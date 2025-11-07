@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_types::{GasCostSummary, IdOperation};
+use iota_sdk::types::{GasCostSummary, IdOperation};
 
 use crate::types::{
     digest::Digest,
@@ -69,8 +69,8 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<Arc<Digest>>,
 }
 
-impl From<iota_types::TransactionEffectsV1> for TransactionEffectsV1 {
-    fn from(value: iota_types::TransactionEffectsV1) -> Self {
+impl From<iota_sdk::types::TransactionEffectsV1> for TransactionEffectsV1 {
+    fn from(value: iota_sdk::types::TransactionEffectsV1) -> Self {
         Self {
             status: value.status.into(),
             epoch: value.epoch,
@@ -96,7 +96,7 @@ impl From<iota_types::TransactionEffectsV1> for TransactionEffectsV1 {
     }
 }
 
-impl From<TransactionEffectsV1> for iota_types::TransactionEffectsV1 {
+impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
     fn from(value: TransactionEffectsV1) -> Self {
         Self {
             status: value.status.into(),
@@ -141,8 +141,8 @@ pub struct ChangedObject {
     pub id_operation: IdOperation,
 }
 
-impl From<iota_types::ChangedObject> for ChangedObject {
-    fn from(value: iota_types::ChangedObject) -> Self {
+impl From<iota_sdk::types::ChangedObject> for ChangedObject {
+    fn from(value: iota_sdk::types::ChangedObject) -> Self {
         Self {
             object_id: Arc::new(value.object_id.into()),
             input_state: value.input_state.into(),
@@ -152,7 +152,7 @@ impl From<iota_types::ChangedObject> for ChangedObject {
     }
 }
 
-impl From<ChangedObject> for iota_types::ChangedObject {
+impl From<ChangedObject> for iota_sdk::types::ChangedObject {
     fn from(value: ChangedObject) -> Self {
         Self {
             object_id: **value.object_id,
@@ -178,8 +178,8 @@ pub struct UnchangedSharedObject {
     pub kind: UnchangedSharedKind,
 }
 
-impl From<iota_types::UnchangedSharedObject> for UnchangedSharedObject {
-    fn from(value: iota_types::UnchangedSharedObject) -> Self {
+impl From<iota_sdk::types::UnchangedSharedObject> for UnchangedSharedObject {
+    fn from(value: iota_sdk::types::UnchangedSharedObject) -> Self {
         Self {
             object_id: Arc::new(value.object_id.into()),
             kind: value.kind.into(),
@@ -187,7 +187,7 @@ impl From<iota_types::UnchangedSharedObject> for UnchangedSharedObject {
     }
 }
 
-impl From<UnchangedSharedObject> for iota_types::UnchangedSharedObject {
+impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
     fn from(value: UnchangedSharedObject) -> Self {
         Self {
             object_id: **value.object_id,
@@ -233,28 +233,30 @@ pub enum UnchangedSharedKind {
     PerEpochConfig,
 }
 
-impl From<iota_types::UnchangedSharedKind> for UnchangedSharedKind {
-    fn from(value: iota_types::UnchangedSharedKind) -> Self {
+impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
+    fn from(value: iota_sdk::types::UnchangedSharedKind) -> Self {
         match value {
-            iota_types::UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+            iota_sdk::types::UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
                 Self::ReadOnlyRoot {
                     version,
                     digest: Arc::new(digest.into()),
                 }
             }
-            iota_types::UnchangedSharedKind::MutateDeleted { version } => {
+            iota_sdk::types::UnchangedSharedKind::MutateDeleted { version } => {
                 Self::MutateDeleted { version }
             }
-            iota_types::UnchangedSharedKind::ReadDeleted { version } => {
+            iota_sdk::types::UnchangedSharedKind::ReadDeleted { version } => {
                 Self::ReadDeleted { version }
             }
-            iota_types::UnchangedSharedKind::Cancelled { version } => Self::Cancelled { version },
-            iota_types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
+            iota_sdk::types::UnchangedSharedKind::Cancelled { version } => {
+                Self::Cancelled { version }
+            }
+            iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
         }
     }
 }
 
-impl From<UnchangedSharedKind> for iota_types::UnchangedSharedKind {
+impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
     fn from(value: UnchangedSharedKind) -> Self {
         match value {
             UnchangedSharedKind::ReadOnlyRoot { version, digest } => Self::ReadOnlyRoot {
@@ -296,11 +298,11 @@ pub enum ObjectIn {
     },
 }
 
-impl From<iota_types::ObjectIn> for ObjectIn {
-    fn from(value: iota_types::ObjectIn) -> Self {
+impl From<iota_sdk::types::ObjectIn> for ObjectIn {
+    fn from(value: iota_sdk::types::ObjectIn) -> Self {
         match value {
-            iota_types::ObjectIn::Missing => Self::Missing,
-            iota_types::ObjectIn::Data {
+            iota_sdk::types::ObjectIn::Missing => Self::Missing,
+            iota_sdk::types::ObjectIn::Data {
                 version,
                 digest,
                 owner,
@@ -313,7 +315,7 @@ impl From<iota_types::ObjectIn> for ObjectIn {
     }
 }
 
-impl From<ObjectIn> for iota_types::ObjectIn {
+impl From<ObjectIn> for iota_sdk::types::ObjectIn {
     fn from(value: ObjectIn) -> Self {
         match value {
             ObjectIn::Missing => Self::Missing,
@@ -360,15 +362,15 @@ pub enum ObjectOut {
     PackageWrite { version: u64, digest: Arc<Digest> },
 }
 
-impl From<iota_types::ObjectOut> for ObjectOut {
-    fn from(value: iota_types::ObjectOut) -> Self {
+impl From<iota_sdk::types::ObjectOut> for ObjectOut {
+    fn from(value: iota_sdk::types::ObjectOut) -> Self {
         match value {
-            iota_types::ObjectOut::Missing => Self::Missing,
-            iota_types::ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
+            iota_sdk::types::ObjectOut::Missing => Self::Missing,
+            iota_sdk::types::ObjectOut::ObjectWrite { digest, owner } => Self::ObjectWrite {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
             },
-            iota_types::ObjectOut::PackageWrite { version, digest } => Self::PackageWrite {
+            iota_sdk::types::ObjectOut::PackageWrite { version, digest } => Self::PackageWrite {
                 version,
                 digest: Arc::new(digest.into()),
             },
@@ -376,7 +378,7 @@ impl From<iota_types::ObjectOut> for ObjectOut {
     }
 }
 
-impl From<ObjectOut> for iota_types::ObjectOut {
+impl From<ObjectOut> for iota_sdk::types::ObjectOut {
     fn from(value: ObjectOut) -> Self {
         match value {
             ObjectOut::Missing => Self::Missing,
@@ -413,3 +415,13 @@ pub enum IdOperation {
     Created,
     Deleted,
 }
+
+crate::export_iota_types_bcs_conversion!(
+    TransactionEffectsV1,
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut,
+    IdOperation
+);

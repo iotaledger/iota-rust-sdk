@@ -13,7 +13,12 @@ async fn main() -> Result<()> {
         .await?
         .data()
     {
-        println!("Coin = {}, Balance = {}", coin.id(), coin.balance());
+        println!(
+            "Coin = {}, Coin Type = {}, Balance = {}",
+            coin.id(),
+            coin.coin_type().as_struct_tag(),
+            coin.balance()
+        );
     }
 
     let balance = client.balance(address, None).await?.unwrap_or_default();

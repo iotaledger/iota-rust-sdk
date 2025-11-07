@@ -13,20 +13,14 @@ use crate::{
 
 /// Rust version of the Move `iota::table::Table` type.
 #[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Table {
     pub id: ObjectId,
     pub size: u64,
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Registry {
     /// The `registry` table maps `Name` to `NameRecord`.
     /// Added / replaced in the `add_record` function.
@@ -37,10 +31,7 @@ pub struct Registry {
 }
 
 #[derive(Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct RegistryEntry {
     pub id: ObjectId,
     pub name: Name,
@@ -48,10 +39,7 @@ pub struct RegistryEntry {
 }
 
 #[derive(Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ReverseRegistryEntry {
     pub id: ObjectId,
     pub address: Address,
@@ -60,10 +48,7 @@ pub struct ReverseRegistryEntry {
 
 /// A single record in the registry.
 #[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct NameRecord {
     /// The ID of the registration NFT assigned to this record.
     ///

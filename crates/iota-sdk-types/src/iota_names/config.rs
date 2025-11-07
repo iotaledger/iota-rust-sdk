@@ -8,7 +8,7 @@ use crate::{Address, ObjectId};
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "kebab-case")
 )]
 pub struct IotaNamesConfig {
@@ -48,7 +48,7 @@ impl IotaNamesConfig {
         }
     }
 
-    pub fn from_env() -> anyhow::Result<Self> {
+    pub fn from_env() -> eyre::Result<Self> {
         Ok(Self::new(
             std::env::var("IOTA_NAMES_PACKAGE_ADDRESS")?.parse()?,
             std::env::var("IOTA_NAMES_OBJECT_ID")?.parse()?,

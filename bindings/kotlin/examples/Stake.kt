@@ -1,12 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.ObjectId
-import iota_sdk.PtbArgument
-import iota_sdk.TransactionBuilder
+import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -14,9 +9,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
 
         val myAddress =
-                Address.fromHex(
-                        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-                )
+            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
         val validators = client.activeValidators()
         if (validators.data.isEmpty()) {
@@ -26,23 +19,9 @@ fun main() = runBlocking {
 
         println("Staking to validator ${validator.name ?: "with no name"}")
 
-        val coinId =
-                ObjectId.fromHex(
-                        "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699"
-                )
+        val builder = TransactionBuilder(myAddress).withClient(client)
 
-        val builder = TransactionBuilder.init(myAddress, client)
-
-        builder.moveCall(
-                Address.system(),
-                Identifier("iota_system"),
-                Identifier("request_add_stake"),
-                listOf(
-                        PtbArgument.sharedMut(ObjectId.system()),
-                        PtbArgument.objectId(coinId),
-                        PtbArgument.address(validator.address)
-                ),
-        )
+        builder.stake(PtbArgument.u64(1000000000uL), validator.address)
 
         val res = builder.dryRun()
 
@@ -53,5 +32,6 @@ fun main() = runBlocking {
         println("Stake dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

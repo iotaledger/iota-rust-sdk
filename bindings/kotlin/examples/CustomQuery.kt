@@ -11,7 +11,7 @@ fun main() = runBlocking {
     val client = GraphQlClient.newDevnet()
 
     val queryEpochDataStr =
-            """
+        """
         query MyQuery(${'$'}id: UInt53) {
             epoch(id: ${'$'}id) {
                 epochId
@@ -21,7 +21,8 @@ fun main() = runBlocking {
                 totalTransactions
             }
         }
-    """.trimIndent()
+        """
+            .trimIndent()
 
     val queryEpochData = Query(queryEpochDataStr)
     val res1 = client.runQuery(queryEpochData)
@@ -34,11 +35,12 @@ fun main() = runBlocking {
     println(res2)
 
     val queryChainIdStr =
-            """
+        """
         query MyQuery {
             chainIdentifier
         }
-    """.trimIndent()
+        """
+            .trimIndent()
     val queryChainId = Query(queryChainIdStr)
     val res3 = client.runQuery(queryChainId)
     println(res3)

@@ -98,10 +98,7 @@ impl TransactionEffectsV1 {
 /// changed-object = object-id object-in object-out id-operation
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ChangedObject {
@@ -127,10 +124,7 @@ pub struct ChangedObject {
 /// unchanged-shared-object = object-id unchanged-shared-object-kind
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct UnchangedSharedObject {
@@ -385,7 +379,7 @@ impl ObjectOut {
 #[derive(Eq, PartialEq, Copy, Clone, Debug)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "lowercase")
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -407,7 +401,7 @@ mod serialization {
 
     use super::*;
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct ReadableTransactionEffectsV1Ref<'a> {
         #[serde(flatten)]
         status: &'a ExecutionStatus,
@@ -425,7 +419,7 @@ mod serialization {
         auxiliary_data_digest: &'a Option<Digest>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct ReadableTransactionEffectsV1 {
         #[serde(flatten)]
         status: ExecutionStatus,
@@ -443,7 +437,7 @@ mod serialization {
         auxiliary_data_digest: Option<Digest>,
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct BinaryTransactionEffectsV1Ref<'a> {
         status: &'a ExecutionStatus,
         epoch: &'a EpochId,
@@ -458,7 +452,7 @@ mod serialization {
         auxiliary_data_digest: &'a Option<Digest>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct BinaryTransactionEffectsV1 {
         status: ExecutionStatus,
         epoch: EpochId,
@@ -588,7 +582,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableUnchangedSharedKind {
         ReadOnlyRoot {
@@ -611,7 +605,7 @@ mod serialization {
         PerEpochConfig,
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryUnchangedSharedKind {
         ReadOnlyRoot { version: Version, digest: Digest },
         MutateDeleted { version: Version },
@@ -708,7 +702,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectIn {
         Missing,
@@ -720,7 +714,7 @@ mod serialization {
         },
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryObjectIn {
         Missing,
         Data {
@@ -802,7 +796,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectOut {
         Missing,
@@ -817,7 +811,7 @@ mod serialization {
         },
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryObjectOut {
         Missing,
         ObjectWrite {

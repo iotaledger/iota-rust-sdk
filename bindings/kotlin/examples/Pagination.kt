@@ -13,23 +13,21 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
         val address =
-                Address.fromHex(
-                        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-                )
+            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
         val allObjects = mutableListOf<Object>()
         var nextCursor: String? = null
         while (true) {
             println("Fetching page with cursor: $nextCursor")
             val page =
-                    client.objects(
-                            ObjectFilter(owner = address),
-                            PaginationFilter(
-                                    direction = Direction.FORWARD,
-                                    cursor = nextCursor,
-                                    // Limit to 1 to demonstrate pagination
-                                    limit = 1
-                            )
-                    )
+                client.objects(
+                    ObjectFilter(owner = address),
+                    PaginationFilter(
+                        direction = Direction.FORWARD,
+                        cursor = nextCursor,
+                        // Limit to 1 to demonstrate pagination
+                        limit = 1,
+                    ),
+                )
             allObjects.addAll(page.data)
             if (page.pageInfo.hasNextPage) {
                 nextCursor = page.pageInfo.endCursor
@@ -43,5 +41,6 @@ fun main() = runBlocking {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

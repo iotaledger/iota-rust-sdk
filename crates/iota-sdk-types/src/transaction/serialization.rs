@@ -8,123 +8,6 @@ use serde_with::{DeserializeAs, SerializeAs};
 use super::Argument;
 use crate::{ObjectId, ObjectReference};
 
-mod transaction {
-    use super::*;
-    use crate::{
-        Address,
-        transaction::{GasPayment, Transaction, TransactionExpiration, TransactionKind},
-    };
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(tag = "version")]
-    #[serde(rename = "Transaction")]
-    enum TransactionDataRef<'a> {
-        #[serde(rename = "1")]
-        V1(TransactionV1Ref<'a>),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(tag = "version")]
-    #[serde(rename = "Transaction")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-    enum TransactionData {
-        #[serde(rename = "1")]
-        V1(TransactionV1),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(rename = "Transaction")]
-    enum BinaryTransactionDataRef<'a> {
-        #[serde(rename = "1")]
-        V1(TransactionV1Ref<'a>),
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(rename = "Transaction")]
-    enum BinaryTransactionData {
-        #[serde(rename = "1")]
-        V1(TransactionV1),
-    }
-
-    #[derive(serde_derive::Serialize)]
-    #[serde(rename = "TransactionV1")]
-    struct TransactionV1Ref<'a> {
-        kind: &'a TransactionKind,
-        sender: &'a Address,
-        gas_payment: &'a GasPayment,
-        expiration: &'a TransactionExpiration,
-    }
-
-    #[derive(serde_derive::Deserialize)]
-    #[serde(rename = "TransactionV1")]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-    struct TransactionV1 {
-        kind: TransactionKind,
-        sender: Address,
-        gas_payment: GasPayment,
-        expiration: TransactionExpiration,
-    }
-
-    impl Serialize for Transaction {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            let transaction = TransactionV1Ref {
-                kind: &self.kind,
-                sender: &self.sender,
-                gas_payment: &self.gas_payment,
-                expiration: &self.expiration,
-            };
-
-            if serializer.is_human_readable() {
-                TransactionDataRef::V1(transaction).serialize(serializer)
-            } else {
-                BinaryTransactionDataRef::V1(transaction).serialize(serializer)
-            }
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Transaction {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let TransactionV1 {
-                kind,
-                sender,
-                gas_payment,
-                expiration,
-            } = if deserializer.is_human_readable() {
-                let TransactionData::V1(transaction) = Deserialize::deserialize(deserializer)?;
-                transaction
-            } else {
-                let BinaryTransactionData::V1(transaction) =
-                    Deserialize::deserialize(deserializer)?;
-                transaction
-            };
-
-            Ok(Transaction {
-                kind,
-                sender,
-                gas_payment,
-                expiration,
-            })
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for Transaction {
-        fn schema_name() -> String {
-            TransactionData::schema_name()
-        }
-
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            TransactionData::json_schema(gen)
-        }
-    }
-}
-
 mod transaction_kind {
     use super::*;
     use crate::transaction::{
@@ -132,7 +15,7 @@ mod transaction_kind {
         GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
@@ -145,7 +28,7 @@ mod transaction_kind {
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "TransactionKind")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -171,7 +54,7 @@ mod transaction_kind {
         }
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
@@ -180,7 +63,7 @@ mod transaction_kind {
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
@@ -284,39 +167,44 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, EndOfEpochTransactionKind,
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
+        EndOfEpochTransactionKind,
     };
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
+        ChangeEpochV3(&'a ChangeEpochV3),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
+        ChangeEpochV3(ChangeEpochV3),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
+        ChangeEpochV3(&'a ChangeEpochV3),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
+        ChangeEpochV3(ChangeEpochV3),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
@@ -332,6 +220,9 @@ mod end_of_epoch {
                     Self::ChangeEpochV2(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV2(k)
                     }
+                    Self::ChangeEpochV3(k) => {
+                        ReadableEndOfEpochTransactionKindRef::ChangeEpochV3(k)
+                    }
                     Self::AuthenticatorStateCreate => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
                     }
@@ -344,6 +235,8 @@ mod end_of_epoch {
                 let binary = match self {
                     Self::ChangeEpoch(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpoch(k),
                     Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
+                    Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
+
                     Self::AuthenticatorStateCreate => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
                     }
@@ -368,6 +261,9 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV2(k) => {
                             Self::ChangeEpochV2(k)
                         }
+                        ReadableEndOfEpochTransactionKind::ChangeEpochV3(k) => {
+                            Self::ChangeEpochV3(k)
+                        }
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
                         }
@@ -381,6 +277,8 @@ mod end_of_epoch {
                     |binary| match binary {
                         BinaryEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
+                        BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
+
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
                         }
@@ -398,7 +296,7 @@ mod version_assignments {
     use super::*;
     use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions {
@@ -406,7 +304,7 @@ mod version_assignments {
         },
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableConsensusDeterminedVersionAssignments {
         CancelledTransactions {
@@ -414,14 +312,14 @@ mod version_assignments {
         },
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions {
             cancelled_transactions: &'a Vec<CancelledTransaction>,
         },
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryConsensusDeterminedVersionAssignments {
         CancelledTransactions {
             cancelled_transactions: Vec<CancelledTransaction>,
@@ -489,7 +387,7 @@ mod input_argument {
     use super::*;
     use crate::transaction::Input;
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
     enum ReadableInput {
         Pure {
@@ -506,13 +404,13 @@ mod input_argument {
         Receiving(ObjectReference),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum ObjectArg {
         ImmutableOrOwned(ObjectReference),
         Shared {
@@ -619,7 +517,7 @@ mod input_argument {
 mod argument {
     use super::*;
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "Argument", untagged, rename_all = "lowercase")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableArgument {
@@ -633,7 +531,7 @@ mod argument {
         NestedResult { result: (u16, u16) },
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "lowercase")]
     enum Gas {
         Gas,
@@ -669,7 +567,7 @@ mod argument {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryArgument {
         Gas,
         Input(u16),
@@ -741,7 +639,7 @@ mod command {
         Upgrade,
     };
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "command", rename_all = "snake_case")]
     enum ReadableCommandRef<'a> {
         MoveCall(&'a MoveCall),
@@ -753,7 +651,7 @@ mod command {
         Upgrade(&'a Upgrade),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "command", rename_all = "snake_case")]
     enum ReadableCommand {
         MoveCall(MoveCall),
@@ -765,7 +663,7 @@ mod command {
         Upgrade(Upgrade),
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryCommandRef<'a> {
         MoveCall(&'a MoveCall),
         TransferObjects(&'a TransferObjects),
@@ -776,7 +674,7 @@ mod command {
         Upgrade(&'a Upgrade),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryCommand {
         MoveCall(MoveCall),
         TransferObjects(TransferObjects),
@@ -929,14 +827,14 @@ mod signed_transaction {
 
     pub(crate) struct SignedTransactionWithIntentMessage;
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
         transaction: &'a Transaction,
         signatures: &'a Vec<UserSignature>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct BinarySignedTransactionWithIntentMessage {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
         transaction: Transaction,
@@ -1020,7 +918,7 @@ mod transaction_expiration {
 
     use crate::{EpochId, TransactionExpiration};
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
     #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
@@ -1031,7 +929,7 @@ mod transaction_expiration {
         ),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,

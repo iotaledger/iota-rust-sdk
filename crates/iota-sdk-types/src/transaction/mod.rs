@@ -14,7 +14,7 @@ mod serialization;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
-/// A transaction
+/// Transaction
 ///
 /// # BCS
 ///
@@ -27,14 +27,37 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct Transaction {
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum Transaction {
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
+    V1(TransactionV1),
+    // When new variants are introduced, it is important that we check version support
+    // in the validity_check function based on the protocol config.
+}
+
+impl Transaction {
+    crate::def_is_as_into_opt!(V1(TransactionV1));
+}
+
+impl From<TransactionV1> for Transaction {
+    fn from(v1: TransactionV1) -> Self {
+        Transaction::V1(v1)
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct TransactionV1 {
     pub kind: TransactionKind,
     pub sender: Address,
     pub gas_payment: GasPayment,
     pub expiration: TransactionExpiration,
 }
 
-#[cfg_attr(feature = "serde", derive(serde_derive::Deserialize))]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize))]
 pub struct SenderSignedTransaction(
     #[cfg_attr(
         feature = "serde",
@@ -44,10 +67,7 @@ pub struct SenderSignedTransaction(
 );
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SignedTransaction {
@@ -95,10 +115,7 @@ impl TransactionExpiration {
 ///               u64                 ; budget
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GasPayment {
@@ -128,10 +145,7 @@ pub struct GasPayment {
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct RandomnessStateUpdate {
@@ -245,6 +259,8 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpoch(ChangeEpoch),
     /// End the epoch and start the next one
     ChangeEpochV2(ChangeEpochV2),
+    /// End the epoch and start the next one
+    ChangeEpochV3(ChangeEpochV3),
     /// Create and initialize the authenticator object used for zklogin
     AuthenticatorStateCreate,
     /// Expire JWKs used for zklogin
@@ -274,10 +290,7 @@ impl EndOfEpochTransactionKind {
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ExecutionTimeObservations {
     V1(Vec<ExecutionTimeObservation>),
 }
@@ -289,10 +302,7 @@ impl ExecutionTimeObservations {
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ExecutionTimeObservation {
     pub key: ExecutionTimeObservationKey,
     pub observations: Vec<ValidatorExecutionTimeObservation>,
@@ -312,10 +322,7 @@ pub struct ExecutionTimeObservation {
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ValidatorExecutionTimeObservation {
     pub validator: crate::Bls12381PublicKey,
     pub duration: std::time::Duration,
@@ -341,10 +348,7 @@ pub struct ValidatorExecutionTimeObservation {
 #[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Clone)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ExecutionTimeObservationKey {
     // Contains all the fields from `ProgrammableMoveCall` besides `arguments`.
     MoveEntryPoint {
@@ -388,10 +392,7 @@ impl ExecutionTimeObservationKey {
 /// authenticator-state-expire = u64 u64
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct AuthenticatorStateExpire {
@@ -418,10 +419,7 @@ pub struct AuthenticatorStateExpire {
 ///                              u64 ; initial version of the authenticator object
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct AuthenticatorStateUpdateV1 {
@@ -451,10 +449,7 @@ pub struct AuthenticatorStateUpdateV1 {
 /// active-jwk = jwk-id jwk u64
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ActiveJwk {
@@ -504,10 +499,7 @@ impl ConsensusDeterminedVersionAssignments {
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CancelledTransaction {
@@ -526,10 +518,7 @@ pub struct CancelledTransaction {
 /// version-assignment = object-id u64
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct VersionAssignment {
@@ -550,10 +539,7 @@ pub struct VersionAssignment {
 ///                                consensus-determined-version-assignments
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ConsensusCommitPrologueV1 {
@@ -600,10 +586,7 @@ pub struct ConsensusCommitPrologueV1 {
 ///                (vector system-package)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ChangeEpoch {
@@ -663,10 +646,7 @@ pub struct ChangeEpoch {
 ///                (vector system-package)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ChangeEpochV2 {
@@ -713,10 +693,57 @@ pub struct ChangeEpochV2 {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct ChangeEpochV3 {
+    /// The next (to become) epoch ID.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub epoch: EpochId,
+    /// The protocol version in effect in the new epoch.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub protocol_version: ProtocolVersion,
+    /// The total amount of gas charged for storage during the epoch.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub storage_charge: u64,
+    /// The total amount of gas charged for computation during the epoch.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub computation_charge: u64,
+    /// The total amount of gas burned for computation during the epoch.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub computation_charge_burned: u64,
+    /// The amount of storage rebate refunded to the txn senders.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub storage_rebate: u64,
+    /// The non-refundable storage fee.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub non_refundable_storage_fee: u64,
+    /// Unix timestamp when epoch started
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub epoch_start_timestamp_ms: u64,
+    /// System packages (specifically framework and move stdlib) that are
+    /// written before the new epoch starts. This tracks framework upgrades
+    /// on chain. When executing the ChangeEpoch txn, the validator must
+    /// write out the modules below.  Modules are provided with the version they
+    /// will be upgraded to, their modules in serialized form (which include
+    /// their package ID), and a list of their transitive dependencies.
+    #[cfg_attr(test, any(proptest::collection::size_range(0..=2).lift()))]
+    pub system_packages: Vec<SystemPackage>,
+    /// Vector of active validator indices eligible to take part in committee
+    /// selection because they support the new, target protocol version.
+    pub eligible_active_validators: Vec<u64>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SystemPackage {
@@ -745,10 +772,7 @@ pub struct SystemPackage {
 /// genesis-transaction = (vector genesis-object)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisTransaction {
@@ -771,10 +795,7 @@ pub struct GenesisTransaction {
 /// ptb = (vector input) (vector command)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ProgrammableTransaction {
@@ -926,10 +947,7 @@ impl Command {
 /// transfer-objects = (vector argument) argument
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransferObjects {
@@ -950,10 +968,7 @@ pub struct TransferObjects {
 /// split-coins = argument (vector argument)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SplitCoins {
@@ -974,10 +989,7 @@ pub struct SplitCoins {
 /// merge-coins = argument (vector argument)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MergeCoins {
@@ -1001,10 +1013,7 @@ pub struct MergeCoins {
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Publish {
@@ -1031,10 +1040,7 @@ pub struct Publish {
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MakeMoveVector {
@@ -1062,10 +1068,7 @@ pub struct MakeMoveVector {
 ///           argument              ; upgrade ticket
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Upgrade {
@@ -1188,10 +1191,7 @@ impl Argument {
 ///             (vector argument)   ; input arguments
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveCall {

@@ -4,6 +4,8 @@
 
 //! Implementation of ed25519 public-key cryptogrophy.
 
+use crate::crypto::{PublicKeyExt, SignatureScheme};
+
 /// An ed25519 public key.
 ///
 /// # BCS
@@ -14,10 +16,7 @@
 /// ed25519-public-key = 32OCTECT
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Ed25519PublicKey(
@@ -56,13 +55,24 @@ impl Ed25519PublicKey {
     pub const fn inner(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
+}
 
-    pub const fn as_bytes(&self) -> &[u8] {
+impl PublicKeyExt for Ed25519PublicKey {
+    type FromBytesErr = std::array::TryFromSliceError;
+
+    /// Returns the public key as bytes.
+    fn as_bytes(&self) -> &[u8] {
         &self.0
     }
 
-    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, std::array::TryFromSliceError> {
+    /// Tries to create an Ed25519PublicKey from bytes.
+    fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, Self::FromBytesErr> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref()).map(Self)
+    }
+
+    /// Returns the signature scheme for this public key.
+    fn scheme(&self) -> SignatureScheme {
+        SignatureScheme::Ed25519
     }
 }
 
@@ -122,10 +132,7 @@ impl std::fmt::Debug for Ed25519PublicKey {
 /// ed25519-signature = 64OCTECT
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Ed25519Signature(

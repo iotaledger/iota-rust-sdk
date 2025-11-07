@@ -1,3 +1,33 @@
 [workspace]
 resolver = "2"
 members = ["crates/*"]
+
+[workspace.dependencies]
+base64ct = "1.6.0"
+bcs = "0.1.6"
+bnum = "0.12.0"
+cynic = "3.7.3"
+derive_more = "2.0"
+eyre = "0.6"
+futures = "0.3.29"
+hex = "0.4.3"
+itertools = "0.13.0"
+paste = "1.0.15"
+primitive-types = { version = "0.14", features = ["impl-serde"] }
+proptest = { version = "1.6.0", default-features = false }
+rand = "0.8.5"
+rand_core = "0.6.4"
+reqwest = { version = "0.12", default-features = false }
+roaring = { version = "0.11.2", default-features = false }
+serde = "1.0.210"
+serde_json = "1.0.128"
+strum = "0.27.2"
+test-strategy = "0.4.0"
+thiserror = "2.0"
+tokio = "1.40.0"
+
+iota-crypto = { version = "0.0.1-alpha.0", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
+iota-graphql-client = { version = "0.0.1-alpha.0", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
+iota-graphql-client-build = { version = "0.0.1-alpha.0", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
+iota-transaction-builder = { version = "0.0.1-alpha.0", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
+iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }

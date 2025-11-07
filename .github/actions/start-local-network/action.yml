@@ -7,7 +7,7 @@ runs:
     - name: Get the IOTA testnet binary and start a local network
       shell: bash
       env:
-        IOTA_BINARY_VERSION: "v0.12.0-rc"
+        IOTA_BINARY_VERSION: "v1.10.0-rc"
         EPOCH_DURATION_MS: "10000"
       run: |
         ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
@@ -36,6 +36,10 @@ runs:
 
         echo "Setting keypair in config"
         sed -i "s|<keypair>|$key|g" ./.github/actions/start-local-network/config.yaml
+
+        echo "Updating fullnode-url to use host IP"
+        HOST_IP=$(hostname -I | awk '{print $1}')
+        sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" ./.github/actions/start-local-network/config.yaml
 
         echo "Requesting faucet coins"
         ./iota client faucet --address gas_station

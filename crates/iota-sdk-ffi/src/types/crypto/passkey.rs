@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_crypto::Verifier;
+use iota_sdk::crypto::Verifier;
 
 use crate::{
     error::Result,
@@ -27,7 +27,7 @@ use crate::{
 /// client-data-json = string ; valid json
 /// ```
 ///
-/// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+/// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
 /// currently requires that the `CollectedClientData.type` field is required to
 /// be `webauthn.get`.
@@ -38,21 +38,21 @@ use crate::{
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PasskeyAuthenticator(pub iota_types::PasskeyAuthenticator);
+pub struct PasskeyAuthenticator(pub iota_sdk::types::PasskeyAuthenticator);
 
 #[uniffi::export]
 impl PasskeyAuthenticator {
     /// Opaque authenticator data for this passkey signature.
     ///
-    /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-    /// more information on this field.
+    /// See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+    /// for more information on this field.
     pub fn authenticator_data(&self) -> Vec<u8> {
         self.0.authenticator_data().to_vec()
     }
 
     /// Structured, unparsed, JSON for this passkey signature.
     ///
-    /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+    /// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
     /// for more information on this field.
     pub fn client_data_json(&self) -> String {
         self.0.client_data_json().to_owned()
@@ -89,13 +89,13 @@ impl PasskeyAuthenticator {
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PasskeyPublicKey(iota_types::PasskeyPublicKey);
+pub struct PasskeyPublicKey(iota_sdk::types::PasskeyPublicKey);
 
 #[uniffi::export]
 impl PasskeyPublicKey {
     #[uniffi::constructor]
     pub fn new(public_key: &Secp256r1PublicKey) -> Self {
-        Self(iota_types::PasskeyPublicKey::new(**public_key))
+        Self(iota_sdk::types::PasskeyPublicKey::new(**public_key))
     }
 
     pub fn inner(&self) -> Secp256r1PublicKey {
@@ -113,3 +113,5 @@ impl PasskeyPublicKey {
         self.0.derive_address().into()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(PasskeyAuthenticator);

@@ -18,24 +18,24 @@ use crate::error::Result;
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
 #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Digest(pub iota_types::Digest);
+pub struct Digest(pub iota_sdk::types::Digest);
 
 #[uniffi::export]
 impl Digest {
     #[uniffi::constructor]
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::Digest::from_bytes(bytes)?))
+        Ok(Self(iota_sdk::types::Digest::from_bytes(bytes)?))
     }
 
     #[uniffi::constructor]
     pub fn from_base58(base58: &str) -> Result<Self> {
-        Ok(Self(iota_types::Digest::from_base58(base58)?))
+        Ok(Self(iota_sdk::types::Digest::from_base58(base58)?))
     }
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
         let mut rng = rand::thread_rng();
-        Self(iota_types::Digest::generate(&mut rng))
+        Self(iota_sdk::types::Digest::generate(&mut rng))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -46,3 +46,5 @@ impl Digest {
         self.0.to_base58()
     }
 }
+
+crate::export_iota_types_objects_bcs_conversion!(Digest);

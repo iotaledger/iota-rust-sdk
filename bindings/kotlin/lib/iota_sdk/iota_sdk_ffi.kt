@@ -2392,6 +2392,691 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -2407,13 +3092,449 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 // when the library is loaded.
 internal interface IntegrityCheckingUniffiLib : Library {
     // Integrity check functions only
-    fun uniffi_iota_sdk_ffi_checksum_func_base64_decode(
+    fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_address_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_argument_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_argument_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_base64_decode(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_base64_encode(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_change_epoch_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_change_epoch_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_changed_object_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_changed_object_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_command_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_command_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_digest_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_digest_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_event_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_event_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_error_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_error_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_status_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_status_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_hex_decode(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_hex_encode(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_id_operation_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_identifier_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_identifier_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_make_move_vector_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_merge_coins_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_merge_coins_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_call_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_call_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_location_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_location_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_package_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_package_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_struct_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_move_struct_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_committee_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_committee_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_multisig_member_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_data_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_data_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_id_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_id_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_in_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_in_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_out_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_out_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_reference_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_reference_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_object_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_owner_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_owner_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_publish_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_publish_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_signed_transaction_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_signed_transaction_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_simple_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_simple_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_split_coins_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_string_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_string_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_struct_tag_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_system_package_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_system_package_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_effects_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_effects_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_events_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_events_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_kind_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_kind_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_v1_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transaction_v1_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transfer_objects_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_transfer_objects_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_type_argument_error_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_type_argument_error_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_type_origin_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_upgrade_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_upgrade_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_user_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_user_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_committee_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_validator_signature_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
@@ -2481,6 +3602,26 @@ fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_storage_rebate(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge_burned(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_eligible_active_validators(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch_start_timestamp_ms(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_non_refundable_storage_fee(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_protocol_version(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_charge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_rebate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_changeepochv3_system_packages(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_is_ecmh_live_object_set(
@@ -2509,6 +3650,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_sequence_number(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_version_specific_data(
@@ -2518,6 +3661,48 @@ fun uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_effects(
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_signatures(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_coin_balance(
 ): Short
@@ -2549,6 +3734,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes(
@@ -2570,6 +3759,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address(
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(
 ): Short
@@ -2651,6 +3842,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_lookup(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size(
@@ -2707,6 +3902,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements(
@@ -2748,6 +3945,16 @@ fun uniffi_iota_sdk_ffi_checksum_method_movepackage_modules(
 fun uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_movepackage_version(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap(
 ): Short
@@ -2867,6 +4074,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_object_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_object_id(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_object_object_ref(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_object_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_object_owner(
@@ -2941,6 +4150,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs(
@@ -2952,6 +4163,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_publish_modules(
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32(
 ): Short
@@ -2975,6 +4190,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple(
@@ -2996,6 +4213,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user(
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32(
 ): Short
@@ -3019,6 +4240,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple(
@@ -3041,6 +4264,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes(
@@ -3050,6 +4277,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der(
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key(
 ): Short
@@ -3109,13 +4338,19 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_type_args(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_systempackage_modules(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_systempackage_version(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize(
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_digest(
 ): Short
@@ -3129,11 +4364,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_transaction_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run(
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute(
+fun uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor(
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration(
 ): Short
@@ -3163,9 +4398,15 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1(
 ): Short
@@ -3176,6 +4417,22 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactioneffects_is_v1(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionevents_events(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transferobjects_address(
 ): Short
@@ -3218,6 +4475,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_upgrade_modules(
 fun uniffi_iota_sdk_ffi_checksum_method_upgrade_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig(
 ): Short
@@ -3383,6 +4642,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_changeepoch_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_changeepochv3_new(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_checkpointsummary_new(
@@ -3423,6 +4684,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate(
@@ -3454,6 +4719,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authe
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new(
 ): Short
@@ -3563,6 +4830,12 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movecall_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message(
@@ -3637,6 +4910,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
@@ -3693,6 +4968,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate(
@@ -3722,6 +5001,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem(
 ): Short
@@ -3777,19 +5060,81 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_splitcoins_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_manager(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_metadata(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config_setting(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_address_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_config_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_pause_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_system_epoch_info_event(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_time_lock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1(
 ): Short
@@ -3806,6 +5151,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis(
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new(
 ): Short
@@ -3832,6 +5181,12 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_u8(
 fun uniffi_iota_sdk_ffi_checksum_constructor_typetag_new_vector(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64(
 ): Short
@@ -4078,6 +5433,32 @@ fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate(`ptr`: Pointer,un
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_changeepochv3(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_changeepochv3(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_changeepochv3_new(`epoch`: Long,`protocolVersion`: Long,`storageCharge`: Long,`computationCharge`: Long,`computationChargeBurned`: Long,`storageRebate`: Long,`nonRefundableStorageFee`: Long,`epochStartTimestampMs`: Long,`systemPackages`: RustBuffer.ByValue,`eligibleActiveValidators`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_computation_charge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_computation_charge_burned(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_eligible_active_validators(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_epoch_start_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_non_refundable_storage_fee(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_protocol_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_storage_charge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_storage_rebate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_checkpointcommitment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_checkpointcommitment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4122,6 +5503,8 @@ fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_sequence_number(`ptr`: Point
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_checkpointsummary_version_specific_data(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4149,6 +5532,52 @@ fun uniffi_iota_sdk_ffi_fn_clone_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiR
 fun uniffi_iota_sdk_ffi_fn_free_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(`el00`: Pointer,`el01`: Pointer,`el10`: Pointer,`el11`: Pointer,`el20`: Pointer,`el21`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run(`ptr`: Pointer,`skipChecks`: Byte,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(`ptr`: Pointer,`keypair`: Pointer,`waitFor`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(`ptr`: Pointer,`keypair`: Pointer,`sponsorKeypair`: Pointer,`waitFor`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(`ptr`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas(`ptr`: Pointer,`objectIds`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_price(`ptr`: Pointer,`price`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_station_sponsor(`ptr`: Pointer,`url`: RustBuffer.ByValue,`duration`: RustBuffer.ByValue,`headers`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_make_move_vec(`ptr`: Pointer,`elements`: RustBuffer.ByValue,`typeTag`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(`ptr`: Pointer,`primaryCoin`: Pointer,`consumedCoins`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish(`ptr`: Pointer,`packageData`: Pointer,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_stake(`ptr`: Pointer,`stake`: Pointer,`validatorAddress`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_transfer_objects(`ptr`: Pointer,`recipient`: Pointer,`objects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_unstake(`ptr`: Pointer,`stakedIota`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_upgrade(`ptr`: Pointer,`packageId`: Pointer,`packageData`: Pointer,`upgradeTicket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4230,6 +5659,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(`value`: Ru
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`accountIndex`: Long,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(`phrase`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(uniffi_out_err: UniffiRustCallStatus, 
@@ -4240,6 +5673,10 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(`ptr`: Pointer,un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4271,6 +5708,8 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_derive_address(`ptr`: Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4321,6 +5760,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_authenticat
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v2(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v3(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4428,9 +5869,9 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(`ptr`: Pointer,`co
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,`coinType`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(`ptr`: Pointer,`tx`: Pointer,`skipChecks`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(`ptr`: Pointer,`tx`: Pointer,`skipChecks`: Byte,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(`ptr`: Pointer,`txKind`: Pointer,`txMeta`: RustBuffer.ByValue,`skipChecks`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(`ptr`: Pointer,`txKind`: Pointer,`txMeta`: RustBuffer.ByValue,`skipChecks`: Byte,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_dynamic_field(`ptr`: Pointer,`address`: Pointer,`typeTag`: Pointer,`name`: RustBuffer.ByValue,
 ): Long
@@ -4446,7 +5887,7 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_epoch_total_transaction_blocks(`
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_events(`ptr`: Pointer,`filter`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(`ptr`: Pointer,`signatures`: RustBuffer.ByValue,`tx`: Pointer,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(`ptr`: Pointer,`signatures`: RustBuffer.ByValue,`tx`: Pointer,`waitFor`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_gas_coins(`ptr`: Pointer,`owner`: Pointer,`paginationFilter`: RustBuffer.ByValue,
 ): Long
@@ -4455,6 +5896,10 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_default_name(`ptr`: P
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_lookup(`ptr`: Pointer,`name`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_iota_names_registrations(`ptr`: Pointer,`address`: Pointer,`paginationFilter`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(`ptr`: Pointer,`digest`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(`ptr`: Pointer,`digest`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_latest_checkpoint_sequence_number(`ptr`: Pointer,
 ): Long
@@ -4511,6 +5956,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(`ptr`: Pointer,`fil
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(`ptr`: Pointer,`filter`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(`ptr`: Pointer,`filter`: RustBuffer.ByValue,`paginationFilter`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(`ptr`: Pointer,`digest`: Pointer,`waitFor`: RustBuffer.ByValue,`timeout`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -4658,6 +6105,26 @@ fun uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table(`ptr`: Pointer,u
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_movepackagedata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_movepackagedata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_base64(`base64`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_json(`json`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_new(`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_dependencies(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_modules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4834,6 +6301,8 @@ fun uniffi_iota_sdk_ffi_fn_method_object_digest(`ptr`: Pointer,uniffi_out_err: U
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_object_object_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_object_object_ref(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_object_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_object_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -4970,6 +6439,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id(`id`: Pointer,uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_id_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(`id`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5054,6 +6525,8 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes(`ptr`: Pointer,u
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5082,6 +6555,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(`value`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`accountIndex`: Long,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(`phrase`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(uniffi_out_err: UniffiRustCallStatus, 
@@ -5092,6 +6569,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5123,6 +6604,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_derive_address(`ptr`: Point
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5176,6 +6659,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(`value`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(`phrase`: RustBuffer.ByValue,`accountIndex`: Long,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(`phrase`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`password`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(uniffi_out_err: UniffiRustCallStatus, 
@@ -5186,6 +6673,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(`ptr`: Pointer,
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5217,6 +6708,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(`ptr`: Point
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5284,6 +6777,10 @@ fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(`ptr`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(`ptr`: Pointer,`message`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5293,6 +6790,8 @@ fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(`ptr`: Pointer,uniffi_out
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5380,13 +6879,73 @@ fun uniffi_iota_sdk_ffi_fn_clone_structtag(`ptr`: Pointer,uniffi_out_err: Uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_structtag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_coin(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_gas_coin(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new(`address`: Pointer,`module`: Pointer,`name`: Pointer,`typeParams`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_manager(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_metadata(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config_setting(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_time_lock(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5394,8 +6953,18 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_module(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5412,10 +6981,12 @@ fun uniffi_iota_sdk_ffi_fn_clone_transaction(`ptr`: Pointer,uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new(`kind`: Pointer,`sender`: Pointer,`gasPayment`: RustBuffer.ByValue,`expiration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(`base64`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1(`transactionV1`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5428,23 +6999,23 @@ fun uniffi_iota_sdk_ffi_fn_method_transaction_sender(`ptr`: Pointer,uniffi_out_e
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(`sender`: Pointer,`client`: Pointer,
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(`ptr`: Pointer,`skipChecks`: Byte,
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(`ptr`: Pointer,`keypair`: Pointer,`waitForFinalization`: Byte,
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(`ptr`: Pointer,`keypair`: Pointer,`sponsorKeypair`: Pointer,`waitForFinalization`: Byte,
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(`ptr`: Pointer,`keypair`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(`ptr`: Pointer,`epoch`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(`ptr`: Pointer,
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectId`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(`ptr`: Pointer,`objectRefs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(`ptr`: Pointer,`budget`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5454,23 +7025,29 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(`ptr`: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(`ptr`: Pointer,`elements`: RustBuffer.ByValue,`typeTag`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,`coin`: Pointer,`coinsToMerge`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(`ptr`: Pointer,`primaryCoin`: Pointer,`consumedCoins`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(`ptr`: Pointer,`packageData`: Pointer,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(`ptr`: Pointer,`stake`: Pointer,`validatorAddress`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(`ptr`: Pointer,`recipient`: Pointer,`objects`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,`package`: Pointer,`ticket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(`ptr`: Pointer,`stakedIota`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`packageId`: Pointer,`packageData`: Pointer,`upgradeTicket`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(`ptr`: Pointer,`client`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5510,6 +7087,30 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transact
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_transactionv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_transactionv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(`kind`: Pointer,`sender`: Pointer,`gasPayment`: RustBuffer.ByValue,`expiration`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_transferobjects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transferobjects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5592,6 +7193,24 @@ fun uniffi_iota_sdk_ffi_fn_method_upgrade_package(`ptr`: Pointer,uniffi_out_err:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_upgradepolicy(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_usersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_usersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5794,13 +7413,449 @@ fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(`ptr`: Pointer,`message
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(`ptr`: Pointer,`jwks`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_address_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_address_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_base64_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_base64_encode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(`input`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_change_epoch_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_change_epoch_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_changed_object_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_changed_object_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_command_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_command_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_ed25519_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_event_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_event_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_error_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_error_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_status_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_hex_decode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_hex_encode(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Short
+fun uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(`input`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Int
+fun uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(`input`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(`input`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(`input`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_input_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_input_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_merge_coins_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_move_call_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_move_location_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_move_package_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_move_package_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_multisig_committee_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_multisig_member_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_multisig_member_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_data_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_object_data_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_object_id_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_object_id_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_in_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_out_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_out_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_object_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_randomness_state_update_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_signed_transaction_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_simple_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_simple_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_string_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_string_to_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_system_package_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_system_package_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_effects_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_events_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_transaction_events_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_expiration_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_transaction_kind_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_transfer_objects_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_type_argument_error_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Short
+fun uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(`input`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Int
+fun uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(`input`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(`input`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(`input`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(`input`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_user_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_user_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_committee_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_committee_member_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_validator_signature_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_version_assignment_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun ffi_iota_sdk_ffi_rustbuffer_alloc(`size`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -5928,16 +7983,670 @@ private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
 }
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs() != 65415.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs() != 37978.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_address_from_bcs() != 8229.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_address_to_bcs() != 61852.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_argument_from_bcs() != 3719.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_argument_to_bcs() != 11813.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs() != 23378.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs() != 26245.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bcs() != 39650.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs() != 31251.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_base64_decode() != 57367.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_base64_encode() != 54791.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs() != 27639.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_to_bcs() != 45714.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_from_bcs() != 28208.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_bcs() != 29002.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs() != 13721.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs() != 3863.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs() != 591.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs() != 11338.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs() != 3386.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_to_bcs() != 32242.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_change_epoch_from_bcs() != 49588.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_change_epoch_to_bcs() != 4565.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_from_bcs() != 16404.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_to_bcs() != 12967.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_changed_object_from_bcs() != 41461.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_changed_object_to_bcs() != 58498.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_bcs() != 62657.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_to_bcs() != 35587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_from_bcs() != 1002.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_to_bcs() != 52481.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_from_bcs() != 23217.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_to_bcs() != 48157.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_bcs() != 40094.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs() != 62034.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs() != 60233.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs() != 19531.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs() != 1042.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs() != 8225.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs() != 5998.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_bcs() != 30279.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_command_from_bcs() != 25814.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_command_to_bcs() != 38816.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_bcs() != 22391.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_bcs() != 13457.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_bcs() != 30528.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs() != 35973.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_digest_from_bcs() != 56231.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_digest_to_bcs() != 10551.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_from_bcs() != 6221.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_to_bcs() != 30464.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_from_bcs() != 39614.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_to_bcs() != 17200.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_from_bcs() != 36284.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_to_bcs() != 6697.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_event_from_bcs() != 11285.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_event_to_bcs() != 35514.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_error_from_bcs() != 54349.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_error_to_bcs() != 1185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_status_from_bcs() != 65175.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_status_to_bcs() != 42821.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs() != 19124.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs() != 3465.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs() != 166.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs() != 35779.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs() != 954.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs() != 38212.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs() != 305.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_to_bcs() != 39838.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs() != 20862.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_bcs() != 63349.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_bcs() != 21010.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs() != 17884.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_hex_decode() != 35424.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_hex_encode() != 34343.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs() != 10273.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs() != 28969.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs() != 7849.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs() != 52773.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs() != 17714.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs() != 38028.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs() != 21810.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs() != 57592.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs() != 10384.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_id_operation_to_bcs() != 62670.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_identifier_from_bcs() != 3668.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_identifier_to_bcs() != 46605.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_input_from_bcs() != 13339.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs() != 51152.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs() != 22836.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs() != 2155.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs() != 29567.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs() != 17479.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_make_move_vector_to_bcs() != 17288.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_merge_coins_from_bcs() != 33652.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_merge_coins_to_bcs() != 40802.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_call_from_bcs() != 3402.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_call_to_bcs() != 40106.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_location_from_bcs() != 62161.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_location_to_bcs() != 25104.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_package_from_bcs() != 922.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_package_to_bcs() != 53617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_struct_from_bcs() != 25715.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_move_struct_to_bcs() != 9518.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs() != 56951.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_bcs() != 57074.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_committee_from_bcs() != 49092.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_committee_to_bcs() != 11846.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_bcs() != 4473.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs() != 55389.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs() != 8657.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs() != 26016.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_bcs() != 49432.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_multisig_member_to_bcs() != 50267.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_data_from_bcs() != 29702.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_data_to_bcs() != 13288.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_from_bcs() != 58875.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_id_from_bcs() != 39824.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_id_to_bcs() != 48535.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_in_from_bcs() != 36098.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_in_to_bcs() != 37270.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_out_from_bcs() != 55820.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_out_to_bcs() != 57777.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_reference_from_bcs() != 2613.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_reference_to_bcs() != 50964.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_object_to_bcs() != 59689.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_owner_from_bcs() != 60479.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_owner_to_bcs() != 40596.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_bcs() != 19771.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_to_bcs() != 36019.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_bcs() != 5683.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_to_bcs() != 26250.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_bcs() != 28762.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs() != 49182.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_publish_from_bcs() != 59778.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_publish_to_bcs() != 44879.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_bcs() != 17429.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_bcs() != 53446.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_bcs() != 26826.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_to_bcs() != 20301.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_from_bcs() != 19555.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_to_bcs() != 65529.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_bcs() != 44046.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_to_bcs() != 12590.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_from_bcs() != 17047.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_to_bcs() != 2418.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_signed_transaction_from_bcs() != 42264.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_signed_transaction_to_bcs() != 44178.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_simple_signature_from_bcs() != 19746.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_simple_signature_to_bcs() != 36033.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_split_coins_from_bcs() != 55454.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs() != 30667.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_string_from_bcs() != 53853.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_string_to_bcs() != 54804.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs() != 24910.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_struct_tag_to_bcs() != 23529.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_system_package_from_bcs() != 60428.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_system_package_to_bcs() != 40961.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_effects_from_bcs() != 36911.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_effects_to_bcs() != 43876.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_bcs() != 64140.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_bcs() != 12420.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_events_from_bcs() != 50477.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_events_to_bcs() != 49708.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_bcs() != 12318.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_bcs() != 34807.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_from_bcs() != 52964.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_kind_from_bcs() != 19749.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_kind_to_bcs() != 38945.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_to_bcs() != 38438.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_v1_from_bcs() != 56096.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transaction_v1_to_bcs() != 62454.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transfer_objects_from_bcs() != 34010.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_transfer_objects_to_bcs() != 59364.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_type_argument_error_from_bcs() != 30578.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_type_argument_error_to_bcs() != 22531.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_type_origin_from_bcs() != 63210.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs() != 62869.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs() != 31167.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs() != 57365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs() != 3653.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs() != 13254.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs() != 335.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs() != 36384.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs() != 63829.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs() != 2947.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs() != 34764.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs() != 59020.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs() != 6308.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_to_bcs() != 46464.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_bcs() != 28910.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_bcs() != 38998.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_upgrade_from_bcs() != 19484.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_bcs() != 58871.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_bcs() != 8867.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_upgrade_to_bcs() != 32303.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_user_signature_from_bcs() != 8567.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_user_signature_to_bcs() != 47630.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_bcs() != 21169.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_bcs() != 44404.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_from_bcs() != 30352.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_bcs() != 27463.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_bcs() != 54694.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_bcs() != 31448.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_bcs() != 28604.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs() != 35325.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs() != 57394.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_validator_signature_to_bcs() != 19559.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_from_bcs() != 23398.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs() != 44956.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs() != 48317.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs() != 50917.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs() != 47140.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs() != 58412.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs() != 13910.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs() != 22664.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs() != 35391.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs() != 39685.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {
@@ -6039,6 +8748,36 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv2_system_packages() != 48705.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge() != 29832.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_computation_charge_burned() != 40461.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_eligible_active_validators() != 6336.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch() != 4081.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_epoch_start_timestamp_ms() != 22703.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_non_refundable_storage_fee() != 5224.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_protocol_version() != 48266.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_charge() != 7690.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_storage_rebate() != 54084.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_changeepochv3_system_packages() != 38309.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest() != 41616.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6081,6 +8820,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message() != 59962.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_signing_message_hex() != 52548.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointsummary_timestamp_ms() != 62474.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6094,6 +8836,69 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_checkpointtransactioninfo_transaction() != 58570.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run() != 10983.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 45165.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 64410.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration() != 32958.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_finish() != 56677.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas() != 522.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_budget() != 27427.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_price() != 56003.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_sponsor() != 25572.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec() != 4858.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins() != 43478.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish() != 25909.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins() != 65187.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor() != 44990.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_stake() != 9961.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_transfer_objects() != 23790.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_unstake() != 40181.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_upgrade() != 59977.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_coin_balance() != 29928.toShort()) {
@@ -6141,6 +8946,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() != 8128.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message() != 59851.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction() != 4951.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32() != 64514.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6168,10 +8979,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() != 37757.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 141.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() != 3041.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() != 16656.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() != 62359.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911.toShort()) {
@@ -6207,7 +9021,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 31173.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 48258.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598.toShort()) {
@@ -6240,10 +9054,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_chain_id() != 45619.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 11584.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() != 9094.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 44363.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() != 36867.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() != 10872.toShort()) {
@@ -6252,19 +9066,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() != 47450.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 12272.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() != 7552.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 40594.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx_kind() != 37663.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 17199.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_field() != 12346.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 6963.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_fields() != 14745.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 47284.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dynamic_object_field() != 28336.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_epoch() != 62805.toShort()) {
@@ -6279,7 +9093,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_events() != 20245.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 41079.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_execute_tx() != 65277.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_gas_coins() != 24826.toShort()) {
@@ -6292,6 +9106,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_iota_names_registrations() != 44467.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() != 8647.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 20156.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336.toShort()) {
@@ -6312,13 +9132,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 51508.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 1970.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14004.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
@@ -6333,7 +9153,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 62867.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_protocol_config() != 58559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() != 39065.toShort()) {
@@ -6376,6 +9196,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 25664.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -6441,6 +9264,21 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_digest() != 31652.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_modules() != 63377.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_base64() != 1835.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_to_json() != 3153.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap() != 41489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6462,7 +9300,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() != 10820.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 12725.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() != 26282.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() != 45468.toShort()) {
@@ -6618,6 +9456,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_object_id() != 6575.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_object_ref() != 13587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_object_type() != 1843.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6699,13 +9540,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_shared() != 6506.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 55474.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_authenticator_data() != 36642.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_challenge() != 28147.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 20272.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_client_data_json() != 26196.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_public_key() != 18555.toShort()) {
@@ -6729,6 +9570,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 39344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 63754.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() != 49868.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6745,6 +9589,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme() != 60810.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message() != 53577.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction() != 34208.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() != 60488.toShort()) {
@@ -6774,10 +9624,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() != 48490.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 798.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() != 60874.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() != 49170.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() != 46673.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() != 49705.toShort()) {
@@ -6813,6 +9666,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() != 20973.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message() != 113.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction() != 1687.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() != 4230.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6840,10 +9699,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() != 27344.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 12227.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() != 48083.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() != 21066.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() != 14205.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() != 64948.toShort()) {
@@ -6879,6 +9741,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() != 19826.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message() != 2940.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() != 35221.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32() != 4776.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -6892,6 +9760,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign() != 52266.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user() != 17485.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key() != 20797.toShort()) {
@@ -6972,13 +9843,22 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_splitcoins_coin() != 17278.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 18393.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 62865.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args() != 48594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies() != 25411.toShort()) {
@@ -6990,7 +9870,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_bcs_serialize() != 39185.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_digest() != 52429.toShort()) {
@@ -7008,25 +9888,25 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_sender() != 38190.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 36608.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest() != 21125.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_dry_run() != 11138.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_signing_digest_hex() != 44484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute() != 27688.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 51030.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_sponsor() != 53109.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 6268.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 32200.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_finish() != 39582.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 43178.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas() != 23371.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_gas_budget() != 48686.toShort()) {
@@ -7041,19 +9921,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_make_move_vec() != 64922.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 15164.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_merge_coins() != 136.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_move_call() != 22281.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 46833.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish() != 22805.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 434.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 6220.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 16395.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
@@ -7062,10 +9942,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_sponsor() != 25655.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_stake() != 41361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_transfer_objects() != 16313.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 34068.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_unstake() != 30530.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_upgrade() != 14493.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_with_client() != 26579.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactioneffects_as_v1() != 48710.toShort()) {
@@ -7081,6 +9970,30 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events() != 36651.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest() != 52708.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_expiration() != 9317.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_gas_payment() != 61676.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_kind() != 56302.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_sender() != 8513.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest() != 51695.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_signing_digest_hex() != 21009.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_to_base64() != 54846.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transferobjects_address() != 37833.toShort()) {
@@ -7144,6 +10057,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket() != 11416.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332.toShort()) {
@@ -7392,6 +10308,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv2_new() != 52433.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv3_new() != 2388.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_checkpointcontents_new() != 27130.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7452,6 +10371,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() != 42838.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() != 55789.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path() != 15255.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() != 53776.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7500,6 +10425,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v2() != 13653.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3() != 21107.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservation_new() != 22119.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7527,7 +10455,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 13557.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 4619.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429.toShort()) {
@@ -7662,6 +10590,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() != 61420.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json() != 13174.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new() != 65225.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7773,6 +10710,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_id_from_hex() != 47640.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_object_ref() != 24215.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option() != 37559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7857,6 +10797,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() != 45448.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() != 33082.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path() != 7431.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() != 20937.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -7900,6 +10846,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() != 63595.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() != 57849.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path() != 7709.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() != 28166.toShort()) {
@@ -7983,25 +10935,118 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_splitcoins_new() != 50321.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_coin() != 13756.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_gas_coin() != 37848.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() != 61625.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_staked_iota() != 30839.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_clock() != 18419.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin() != 38232.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_manager() != 16973.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_coin_metadata() != 56669.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config() != 33902.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_config_setting() != 18224.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_address_key() != 6409.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_config_key() != 3059.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_pause_key() != 36813.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() != 24465.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() != 4196.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state() != 29781.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap() != 59282.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_string() != 47333.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_system_epoch_info_event() != 36154.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_time_lock() != 38402.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iota() != 46742.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving() != 40850.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() != 2523.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() != 54533.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap() != 6365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt() != 44298.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() != 43936.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new() != 4081.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_init() != 29935.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_new_v1() != 58632.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionbuilder_new() != 35216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactioneffects_new_v1() != 63561.toShort()) {
@@ -8026,6 +11071,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64() != 19681.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new() != 17484.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transferobjects_new() != 22470.toShort()) {
@@ -8065,6 +11116,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_upgrade_new() != 61663.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_additive() != 63459.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_compatible() != 63292.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only() != 44371.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64() != 8029.toShort()) {
@@ -8333,6 +11393,29 @@ public object FfiConverterUByte: FfiConverter<UByte, Byte> {
 /**
  * @suppress
  */
+public object FfiConverterByte: FfiConverter<Byte, Byte> {
+    override fun lift(value: Byte): Byte {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Byte {
+        return buf.get()
+    }
+
+    override fun lower(value: Byte): Byte {
+        return value
+    }
+
+    override fun allocationSize(value: Byte) = 1UL
+
+    override fun write(value: Byte, buf: ByteBuffer) {
+        buf.put(value)
+    }
+}
+
+/**
+ * @suppress
+ */
 public object FfiConverterUShort: FfiConverter<UShort, Short> {
     override fun lift(value: Short): UShort {
         return value.toUShort()
@@ -8350,6 +11433,29 @@ public object FfiConverterUShort: FfiConverter<UShort, Short> {
 
     override fun write(value: UShort, buf: ByteBuffer) {
         buf.putShort(value.toShort())
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterShort: FfiConverter<Short, Short> {
+    override fun lift(value: Short): Short {
+        return value
+    }
+
+    override fun read(buf: ByteBuffer): Short {
+        return buf.getShort()
+    }
+
+    override fun lower(value: Short): Short {
+        return value
+    }
+
+    override fun allocationSize(value: Short) = 2UL
+
+    override fun write(value: Short, buf: ByteBuffer) {
+        buf.putShort(value)
     }
 }
 
@@ -8693,43 +11799,30 @@ public object FfiConverterDuration: FfiConverterRustBuffer<java.time.Duration> {
  * is a valid IOTA address:
  * `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
  *
- * ```
- * use iota_types::Address;
- *
- * let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
- * let address = Address::from_hex(hex).unwrap();
- * println!("Address: {}", address);
- * assert_eq!(hex, address.to_string());
- * ```
- *
  * # Deriving an Address
  *
  * Addresses are cryptographically derived from a number of user account
  * authenticators, the simplest of which is an
- * [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+ * `Ed25519PublicKey`.
  *
  * Deriving an address consists of the Blake2b256 hash of the sequence of bytes
  * of its corresponding authenticator, prefixed with a domain-separator (except
  * ed25519, for compatibility reasons). For each other authenticator, this
  * domain-separator is the single byte-value of its
- * [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
- * schema flag || authenticator bytes)`.
+ * `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+ * bytes)`.
  *
  * Each authenticator has a method for deriving its `Address` as well as
  * documentation for the specifics of how the derivation is done. See
- * [`Ed25519PublicKey::derive_address`] for an example.
- *
- * [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+ * `Ed25519PublicKey::derive_address` for an example.
  *
  * ## Relationship to ObjectIds
  *
- * [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+ * `ObjectId`s and `Address`es share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure that,
  * cryptographically, there won't be any overlap, e.g. there can't be a
  * valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
  * account.
- *
- * [`ObjectId`]: iota_types::ObjectId
  *
  * # BCS
  *
@@ -8757,43 +11850,30 @@ public interface AddressInterface {
  * is a valid IOTA address:
  * `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
  *
- * ```
- * use iota_types::Address;
- *
- * let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
- * let address = Address::from_hex(hex).unwrap();
- * println!("Address: {}", address);
- * assert_eq!(hex, address.to_string());
- * ```
- *
  * # Deriving an Address
  *
  * Addresses are cryptographically derived from a number of user account
  * authenticators, the simplest of which is an
- * [`Ed25519PublicKey`](iota_types::Ed25519PublicKey).
+ * `Ed25519PublicKey`.
  *
  * Deriving an address consists of the Blake2b256 hash of the sequence of bytes
  * of its corresponding authenticator, prefixed with a domain-separator (except
  * ed25519, for compatibility reasons). For each other authenticator, this
  * domain-separator is the single byte-value of its
- * [`SignatureScheme`](iota_types::SignatureScheme) flag. E.g. `hash(signature
- * schema flag || authenticator bytes)`.
+ * `SignatureScheme` flag. E.g. `hash(signature schema flag || authenticator
+ * bytes)`.
  *
  * Each authenticator has a method for deriving its `Address` as well as
  * documentation for the specifics of how the derivation is done. See
- * [`Ed25519PublicKey::derive_address`] for an example.
- *
- * [`Ed25519PublicKey::derive_address`]: iota_types::Ed25519PublicKey::derive_address
+ * `Ed25519PublicKey::derive_address` for an example.
  *
  * ## Relationship to ObjectIds
  *
- * [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
+ * `ObjectId`s and `Address`es share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure that,
  * cryptographically, there won't be any overlap, e.g. there can't be a
  * valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
  * account.
- *
- * [`ObjectId`]: iota_types::ObjectId
  *
  * # BCS
  *
@@ -12095,6 +15175,439 @@ public object FfiConverterTypeChangeEpochV2: FfiConverter<ChangeEpochV2, Pointer
 //
 
 
+public interface ChangeEpochV3Interface {
+    
+    /**
+     * The total amount of gas charged for computation during the epoch.
+     */
+    fun `computationCharge`(): kotlin.ULong
+    
+    /**
+     * The total amount of gas burned for computation during the epoch.
+     */
+    fun `computationChargeBurned`(): kotlin.ULong
+    
+    /**
+     * Vector of active validator indices eligible to take part in committee
+     * selection because they support the new, target protocol version.
+     */
+    fun `eligibleActiveValidators`(): List<kotlin.ULong>
+    
+    /**
+     * The next (to become) epoch ID.
+     */
+    fun `epoch`(): kotlin.ULong
+    
+    /**
+     * Unix timestamp when epoch started
+     */
+    fun `epochStartTimestampMs`(): kotlin.ULong
+    
+    /**
+     * The non-refundable storage fee.
+     */
+    fun `nonRefundableStorageFee`(): kotlin.ULong
+    
+    /**
+     * The protocol version in effect in the new epoch.
+     */
+    fun `protocolVersion`(): kotlin.ULong
+    
+    /**
+     * The total amount of gas charged for storage during the epoch.
+     */
+    fun `storageCharge`(): kotlin.ULong
+    
+    /**
+     * The amount of storage rebate refunded to the txn senders.
+     */
+    fun `storageRebate`(): kotlin.ULong
+    
+    /**
+     * System packages (specifically framework and move stdlib) that are
+     * written before the new epoch starts.
+     */
+    fun `systemPackages`(): List<SystemPackage>
+    
+    companion object
+}
+
+open class ChangeEpochV3: Disposable, AutoCloseable, ChangeEpochV3Interface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`epoch`: kotlin.ULong, `protocolVersion`: kotlin.ULong, `storageCharge`: kotlin.ULong, `computationCharge`: kotlin.ULong, `computationChargeBurned`: kotlin.ULong, `storageRebate`: kotlin.ULong, `nonRefundableStorageFee`: kotlin.ULong, `epochStartTimestampMs`: kotlin.ULong, `systemPackages`: List<SystemPackage>, `eligibleActiveValidators`: List<kotlin.ULong>) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_changeepochv3_new(
+        FfiConverterULong.lower(`epoch`),FfiConverterULong.lower(`protocolVersion`),FfiConverterULong.lower(`storageCharge`),FfiConverterULong.lower(`computationCharge`),FfiConverterULong.lower(`computationChargeBurned`),FfiConverterULong.lower(`storageRebate`),FfiConverterULong.lower(`nonRefundableStorageFee`),FfiConverterULong.lower(`epochStartTimestampMs`),FfiConverterSequenceTypeSystemPackage.lower(`systemPackages`),FfiConverterSequenceULong.lower(`eligibleActiveValidators`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_changeepochv3(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_changeepochv3(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * The total amount of gas charged for computation during the epoch.
+     */override fun `computationCharge`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_computation_charge(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The total amount of gas burned for computation during the epoch.
+     */override fun `computationChargeBurned`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_computation_charge_burned(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Vector of active validator indices eligible to take part in committee
+     * selection because they support the new, target protocol version.
+     */override fun `eligibleActiveValidators`(): List<kotlin.ULong> {
+            return FfiConverterSequenceULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_eligible_active_validators(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The next (to become) epoch ID.
+     */override fun `epoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Unix timestamp when epoch started
+     */override fun `epochStartTimestampMs`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_epoch_start_timestamp_ms(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The non-refundable storage fee.
+     */override fun `nonRefundableStorageFee`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_non_refundable_storage_fee(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The protocol version in effect in the new epoch.
+     */override fun `protocolVersion`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_protocol_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The total amount of gas charged for storage during the epoch.
+     */override fun `storageCharge`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_storage_charge(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The amount of storage rebate refunded to the txn senders.
+     */override fun `storageRebate`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_storage_rebate(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * System packages (specifically framework and move stdlib) that are
+     * written before the new epoch starts.
+     */override fun `systemPackages`(): List<SystemPackage> {
+            return FfiConverterSequenceTypeSystemPackage.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_system_packages(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeChangeEpochV3: FfiConverter<ChangeEpochV3, Pointer> {
+
+    override fun lower(value: ChangeEpochV3): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ChangeEpochV3 {
+        return ChangeEpochV3(value)
+    }
+
+    override fun read(buf: ByteBuffer): ChangeEpochV3 {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ChangeEpochV3) = 8UL
+
+    override fun write(value: ChangeEpochV3, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 /**
  * A commitment made by a checkpoint.
  *
@@ -12759,6 +16272,8 @@ public interface CheckpointSummaryInterface {
     
     fun `signingMessage`(): kotlin.ByteArray
     
+    fun `signingMessageHex`(): kotlin.String
+    
     /**
      * Timestamp of the checkpoint - number of milliseconds from the Unix epoch
      * Checkpoint timestamps are monotonic, but not strongly monotonic -
@@ -13050,6 +16565,18 @@ open class CheckpointSummary: Disposable, AutoCloseable, CheckpointSummaryInterf
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingMessageHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_checkpointsummary_signing_message_hex(
         it, _status)
 }
     }
@@ -13915,6 +17442,792 @@ public object FfiConverterTypeCircomG2: FfiConverter<CircomG2, Pointer> {
     override fun allocationSize(value: CircomG2) = 8UL
 
     override fun write(value: CircomG2, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A builder for creating transactions which uses a GraphQL client to
+ * automatically resolve inputs. Use `finish` to finalize the transaction data.
+ */
+public interface ClientTransactionBuilderInterface {
+    
+    /**
+     * Dry run the transaction.
+     */
+    suspend fun `dryRun`(`skipChecks`: kotlin.Boolean = false): DryRunResult
+    
+    /**
+     * Execute the transaction and optionally wait for finalization.
+     */
+    suspend fun `execute`(`keypair`: SimpleKeypair, `waitFor`: WaitForTx? = null): TransactionEffects
+    
+    /**
+     * Execute the transaction and optionally wait for finalization.
+     */
+    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitFor`: WaitForTx? = null): TransactionEffects
+    
+    /**
+     * Set the expiration of the transaction to be a specific epoch.
+     */
+    fun `expiration`(`epoch`: kotlin.ULong): ClientTransactionBuilder
+    
+    /**
+     * Convert this builder into a transaction.
+     */
+    suspend fun `finish`(): Transaction
+    
+    /**
+     * Add gas coins that will be consumed. Optional.
+     */
+    fun `gas`(`objectIds`: List<ObjectId>): ClientTransactionBuilder
+    
+    /**
+     * Set the gas budget for the transaction.
+     */
+    fun `gasBudget`(`budget`: kotlin.ULong): ClientTransactionBuilder
+    
+    /**
+     * Set the gas price for the transaction.
+     */
+    fun `gasPrice`(`price`: kotlin.ULong): ClientTransactionBuilder
+    
+    /**
+     * Set the gas station sponsor.
+     */
+    fun `gasStationSponsor`(`url`: kotlin.String, `duration`: java.time.Duration? = null, `headers`: Map<kotlin.String, List<kotlin.String>>? = null): ClientTransactionBuilder
+    
+    /**
+     * Make a move vector from a list of elements. The elements must all be of
+     * the type indicated by `type_tag`.
+     */
+    fun `makeMoveVec`(`elements`: List<MoveArg>, `typeTag`: TypeTag, `name`: kotlin.String): ClientTransactionBuilder
+    
+    /**
+     * Merge multiple coins into one.
+     *
+     * This method combines the balances of multiple coins of the same coin
+     * type into a single coin. The `primary_coin` will receive the balances
+     * from all `consumed_coins`. After merging, the `consumed_coins` will
+     * be consumed and no longer exist.
+     */
+    fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): ClientTransactionBuilder
+    
+    /**
+     * Call a Move function with the given arguments.
+     */
+    fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
+    
+    /**
+     * Publish a list of modules with the given dependencies. The result
+     * assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
+     * Move type. Note that the upgrade capability needs to be handled
+     * after this call:
+     * - transfer it to the transaction sender or another address
+     * - burn it
+     * - wrap it for access control
+     * - discard the it to make a package immutable
+     *
+     * The arguments required for this command are:
+     * - `modules`: is the modules' bytecode to be published
+     * - `dependencies`: is the list of IDs of the transitive dependencies of
+     * the package
+     */
+    fun `publish`(`packageData`: MovePackageData, `upgradeCapName`: kotlin.String): ClientTransactionBuilder
+    
+    /**
+     * Transfer some coins to a recipient address. If multiple coins are
+     * provided then they will be merged.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS.
+     * If `amount` is provided, that amount is split from the provided coins
+     * and sent.
+     * If `amount` is `None`, the entire coins are transferred.
+     *
+     * All provided coins must have the same coin type. Mixing coins of
+     * different types will result in an error.
+     *
+     * If you intend to transfer all provided coins to another address in a
+     * single transaction, consider using
+     * `TransactionBuilder::transfer_objects()` instead.
+     */
+    fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument? = null): ClientTransactionBuilder
+    
+    /**
+     * Send IOTA to a recipient address.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+     * sent.
+     */
+    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): ClientTransactionBuilder
+    
+    /**
+     * Split a coin into many.
+     */
+    fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
+    
+    /**
+     * Set the sponsor of the transaction.
+     */
+    fun `sponsor`(`sponsor`: Address): ClientTransactionBuilder
+    
+    /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */
+    fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): ClientTransactionBuilder
+    
+    /**
+     * Transfer a list of objects to the given address, without producing any
+     * result.
+     */
+    fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): ClientTransactionBuilder
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */
+    fun `unstake`(`stakedIota`: PtbArgument): ClientTransactionBuilder
+    
+    /**
+     * Upgrade a Move package.
+     *
+     * - `modules`: is the modules' bytecode for the modules to be published
+     * - `dependencies`: is the list of IDs of the transitive dependencies of
+     * the package to be upgraded
+     * - `package`: is the ID of the current package being upgraded
+     * - `ticket`: is the upgrade ticket
+     *
+     * To get the ticket, you have to call the
+     * `0x2::package::authorize_upgrade` function, and pass the package
+     * ID, the upgrade policy, and package digest.
+     */
+    fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String? = null): ClientTransactionBuilder
+    
+    companion object
+}
+
+/**
+ * A builder for creating transactions which uses a GraphQL client to
+ * automatically resolve inputs. Use `finish` to finalize the transaction data.
+ */
+open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactionBuilderInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Dry run the transaction.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `dryRun`(`skipChecks`: kotlin.Boolean) : DryRunResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run(
+                thisPtr,
+                FfiConverterBoolean.lower(`skipChecks`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeDryRunResult.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute the transaction and optionally wait for finalization.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitFor`: WaitForTx?) : TransactionEffects {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
+                thisPtr,
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeTransactionEffects.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute the transaction and optionally wait for finalization.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitFor`: WaitForTx?) : TransactionEffects {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
+                thisPtr,
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeTransactionEffects.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Set the expiration of the transaction to be a specific epoch.
+     */override fun `expiration`(`epoch`: kotlin.ULong): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_expiration(
+        it, FfiConverterULong.lower(`epoch`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Convert this builder into a transaction.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `finish`() : Transaction {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_finish(
+                thisPtr,
+                
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeTransaction.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Add gas coins that will be consumed. Optional.
+     */override fun `gas`(`objectIds`: List<ObjectId>): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas(
+        it, FfiConverterSequenceTypeObjectId.lower(`objectIds`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Set the gas budget for the transaction.
+     */override fun `gasBudget`(`budget`: kotlin.ULong): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_budget(
+        it, FfiConverterULong.lower(`budget`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Set the gas price for the transaction.
+     */override fun `gasPrice`(`price`: kotlin.ULong): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_price(
+        it, FfiConverterULong.lower(`price`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Set the gas station sponsor.
+     */override fun `gasStationSponsor`(`url`: kotlin.String, `duration`: java.time.Duration?, `headers`: Map<kotlin.String, List<kotlin.String>>?): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_station_sponsor(
+        it, FfiConverterString.lower(`url`),FfiConverterOptionalDuration.lower(`duration`),FfiConverterOptionalMapStringSequenceString.lower(`headers`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Make a move vector from a list of elements. The elements must all be of
+     * the type indicated by `type_tag`.
+     */override fun `makeMoveVec`(`elements`: List<MoveArg>, `typeTag`: TypeTag, `name`: kotlin.String): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_make_move_vec(
+        it, FfiConverterSequenceTypeMoveArg.lower(`elements`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterString.lower(`name`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Merge multiple coins into one.
+     *
+     * This method combines the balances of multiple coins of the same coin
+     * type into a single coin. The `primary_coin` will receive the balances
+     * from all `consumed_coins`. After merging, the `consumed_coins` will
+     * be consumed and no longer exist.
+     */override fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(
+        it, FfiConverterTypePTBArgument.lower(`primaryCoin`),FfiConverterSequenceTypePTBArgument.lower(`consumedCoins`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Call a Move function with the given arguments.
+     */override fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument>, `typeArgs`: List<TypeTag>, `names`: List<kotlin.String>): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(
+        it, FfiConverterTypeAddress.lower(`package`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`function`),FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterSequenceString.lower(`names`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Publish a list of modules with the given dependencies. The result
+     * assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
+     * Move type. Note that the upgrade capability needs to be handled
+     * after this call:
+     * - transfer it to the transaction sender or another address
+     * - burn it
+     * - wrap it for access control
+     * - discard the it to make a package immutable
+     *
+     * The arguments required for this command are:
+     * - `modules`: is the modules' bytecode to be published
+     * - `dependencies`: is the list of IDs of the transitive dependencies of
+     * the package
+     */override fun `publish`(`packageData`: MovePackageData, `upgradeCapName`: kotlin.String): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish(
+        it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterString.lower(`upgradeCapName`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Transfer some coins to a recipient address. If multiple coins are
+     * provided then they will be merged.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS.
+     * If `amount` is provided, that amount is split from the provided coins
+     * and sent.
+     * If `amount` is `None`, the entire coins are transferred.
+     *
+     * All provided coins must have the same coin type. Mixing coins of
+     * different types will result in an error.
+     *
+     * If you intend to transfer all provided coins to another address in a
+     * single transaction, consider using
+     * `TransactionBuilder::transfer_objects()` instead.
+     */override fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument?): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(
+        it, FfiConverterSequenceTypePTBArgument.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Send IOTA to a recipient address.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+     * sent.
+     */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterTypePTBArgument.lower(`amount`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Split a coin into many.
+     */override fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String>): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins(
+        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Set the sponsor of the transaction.
+     */override fun `sponsor`(`sponsor`: Address): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_sponsor(
+        it, FfiConverterTypeAddress.lower(`sponsor`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */override fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_stake(
+        it, FfiConverterTypePTBArgument.lower(`stake`),FfiConverterTypeAddress.lower(`validatorAddress`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Transfer a list of objects to the given address, without producing any
+     * result.
+     */override fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_transfer_objects(
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */override fun `unstake`(`stakedIota`: PtbArgument): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_unstake(
+        it, FfiConverterTypePTBArgument.lower(`stakedIota`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Upgrade a Move package.
+     *
+     * - `modules`: is the modules' bytecode for the modules to be published
+     * - `dependencies`: is the list of IDs of the transitive dependencies of
+     * the package to be upgraded
+     * - `package`: is the ID of the current package being upgraded
+     * - `ticket`: is the upgrade ticket
+     *
+     * To get the ticket, you have to call the
+     * `0x2::package::authorize_upgrade` function, and pass the package
+     * ID, the upgrade policy, and package digest.
+     */override fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String?): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_upgrade(
+        it, FfiConverterTypeObjectId.lower(`packageId`),FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterTypePTBArgument.lower(`upgradeTicket`),FfiConverterOptionalString.lower(`name`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeClientTransactionBuilder: FfiConverter<ClientTransactionBuilder, Pointer> {
+
+    override fun lower(value: ClientTransactionBuilder): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ClientTransactionBuilder {
+        return ClientTransactionBuilder(value)
+    }
+
+    override fun read(buf: ByteBuffer): ClientTransactionBuilder {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ClientTransactionBuilder) = 8UL
+
+    override fun write(value: ClientTransactionBuilder, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -15629,6 +19942,16 @@ public interface Ed25519PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode this private key as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string.
      */
@@ -15767,6 +20090,38 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
     )
@@ -15917,6 +20272,35 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Construct the private key from a mnemonic phrase
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Ed25519PrivateKey {
+            return FfiConverterTypeEd25519PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
+        FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an instance from a mnemonic phrase and a derivation path like
+     * `"m/44'/4218'/0'/0'/0'"`
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Ed25519PrivateKey {
+            return FfiConverterTypeEd25519PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(
+        FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
     }
@@ -16102,11 +20486,16 @@ public interface Ed25519PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -16226,7 +20615,7 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -16244,6 +20633,21 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -17473,6 +21877,16 @@ open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTrans
     }
     
 
+         fun `newChangeEpochV3`(`tx`: ChangeEpochV3): EndOfEpochTransactionKind {
+            return FfiConverterTypeEndOfEpochTransactionKind.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v3(
+        FfiConverterTypeChangeEpochV3.lower(`tx`),_status)
+}
+    )
+    }
+    
+
         
     }
     
@@ -18481,7 +22895,7 @@ public interface FaucetClientInterface {
     /**
      * Check the faucet request status.
      *
-     * Possible statuses are defined in: [`BatchSendStatusType`]
+     * Possible statuses are defined in: `BatchSendStatusType`
      */
     suspend fun `requestStatus`(`id`: kotlin.String): BatchSendStatus?
     
@@ -18508,7 +22922,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
     }
     /**
      * Construct a new `FaucetClient` with the given faucet service URL. This
-     * [`FaucetClient`] expects that the service provides two endpoints:
+     * `FaucetClient` expects that the service provides two endpoints:
      * /v1/gas and /v1/status. As such, do not provide the request
      * endpoint, just the top level service endpoint.
      *
@@ -18646,7 +23060,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
     /**
      * Check the faucet request status.
      *
-     * Possible statuses are defined in: [`BatchSendStatusType`]
+     * Possible statuses are defined in: `BatchSendStatusType`
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -19474,14 +23888,14 @@ public interface GraphQlClientInterface {
     suspend fun `chainId`(): kotlin.String
     
     /**
-     * Get the [`CheckpointSummary`] for a given checkpoint digest or
+     * Get the `CheckpointSummary` for a given checkpoint digest or
      * checkpoint id. If none is provided, it will use the last known
      * checkpoint id.
      */
     suspend fun `checkpoint`(`digest`: Digest? = null, `seqNum`: kotlin.ULong? = null): CheckpointSummary?
     
     /**
-     * Get a page of [`CheckpointSummary`] for the provided parameters.
+     * Get a page of `CheckpointSummary` for the provided parameters.
      */
     suspend fun `checkpoints`(`paginationFilter`: PaginationFilter? = null): CheckpointSummaryPage
     
@@ -19499,7 +23913,7 @@ public interface GraphQlClientInterface {
     suspend fun `coins`(`owner`: Address, `paginationFilter`: PaginationFilter? = null, `coinType`: StructTag? = null): CoinPage
     
     /**
-     * Dry run a [`Transaction`] and return the transaction effects and dry run
+     * Dry run a `Transaction` and return the transaction effects and dry run
      * error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -19507,10 +23921,10 @@ public interface GraphQlClientInterface {
      * sender, and calling non-public, non-entry functions, and some other
      * checks. Defaults to false.
      */
-    suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean? = null): DryRunResult
+    suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
-     * Dry run a [`TransactionKind`] and return the transaction effects and dry
+     * Dry run a `TransactionKind` and return the transaction effects and dry
      * run error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -19520,7 +23934,7 @@ public interface GraphQlClientInterface {
      *
      * `tx_meta` is the transaction metadata.
      */
-    suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean? = null): DryRunResult
+    suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean = false): DryRunResult
     
     /**
      * Access a dynamic field on an object using its name. Names are arbitrary
@@ -19529,20 +23943,8 @@ public interface GraphQlClientInterface {
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
-     *
-     * # Example
-     * ```rust,ignore
-     *
-     * let client = iota_graphql_client::Client::new_devnet();
-     * let address = ObjectId::SYSTEM.into();
-     * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-     *
-     * # alternatively, pass in the bcs bytes
-     * let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-     * let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-     * ```
      */
     suspend fun `dynamicField`(`address`: Address, `typeTag`: TypeTag, `name`: Value): DynamicFieldOutput?
     
@@ -19550,7 +23952,7 @@ public interface GraphQlClientInterface {
      * Get a page of dynamic fields for the provided address. Note that this
      * will also fetch dynamic fields on wrapped objects.
      *
-     * This returns [`Page`] of [`DynamicFieldOutput`]s.
+     * This returns a page of `DynamicFieldOutput`s.
      */
     suspend fun `dynamicFields`(`address`: Address, `paginationFilter`: PaginationFilter? = null): DynamicFieldOutputPage
     
@@ -19561,7 +23963,7 @@ public interface GraphQlClientInterface {
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
      */
     suspend fun `dynamicObjectField`(`address`: Address, `typeTag`: TypeTag, `name`: Value): DynamicFieldOutput?
@@ -19595,7 +23997,7 @@ public interface GraphQlClientInterface {
     /**
      * Execute a transaction.
      */
-    suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction): TransactionEffects?
+    suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitFor`: WaitForTx? = null): TransactionEffects
     
     /**
      * Get the list of gas coins for the specified address.
@@ -19616,6 +24018,20 @@ public interface GraphQlClientInterface {
      * Find all registration NFTs for the given address.
      */
     suspend fun `iotaNamesRegistrations`(`address`: Address, `paginationFilter`: PaginationFilter): NameRegistrationPage
+    
+    /**
+     * Returns whether the transaction for the given digest has been included
+     * in a checkpoint (finalized).
+     */
+    suspend fun `isTxFinalized`(`digest`: Digest): kotlin.Boolean
+    
+    /**
+     * Returns whether the transaction for the given digest has been indexed
+     * on the node. This means that it can be queries by its digest and its
+     * effects will be usable for subsequent transactions. To check for
+     * full finalization, use `is_tx_finalized`.
+     */
+    suspend fun `isTxIndexedOnNode`(`digest`: Digest): kotlin.Boolean
     
     /**
      * Return the sequence number of the latest checkpoint that has been
@@ -19658,7 +24074,7 @@ public interface GraphQlClientInterface {
     suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
-     * Return an object based on the provided [`Address`].
+     * Return an object based on the provided `Address`.
      *
      * If the object does not exist (e.g., due to pruning), this will return
      * `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -19667,28 +24083,16 @@ public interface GraphQlClientInterface {
     suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Object?
     
     /**
-     * Return the object's bcs content [`Vec<u8>`] based on the provided
-     * [`Address`].
+     * Return the object's bcs content `Vec<u8>` based on the provided
+     * `Address`.
      */
     suspend fun `objectBcs`(`objectId`: ObjectId): kotlin.ByteArray?
     
     /**
      * Return a page of objects based on the provided parameters.
      *
-     * Use this function together with the [`ObjectFilter::owner`] to get the
+     * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
-     *
-     * # Example
-     *
-     * ```rust,ignore
-     * let filter = ObjectFilter {
-     * type_tag: None,
-     * owner: Some(Address::from_str("test").unwrap().into()),
-     * object_ids: None,
-     * };
-     *
-     * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-     * ```
      */
     suspend fun `objects`(`filter`: ObjectFilter? = null, `paginationFilter`: PaginationFilter? = null): ObjectPage
     
@@ -19735,7 +24139,7 @@ public interface GraphQlClientInterface {
     /**
      * Get the protocol configuration.
      */
-    suspend fun `protocolConfig`(`version`: kotlin.ULong? = null): ProtocolConfigs?
+    suspend fun `protocolConfig`(`version`: kotlin.ULong? = null): ProtocolConfigs
     
     /**
      * Get the reference gas price for the provided epoch or the last known one
@@ -19816,6 +24220,13 @@ public interface GraphQlClientInterface {
      * Get a page of transactions' effects based on the provided filters.
      */
     suspend fun `transactionsEffects`(`filter`: TransactionsFilter? = null, `paginationFilter`: PaginationFilter? = null): TransactionEffectsPage
+    
+    /**
+     * Wait for the indexing or finalization of a transaction
+     * by its digest. An optional timeout can be provided, which, if
+     * exceeded, will return an error (default 60s).
+     */
+    suspend fun `waitForTx`(`digest`: Digest, `waitFor`: WaitForTx, `timeout`: java.time.Duration? = null)
     
     companion object
 }
@@ -19993,7 +24404,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Get the [`CheckpointSummary`] for a given checkpoint digest or
+     * Get the `CheckpointSummary` for a given checkpoint digest or
      * checkpoint id. If none is provided, it will use the last known
      * checkpoint id.
      */
@@ -20019,7 +24430,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Get a page of [`CheckpointSummary`] for the provided parameters.
+     * Get a page of `CheckpointSummary` for the provided parameters.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20094,7 +24505,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Dry run a [`Transaction`] and return the transaction effects and dry run
+     * Dry run a `Transaction` and return the transaction effects and dry run
      * error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -20104,12 +24515,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean?) : DryRunResult {
+    override suspend fun `dryRunTx`(`tx`: Transaction, `skipChecks`: kotlin.Boolean) : DryRunResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx(
                 thisPtr,
-                FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalBoolean.lower(`skipChecks`),
+                FfiConverterTypeTransaction.lower(`tx`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20124,7 +24535,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Dry run a [`TransactionKind`] and return the transaction effects and dry
+     * Dry run a `TransactionKind` and return the transaction effects and dry
      * run error (if any).
      *
      * `skipChecks` optional flag disables the usual verification checks that
@@ -20136,12 +24547,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean?) : DryRunResult {
+    override suspend fun `dryRunTxKind`(`txKind`: TransactionKind, `txMeta`: TransactionMetadata, `skipChecks`: kotlin.Boolean) : DryRunResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_dry_run_tx_kind(
                 thisPtr,
-                FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterOptionalBoolean.lower(`skipChecks`),
+                FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -20162,20 +24573,8 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
-     *
-     * # Example
-     * ```rust,ignore
-     *
-     * let client = iota_graphql_client::Client::new_devnet();
-     * let address = ObjectId::SYSTEM.into();
-     * let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-     *
-     * # alternatively, pass in the bcs bytes
-     * let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-     * let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-     * ```
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20202,7 +24601,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * Get a page of dynamic fields for the provided address. Note that this
      * will also fetch dynamic fields on wrapped objects.
      *
-     * This returns [`Page`] of [`DynamicFieldOutput`]s.
+     * This returns a page of `DynamicFieldOutput`s.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20232,7 +24631,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      *
      * The `name` argument is a json serialized type.
      *
-     * This returns [`DynamicFieldOutput`] which contains the name, the value
+     * This returns `DynamicFieldOutput` which contains the name, the value
      * as json, and object.
      */
     @Throws(SdkFfiException::class)
@@ -20363,19 +24762,19 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction) : TransactionEffects? {
+    override suspend fun `executeTx`(`signatures`: List<UserSignature>, `tx`: Transaction, `waitFor`: WaitForTx?) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_execute_tx(
                 thisPtr,
-                FfiConverterSequenceTypeUserSignature.lower(`signatures`),FfiConverterTypeTransaction.lower(`tx`),
+                FfiConverterSequenceTypeUserSignature.lower(`signatures`),FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -20472,6 +24871,58 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeNameRegistrationPage.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Returns whether the transaction for the given digest has been included
+     * in a checkpoint (finalized).
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `isTxFinalized`(`digest`: Digest) : kotlin.Boolean {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_finalized(
+                thisPtr,
+                FfiConverterTypeDigest.lower(`digest`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
+        // lift function
+        { FfiConverterBoolean.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Returns whether the transaction for the given digest has been indexed
+     * on the node. This means that it can be queries by its digest and its
+     * effects will be usable for subsequent transactions. To check for
+     * full finalization, use `is_tx_finalized`.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `isTxIndexedOnNode`(`digest`: Digest) : kotlin.Boolean {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_is_tx_indexed_on_node(
+                thisPtr,
+                FfiConverterTypeDigest.lower(`digest`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
+        // lift function
+        { FfiConverterBoolean.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -20633,7 +25084,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Return an object based on the provided [`Address`].
+     * Return an object based on the provided `Address`.
      *
      * If the object does not exist (e.g., due to pruning), this will return
      * `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -20661,8 +25112,8 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Return the object's bcs content [`Vec<u8>`] based on the provided
-     * [`Address`].
+     * Return the object's bcs content `Vec<u8>` based on the provided
+     * `Address`.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20688,20 +25139,8 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Return a page of objects based on the provided parameters.
      *
-     * Use this function together with the [`ObjectFilter::owner`] to get the
+     * Use this function together with the `ObjectFilter::owner` to get the
      * objects owned by an address.
-     *
-     * # Example
-     *
-     * ```rust,ignore
-     * let filter = ObjectFilter {
-     * type_tag: None,
-     * owner: Some(Address::from_str("test").unwrap().into()),
-     * object_ids: None,
-     * };
-     *
-     * let owned_objects = client.objects(None, None, Some(filter), None, None).await;
-     * ```
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -20845,7 +25284,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `protocolConfig`(`version`: kotlin.ULong?) : ProtocolConfigs? {
+    override suspend fun `protocolConfig`(`version`: kotlin.ULong?) : ProtocolConfigs {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_protocol_config(
@@ -20857,7 +25296,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
-        { FfiConverterOptionalTypeProtocolConfigs.lift(it) },
+        { FfiConverterTypeProtocolConfigs.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -21205,6 +25644,33 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeTransactionEffectsPage.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Wait for the indexing or finalization of a transaction
+     * by its digest. An optional timeout can be provided, which, if
+     * exceeded, will return an error (default 60s).
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `waitForTx`(`digest`: Digest, `waitFor`: WaitForTx, `timeout`: java.time.Duration?) {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
+                thisPtr,
+                FfiConverterTypeDigest.lower(`digest`),FfiConverterTypeWaitForTx.lower(`waitFor`),FfiConverterOptionalDuration.lower(`timeout`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
+        // lift function
+        { Unit },
+        
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -24077,6 +28543,354 @@ public object FfiConverterTypeMovePackage: FfiConverter<MovePackage, Pointer> {
 
 
 /**
+ * Type corresponding to the output of `iota move build
+ * --dump-bytecode-as-base64`
+ */
+public interface MovePackageDataInterface {
+    
+    /**
+     * Returns the package dependencies.
+     */
+    fun `dependencies`(): List<ObjectId>
+    
+    /**
+     * Returns the package digest.
+     */
+    fun `digest`(): Digest
+    
+    /**
+     * Returns the package modules.
+     */
+    fun `modules`(): List<kotlin.ByteArray>
+    
+    fun `toBase64`(): kotlin.String
+    
+    fun `toJson`(): kotlin.String
+    
+    companion object
+}
+
+/**
+ * Type corresponding to the output of `iota move build
+ * --dump-bytecode-as-base64`
+ */
+open class MovePackageData: Disposable, AutoCloseable, MovePackageDataInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_new(
+        FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_movepackagedata(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_movepackagedata(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Returns the package dependencies.
+     */override fun `dependencies`(): List<ObjectId> {
+            return FfiConverterSequenceTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackagedata_dependencies(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the package digest.
+     */override fun `digest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackagedata_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the package modules.
+     */override fun `modules`(): List<kotlin.ByteArray> {
+            return FfiConverterSequenceByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackagedata_modules(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `toBase64`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_base64(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `toJson`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+        
+    @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): MovePackageData {
+            return FfiConverterTypeMovePackageData.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_base64(
+        FfiConverterString.lower(`base64`),_status)
+}
+    )
+    }
+    
+
+        
+    @Throws(SdkFfiException::class) fun `fromJson`(`json`: kotlin.String): MovePackageData {
+            return FfiConverterTypeMovePackageData.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movepackagedata_from_json(
+        FfiConverterString.lower(`json`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMovePackageData: FfiConverter<MovePackageData, Pointer> {
+
+    override fun lower(value: MovePackageData): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): MovePackageData {
+        return MovePackageData(value)
+    }
+
+    override fun read(buf: ByteBuffer): MovePackageData {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: MovePackageData) = 8UL
+
+    override fun write(value: MovePackageData, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
  * Aggregated signature from members of a multisig committee.
  *
  * # BCS
@@ -24100,7 +28914,7 @@ public object FfiConverterTypeMovePackage: FfiConverter<MovePackage, Pointer> {
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 public interface MultisigAggregatedSignatureInterface {
@@ -24145,7 +28959,7 @@ public interface MultisigAggregatedSignatureInterface {
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 open class MultisigAggregatedSignature: Disposable, AutoCloseable, MultisigAggregatedSignatureInterface
@@ -24762,13 +29576,10 @@ public interface MultisigCommitteeInterface {
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
      *
-     * When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
      * refers to the same input used when deriving the address using the
-     * [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
      * full 32-byte `address_seed` value).
-     *
-     * [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-     * [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
      */
     fun `deriveAddress`(): Address
     
@@ -24937,13 +29748,10 @@ open class MultisigCommittee: Disposable, AutoCloseable, MultisigCommitteeInterf
      * `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
      * || ... || flag_n || pk_n || weight_n)`.
      *
-     * When flag_i is ZkLogin, the pk_i for the [`ZkLoginPublicIdentifier`]
+     * When flag_i is ZkLogin, the pk_i for the `ZkLoginPublicIdentifier`
      * refers to the same input used when deriving the address using the
-     * [`ZkLoginPublicIdentifier::derive_address_padded`] method (using the
+     * `ZkLoginPublicIdentifier::derive_address_padded` method (using the
      * full 32-byte `address_seed` value).
-     *
-     * [`ZkLoginPublicIdentifier`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier
-     * [`ZkLoginPublicIdentifier::derive_address_padded`]: crate::types::crypto::zklogin::ZkLoginPublicIdentifier::derive_address_padded
      */override fun `deriveAddress`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
@@ -27340,6 +32148,11 @@ public interface ObjectInterface {
     fun `objectId`(): ObjectId
     
     /**
+     * Return this object's reference
+     */
+    fun `objectRef`(): ObjectReference
+    
+    /**
      * Return this object's type
      */
     fun `objectType`(): ObjectType
@@ -27570,6 +32383,21 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_object_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Return this object's reference
+     */override fun `objectRef`(): ObjectReference {
+            return FfiConverterTypeObjectReference.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_object_ref(
         it, _status)
 }
     }
@@ -28153,7 +32981,7 @@ public object FfiConverterTypeObjectData: FfiConverter<ObjectData, Pointer> {
  *
  * ## Relationship to Address
  *
- * [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+ * `Address`es and `ObjectId`s share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure,
  * cryptographically, that there won't be any overlap, e.g. there can't be a
  * valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -28191,7 +33019,7 @@ public interface ObjectIdInterface {
  *
  * ## Relationship to Address
  *
- * [`Address`]es and [`ObjectId`]s share the same 32-byte addressable space but
+ * `Address`es and `ObjectId`s share the same 32-byte addressable space but
  * are derived leveraging different domain-separator values to ensure,
  * cryptographically, that there won't be any overlap, e.g. there can't be a
  * valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
@@ -29550,6 +34378,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+         fun `objectRef`(`id`: ObjectReference): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_object_ref(
+        FfiConverterTypeObjectReference.lower(`id`),_status)
+}
+    )
+    }
+    
+
          fun `option`(`value`: MoveArg?): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
@@ -29917,7 +34755,7 @@ public object FfiConverterTypePTBArgument: FfiConverter<PtbArgument, Pointer> {
  * client-data-json = string ; valid json
  * ```
  *
- * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+ * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
  * the required json-schema for the `client-data-json` rule. In addition, IOTA
  * currently requires that the `CollectedClientData.type` field is required to
  * be `webauthn.get`.
@@ -29933,8 +34771,8 @@ public interface PasskeyAuthenticatorInterface {
     /**
      * Opaque authenticator data for this passkey signature.
      *
-     * See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-     * more information on this field.
+     * See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+     * for more information on this field.
      */
     fun `authenticatorData`(): kotlin.ByteArray
     
@@ -29949,7 +34787,7 @@ public interface PasskeyAuthenticatorInterface {
     /**
      * Structured, unparsed, JSON for this passkey signature.
      *
-     * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+     * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
      * for more information on this field.
      */
     fun `clientDataJson`(): kotlin.String
@@ -29985,7 +34823,7 @@ public interface PasskeyAuthenticatorInterface {
  * client-data-json = string ; valid json
  * ```
  *
- * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+ * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
  * the required json-schema for the `client-data-json` rule. In addition, IOTA
  * currently requires that the `CollectedClientData.type` field is required to
  * be `webauthn.get`.
@@ -30082,8 +34920,8 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     /**
      * Opaque authenticator data for this passkey signature.
      *
-     * See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-     * more information on this field.
+     * See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
+     * for more information on this field.
      */override fun `authenticatorData`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
@@ -30118,7 +34956,7 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     /**
      * Structured, unparsed, JSON for this passkey signature.
      *
-     * See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
+     * See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
      * for more information on this field.
      */override fun `clientDataJson`(): kotlin.String {
             return FfiConverterString.lift(
@@ -30847,6 +35685,8 @@ public interface PersonalMessageInterface {
     
     fun `signingDigest`(): kotlin.ByteArray
     
+    fun `signingDigestHex`(): kotlin.String
+    
     companion object
 }
 
@@ -30956,6 +35796,18 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `signingDigestHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(
         it, _status)
 }
     }
@@ -31697,6 +36549,16 @@ public interface Secp256k1PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode this private key as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string.
      */
@@ -31835,6 +36697,38 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
     )
@@ -31985,6 +36879,35 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Construct the private key from a mnemonic phrase
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256k1PrivateKey {
+            return FfiConverterTypeSecp256k1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
+        FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an instance from a mnemonic phrase and a derivation path like
+     * `"m/54'/4218'/0'/0/0"`
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256k1PrivateKey {
+            return FfiConverterTypeSecp256k1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
+        FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
     }
@@ -32171,11 +37094,16 @@ public interface Secp256k1PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -32296,7 +37224,7 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -32314,6 +37242,21 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended.
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -33403,6 +38346,16 @@ public interface Secp256r1PrivateKeyInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode this private key as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string.
      */
@@ -33553,6 +38506,38 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
     )
@@ -33712,6 +38697,35 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Construct the private key from a mnemonic phrase
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256r1PrivateKey {
+            return FfiConverterTypeSecp256r1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
+        FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create an instance from a mnemonic phrase and a derivation path like
+     * `"m/74'/4218'/0'/0/0"`
+     */
+    @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256r1PrivateKey {
+            return FfiConverterTypeSecp256r1PrivateKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
+        FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
     }
@@ -33901,11 +38915,16 @@ public interface Secp256r1PublicKeyInterface {
     fun `deriveAddress`(): Address
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */
     fun `scheme`(): SignatureScheme
     
     fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended
+     */
+    fun `toFlaggedBytes`(): kotlin.ByteArray
     
     companion object
 }
@@ -34026,7 +39045,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     
     /**
-     * Return the flag for this signature scheme
+     * Returns the signature scheme for this public key.
      */override fun `scheme`(): SignatureScheme {
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
@@ -34044,6 +39063,21 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the bytes with signature scheme flag prepended
+     */override fun `toFlaggedBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -35130,6 +40164,16 @@ public interface SimpleKeypairInterface {
     fun `scheme`(): SignatureScheme
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
+    /**
      * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string. Note that the pubkey is not encoded.
      */
@@ -35151,6 +40195,8 @@ public interface SimpleKeypairInterface {
     fun `toPem`(): kotlin.String
     
     fun `trySign`(`message`: kotlin.ByteArray): SimpleSignature
+    
+    fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature
     
     fun `verifyingKey`(): SimpleVerifyingKey
     
@@ -35265,6 +40311,38 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
 
     
     /**
+     * Sign a personal message and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signPersonalMessage`(`message`: PersonalMessage): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
+        it, FfiConverterTypePersonalMessage.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Sign a transaction and return a UserSignature.
+     */
+    @Throws(SdkFfiException::class)override fun `signTransaction`(`transaction`: Transaction): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
+        it, FfiConverterTypeTransaction.lower(`transaction`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
      * "iotaprivkey" to a string. Note that the pubkey is not encoded.
      */
@@ -35333,6 +40411,19 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
+        it, FfiConverterByteArray.lower(`message`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(SdkFfiException::class)override fun `trySignUser`(`message`: kotlin.ByteArray): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -37002,6 +42093,9 @@ public object FfiConverterTypeSplitCoins: FfiConverter<SplitCoins, Pointer> {
  */
 public interface StructTagInterface {
     
+    /**
+     * Returns the address part of a `StructTag`
+     */
     fun `address`(): Address
     
     /**
@@ -37013,6 +42107,21 @@ public interface StructTagInterface {
      * Checks if this is a Coin type
      */
     fun `coinTypeOpt`(): TypeTag?
+    
+    /**
+     * Returns the module part of a `StructTag`
+     */
+    fun `module`(): Identifier
+    
+    /**
+     * Returns the name part of a `StructTag`
+     */
+    fun `name`(): Identifier
+    
+    /**
+     * Returns the type params part of a `StructTag`
+     */
+    fun `typeArgs`(): List<TypeTag>
     
     companion object
 }
@@ -37120,7 +42229,10 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         }
     }
 
-    override fun `address`(): Address {
+    
+    /**
+     * Returns the address part of a `StructTag`
+     */override fun `address`(): Address {
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -37163,6 +42275,51 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     
 
     
+    /**
+     * Returns the module part of a `StructTag`
+     */override fun `module`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_module(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the name part of a `StructTag`
+     */override fun `name`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the type params part of a `StructTag`
+     */override fun `typeArgs`(): List<TypeTag> {
+            return FfiConverterSequenceTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
     override fun toString(): String {
         return FfiConverterString.lift(
     callWithPointer {
@@ -37174,34 +42331,348 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     )
     }
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is StructTag) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(
+        it, FfiConverterTypeStructTag.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
-         fun `coin`(`typeTag`: TypeTag): StructTag {
+         fun `newAsciiString`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_coin(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newBalance`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
     }
     
 
-         fun `gasCoin`(): StructTag {
+         fun `newClock`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_gas_coin(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(
         _status)
 }
     )
     }
     
 
-         fun `stakedIota`(): StructTag {
+         fun `newCoin`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_staked_iota(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newCoinManager`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_manager(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newCoinMetadata`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_metadata(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newConfig`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(
         _status)
+}
+    )
+    }
+    
+
+         fun `newConfigSetting`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config_setting(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newDenyListAddressKey`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newDenyListConfigKey`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newDenyListGlobalPauseKey`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newDisplayCreated`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
+        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `newGasCoin`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newId`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newIotaCoinType`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newIotaSystemAdminCap`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newIotaSystemState`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newIotaTreasuryCap`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newName`(`address`: Address): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
+        FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `newStakedIota`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newString`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newSystemEpochInfoEvent`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newTimeLock`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_time_lock(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newTimelockedStakedIota`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newTransferReceiving`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newTreasuryCap`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newUid`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newUpgradeCap`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newUpgradeReceipt`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newUpgradeTicket`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newVersionUpdated`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
     }
@@ -37637,7 +43108,7 @@ public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer
 
 
 /**
- * A transaction
+ * Transaction
  *
  * # BCS
  *
@@ -37651,7 +43122,7 @@ public object FfiConverterTypeSystemPackage: FfiConverter<SystemPackage, Pointer
  */
 public interface TransactionInterface {
     
-    fun `bcsSerialize`(): kotlin.ByteArray
+    fun `asV1`(): TransactionV1
     
     fun `digest`(): Digest
     
@@ -37663,13 +43134,26 @@ public interface TransactionInterface {
     
     fun `sender`(): Address
     
+    /**
+     * Get the signing digest.
+     */
     fun `signingDigest`(): kotlin.ByteArray
+    
+    /**
+     * Get the signing digest as a hex string.
+     */
+    fun `signingDigestHex`(): kotlin.String
+    
+    /**
+     * Serialize the transaction as a base64-encoded string.
+     */
+    fun `toBase64`(): kotlin.String
     
     companion object
 }
 
 /**
- * A transaction
+ * Transaction
  *
  * # BCS
  *
@@ -37699,13 +43183,6 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new(
-        FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
-}
-    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -37770,12 +43247,11 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         }
     }
 
-    
-    @Throws(SdkFfiException::class)override fun `bcsSerialize`(): kotlin.ByteArray {
-            return FfiConverterByteArray.lift(
+    override fun `asV1`(): TransactionV1 {
+            return FfiConverterTypeTransactionV1.lift(
     callWithPointer {
-    uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_bcs_serialize(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
         it, _status)
 }
     }
@@ -37843,7 +43319,10 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     }
     
 
-    override fun `signingDigest`(): kotlin.ByteArray {
+    
+    /**
+     * Get the signing digest.
+     */override fun `signingDigest`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -37856,10 +43335,65 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     
 
     
+    /**
+     * Get the signing digest as a hex string.
+     */override fun `signingDigestHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
+    /**
+     * Serialize the transaction as a base64-encoded string.
+     */override fun `toBase64`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
+        it, _status)
+}
+    }
+    )
+    }
     
-    companion object
+
+    
+
+    
+    companion object {
+        
+    /**
+     * Deserialize a transaction from a base64-encoded string.
+     */
+    @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): Transaction {
+            return FfiConverterTypeTransaction.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(
+        FfiConverterString.lower(`base64`),_status)
+}
+    )
+    }
+    
+
+         fun `newV1`(`transactionV1`: TransactionV1): Transaction {
+            return FfiConverterTypeTransaction.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1(
+        FfiConverterTypeTransactionV1.lower(`transactionV1`),_status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -37991,25 +43525,20 @@ public object FfiConverterTypeTransaction: FfiConverter<Transaction, Pointer> {
 
 
 /**
- * A builder for creating transactions. Use [`finish`](Self::finish) to
- * finalize the transaction data.
+ * A builder for creating transactions. Use `finish` to finalize the
+ * transaction data.
  */
 public interface TransactionBuilderInterface {
     
     /**
-     * Dry run the transaction.
+     * Execute the transaction using the gas station and return the JSON
+     * transaction effects. This will fail unless data is set with the
+     * `gas_station_sponsor` function.
+     *
+     * NOTE: These effects are not necessarily compatible with
+     * `TransactionEffects`
      */
-    suspend fun `dryRun`(`skipChecks`: kotlin.Boolean = false): DryRunResult
-    
-    /**
-     * Execute the transaction and optionally wait for finalization.
-     */
-    suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
-    
-    /**
-     * Execute the transaction and optionally wait for finalization.
-     */
-    suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean = false): TransactionEffects?
+    suspend fun `executeWithGasStation`(`keypair`: SimpleKeypair): Value
     
     /**
      * Set the expiration of the transaction to be a specific epoch.
@@ -38019,12 +43548,12 @@ public interface TransactionBuilderInterface {
     /**
      * Convert this builder into a transaction.
      */
-    suspend fun `finish`(): Transaction
+    fun `finish`(): Transaction
     
     /**
-     * Add a gas object to use to pay for the transaction.
+     * Add gas coins that will be consumed. Optional.
      */
-    fun `gas`(`objectId`: ObjectId): TransactionBuilder
+    fun `gas`(`objectRefs`: List<ObjectReference>): TransactionBuilder
     
     /**
      * Set the gas budget for the transaction.
@@ -38048,9 +43577,14 @@ public interface TransactionBuilderInterface {
     fun `makeMoveVec`(`elements`: List<MoveArg>, `typeTag`: TypeTag, `name`: kotlin.String): TransactionBuilder
     
     /**
-     * Merge a list of coins into a single coin, without producing any result.
+     * Merge multiple coins into one.
+     *
+     * This method combines the balances of multiple coins of the same coin
+     * type into a single coin. The `primary_coin` will receive the balances
+     * from all `consumed_coins`. After merging, the `consumed_coins` will
+     * be consumed and no longer exist.
      */
-    fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder
+    fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): TransactionBuilder
     
     /**
      * Call a Move function with the given arguments.
@@ -38072,18 +43606,35 @@ public interface TransactionBuilderInterface {
      * - `dependencies`: is the list of IDs of the transitive dependencies of
      * the package
      */
-    fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder
+    fun `publish`(`packageData`: MovePackageData, `upgradeCapName`: kotlin.String): TransactionBuilder
     
     /**
      * Transfer some coins to a recipient address. If multiple coins are
      * provided then they will be merged.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS.
+     * If `amount` is provided, that amount is split from the provided coins
+     * and sent.
+     * If `amount` is `None`, the entire coins are transferred.
+     *
+     * All provided coins must have the same coin type. Mixing coins of
+     * different types will result in an error.
+     *
+     * If you intend to transfer all provided coins to another address in a
+     * single transaction, consider using
+     * `TransactionBuilder::transfer_objects()` instead.
      */
     fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
     
     /**
      * Send IOTA to a recipient address.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+     * sent.
      */
-    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument? = null): TransactionBuilder
+    fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder
     
     /**
      * Split a coin by the provided amounts.
@@ -38096,10 +43647,23 @@ public interface TransactionBuilderInterface {
     fun `sponsor`(`sponsor`: Address): TransactionBuilder
     
     /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */
+    fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder
+    
+    /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */
     fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */
+    fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder
     
     /**
      * Upgrade a Move package.
@@ -38114,14 +43678,16 @@ public interface TransactionBuilderInterface {
      * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
      */
-    fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
+    fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String? = null): TransactionBuilder
+    
+    fun `withClient`(`client`: GraphQlClient): ClientTransactionBuilder
     
     companion object
 }
 
 /**
- * A builder for creating transactions. Use [`finish`](Self::finish) to
- * finalize the transaction data.
+ * A builder for creating transactions. Use `finish` to finalize the
+ * transaction data.
  */
 open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInterface
 {
@@ -38141,6 +43707,16 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    /**
+     * Create a new transaction builder and initialize its elements to default.
+     */
+    constructor(`sender`: Address) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
+        FfiConverterTypeAddress.lower(`sender`),_status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -38207,71 +43783,28 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Dry run the transaction.
+     * Execute the transaction using the gas station and return the JSON
+     * transaction effects. This will fail unless data is set with the
+     * `gas_station_sponsor` function.
+     *
+     * NOTE: These effects are not necessarily compatible with
+     * `TransactionEffects`
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `dryRun`(`skipChecks`: kotlin.Boolean) : DryRunResult {
+    override suspend fun `executeWithGasStation`(`keypair`: SimpleKeypair) : Value {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_dry_run(
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
                 thisPtr,
-                FfiConverterBoolean.lower(`skipChecks`),
+                FfiConverterTypeSimpleKeypair.lower(`keypair`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
         { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
-        { FfiConverterTypeDryRunResult.lift(it) },
-        // Error FFI converter
-        SdkFfiException.ErrorHandler,
-    )
-    }
-
-    
-    /**
-     * Execute the transaction and optionally wait for finalization.
-     */
-    @Throws(SdkFfiException::class)
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `execute`(`keypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute(
-                thisPtr,
-                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterBoolean.lower(`waitForFinalization`),
-            )
-        },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
-        // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
-        // Error FFI converter
-        SdkFfiException.ErrorHandler,
-    )
-    }
-
-    
-    /**
-     * Execute the transaction and optionally wait for finalization.
-     */
-    @Throws(SdkFfiException::class)
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeWithSponsor`(`keypair`: SimpleKeypair, `sponsorKeypair`: SimpleKeypair, `waitForFinalization`: kotlin.Boolean) : TransactionEffects? {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_sponsor(
-                thisPtr,
-                FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterBoolean.lower(`waitForFinalization`),
-            )
-        },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
-        // lift function
-        { FfiConverterOptionalTypeTransactionEffects.lift(it) },
+        { FfiConverterTypeValue.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -38296,35 +43829,27 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Convert this builder into a transaction.
      */
-    @Throws(SdkFfiException::class)
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `finish`() : Transaction {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
-                thisPtr,
-                
-            )
-        },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
-        // lift function
-        { FfiConverterTypeTransaction.lift(it) },
-        // Error FFI converter
-        SdkFfiException.ErrorHandler,
+    @Throws(SdkFfiException::class)override fun `finish`(): Transaction {
+            return FfiConverterTypeTransaction.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
+        it, _status)
+}
+    }
     )
     }
+    
 
     
     /**
-     * Add a gas object to use to pay for the transaction.
-     */override fun `gas`(`objectId`: ObjectId): TransactionBuilder {
+     * Add gas coins that will be consumed. Optional.
+     */override fun `gas`(`objectRefs`: List<ObjectReference>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
-        it, FfiConverterTypeObjectId.lower(`objectId`),_status)
+        it, FfiConverterSequenceTypeObjectReference.lower(`objectRefs`),_status)
 }
     }
     )
@@ -38394,13 +43919,18 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
-     * Merge a list of coins into a single coin, without producing any result.
-     */override fun `mergeCoins`(`coin`: PtbArgument, `coinsToMerge`: List<PtbArgument>): TransactionBuilder {
+     * Merge multiple coins into one.
+     *
+     * This method combines the balances of multiple coins of the same coin
+     * type into a single coin. The `primary_coin` will receive the balances
+     * from all `consumed_coins`. After merging, the `consumed_coins` will
+     * be consumed and no longer exist.
+     */override fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
-        it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`coinsToMerge`),_status)
+        it, FfiConverterTypePTBArgument.lower(`primaryCoin`),FfiConverterSequenceTypePTBArgument.lower(`consumedCoins`),_status)
 }
     }
     )
@@ -38437,12 +43967,12 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * - `modules`: is the modules' bytecode to be published
      * - `dependencies`: is the list of IDs of the transitive dependencies of
      * the package
-     */override fun `publish`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `upgradeCapName`: kotlin.String): TransactionBuilder {
+     */override fun `publish`(`packageData`: MovePackageData, `upgradeCapName`: kotlin.String): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
-        it, FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterString.lower(`upgradeCapName`),_status)
+        it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterString.lower(`upgradeCapName`),_status)
 }
     }
     )
@@ -38453,6 +43983,19 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     /**
      * Transfer some coins to a recipient address. If multiple coins are
      * provided then they will be merged.
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS.
+     * If `amount` is provided, that amount is split from the provided coins
+     * and sent.
+     * If `amount` is `None`, the entire coins are transferred.
+     *
+     * All provided coins must have the same coin type. Mixing coins of
+     * different types will result in an error.
+     *
+     * If you intend to transfer all provided coins to another address in a
+     * single transaction, consider using
+     * `TransactionBuilder::transfer_objects()` instead.
      */override fun `sendCoins`(`coins`: List<PtbArgument>, `recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
@@ -38468,12 +44011,16 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
     /**
      * Send IOTA to a recipient address.
-     */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument?): TransactionBuilder {
+     *
+     * The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
+     * equals 1_000_000_000 NANOS. That amount is split from the gas coin and
+     * sent.
+     */override fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
-        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
+        it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterTypePTBArgument.lower(`amount`),_status)
 }
     }
     )
@@ -38512,6 +44059,24 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     
     /**
+     * Add stake to a validator's staking pool.
+     *
+     * This is a high-level function which will split the provided stake amount
+     * from the gas coin and then stake using the resulting coin.
+     */override fun `stake`(`stake`: PtbArgument, `validatorAddress`: Address): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+        it, FfiConverterTypePTBArgument.lower(`stake`),FfiConverterTypeAddress.lower(`validatorAddress`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Transfer a list of objects to the given address, without producing any
      * result.
      */override fun `transferObjects`(`recipient`: Address, `objects`: List<PtbArgument>): TransactionBuilder {
@@ -38520,6 +44085,21 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Withdraw stake from a validator's staking pool.
+     */override fun `unstake`(`stakedIota`: PtbArgument): TransactionBuilder {
+            return FfiConverterTypeTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+        it, FfiConverterTypePTBArgument.lower(`stakedIota`),_status)
 }
     }
     )
@@ -38539,12 +44119,24 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
      * To get the ticket, you have to call the
      * `0x2::package::authorize_upgrade` function, and pass the package
      * ID, the upgrade policy, and package digest.
-     */override fun `upgrade`(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: PtbArgument, `name`: kotlin.String?): TransactionBuilder {
+     */override fun `upgrade`(`packageId`: ObjectId, `packageData`: MovePackageData, `upgradeTicket`: PtbArgument, `name`: kotlin.String?): TransactionBuilder {
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
-        it, FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypePTBArgument.lower(`ticket`),FfiConverterOptionalString.lower(`name`),_status)
+        it, FfiConverterTypeObjectId.lower(`packageId`),FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterTypePTBArgument.lower(`upgradeTicket`),FfiConverterOptionalString.lower(`name`),_status)
+}
+    }
+    )
+    }
+    
+
+    override fun `withClient`(`client`: GraphQlClient): ClientTransactionBuilder {
+            return FfiConverterTypeClientTransactionBuilder.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
+        it, FfiConverterTypeGraphQLClient.lower(`client`),_status)
 }
     }
     )
@@ -38554,27 +44146,8 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     
 
     
-    companion object {
-        
-    /**
-     * Create a new transaction builder and initialize its elements to default.
-     */
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-     suspend fun `init`(`sender`: Address, `client`: GraphQlClient) : TransactionBuilder {
-        return uniffiRustCallAsync(
-        UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_init(FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGraphQLClient.lower(`client`),),
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
-        // lift function
-        { FfiConverterTypeTransactionBuilder.lift(it) },
-        // Error FFI converter
-        UniffiNullRustCallStatusErrorHandler,
-    )
-    }
-
-        
-    }
+    
+    companion object
     
 }
 
@@ -39499,6 +45072,406 @@ public object FfiConverterTypeTransactionKind: FfiConverter<TransactionKind, Poi
     override fun allocationSize(value: TransactionKind) = 8UL
 
     override fun write(value: TransactionKind, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * A transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction = %x00 transaction-v1
+ *
+ * transaction-v1 = transaction-kind address gas-payment transaction-expiration
+ * ```
+ */
+public interface TransactionV1Interface {
+    
+    fun `digest`(): Digest
+    
+    fun `expiration`(): TransactionExpiration
+    
+    fun `gasPayment`(): GasPayment
+    
+    fun `kind`(): TransactionKind
+    
+    fun `sender`(): Address
+    
+    /**
+     * Get the signing digest.
+     */
+    fun `signingDigest`(): kotlin.ByteArray
+    
+    /**
+     * Get the signing digest as a hex string.
+     */
+    fun `signingDigestHex`(): kotlin.String
+    
+    /**
+     * Serialize the transaction as a base64-encoded string.
+     */
+    fun `toBase64`(): kotlin.String
+    
+    companion object
+}
+
+/**
+ * A transaction
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * transaction = %x00 transaction-v1
+ *
+ * transaction-v1 = transaction-kind address gas-payment transaction-expiration
+ * ```
+ */
+open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
+        FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
+        }
+    }
+
+    override fun `digest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `expiration`(): TransactionExpiration {
+            return FfiConverterTypeTransactionExpiration.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `gasPayment`(): GasPayment {
+            return FfiConverterTypeGasPayment.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `kind`(): TransactionKind {
+            return FfiConverterTypeTransactionKind.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `sender`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Get the signing digest.
+     */override fun `signingDigest`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Get the signing digest as a hex string.
+     */override fun `signingDigestHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Serialize the transaction as a base64-encoded string.
+     */override fun `toBase64`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+        
+    /**
+     * Deserialize a transaction from a base64-encoded string.
+     */
+    @Throws(SdkFfiException::class) fun `fromBase64`(`bytes`: kotlin.String): TransactionV1 {
+            return FfiConverterTypeTransactionV1.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
+        FfiConverterString.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeTransactionV1: FfiConverter<TransactionV1, Pointer> {
+
+    override fun lower(value: TransactionV1): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): TransactionV1 {
+        return TransactionV1(value)
+    }
+
+    override fun read(buf: ByteBuffer): TransactionV1 {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: TransactionV1) = 8UL
+
+    override fun write(value: TransactionV1, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -40853,6 +46826,324 @@ public object FfiConverterTypeUpgrade: FfiConverter<Upgrade, Pointer> {
 
 
 /**
+ * Representation of upgrade policy constants in `iota::package`.
+ */
+public interface UpgradePolicyInterface {
+    
+    /**
+     * Returns the internal representation.
+     */
+    fun `asU8`(): kotlin.UByte
+    
+    companion object
+}
+
+/**
+ * Representation of upgrade policy constants in `iota::package`.
+ */
+open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Returns the internal representation.
+     */override fun `asU8`(): kotlin.UByte {
+            return FfiConverterUByte.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is UpgradePolicy) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+        it, FfiConverterTypeUpgradePolicy.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    companion object {
+        
+    /**
+     * Allows adding new functionalities (e.g., new public functions or
+     * structs) but restricts changes to existing functionalities.
+     */ fun `additive`(): UpgradePolicy {
+            return FfiConverterTypeUpgradePolicy.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * The least restrictive policy. Permits changes to all function
+     * implementations, the removal of ability constraints on generic type
+     * parameters in function signatures, and modifications to private,
+     * public(friend), and entry function signatures. However, public function
+     * signatures and existing types cannot be changed.
+     */ fun `compatible`(): UpgradePolicy {
+            return FfiConverterTypeUpgradePolicy.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Limits modifications to the package’s dependencies only.
+     */ fun `depOnly`(): UpgradePolicy {
+            return FfiConverterTypeUpgradePolicy.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer> {
+
+    override fun lower(value: UpgradePolicy): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): UpgradePolicy {
+        return UpgradePolicy(value)
+    }
+
+    override fun read(buf: ByteBuffer): UpgradePolicy {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: UpgradePolicy) = 8UL
+
+    override fun write(value: UpgradePolicy, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
  * A signature from a user
  *
  * A `UserSignature` is most commonly used to authorize the execution and
@@ -41688,7 +47979,7 @@ public object FfiConverterTypeUserSignatureVerifier: FfiConverter<UserSignatureV
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 public interface ValidatorAggregatedSignatureInterface {
@@ -41718,7 +48009,7 @@ public interface ValidatorAggregatedSignatureInterface {
  * ; roaring bitmaps
  * ```
  *
- * See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
+ * See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
  * serialized format of RoaringBitmaps.
  */
 open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAggregatedSignatureInterface
@@ -44371,7 +50662,7 @@ public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> 
  *
  * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
  * account authenticators, and contains the information required to derive the
- * onchain account [`Address`] for a Zklogin authenticator.
+ * onchain account `Address` for a Zklogin authenticator.
  *
  * ## Note
  *
@@ -44417,8 +50708,6 @@ public object FfiConverterTypeZkLoginProof: FfiConverter<ZkLoginProof, Pointer> 
  * ; with any leading zero bytes stripped
  * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
  * ```
- *
- * [`Address`]: crate::Address
  */
 public interface ZkLoginPublicIdentifierInterface {
     
@@ -44466,7 +50755,7 @@ public interface ZkLoginPublicIdentifierInterface {
  *
  * A `ZkLoginPublicIdentifier` is the equivalent of a public key for other
  * account authenticators, and contains the information required to derive the
- * onchain account [`Address`] for a Zklogin authenticator.
+ * onchain account `Address` for a Zklogin authenticator.
  *
  * ## Note
  *
@@ -44512,8 +50801,6 @@ public interface ZkLoginPublicIdentifierInterface {
  * ; with any leading zero bytes stripped
  * address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
  * ```
- *
- * [`Address`]: crate::Address
  */
 open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIdentifierInterface
 {
@@ -45989,6 +52276,20 @@ public object FfiConverterTypeDynamicFieldValue: FfiConverterRustBuffer<DynamicF
 
 
 
+/**
+ * Data which, when included in a [`CheckpointSummary`], signals the end of an
+ * `Epoch`.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
+ * u64                                 ; next_epoch_protocol_version
+ * (vector checkpoint-commitment)      ; epoch_commitments
+ * ```
+ */
 data class EndOfEpochData (
     var `nextEpochCommittee`: List<ValidatorCommitteeMember>, 
     var `nextEpochProtocolVersion`: kotlin.ULong, 
@@ -49810,6 +56111,13 @@ sealed class CommandArgumentError {
     object SharedObjectOperationNotAllowed : CommandArgumentError()
     
     
+    /**
+     * Invalid argument arity. Expected a single argument but found a result
+     * that expanded to multiple arguments.
+     */
+    object InvalidArgumentArity : CommandArgumentError()
+    
+    
 
     
     companion object
@@ -49840,6 +56148,7 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
             10 -> CommandArgumentError.InvalidObjectByValue
             11 -> CommandArgumentError.InvalidObjectByMutRef
             12 -> CommandArgumentError.SharedObjectOperationNotAllowed
+            13 -> CommandArgumentError.InvalidArgumentArity
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
         }
     }
@@ -49921,6 +56230,12 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
                 4UL
             )
         }
+        is CommandArgumentError.InvalidArgumentArity -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
     }
 
     override fun write(value: CommandArgumentError, buf: ByteBuffer) {
@@ -49975,6 +56290,10 @@ public object FfiConverterTypeCommandArgumentError : FfiConverterRustBuffer<Comm
             }
             is CommandArgumentError.SharedObjectOperationNotAllowed -> {
                 buf.putInt(12)
+                Unit
+            }
+            is CommandArgumentError.InvalidArgumentArity -> {
+                buf.putInt(13)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
@@ -51134,7 +57453,7 @@ public object FfiConverterTypeExecutionError : FfiConverterRustBuffer<ExecutionE
  * execution-status = success / failure
  * success = %x00
  * failure = %x01 execution-error (option u64)
- * ```xx
+ * ```
  */
 sealed class ExecutionStatus: Disposable  {
     
@@ -52482,6 +58801,47 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
 
 
 
+/**
+ * Determines what to wait for after executing a transaction.
+ */
+
+enum class WaitForTx {
+    
+    /**
+     * Indicates that the transaction effects will be usable in subsequent
+     * transactions, and that the transaction itself is indexed on the node.
+     */
+    INDEXED,
+    /**
+     * Indicates that the transaction has been included in a checkpoint, and
+     * all queries may include it.
+     */
+    FINALIZED;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeWaitForTx: FfiConverterRustBuffer<WaitForTx> {
+    override fun read(buf: ByteBuffer) = try {
+        WaitForTx.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: WaitForTx) = 4UL
+
+    override fun write(value: WaitForTx, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
 
 /**
  * @suppress
@@ -52572,38 +58932,6 @@ public object FfiConverterOptionalULong: FfiConverterRustBuffer<kotlin.ULong?> {
         } else {
             buf.put(1)
             FfiConverterULong.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterOptionalBoolean: FfiConverterRustBuffer<kotlin.Boolean?> {
-    override fun read(buf: ByteBuffer): kotlin.Boolean? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterBoolean.read(buf)
-    }
-
-    override fun allocationSize(value: kotlin.Boolean?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterBoolean.allocationSize(value)
-        }
-    }
-
-    override fun write(value: kotlin.Boolean?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterBoolean.write(value, buf)
         }
     }
 }
@@ -54364,6 +60692,38 @@ public object FfiConverterOptionalTypeTransactionBlockKindInput: FfiConverterRus
         } else {
             buf.put(1)
             FfiConverterTypeTransactionBlockKindInput.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeWaitForTx: FfiConverterRustBuffer<WaitForTx?> {
+    override fun read(buf: ByteBuffer): WaitForTx? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeWaitForTx.read(buf)
+    }
+
+    override fun allocationSize(value: WaitForTx?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeWaitForTx.allocationSize(value)
+        }
+    }
+
+    override fun write(value: WaitForTx?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeWaitForTx.write(value, buf)
         }
     }
 }
@@ -56801,6 +63161,136 @@ public typealias FfiConverterTypeValue = FfiConverterString
 
 
 
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `activeJwkFromBcs`(`bcs`: kotlin.ByteArray): ActiveJwk {
+            return FfiConverterTypeActiveJwk.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `activeJwkToBcs`(`data`: ActiveJwk): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(
+        FfiConverterTypeActiveJwk.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `addressFromBcs`(`bcs`: kotlin.ByteArray): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_address_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `addressToBcs`(`data`: Address): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_address_to_bcs(
+        FfiConverterTypeAddress.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `argumentFromBcs`(`bcs`: kotlin.ByteArray): Argument {
+            return FfiConverterTypeArgument.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `argumentToBcs`(`data`: Argument): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(
+        FfiConverterTypeArgument.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `authenticatorStateExpireFromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateExpire {
+            return FfiConverterTypeAuthenticatorStateExpire.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `authenticatorStateExpireToBcs`(`data`: AuthenticatorStateExpire): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(
+        FfiConverterTypeAuthenticatorStateExpire.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1FromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateUpdateV1 {
+            return FfiConverterTypeAuthenticatorStateUpdateV1.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1ToBcs`(`data`: AuthenticatorStateUpdateV1): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(
+        FfiConverterTypeAuthenticatorStateUpdateV1.lower(`data`),_status)
+}
+    )
+    }
+    
+
     @Throws(SdkFfiException::class) fun `base64Decode`(`input`: kotlin.String): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
@@ -56820,6 +63310,838 @@ public typealias FfiConverterTypeValue = FfiConverterString
     }
     
 
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `bls12381PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Bls12381PublicKey {
+            return FfiConverterTypeBls12381PublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `bls12381PublicKeyToBcs`(`data`: Bls12381PublicKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs(
+        FfiConverterTypeBls12381PublicKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `bls12381SignatureFromBcs`(`bcs`: kotlin.ByteArray): Bls12381Signature {
+            return FfiConverterTypeBls12381Signature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `bls12381SignatureToBcs`(`data`: Bls12381Signature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(
+        FfiConverterTypeBls12381Signature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `bn254FieldElementFromBcs`(`bcs`: kotlin.ByteArray): Bn254FieldElement {
+            return FfiConverterTypeBn254FieldElement.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `bn254FieldElementToBcs`(`data`: Bn254FieldElement): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(
+        FfiConverterTypeBn254FieldElement.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a bool from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `boolFromBcs`(`input`: kotlin.ByteArray): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this bool to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `boolToBcs`(`input`: kotlin.Boolean): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(
+        FfiConverterBoolean.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `cancelledTransactionFromBcs`(`bcs`: kotlin.ByteArray): CancelledTransaction {
+            return FfiConverterTypeCancelledTransaction.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `cancelledTransactionToBcs`(`data`: CancelledTransaction): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(
+        FfiConverterTypeCancelledTransaction.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `changeEpochFromBcs`(`bcs`: kotlin.ByteArray): ChangeEpoch {
+            return FfiConverterTypeChangeEpoch.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `changeEpochToBcs`(`data`: ChangeEpoch): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_to_bcs(
+        FfiConverterTypeChangeEpoch.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `changeEpochV2FromBcs`(`bcs`: kotlin.ByteArray): ChangeEpochV2 {
+            return FfiConverterTypeChangeEpochV2.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `changeEpochV2ToBcs`(`data`: ChangeEpochV2): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_bcs(
+        FfiConverterTypeChangeEpochV2.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `changedObjectFromBcs`(`bcs`: kotlin.ByteArray): ChangedObject {
+            return FfiConverterTypeChangedObject.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_changed_object_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `changedObjectToBcs`(`data`: ChangedObject): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_changed_object_to_bcs(
+        FfiConverterTypeChangedObject.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointCommitmentFromBcs`(`bcs`: kotlin.ByteArray): CheckpointCommitment {
+            return FfiConverterTypeCheckpointCommitment.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointCommitmentToBcs`(`data`: CheckpointCommitment): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_bcs(
+        FfiConverterTypeCheckpointCommitment.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointContentsFromBcs`(`bcs`: kotlin.ByteArray): CheckpointContents {
+            return FfiConverterTypeCheckpointContents.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointContentsToBcs`(`data`: CheckpointContents): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_bcs(
+        FfiConverterTypeCheckpointContents.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointSummaryFromBcs`(`bcs`: kotlin.ByteArray): CheckpointSummary {
+            return FfiConverterTypeCheckpointSummary.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointSummaryToBcs`(`data`: CheckpointSummary): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_bcs(
+        FfiConverterTypeCheckpointSummary.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointTransactionInfoFromBcs`(`bcs`: kotlin.ByteArray): CheckpointTransactionInfo {
+            return FfiConverterTypeCheckpointTransactionInfo.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `checkpointTransactionInfoToBcs`(`data`: CheckpointTransactionInfo): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(
+        FfiConverterTypeCheckpointTransactionInfo.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `circomG1FromBcs`(`bcs`: kotlin.ByteArray): CircomG1 {
+            return FfiConverterTypeCircomG1.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `circomG1ToBcs`(`data`: CircomG1): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(
+        FfiConverterTypeCircomG1.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `circomG2FromBcs`(`bcs`: kotlin.ByteArray): CircomG2 {
+            return FfiConverterTypeCircomG2.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `circomG2ToBcs`(`data`: CircomG2): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(
+        FfiConverterTypeCircomG2.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `commandArgumentErrorFromBcs`(`bcs`: kotlin.ByteArray): CommandArgumentError {
+            return FfiConverterTypeCommandArgumentError.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `commandArgumentErrorToBcs`(`data`: CommandArgumentError): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_bcs(
+        FfiConverterTypeCommandArgumentError.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `commandFromBcs`(`bcs`: kotlin.ByteArray): Command {
+            return FfiConverterTypeCommand.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `commandToBcs`(`data`: Command): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_to_bcs(
+        FfiConverterTypeCommand.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `consensusCommitPrologueV1FromBcs`(`bcs`: kotlin.ByteArray): ConsensusCommitPrologueV1 {
+            return FfiConverterTypeConsensusCommitPrologueV1.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `consensusCommitPrologueV1ToBcs`(`data`: ConsensusCommitPrologueV1): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_bcs(
+        FfiConverterTypeConsensusCommitPrologueV1.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `consensusDeterminedVersionAssignmentsFromBcs`(`bcs`: kotlin.ByteArray): ConsensusDeterminedVersionAssignments {
+            return FfiConverterTypeConsensusDeterminedVersionAssignments.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `consensusDeterminedVersionAssignmentsToBcs`(`data`: ConsensusDeterminedVersionAssignments): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_to_bcs(
+        FfiConverterTypeConsensusDeterminedVersionAssignments.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `digestFromBcs`(`bcs`: kotlin.ByteArray): Digest {
+            return FfiConverterTypeDigest.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `digestToBcs`(`data`: Digest): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(
+        FfiConverterTypeDigest.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `ed25519PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Ed25519PublicKey {
+            return FfiConverterTypeEd25519PublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `ed25519PublicKeyToBcs`(`data`: Ed25519PublicKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_bcs(
+        FfiConverterTypeEd25519PublicKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `ed25519SignatureFromBcs`(`bcs`: kotlin.ByteArray): Ed25519Signature {
+            return FfiConverterTypeEd25519Signature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `ed25519SignatureToBcs`(`data`: Ed25519Signature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_bcs(
+        FfiConverterTypeEd25519Signature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `endOfEpochDataFromBcs`(`bcs`: kotlin.ByteArray): EndOfEpochData {
+            return FfiConverterTypeEndOfEpochData.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `endOfEpochDataToBcs`(`data`: EndOfEpochData): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_bcs(
+        FfiConverterTypeEndOfEpochData.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `eventFromBcs`(`bcs`: kotlin.ByteArray): Event {
+            return FfiConverterTypeEvent.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_event_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `eventToBcs`(`data`: Event): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_event_to_bcs(
+        FfiConverterTypeEvent.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionErrorFromBcs`(`bcs`: kotlin.ByteArray): ExecutionError {
+            return FfiConverterTypeExecutionError.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_error_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionErrorToBcs`(`data`: ExecutionError): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_error_to_bcs(
+        FfiConverterTypeExecutionError.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionStatusFromBcs`(`bcs`: kotlin.ByteArray): ExecutionStatus {
+            return FfiConverterTypeExecutionStatus.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionStatusToBcs`(`data`: ExecutionStatus): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(
+        FfiConverterTypeExecutionStatus.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionTimeObservationFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservation {
+            return FfiConverterTypeExecutionTimeObservation.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionTimeObservationKeyFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservationKey {
+            return FfiConverterTypeExecutionTimeObservationKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionTimeObservationKeyToBcs`(`data`: ExecutionTimeObservationKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(
+        FfiConverterTypeExecutionTimeObservationKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionTimeObservationToBcs`(`data`: ExecutionTimeObservation): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(
+        FfiConverterTypeExecutionTimeObservation.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionTimeObservationsFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservations {
+            return FfiConverterTypeExecutionTimeObservations.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `executionTimeObservationsToBcs`(`data`: ExecutionTimeObservations): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(
+        FfiConverterTypeExecutionTimeObservations.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `gasCostSummaryFromBcs`(`bcs`: kotlin.ByteArray): GasCostSummary {
+            return FfiConverterTypeGasCostSummary.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `gasCostSummaryToBcs`(`data`: GasCostSummary): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_bcs(
+        FfiConverterTypeGasCostSummary.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `gasPaymentFromBcs`(`bcs`: kotlin.ByteArray): GasPayment {
+            return FfiConverterTypeGasPayment.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `gasPaymentToBcs`(`data`: GasPayment): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(
+        FfiConverterTypeGasPayment.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `genesisObjectFromBcs`(`bcs`: kotlin.ByteArray): GenesisObject {
+            return FfiConverterTypeGenesisObject.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `genesisObjectToBcs`(`data`: GenesisObject): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(
+        FfiConverterTypeGenesisObject.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `genesisTransactionFromBcs`(`bcs`: kotlin.ByteArray): GenesisTransaction {
+            return FfiConverterTypeGenesisTransaction.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `genesisTransactionToBcs`(`data`: GenesisTransaction): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(
+        FfiConverterTypeGenesisTransaction.lower(`data`),_status)
+}
+    )
+    }
+    
+
     @Throws(SdkFfiException::class) fun `hexDecode`(`input`: kotlin.String): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
@@ -56834,6 +64156,1878 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_hex_encode(
         FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i16 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i16FromBcs`(`input`: kotlin.ByteArray): kotlin.Short {
+            return FfiConverterShort.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i16 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i16ToBcs`(`input`: kotlin.Short): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(
+        FfiConverterShort.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i32 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i32FromBcs`(`input`: kotlin.ByteArray): kotlin.Int {
+            return FfiConverterInt.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i32 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i32ToBcs`(`input`: kotlin.Int): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(
+        FfiConverterInt.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i64 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i64FromBcs`(`input`: kotlin.ByteArray): kotlin.Long {
+            return FfiConverterLong.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i64 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i64ToBcs`(`input`: kotlin.Long): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(
+        FfiConverterLong.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a i8 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i8FromBcs`(`input`: kotlin.ByteArray): kotlin.Byte {
+            return FfiConverterByte.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this i8 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `i8ToBcs`(`input`: kotlin.Byte): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(
+        FfiConverterByte.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `idOperationFromBcs`(`bcs`: kotlin.ByteArray): IdOperation {
+            return FfiConverterTypeIdOperation.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `idOperationToBcs`(`data`: IdOperation): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs(
+        FfiConverterTypeIdOperation.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `identifierFromBcs`(`bcs`: kotlin.ByteArray): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `identifierToBcs`(`data`: Identifier): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs(
+        FfiConverterTypeIdentifier.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `inputFromBcs`(`bcs`: kotlin.ByteArray): Input {
+            return FfiConverterTypeInput.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `inputToBcs`(`data`: Input): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
+        FfiConverterTypeInput.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `jwkFromBcs`(`bcs`: kotlin.ByteArray): Jwk {
+            return FfiConverterTypeJwk.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `jwkIdFromBcs`(`bcs`: kotlin.ByteArray): JwkId {
+            return FfiConverterTypeJwkId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `jwkIdToBcs`(`data`: JwkId): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
+        FfiConverterTypeJwkId.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `jwkToBcs`(`data`: Jwk): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
+        FfiConverterTypeJwk.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `makeMoveVectorFromBcs`(`bcs`: kotlin.ByteArray): MakeMoveVector {
+            return FfiConverterTypeMakeMoveVector.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `makeMoveVectorToBcs`(`data`: MakeMoveVector): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs(
+        FfiConverterTypeMakeMoveVector.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `mergeCoinsFromBcs`(`bcs`: kotlin.ByteArray): MergeCoins {
+            return FfiConverterTypeMergeCoins.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_merge_coins_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `mergeCoinsToBcs`(`data`: MergeCoins): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs(
+        FfiConverterTypeMergeCoins.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `moveCallFromBcs`(`bcs`: kotlin.ByteArray): MoveCall {
+            return FfiConverterTypeMoveCall.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_call_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `moveCallToBcs`(`data`: MoveCall): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs(
+        FfiConverterTypeMoveCall.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `moveLocationFromBcs`(`bcs`: kotlin.ByteArray): MoveLocation {
+            return FfiConverterTypeMoveLocation.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_location_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `moveLocationToBcs`(`data`: MoveLocation): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs(
+        FfiConverterTypeMoveLocation.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `movePackageFromBcs`(`bcs`: kotlin.ByteArray): MovePackage {
+            return FfiConverterTypeMovePackage.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_package_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `movePackageToBcs`(`data`: MovePackage): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_package_to_bcs(
+        FfiConverterTypeMovePackage.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `moveStructFromBcs`(`bcs`: kotlin.ByteArray): MoveStruct {
+            return FfiConverterTypeMoveStruct.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `moveStructToBcs`(`data`: MoveStruct): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(
+        FfiConverterTypeMoveStruct.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigAggregatedSignatureFromBcs`(`bcs`: kotlin.ByteArray): MultisigAggregatedSignature {
+            return FfiConverterTypeMultisigAggregatedSignature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigAggregatedSignatureToBcs`(`data`: MultisigAggregatedSignature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_bcs(
+        FfiConverterTypeMultisigAggregatedSignature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigCommitteeFromBcs`(`bcs`: kotlin.ByteArray): MultisigCommittee {
+            return FfiConverterTypeMultisigCommittee.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_committee_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigCommitteeToBcs`(`data`: MultisigCommittee): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_bcs(
+        FfiConverterTypeMultisigCommittee.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigMemberFromBcs`(`bcs`: kotlin.ByteArray): MultisigMember {
+            return FfiConverterTypeMultisigMember.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyFromBcs`(`bcs`: kotlin.ByteArray): MultisigMemberPublicKey {
+            return FfiConverterTypeMultisigMemberPublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyToBcs`(`data`: MultisigMemberPublicKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(
+        FfiConverterTypeMultisigMemberPublicKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigMemberSignatureFromBcs`(`bcs`: kotlin.ByteArray): MultisigMemberSignature {
+            return FfiConverterTypeMultisigMemberSignature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigMemberSignatureToBcs`(`data`: MultisigMemberSignature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_to_bcs(
+        FfiConverterTypeMultisigMemberSignature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `multisigMemberToBcs`(`data`: MultisigMember): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_to_bcs(
+        FfiConverterTypeMultisigMember.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectDataFromBcs`(`bcs`: kotlin.ByteArray): ObjectData {
+            return FfiConverterTypeObjectData.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_data_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectDataToBcs`(`data`: ObjectData): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_data_to_bcs(
+        FfiConverterTypeObjectData.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectFromBcs`(`bcs`: kotlin.ByteArray): Object {
+            return FfiConverterTypeObject.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectIdFromBcs`(`bcs`: kotlin.ByteArray): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_id_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectIdToBcs`(`data`: ObjectId): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_id_to_bcs(
+        FfiConverterTypeObjectId.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectInFromBcs`(`bcs`: kotlin.ByteArray): ObjectIn {
+            return FfiConverterTypeObjectIn.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_in_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectInToBcs`(`data`: ObjectIn): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(
+        FfiConverterTypeObjectIn.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectOutFromBcs`(`bcs`: kotlin.ByteArray): ObjectOut {
+            return FfiConverterTypeObjectOut.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_out_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectOutToBcs`(`data`: ObjectOut): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_out_to_bcs(
+        FfiConverterTypeObjectOut.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectReferenceFromBcs`(`bcs`: kotlin.ByteArray): ObjectReference {
+            return FfiConverterTypeObjectReference.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectReferenceToBcs`(`data`: ObjectReference): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(
+        FfiConverterTypeObjectReference.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `objectToBcs`(`data`: Object): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_to_bcs(
+        FfiConverterTypeObject.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `ownerFromBcs`(`bcs`: kotlin.ByteArray): Owner {
+            return FfiConverterTypeOwner.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `ownerToBcs`(`data`: Owner): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(
+        FfiConverterTypeOwner.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `packageUpgradeErrorFromBcs`(`bcs`: kotlin.ByteArray): PackageUpgradeError {
+            return FfiConverterTypePackageUpgradeError.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `packageUpgradeErrorToBcs`(`data`: PackageUpgradeError): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_bcs(
+        FfiConverterTypePackageUpgradeError.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `passkeyAuthenticatorFromBcs`(`bcs`: kotlin.ByteArray): PasskeyAuthenticator {
+            return FfiConverterTypePasskeyAuthenticator.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `passkeyAuthenticatorToBcs`(`data`: PasskeyAuthenticator): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_bcs(
+        FfiConverterTypePasskeyAuthenticator.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `programmableTransactionFromBcs`(`bcs`: kotlin.ByteArray): ProgrammableTransaction {
+            return FfiConverterTypeProgrammableTransaction.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `programmableTransactionToBcs`(`data`: ProgrammableTransaction): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(
+        FfiConverterTypeProgrammableTransaction.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `publishFromBcs`(`bcs`: kotlin.ByteArray): Publish {
+            return FfiConverterTypePublish.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `publishToBcs`(`data`: Publish): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(
+        FfiConverterTypePublish.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `randomnessStateUpdateFromBcs`(`bcs`: kotlin.ByteArray): RandomnessStateUpdate {
+            return FfiConverterTypeRandomnessStateUpdate.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `randomnessStateUpdateToBcs`(`data`: RandomnessStateUpdate): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_bcs(
+        FfiConverterTypeRandomnessStateUpdate.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256k1PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Secp256k1PublicKey {
+            return FfiConverterTypeSecp256k1PublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256k1PublicKeyToBcs`(`data`: Secp256k1PublicKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_bcs(
+        FfiConverterTypeSecp256k1PublicKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256k1SignatureFromBcs`(`bcs`: kotlin.ByteArray): Secp256k1Signature {
+            return FfiConverterTypeSecp256k1Signature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256k1SignatureToBcs`(`data`: Secp256k1Signature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_bcs(
+        FfiConverterTypeSecp256k1Signature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256r1PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Secp256r1PublicKey {
+            return FfiConverterTypeSecp256r1PublicKey.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256r1PublicKeyToBcs`(`data`: Secp256r1PublicKey): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_bcs(
+        FfiConverterTypeSecp256r1PublicKey.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256r1SignatureFromBcs`(`bcs`: kotlin.ByteArray): Secp256r1Signature {
+            return FfiConverterTypeSecp256r1Signature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `secp256r1SignatureToBcs`(`data`: Secp256r1Signature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_bcs(
+        FfiConverterTypeSecp256r1Signature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `signedTransactionFromBcs`(`bcs`: kotlin.ByteArray): SignedTransaction {
+            return FfiConverterTypeSignedTransaction.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_signed_transaction_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `signedTransactionToBcs`(`data`: SignedTransaction): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_bcs(
+        FfiConverterTypeSignedTransaction.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `simpleSignatureFromBcs`(`bcs`: kotlin.ByteArray): SimpleSignature {
+            return FfiConverterTypeSimpleSignature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_simple_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `simpleSignatureToBcs`(`data`: SimpleSignature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_simple_signature_to_bcs(
+        FfiConverterTypeSimpleSignature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `splitCoinsFromBcs`(`bcs`: kotlin.ByteArray): SplitCoins {
+            return FfiConverterTypeSplitCoins.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `splitCoinsToBcs`(`data`: SplitCoins): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(
+        FfiConverterTypeSplitCoins.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a String from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `stringFromBcs`(`input`: kotlin.ByteArray): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this String to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `stringToBcs`(`input`: kotlin.String): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_to_bcs(
+        FfiConverterString.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `structTagFromBcs`(`bcs`: kotlin.ByteArray): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `structTagToBcs`(`data`: StructTag): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(
+        FfiConverterTypeStructTag.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `systemPackageFromBcs`(`bcs`: kotlin.ByteArray): SystemPackage {
+            return FfiConverterTypeSystemPackage.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_system_package_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `systemPackageToBcs`(`data`: SystemPackage): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_system_package_to_bcs(
+        FfiConverterTypeSystemPackage.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionEffectsFromBcs`(`bcs`: kotlin.ByteArray): TransactionEffects {
+            return FfiConverterTypeTransactionEffects.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionEffectsToBcs`(`data`: TransactionEffects): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_bcs(
+        FfiConverterTypeTransactionEffects.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionEffectsV1FromBcs`(`bcs`: kotlin.ByteArray): TransactionEffectsV1 {
+            return FfiConverterTypeTransactionEffectsV1.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionEffectsV1ToBcs`(`data`: TransactionEffectsV1): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_bcs(
+        FfiConverterTypeTransactionEffectsV1.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionEventsFromBcs`(`bcs`: kotlin.ByteArray): TransactionEvents {
+            return FfiConverterTypeTransactionEvents.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_events_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionEventsToBcs`(`data`: TransactionEvents): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_events_to_bcs(
+        FfiConverterTypeTransactionEvents.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionExpirationFromBcs`(`bcs`: kotlin.ByteArray): TransactionExpiration {
+            return FfiConverterTypeTransactionExpiration.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_expiration_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionExpirationToBcs`(`data`: TransactionExpiration): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_bcs(
+        FfiConverterTypeTransactionExpiration.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionFromBcs`(`bcs`: kotlin.ByteArray): Transaction {
+            return FfiConverterTypeTransaction.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionKindFromBcs`(`bcs`: kotlin.ByteArray): TransactionKind {
+            return FfiConverterTypeTransactionKind.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionKindToBcs`(`data`: TransactionKind): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_kind_to_bcs(
+        FfiConverterTypeTransactionKind.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionToBcs`(`data`: Transaction): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(
+        FfiConverterTypeTransaction.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionV1FromBcs`(`bcs`: kotlin.ByteArray): TransactionV1 {
+            return FfiConverterTypeTransactionV1.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transactionV1ToBcs`(`data`: TransactionV1): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(
+        FfiConverterTypeTransactionV1.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transferObjectsFromBcs`(`bcs`: kotlin.ByteArray): TransferObjects {
+            return FfiConverterTypeTransferObjects.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transfer_objects_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `transferObjectsToBcs`(`data`: TransferObjects): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_bcs(
+        FfiConverterTypeTransferObjects.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `typeArgumentErrorFromBcs`(`bcs`: kotlin.ByteArray): TypeArgumentError {
+            return FfiConverterTypeTypeArgumentError.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_argument_error_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `typeArgumentErrorToBcs`(`data`: TypeArgumentError): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_bcs(
+        FfiConverterTypeTypeArgumentError.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `typeOriginFromBcs`(`bcs`: kotlin.ByteArray): TypeOrigin {
+            return FfiConverterTypeTypeOrigin.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `typeOriginToBcs`(`data`: TypeOrigin): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(
+        FfiConverterTypeTypeOrigin.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `typeTagFromBcs`(`bcs`: kotlin.ByteArray): TypeTag {
+            return FfiConverterTypeTypeTag.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `typeTagToBcs`(`data`: TypeTag): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(
+        FfiConverterTypeTypeTag.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u16 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u16FromBcs`(`input`: kotlin.ByteArray): kotlin.UShort {
+            return FfiConverterUShort.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u16 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u16ToBcs`(`input`: kotlin.UShort): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(
+        FfiConverterUShort.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u32 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u32FromBcs`(`input`: kotlin.ByteArray): kotlin.UInt {
+            return FfiConverterUInt.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u32 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u32ToBcs`(`input`: kotlin.UInt): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(
+        FfiConverterUInt.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u64 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u64FromBcs`(`input`: kotlin.ByteArray): kotlin.ULong {
+            return FfiConverterULong.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u64 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u64ToBcs`(`input`: kotlin.ULong): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(
+        FfiConverterULong.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a u8 from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u8FromBcs`(`input`: kotlin.ByteArray): kotlin.UByte {
+            return FfiConverterUByte.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(
+        FfiConverterByteArray.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this u8 to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `u8ToBcs`(`input`: kotlin.UByte): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(
+        FfiConverterUByte.lower(`input`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `unchangedSharedKindFromBcs`(`bcs`: kotlin.ByteArray): UnchangedSharedKind {
+            return FfiConverterTypeUnchangedSharedKind.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `unchangedSharedKindToBcs`(`data`: UnchangedSharedKind): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_bcs(
+        FfiConverterTypeUnchangedSharedKind.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `unchangedSharedObjectFromBcs`(`bcs`: kotlin.ByteArray): UnchangedSharedObject {
+            return FfiConverterTypeUnchangedSharedObject.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `unchangedSharedObjectToBcs`(`data`: UnchangedSharedObject): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_bcs(
+        FfiConverterTypeUnchangedSharedObject.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `upgradeFromBcs`(`bcs`: kotlin.ByteArray): Upgrade {
+            return FfiConverterTypeUpgrade.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `upgradeInfoFromBcs`(`bcs`: kotlin.ByteArray): UpgradeInfo {
+            return FfiConverterTypeUpgradeInfo.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `upgradeInfoToBcs`(`data`: UpgradeInfo): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(
+        FfiConverterTypeUpgradeInfo.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `upgradeToBcs`(`data`: Upgrade): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(
+        FfiConverterTypeUpgrade.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `userSignatureFromBcs`(`bcs`: kotlin.ByteArray): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_user_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `userSignatureToBcs`(`data`: UserSignature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_user_signature_to_bcs(
+        FfiConverterTypeUserSignature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorAggregatedSignatureFromBcs`(`bcs`: kotlin.ByteArray): ValidatorAggregatedSignature {
+            return FfiConverterTypeValidatorAggregatedSignature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorAggregatedSignatureToBcs`(`data`: ValidatorAggregatedSignature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_bcs(
+        FfiConverterTypeValidatorAggregatedSignature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorCommitteeFromBcs`(`bcs`: kotlin.ByteArray): ValidatorCommittee {
+            return FfiConverterTypeValidatorCommittee.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorCommitteeMemberFromBcs`(`bcs`: kotlin.ByteArray): ValidatorCommitteeMember {
+            return FfiConverterTypeValidatorCommitteeMember.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorCommitteeMemberToBcs`(`data`: ValidatorCommitteeMember): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_member_to_bcs(
+        FfiConverterTypeValidatorCommitteeMember.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorCommitteeToBcs`(`data`: ValidatorCommittee): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(
+        FfiConverterTypeValidatorCommittee.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationFromBcs`(`bcs`: kotlin.ByteArray): ValidatorExecutionTimeObservation {
+            return FfiConverterTypeValidatorExecutionTimeObservation.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationToBcs`(`data`: ValidatorExecutionTimeObservation): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(
+        FfiConverterTypeValidatorExecutionTimeObservation.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorSignatureFromBcs`(`bcs`: kotlin.ByteArray): ValidatorSignature {
+            return FfiConverterTypeValidatorSignature.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `validatorSignatureToBcs`(`data`: ValidatorSignature): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_signature_to_bcs(
+        FfiConverterTypeValidatorSignature.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `versionAssignmentFromBcs`(`bcs`: kotlin.ByteArray): VersionAssignment {
+            return FfiConverterTypeVersionAssignment.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `versionAssignmentToBcs`(`data`: VersionAssignment): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(
+        FfiConverterTypeVersionAssignment.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginAuthenticator {
+            return FfiConverterTypeZkLoginAuthenticator.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorToBcs`(`data`: ZkLoginAuthenticator): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(
+        FfiConverterTypeZkLoginAuthenticator.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginClaimFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginClaim {
+            return FfiConverterTypeZkLoginClaim.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginClaimToBcs`(`data`: ZkLoginClaim): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(
+        FfiConverterTypeZkLoginClaim.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginProofFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginProof {
+            return FfiConverterTypeZkLoginProof.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginProofToBcs`(`data`: ZkLoginProof): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(
+        FfiConverterTypeZkLoginProof.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create this type from BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginPublicIdentifier {
+            return FfiConverterTypeZkLoginPublicIdentifier.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(
+        FfiConverterByteArray.lower(`bcs`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Convert this type to BCS encoded bytes.
+         */
+    @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierToBcs`(`data`: ZkLoginPublicIdentifier): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(
+        FfiConverterTypeZkLoginPublicIdentifier.lower(`data`),_status)
 }
     )
     }

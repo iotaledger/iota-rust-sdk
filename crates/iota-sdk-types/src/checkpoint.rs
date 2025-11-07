@@ -60,10 +60,7 @@ impl CheckpointCommitment {
 ///                     (vector checkpoint-commitment)      ; epoch_commitments
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct EndOfEpochData {
@@ -170,10 +167,7 @@ pub struct CheckpointSummary {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SignedCheckpointSummary {
@@ -223,10 +217,7 @@ impl CheckpointContents {
 
 /// Transaction information committed to in a checkpoint
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransactionInfo {
@@ -237,10 +228,7 @@ pub struct CheckpointTransactionInfo {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointData {
@@ -251,10 +239,7 @@ pub struct CheckpointData {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointTransaction {
@@ -285,7 +270,7 @@ mod serialization {
 
     use super::*;
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct ReadableCheckpointSummaryRef<'a> {
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: &'a EpochId,
@@ -308,7 +293,7 @@ mod serialization {
         version_specific_data: &'a Vec<u8>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct ReadableCheckpointSummary {
         #[serde(with = "crate::_serde::ReadableDisplay")]
         epoch: EpochId,
@@ -331,7 +316,7 @@ mod serialization {
         version_specific_data: Vec<u8>,
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct BinaryCheckpointSummaryRef<'a> {
         epoch: &'a EpochId,
         sequence_number: &'a CheckpointSequenceNumber,
@@ -345,7 +330,7 @@ mod serialization {
         version_specific_data: &'a Vec<u8>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct BinaryCheckpointSummary {
         epoch: EpochId,
         sequence_number: CheckpointSequenceNumber,
@@ -478,7 +463,7 @@ mod serialization {
             if serializer.is_human_readable() {
                 serializer.serialize_newtype_struct("CheckpointContents", &self.0)
             } else {
-                #[derive(serde_derive::Serialize)]
+                #[derive(serde::Serialize)]
                 struct Digests<'a> {
                     transaction: &'a Digest,
                     effects: &'a Digest,
@@ -524,19 +509,19 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct ExecutionDigests {
         transaction: Digest,
         effects: Digest,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct BinaryContentsV1 {
         digests: Vec<ExecutionDigests>,
         signatures: Vec<Vec<UserSignature>>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryContents {
         V1(BinaryContentsV1),
     }
@@ -585,13 +570,13 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
     enum ReadableCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }

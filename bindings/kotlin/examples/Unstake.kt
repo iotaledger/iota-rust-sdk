@@ -1,36 +1,23 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.ObjectFilter
-import iota_sdk.ObjectId
-import iota_sdk.PtbArgument
-import iota_sdk.TransactionBuilder
+import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newDevnet()
 
-        val stakedIotas = client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota"))
+        val stakedIotas =
+            client.objects(ObjectFilter(typeTag = StructTag.newStakedIota().toString()))
         if (stakedIotas.data.isEmpty()) {
             throw Exception("no validators found")
         }
         val stakedIota = stakedIotas.data[0]
 
-        val builder = TransactionBuilder.init(stakedIota.owner().asAddress(), client)
+        val builder = TransactionBuilder(stakedIota.owner().asAddress()).withClient(client)
 
-        builder.moveCall(
-                Address.system(),
-                Identifier("iota_system"),
-                Identifier("request_withdraw_stake"),
-                listOf(
-                        PtbArgument.sharedMut(ObjectId.system()),
-                        PtbArgument.objectId(stakedIota.objectId())
-                ),
-        )
+        builder.unstake(PtbArgument.objectId(stakedIota.objectId()))
 
         val res = builder.dryRun()
 
@@ -41,5 +28,6 @@ fun main() = runBlocking {
         println("Unstake dry run was successful!")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }
