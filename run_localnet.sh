@@ -34,6 +34,15 @@ if [ "$1" == "start" ]; then
     echo "Setting keypair in config..."
     sed -i.bak "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
 
+    # Get host IP to update fullnode-url
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        HOST_IP="host.docker.internal"
+    else
+        HOST_IP=$(hostname -I | awk '{print $1}')
+    fi
+    echo "Updating fullnode-url to use host IP: $HOST_IP"
+    sed -i.bak "s|http://localhost:9000|http://$HOST_IP:9000|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
+
     echo "Waiting for network to start and requesting faucet coins..."
     success=false
     for i in {1..30}; do
@@ -57,7 +66,7 @@ if [ "$1" == "start" ]; then
     success=false
     for i in {1..30}; do
         sleep 1
-        if curl --silent --fail http://0.0.0.0:9527/version >/dev/null 2>&1; then
+        if curl --silent --fail http://localhost:9527/version >/dev/null 2>&1; then
             success=true
             break
         fi
@@ -71,6 +80,7 @@ if [ "$1" == "start" ]; then
     echo "IOTA PID: $IOTA_PID"
     echo "Logs are being written to $IOTA_LOG"
     echo "To view logs: $0 logs"
+    echo "To view gas station logs: $0 gaslogs"
     echo "To stop, run: $0 stop"
 
 elif [ "$1" == "stop" ]; then
@@ -117,9 +127,13 @@ elif [ "$1" == "logs" ]; then
         echo "Log file $IOTA_LOG not found. Start the network first."
     fi
 
+elif [ "$1" == "gaslogs" ]; then
+    docker compose -f "$COMPOSE_PATH" -p start-local-network logs -f
+
 else
-    echo "Usage: $0 start|stop|logs"
+    echo "Usage: $0 start|stop|logs|gaslogs"
     echo "  start: Start the local IOTA network with gas station"
     echo "  stop:  Stop the local IOTA network and gas station"
     echo "  logs:  View the latest IOTA network logs (follow mode)"
+    echo "  gaslogs: View the latest gas station logs (follow mode)"
 fi

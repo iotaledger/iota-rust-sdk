@@ -2,7 +2,7 @@ name: Bindings
 
 on:
   push:
-    branches: [develop, sdk-bindings]
+    branches: [develop]
     paths:
       - ".github/workflow/bindings.yml"
       - "bindings/**"
@@ -41,6 +41,8 @@ jobs:
         run: make go
       - name: Checks for uncommitted changes
         run: git diff --exit-code
+      - name: Check format of the examples
+        run: make go-examples-format-check
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make go-examples
@@ -72,6 +74,8 @@ jobs:
         with:
           distribution: "oracle"
           java-version: "21"
+      - name: Check format of the examples
+        run: make kotlin-examples-format-check
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make kotlin-examples
@@ -99,6 +103,10 @@ jobs:
         run: make python
       - name: Checks for uncommitted changes
         run: git diff --exit-code
+      - name: Check format of the examples
+        run: |
+          pip install yapf
+          make python-examples-format-check
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make python-examples

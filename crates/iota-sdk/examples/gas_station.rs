@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
     let keypair = Ed25519PrivateKey::generate(rand::thread_rng());
     let sender = keypair.public_key().derive_address();
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    let mut builder = TransactionBuilder::new(sender).with_client(&client);
 
     builder
         .move_call(Address::STD_LIB, "u64", "sqrt")
@@ -27,11 +27,9 @@ async fn main() -> Result<()> {
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
         );
 
-    let res = builder.execute(&keypair.into(), true).await?;
+    let effects = builder.execute(&keypair.into(), None).await?;
 
-    if let Some(effects) = res {
-        println!("{effects:#?}");
-    }
+    println!("{effects:#?}");
 
     println!("Sponsored transaction was successful!");
 

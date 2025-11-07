@@ -9,15 +9,31 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func objIdFromHex(hex string) *sdk.PtbArgument {
+	id, err := sdk.PtbArgumentObjectIdFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse object ID: %v", err)
+	}
+	return id
+}
+
+func addrFromHex(hex string) *sdk.Address {
+	address, err := sdk.AddressFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+	return address
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
-	sender, _ := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	coin0, _ := sdk.PtbArgumentObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
-	coin1, _ := sdk.PtbArgumentObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
+	coin0 := objIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+	coin1 := objIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 	builder.MergeCoins(coin0, []*sdk.PtbArgument{coin1})
 
 	txn, err := builder.Finish()

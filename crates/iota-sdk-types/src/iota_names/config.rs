@@ -8,7 +8,7 @@ use crate::{Address, ObjectId};
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "kebab-case")
 )]
 pub struct IotaNamesConfig {

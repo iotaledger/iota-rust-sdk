@@ -1,14 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
-import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.ObjectId
-import iota_sdk.PtbArgument
-import iota_sdk.StructTag
-import iota_sdk.TransactionBuilder
-import iota_sdk.TypeTag
+import iota_sdk.*
 import kotlin.collections.emptyList
 import kotlinx.coroutines.runBlocking
 
@@ -19,95 +12,91 @@ fun main() = runBlocking {
         val sender = Address.zero()
 
         val iotaNamesPackageAddress =
-                Address.fromHex(
-                        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
-                )
+            Address.fromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
         val iotaNamesObjectId =
-                ObjectId.fromHex(
-                        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
-                )
+            ObjectId.fromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
         val stdlibAddress = Address.stdLib()
 
         val name = "name.iota"
         println("Looking up name: $name")
 
-        val builder = TransactionBuilder.init(sender, client)
+        val builder = TransactionBuilder(sender).withClient(client)
 
         // 1. Get the registry
         builder.moveCall(
-                iotaNamesPackageAddress,
-                Identifier("iota_names"),
-                Identifier("registry"),
-                listOf(PtbArgument.sharedMut(iotaNamesObjectId)),
-                listOf(
-                        TypeTag.newStruct(
-                                StructTag(
-                                        iotaNamesPackageAddress,
-                                        Identifier("registry"),
-                                        Identifier("Registry"),
-                                )
-                        )
-                ),
-                listOf("iota_names")
+            iotaNamesPackageAddress,
+            Identifier("iota_names"),
+            Identifier("registry"),
+            listOf(PtbArgument.sharedMut(iotaNamesObjectId)),
+            listOf(
+                TypeTag.newStruct(
+                    StructTag(
+                        iotaNamesPackageAddress,
+                        Identifier("registry"),
+                        Identifier("Registry"),
+                    )
+                )
+            ),
+            listOf("iota_names"),
         )
 
         // 2. Create name from string
         // BCS encode the string: length (as varint) + UTF-8 bytes
         builder.moveCall(
-                iotaNamesPackageAddress,
-                Identifier("name"),
-                Identifier("new"),
-                listOf(PtbArgument.string(name)),
-                emptyList(),
-                listOf("name")
+            iotaNamesPackageAddress,
+            Identifier("name"),
+            Identifier("new"),
+            listOf(PtbArgument.string(name)),
+            emptyList(),
+            listOf("name"),
         )
 
         // 3. Lookup name record
         builder.moveCall(
-                iotaNamesPackageAddress,
-                Identifier("registry"),
-                Identifier("lookup"),
-                listOf(PtbArgument.res("iota_names"), PtbArgument.res("name")),
-                emptyList(),
-                listOf("name_record_opt")
+            iotaNamesPackageAddress,
+            Identifier("registry"),
+            Identifier("lookup"),
+            listOf(PtbArgument.res("iota_names"), PtbArgument.res("name")),
+            emptyList(),
+            listOf("name_record_opt"),
         )
 
         // 4. Borrow name record from option
         builder.moveCall(
-                stdlibAddress,
-                Identifier("option"),
-                Identifier("borrow"),
-                listOf(PtbArgument.res("name_record_opt")),
-                listOf(
-                        TypeTag.newStruct(
-                                StructTag(
-                                        iotaNamesPackageAddress,
-                                        Identifier("name_record"),
-                                        Identifier("NameRecord"),
-                                )
-                        )
-                ),
-                listOf("name_record")
+            stdlibAddress,
+            Identifier("option"),
+            Identifier("borrow"),
+            listOf(PtbArgument.res("name_record_opt")),
+            listOf(
+                TypeTag.newStruct(
+                    StructTag(
+                        iotaNamesPackageAddress,
+                        Identifier("name_record"),
+                        Identifier("NameRecord"),
+                    )
+                )
+            ),
+            listOf("name_record"),
         )
 
         // 5. Get target address from name record
         builder.moveCall(
-                iotaNamesPackageAddress,
-                Identifier("name_record"),
-                Identifier("target_address"),
-                listOf(PtbArgument.res("name_record")),
-                emptyList(),
-                listOf("target_address_opt")
+            iotaNamesPackageAddress,
+            Identifier("name_record"),
+            Identifier("target_address"),
+            listOf(PtbArgument.res("name_record")),
+            emptyList(),
+            listOf("target_address_opt"),
         )
 
         // 6. Borrow address from option
         builder.moveCall(
-                stdlibAddress,
-                Identifier("option"),
-                Identifier("borrow"),
-                listOf(PtbArgument.res("target_address_opt")),
-                listOf(TypeTag.newAddress()),
-                listOf("target_address")
+            stdlibAddress,
+            Identifier("option"),
+            Identifier("borrow"),
+            listOf(PtbArgument.res("target_address_opt")),
+            listOf(TypeTag.newAddress()),
+            listOf("target_address"),
         )
 
         val res = builder.dryRun(true)
@@ -126,7 +115,7 @@ fun main() = runBlocking {
                     println("Resolved address: ${resolvedAddress.toHex()}")
                 } else {
                     println(
-                            "Last result is not an address type or has wrong length: ${returnValue.bcs.size}"
+                        "Last result is not an address type or has wrong length: ${returnValue.bcs.size}"
                     )
                 }
             } else {
@@ -137,5 +126,6 @@ fun main() = runBlocking {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

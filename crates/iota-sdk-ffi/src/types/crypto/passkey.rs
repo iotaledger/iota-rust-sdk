@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_crypto::Verifier;
+use iota_sdk::crypto::Verifier;
 
 use crate::{
     error::Result,
@@ -38,7 +38,7 @@ use crate::{
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PasskeyAuthenticator(pub iota_types::PasskeyAuthenticator);
+pub struct PasskeyAuthenticator(pub iota_sdk::types::PasskeyAuthenticator);
 
 #[uniffi::export]
 impl PasskeyAuthenticator {
@@ -89,13 +89,13 @@ impl PasskeyAuthenticator {
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
 #[derive(derive_more::From, uniffi::Object)]
-pub struct PasskeyPublicKey(iota_types::PasskeyPublicKey);
+pub struct PasskeyPublicKey(iota_sdk::types::PasskeyPublicKey);
 
 #[uniffi::export]
 impl PasskeyPublicKey {
     #[uniffi::constructor]
     pub fn new(public_key: &Secp256r1PublicKey) -> Self {
-        Self(iota_types::PasskeyPublicKey::new(**public_key))
+        Self(iota_sdk::types::PasskeyPublicKey::new(**public_key))
     }
 
     pub fn inner(&self) -> Secp256r1PublicKey {

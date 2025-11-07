@@ -49,24 +49,24 @@ use crate::{
 /// address = 32OCTET
 /// ```
 #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Address(pub iota_types::Address);
+pub struct Address(pub iota_sdk::types::Address);
 
 #[uniffi::export]
 impl Address {
     #[uniffi::constructor]
     pub fn from_bytes(bytes: Vec<u8>) -> Result<Self> {
-        Ok(Self(iota_types::Address::from_bytes(bytes)?))
+        Ok(Self(iota_sdk::types::Address::from_bytes(bytes)?))
     }
 
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_types::Address::from_hex(hex)?))
+        Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
     }
 
     #[uniffi::constructor]
     pub fn generate() -> Self {
         let mut rng = rand::thread_rng();
-        Self(iota_types::Address::generate(&mut rng))
+        Self(iota_sdk::types::Address::generate(&mut rng))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -85,7 +85,7 @@ macro_rules! named_address {
             impl Address {$(
                 #[uniffi::constructor]
                 pub const fn [< $constant:lower >]() -> Self {
-                    Self(iota_types::Address::$constant)
+                    Self(iota_sdk::types::Address::$constant)
                 }
             )+}
         }

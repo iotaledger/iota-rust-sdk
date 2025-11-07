@@ -212,7 +212,8 @@ impl SimpleSignature {
 /// zklogin-flag     = %x05
 /// passkey-flag     = %x06
 /// ```
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, strum::Display)]
+#[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 pub enum SignatureScheme {
@@ -229,19 +230,6 @@ impl SignatureScheme {
     crate::def_is!(
         Ed25519, Secp256k1, Secp256r1, Multisig, Bls12381, ZkLogin, Passkey,
     );
-
-    /// Return the name of this signature scheme
-    pub fn name(self) -> &'static str {
-        match self {
-            SignatureScheme::Ed25519 => "ed25519",
-            SignatureScheme::Secp256k1 => "secp256k1",
-            SignatureScheme::Secp256r1 => "secp256r1",
-            SignatureScheme::Multisig => "multisig",
-            SignatureScheme::Bls12381 => "bls12381",
-            SignatureScheme::ZkLogin => "zklogin",
-            SignatureScheme::Passkey => "passkey",
-        }
-    }
 
     /// Try constructing from a byte flag
     pub fn from_byte(flag: u8) -> Result<Self, InvalidSignatureScheme> {
@@ -481,7 +469,7 @@ mod serialization {
         where
             S: serde::Serializer,
         {
-            #[derive(serde_derive::Serialize)]
+            #[derive(serde::Serialize)]
             #[serde(tag = "scheme")]
             #[serde(rename_all = "lowercase")]
             enum Sig<'a> {
@@ -576,7 +564,7 @@ mod serialization {
         where
             D: serde::Deserializer<'de>,
         {
-            #[derive(serde_derive::Deserialize)]
+            #[derive(serde::Deserialize)]
             #[serde(tag = "scheme")]
             #[serde(rename_all = "lowercase")]
             enum Sig {
@@ -689,7 +677,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     enum ReadableUserSignatureRef<'a> {
         Ed25519 {
@@ -709,7 +697,7 @@ mod serialization {
         Passkey(&'a PasskeyAuthenticator),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "UserSignature")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]

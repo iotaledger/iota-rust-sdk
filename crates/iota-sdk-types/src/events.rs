@@ -14,10 +14,7 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 /// transaction-events = vector event
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransactionEvents(pub Vec<Event>);
@@ -32,10 +29,7 @@ pub struct TransactionEvents(pub Vec<Event>);
 /// event = object-id identifier address struct-tag bytes
 /// ```
 #[derive(PartialEq, Eq, Debug, Clone)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Event {
@@ -61,10 +55,7 @@ pub struct Event {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct BalanceChange {

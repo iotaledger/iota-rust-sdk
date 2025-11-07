@@ -32,7 +32,7 @@ func main() {
 
 	client := sdk.GraphQlClientNewLocalnet()
 
-	builder := sdk.TransactionBuilderInit(senderAddress, client)
+	builder := sdk.NewTransactionBuilder(senderAddress).WithClient(client)
 	builder.SendIota(recipientAddress, sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err.(*sdk.SdkFfiError) != nil {
@@ -53,12 +53,9 @@ func main() {
 	}
 	userSignature := sdk.UserSignatureNewSimple(signature)
 
-	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn)
+	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn, nil)
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to execute: %v", err)
-	}
-	if effects == nil {
-		log.Fatalf("Transaction execution failed")
 	}
 	log.Printf("Digest: %s", sdk.HexEncode((*effects).Digest().ToBytes()))
 	log.Printf("Transaction status: %v", (*effects).AsV1().Status)

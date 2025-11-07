@@ -80,10 +80,7 @@ impl MultisigMemberPublicKey {
 ///                          u8     ; weight
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigMember {
@@ -131,10 +128,7 @@ impl MultisigMember {
 ///                             u16     ; threshold
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MultisigCommittee {
@@ -340,28 +334,28 @@ mod serialization {
         crypto::SignatureFromBytesError,
     };
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     pub struct Multisig {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
         committee: MultisigCommittee,
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     pub struct MultisigRef<'a> {
         signatures: &'a [MultisigMemberSignature],
         bitmap: BitmapUnit,
         committee: &'a MultisigCommittee,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct ReadableMultisigAggregatedSignature {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
         committee: MultisigCommittee,
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct ReadableMultisigAggregatedSignatureRef<'a> {
         signatures: &'a [MultisigMemberSignature],
         bitmap: BitmapUnit,
@@ -446,7 +440,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum MemberPublicKey {
         Ed25519(Ed25519PublicKey),
         Secp256k1(Secp256k1PublicKey),
@@ -454,7 +448,7 @@ mod serialization {
         ZkLogin(ZkLoginPublicIdentifier),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "MultisigMemberPublicKey")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -552,7 +546,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum MemberSignature {
         Ed25519(Ed25519Signature),
         Secp256k1(Secp256k1Signature),
@@ -560,7 +554,7 @@ mod serialization {
         ZkLogin(Box<ZkLoginAuthenticator>),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "MultisigMemberSignature")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]

@@ -10,37 +10,61 @@ import (
 	sdk "bindings/iota_sdk_ffi"
 )
 
+func objIdFromHex(hex string) *sdk.ObjectId {
+	id, err := sdk.ObjectIdFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse object ID: %v", err)
+	}
+	return id
+}
+
+func addrFromHex(hex string) *sdk.Address {
+	address, err := sdk.AddressFromHex(hex)
+	if err != nil {
+		log.Fatalf("Failed to parse address: %v", err)
+	}
+	return address
+}
+
+func identifier(ident string) *sdk.Identifier {
+	identifier, err := sdk.NewIdentifier(ident)
+	if err != nil {
+		log.Fatalf("Failed to parse identifier: %v", err)
+	}
+	return identifier
+}
+
 func main() {
 	client := sdk.GraphQlClientNewDevnet()
 
 	sender := sdk.AddressZero()
 
-	iotaNamesPackageAddress, _ := sdk.AddressFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
+	iotaNamesPackageAddress := addrFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
 
-	iotaNamesObjectId, _ := sdk.ObjectIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
+	iotaNamesObjectId := objIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
 
 	stdlibAddress := sdk.AddressStdLib()
 
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	// Create identifiers
-	iotaNamesModule, _ := sdk.NewIdentifier("iota_names")
-	nameModule, _ := sdk.NewIdentifier("name")
-	nameNewFn, _ := sdk.NewIdentifier("new")
-	lookupFn, _ := sdk.NewIdentifier("lookup")
-	optionModule, _ := sdk.NewIdentifier("option")
-	borrowFn, _ := sdk.NewIdentifier("borrow")
-	targetAddressFn, _ := sdk.NewIdentifier("target_address")
-	registryModule, _ := sdk.NewIdentifier("registry")
-	registryName, _ := sdk.NewIdentifier("Registry")
+	iotaNamesModule := identifier("iota_names")
+	nameModule := identifier("name")
+	nameNewFn := identifier("new")
+	lookupFn := identifier("lookup")
+	optionModule := identifier("option")
+	borrowFn := identifier("borrow")
+	targetAddressFn := identifier("target_address")
+	registryModule := identifier("registry")
+	registryName := identifier("Registry")
 
 	registryType := sdk.NewStructTag(iotaNamesPackageAddress, registryModule, registryName, []*sdk.TypeTag{})
 
-	nameRecordModule, _ := sdk.NewIdentifier("name_record")
-	nameRecordName, _ := sdk.NewIdentifier("NameRecord")
+	nameRecordModule := identifier("name_record")
+	nameRecordName := identifier("NameRecord")
 	nameRecordType := sdk.NewStructTag(iotaNamesPackageAddress, nameRecordModule, nameRecordName, []*sdk.TypeTag{})
 
 	// 1. Get the registry

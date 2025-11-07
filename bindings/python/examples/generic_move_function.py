@@ -1,26 +1,23 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-import asyncio
-
 from lib.iota_sdk_ffi import *
+
+import asyncio
 
 
 async def main():
     client = GraphQlClient.new_devnet()
 
     sender = Address.from_hex(
-        "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e"
-    )
+        "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     addr1 = Address.from_hex(
-        "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e"
-    )
+        "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")
     addr2 = Address.from_hex(
-        "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3"
-    )
+        "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")
 
     builder.move_call(
         Address.framework(),

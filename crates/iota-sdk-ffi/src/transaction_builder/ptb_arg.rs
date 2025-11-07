@@ -3,20 +3,24 @@
 
 use std::sync::Arc;
 
-use iota_transaction_builder::{
+use iota_sdk::transaction_builder::{
     PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::Res, res,
 };
 use primitive_types::U256;
 
 use crate::{
     error::Result,
-    types::{address::Address, digest::Digest, object::ObjectId},
+    types::{
+        address::Address,
+        digest::Digest,
+        object::{ObjectId, ObjectReference},
+    },
 };
 
 #[derive(Clone, uniffi::Object)]
 pub enum MoveArg {
-    Address(iota_types::Address),
-    Digest(iota_types::Digest),
+    Address(iota_sdk::types::Address),
+    Digest(iota_sdk::types::Digest),
     Bool(bool),
     U8(u8),
     U16(u16),
@@ -38,7 +42,7 @@ impl MoveArg {
 
     #[uniffi::constructor]
     pub fn address_from_hex(hex: String) -> Result<Self> {
-        Ok(Self::Address(iota_types::Address::from_hex(hex)?))
+        Ok(Self::Address(iota_sdk::types::Address::from_hex(hex)?))
     }
 
     #[uniffi::constructor]
@@ -48,7 +52,7 @@ impl MoveArg {
 
     #[uniffi::constructor]
     pub fn digest_from_base58(base58: String) -> Result<Self> {
-        Ok(Self::Digest(iota_types::Digest::from_base58(base58)?))
+        Ok(Self::Digest(iota_sdk::types::Digest::from_base58(base58)?))
     }
 
     #[uniffi::constructor]
@@ -182,7 +186,7 @@ impl MoveArg {
     }
 }
 
-impl iota_transaction_builder::types::MoveArg for &MoveArg {
+impl iota_sdk::transaction_builder::types::MoveArg for &MoveArg {
     fn pure_bytes(self) -> PureBytes {
         match self {
             MoveArg::Address(address) => address.pure_bytes(),
@@ -203,12 +207,13 @@ impl iota_transaction_builder::types::MoveArg for &MoveArg {
 
 #[derive(uniffi::Object)]
 pub enum PTBArgument {
-    ObjectId(iota_types::ObjectId),
+    ObjectId(iota_sdk::types::ObjectId),
+    ObjectRef(iota_sdk::types::ObjectReference),
     Move(MoveArg),
     Res(Res),
-    Shared(Shared<iota_types::ObjectId>),
-    SharedMut(SharedMut<iota_types::ObjectId>),
-    Receiving(Receiving<iota_types::ObjectId>),
+    Shared(Shared<iota_sdk::types::ObjectId>),
+    SharedMut(SharedMut<iota_sdk::types::ObjectId>),
+    Receiving(Receiving<iota_sdk::types::ObjectId>),
     Gas,
 }
 
@@ -225,13 +230,18 @@ impl PTBArgument {
     }
 
     #[uniffi::constructor]
+    pub fn object_ref(id: ObjectReference) -> Self {
+        Self::ObjectRef(id.into())
+    }
+
+    #[uniffi::constructor]
     pub fn move_arg(arg: &MoveArg) -> Self {
         Self::Move(arg.clone())
     }
 
     #[uniffi::constructor]
     pub fn object_id_from_hex(hex: &str) -> Result<Self> {
-        Ok(Self::ObjectId(iota_types::ObjectId::from_hex(hex)?))
+        Ok(Self::ObjectId(iota_sdk::types::ObjectId::from_hex(hex)?))
     }
 
     #[uniffi::constructor]
@@ -241,7 +251,9 @@ impl PTBArgument {
 
     #[uniffi::constructor]
     pub fn shared_from_hex(hex: &str) -> Result<Self> {
-        Ok(Self::Shared(Shared(iota_types::ObjectId::from_hex(hex)?)))
+        Ok(Self::Shared(Shared(iota_sdk::types::ObjectId::from_hex(
+            hex,
+        )?)))
     }
 
     #[uniffi::constructor]
@@ -251,9 +263,9 @@ impl PTBArgument {
 
     #[uniffi::constructor]
     pub fn shared_mut_from_hex(hex: &str) -> Result<Self> {
-        Ok(Self::SharedMut(SharedMut(iota_types::ObjectId::from_hex(
-            hex,
-        )?)))
+        Ok(Self::SharedMut(SharedMut(
+            iota_sdk::types::ObjectId::from_hex(hex)?,
+        )))
     }
 
     #[uniffi::constructor]
@@ -263,9 +275,9 @@ impl PTBArgument {
 
     #[uniffi::constructor]
     pub fn receiving_from_hex(hex: &str) -> Result<Self> {
-        Ok(Self::Receiving(Receiving(iota_types::ObjectId::from_hex(
-            hex,
-        )?)))
+        Ok(Self::Receiving(Receiving(
+            iota_sdk::types::ObjectId::from_hex(hex)?,
+        )))
     }
 
     #[uniffi::constructor]
@@ -394,19 +406,20 @@ impl PTBArgument {
     }
 }
 
-impl iota_transaction_builder::PTBArgument for &PTBArgument {
+impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
     fn arg(
         self,
-        ptb: &mut iota_transaction_builder::builder::TransactionBuildData,
-    ) -> iota_transaction_builder::unresolved::Argument {
+        ptb: &mut iota_sdk::transaction_builder::builder::TransactionBuildData,
+    ) -> iota_sdk::transaction_builder::unresolved::Argument {
         match self {
             PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
+            PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().arg(ptb),
             PTBArgument::Move(arg) => arg.arg(ptb),
             PTBArgument::Res(res) => res.arg(ptb),
             PTBArgument::Shared(shared) => shared.arg(ptb),
             PTBArgument::SharedMut(shared_mut) => shared_mut.arg(ptb),
             PTBArgument::Receiving(receiving) => receiving.arg(ptb),
-            PTBArgument::Gas => iota_transaction_builder::unresolved::Argument::Gas,
+            PTBArgument::Gas => iota_sdk::transaction_builder::unresolved::Argument::Gas,
         }
     }
 }

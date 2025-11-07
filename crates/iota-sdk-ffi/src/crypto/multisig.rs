@@ -6,7 +6,7 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use iota_crypto::{SignatureError, Verifier};
+use iota_sdk::crypto::{SignatureError, Verifier};
 
 use crate::{
     crypto::zklogin::ZkloginVerifier,
@@ -19,13 +19,13 @@ use crate::{
 };
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigVerifier(pub iota_crypto::multisig::MultisigVerifier);
+pub struct MultisigVerifier(pub iota_sdk::crypto::multisig::MultisigVerifier);
 
 #[uniffi::export]
 impl MultisigVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_crypto::multisig::MultisigVerifier::new())
+        Self(iota_sdk::crypto::multisig::MultisigVerifier::new())
     }
 
     pub fn with_zklogin_verifier(&self, zklogin_verifier: &ZkloginVerifier) -> Self {
@@ -49,13 +49,13 @@ impl MultisigVerifier {
 
 /// Verifier that will verify all UserSignature variants
 #[derive(derive_more::From, uniffi::Object)]
-pub struct UserSignatureVerifier(pub iota_crypto::multisig::UserSignatureVerifier);
+pub struct UserSignatureVerifier(pub iota_sdk::crypto::multisig::UserSignatureVerifier);
 
 #[uniffi::export]
 impl UserSignatureVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_crypto::multisig::UserSignatureVerifier::new())
+        Self(iota_sdk::crypto::multisig::UserSignatureVerifier::new())
     }
 
     pub fn with_zklogin_verifier(&self, zklogin_verifier: &ZkloginVerifier) -> Self {
@@ -78,14 +78,14 @@ impl UserSignatureVerifier {
 }
 
 #[derive(derive_more::From, uniffi::Object)]
-pub struct MultisigAggregator(pub iota_crypto::multisig::MultisigAggregator);
+pub struct MultisigAggregator(pub iota_sdk::crypto::multisig::MultisigAggregator);
 
 #[uniffi::export]
 impl MultisigAggregator {
     #[uniffi::constructor]
     pub fn new_with_transaction(committee: &MultisigCommittee, transaction: &Transaction) -> Self {
         Self(
-            iota_crypto::multisig::MultisigAggregator::new_with_transaction(
+            iota_sdk::crypto::multisig::MultisigAggregator::new_with_transaction(
                 committee.0.clone(),
                 &transaction.0,
             ),
@@ -94,10 +94,12 @@ impl MultisigAggregator {
 
     #[uniffi::constructor]
     pub fn new_with_message(committee: &MultisigCommittee, message: &[u8]) -> Self {
-        Self(iota_crypto::multisig::MultisigAggregator::new_with_message(
-            committee.0.clone(),
-            &iota_types::PersonalMessage(Cow::Borrowed(message)),
-        ))
+        Self(
+            iota_sdk::crypto::multisig::MultisigAggregator::new_with_message(
+                committee.0.clone(),
+                &iota_sdk::types::PersonalMessage(Cow::Borrowed(message)),
+            ),
+        )
     }
 
     pub fn verifier(&self) -> MultisigVerifier {

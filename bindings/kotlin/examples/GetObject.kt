@@ -12,9 +12,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
 
         val objectId =
-                ObjectId.fromHex(
-                        "0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e"
-                )
+            ObjectId.fromHex("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
 
         val obj = client.`object`(objectId)!!
 
@@ -28,5 +26,6 @@ fun main() = runBlocking {
         println("BCS bytes: ${hexEncode(obj.asStruct().contents)}")
     } catch (e: Exception) {
         e.printStackTrace()
+        kotlin.system.exitProcess(1)
     }
 }

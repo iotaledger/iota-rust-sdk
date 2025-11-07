@@ -1,10 +1,9 @@
 [package]
 name = "iota-sdk-types"
-version = "0.0.1"
+version = "0.0.1-alpha.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
-publish = false
 readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Core types for the IOTA SDK"
@@ -27,7 +26,6 @@ rustdoc-args = [
 default = []
 serde = [
   "dep:serde",
-  "dep:serde_derive",
   "dep:serde_with",
   "dep:bcs",
   "dep:serde_json",
@@ -43,19 +41,18 @@ proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 base64ct = { workspace = true, features = ["alloc"] }
 bnum.workspace = true
 bs58 = "0.5.1"
-derive_more = { workspace = true, features = ["display"] }
 eyre.workspace = true
 hex.workspace = true
 paste.workspace = true
 roaring.workspace = true
+strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 winnow = "0.7"
 
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
 itertools = { workspace = true, optional = true }
-serde = { workspace = true, optional = true }
-serde_derive = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
