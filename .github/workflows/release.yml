@@ -43,9 +43,9 @@ jobs:
       - name: Set package and tag from ref
         if: github.event.pull_request.merged == true
         run: |
-          tag=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
-          pkg=$(echo "${{ github.base_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
-          version=$(echo "${{ github.base_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
+          tag=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
+          pkg=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
+          version=$(echo "${{ github.head_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
           echo "TAG=$tag" >> $GITHUB_ENV
           echo "PKG=$pkg" >> $GITHUB_ENV
           echo "VERSION=$version" >> $GITHUB_ENV
@@ -57,7 +57,7 @@ jobs:
           PKG: ${{ env.PKG }}
           VERSION: ${{ env.VERSION }}
         run: |
-          if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
+          if [ "$VERSION" =~ .*-alpha\..*  ] || [ "$VERSION" =~ .*-beta\..*  ] || [ "$VERSION" =~ .*-rc\..*  ]; then
             gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes-file "crates/$PKG/CHANGELOG.md"
           else
             gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
