@@ -1,9 +1,6 @@
 name: Publish to Maven Central
 
 on:
-  # TODO: remove after testing
-  push:
-    branches: [ci/kotlin-release]
   workflow_dispatch:
     inputs:
       version:
@@ -77,9 +74,6 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # - name: Build Rust library
-      #   run: cargo build -p iota-sdk-ffi --lib --release
-
       - name: Download native libraries
         uses: actions/download-artifact@v4
         with:
@@ -122,7 +116,7 @@ jobs:
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" build.gradle.kts
 
       - name: Publish to Maven Central
-        if: github.event_name == 'release' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == false)
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'false')
         run: |
           cd bindings/kotlin
           ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
@@ -133,7 +127,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
 
       - name: Dry run - Local publish only
-        if: github.event_name != 'release' && github.event_name != 'push' && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run == true)
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true')
         run: |
           cd bindings/kotlin
           echo "Dry run: Publishing to local Maven repository only"
