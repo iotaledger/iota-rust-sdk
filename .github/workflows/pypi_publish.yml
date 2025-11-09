@@ -32,15 +32,15 @@ jobs:
           # - os: ubuntu-latest
           #   target: aarch64-unknown-linux-gnu
           #   lib_ext: so
-          - os: macos-latest
-            target: x86_64-apple-darwin
-            lib_ext: dylib
+          # - os: macos-latest
+          #   target: x86_64-apple-darwin
+          #   lib_ext: dylib
           # - os: macos-latest
           #   target: aarch64-apple-darwin
           #   lib_ext: dylib
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            lib_ext: dll
+          # - os: windows-latest
+          #   target: x86_64-pc-windows-msvc
+          #   lib_ext: dll
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -55,9 +55,9 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install version-matched uniffi-bindgen for maturin
-        run: |
-          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+      # - name: Install version-matched uniffi-bindgen for maturin
+      #   run: |
+      #     cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
 
       - name: Create `iota_sdk` dir
         run: mkdir bindings/python/src/iota_sdk
@@ -73,7 +73,7 @@ jobs:
 
       - name: Fix wheel
         run: |
-          WHEEL_PATH="$(find ./target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
+          WHEEL_PATH="$(find ./dist -maxdepth 1 -type f -name '*.whl' -print -quit)"
           ../scripts/repair_whl.sh $WHEEL_PATH
 
       - name: Upload wheel
@@ -119,26 +119,12 @@ jobs:
           name: wheels-sdist
           path: dist
 
-  release:
-    name: Release
+  publish:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
     needs: build
-    permissions:
-      # Use to sign the release artifacts
-      id-token: write
-      # Used to upload release artifacts
-      contents: write
-      # Used to generate artifact attestation
-      attestations: write
     steps:
       - name: Download the artifacts from the build job
         uses: actions/download-artifact@v4
-
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-path: "wheels-*/*"
 
       - name: Publish to TestPyPI (Dry Run)
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
