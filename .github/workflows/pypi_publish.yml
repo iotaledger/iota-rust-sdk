@@ -64,7 +64,8 @@ jobs:
         with:
           target: ${{ matrix.target }}
           command: build
-          args: --release --out dist --find-interpreter -- --working-directory bindings/python/src
+          args: --release --out dist --find-interpreter
+          working-directory: bindings/python/src
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: auto
 
@@ -90,7 +91,8 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
-          args: --release --out dist --find-interpreter -- --working-directory bindings/python/src
+          args: --out dist
+          working-directory: bindings/python/src
 
       - name: Upload sdist
         uses: actions/upload-artifact@v4
