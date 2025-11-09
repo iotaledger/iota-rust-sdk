@@ -64,13 +64,13 @@ jobs:
         with:
           target: ${{ matrix.target }}
           command: build
-          args: --release --out dist --find-interpreter --working-directory bindings/python/src
+          args: --release --out dist --find-interpreter -- --working-directory bindings/python/src
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: auto
 
       - name: Fix wheel
         run: |
-          WHEEL_PATH="$(find ./target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)" 
+          WHEEL_PATH="$(find ./target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
           ../scripts/repair_whl.sh $WHEEL_PATH
 
       - name: Upload wheel

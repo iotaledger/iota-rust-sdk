@@ -1,5 +1,5 @@
 [build-system]
-requires = [ "maturin>=1.6,<2.0" ]
+requires = ["maturin>=1.6,<2.0"]
 build-backend = "maturin"
 
 [project]
@@ -9,8 +9,8 @@ description = "IOTA SDK Python bindings"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.13"
-dependencies = [ "cffi" ]
-authors = [ { name = "IOTA Foundation", email = "info@iota.org" } ]
+dependencies = ["cffi"]
+authors = [{ name = "IOTA Foundation", email = "info@iota.org" }]
 
 [project.urls]
 homepage = "https://iota.org"
