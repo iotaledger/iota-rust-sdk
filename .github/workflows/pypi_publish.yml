@@ -90,7 +90,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
-          args: --out dist
+          args: --release --out dist --find-interpreter -- --working-directory bindings/python/src
 
       - name: Upload sdist
         uses: actions/upload-artifact@v4
