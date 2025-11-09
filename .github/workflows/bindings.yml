@@ -17,6 +17,7 @@ concurrency:
 jobs:
   go:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     services:
       postgres:
         image: postgres
@@ -48,6 +49,7 @@ jobs:
         run: make go-examples
   kotlin:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     services:
       postgres:
         image: postgres
@@ -81,6 +83,7 @@ jobs:
         run: make kotlin-examples
   python:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     services:
       postgres:
         image: postgres
