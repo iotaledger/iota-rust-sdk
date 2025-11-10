@@ -1,9 +1,6 @@
 name: Publish to PyPi
 
 on:
-  # TODO: remove after testing
-  push:
-    branches: [ci/python-release]
   workflow_dispatch:
     inputs:
       version:
@@ -20,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-wheels:
     name: Build platform specific wheels
     runs-on: ${{ matrix.os }}
     strategy:
@@ -95,7 +92,7 @@ jobs:
           name: wheel-${{ matrix.target }}
           path: target/wheels/*.whl
 
-  sdist:
+  build-sdist:
     name: Build a source distribution (.tar.gz)
     runs-on: ubuntu-latest
     steps:
@@ -133,16 +130,16 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [build, sdist]
+    needs: [build-wheels, build-sdist]
     if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
-      - name: Download the artifacts from the build job
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           pattern: "*"
           merge-multiple: true
 
-      - name: Ensure wheels and sdist exist before publishing
+      - name: Ensure wheels and sdist exist
         run: |
           shopt -s nullglob
           files=( *.whl *.tar.gz )
