@@ -1,6 +1,9 @@
 name: Publish to PyPi
 
 on:
+  # TODO: remove after testing
+  push:
+    branches: [ci/python-release]
   workflow_dispatch:
     inputs:
       version:
@@ -26,15 +29,15 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             lib_ext: so
-          # - os: ubuntu-latest
-          #   target: aarch64-unknown-linux-gnu
-          #   lib_ext: so
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            lib_ext: so
           - os: macos-latest
             target: x86_64-apple-darwin
             lib_ext: dylib
-          # - os: macos-latest
-          #   target: aarch64-apple-darwin
-          #   lib_ext: dylib
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            lib_ext: dylib
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             lib_ext: dll
@@ -78,13 +81,13 @@ jobs:
           working-directory: bindings/python/src
           manylinux: auto
 
-      - name: Repair wheel (for non-windows platforms)
-        if: ${{ matrix.os != 'windows-latest' }}
-        shell: bash
-        run: |
-          WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
-          [[ -f $WHEEL_PATH ]] || exit 1
-          .github/scripts/repair_whl.sh "$WHEEL_PATH" "${{ matrix.lib_ext }}"
+    #   - name: Repair wheel (for non-windows platforms)
+    #     if: ${{ matrix.os != 'windows-latest' }}
+    #     shell: bash
+    #     run: |
+    #       WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
+    #       [[ -f $WHEEL_PATH ]] || exit 1
+    #       .github/scripts/repair_whl.sh "$WHEEL_PATH" "${{ matrix.lib_ext }}"
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
