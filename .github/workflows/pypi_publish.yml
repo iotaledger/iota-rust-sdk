@@ -26,12 +26,15 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             lib_ext: so
+            sed_cmd: "sed -i"
           - os: macos-latest
             target: x86_64-apple-darwin
             lib_ext: dylib
+            sed_cmd: "sed -i ''"
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             lib_ext: dll
+            sed_cmd: "sed -i"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -51,16 +54,15 @@ jobs:
         with:
           python-version: 3.13
 
-      - name: Set version for manual dispatch
-        shell: bash
+      - name: Update version
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
+        shell: bash
         run: |
           FILE="bindings/python/src/pyproject.toml"
-          grep -q '^version = ".*"' "$FILE" \
-            || { echo "Error: version line not found in $FILE" >&2; exit 1; }
+          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
           NEW_VERSION=${{ github.event.inputs.version }}
-          echo "version (input): $NEW_VERSION"
-          sed -i '' -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
+          SED='${{ matrix.sed_cmd }}'
+          $SED -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
           echo "pyproject.toml:"
           cat "$FILE"
 
