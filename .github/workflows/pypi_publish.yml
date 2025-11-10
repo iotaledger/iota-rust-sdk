@@ -66,7 +66,7 @@ jobs:
 
       - name: Set version for manual dispatch
         shell: bash
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
         run: |
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" bindings/python/src/pyproject.toml
           echo "Checking the set version:"
@@ -81,7 +81,8 @@ jobs:
           working-directory: bindings/python/src
           manylinux: auto
 
-      - name: Repair wheel
+      - name: Repair wheel (for non-windows platforms)
+        if: ${{ matrix.target != 'windows-latest' }}
         shell: bash
         run: |
           WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
@@ -114,7 +115,7 @@ jobs:
           python-version: 3.13
 
       - name: Set version for manual dispatch
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
         run: |
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" bindings/python/src/pyproject.toml
 
