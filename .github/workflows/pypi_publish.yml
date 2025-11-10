@@ -51,16 +51,12 @@ jobs:
         with:
           python-version: 3.13
 
-      - name: Install wheel
-        shell: bash
-        run: python -m pip install --upgrade pip wheel
-
       - name: Set version for manual dispatch
         shell: bash
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
         run: |
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" bindings/python/src/pyproject.toml
-          echo "Checking the set version:"
+          echo "pyproject.toml:"
           cat bindings/python/src/pyproject.toml
 
       - name: Build wheel
@@ -139,7 +135,7 @@ jobs:
         env:
           MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         with:
-          command: upload
+          command: upload-must-fail-precaution # TODO: use actual command
           args: --non-interactive --skip-existing *.whl *.tar.gz
 
       - name: Publish to TestPyPI only (Dry Run)
