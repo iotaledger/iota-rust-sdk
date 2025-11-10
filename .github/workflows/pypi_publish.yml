@@ -27,14 +27,14 @@ jobs:
             target: x86_64-unknown-linux-gnu
             lib_ext: so
             sed_cmd: "sed -i"
-        #   - os: macos-latest
-        #     target: x86_64-apple-darwin
-        #     lib_ext: dylib
-        #     sed_cmd: "sed -i ''"
-        #   - os: windows-latest
-        #     target: x86_64-pc-windows-msvc
-        #     lib_ext: dll
-        #     sed_cmd: "sed -i"
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            lib_ext: dylib
+            sed_cmd: "sed -i ''"
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            lib_ext: dll
+            sed_cmd: "sed -i"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -61,10 +61,10 @@ jobs:
           FILE="bindings/python/src/pyproject.toml"
           grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
           NEW_VERSION=${{ github.event.inputs.version }}
-          echo "new version: $NEW_VERSION"
+          echo "New version: $NEW_VERSION"
           SED='${{ matrix.sed_cmd }}'
           $SED -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "pyproject.toml:"
+          echo "New pyproject.toml:"
           cat "$FILE"
 
       - name: Build wheel
@@ -158,7 +158,7 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          twine upload-must-fail --non-interactive --skip-existing *.whl *.tar.gz # TODO: rename once dry-run works
+          twine upload --non-interactive --skip-existing *.whl *.tar.gz
 
       - name: Publish to TestPyPI only (Dry Run)
         if: ${{ fromJSON(inputs.dry_run) }}
