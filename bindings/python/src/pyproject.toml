@@ -17,6 +17,5 @@ homepage = "https://iota.org"
 
 [tool.maturin]
 bindings = "uniffi"
-python-source = "iota_sdk"
 module-name = "iota_sdk"
 manifest-path = "../../../crates/iota-sdk-ffi/Cargo.toml"
