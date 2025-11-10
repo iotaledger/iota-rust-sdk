@@ -26,15 +26,15 @@ jobs:
     strategy:
       matrix:
         include:
-          #   - os: ubuntu-latest
-          #     target: x86_64-unknown-linux-gnu
-          #     lib_ext: so
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            lib_ext: so
           # - os: ubuntu-latest
           #   target: aarch64-unknown-linux-gnu
           #   lib_ext: so
-          #   - os: macos-latest
-          #     target: x86_64-apple-darwin
-          #     lib_ext: dylib
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            lib_ext: dylib
           # - os: macos-latest
           #   target: aarch64-apple-darwin
           #   lib_ext: dylib
