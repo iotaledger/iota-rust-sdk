@@ -27,14 +27,14 @@ jobs:
             target: x86_64-unknown-linux-gnu
             lib_ext: so
             sed_cmd: "sed -i"
-          - os: macos-latest
-            target: x86_64-apple-darwin
-            lib_ext: dylib
-            sed_cmd: "sed -i ''"
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            lib_ext: dll
-            sed_cmd: "sed -i"
+        #   - os: macos-latest
+        #     target: x86_64-apple-darwin
+        #     lib_ext: dylib
+        #     sed_cmd: "sed -i ''"
+        #   - os: windows-latest
+        #     target: x86_64-pc-windows-msvc
+        #     lib_ext: dll
+        #     sed_cmd: "sed -i"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -151,12 +151,15 @@ jobs:
         with:
           command: upload-must-fail-precaution # TODO: use actual command
           args: --non-interactive --skip-existing *.whl *.tar.gz
+          working-directory: bindings/python/src
 
       - name: Publish to TestPyPI only (Dry Run)
         if: ${{ fromJSON(inputs.dry_run) }}
         uses: PyO3/maturin-action@v1
         env:
+          MATURIN_REPOSITORY_URL: https://test.pypi.org/legacy/
           MATURIN_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
         with:
           command: upload
-          args: --repository testpypi --non-interactive --skip-existing *.whl *.tar.gz
+          args: --non-interactive --skip-existing *.whl *.tar.gz
+          working-directory: bindings/python/src
