@@ -61,6 +61,7 @@ jobs:
           FILE="bindings/python/src/pyproject.toml"
           grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
           NEW_VERSION=${{ github.event.inputs.version }}
+          echo "new version: $NEW_VERSION"
           SED='${{ matrix.sed_cmd }}'
           $SED -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
           echo "pyproject.toml:"
@@ -100,10 +101,16 @@ jobs:
         with:
           python-version: 3.13
 
-      - name: Set version for manual dispatch
+      - name: Update version
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
         run: |
-          sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" bindings/python/src/pyproject.toml
+          FILE="bindings/python/src/pyproject.toml"
+          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
+          NEW_VERSION=${{ github.event.inputs.version }}
+          echo "new version: $NEW_VERSION"
+          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
+          echo "pyproject.toml:"
+          cat "$FILE"
 
       - name: Build sdist
         uses: PyO3/maturin-action@v1
