@@ -66,12 +66,13 @@ jobs:
         run: |
           WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
           [[ -f $WHEEL_PATH ]] || exit 1
-          .github/scripts/repair_whl.sh "$WHEEL_PATH" "${{ matrix.lib_ext }}" 
+          .github/scripts/repair_whl.sh "$WHEEL_PATH" "${{ matrix.lib_ext }}"
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          path: target/wheels
+          name: wheel-${{ matrix.target }}
+          path: target/wheels/*.whl
 
   sdist:
     name: Build a source distribution (.tar.gz)
@@ -90,7 +91,8 @@ jobs:
       - name: Upload sdist
         uses: actions/upload-artifact@v4
         with:
-          path: target/wheels
+          name: sdist
+          path: target/wheels/*.tar.gz
 
   publish:
     runs-on: ubuntu-latest
