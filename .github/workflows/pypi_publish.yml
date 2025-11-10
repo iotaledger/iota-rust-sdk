@@ -69,6 +69,8 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
         run: |
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" bindings/python/src/pyproject.toml
+          echo "Checking the set version:"
+          cat bindings/python/src/pyproject.toml
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1

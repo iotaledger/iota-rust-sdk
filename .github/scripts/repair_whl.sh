@@ -14,11 +14,14 @@ TEMP_DIR="$(mktemp -d)"
 trap 'rm -rf -- "$TEMP_DIR"' EXIT
 
 # Unpack the broken wheel into a temp dir
-python -m wheel unpack --dest "$TEMP_DIR" "$BROKEN_WHEEL_FILEPATH" # >/dev/null
+python -m wheel unpack --dest "$TEMP_DIR" "$BROKEN_WHEEL_FILEPATH" >/dev/null
 
 # Determine the name of the unpacked directory `iota_sdk-x.y.z` which is the only sub directory
 UNPACKED_DIR="$(find "$TEMP_DIR" -mindepth 1 -maxdepth 1 -type d -print -quit)"
 UNPACKED_PKG_DIR="$UNPACKED_DIR/iota_sdk"
+
+# List package contents
+ls -l "$UNPACKED_PKG_DIR"
 
 # Fix the file name to what the `iota_sdk_ffi.py` stub expects
 mv "$UNPACKED_PKG_DIR/libuniffi_iota_sdk_ffi.$LIB_EXT" "$UNPACKED_PKG_DIR/libiota_sdk_ffi.$LIB_EXT"
