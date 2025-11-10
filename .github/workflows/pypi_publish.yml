@@ -51,6 +51,7 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Install `uniffi-bindgen` for maturin
+        shell: bash
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
 
@@ -60,9 +61,11 @@ jobs:
           python-version: 3.13
 
       - name: Install wheel
+        shell: bash
         run: python -m pip install --upgrade pip wheel
 
       - name: Set version for manual dispatch
+        shell: bash
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
         run: |
           sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" bindings/python/src/pyproject.toml
@@ -77,6 +80,7 @@ jobs:
           manylinux: auto
 
       - name: Repair wheel
+        shell: bash
         run: |
           WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
           [[ -f $WHEEL_PATH ]] || exit 1
