@@ -82,7 +82,7 @@ jobs:
           manylinux: auto
 
       - name: Repair wheel (for non-windows platforms)
-        if: ${{ matrix.target != 'windows-latest' }}
+        if: ${{ matrix.os != 'windows-latest' }}
         shell: bash
         run: |
           WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
