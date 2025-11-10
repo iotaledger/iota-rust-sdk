@@ -1,12 +1,13 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-if (( $# != 1 )); then
-  echo "Usage: $0 /path/to/iota_sdk-x.y.z-*.whl" >&2
+if (( $# != 2 )); then
+  echo "Usage: $0 /path/to/iota_sdk-x.y.z-*.whl LIB_EXT" >&2
   exit 2
 fi
 
 BROKEN_WHEEL_FILEPATH=$(realpath "$1")
+LIB_EXT=$2
 
 # Create a temporary dir to unpack the broken wheel into
 TEMP_DIR="$(mktemp -d)"
@@ -20,7 +21,7 @@ UNPACKED_DIR="$(find "$TEMP_DIR" -mindepth 1 -maxdepth 1 -type d -print -quit)"
 UNPACKED_PKG_DIR="$UNPACKED_DIR/iota_sdk"
 
 # Fix the file name to what the `iota_sdk_ffi.py` stub expects
-mv "$UNPACKED_PKG_DIR/libuniffi_iota_sdk_ffi.so" "$UNPACKED_PKG_DIR/libiota_sdk_ffi.so"
+mv "$UNPACKED_PKG_DIR/libuniffi_iota_sdk_ffi.$LIB_EXT" "$UNPACKED_PKG_DIR/libiota_sdk_ffi.$LIB_EXT"
 
 # Repack the wheel into a new `.whl` file, ensuring the RECORD file is updated
 python -m wheel pack --dest "$TEMP_DIR" "$UNPACKED_DIR" >/dev/null

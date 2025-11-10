@@ -66,8 +66,7 @@ jobs:
         run: |
           WHEEL_PATH="$(find target/wheels -maxdepth 1 -type f -name '*.whl' -print -quit)"
           [[ -f $WHEEL_PATH ]] || exit 1
-          echo "Repairing wheel at: $WHEEL_PATH"
-          .github/scripts/repair_whl.sh $WHEEL_PATH
+          .github/scripts/repair_whl.sh "$WHEEL_PATH" "${{ matrix.lib_ext }}" 
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4

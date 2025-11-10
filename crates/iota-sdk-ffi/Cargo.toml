@@ -7,7 +7,7 @@ license = "Apache-2.0"
 publish = false
 
 [[bin]]
-name = "uniffi-bindgen" # we need this to have the expect name for maturin in the CI
+name = "iota_sdk_bindings"
 path = "uniffi_bindgen.rs"
 
 [lib]
