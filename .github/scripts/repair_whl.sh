@@ -14,7 +14,7 @@ TEMP_DIR="$(mktemp -d)"
 trap 'rm -rf -- "$TEMP_DIR"' EXIT
 
 # Unpack the broken wheel into a temp dir
-python -m wheel unpack --dest "$TEMP_DIR" "$BROKEN_WHEEL_FILEPATH" >/dev/null
+python -m wheel unpack --dest "$TEMP_DIR" "$BROKEN_WHEEL_FILEPATH" # >/dev/null
 
 # Determine the name of the unpacked directory `iota_sdk-x.y.z` which is the only sub directory
 UNPACKED_DIR="$(find "$TEMP_DIR" -mindepth 1 -maxdepth 1 -type d -print -quit)"
