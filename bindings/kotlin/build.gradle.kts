@@ -2,8 +2,8 @@ import com.ncorti.ktfmt.gradle.tasks.*
 import java.util.Base64
 
 plugins {
-    kotlin("jvm") version "1.9.24"
-    kotlin("plugin.serialization") version "1.9.24"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
     application
@@ -75,9 +75,9 @@ sourceSets {
 
 // Add compiler configuration to handle UniFFI type conflicts
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "21"
-        freeCompilerArgs +=
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+        freeCompilerArgs.addAll(
             listOf(
                 "-Xjvm-default=all",
                 "-Xallow-kotlin-package",
@@ -89,8 +89,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
                 // Add these flags to help with recursive type issues
                 "-Xtype-enhancement-improvements-strict-mode=false",
             )
-        allWarningsAsErrors = false
-        suppressWarnings = true
+        )
+        allWarningsAsErrors.set(false)
+        suppressWarnings.set(true)
     }
 }
 
