@@ -52,9 +52,9 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.13
+          python-version: 3.8
 
-      - name: Update version
+      - name: Manual version override
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
         shell: bash
         run: |
@@ -64,7 +64,7 @@ jobs:
           echo "New version: $NEW_VERSION"
           SED='${{ matrix.sed_cmd }}'
           $SED -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "New pyproject.toml:"
+          echo "Updated pyproject.toml:"
           cat "$FILE"
 
       - name: Build wheel
@@ -72,7 +72,7 @@ jobs:
         with:
           target: ${{ matrix.target }}
           command: build
-          args: --release
+          args: --release --strip
           working-directory: bindings/python/src
           manylinux: auto
 
@@ -99,17 +99,17 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.13
+          python-version: 3.8
 
-      - name: Update version
+      - name: Manual version override
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
         run: |
           FILE="bindings/python/src/pyproject.toml"
           grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
           NEW_VERSION=${{ github.event.inputs.version }}
-          echo "new version: $NEW_VERSION"
+          echo "New version: $NEW_VERSION"
           sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "pyproject.toml:"
+          echo "Updated pyproject.toml:"
           cat "$FILE"
 
       - name: Build sdist
@@ -146,7 +146,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.13
+          python-version: 3.8
 
       - name: Install Twine
         run: |

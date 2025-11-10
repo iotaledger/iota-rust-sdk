@@ -46,10 +46,9 @@ You can also test creating and installing a python wheel (`.whl`) locally:
 2. `cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen`
 3. `cd bindings/python/src`
 4. `maturin build --release` (you'll find the generated `.whl` in target/wheels)
-5. Repair the `.whl` file using the `repair_whl.sh` script in `.github/scripts/repair_whl.sh`
-6. Create a python test project with a virtual environment
-7. `pip install target/wheels/iota_sdk-0.1.0-<PLATFORM_SPECIFIC>.whl`
-8. Finally paste and run:
+5. Create a python test project with a virtual environment
+6. `pip install target/wheels/iota_sdk-0.1.0-<PLATFORM_SPECIFIC>.whl`
+7. Paste and run:
 
 ```python
 from iota_sdk import *
