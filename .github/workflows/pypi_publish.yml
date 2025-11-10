@@ -32,15 +32,15 @@ jobs:
           # - os: ubuntu-latest
           #   target: aarch64-unknown-linux-gnu
           #   lib_ext: so
-          # - os: macos-latest
-          #   target: x86_64-apple-darwin
-          #   lib_ext: dylib
-          # - os: macos-latest
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            lib_ext: dylib
+          - os: macos-latest
           #   target: aarch64-apple-darwin
           #   lib_ext: dylib
-          # - os: windows-latest
-          #   target: x86_64-pc-windows-msvc
-          #   lib_ext: dll
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            lib_ext: dll
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install version-matched `uniffi-bindgen` that maturin can use
+      - name: Install `uniffi-bindgen` for maturin
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
 
@@ -98,7 +98,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install version-matched `uniffi-bindgen` that maturin can use
+      - name: Install `uniffi-bindgen` for maturin
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
 
