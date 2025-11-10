@@ -57607,11 +57607,11 @@ public object FfiConverterTypeFeature: FfiConverterRustBuffer<Feature> {
  * ```
  */
 
-enum class IdOperation {
+enum class IdOperation(val value: kotlin.UByte) {
     
-    NONE,
-    CREATED,
-    DELETED;
+    NONE(0u),
+    CREATED(1u),
+    DELETED(2u);
     companion object
 }
 
@@ -58283,15 +58283,15 @@ public object FfiConverterTypeSdkFfiError : FfiConverterRustBuffer<SdkFfiExcepti
  * ```
  */
 
-enum class SignatureScheme {
+enum class SignatureScheme(val value: kotlin.UByte) {
     
-    ED25519,
-    SECP256K1,
-    SECP256R1,
-    MULTISIG,
-    BLS12381,
-    ZK_LOGIN,
-    PASSKEY;
+    ED25519(0u),
+    SECP256K1(1u),
+    SECP256R1(2u),
+    MULTISIG(3u),
+    BLS12381(4u),
+    ZK_LOGIN(5u),
+    PASSKEY(6u);
     companion object
 }
 
@@ -58561,16 +58561,16 @@ public object FfiConverterTypeTransactionExpiration : FfiConverterRustBuffer<Tra
  * ```
  */
 
-enum class TypeArgumentError {
+enum class TypeArgumentError(val value: kotlin.UByte) {
     
     /**
      * A type was not found in the module specified
      */
-    TYPE_NOT_FOUND,
+    TYPE_NOT_FOUND(0u),
     /**
      * A type provided did not match the specified constraint
      */
-    CONSTRAINT_NOT_SATISFIED;
+    CONSTRAINT_NOT_SATISFIED(1u);
     companion object
 }
 

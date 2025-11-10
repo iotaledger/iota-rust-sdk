@@ -28,4 +28,4 @@ serde_json.workspace = true
 tokio = { workspace = true, features = ["time"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
-iota-sdk = { version = "3.0.0-alpha.0", path = "../iota-sdk" }
+iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk" }
