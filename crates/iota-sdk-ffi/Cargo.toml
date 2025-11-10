@@ -7,7 +7,7 @@ license = "Apache-2.0"
 publish = false
 
 [[bin]]
-name = "iota_sdk_bindings"
+name = "uniffi-bindgen"
 path = "uniffi_bindgen.rs"
 
 [lib]
