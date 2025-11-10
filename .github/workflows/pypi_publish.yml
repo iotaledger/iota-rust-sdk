@@ -152,7 +152,7 @@ jobs:
           command: upload
           args: --non-interactive --skip-existing *.whl *.tar.gz
 
-      - name: Publish to TestPyPI (Dry Run)
+      - name: Publish to TestPyPI only (Dry Run)
         if: ${{ fromJSON(inputs.dry_run) }}
         uses: PyO3/maturin-action@v1
         env:
