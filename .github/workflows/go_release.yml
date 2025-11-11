@@ -25,8 +25,8 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          # args: release --clean --skip=publish
-          args: build --clean --skip validate
+          args: release --clean --skip=publish
+          # args: build --clean --skip validate
           workdir: bindings/go
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
