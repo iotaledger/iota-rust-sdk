@@ -1,6 +1,9 @@
 name: Publish to Maven Central
 
 on:
+  # TODO: remove after testing
+  push:
+    branches: [ci/kotlin-release]
   workflow_dispatch:
     inputs:
       version:
@@ -49,14 +52,20 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
+      - name: Install cross-compilation tools
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+
       - name: Build the bindings
-        run: make kotlin
+        run: make kotlin TARGET=${{ matrix.target }}
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Upload native library
         uses: actions/upload-artifact@v4
         with:
           name: native-lib-${{ matrix.os }}-${{ matrix.target }}
-          path: bindings/kotlin/lib/*iota_sdk_ffi*
+          path: bindings/kotlin/lib/**/*iota_sdk_ffi*
 
   publish:
     runs-on: ubuntu-latest
@@ -88,20 +97,21 @@ jobs:
           echo "Listing contents of bindings/kotlin/lib before copying:"
           ls -la bindings/kotlin/lib/
           cd bindings/kotlin/lib
-          echo "Copying libraries..."
-          cp ../../../libs/native-lib-ubuntu-latest-x86_64-unknown-linux-gnu/libiota_sdk_ffi.so .
-          cp ../../../libs/native-lib-ubuntu-latest-aarch64-unknown-linux-gnu/libiota_sdk_ffi.so libiota_sdk_ffi_arm64.so
-          cp ../../../libs/native-lib-macos-latest-x86_64-apple-darwin/libiota_sdk_ffi.dylib .
-          cp ../../../libs/native-lib-macos-latest-aarch64-apple-darwin/libiota_sdk_ffi.dylib libiota_sdk_ffi_arm64.dylib
-          cp ../../../libs/native-lib-windows-latest-x86_64-pc-windows-msvc/iota_sdk_ffi.dll .
+          echo "Creating platform directories and copying libraries..."
+          mkdir -p linux-x86-64 linux-aarch64 darwin-x86-64 darwin-aarch64 win32-x86-64
+          cp ../../../libs/native-lib-ubuntu-latest-x86_64-unknown-linux-gnu/linux-x86-64/libiota_sdk_ffi.so linux-x86-64/
+          cp ../../../libs/native-lib-ubuntu-latest-aarch64-unknown-linux-gnu/linux-aarch64/libiota_sdk_ffi.so linux-aarch64/
+          cp ../../../libs/native-lib-macos-latest-x86_64-apple-darwin/darwin-x86-64/libiota_sdk_ffi.dylib darwin-x86-64/
+          cp ../../../libs/native-lib-macos-latest-aarch64-apple-darwin/darwin-aarch64/libiota_sdk_ffi.dylib darwin-aarch64/
+          cp ../../../libs/native-lib-windows-latest-x86_64-pc-windows-msvc/win32-x86-64/iota_sdk_ffi.dll win32-x86-64/
           echo "Contents after copying:"
-          ls -la
+          ls -la linux-* darwin-* win32-*
 
       - name: Generate Kotlin bindings
         run: |
           cd bindings/kotlin
-          # Generate bindings using the Linux library (arbitrary choice)
-          cargo run --bin iota_sdk_bindings -- generate --library "lib/libiota_sdk_ffi.so" --language kotlin --out-dir lib --no-format -c uniffi.toml
+          # Generate bindings using the Linux x86_64 library (arbitrary choice)
+          cargo run --bin iota_sdk_bindings -- generate --library "lib/linux-x86-64/libiota_sdk_ffi.so" --language kotlin --out-dir lib --no-format -c uniffi.toml
 
       - name: Set version for release
         if: github.event_name == 'release'

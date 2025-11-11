@@ -1,5 +1,6 @@
 import com.ncorti.ktfmt.gradle.tasks.*
 import java.util.Base64
+import org.gradle.api.tasks.bundling.Jar
 
 plugins {
     kotlin("jvm") version "2.2.21"
@@ -12,7 +13,7 @@ plugins {
 
 group = "org.iota"
 
-version = "0.0.1-alpha.1"
+version = "0.0.1-alpha.2"
 
 repositories { mavenCentral() }
 
@@ -45,7 +46,15 @@ tasks.register<KtfmtFormatTask>("KtfmtFormat") {
 // Generic task to run any example
 tasks.register<JavaExec>("example") {
     classpath = sourceSets["main"].runtimeClasspath
-    jvmArgs = listOf("-Djna.library.path=${projectDir}/lib")
+    val osName = System.getProperty("os.name").lowercase()
+    val platformDir =
+        when {
+            osName.contains("linux") -> "linux-x86-64"
+            osName.contains("mac") || osName.contains("darwin") -> "darwin-x86-64"
+            osName.contains("windows") -> "win32-x86-64"
+            else -> "linux-x86-64" // fallback
+        }
+    jvmArgs = listOf("-Djna.library.path=${projectDir}/lib/$platformDir")
 
     // Get the example name from the command line argument -Pexample=<name>
     val exampleProperty = "example"
@@ -68,6 +77,10 @@ tasks.register<JavaExec>("example") {
 sourceSets {
     main {
         kotlin { srcDirs("lib", "examples") }
+        resources {
+            srcDir("lib")
+            exclude("**/*.kt")
+        }
         // Explicitly disable Java source sets since we only have Kotlin
         java { setSrcDirs(emptyList<String>()) }
     }
@@ -146,5 +159,11 @@ signing {
     if (signingKeyEncoded.isPresent && signingPassword.isPresent) {
         val signingKey = String(Base64.getDecoder().decode(signingKeyEncoded.get()))
         useInMemoryPgpKeys(signingKey, signingPassword.get())
+    }
+}
+
+tasks.whenTaskAdded {
+    if (name == "sourcesJar") {
+        (this as Jar).exclude("**/*.so", "**/*.dylib", "**/*.dll")
     }
 }
