@@ -1,9 +1,10 @@
 name: Go Release
 
 on:
+  pull_request:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   goreleaser:
@@ -24,6 +25,8 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean
+          # args: release --clean
+          args: build --clean
+          workdir: bindings/go
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
