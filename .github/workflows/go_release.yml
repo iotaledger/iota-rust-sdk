@@ -25,7 +25,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          # args: release --clean
+          # args: release --clean --skip=publish
           args: build --clean --skip validate
           workdir: bindings/go
         env:
