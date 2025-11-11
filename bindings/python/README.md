@@ -1,4 +1,8 @@
-# IOTA SDK - Python Bindings
+# IOTA SDK Library - Python Bindings
+
+This document describes how to generate platform specific Python bindings for the IOTA SDK locally from the repository itself.
+
+Instructions on how to install pre-built officially released Python bindings for your project you can find [`here`](src/README.md).
 
 ## Prerequisites
 
@@ -11,56 +15,32 @@ Please follow the general install instructions for your platform.
 
 Verify by running `make --version` and `python3 --version`.
 
-## Generate Python bindings
+## Generate Python bindings module `iota_sdk_ffi.py`
 
-```bash
-make python
-```
+1. Build the bindings: `make python`
+2. Test by running the following minimal example: `make python-example chain_id`
 
-## Run Python example
+## Generate Python bindings wheel `iota_sdk-*.whl`
 
-```sh
-make python-example chain_id
-```
+1. Install `maturin`: `pipx install maturin`
+2. Install `uniffi-bindgen`: `cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen`
+3. Switch to the Python bindings package: `cd bindings/python/src`
+4. Build the wheel: `maturin build --release` (you'll find the generated `.whl` in target/wheels)
+5. Create or switch to your Python project with an activated virtual environment
+6. Install the local wheel: `pip install target/wheels/iota_sdk-0.1.0-<PLATFORM_SPECIFIC>.whl`
+7. Test by running the following minimal example:
 
-## Publishing to PyPi (Python Package Index)
+   ```python
+   from iota_sdk import *
 
-### Dry Run Testing
+   import asyncio
 
-To test the publishing process without actually publishing to PyPi:
+   async def main():
+       client = GraphQlClient.new_devnet()
 
-1. Go to the Actions tab in GitHub
-2. Select "Publish to PyPi" workflow
-3. Click "Run workflow"
-4. Check "Publish to TestPyPI only (Dry Run)"
-5. Optionally specify a version
-6. Run the workflow
+       chain_id = await client.chain_id()
+       print("Chain ID:", chain_id)
 
-This will build all artifacts and publish them to `https://test.pypi.org/`.
-
-### Local Testing
-
-You can also test creating and installing a python wheel (`.whl`) locally:
-
-1. `pipx install maturin` (cargo install maturin fails to compile unless you install their latest main)
-2. `cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen`
-3. `cd bindings/python/src`
-4. `maturin build --release` (you'll find the generated `.whl` in target/wheels)
-5. Create a python test project with a virtual environment
-6. `pip install target/wheels/iota_sdk-0.1.0-<PLATFORM_SPECIFIC>.whl`
-7. Paste and run:
-
-```python
-from iota_sdk import *
-
-import asyncio
-
-async def main():
-    client = GraphQlClient.new_devnet()
-
-    chain_id = await client.chain_id()
-    print("Chain ID:", chain_id)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
+   if __name__ == "__main__":
+       asyncio.run(main())
+   ```
