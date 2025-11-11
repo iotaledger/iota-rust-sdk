@@ -8,12 +8,9 @@ before:
     - cargo install --locked cargo-zigbuild
     - cargo fetch --locked
 
+# Skip builds since this is a Go library, not an executable
 builds:
-  - id: go-sdk
-    main: iota_sdk_ffi
-    # Needed to build a library instead of a binary
-    skip: true
-
+  - skip: true
 
 archives:
   - formats: [tar.gz]
