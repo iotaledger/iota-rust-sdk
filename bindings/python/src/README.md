@@ -1,6 +1,6 @@
 # IOTA SDK Library - Python bindings
 
-This library provides Python bindings for the official [`IOTA SDK`](https://github.com/iotaledger/iota-rust-sdk). 
+This library provides Python bindings for the official [`IOTA SDK`](https://github.com/iotaledger/iota-rust-sdk).
 
 Note that these bindings were automatically generated using [`uniffi-rs`](https://github.com/mozilla/uniffi-rs) and [`maturin`](https://github.com/PyO3/maturin) and are incompatible with any IOTA SDK version prior `v3`.
 
