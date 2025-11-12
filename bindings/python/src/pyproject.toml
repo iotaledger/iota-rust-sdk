@@ -9,7 +9,6 @@ description = "IOTA SDK Python bindings"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.8"
-dependencies = ["cffi"]
 authors = [{ name = "IOTA Foundation", email = "info@iota.org" }]
 
 [project.urls]
