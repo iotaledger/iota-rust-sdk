@@ -82,7 +82,8 @@ jobs:
           command: build
           args: --release --strip
           working-directory: bindings/python/src
-          manylinux: auto
+          manylinux: 2_39
+          maturin-version: v1.10.1
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
