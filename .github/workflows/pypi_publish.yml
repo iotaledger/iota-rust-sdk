@@ -162,7 +162,11 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          twine upload --non-interactive --skip-existing *.whl *.tar.gz
+          twine upload \
+            --non-interactive \
+            --skip-existing \
+            --disable-progress-bar \
+            *.whl *.tar.gz
 
       - name: Publish to TestPyPI only (Dry Run)
         if: ${{ fromJSON(inputs.dry_run) }}
@@ -171,4 +175,10 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
         run: |
-          twine upload --non-interactive *.whl *.tar.gz
+          twine upload \
+            --non-interactive \
+            --skip-existing \
+            --disable-progress-bar \
+            *.whl *.tar.gz
+
+
