@@ -12,8 +12,6 @@ To add this library as a dependency to your 3.8+ Python project, first make sure
 pip install iota-sdk
 ```
 
-Note that for this command to work your shell should be running a virtual Python environment.
-
 You can check your installation by running the following minimum example:
 
 ```python
