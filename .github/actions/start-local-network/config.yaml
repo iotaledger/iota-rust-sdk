@@ -1,14 +1,14 @@
 ---
 signer-config:
   local:
-    keypair: <keypair>
+    keypair: AJmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZ
 rpc-host-ip: 0.0.0.0
 rpc-port: 9527
 metrics-port: 9185
 storage-config:
   redis:
     redis_url: "redis://redis:6379"
-fullnode-url: "http://localhost:9000"
+fullnode-url: "http://host.docker.internal:9000"
 coin-init-config:
   target-init-balance: 100000000
   refresh-interval-sec: 86400

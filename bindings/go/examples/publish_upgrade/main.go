@@ -25,7 +25,7 @@ import (
 	"os"
 	"time"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func main() {

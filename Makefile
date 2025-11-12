@@ -116,7 +116,8 @@ endef
 go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
 	@$(build_binding) \
-	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format || exit $$?
+	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
+	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
 
 .PHONY: kotlin
 kotlin: ## Build Kotlin bindings
