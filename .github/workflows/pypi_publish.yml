@@ -82,7 +82,7 @@ jobs:
           command: build
           args: --release --strip
           working-directory: bindings/python/src
-          manylinux: 2_28
+          manylinux: auto
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
