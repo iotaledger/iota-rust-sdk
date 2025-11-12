@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk_ffi"
 )
 
 func main() {
