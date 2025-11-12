@@ -171,4 +171,4 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
         run: |
-          twine upload --non-interactive --skip-existing *.whl *.tar.gz
+          twine upload --non-interactive *.whl *.tar.gz
