@@ -18,22 +18,16 @@ permissions:
 
 jobs:
   linux:
-    runs-on: ${{ matrix.platform.runner }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         platform:
-          - runner: ubuntu-22.04
-            target: x86_64
-          - runner: ubuntu-22.04
-            target: x86
-          - runner: ubuntu-22.04
-            target: aarch64
-          - runner: ubuntu-22.04
-            target: armv7
-          - runner: ubuntu-22.04
-            target: s390x
-          - runner: ubuntu-22.04
-            target: ppc64le
+          - target: x86_64
+          # - target: x86
+          #- target: aarch64
+          # - target: armv7
+          # - target: s390x
+          # - target: ppc64le
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -78,6 +72,100 @@ jobs:
           name: wheel-linux-${{ matrix.platform.target }}
           path: target/wheels/*.whl
 
+  macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        platform:
+          - target: x86_64
+          # - target: aarch64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install `uniffi-bindgen` for maturin
+        shell: bash
+        run: |
+          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+
+      - name: Manual version override
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
+        shell: bash
+        run: |
+          FILE="bindings/python/src/pyproject.toml"
+          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
+          NEW_VERSION=${{ github.event.inputs.version }}
+          echo "New version: $NEW_VERSION"
+          sed -i '' -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
+          echo "Updated pyproject.toml:"
+          cat "$FILE"
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-macos-${{ matrix.platform.target }}
+          path: target/wheels/*.whl
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        platform:
+          - target: x64
+          # - target: x86
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install `uniffi-bindgen` for maturin
+        shell: bash
+        run: |
+          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+          architecture: ${{ matrix.platform.target }}
+
+      - name: Manual version override
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
+        shell: bash
+        run: |
+          FILE="bindings/python/src/pyproject.toml"
+          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
+          NEW_VERSION=${{ github.event.inputs.version }}
+          echo "New version: $NEW_VERSION"
+          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
+          echo "Updated pyproject.toml:"
+          cat "$FILE"
+
+      - name: Build wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.platform.target }}
+          command: build
+          args: --release --find-interpreter
+          working-directory: bindings/python/src
+          manylinux: auto
+          maturin-version: v1.10.1 # pinned
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-windows-${{ matrix.platform.target }}
+          path: target/wheels/*.whl
+
   sdist:
     name: Build a source distribution (.tar.gz)
     runs-on: ubuntu-latest
@@ -110,7 +198,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [linux, sdist]
+    needs: [linux, macos, windows, sdist]
     if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Download build artifacts
