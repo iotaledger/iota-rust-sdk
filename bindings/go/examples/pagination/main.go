@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
-	address, err := sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	client := iota_sdk.GraphQlClientNewDevnet()
+	address, err := iota_sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
 	// Limit to 1 to demonstrate pagination
 	limit := int32(1)
-	var allObjects []*sdk.Object
+	var allObjects []*iota_sdk.Object
 	var nextCursor *string
 	for {
 		if nextCursor != nil {
@@ -24,8 +24,8 @@ func main() {
 		} else {
 			fmt.Printf("Fetching page with cursor: nil\n")
 		}
-		page, err := client.Objects(&sdk.ObjectFilter{Owner: &address}, &sdk.PaginationFilter{Direction: sdk.DirectionForward, Cursor: nextCursor, Limit: &limit})
-		if err.(*sdk.SdkFfiError) != nil {
+		page, err := client.Objects(&iota_sdk.ObjectFilter{Owner: &address}, &iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Cursor: nextCursor, Limit: &limit})
+		if err.(*iota_sdk.SdkFfiError) != nil {
 			log.Fatalf("Failed to get owned objects: %v", err)
 		}
 		for _, obj := range page.Data {

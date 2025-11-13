@@ -7,23 +7,23 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	address, err := sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+	address, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	if err != nil {
 		log.Fatalf("Failed to create address: %v", err)
 	}
 
-	faucetClient := sdk.FaucetClientNewLocalnet()
+	faucetClient := iota_sdk.FaucetClientNewLocalnet()
 
 	faucetReceipt, err := faucetClient.RequestAndWait(address)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	if err.(*sdk.SdkFfiError) == nil {
+	if err.(*iota_sdk.SdkFfiError) == nil {
 		fmt.Println("Faucet receipt:")
 		for _, coin := range faucetReceipt.Sent {
 			coinIdHex := coin.Id.ToHex()
