@@ -6,11 +6,11 @@ package main
 import (
 	"fmt"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	privateKey := sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
 	privateKeyBech32, err := privateKey.ToBech32()
 	if err != nil {
 		panic(err)
@@ -20,7 +20,7 @@ func main() {
 	address := publicKey.DeriveAddress()
 
 	fmt.Println("Private Key:", privateKeyBech32)
-	fmt.Println("Public Key:", sdk.Base64Encode(publicKey.ToBytes()))
-	fmt.Println("Public Key With Flag:", sdk.Base64Encode(flaggedPublicKey))
+	fmt.Println("Public Key:", iota_sdk.Base64Encode(publicKey.ToBytes()))
+	fmt.Println("Public Key With Flag:", iota_sdk.Base64Encode(flaggedPublicKey))
 	fmt.Println("Address:", address.ToHex())
 }

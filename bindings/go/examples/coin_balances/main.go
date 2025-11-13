@@ -7,19 +7,19 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
-	address, err := sdk.AddressFromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
+	address, err := iota_sdk.AddressFromHex("0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
 	coins, err := client.Coins(address, nil, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get coins: %v", err)
 	}
 
@@ -28,7 +28,7 @@ func main() {
 	}
 
 	balance, err := client.Balance(address, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
 	fmt.Printf("Total Balance = %d\n", *balance)

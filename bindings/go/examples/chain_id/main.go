@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	chainID, err := client.ChainId()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get chain ID: %v", err)
 	}
 	fmt.Println("Chain ID:", chainID)

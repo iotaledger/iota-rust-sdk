@@ -119,7 +119,8 @@ go: ## Build Go bindings
 	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
 	# TODO: For some reason only the .h file is renamed, not the .go file
 	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
-
+	@sed -i.bak "s/^package iota_sdk_ffi$$/package iota_sdk/" bindings/go/iota_sdk/iota_sdk.go && rm bindings/go/iota_sdk/iota_sdk.go.bak
+	
 .PHONY: kotlin
 kotlin: ## Build Kotlin bindings
 	@printf "Building Kotlin bindings...\n"

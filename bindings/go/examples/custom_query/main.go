@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	queryEpochDataStr := `
 	query MyQuery($id: UInt53) {
@@ -24,11 +24,11 @@ func main() {
 		}
 	}`
 
-	queryEpochData := sdk.Query{
+	queryEpochData := iota_sdk.Query{
 		Query: queryEpochDataStr,
 	}
 	res1, err := client.RunQuery(queryEpochData)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to run a query: %v", err)
 	}
 	fmt.Println(res1)
@@ -36,12 +36,12 @@ func main() {
 	variablesJson := `{"id": 1}`
 	variables := string(variablesJson)
 
-	queryEpochDataWithVariables := sdk.Query{
+	queryEpochDataWithVariables := iota_sdk.Query{
 		Query:     queryEpochDataStr,
 		Variables: &variables,
 	}
 	res2, err := client.RunQuery(queryEpochDataWithVariables)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to run a query with variables: %v", err)
 	}
 	fmt.Println(res2)
@@ -50,11 +50,11 @@ func main() {
 	query MyQuery {
 		chainIdentifier
 	}`
-	queryChainId := sdk.Query{
+	queryChainId := iota_sdk.Query{
 		Query: queryChainIdStr,
 	}
 	res3, err := client.RunQuery(queryChainId)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to run a query: %v", err)
 	}
 	fmt.Println(res3)

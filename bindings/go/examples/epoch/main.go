@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	// Get current epoch
 	currentEpoch, err := client.Epoch(nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get current epoch: %v", err)
 	}
 	if currentEpoch == nil {
@@ -28,7 +28,7 @@ func main() {
 	// Get previous epoch
 	previousEpochId := currentEpoch.EpochId - 1
 	previousEpoch, err := client.Epoch(&previousEpochId)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get previous epoch: %v", err)
 	}
 	if previousEpoch == nil {

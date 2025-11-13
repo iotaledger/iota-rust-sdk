@@ -1,5 +1,5 @@
 
-package iota_sdk_ffi
+package iota_sdk
 
 // #include <iota_sdk.h>
 import "C"
