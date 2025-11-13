@@ -52,8 +52,6 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
 
       - name: Install `uniffi-bindgen` for maturin
         shell: bash
