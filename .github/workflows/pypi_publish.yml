@@ -80,10 +80,18 @@ jobs:
         with:
           target: ${{ matrix.target }}
           command: build
-          args: --release --strip
+          args: |
+            --release \
+            --strip \
+            --find-interpreter \
+            --auditwheel=repair \
+            --zig
           working-directory: bindings/python/src
-          manylinux: 2_39
-          maturin-version: v1.10.1
+          manylinux: 2_28 # enforces --compatibility=manylinux_2_28
+          maturin-version: v1.10.1 # pinned
+          before-script-linux: |
+            python3 -m pip install --upgrade pip
+            python3 -m pip install ziglang
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
