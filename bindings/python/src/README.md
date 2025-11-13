@@ -6,7 +6,7 @@ Note that these bindings were automatically generated using [`uniffi-rs`](https:
 
 ## Installation
 
-To add this library as a dependency to your 3.8+ Python project, first make sure you have created a [`virtual environment`](https://docs.python.org/3/library/venv.html), then run the command:
+To add this library as a dependency to your 3.9+ Python project, first make sure you have created a [`virtual environment`](https://docs.python.org/3/library/venv.html), then run the command:
 
 ```sh
 pip install iota-sdk

@@ -70,6 +70,57 @@ jobs:
           name: wheel-linux-${{ matrix.platform.target }}
           path: target/wheels/*.whl
 
+  musllinux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - target: x86_64
+          # - target: x86
+          # - target: aarch64
+          # - target: armv7
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install `uniffi-bindgen` for maturin
+        run: |
+          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+
+      - name: Update version in pyproject.toml
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
+        run: |
+          FILE="bindings/python/src/pyproject.toml"
+          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
+          NEW_VERSION=${{ github.event.inputs.version }}
+          echo "New version: $NEW_VERSION"
+          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
+          echo "Updated pyproject.toml:"
+          cat "$FILE"
+
+      - name: Build wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.platform.target }}
+          command: build
+          args: --release --find-interpreter
+          working-directory: bindings/python/src
+          manylinux: musllinux_1_2
+          maturin-version: v1.10.1
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-musllinux-${{ matrix.platform.target }}
+          path: target/wheels/*.whl
+
   macos:
     runs-on: macos-latest
     strategy:
@@ -247,6 +298,7 @@ jobs:
             --non-interactive \
             --skip-existing \
             --disable-progress-bar \
+            --attestations \
             *.whl *.tar.gz
 
       - name: Publish to TestPyPI only (Dry Run)
@@ -258,4 +310,5 @@ jobs:
             --non-interactive \
             --skip-existing \
             --disable-progress-bar \
+            --attestations \
             *.whl *.tar.gz
