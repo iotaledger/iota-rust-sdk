@@ -23,24 +23,27 @@ jobs:
     strategy:
       matrix:
         include:
+          # linux
           - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
+            target: x86_64
             lib_ext: so
             sed_cmd: "sed -i"
           - os: ubuntu-latest
-            target: aarch64-unknown-linux-gnu
+            target: aarch64
             lib_ext: so
             sed_cmd: "sed -i"
+          # macos
           - os: macos-latest
-            target: x86_64-apple-darwin
+            target: x86_64
             lib_ext: dylib
             sed_cmd: "sed -i ''"
           - os: macos-latest
-            target: aarch64-apple-darwin
+            target: aarch64
             lib_ext: dylib
             sed_cmd: "sed -i ''"
+          # windows
           - os: windows-latest
-            target: x86_64-pc-windows-msvc
+            target: x86_64
             lib_ext: dll
             sed_cmd: "sed -i"
     steps:
@@ -60,7 +63,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.x
+          python-version: 3.9
 
       - name: Manual version override
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
@@ -87,7 +90,7 @@ jobs:
             --auditwheel=repair \
             --zig
           working-directory: bindings/python/src
-          manylinux: 2_28 # enforces --compatibility=manylinux_2_28
+          manylinux: auto
           maturin-version: v1.10.1 # pinned
           before-script-linux: |
             python3 -m pip install --upgrade pip
@@ -112,7 +115,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.x
+          python-version: 3.9
 
       - name: Manual version override
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
@@ -159,7 +162,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.x
+          python-version: 3.9
 
       - name: Install Twine
         run: |
