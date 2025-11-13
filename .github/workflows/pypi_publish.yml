@@ -22,9 +22,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          #- target: x86_64
+          - target: x86_64
           # - target: i686
-          - target: aarch64
+          # - target: aarch64
           # - target: armv7l
           # - target: ppc64le
           # - target: s390x
@@ -62,7 +62,7 @@ jobs:
           args: --release --find-interpreter
           working-directory: bindings/python/src
           manylinux: 2_28
-          maturin-version: v1.10.1 # pinned
+          maturin-version: v1.10.1
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
@@ -76,7 +76,7 @@ jobs:
       matrix:
         platform:
           - target: x86_64
-          - target: aarch64
+          # - target: aarch64
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -229,9 +229,6 @@ jobs:
 
       - name: Publish to PyPI
         if: ${{ !fromJSON(inputs.dry_run) }}
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           twine upload \
             --non-interactive \
@@ -243,8 +240,6 @@ jobs:
         if: ${{ fromJSON(inputs.dry_run) }}
         env:
           TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
         run: |
           twine upload \
             --non-interactive \
