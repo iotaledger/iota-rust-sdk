@@ -71,7 +71,6 @@ jobs:
           path: target/wheels/*.whl
 
   musllinux:
-    if: false # temp disable
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -123,7 +122,6 @@ jobs:
           path: target/wheels/*.whl
 
   macos:
-    if: false # temp disable
     runs-on: macos-latest
     strategy:
       matrix:
@@ -172,7 +170,6 @@ jobs:
           path: target/wheels/*.whl
 
   windows:
-    if: false # temp disable
     runs-on: windows-latest
     strategy:
       matrix:
