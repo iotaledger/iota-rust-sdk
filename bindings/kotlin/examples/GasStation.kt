@@ -13,20 +13,18 @@ fun main() = runBlocking {
         var sender = keypair.publicKey().deriveAddress()
         var simpleKey = SimpleKeypair.fromEd25519(keypair)
 
-        val builder = TransactionBuilder.init(sender, client)
+        val builder = TransactionBuilder(sender).withClient(client)
 
         builder.moveCall(
-                Address.stdLib(),
-                Identifier("u64"),
-                Identifier("sqrt"),
-                listOf(
-                        PtbArgument.u64(64uL),
-                )
+            Address.stdLib(),
+            Identifier("u64"),
+            Identifier("sqrt"),
+            listOf(PtbArgument.u64(64uL)),
         )
 
         builder.gasStationSponsor(
-                gasStationUrl,
-                headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken"))
+            gasStationUrl,
+            headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
         )
 
         val res = builder.execute(simpleKey)

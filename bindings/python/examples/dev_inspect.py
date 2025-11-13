@@ -3,8 +3,8 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
+
 
 async def main():
     client = GraphQlClient.new_devnet()
@@ -12,17 +12,15 @@ async def main():
     sender = Address.zero()
 
     iota_names_package_address = Address.from_hex(
-        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
-    )
+        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
     iota_names_object_id = ObjectId.from_hex(
-        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
-    )
+        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
     stdlib_address = Address.std_lib()
 
     name = "name.iota"
     print(f"Looking up name: {name}")
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     # 1. Get the registry
     builder.move_call(
@@ -36,8 +34,7 @@ async def main():
                     iota_names_package_address,
                     Identifier("registry"),
                     Identifier("Registry"),
-                )
-            )
+                ))
         ],
         ["iota_names"],
     )
@@ -56,7 +53,8 @@ async def main():
         iota_names_package_address,
         Identifier("registry"),
         Identifier("lookup"),
-        [PtbArgument.res("iota_names"), PtbArgument.res("name")],
+        [PtbArgument.res("iota_names"),
+         PtbArgument.res("name")],
         names=["name_record_opt"],
     )
 
@@ -72,8 +70,7 @@ async def main():
                     iota_names_package_address,
                     Identifier("name_record"),
                     Identifier("NameRecord"),
-                )
-            )
+                ))
         ],
         ["name_record"],
     )
@@ -107,7 +104,8 @@ async def main():
         last_effect = res.results[-1]
         if len(last_effect.return_values) > 0:
             return_value = last_effect.return_values[0]
-            if return_value.type_tag.is_address() and len(return_value.bcs) == 32:
+            if return_value.type_tag.is_address() and len(
+                    return_value.bcs) == 32:
                 resolved_address = Address.from_bytes(return_value.bcs)
                 print(f"Resolved address: {resolved_address.to_hex()}")
             else:
@@ -118,6 +116,7 @@ async def main():
             print("No return value in last effect")
     else:
         print("No results found")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

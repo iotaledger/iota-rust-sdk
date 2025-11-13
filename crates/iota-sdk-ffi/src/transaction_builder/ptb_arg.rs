@@ -10,7 +10,11 @@ use primitive_types::U256;
 
 use crate::{
     error::Result,
-    types::{address::Address, digest::Digest, object::ObjectId},
+    types::{
+        address::Address,
+        digest::Digest,
+        object::{ObjectId, ObjectReference},
+    },
 };
 
 #[derive(Clone, uniffi::Object)]
@@ -204,6 +208,7 @@ impl iota_sdk::transaction_builder::types::MoveArg for &MoveArg {
 #[derive(uniffi::Object)]
 pub enum PTBArgument {
     ObjectId(iota_sdk::types::ObjectId),
+    ObjectRef(iota_sdk::types::ObjectReference),
     Move(MoveArg),
     Res(Res),
     Shared(Shared<iota_sdk::types::ObjectId>),
@@ -222,6 +227,11 @@ impl PTBArgument {
     #[uniffi::constructor]
     pub fn object_id(id: &ObjectId) -> Self {
         Self::ObjectId(**id)
+    }
+
+    #[uniffi::constructor]
+    pub fn object_ref(id: ObjectReference) -> Self {
+        Self::ObjectRef(id.into())
     }
 
     #[uniffi::constructor]
@@ -403,6 +413,7 @@ impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
     ) -> iota_sdk::transaction_builder::unresolved::Argument {
         match self {
             PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
+            PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().arg(ptb),
             PTBArgument::Move(arg) => arg.arg(ptb),
             PTBArgument::Res(res) => res.arg(ptb),
             PTBArgument::Shared(shared) => shared.arg(ptb),

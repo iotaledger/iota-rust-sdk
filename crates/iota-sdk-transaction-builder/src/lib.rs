@@ -286,6 +286,7 @@ pub use iota_graphql_client::WaitForTx;
 pub use self::{
     builder::{
         TransactionBuilder,
+        client_methods::ClientMethods,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
     },
     types::PureBytes,
@@ -581,7 +582,7 @@ mod tests {
         check_effects_status_success(effects).await;
 
         let client = Client::new_localnet();
-        let mut tx = TransactionBuilder::new(address).with_client(client.clone());
+        let mut tx = TransactionBuilder::new(address).with_client(&client);
         let mut upgrade_cap = None;
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();

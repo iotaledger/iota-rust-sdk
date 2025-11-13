@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -26,7 +25,10 @@ async def main():
 
     print(f"Previous epoch: {previous_epoch.epoch_id}")
     if previous_epoch.total_stake_rewards is not None:
-        print(f"Previous epoch stake rewards: {previous_epoch.total_stake_rewards}")
+        print(
+            f"Previous epoch stake rewards: {previous_epoch.total_stake_rewards}"
+        )
+
 
 if __name__ == "__main__":
     asyncio.run(main())

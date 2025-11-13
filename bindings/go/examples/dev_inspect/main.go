@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func objIdFromHex(hex string) *sdk.ObjectId {
@@ -48,7 +48,7 @@ func main() {
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	// Create identifiers
 	iotaNamesModule := identifier("iota_names")

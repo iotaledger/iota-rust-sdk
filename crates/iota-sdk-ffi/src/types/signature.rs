@@ -32,6 +32,7 @@ use crate::{
 /// passkey-flag     = %x06
 /// ```
 #[uniffi::remote(Enum)]
+#[repr(u8)]
 pub enum SignatureScheme {
     Ed25519 = 0x00,
     Secp256k1 = 0x01,

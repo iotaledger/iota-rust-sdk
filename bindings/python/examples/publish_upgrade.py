@@ -23,10 +23,7 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
-import base64
-import json
 import os
 
 
@@ -61,7 +58,7 @@ async def main():
     client = GraphQlClient.new_localnet()
 
     # Build the `publish` PTB
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
     # Publish the package and receive the upgrade cap in return
     builder.publish(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
@@ -79,7 +76,7 @@ async def main():
 
     # Sign and execute the transaction (publish the package)
     print("> Publishing package:")
-    sig = UserSignature.new_simple(private_key.try_sign_simple(tx.signing_digest()))
+    sig = private_key.sign_transaction(tx)
     effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
     print("Success")
 
@@ -114,7 +111,7 @@ async def main():
         raise Exception("Missing package id")
 
     # Build the `upgrade` PTB
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     # Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
     # ticket
@@ -143,7 +140,10 @@ async def main():
         Address.framework(),
         Identifier("package"),
         Identifier("commit_upgrade"),
-        [PtbArgument.object_id(upgrade_cap), PtbArgument.res("upgrade_receipt")],
+        [
+            PtbArgument.object_id(upgrade_cap),
+            PtbArgument.res("upgrade_receipt")
+        ],
     )
 
     tx = await builder.finish()
@@ -159,8 +159,7 @@ async def main():
 
     # Sign and execute the transaction (upgrade the package)
     print("> Upgrading package:")
-    signature = private_key.try_sign_simple(tx.signing_digest())
-    sig = UserSignature.new_simple(signature)
+    sig = private_key.sign_transaction(tx)
     effects = await client.execute_tx([sig], tx)
     print("Success")
 

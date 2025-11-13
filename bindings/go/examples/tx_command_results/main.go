@@ -6,7 +6,7 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func addrFromHex(hex string) *sdk.Address {
@@ -30,7 +30,7 @@ func main() {
 
 	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	packageAddr := sdk.AddressStdLib()
 	moduleName := identifier("u64")

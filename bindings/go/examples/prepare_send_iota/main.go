@@ -6,7 +6,7 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func addrFromHex(hex string) *sdk.Address {
@@ -24,7 +24,7 @@ func main() {
 
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-	builder := sdk.TransactionBuilderInit(fromAddress, client)
+	builder := sdk.NewTransactionBuilder(fromAddress).WithClient(client)
 	builder.SendIota(toAddress, sdk.PtbArgumentU64(5000000000))
 
 	txn, err := builder.Finish()

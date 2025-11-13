@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func objIdFromHex(hex string) *sdk.ObjectId {
@@ -41,7 +41,7 @@ func main() {
 		{"0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522", 2_000_000_000},
 	}
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	// Prepare amounts and labels
 	var amounts []*sdk.PtbArgument

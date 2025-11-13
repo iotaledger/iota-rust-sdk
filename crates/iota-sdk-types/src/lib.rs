@@ -145,8 +145,9 @@ pub use crypto::{
 };
 pub use digest::{Digest, DigestParseError, SigningDigest};
 pub use effects::{
-    ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
-    UnchangedSharedKind, UnchangedSharedObject,
+    ChangedObject, DryRunEffect, DryRunMutation, DryRunResult, DryRunReturn, IdOperation, ObjectIn,
+    ObjectOut, TransactionArgument, TransactionEffects, TransactionEffectsV1, UnchangedSharedKind,
+    UnchangedSharedObject,
 };
 pub use events::{BalanceChange, Event, TransactionEvents};
 pub use execution_status::{

@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-graphql-client"
-version = "0.0.1-alpha.0"
+version = "0.0.1-alpha.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -24,14 +24,14 @@ tokio = { workspace = true, features = ["time"] }
 tracing = "0.1.37"
 url = "2.5.3"
 
-iota-types = { workspace = true, features = ["serde"] }
+iota-types = { workspace = true, features = ["serde", "hash"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.2", features = ["js"] }
 
 [dev-dependencies]
-hex.workspace = true
 rand.workspace = true
 
-iota-crypto = { workspace = true, features = ["ed25519", "pem", "bech32"] }
-iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]

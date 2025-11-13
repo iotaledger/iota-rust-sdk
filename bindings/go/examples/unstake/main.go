@@ -6,7 +6,7 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	builder := sdk.TransactionBuilderInit(stakedIota.Owner().AsAddress(), client)
+	builder := sdk.NewTransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client)
 	builder.Unstake(sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
 
 	res, err := builder.DryRun(false)

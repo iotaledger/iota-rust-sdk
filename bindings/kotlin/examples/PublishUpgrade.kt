@@ -19,7 +19,6 @@
  * ```
  *
  * With this example it is necessary to run a localnet:
- *
  * ```sh
  * iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
  * ```
@@ -57,7 +56,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
 
         // Build the `publish` PTB
-        val builderPublish = TransactionBuilder.init(sender, client)
+        val builderPublish = TransactionBuilder(sender).withClient(client)
         // Publish the package and receive the upgrade cap in return
         builderPublish.publish(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
@@ -73,8 +72,7 @@ fun main() = runBlocking {
 
         // Sign and execute the transaction (publish the package)
         println("> Publishing package:")
-        val sigPublish =
-                UserSignature.newSimple(privateKey.trySignSimple(txPublish.signingDigest()))
+        val sigPublish = privateKey.signTransaction(txPublish)
         val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
         println("Success")
 
@@ -88,13 +86,13 @@ fun main() = runBlocking {
             if (changedObj.outputState is ObjectOut.ObjectWrite) {
                 val objectId = changedObj.objectId
                 val obj: Object =
-                        client.`object`(objectId, null)
-                                ?: throw Exception("Missing object ${objectId.toHex()}")
+                    client.`object`(objectId, null)
+                        ?: throw Exception("Missing object ${objectId.toHex()}")
                 val upgradeCapType = StructTag.newUpgradeCap()
                 if (obj.asStruct().structType == upgradeCapType) {
                     println("UpgradeCap: ${objectId.toHex()}")
                     println(
-                            "UpgradeCapOwner: ${(changedObj.outputState as ObjectOut.ObjectWrite).owner.asAddress().toHex()}"
+                        "UpgradeCapOwner: ${(changedObj.outputState as ObjectOut.ObjectWrite).owner.asAddress().toHex()}"
                     )
                     upgradeCap = objectId
                 }
@@ -114,7 +112,7 @@ fun main() = runBlocking {
         }
 
         // Build the `upgrade` PTB, that consists of 3 steps
-        val builderUpgrade = TransactionBuilder.init(sender, client)
+        val builderUpgrade = TransactionBuilder(sender).withClient(client)
 
         // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
         // ticket
@@ -122,27 +120,27 @@ fun main() = runBlocking {
         val upgradePolicyArg = PtbArgument.u8(UpgradePolicy.compatible().asU8())
         val compiledPackageDigestArg = PtbArgument.u8Vec(digest.toBytes())
         builderUpgrade.moveCall(
-                `package` = Address.framework(),
-                module = Identifier("package"),
-                function = Identifier("authorize_upgrade"),
-                arguments = listOf(upgradeCapArg, upgradePolicyArg, compiledPackageDigestArg),
-                names = listOf("upgrade_ticket")
+            `package` = Address.framework(),
+            module = Identifier("package"),
+            function = Identifier("authorize_upgrade"),
+            arguments = listOf(upgradeCapArg, upgradePolicyArg, compiledPackageDigestArg),
+            names = listOf("upgrade_ticket"),
         )
 
         // Upgrade the package to receive an upgrade receipt
         builderUpgrade.upgrade(
-                packageId = packageId,
-                packageData = packageData,
-                upgradeTicket = PtbArgument.res("upgrade_ticket"),
-                name = "upgrade_receipt"
+            packageId = packageId,
+            packageData = packageData,
+            upgradeTicket = PtbArgument.res("upgrade_ticket"),
+            name = "upgrade_receipt",
         )
 
         // Commit the upgrade using the receipt
         builderUpgrade.moveCall(
-                `package` = Address.framework(),
-                module = Identifier("package"),
-                function = Identifier("commit_upgrade"),
-                arguments = listOf(upgradeCapArg, PtbArgument.res("upgrade_receipt")),
+            `package` = Address.framework(),
+            module = Identifier("package"),
+            function = Identifier("commit_upgrade"),
+            arguments = listOf(upgradeCapArg, PtbArgument.res("upgrade_receipt")),
         )
 
         // Finalize the PTB
@@ -157,8 +155,7 @@ fun main() = runBlocking {
 
         // Sign and execute the transaction (upgrade the package)
         println("> Upgrading package:")
-        val sigUpgrade =
-                UserSignature.newSimple(privateKey.trySignSimple(txUpgrade.signingDigest()))
+        val sigUpgrade = privateKey.signTransaction(txUpgrade)
         val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
         println("Success")
 
@@ -181,4 +178,4 @@ fun main() = runBlocking {
 }
 
 const val PRECOMPILED_PACKAGE =
-        """{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}"""
+    """{"modules":["oRzrCwYAAAAKAQAIAggUAxw+BFoGBWBBB6EBwQEI4gJACqIDGgy8A5cBDdMEBgAKAQ0BEwEUAAIMAAABCAAAAAgAAQQEAAMDAgAACAABAAAJAgMAABACAwAAEgQDAAAMBQYAAAYHAQAAEQgBAAAFCQoAAQsACwACDg8BAQwCEw8BAQgDDwwNAAoOCgYJBgEHCAQAAQYIAAEDAQYIAQQHCAEDAwcIBAEIAAQDAwUHCAQDCAAFBwgEAgMHCAQBCAIBCAMBBggEAQUBCAECCQAFBkNvbmZpZwVGb3JnZQVTd29yZAlUeENvbnRleHQDVUlEDWNyZWF0ZV9jb25maWcMY3JlYXRlX3N3b3JkAmlkBGluaXQFbWFnaWMJbXlfbW9kdWxlA25ldwluZXdfc3dvcmQGb2JqZWN0D3B1YmxpY190cmFuc2ZlcgZzZW5kZXIIc3RyZW5ndGgOc3dvcmRfdHJhbnNmZXIOc3dvcmRzX2NyZWF0ZWQIdHJhbnNmZXIKdHhfY29udGV4dAV2YWx1ZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAgMHCAMJAxADAQICBwgDEgMCAgIHCAMVAwAAAAABCQoAEQgGAAAAAAAAAAASAQsALhELOAACAQEAAAEECwAQABQCAgEAAAEECwAQARQCAwEAAAEECwAQAhQCBAEAAAEOCgAQAhQGAQAAAAAAAAAWCwAPAhULAxEICwELAhIAAgUBAAABCAsDEQgLAAsBEgALAjgBAgYBAAABBAsACwE4AgIHAQAAAQULAREICwASAgIAAQACAQEA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[246,127,102,77,186,19,68,12,161,181,56,248,210,0,91,211,245,251,165,152,0,197,250,135,171,37,177,240,133,76,122,124]}"""

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func main() {
@@ -21,17 +21,17 @@ func main() {
 	if err.(*sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get transaction: %v", err)
 	}
-	fmt.Printf("Signed Transaction: %v\n", signed_transaction);
+	fmt.Printf("Signed Transaction: %v\n", signed_transaction)
 
-    transaction_effects, err := client.TransactionEffects(digest)
-    if err.(*sdk.SdkFfiError) != nil {
-        log.Fatalf("Failed to get transaction effects: %v", err)
-    }
-    fmt.Printf("Transaction Effects: %v\n", transaction_effects);
+	transaction_effects, err := client.TransactionEffects(digest)
+	if err.(*sdk.SdkFfiError) != nil {
+		log.Fatalf("Failed to get transaction effects: %v", err)
+	}
+	fmt.Printf("Transaction Effects: %v\n", transaction_effects)
 
-    transaction_data_effects, err := client.TransactionDataEffects(digest)
-    if err.(*sdk.SdkFfiError) != nil {
-        log.Fatalf("Failed to get transaction data effects: %v", err)
-    }
-    fmt.Printf("Transaction Data Effects: %v\n", transaction_data_effects);
+	transaction_data_effects, err := client.TransactionDataEffects(digest)
+	if err.(*sdk.SdkFfiError) != nil {
+		log.Fatalf("Failed to get transaction data effects: %v", err)
+	}
+	fmt.Printf("Transaction Data Effects: %v\n", transaction_data_effects)
 }

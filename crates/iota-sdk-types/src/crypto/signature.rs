@@ -469,7 +469,7 @@ mod serialization {
         where
             S: serde::Serializer,
         {
-            #[derive(serde_derive::Serialize)]
+            #[derive(serde::Serialize)]
             #[serde(tag = "scheme")]
             #[serde(rename_all = "lowercase")]
             enum Sig<'a> {
@@ -564,7 +564,7 @@ mod serialization {
         where
             D: serde::Deserializer<'de>,
         {
-            #[derive(serde_derive::Deserialize)]
+            #[derive(serde::Deserialize)]
             #[serde(tag = "scheme")]
             #[serde(rename_all = "lowercase")]
             enum Sig {
@@ -677,7 +677,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     enum ReadableUserSignatureRef<'a> {
         Ed25519 {
@@ -697,7 +697,7 @@ mod serialization {
         Passkey(&'a PasskeyAuthenticator),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "scheme", rename_all = "lowercase")]
     #[serde(rename = "UserSignature")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]

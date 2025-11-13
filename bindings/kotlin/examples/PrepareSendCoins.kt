@@ -9,22 +9,18 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
 
         val fromAddress =
-                Address.fromHex(
-                        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-                )
+            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
         val toAddress =
-                Address.fromHex(
-                        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-                )
+            Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
         // This is a coin of type
         // 0x3358bea865960fea2a1c6844b6fc365f662463dd1821f619838eb2e606a53b6a::cert::CERT
         val coinId =
-                PtbArgument.objectIdFromHex(
-                        "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
-                )
+            PtbArgument.objectIdFromHex(
+                "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9"
+            )
 
-        val builder = TransactionBuilder.init(fromAddress, client)
+        val builder = TransactionBuilder(fromAddress).withClient(client)
 
         builder.sendCoins(listOf(coinId), toAddress, PtbArgument.u64(50000000000uL))
 

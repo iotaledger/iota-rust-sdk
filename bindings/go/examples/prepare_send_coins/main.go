@@ -6,7 +6,7 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func objIdFromHex(hex string) *sdk.PtbArgument {
@@ -36,7 +36,7 @@ func main() {
 	coinObjId := objIdFromHex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")
 	amount := sdk.PtbArgumentU64(50000000000)
 
-	builder := sdk.TransactionBuilderInit(fromAddress, client)
+	builder := sdk.NewTransactionBuilder(fromAddress).WithClient(client)
 	builder.SendCoins([]*sdk.PtbArgument{coinObjId}, toAddress, &amount)
 
 	txn, err := builder.Finish()

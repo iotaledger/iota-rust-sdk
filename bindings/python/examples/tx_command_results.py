@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -11,10 +10,9 @@ async def main():
     client = GraphQlClient.new_devnet()
 
     sender = Address.from_hex(
-        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c"
-    )
+        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     package_addr = Address.std_lib()
     module_name = Identifier("u64")
@@ -41,15 +39,16 @@ async def main():
     builder.split_coins(
         PtbArgument.gas(),
         # Use the named results of previous commands as arguments
-        [PtbArgument.res("res0"), PtbArgument.res("res1")],
+        [PtbArgument.res("res0"),
+         PtbArgument.res("res1")],
         # For nested results, a tuple or vec can be used to name them
         ["coin0", "coin1"],
     )
 
     # Use named results as arguments
     builder.transfer_objects(
-        sender, [PtbArgument.res("coin0"), PtbArgument.res("coin1")]
-    )
+        sender, [PtbArgument.res("coin0"),
+                 PtbArgument.res("coin1")])
 
     txn = await builder.finish()
 

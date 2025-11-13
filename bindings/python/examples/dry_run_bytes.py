@@ -3,7 +3,6 @@
 
 from lib.iota_sdk_ffi import *
 
-import sys
 import asyncio
 
 
@@ -19,6 +18,7 @@ async def main():
 
     print("Dry run was successful!")
     print(f"Dry run result: {res}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -117,6 +117,26 @@ impl SimpleKeypair {
     fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {
         Ok(Signer::<iota_sdk::types::SimpleSignature>::try_sign(&self.0, message)?.into())
     }
+
+    pub fn try_sign_user(&self, message: &[u8]) -> Result<crate::types::signature::UserSignature> {
+        Ok(Signer::<iota_sdk::types::UserSignature>::try_sign(&self.0, message)?.into())
+    }
+
+    /// Sign a transaction and return a UserSignature.
+    pub fn sign_transaction(
+        &self,
+        transaction: &crate::types::transaction::Transaction,
+    ) -> Result<crate::types::signature::UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_transaction(&self.0, &transaction.0)?.into())
+    }
+
+    /// Sign a personal message and return a UserSignature.
+    pub fn sign_personal_message(
+        &self,
+        message: &crate::types::PersonalMessage,
+    ) -> Result<crate::types::signature::UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
+    }
 }
 
 #[derive(derive_more::From, uniffi::Object)]

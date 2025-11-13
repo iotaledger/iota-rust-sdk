@@ -6,7 +6,7 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func addrFromHex(hex string) *sdk.Address {
@@ -40,7 +40,7 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	builder := sdk.TransactionBuilderInit(myAddress, client)
+	builder := sdk.NewTransactionBuilder(myAddress).WithClient(client)
 
 	builder.Stake(sdk.PtbArgumentU64(1000000000), validator.Address)
 
