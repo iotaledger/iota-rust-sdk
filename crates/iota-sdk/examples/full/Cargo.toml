@@ -5,6 +5,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-eyre = "0.6"
 iota-sdk = "=3.0.0-alpha.1"
 tokio = "1.40.0"
