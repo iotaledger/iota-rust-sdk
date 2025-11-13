@@ -6,7 +6,7 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func addrFromHex(hex string) *sdk.Address {

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 const MNEMONIC = "round attack kitchen wink winter music trip tiny nephew hire orange what"

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func objIdFromHex(hex string) *sdk.ObjectId {
