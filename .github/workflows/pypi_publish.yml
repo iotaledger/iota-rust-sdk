@@ -298,7 +298,6 @@ jobs:
             --non-interactive \
             --skip-existing \
             --disable-progress-bar \
-            --attestations \
             *.whl *.tar.gz
 
       - name: Publish to TestPyPI only (Dry Run)
@@ -312,5 +311,4 @@ jobs:
             --non-interactive \
             --skip-existing \
             --disable-progress-bar \
-            --attestations \
             *.whl *.tar.gz
