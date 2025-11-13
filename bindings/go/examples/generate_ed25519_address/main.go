@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 
-	sdk "bindings/iota_sdk_ffi"
+	sdk "bindings/iota_sdk"
 )
 
 func main() {

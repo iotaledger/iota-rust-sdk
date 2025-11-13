@@ -13603,5 +13603,5 @@ uint32_t ffi_iota_sdk_ffi_uniffi_contract_version(void
 #endif
 
 
-void iota_sdk_ffi_uniffiFutureContinuationCallback(uint64_t, int8_t);
-void iota_sdk_ffi_uniffiFreeGorutine(uint64_t);
+void iota_sdk_uniffiFutureContinuationCallback(uint64_t, int8_t);
+void iota_sdk_uniffiFreeGorutine(uint64_t);
