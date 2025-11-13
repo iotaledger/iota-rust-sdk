@@ -27,3 +27,7 @@ make go
 ```sh
 make go-example chain_id
 ```
+
+```sh
+go get github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk
+```
