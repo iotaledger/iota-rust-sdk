@@ -41,7 +41,7 @@ jobs:
           rustup target add ${{ matrix.target }}
 
       - name: Build bindings
-        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
       
       - name: Archive bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
@@ -134,9 +134,9 @@ jobs:
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go bindings to version v0.0.6"
+          git commit -m "Update Go bindings to version v0.0.7"
           git push
-          git tag v0.0.6 -m "v0.0.6"
+          git tag v0.0.7 -m "v0.0.7"
           git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
