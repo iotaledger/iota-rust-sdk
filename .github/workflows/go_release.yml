@@ -134,9 +134,9 @@ jobs:
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go bindings to version v0.0.3"
+          git commit -m "Update Go bindings to version v0.0.4"
           git push
-          git tag v0.0.3 -m "v0.0.3"
+          git tag v0.0.4 -m "v0.0.4"
           git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
