@@ -82,7 +82,7 @@ jobs:
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/aarch64-linux-gnu-gcc
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/x86_64-linux-gnu-gcc
-        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+        run: RUSTFLAGS="-C link-args=-Wl,-rpath,$ORIGIN" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
       - name: Archive bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
