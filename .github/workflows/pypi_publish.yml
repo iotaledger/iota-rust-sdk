@@ -288,34 +288,23 @@ jobs:
         with:
           subject-path: "${{ github.workspace }}"
 
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.9
-
-      - name: Install Twine
-        run: |
-          pip install --upgrade twine
-
       - name: Publish to PyPI
         if: ${{ !fromJSON(inputs.dry_run) }}
-        run: |
-          twine upload \
-            --non-interactive \
-            --skip-existing \
-            --disable-progress-bar \
-            *.whl *.tar.gz
-            # --attestations \ # error: <file> has no associated attestations
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: ${{ github.workspace }}
+          skip-existing: true
+          verbose: true
+          attestations: true
+          verify-metadata: true
 
       - name: Publish to TestPyPI only (Dry Run)
         if: ${{ fromJSON(inputs.dry_run) }}
-        env:
-          TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
-        run: |
-          twine upload \
-            --non-interactive \
-            --skip-existing \
-            --disable-progress-bar \
-            *.tar.gz
-            # --attestations \ # error: <file> has no associated attestations
-            # *.whl *.tar.gz
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: ${{ github.workspace }}
+          skip-existing: true
+          verbose: true
+          attestations: true
+          verify-metadata: true
