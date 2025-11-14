@@ -22,6 +22,33 @@ jobs:
           name: go-bindings
           path: bindings/go/iota_sdk
 
+
+  build-darwin:
+    runs-on: macOS-latest
+    name: Build darwin ${{ matrix.target }}
+    strategy:
+      matrix:
+        target: [
+          aarch64-apple-darwin,
+          x86_64-apple-darwin,
+        ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+
+      - name: Install rust target ${{ matrix.target }}
+        run: |
+          rustup target add ${{ matrix.target }}
+
+      - name: Build bindings
+        run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+      
+      - name: Archive bindings
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: bindings-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.dylib
+
   build-linux:
     runs-on: ubuntu-latest
     name: Build linux ${{ matrix.target }}
@@ -69,6 +96,7 @@ jobs:
     needs:
       - prepare-source-archive
       - build-linux
+      - build-darwin
     steps:
       - name: Checkout iota-sdk-go
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -91,14 +119,24 @@ jobs:
           name: bindings-x86_64-unknown-linux-gnu
           path: lib/linux-amd64
 
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: bindings-aarch64-apple-darwin
+          path: lib/darwin-aarch64
+
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: bindings-x86_64-apple-darwin
+          path: lib/darwin-amd64
+
       - name: Tag the Go package
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go bindings to version v0.0.2"
+          git commit -m "Update Go bindings to version v0.0.3"
           git push
-          git tag v0.0.2 -m "v0.0.2"
+          git tag v0.0.3 -m "v0.0.3"
           git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
