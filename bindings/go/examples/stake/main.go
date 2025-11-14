@@ -6,11 +6,11 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func addrFromHex(hex string) *sdk.Address {
-	address, err := sdk.AddressFromHex(hex)
+func addrFromHex(hex string) *iota_sdk.Address {
+	address, err := iota_sdk.AddressFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
@@ -18,12 +18,12 @@ func addrFromHex(hex string) *sdk.Address {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	myAddress := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	validators, err := client.ActiveValidators(nil, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get active validators: %v", err)
 	}
 
@@ -40,12 +40,12 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	builder := sdk.NewTransactionBuilder(myAddress).WithClient(client)
+	builder := iota_sdk.NewTransactionBuilder(myAddress).WithClient(client)
 
-	builder.Stake(sdk.PtbArgumentU64(1000000000), validator.Address)
+	builder.Stake(iota_sdk.PtbArgumentU64(1000000000), validator.Address)
 
 	res, err := builder.DryRun(false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 

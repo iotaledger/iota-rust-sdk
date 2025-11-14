@@ -1,7 +1,7 @@
 
-package iota_sdk_ffi
+package iota_sdk
 
-// #include <iota_sdk_ffi.h>
+// #include <iota_sdk.h>
 import "C"
 
 import (
@@ -41915,8 +41915,8 @@ type rustFuturePollFunc func(C.uint64_t, C.UniffiRustFutureContinuationCallback,
 type rustFutureCompleteFunc[T any] func(C.uint64_t, *C.RustCallStatus) T
 type rustFutureFreeFunc func(C.uint64_t)
 
-//export iota_sdk_ffi_uniffiFutureContinuationCallback
-func iota_sdk_ffi_uniffiFutureContinuationCallback(data C.uint64_t, pollResult C.int8_t) {
+//export iota_sdk_uniffiFutureContinuationCallback
+func iota_sdk_uniffiFutureContinuationCallback(data C.uint64_t, pollResult C.int8_t) {
 	h := cgo.Handle(uintptr(data))
 	waiter := h.Value().(chan int8)
 	waiter <- int8(pollResult)
@@ -41941,7 +41941,7 @@ func uniffiRustCallAsync[E any, T any, F any](
 	for pollResult != uniffiRustFuturePollReady {
 		pollFunc(
 			rustFuture,
-			(C.UniffiRustFutureContinuationCallback)(C.iota_sdk_ffi_uniffiFutureContinuationCallback),
+			(C.UniffiRustFutureContinuationCallback)(C.iota_sdk_uniffiFutureContinuationCallback),
 			C.uint64_t(chanHandle),
 		)
 		pollResult = <-waiter
@@ -41960,8 +41960,8 @@ func uniffiRustCallAsync[E any, T any, F any](
 	return liftFunc(ffiValue), nil
 }
 
-//export iota_sdk_ffi_uniffiFreeGorutine
-func iota_sdk_ffi_uniffiFreeGorutine(data C.uint64_t) {
+//export iota_sdk_uniffiFreeGorutine
+func iota_sdk_uniffiFreeGorutine(data C.uint64_t) {
 	handle := cgo.Handle(uintptr(data))
 	defer handle.Delete()
 

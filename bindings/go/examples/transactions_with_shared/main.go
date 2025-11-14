@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *sdk.ObjectId {
-	id, err := sdk.ObjectIdFromHex(hex)
+func objIdFromHex(hex string) *iota_sdk.ObjectId {
+	id, err := iota_sdk.ObjectIdFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
@@ -19,12 +19,12 @@ func objIdFromHex(hex string) *sdk.ObjectId {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	sharedObjId := objIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
 
-	transactions, err := client.Transactions(&sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	transactions, err := client.Transactions(&iota_sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

@@ -6,19 +6,19 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func addrFromHex(hex string) *sdk.Address {
-	address, err := sdk.AddressFromHex(hex)
+func addrFromHex(hex string) *iota_sdk.Address {
+	address, err := iota_sdk.AddressFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 	return address
 }
 
-func identifier(ident string) *sdk.Identifier {
-	identifier, err := sdk.NewIdentifier(ident)
+func identifier(ident string) *iota_sdk.Identifier {
+	identifier, err := iota_sdk.NewIdentifier(ident)
 	if err != nil {
 		log.Fatalf("Failed to parse identifier: %v", err)
 	}
@@ -26,20 +26,20 @@ func identifier(ident string) *sdk.Identifier {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	packageAddr := sdk.AddressStdLib()
+	packageAddr := iota_sdk.AddressStdLib()
 	moduleName := identifier("u64")
 	functionName := identifier("max")
 	builder.MoveCall(
 		packageAddr,
 		moduleName,
 		functionName,
-		[]*sdk.PtbArgument{sdk.PtbArgumentU64(0), sdk.PtbArgumentU64(1000)},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentU64(0), iota_sdk.PtbArgumentU64(1000)},
 		nil,
 		// Assign a name to the result of this command
 		[]string{"res0"},
@@ -49,25 +49,25 @@ func main() {
 		packageAddr,
 		moduleName,
 		functionName,
-		[]*sdk.PtbArgument{sdk.PtbArgumentU64(1000), sdk.PtbArgumentU64(2000)},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentU64(1000), iota_sdk.PtbArgumentU64(2000)},
 		nil,
 		// Assign a name to the result of this command
 		[]string{"res1"},
 	)
 
 	builder.SplitCoins(
-		sdk.PtbArgumentGas(),
+		iota_sdk.PtbArgumentGas(),
 		// Use the named results of previous commands to use as arguments
-		[]*sdk.PtbArgument{sdk.PtbArgumentRes("res0"), sdk.PtbArgumentRes("res1")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("res0"), iota_sdk.PtbArgumentRes("res1")},
 		// For nested results, a tuple or vec can be used to name them
 		[]string{"coin0", "coin1"},
 	)
 
 	// Use named results as arguments
-	builder.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("coin0"), sdk.PtbArgumentRes("coin1")})
+	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("coin0"), iota_sdk.PtbArgumentRes("coin1")})
 
 	txn, err := builder.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -75,7 +75,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := client.DryRunTx(txn, false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to send tx: %v", err)
 	}
 

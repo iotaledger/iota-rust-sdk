@@ -6,16 +6,16 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	recipientAddress, err := sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+	recipientAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	if err != nil {
 		log.Fatalf("Failed to parse recipient address: %v", err)
 	}
 
-	privateKey, err := sdk.NewEd25519PrivateKey(make([]byte, 32))
+	privateKey, err := iota_sdk.NewEd25519PrivateKey(make([]byte, 32))
 	if err != nil {
 		log.Fatalf("Failed to create private key: %v", err)
 	}
@@ -24,23 +24,23 @@ func main() {
 	log.Printf("Sender address: %s", senderAddress.ToHex())
 
 	// Request funds from faucet
-	faucet := sdk.FaucetClientNewLocalnet()
+	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWait(senderAddress)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	client := sdk.GraphQlClientNewLocalnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	builder := sdk.NewTransactionBuilder(senderAddress).WithClient(client)
-	builder.SendIota(recipientAddress, sdk.PtbArgumentU64(1000))
+	builder := iota_sdk.NewTransactionBuilder(senderAddress).WithClient(client)
+	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
 	dryRunResult, err := client.DryRunTx(txn, false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}
 	if dryRunResult.Error != nil {
@@ -51,13 +51,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	userSignature := sdk.UserSignatureNewSimple(signature)
+	userSignature := iota_sdk.UserSignatureNewSimple(signature)
 
-	effects, err := client.ExecuteTx([]*sdk.UserSignature{userSignature}, txn, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	effects, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSignature}, txn, nil)
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
-	log.Printf("Digest: %s", sdk.HexEncode((*effects).Digest().ToBytes()))
+	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))
 	log.Printf("Transaction status: %v", (*effects).AsV1().Status)
 	log.Printf("Effects: %+v", (*effects).AsV1())
 }

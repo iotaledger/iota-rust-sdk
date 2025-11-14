@@ -6,19 +6,19 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *sdk.PtbArgument {
-	id, err := sdk.PtbArgumentObjectIdFromHex(hex)
+func objIdFromHex(hex string) *iota_sdk.PtbArgument {
+	id, err := iota_sdk.PtbArgumentObjectIdFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	return id
 }
 
-func addrFromHex(hex string) *sdk.Address {
-	address, err := sdk.AddressFromHex(hex)
+func addrFromHex(hex string) *iota_sdk.Address {
+	address, err := iota_sdk.AddressFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
@@ -26,18 +26,18 @@ func addrFromHex(hex string) *sdk.Address {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	coin0 := objIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
 	coin1 := objIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")
 
-	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
-	builder.MergeCoins(coin0, []*sdk.PtbArgument{coin1})
+	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder.MergeCoins(coin0, []*iota_sdk.PtbArgument{coin1})
 
 	txn, err := builder.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -45,7 +45,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := builder.DryRun(false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to merge coins: %v", err)
 	}
 
