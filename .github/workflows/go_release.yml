@@ -90,6 +90,31 @@ jobs:
           name: bindings-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/libiota_sdk_ffi.so
 
+  build-windows:
+    runs-on: windows-latest
+    name: Build windows ${{ matrix.target }}
+    strategy:
+      matrix:
+        target: [
+          x86_64-pc-windows-msvc,
+        ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+
+      - name: Install rust target ${{ matrix.target }}
+        run: |
+          rustup target add ${{ matrix.target }}
+
+      - name: Build bindings
+        run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+
+      - name: Archive bindings
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: bindings-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.dll
+
   release-archives:
     name: Release archives
     runs-on: ubuntu-latest
@@ -97,6 +122,7 @@ jobs:
       - prepare-source-archive
       - build-linux
       - build-darwin
+      - build-windows
     steps:
       - name: Checkout iota-sdk-go
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -129,14 +155,19 @@ jobs:
           name: bindings-x86_64-apple-darwin
           path: lib/darwin-amd64
 
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: bindings-x86_64-pc-windows-msvc
+          path: lib/windows-amd64
+
       - name: Tag the Go package
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go bindings to version v0.0.7"
+          git commit -m "Update Go bindings to version v0.0.8"
           git push
-          git tag v0.0.7 -m "v0.0.7"
+          git tag v0.0.8 -m "v0.0.8"
           git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
