@@ -22,12 +22,12 @@ jobs:
     strategy:
       matrix:
         platform:
-          - target: x86_64
-          - target: i686
-          - target: aarch64
-          - target: armv7l
-          - target: ppc64le
-          # - target: s390x # fails here: crates/iota-sdk-types/src/u256.rs:51:5
+        #   - target: x86_64
+        #   - target: i686
+        #   - target: aarch64
+        #   - target: armv7l
+        #   - target: ppc64le
+    # - target: s390x # fails here: crates/iota-sdk-types/src/u256.rs:51:5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -71,6 +71,7 @@ jobs:
           path: target/wheels/*.whl
 
   musllinux:
+    if: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -122,6 +123,7 @@ jobs:
           path: target/wheels/*.whl
 
   macos:
+    if: false
     runs-on: macos-latest
     strategy:
       matrix:
@@ -170,6 +172,7 @@ jobs:
           path: target/wheels/*.whl
 
   windows:
+    if: false
     runs-on: windows-latest
     strategy:
       matrix:
