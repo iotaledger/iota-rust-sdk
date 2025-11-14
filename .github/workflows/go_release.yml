@@ -22,7 +22,6 @@ jobs:
           name: go-bindings
           path: bindings/go/iota_sdk
 
-
   build-darwin:
     runs-on: macOS-latest
     name: Build darwin ${{ matrix.target }}
@@ -42,7 +41,7 @@ jobs:
 
       - name: Build bindings
         run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
-      
+
       - name: Archive bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
@@ -108,11 +107,11 @@ jobs:
 
       - name: Build bindings
         run: |
-            cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
-            ls
-            ls target
-            ls target/${{ matrix.target }}
-            ls target/${{ matrix.target }}/release
+          cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+          ls
+          ls target
+          ls target/${{ matrix.target }}
+          ls target/${{ matrix.target }}/release
 
       - name: Archive bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
