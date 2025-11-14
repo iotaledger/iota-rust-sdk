@@ -30,7 +30,7 @@ jobs:
       - name: Checkout iota-sdk-go
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
         with:
-          repository: iota/iota-sdk-go
+          repository: iotaledger/iota-sdk-go
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_GO_SDK }}
           fetch-depth: 0
 
