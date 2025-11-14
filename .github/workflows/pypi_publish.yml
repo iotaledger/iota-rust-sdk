@@ -317,4 +317,5 @@ jobs:
             --skip-existing \
             --disable-progress-bar \
             --attestations \
-            *.whl *.tar.gz
+            *.tar.gz
+            # *.whl *.tar.gz
