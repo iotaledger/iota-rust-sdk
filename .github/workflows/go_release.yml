@@ -108,16 +108,12 @@ jobs:
       - name: Build bindings
         run: |
           cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
-          ls
-          ls target
-          ls target/${{ matrix.target }}
-          ls target/${{ matrix.target }}/release
 
       - name: Archive bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: bindings-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.dll
+          path: target/${{ matrix.target }}/release/iota_sdk_ffi.dll
 
   release-archives:
     name: Release archives
