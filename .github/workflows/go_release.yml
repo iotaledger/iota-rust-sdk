@@ -42,8 +42,8 @@ jobs:
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
-          git add bindings/go/iota_sdk/iota_sdk.go
-          git add bindings/go/iota_sdk/iota_sdk.h
+          git add iota_sdk.go
+          git add iota_sdk.h
           git commit -m "Update Go bindings to version v0.0.1"
           git push
           git tag v0.0.1 -m "v0.0.1"
