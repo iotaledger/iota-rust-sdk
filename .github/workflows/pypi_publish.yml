@@ -290,7 +290,7 @@ jobs:
 
       - name: Publish to PyPI
         if: ${{ !fromJSON(inputs.dry_run) }}
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           packages-dir: ${{ github.workspace }}
           skip-existing: true
@@ -300,7 +300,7 @@ jobs:
 
       - name: Publish to TestPyPI only (Dry Run)
         if: ${{ fromJSON(inputs.dry_run) }}
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: ${{ github.workspace }}
