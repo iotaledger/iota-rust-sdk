@@ -1,0 +1,50 @@
+name: Go Release
+on:
+  pull_request:
+  workflow_call:
+    inputs:
+      version:
+        description: "Version for the go package"
+        required: true
+        type: string
+
+jobs:
+  prepare-archives:
+    name: Prepare archives
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+
+      - name: Archive Go bindings
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: go-bindings
+          path: bindings/go/iota_sdk
+
+  release-archives:
+    name: Release archives
+    runs-on: ubuntu-latest
+    needs: prepare-archives
+    steps:
+      - name: Checkout iota-sdk-go
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          repository: iota/iota-sdk-go
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_GO_SDK }}
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: go-bindings
+
+      - name: Tag the Go package
+        run: |
+          git config --global user.email github-actions@github.com
+          git config --global user.name github-actions
+          git add bindings/go/iota_sdk/iota_sdk.go
+          git add bindings/go/iota_sdk/iota_sdk.h
+          git commit -m "Update Go bindings to version v${{ inputs.version }}"
+          git push
+          git tag v${{ inputs.version }} -m "v${{ inputs.version }}"
+          git push --tags
