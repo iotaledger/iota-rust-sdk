@@ -153,8 +153,15 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_GO_SDK }}
           fetch-depth: 0
 
-      - uses: actions-ecosystem/action-get-latest-tag@b7c32daec3395a9616f88548363a42652b22d435 # v1.6.0
+      - name: Get latest tag from iota-sdk-go
         id: get-latest-tag
+        run: |
+          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="v0.0.0"
+          fi
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest tag: $LATEST_TAG"
 
       - uses: actions-ecosystem/action-bump-semver@34e334551143a5301f38c830e44a22273c6ff5c5 # v1.0.0
         id: bump-semver
