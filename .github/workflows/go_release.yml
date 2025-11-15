@@ -203,9 +203,9 @@ jobs:
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go bindings to version v${{ steps.bump-semver.outputs.new_version }}"
+          git commit -m "Update Go bindings to version ${{ steps.bump-semver.outputs.new_version }}"
           git push
-          git tag v${{ steps.bump-semver.outputs.new_version }} -m "v${{ steps.bump-semver.outputs.new_version }}"
+          git tag ${{ steps.bump-semver.outputs.new_version }} -m "${{ steps.bump-semver.outputs.new_version }}"
           git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
