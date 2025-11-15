@@ -1,12 +1,34 @@
 name: Go Release
 on:
   pull_request:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       version:
         description: "Version for the go package"
         required: true
         type: string
+      level:
+        description: |
+          The level of version bump to make.
+
+          Possible values:
+          - major:   Increase the major version (x.0.0)
+          - minor:   Increase the minor version (x.y.0)
+          - patch:   Increase the patch version (x.y.z)
+          - release: Remove the pre-version (x.y.z)
+          - rc:      Increase the rc pre-version (x.y.z-rc.M)
+          - beta:    Increase the beta pre-version (x.y.z-beta.M)
+          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
+        type: choice
+        required: true
+        options: # TODO take from semver cmd
+          - major
+          - minor
+          - patch
+          - release
+          - rc
+          - beta
+          - alpha
 
 jobs:
   prepare-source-archive:
@@ -131,14 +153,14 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_GO_SDK }}
           fetch-depth: 0
 
-      - name: Get latest tag from iota-sdk-go
-        run: |
-          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="v0.0.0"
-          fi
-          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          echo "Latest tag: $LATEST_TAG"
+      - uses: actions-ecosystem/action-get-latest-tag@b7c32daec3395a9616f88548363a42652b22d435 # v1.6.0
+        id: get-latest-tag
+
+      - uses: actions-ecosystem/action-bump-semver@34e334551143a5301f38c830e44a22273c6ff5c5 # v1.0.0
+        id: bump-semver
+        with:
+          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          level: ${{ inputs.level }}
 
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
@@ -174,9 +196,9 @@ jobs:
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           # git add .
-          # git commit -m "Update Go bindings to version v0.0.8"
+          # git commit -m "Update Go bindings to version v${{ steps.bump-semver.outputs.new_version }}"
           # git push
-          # git tag v0.0.8 -m "v0.0.8"
+          # git tag v${{ steps.bump-semver.outputs.new_version }} -m "v${{ steps.bump-semver.outputs.new_version }}"
           # git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
