@@ -131,6 +131,15 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_GO_SDK }}
           fetch-depth: 0
 
+      - name: Get latest tag from iota-sdk-go
+        run: |
+          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="v0.0.0"
+          fi
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest tag: $LATEST_TAG"
+
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: go-bindings
@@ -164,11 +173,11 @@ jobs:
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
-          git add .
-          git commit -m "Update Go bindings to version v0.0.8"
-          git push
-          git tag v0.0.8 -m "v0.0.8"
-          git push --tags
+          # git add .
+          # git commit -m "Update Go bindings to version v0.0.8"
+          # git push
+          # git tag v0.0.8 -m "v0.0.8"
+          # git push --tags
 
 # git commit -m "Update Go bindings to version v${{ inputs.version }}"
 # git tag v${{ inputs.version }} -m "v${{ inputs.version }}"
