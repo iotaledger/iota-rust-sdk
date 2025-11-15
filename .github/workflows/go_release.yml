@@ -1,6 +1,6 @@
 name: Go Release
 on:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
     inputs:
       version:
@@ -167,7 +167,7 @@ jobs:
         id: bump-semver
         with:
           current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: ${{ inputs.level }}
+          level: ${{ inputs.level || 'patch' }} # TODO undo
 
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
