@@ -1,9 +1,9 @@
 name: Go Release
 on:
-  pull_request:
+  pull_request: # TODO REMOVE
   workflow_dispatch:
     inputs:
-      version:
+      version: # TODO remove?
         description: "Version for the go package"
         required: true
         type: string
@@ -35,7 +35,7 @@ jobs:
     name: Prepare source archive
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
       - name: Archive Go bindings
@@ -44,9 +44,9 @@ jobs:
           name: go-bindings
           path: bindings/go/iota_sdk
 
-  build-darwin:
+  prepare-darwin-archive:
     runs-on: macOS-latest
-    name: Build darwin ${{ matrix.target }}
+    name: Prepare darwin ${{ matrix.target }} archive
     strategy:
       matrix:
         target: [
@@ -54,12 +54,11 @@ jobs:
           x86_64-apple-darwin,
         ]
     steps:
-      - name: Checkout
+      - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
       - name: Install rust target ${{ matrix.target }}
-        run: |
-          rustup target add ${{ matrix.target }}
+        run: rustup target add ${{ matrix.target }}
 
       - name: Build bindings
         run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
@@ -70,9 +69,9 @@ jobs:
           name: bindings-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/libiota_sdk_ffi.dylib
 
-  build-linux:
+  prepare-linux-archive:
     runs-on: ubuntu-latest
-    name: Build linux ${{ matrix.target }}
+    name: Prepare linux ${{ matrix.target }} archive
     strategy:
       matrix:
         target: [
@@ -80,12 +79,11 @@ jobs:
           x86_64-unknown-linux-gnu,
         ]
     steps:
-      - name: Checkout
+      - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
       - name: Install rust target ${{ matrix.target }}
-        run: |
-          rustup target add ${{ matrix.target }}
+        run: rustup target add ${{ matrix.target }}
 
       - name: Install gcc-aarch64-linux-gnu
         if: matrix.target == 'aarch64-unknown-linux-gnu'
@@ -111,25 +109,23 @@ jobs:
           name: bindings-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/libiota_sdk_ffi.so
 
-  build-windows:
+  prepare-windows-archive:
     runs-on: windows-latest
-    name: Build windows ${{ matrix.target }}
+    name: Prepare windows ${{ matrix.target }} archive
     strategy:
       matrix:
         target: [
           x86_64-pc-windows-msvc,
         ]
     steps:
-      - name: Checkout
+      - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
 
       - name: Install rust target ${{ matrix.target }}
-        run: |
-          rustup target add ${{ matrix.target }}
+        run: rustup target add ${{ matrix.target }}
 
       - name: Build bindings
-        run: |
-          cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+        run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
       - name: Archive bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
@@ -142,9 +138,9 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - prepare-source-archive
-      - build-linux
-      - build-darwin
-      - build-windows
+      - prepare-linux-archive
+      - prepare-darwin-archive
+      - prepare-windows-archive
     steps:
       - name: Checkout iota-sdk-go
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -207,6 +203,3 @@ jobs:
           git push
           git tag ${{ steps.bump-semver.outputs.new_version }} -m "${{ steps.bump-semver.outputs.new_version }}"
           git push --tags
-
-# git commit -m "Update Go bindings to version v${{ inputs.version }}"
-# git tag v${{ inputs.version }} -m "v${{ inputs.version }}"
