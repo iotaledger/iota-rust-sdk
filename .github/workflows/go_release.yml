@@ -44,40 +44,29 @@ jobs:
           name: go-bindings
           path: bindings/go/iota_sdk
 
-  prepare-darwin-archive:
-    runs-on: macOS-latest
-    name: Prepare darwin ${{ matrix.target }} archive
+  prepare-build-archives:
     strategy:
       matrix:
-        target: [
-          aarch64-apple-darwin,
-          x86_64-apple-darwin,
-        ]
-    steps:
-      - name: Checkout iota-rust-sdk
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
-
-      - name: Install rust target ${{ matrix.target }}
-        run: rustup target add ${{ matrix.target }}
-
-      - name: Build bindings
-        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
-
-      - name: Archive bindings
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: bindings-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.dylib
-
-  prepare-linux-archive:
-    runs-on: ubuntu-latest
-    name: Prepare linux ${{ matrix.target }} archive
-    strategy:
-      matrix:
-        target: [
-          aarch64-unknown-linux-gnu,
-          x86_64-unknown-linux-gnu,
-        ]
+        include:
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            lib_ext: dylib
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            lib_ext: dylib
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            lib_ext: so
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            lib_ext: so
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            lib_ext: dll
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            lib_ext: dll
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
@@ -97,50 +86,33 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y gcc-x86-64-linux-gnu g++-x86-64-linux-gnu
 
-      - name: Build bindings
+      - name: Build ${{ matrix.target }} bindings
+        if: matrix.os == 'macos-latest'
+        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+
+      - name: Build ${{ matrix.target }} bindings
+        if: matrix.os == 'ubuntu-latest'
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/aarch64-linux-gnu-gcc
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/x86_64-linux-gnu-gcc
         run: RUSTFLAGS="-C link-args=-Wl,-rpath,$ORIGIN" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
-      - name: Archive bindings
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: bindings-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.so
-
-  prepare-windows-archive:
-    runs-on: windows-latest
-    name: Prepare windows ${{ matrix.target }} archive
-    strategy:
-      matrix:
-        target: [
-          x86_64-pc-windows-msvc,
-        ]
-    steps:
-      - name: Checkout iota-rust-sdk
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
-
-      - name: Install rust target ${{ matrix.target }}
-        run: rustup target add ${{ matrix.target }}
-
       - name: Build bindings
+        if: matrix.os == 'windows-latest'
         run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
-      - name: Archive bindings
+      - name: Archive ${{ matrix.target }} bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: bindings-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/iota_sdk_ffi.dll
+          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.${{ matrix.lib_ext }}
 
   release-archives:
     name: Release archives
     runs-on: ubuntu-latest
     needs:
       - prepare-source-archive
-      - prepare-linux-archive
-      - prepare-darwin-archive
-      - prepare-windows-archive
+      - prepare-build-archives
     steps:
       - name: Checkout iota-sdk-go
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
