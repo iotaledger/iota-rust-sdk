@@ -51,21 +51,27 @@ jobs:
           - os: macos-latest
             target: x86_64-apple-darwin
             lib: libiota_sdk_ffi.dylib
+            folder: darwin-amd64
           - os: macos-latest
             target: aarch64-apple-darwin
             lib: libiota_sdk_ffi.dylib
+            folder: darwin-aarch64
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             lib: libiota_sdk_ffi.so
+            folder: linux-amd64
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             lib: libiota_sdk_ffi.so
+            folder: linux-aarch64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             lib: iota_sdk_ffi.dll
+            folder: windows-amd64
           - os: windows-latest
             target: aarch64-pc-windows-msvc
             lib: iota_sdk_ffi.dll
+            folder: windows-aarch64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout iota-rust-sdk
@@ -101,11 +107,16 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
+      - name: Prepare upload
+        run: |
+          mkdir -p lib/${{ matrix.folder }}
+          cp target/${{ matrix.target }}/release/${{ matrix.lib }} lib/${{ matrix.folder }}/${{ matrix.lib }}
+
       - name: Archive ${{ matrix.target }} bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
-          name: bindings-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/${{ matrix.lib }}
+          name: ${{ matrix.target }}
+          path: lib
 
   release-archives:
     name: Release archives
@@ -138,38 +149,6 @@ jobs:
           level: ${{ inputs.level || 'patch' }} # TODO undo
 
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: go-bindings
-
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: bindings-aarch64-unknown-linux-gnu
-          path: lib/linux-aarch64
-
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: bindings-x86_64-unknown-linux-gnu
-          path: lib/linux-amd64
-
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: bindings-aarch64-apple-darwin
-          path: lib/darwin-aarch64
-
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: bindings-x86_64-apple-darwin
-          path: lib/darwin-amd64
-
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: bindings-x86_64-pc-windows-msvc
-          path: lib/windows-amd64
-
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: bindings-aarch64-pc-windows-msvc
-          path: lib/windows-aarch64
 
       - name: Tag the Go package
         run: |
