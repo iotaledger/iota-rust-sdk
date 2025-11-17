@@ -118,7 +118,11 @@ if [ -n "$$TARGET" ]; then \
 				aarch64) PLATFORM_DIR="darwin-aarch64" ;; \
 				*) PLATFORM_DIR="darwin-x86-64" ;; \
 			esac ;; \
-		windows) LIB_PREFIX=""; LIB_EXT=".dll"; PLATFORM_DIR="win32-x86-64" ;; \
+		windows) LIB_PREFIX=""; LIB_EXT=".dll"; \
+			case "$$ARCH" in \
+				aarch64) PLATFORM_DIR="win32-aarch64" ;; \
+				*) PLATFORM_DIR="win32-x86-64" ;; \
+			esac ;; \
 		*) echo "Unsupported OS in TARGET: $$OS"; exit 1 ;; \
 	esac; \
 else \
@@ -135,7 +139,11 @@ else \
 				aarch64) PLATFORM_DIR="linux-aarch64" ;; \
 				*) PLATFORM_DIR="linux-x86-64" ;; \
 			esac ;; \
-		MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_PREFIX=""; LIB_EXT=".dll"; PLATFORM_DIR="win32-x86-64" ;; \
+		MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_PREFIX=""; LIB_EXT=".dll"; \
+			case "$$MACHINE" in \
+				aarch64|arm64) PLATFORM_DIR="win32-aarch64" ;; \
+				*) PLATFORM_DIR="win32-x86-64" ;; \
+			esac ;; \
 		*)        echo "Unsupported platform"; exit 1 ;; \
 	esac; \
 fi;

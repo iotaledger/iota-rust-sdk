@@ -13,7 +13,7 @@ on:
       dry_run:
         description: "Dry run - publish to local Maven repo only"
         required: false
-        default: false
+        default: true
         type: boolean
 
 jobs:
@@ -36,6 +36,9 @@ jobs:
             lib_ext: dylib
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            lib_ext: dll
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
             lib_ext: dll
     steps:
       - name: Checkout repository
@@ -98,12 +101,13 @@ jobs:
           ls -la bindings/kotlin/lib/
           cd bindings/kotlin/lib
           echo "Creating platform directories and copying libraries..."
-          mkdir -p linux-x86-64 linux-aarch64 darwin-x86-64 darwin-aarch64 win32-x86-64
+          mkdir -p linux-x86-64 linux-aarch64 darwin-x86-64 darwin-aarch64 win32-x86-64 win32-aarch64
           cp ../../../libs/native-lib-ubuntu-latest-x86_64-unknown-linux-gnu/linux-x86-64/libiota_sdk_ffi.so linux-x86-64/
           cp ../../../libs/native-lib-ubuntu-latest-aarch64-unknown-linux-gnu/linux-aarch64/libiota_sdk_ffi.so linux-aarch64/
           cp ../../../libs/native-lib-macos-latest-x86_64-apple-darwin/darwin-x86-64/libiota_sdk_ffi.dylib darwin-x86-64/
           cp ../../../libs/native-lib-macos-latest-aarch64-apple-darwin/darwin-aarch64/libiota_sdk_ffi.dylib darwin-aarch64/
           cp ../../../libs/native-lib-windows-latest-x86_64-pc-windows-msvc/win32-x86-64/iota_sdk_ffi.dll win32-x86-64/
+          cp ../../../libs/native-lib-windows-latest-aarch64-pc-windows-msvc/win32-aarch64/iota_sdk_ffi.dll win32-aarch64/
           echo "Contents after copying:"
           ls -la linux-* darwin-* win32-*
 
