@@ -289,7 +289,7 @@ jobs:
           subject-path: dist
 
       - name: Publish to PyPI
-        if: ${{ !fromJSON(inputs.dry_run) }}
+        if: ${{ !fromJSON(inputs.test_publish) }}
         uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           packages-dir: dist
@@ -298,8 +298,8 @@ jobs:
           attestations: true
           verify-metadata: true
 
-      - name: Publish to TestPyPI only (Dry Run)
-        if: ${{ fromJSON(inputs.dry_run) }}
+      - name: Publish to TestPyPI
+        if: ${{ fromJSON(inputs.test_publish) }}
         uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           repository-url: https://test.pypi.org/legacy/
