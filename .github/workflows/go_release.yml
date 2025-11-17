@@ -103,7 +103,7 @@ jobs:
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/x86_64-linux-gnu-gcc
         run: RUSTFLAGS="-C link-args=-Wl,-rpath,$ORIGIN" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
-      - name: Build bindings
+      - name: Build ${{ matrix.target }} bindings
         if: matrix.os == 'windows-latest'
         run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
@@ -149,6 +149,8 @@ jobs:
           level: ${{ inputs.level || 'patch' }} # TODO undo
 
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          merge-multiple: true
 
       - name: Tag the Go package
         run: |
