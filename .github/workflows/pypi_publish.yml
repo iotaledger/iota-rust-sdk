@@ -7,8 +7,8 @@ on:
         description: "Version to publish (leave empty for release version)"
         required: false
         type: string
-      dry_run:
-        description: "Dry run - publish to Test-PyPi repo only"
+      test_publish:
+        description: "Publish to Test-PyPi only"
         required: false
         default: true
         type: boolean
@@ -27,10 +27,9 @@ jobs:
           - target: aarch64
           - target: armv7l
           - target: ppc64le
-    # - target: s390x # fails here: crates/iota-sdk-types/src/u256.rs:51:5
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -80,7 +79,7 @@ jobs:
           - target: armv7
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -130,7 +129,7 @@ jobs:
           - target: aarch64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -179,7 +178,7 @@ jobs:
           - target: x86
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -227,7 +226,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Update version in pyproject.toml
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
