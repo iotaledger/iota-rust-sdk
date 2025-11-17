@@ -50,22 +50,22 @@ jobs:
         include:
           - os: macos-latest
             target: x86_64-apple-darwin
-            lib_ext: dylib
+            lib: libiota_sdk_ffi.dylib
           - os: macos-latest
             target: aarch64-apple-darwin
-            lib_ext: dylib
+            lib: libiota_sdk_ffi.dylib
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            lib_ext: so
+            lib: libiota_sdk_ffi.so
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            lib_ext: so
+            lib: libiota_sdk_ffi.so
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            lib_ext: dll
+            lib: iota_sdk_ffi.dll
           - os: windows-latest
             target: aarch64-pc-windows-msvc
-            lib_ext: dll
+            lib: iota_sdk_ffi.dll
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout iota-rust-sdk
@@ -88,7 +88,7 @@ jobs:
 
       - name: Build ${{ matrix.target }} bindings
         if: matrix.os == 'macos-latest'
-        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/libiota_sdk_ffi.dylib" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/${{ matrix.lib }}" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
       - name: Build ${{ matrix.target }} bindings
         if: matrix.os == 'ubuntu-latest'
@@ -105,7 +105,7 @@ jobs:
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: bindings-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/libiota_sdk_ffi.${{ matrix.lib_ext }}
+          path: target/${{ matrix.target }}/release/${{ matrix.lib }}
 
   release-archives:
     name: Release archives
@@ -165,6 +165,11 @@ jobs:
         with:
           name: bindings-x86_64-pc-windows-msvc
           path: lib/windows-amd64
+
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: bindings-aarch64-pc-windows-msvc
+          path: lib/windows-aarch64
 
       - name: Tag the Go package
         run: |
