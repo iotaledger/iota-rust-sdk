@@ -32,10 +32,13 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
+        with:
+          toolchain: stable #1.91.1
 
       - name: Install `uniffi-bindgen` for maturin
         run: cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -63,7 +66,7 @@ jobs:
           maturin-version: v1.10.1
 
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: wheel-linux-${{ matrix.platform.target }}
           path: target/wheels/*.whl
@@ -82,12 +85,14 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
+        with:
+          toolchain: stable #1.91.1
 
       - name: Install `uniffi-bindgen` for maturin
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
-          
+
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -115,7 +120,7 @@ jobs:
           maturin-version: v1.10.1
 
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: wheel-musllinux-${{ matrix.platform.target }}
           path: target/wheels/*.whl
@@ -132,12 +137,14 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
+        with:
+          toolchain: stable #1.91.1
 
       - name: Install `uniffi-bindgen` for maturin
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
-          
+
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -164,7 +171,7 @@ jobs:
           maturin-version: v1.10.1
 
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: wheel-macos-${{ matrix.platform.target }}
           path: target/wheels/*.whl
@@ -181,7 +188,9 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
+        with:
+          toolchain: stable #1.91.1
 
       - name: Install `uniffi-bindgen` for maturin
         shell: bash
@@ -216,7 +225,7 @@ jobs:
           maturin-version: v1.10.1
 
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: wheel-windows-${{ matrix.platform.target }}
           path: target/wheels/*.whl
@@ -246,7 +255,7 @@ jobs:
           working-directory: bindings/python/src
 
       - name: Upload sdist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: sdist
           path: target/wheels/*.tar.gz
@@ -260,7 +269,7 @@ jobs:
       attestations: write
     steps:
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           pattern: "*"
           merge-multiple: true
