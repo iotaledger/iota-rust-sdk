@@ -27,7 +27,7 @@ Verify by running `make --version` and `python3 --version`.
 3. Switch to the Python bindings package: `cd bindings/python/src`
 4. Build the wheel: `maturin build --release` (you'll find the generated `.whl` in target/wheels)
 5. Create or switch to your Python project with an activated virtual environment
-6. Install the local wheel: `pip install target/wheels/iota_sdk-0.1.0-<PLATFORM_SPECIFIC>.whl`
+6. Install the local wheel: `pip install target/wheels/iota_sdk-<VERSION>-<PLATFORM>.whl`
 7. Test by running the following minimal example:
 
    ```python

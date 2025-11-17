@@ -36,8 +36,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install `uniffi-bindgen` for maturin
-        run: |
-          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+        run: cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -89,6 +88,7 @@ jobs:
       - name: Install `uniffi-bindgen` for maturin
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+          
       - name: Install Python
         uses: actions/setup-python@v5
         with:
@@ -138,6 +138,7 @@ jobs:
       - name: Install `uniffi-bindgen` for maturin
         run: |
           cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+          
       - name: Install Python
         uses: actions/setup-python@v5
         with:
