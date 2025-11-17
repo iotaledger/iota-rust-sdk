@@ -41,7 +41,7 @@ jobs:
       - name: Archive Go bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
-          name: go-bindings
+          name: source
           path: bindings/go/iota_sdk
 
   prepare-build-archives:
@@ -109,14 +109,14 @@ jobs:
 
       - name: Prepare upload
         run: |
-          mkdir -p lib/${{ matrix.folder }}
-          cp target/${{ matrix.target }}/release/${{ matrix.lib }} lib/${{ matrix.folder }}/${{ matrix.lib }}
+          mkdir -p tmp/lib/${{ matrix.folder }}
+          cp target/${{ matrix.target }}/release/${{ matrix.lib }} tmp/lib/${{ matrix.folder }}/${{ matrix.lib }}
 
       - name: Archive ${{ matrix.target }} bindings
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: ${{ matrix.target }}
-          path: lib
+          path: tmp
 
   release-archives:
     name: Release archives
