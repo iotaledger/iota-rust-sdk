@@ -1,5 +1,5 @@
 name: "Install prerequisites for publishing to PyPI"
-description: "Shared setup for all platform specific workflow jobs"
+description: "Shared setup steps for all platform specific workflow jobs"
 
 inputs:
   sed-cmd:

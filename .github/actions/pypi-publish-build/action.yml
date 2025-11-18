@@ -1,0 +1,33 @@
+name: "Build artifacts for publishing to PyPI"
+description: "Shared build steps for all platform specific workflow jobs"
+
+inputs:
+  platform:
+    description: "The name of the platform"
+    required: true
+  target:
+    description: "The build target"
+    required: true
+  manylinux:
+    description: "The maturin manylinux container version to use"
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Build wheel
+      uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
+      with:
+        target: ${{ inputs.target }}
+        command: build
+        args: --release --find-interpreter
+        working-directory: bindings/python/src
+        manylinux: ${{ inputs.manylinux }}
+        maturin-version: v1.10.1
+
+    - name: Upload wheel
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      with:
+        name: wheel-${{ inputs.platform }}-${{ inputs.target }}
+        path: target/wheels/*.whl
