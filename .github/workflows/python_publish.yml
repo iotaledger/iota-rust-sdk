@@ -13,16 +13,50 @@ permissions:
   contents: read
 
 jobs:
-  linux:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
         platform:
-          - target: x86_64
-          - target: i686
-          - target: aarch64
-          - target: armv7l
-          - target: ppc64le
+          - name: linux
+            target: x86_64
+            runner: ubuntu-latest
+          - name: linux
+            target: i686
+            runner: ubuntu-latest
+          - name: linux
+            target: aarch64
+            runner: ubuntu-latest
+          - name: linux
+            target: armv7l
+            runner: ubuntu-latest
+          - name: linux
+            target: ppc64le
+            runner: ubuntu-latest
+          - name: musllinux
+            target: x86_64
+            runner: ubuntu-latest
+          - name: musllinux
+            target: x86
+            runner: ubuntu-latest
+          - name: musllinux
+            target: aarch64
+            runner: ubuntu-latest
+          - name: musllinux
+            target: armv7
+            runner: ubuntu-latest
+          - name: macos
+            target: x86_64
+            runner: macos-latest
+          - name: macos
+            target: aarch64
+            runner: macos-latest
+          - name: windows
+            target: x64
+            runner: windows-latest
+          - name: windows
+            target: x86
+            runner: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -31,73 +65,33 @@ jobs:
         uses: ./.github/actions/python-publish-setup
 
       - name: Build wheel
+        if: ${{ matrix.platform.name.linux }}
         uses: ./.github/actions/python-publish-build
         with:
-          platform: "linux"
+          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
           manylinux: "2_28"
 
-  musllinux:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform:
-          - target: x86_64
-          - target: x86
-          - target: aarch64
-          - target: armv7
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Setup prerequisites
-        uses: ./.github/actions/python-publish-setup
-
       - name: Build wheel
+        if: ${{ matrix.platform.name.musllinux }}
         uses: ./.github/actions/python-publish-build
         with:
-          platform: "musllinux"
+          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
           manylinux: musllinux_1_2
 
-  macos:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        platform:
-          - target: x86_64
-          - target: aarch64
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Setup prerequisites
-        uses: ./.github/actions/python-publish-setup
-
       - name: Build wheel
+        if: ${{ matrix.platform.name.macos }}
         uses: ./.github/actions/python-publish-build
         with:
-          platform: "macos"
+          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
 
-  windows:
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        platform:
-          - target: x64
-          - target: x86
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Setup prerequisites
-        uses: ./.github/actions/python-publish-setup
-
       - name: Build wheel
+        if: ${{ matrix.platform.name.windows }}
         uses: ./.github/actions/python-publish-build
         with:
-          platform: "windows"
+          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
 
   sdist:
