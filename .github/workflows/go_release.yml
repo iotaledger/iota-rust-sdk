@@ -1,5 +1,6 @@
 name: Go Release
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       version:
@@ -83,10 +84,6 @@ jobs:
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
-      - name: Install gcc-x86-64-linux-gnu
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
-        run: sudo apt-get install -y gcc-x86-64-linux-gnu g++-x86-64-linux-gnu
-
       - name: Build ${{ matrix.os }} ${{ matrix.target }} library
         if: matrix.os == 'macos-latest'
         run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/${{ matrix.lib }}" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
@@ -147,7 +144,7 @@ jobs:
         id: bump-semver
         with:
           current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: ${{ inputs.level }}
+          level: ${{ inputs.level || 'patch' }}
 
       - name: Set version according to inputs
         id: set-version
