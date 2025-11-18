@@ -3,9 +3,9 @@ on:
   pull_request: # TODO REMOVE
   workflow_dispatch:
     inputs:
-      version: # TODO remove?
+      version:
         description: "Version for the go package"
-        required: true
+        required: false
         type: string
       level:
         description: |
@@ -152,12 +152,21 @@ jobs:
         with:
           merge-multiple: true
 
+      - name: Set version
+        id: set-version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Tag the Go package
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go bindings to version ${{ steps.bump-semver.outputs.new_version }}"
+          git commit -m "Update Go bindings to version ${{ steps.set-version.outputs.version }}"
           git push
-          git tag ${{ steps.bump-semver.outputs.new_version }} -m "${{ steps.bump-semver.outputs.new_version }}"
+          git tag ${{ steps.set-version.outputs.version }} -m "${{ steps.set-version.outputs.version }}"
           git push --tags
