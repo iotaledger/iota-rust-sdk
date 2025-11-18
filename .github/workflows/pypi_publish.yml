@@ -28,32 +28,8 @@ jobs:
           - target: armv7l
           - target: ppc64le
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
-        with:
-          toolchain: stable #1.91.1
-
-      - name: Install `uniffi-bindgen` for maturin
-        run: cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.9
-
-      - name: Update version in pyproject.toml
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
-        run: |
-          FILE="bindings/python/src/pyproject.toml"
-          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
-          NEW_VERSION=${{ github.event.inputs.version }}
-          echo "New version: $NEW_VERSION"
-          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "Updated pyproject.toml:"
-          cat "$FILE"
+      - name: Python release setup
+        uses: ./.github/actions/pypi-publish-setup
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1
@@ -81,33 +57,8 @@ jobs:
           - target: aarch64
           - target: armv7
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
-        with:
-          toolchain: stable #1.91.1
-
-      - name: Install `uniffi-bindgen` for maturin
-        run: |
-          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.9
-
-      - name: Update version in pyproject.toml
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
-        run: |
-          FILE="bindings/python/src/pyproject.toml"
-          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
-          NEW_VERSION=${{ github.event.inputs.version }}
-          echo "New version: $NEW_VERSION"
-          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "Updated pyproject.toml:"
-          cat "$FILE"
+      - name: Python release setup
+        uses: ./.github/actions/pypi-publish-setup
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1
@@ -133,33 +84,10 @@ jobs:
           - target: x86_64
           - target: aarch64
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
+      - name: Python release setup
+        uses: ./.github/actions/pypi-publish-setup
         with:
-          toolchain: stable #1.91.1
-
-      - name: Install `uniffi-bindgen` for maturin
-        run: |
-          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.9
-
-      - name: Update version in pyproject.toml
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
-        run: |
-          FILE="bindings/python/src/pyproject.toml"
-          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
-          NEW_VERSION=${{ github.event.inputs.version }}
-          echo "New version: $NEW_VERSION"
-          sed -i '' -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "Updated pyproject.toml:"
-          cat "$FILE"
+          sed-cmd: "sed -i ''"
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1
@@ -184,36 +112,8 @@ jobs:
           - target: x64
           - target: x86
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
-        with:
-          toolchain: stable #1.91.1
-
-      - name: Install `uniffi-bindgen` for maturin
-        shell: bash
-        run: |
-          cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.9
-          architecture: ${{ matrix.platform.target }}
-
-      - name: Update version in pyproject.toml
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
-        shell: bash
-        run: |
-          FILE="bindings/python/src/pyproject.toml"
-          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
-          NEW_VERSION=${{ github.event.inputs.version }}
-          echo "New version: $NEW_VERSION"
-          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "Updated pyproject.toml:"
-          cat "$FILE"
+      - name: Python release setup
+        uses: ./.github/actions/pypi-publish-setup
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1
@@ -234,19 +134,12 @@ jobs:
     name: Build a source distribution (.tar.gz)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Update version in pyproject.toml
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
-        run: |
-          FILE="bindings/python/src/pyproject.toml"
-          grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
-          NEW_VERSION=${{ github.event.inputs.version }}
-          echo "New version: $NEW_VERSION"
-          sed -i -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
-          echo "Updated pyproject.toml:"
-          cat "$FILE"
+      - name: Python release setup
+        uses: ./.github/actions/pypi-publish-setup
+        with:
+          setup-rust: "false"
+          setup-python: "false"
+          setup-bindgen: "false"
 
       - name: Build sdist
         uses: PyO3/maturin-action@v1

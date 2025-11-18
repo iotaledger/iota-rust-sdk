@@ -1,0 +1,56 @@
+name: "Common Python setup"
+description: "Shared setup for all Python release jobs"
+
+inputs:
+  sed-cmd:
+    description: "How sed is invoked"
+    required: false
+    default: "sed -i"
+  setup-rust:
+    description: "Whether Rust should be installed"
+    required: false
+    default: "true"
+  setup-python:
+    description: "Whether Python should be installed"
+    required: false
+    default: "true"
+  install-bindgen:
+    description: "Whether uniffi-bindgen should be installed"
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+    - name: Install Rust
+      if: ${{ !fromJSON(inputs.setup-rust) }}
+      uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
+      with:
+        toolchain: stable #1.91.1
+
+    - name: Install `uniffi-bindgen` for maturin
+      if: ${{ !fromJSON(inputs.setup-bindgen) }}
+      shell: bash
+      run: cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
+
+    - name: Install Python
+      if: ${{ !fromJSON(inputs.setup-python) }}
+      shell: bash
+      uses: actions/setup-python@v5 # TODO
+      with:
+        python-version: 3.9
+
+    - name: Update version in pyproject.toml
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version != '' }}
+      shell: bash
+      run: |
+        FILE="bindings/python/src/pyproject.toml"
+        grep -q '^version = ".*"' "$FILE" || { echo "version line missing"; exit 1; }
+        NEW_VERSION=${{ github.event.inputs.version }}
+        echo "New version: $NEW_VERSION"
+        ${{ inputs.sed-cmd }} -E "s|^version = \".*\"|version = \"${NEW_VERSION}\"|" "$FILE"
+        echo "Updated pyproject.toml:"
+        cat "$FILE"
