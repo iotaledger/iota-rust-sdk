@@ -21,42 +21,55 @@ jobs:
           - name: linux
             target: x86_64
             runner: ubuntu-latest
+            container: 2_28
           - name: linux
             target: i686
             runner: ubuntu-latest
+            container: 2_28
           - name: linux
             target: aarch64
             runner: ubuntu-latest
+            container: 2_28
           - name: linux
             target: armv7l
             runner: ubuntu-latest
+            container: 2_28
           - name: linux
             target: ppc64le
             runner: ubuntu-latest
+            container: 2_28
           - name: musllinux
             target: x86_64
             runner: ubuntu-latest
+            container: musllinux_1_2
           - name: musllinux
             target: x86
             runner: ubuntu-latest
+            container: musllinux_1_2
           - name: musllinux
             target: aarch64
             runner: ubuntu-latest
+            container: musllinux_1_2
           - name: musllinux
             target: armv7
             runner: ubuntu-latest
+            container: musllinux_1_2
           - name: macos
             target: x86_64
             runner: macos-latest
+            container: ""
           - name: macos
             target: aarch64
             runner: macos-latest
+            container: ""
           - name: windows
             target: x64
             runner: windows-latest
+            container: ""
           - name: windows
             target: x86
             runner: windows-latest
+            container: ""
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -76,42 +89,12 @@ jobs:
           python-version: 3.9
 
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
-        if: matrix.platform.name == 'linux'
-        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
-        with:
-          target: ${{ matrix.platform.target }}
-          command: build
-          args: --release --find-interpreter
-          working-directory: bindings/python/src
-          manylinux: 2_28
-          maturin-version: v1.10.1
-
-      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
-        if: matrix.platform.name == 'musllinux'
         uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
           target: ${{ matrix.platform.target }}
           args: --release --find-interpreter
           working-directory: bindings/python/src
-          manylinux: musllinux_1_2
-          maturin-version: v1.10.1
-
-      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
-        if: matrix.platform.name == 'macos'
-        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
-        with:
-          target: ${{ matrix.platform.target }}
-          args: --release --find-interpreter
-          working-directory: bindings/python/src
-          maturin-version: v1.10.1
-
-      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
-        if: matrix.platform.name == 'windows'
-        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
-        with:
-          target: ${{ matrix.platform.target }}
-          args: --release --find-interpreter
-          working-directory: bindings/python/src
+          manylinux: ${{ matrix.platform.container }}
           maturin-version: v1.10.1
 
       - name: Upload wheel
