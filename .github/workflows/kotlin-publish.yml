@@ -83,17 +83,16 @@ jobs:
           ls -la bindings/kotlin/lib/
 
       # Uncomment for testing publishing without actually releasing
-      - name: Dry run - Local publish only
-        run: |
-          cd bindings/kotlin
-          echo "Dry run: Publishing to local Maven repository only"
-          ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
-        env:
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+      # - name: Dry run - Local publish only
+      #   run: |
+      #     cd bindings/kotlin
+      #     echo "Dry run: Publishing to local Maven repository only"
+      #     ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
+      #   env:
+      #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+      #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
 
       - name: Publish to Maven Central
-        if: contains(github.event.release.tag_name, 'kotlin')
         run: |
           cd bindings/kotlin
           ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
