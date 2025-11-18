@@ -75,31 +75,31 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Build wheel
-        if: ${{ matrix.platform.name.linux }}
+      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
+        if: matrix.platform.name == 'linux'
         uses: ./.github/actions/python-publish-build
         with:
           platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
           manylinux: "2_28"
 
-      - name: Build wheel
-        if: ${{ matrix.platform.name.musllinux }}
+      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
+        if: matrix.platform.name == 'musllinux'
         uses: ./.github/actions/python-publish-build
         with:
           platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
           manylinux: musllinux_1_2
 
-      - name: Build wheel
-        if: ${{ matrix.platform.name.macos }}
+      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
+        if: matrix.platform.name == 'macos'
         uses: ./.github/actions/python-publish-build
         with:
           platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
 
-      - name: Build wheel
-        if: ${{ matrix.platform.name.windows }}
+      - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
+        if: matrix.platform.name == 'windows'
         uses: ./.github/actions/python-publish-build
         with:
           platform: ${{ matrix.platform.name }}
