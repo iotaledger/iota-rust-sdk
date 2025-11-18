@@ -1,6 +1,7 @@
-name: Release
+name: Create release
 
 on:
+  # TODO remove?
   workflow_dispatch:
     inputs:
       package:
@@ -50,6 +51,8 @@ jobs:
           echo "PKG=$pkg" >> $GITHUB_ENV
           echo "VERSION=$version" >> $GITHUB_ENV
 
+      # TODO why is it taking the whole changelog file?
+      # TODO handle bindings changelog
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

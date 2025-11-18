@@ -36,10 +36,13 @@ on:
           - iota-sdk-graphql-client
           - iota-sdk-transaction-builder
           - iota-sdk
+          - iota-go-sdk
+          - iota-kotlin-sdk
+          - iota-python-sdk
 
 jobs:
   publish:
-    name: Setup for publish to crates.io
+    name: Setup for publishing ${{ inputs.package }}
     permissions:
       id-token: write # Enable OIDC
       pull-requests: write
@@ -56,6 +59,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install cargo-release
+        if: inputs.package == 'iota-sdk' || inputs.package == 'iota-sdk-types' || inputs.package == 'iota-sdk-crypto' || inputs.package == 'iota-sdk-graphql-client-build' || inputs.package == 'iota-sdk-graphql-client' || inputs.package == 'iota-sdk-transaction-builder'
         uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
         with:
           tool: cargo-release@0.25.20
@@ -65,10 +69,13 @@ jobs:
         with:
           tool: git-cliff
 
+      # TODO does this actually work?
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
-      - id: pr-create
+      - name: Create PR for Rust
+        id: pr-create
         uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
+        if: inputs.package == 'iota-sdk' || inputs.package == 'iota-sdk-types' || inputs.package == 'iota-sdk-crypto' || inputs.package == 'iota-sdk-graphql-client-build' || inputs.package == 'iota-sdk-graphql-client' || inputs.package == 'iota-sdk-transaction-builder'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ inputs.level }}
@@ -77,6 +84,31 @@ jobs:
           git-user-email: info@iota.org
           base-branch: develop
           pr-template-file: ./.github/release-pr-template.ejs
+
+      # - name: Create PR for Kotlin
+      #   if: inputs.package == 'kotlin-sdk'
+      #   runs: |
+      #     echo "Creating PR for Kotlin SDK - Not yet implemented."
+      # TODO generate changelog
+
+      # - name: Create PR for Python
+      #   if: inputs.package == 'python-sdk'
+      #   runs: |
+      #     echo "Creating PR for Python SDK - Not yet implemented."
+      # TODO generate changelog
+
+      - name: Create Pull Request
+        if: inputs.package == 'go-sdk' || inputs.package == 'kotlin-sdk' || inputs.package == 'python-sdk'
+        uses: peter-evans/create-pull-request@v7 # TODO pin
+        with:
+          commit-message: "Bump ${{ inputs.package }} version to ${{ steps.bump.outputs.new_version }}"
+          title: "Bump ${{ inputs.package }} version to ${{ steps.bump.outputs.new_version }}"
+          body: "Automated semver bump of ${{ inputs.package }} version."
+          branch: "release/${{ inputs.package }}/${{ steps.bump.outputs.new_version }}"
+          delete-branch: true
+
+      # TODO what about go?
+      # TODO extra step to set the pr URL and version?
 
       - name: Add release notes
         env:
