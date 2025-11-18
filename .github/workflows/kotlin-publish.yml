@@ -1,23 +1,15 @@
-name: Publish to Maven Central
+name: Publish Kotlin to Maven Central
 
 on:
   # TODO: remove after testing
   push:
     branches: [ci/kotlin-release]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version to publish (leave empty for release version)"
-        required: false
-        type: string
-      dry_run:
-        description: "Dry run - publish to local Maven repo only"
-        required: false
-        default: true
-        type: boolean
+  release:
+    types: [published]
 
 jobs:
   build:
+    # if: contains(github.event.release.tag_name, 'kotlin')
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -36,18 +28,19 @@ jobs:
             target: aarch64-pc-windows-msvc
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           java-version: "21"
           distribution: "temurin"
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331 # v1.91.1
         with:
           targets: ${{ matrix.target }}
+          toolchain: stable
 
       - name: Install cross-compilation tools
         if: matrix.target == 'aarch64-unknown-linux-gnu'
@@ -69,19 +62,16 @@ jobs:
     needs: build
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
         with:
           java-version: "21"
           distribution: "temurin"
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Download native libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           path: libs
 
@@ -105,41 +95,28 @@ jobs:
           echo "Contents after copying:"
           ls -la linux-* darwin-* win32-*
 
-      - name: Generate Kotlin bindings
+      - name: List downloaded libraries
         run: |
-          cd bindings/kotlin
-          # Generate bindings using the Linux x86_64 library (arbitrary choice)
-          cargo run --bin iota_sdk_bindings -- generate --library "lib/linux-x86-64/libiota_sdk_ffi.so" --language kotlin --out-dir lib --no-format -c uniffi.toml
+          echo "Contents of bindings/kotlin/lib:"
+          ls -la bindings/kotlin/lib/
 
-      - name: Set version for release
-        if: github.event_name == 'release'
+      # Uncomment for testing publishing without actually releasing
+      - name: Dry run - Local publish only
         run: |
           cd bindings/kotlin
-          sed -i "s/version = .*/version = \"${{ github.event.release.tag_name }}\"/" build.gradle.kts
-
-      - name: Set version for manual dispatch
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.version != ''
-        run: |
-          cd bindings/kotlin
-          sed -i "s/version = .*/version = \"${{ github.event.inputs.version }}\"/" build.gradle.kts
+          echo "Dry run: Publishing to local Maven repository only"
+          ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
 
       - name: Publish to Maven Central
-        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == false)
+        if: contains(github.event.release.tag_name, 'kotlin')
         run: |
           cd bindings/kotlin
           ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
-
-      - name: Dry run - Local publish only
-        if: github.event_name != 'release' && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run == true)
-        run: |
-          cd bindings/kotlin
-          echo "Dry run: Publishing to local Maven repository only"
-          ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
-        env:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}

@@ -226,13 +226,13 @@ kotlin-examples: ## Run all Kotlin bindings examples
 .PHONY: kotlin-examples-format-check
 kotlin-examples-format-check: ## Check format of all Kotlin bindings examples
 	cd bindings/kotlin; \
-	./gradlew KtfmtCheck --no-configuration-cache || exit $$?; \
+	./gradlew KtfmtCheck || exit $$?; \
 	cd -
 
 .PHONY: kotlin-examples-format
 kotlin-examples-format: ## Format all Kotlin bindings examples
 	cd bindings/kotlin; \
-	./gradlew KtfmtFormat --no-configuration-cache; \
+	./gradlew KtfmtFormat; \
 	cd -
 
 .PHONY: python-example
