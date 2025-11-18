@@ -119,7 +119,7 @@ mavenPublishing {
     coordinates("org.iota", "iota-sdk", version.toString())
 
     pom {
-        name.set("IOTA SDK Kotlin Bindings")
+        name.set("IOTA Kotlin SDK")
         description.set("Kotlin bindings for the IOTA SDK")
         url.set("https://github.com/iotaledger/iota-rust-sdk")
         licenses {
