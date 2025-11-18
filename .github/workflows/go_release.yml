@@ -92,18 +92,18 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y gcc-x86-64-linux-gnu g++-x86-64-linux-gnu
 
-      - name: Build ${{ matrix.target }} bindings
+      - name: Build ${{ matrix.os }} ${{ matrix.target }} bindings
         if: matrix.os == 'macos-latest'
         run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/${{ matrix.lib }}" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
-      - name: Build ${{ matrix.target }} bindings
+      - name: Build ${{ matrix.os }} ${{ matrix.target }} bindings
         if: matrix.os == 'ubuntu-latest'
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/aarch64-linux-gnu-gcc
           CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: /usr/bin/x86_64-linux-gnu-gcc
         run: RUSTFLAGS="-C link-args=-Wl,-rpath,$ORIGIN" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
-      - name: Build ${{ matrix.target }} bindings
+      - name: Build ${{ matrix.os }} ${{ matrix.target }} bindings
         if: matrix.os == 'windows-latest'
         run: cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
