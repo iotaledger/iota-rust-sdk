@@ -1,5 +1,5 @@
-name: "Common Python setup"
-description: "Shared setup for all Python release jobs"
+name: "Install prerequisites for publishing to PyPI"
+description: "Shared setup for all platform specific workflow jobs"
 
 inputs:
   sed-cmd:
