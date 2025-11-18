@@ -70,8 +70,8 @@ jobs:
           LIB_NAME="${{ matrix.lib_prefix }}iota_sdk_ffi${{ matrix.lib_ext }}"
           mkdir -p bindings/kotlin/lib/${{ matrix.folder }}
           cp "$TARGET_DIR/$LIB_NAME" bindings/kotlin/lib/${{ matrix.folder }}/
-        # env:
-        #   CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Upload native library
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
