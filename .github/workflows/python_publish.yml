@@ -29,10 +29,10 @@ jobs:
           - target: ppc64le
     steps:
       - name: Setup prerequisites
-        uses: ./.github/actions/pypi-publish-setup
+        uses: ./.github/actions/python-publish-setup
 
       - name: Build wheel
-        uses: ./.github/actions/pypi-publish-build
+        uses: ./.github/actions/python-publish-build
         with:
           platform: "linux"
           target: ${{ matrix.platform.target }}
@@ -49,10 +49,10 @@ jobs:
           - target: armv7
     steps:
       - name: Setup prerequisites
-        uses: ./.github/actions/pypi-publish-setup
+        uses: ./.github/actions/python-publish-setup
 
       - name: Build wheel
-        uses: ./.github/actions/pypi-publish-build
+        uses: ./.github/actions/python-publish-build
         with:
           platform: "musllinux"
           target: ${{ matrix.platform.target }}
@@ -67,12 +67,12 @@ jobs:
           - target: aarch64
     steps:
       - name: Setup prerequisites
-        uses: ./.github/actions/pypi-publish-setup
+        uses: ./.github/actions/python-publish-setup
         with:
           sed-cmd: "sed -i ''"
 
       - name: Build wheel
-        uses: ./.github/actions/pypi-publish-build
+        uses: ./.github/actions/python-publish-build
         with:
           platform: "macos"
           target: ${{ matrix.platform.target }}
@@ -86,10 +86,10 @@ jobs:
           - target: x86
     steps:
       - name: Setup prerequisites
-        uses: ./.github/actions/pypi-publish-setup
+        uses: ./.github/actions/python-publish-setup
 
       - name: Build wheel
-        uses: ./.github/actions/pypi-publish-build
+        uses: ./.github/actions/python-publish-build
         with:
           platform: "windows"
           target: ${{ matrix.platform.target }}
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup prerequisites
-        uses: ./.github/actions/pypi-publish-setup
+        uses: ./.github/actions/python-publish-setup
         with:
           setup-rust: "false"
           setup-python: "false"
