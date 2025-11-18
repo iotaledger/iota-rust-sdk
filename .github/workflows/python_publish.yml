@@ -106,7 +106,7 @@ jobs:
           setup-bindgen: "false"
 
       - name: Build sdist
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
           command: sdist
           working-directory: bindings/python/src
@@ -141,13 +141,13 @@ jobs:
           printf '  - %s\n' "${files[@]}"
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
         with:
           subject-path: dist
 
       - name: Publish to PyPI
         if: ${{ !fromJSON(inputs.test_publish) }}
-        uses: pypa/gh-action-pypi-publish@v1.13.0
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
         with:
           packages-dir: dist
           skip-existing: true
@@ -157,7 +157,7 @@ jobs:
 
       - name: Publish to TestPyPI
         if: ${{ fromJSON(inputs.test_publish) }}
-        uses: pypa/gh-action-pypi-publish@v1.13.0
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
         with:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: dist
