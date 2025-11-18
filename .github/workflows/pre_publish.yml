@@ -91,14 +91,14 @@ jobs:
       #     echo "Creating PR for Kotlin SDK - Not yet implemented."
       # TODO generate changelog
 
-      # - name: Create PR for Python
-      #   if: inputs.package == 'python-sdk'
-      #   runs: |
-      #     echo "Creating PR for Python SDK - Not yet implemented."
-      # TODO generate changelog
+      - name: Bump version and create changelog for Python
+        if: inputs.package == 'iota-python-sdk'
+        uses: ./.github/actions/python-pre-publish
+        with:
+          bump: ${{ inputs.level }}
 
       - name: Create Pull Request
-        if: inputs.package == 'go-sdk' || inputs.package == 'kotlin-sdk' || inputs.package == 'python-sdk'
+        if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
         uses: peter-evans/create-pull-request@v7 # TODO pin
         with:
           commit-message: "Bump ${{ inputs.package }} version to ${{ steps.bump.outputs.new_version }}"
