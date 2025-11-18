@@ -1,6 +1,8 @@
 name: Publish to PyPi
 
 on:
+  push:
+    branches: [ci/python-release]
   workflow_dispatch:
     inputs:
       version:
