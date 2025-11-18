@@ -1,4 +1,4 @@
-name: Publish rust crates
+name: Publish Rust SDK crates
 
 on:
   release:
