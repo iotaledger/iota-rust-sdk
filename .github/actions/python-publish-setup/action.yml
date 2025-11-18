@@ -1,12 +1,6 @@
 name: "Install prerequisites for publishing to PyPI"
 description: "Shared setup steps for all platform specific workflow jobs"
 
-inputs:
-  sed-cmd:
-    description: "How sed is invoked"
-    required: false
-    default: "sed -i"
-
 runs:
   using: "composite"
   steps:
