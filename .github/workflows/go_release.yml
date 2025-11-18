@@ -1,6 +1,5 @@
 name: Go Release
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       version:
@@ -144,7 +143,7 @@ jobs:
         id: bump-semver
         with:
           current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: ${{ inputs.level || 'patch' }}
+          level: ${{ inputs.level }}
 
       - name: Set version according to inputs
         id: set-version
