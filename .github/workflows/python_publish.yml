@@ -77,33 +77,48 @@ jobs:
 
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
         if: matrix.platform.name == 'linux'
-        uses: ./.github/actions/python-publish-build
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
-          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
-          manylinux: "2_28"
+          command: build
+          args: --release --find-interpreter
+          working-directory: bindings/python/src
+          manylinux: 2_28
+          maturin-version: v1.10.1
 
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
         if: matrix.platform.name == 'musllinux'
-        uses: ./.github/actions/python-publish-build
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
-          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
+          args: --release --find-interpreter
+          working-directory: bindings/python/src
           manylinux: musllinux_1_2
+          maturin-version: v1.10.1
 
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
         if: matrix.platform.name == 'macos'
-        uses: ./.github/actions/python-publish-build
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
-          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
+          args: --release --find-interpreter
+          working-directory: bindings/python/src
+          maturin-version: v1.10.1
 
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
         if: matrix.platform.name == 'windows'
-        uses: ./.github/actions/python-publish-build
+        uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
-          platform: ${{ matrix.platform.name }}
           target: ${{ matrix.platform.target }}
+          args: --release --find-interpreter
+          working-directory: bindings/python/src
+          maturin-version: v1.10.1
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: wheel-${{ matrix.platform.name }}-${{ matrix.platform.target }}
+          path: target/wheels/*.whl
 
   sdist:
     name: Build a source distribution (.tar.gz)
