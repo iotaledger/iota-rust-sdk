@@ -16,16 +16,28 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            lib_prefix: lib
+            lib_ext: .so
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
+            lib_prefix: lib
+            lib_ext: .so
           - os: macos-latest
             target: x86_64-apple-darwin
+            lib_prefix: lib
+            lib_ext: .dylib
           - os: macos-latest
             target: aarch64-apple-darwin
+            lib_prefix: lib
+            lib_ext: .dylib
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            lib_prefix: ""
+            lib_ext: .dll
           - os: windows-latest
             target: aarch64-pc-windows-msvc
+            lib_prefix: ""
+            lib_ext: .dll
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -47,15 +59,21 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
 
       - name: Build the bindings
-        run: make kotlin TARGET=${{ matrix.target }}
+        run: |
+          cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+          TARGET_DIR="target/${{ matrix.target }}/release"
+          LIB_NAME="${{ matrix.lib_prefix }}iota_sdk_ffi${{ matrix.lib_ext }}"
+          cargo run --bin iota_sdk_bindings -- generate --library "$TARGET_DIR/$LIB_NAME" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml
+          cp "$TARGET_DIR/$LIB_NAME" bindings/kotlin/lib/
+        shell: bash
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Upload native library
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: native-lib-${{ matrix.os }}-${{ matrix.target }}
-          path: bindings/kotlin/lib/**/*iota_sdk_ffi*
+          path: bindings/kotlin/lib/*iota_sdk_ffi*
 
   publish:
     runs-on: ubuntu-latest
@@ -83,21 +101,21 @@ jobs:
           ls -la bindings/kotlin/lib/
 
       # Uncomment for testing publishing without actually releasing
-      # - name: Dry run - Local publish only
-      #   run: |
-      #     cd bindings/kotlin
-      #     echo "Dry run: Publishing to local Maven repository only"
-      #     ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
-      #   env:
-      #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-      #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
-
-      - name: Publish to Maven Central
+      - name: Dry run - Local publish only
         run: |
           cd bindings/kotlin
-          ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
+          echo "Dry run: Publishing to local Maven repository only"
+          ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
         env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+
+      # - name: Publish to Maven Central
+      #   run: |
+      #     cd bindings/kotlin
+      #     ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
+      #   env:
+      #     ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
+      #     ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
+      #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+      #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}

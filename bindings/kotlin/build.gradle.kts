@@ -46,25 +46,6 @@ tasks.register<KtfmtFormatTask>("KtfmtFormat") {
 // Generic task to run any example
 tasks.register<JavaExec>("example") {
     classpath = sourceSets["main"].runtimeClasspath
-    val osName = System.getProperty("os.name").lowercase()
-    val osArch = System.getProperty("os.arch").lowercase()
-    val platformDir =
-        when {
-            osName.contains("linux") && (osArch.contains("amd64") || osArch.contains("x86_64")) ->
-                "linux-x86_64"
-            osName.contains("linux") && (osArch.contains("aarch64") || osArch.contains("arm64")) ->
-                "linux-aarch64"
-            (osName.contains("mac") || osName.contains("darwin")) &&
-                (osArch.contains("amd64") || osArch.contains("x86_64")) -> "darwin-x86_64"
-            (osName.contains("mac") || osName.contains("darwin")) &&
-                (osArch.contains("aarch64") || osArch.contains("arm64")) -> "darwin-aarch64"
-            osName.contains("windows") && (osArch.contains("amd64") || osArch.contains("x86_64")) ->
-                "win32-x86_64"
-            osName.contains("windows") &&
-                (osArch.contains("aarch64") || osArch.contains("arm64")) -> "win32-aarch64"
-            else -> "linux-x86_64" // fallback
-        }
-    jvmArgs = listOf("-Djna.library.path=${projectDir}/lib/$platformDir")
 
     // Get the example name from the command line argument -Pexample=<name>
     val exampleProperty = "example"
