@@ -98,7 +98,7 @@ jobs:
             latest_tag="iota-go-sdk-v0.0.0"
           fi
           latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
-          source ./github/bump_version.sh
+          source .github/bump_version.sh
           new_version=$(bump_semver "$latest_version" "${{ inputs.level }}")
           echo "latest version: $latest_version"
           echo "new version: $new_version"
