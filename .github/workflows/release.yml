@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Set package and tag from inputs
-        if: github.event.pull_request == null
+        # if: github.event.pull_request == null
         run: |
           echo "TAG=${{ inputs.package }}-v${{ inputs.version }}" >> $GITHUB_ENV
           echo "PKG=${{ inputs.package }}" >> $GITHUB_ENV
