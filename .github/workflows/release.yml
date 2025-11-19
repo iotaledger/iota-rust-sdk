@@ -68,7 +68,7 @@ jobs:
           PKG: ${{ env.PKG }}
           VERSION: ${{ env.VERSION }}
         run: |
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease
 
           #           if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
           #   gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease"
