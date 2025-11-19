@@ -1,4 +1,4 @@
-# IOTA Sdk
+# IOTA SDK
 
 A Rust SDK for integrating with the [IOTA blockchain](https://docs.iota.org/).
 

@@ -1,15 +1,14 @@
-name: Publish rust crates
+name: Publish Rust SDK crate
 
 on:
   release:
     types: [published]
 
-# TODO filter release tags to only rust crates?
-
 jobs:
   publish:
-    name: Publish to crates.io
+    name: Publish ${{github.event.release.tag_name}} to crates.io
     runs-on: ubuntu-latest
+    if: startsWith(github.event.release.tag_name, 'iota-sdk')
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
