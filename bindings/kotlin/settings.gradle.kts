@@ -1,4 +1,4 @@
-rootProject.name = "iota-sdk-jvm"
+rootProject.name = "iota-sdk"
 
 include(":lib")
 
