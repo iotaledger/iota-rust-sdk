@@ -89,6 +89,7 @@ jobs:
           python-version: 3.9
 
       - name: Copy license
+        shell: bash
         run: cp ./LICENSE bindings/python/src
 
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
