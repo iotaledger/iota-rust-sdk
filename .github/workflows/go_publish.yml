@@ -7,30 +7,8 @@ on:
     inputs:
       version:
         description: "Version for the go package (bypass the level if present)"
-        required: false
-        type: string
-      level:
-        description: |
-          The level of version bump to make.
-
-          Possible values:
-          - major:   Increase the major version (x.0.0)
-          - minor:   Increase the minor version (x.y.0)
-          - patch:   Increase the patch version (x.y.z)
-          - release: Remove the pre-version (x.y.z)
-          - rc:      Increase the rc pre-version (x.y.z-rc.M)
-          - beta:    Increase the beta pre-version (x.y.z-beta.M)
-          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
-        type: choice
         required: true
-        options: # TODO adjust in followup PR
-          - major
-          - minor
-          - patch
-          - release
-          - rc
-          - beta
-          - alpha
+        type: string
 
 jobs:
   prepare-source-archive:
@@ -134,15 +112,13 @@ jobs:
         with:
           merge-multiple: true
 
-      # TODO take version from release tag
-
       - name: Set version according to inputs
         id: set-version
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           else
-            echo "version=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+            echo "version=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|.*-v(.*)|\1|p')" >> $GITHUB_OUTPUT
           fi
 
       - name: Tag the Go SDK
