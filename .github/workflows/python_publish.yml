@@ -8,7 +8,7 @@ on:
       test_publish:
         description: "Publish to Test-PyPI only"
         required: false
-        default: true
+        default: false
         type: boolean
 
 permissions:
@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   wheels:
+    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'python')) || github.event_name == 'workflow_dispatch'
     runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
@@ -111,6 +112,7 @@ jobs:
 
   sdist:
     name: Build a source distribution (.tar.gz)
+    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'python')) || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
