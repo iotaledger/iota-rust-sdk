@@ -90,8 +90,9 @@ jobs:
 
       # TODO @tibo  get version, bump it, trigger workflow call
 
-      - name: Create Pull Request
+      - name: Bump go version
         # if: inputs.package == 'go-sdk'
+        id: bump-go-version
         run: |
           latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
           if [ -z "$latest_tag" ]; then
@@ -102,7 +103,14 @@ jobs:
           new_version=$(bump_semver "$latest_version" "${{ inputs.level || 'patch' }}")
           echo "latest version: $latest_version"
           echo "new version: $new_version"
-          # TODO workflow call
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Trigger Go release
+        # if: inputs.package == 'go-sdk'
+        uses: ./.github/workflows/release.yml
+        with:
+          package: iota-go-sdk
+          version: ${{ steps.bump-go-version.outputs.new_version }}
 
       # - name: Create PR for Rust
       #   if: startsWith(inputs.package, 'iota-sdk')
