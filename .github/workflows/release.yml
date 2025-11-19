@@ -68,11 +68,10 @@ jobs:
           PKG: ${{ env.PKG }}
           VERSION: ${{ env.VERSION }}
         run: |
-          gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease
+          if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease
+          else
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft
+          fi
 
-#           if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
-#   gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease"
-# else
-#   gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft"
-# fi
 #--notes-file "crates/$PKG/CHANGELOG.md
