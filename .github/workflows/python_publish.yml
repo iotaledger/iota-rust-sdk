@@ -83,7 +83,6 @@ jobs:
           toolchain: stable
 
       - name: Install `uniffi-bindgen` for maturin
-        shell: bash
         run: cargo install --path crates/iota-sdk-ffi --bin uniffi-bindgen
 
       - name: Install Python
