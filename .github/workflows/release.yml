@@ -1,9 +1,16 @@
 name: Create release
 
 on:
-  # TODO remove?
-  # TODO tibo for Go
-  # workflow_call:
+  workflow_call:
+    inputs:
+      package:
+        type: string
+        required: true
+        description: The package to publish.
+      version:
+        type: string
+        required: true
+        description: The exact version.
   workflow_dispatch:
     inputs:
       package:
@@ -55,6 +62,7 @@ jobs:
 
       # TODO why is it taking the whole changelog file?
       # TODO handle bindings changelog
+      # TODO bring back notes "--notes-file "crates/$PKG/CHANGELOG.md"
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +71,7 @@ jobs:
           VERSION: ${{ env.VERSION }}
         run: |
           if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes-file "crates/$PKG/CHANGELOG.md"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease
           else
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft
           fi
