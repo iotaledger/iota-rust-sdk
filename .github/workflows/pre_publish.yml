@@ -141,6 +141,8 @@ jobs:
         # if: inputs.package == 'go-sdk'
         id: bump-go-version
         run: |
+          git tag
+          git tag -l "*iota-go-sdk*" --sort=-v:refname
           latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
           if [ -z "$latest_tag" ]; then
             latest_tag="iota-go-sdk-v0.0.0"
