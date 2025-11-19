@@ -16,43 +16,31 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            lib_prefix: lib
-            lib_ext: .so
             folder: linux-x86-64
+            lib_name: libiota_sdk_ffi.so
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            lib_prefix: lib
-            lib_ext: .so
             folder: linux-aarch64
+            lib_name: libiota_sdk_ffi.so
           - os: macos-latest
             target: x86_64-apple-darwin
-            lib_prefix: lib
-            lib_ext: .dylib
             folder: darwin-x86-64
+            lib_name: libiota_sdk_ffi.dylib
           - os: macos-latest
             target: aarch64-apple-darwin
-            lib_prefix: lib
-            lib_ext: .dylib
             folder: darwin-aarch64
+            lib_name: libiota_sdk_ffi.dylib
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            lib_prefix: ""
-            lib_ext: .dll
             folder: windows-x86-64
+            lib_name: iota_sdk_ffi.dll
           - os: windows-latest
             target: aarch64-pc-windows-msvc
-            lib_prefix: ""
-            lib_ext: .dll
             folder: win32-aarch64
+            lib_name: iota_sdk_ffi.dll
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      # - name: Set up JDK 21
-      #   uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
-      #   with:
-      #     java-version: "21"
-      #     distribution: "temurin"
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331 # v1.91.1
@@ -67,9 +55,8 @@ jobs:
         run: |
           cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
           TARGET_DIR="target/${{ matrix.target }}/release"
-          LIB_NAME="${{ matrix.lib_prefix }}iota_sdk_ffi${{ matrix.lib_ext }}"
           mkdir -p bindings/kotlin/lib/${{ matrix.folder }}
-          cp "$TARGET_DIR/$LIB_NAME" bindings/kotlin/lib/${{ matrix.folder }}/
+          cp "$TARGET_DIR/${{ matrix.lib_name }}" bindings/kotlin/lib/${{ matrix.folder }}/
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
@@ -77,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: native-lib-${{ matrix.os }}-${{ matrix.target }}
-          path: bindings/kotlin/lib/${{ matrix.folder }}/*iota_sdk_ffi*
+          path: bindings/kotlin/lib/${{ matrix.folder }}/${{ matrix.lib_name }}
 
   publish:
     runs-on: ubuntu-latest
