@@ -75,5 +75,3 @@ jobs:
           else
             gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft
           fi
-
-
