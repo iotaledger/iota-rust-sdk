@@ -15,6 +15,7 @@ runs:
   using: "composite"
   steps:
     - name: Bump release version and create changelog
+      id: bump
       if: ${{ inputs.level == "alpha" || inputs.level == "beta" || inputs.level == "rc" }}
       uses: commitizen-tools/commitizen-action@master
       with:
@@ -25,9 +26,9 @@ runs:
         changelog: true
         changelog_increment_filename: "body.md"
         dry-run: true # TODO remove once tested
-      id: bump
 
     - name: Release and create changelog
+      id: bump
       if: ${{ inputs.level == "release" }}
       uses: commitizen-tools/commitizen-action@master
       with:
@@ -37,9 +38,9 @@ runs:
         changelog: true
         changelog_increment_filename: "body.md"
         dry-run: true # TODO remove once tested
-      id: bump
 
     - name: Bump pre-release version and create changelog
+      id: bump
       if: ${{ inputs.level == "major" || inputs.level == "minor" || inputs.level == "patch" }}
       uses: commitizen-tools/commitizen-action@master
       with:
@@ -50,4 +51,3 @@ runs:
         changelog: true
         changelog_increment_filename: "body.md"
         dry-run: true # TODO remove once tested
-      id: bump
