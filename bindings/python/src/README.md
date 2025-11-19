@@ -9,7 +9,7 @@ Note that these bindings were automatically generated using [`uniffi-rs`](https:
 To add this library as a dependency to your 3.9+ Python project, first make sure you have created a [`virtual environment`](https://docs.python.org/3/library/venv.html), then run the command:
 
 ```sh
-pip install iota-sdk
+pip install iota-sdk==3.0.0a1
 ```
 
 You can check your installation by running the following minimum example:
