@@ -92,7 +92,7 @@ jobs:
           pattern: native-lib-*
           merge-multiple: true
 
-      - name: Dry run - Local publish only
+      - name: Test publish - local only
         if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
