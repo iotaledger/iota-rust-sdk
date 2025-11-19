@@ -132,7 +132,7 @@ mavenPublishing {
             developer {
                 id.set("iotaledger")
                 name.set("IOTA Foundation")
-                email.set("contact@iota.org")
+                email.set("info@iota.org")
             }
         }
         scm {
