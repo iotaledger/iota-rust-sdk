@@ -1,10 +1,10 @@
-name: Publish to PyPi
+name: Publish to PyPI
 
 on:
   workflow_dispatch:
     inputs:
       test_publish:
-        description: "Publish to Test-PyPi only"
+        description: "Publish to Test-PyPI only"
         required: false
         default: true
         type: boolean
@@ -22,54 +22,54 @@ jobs:
             target: x86_64
             runner: ubuntu-latest
             container: 2_28
-          # - name: linux
-          #   target: i686
-          #   runner: ubuntu-latest
-          #   container: 2_28
-          # - name: linux
-          #   target: aarch64
-          #   runner: ubuntu-latest
-          #   container: 2_28
-          # - name: linux
-          #   target: armv7l
-          #   runner: ubuntu-latest
-          #   container: 2_28
-          # - name: linux
-          #   target: ppc64le
-          #   runner: ubuntu-latest
-          #   container: 2_28
-          # - name: musllinux
-          #   target: x86_64
-          #   runner: ubuntu-latest
-          #   container: musllinux_1_2
-          # - name: musllinux
-          #   target: x86
-          #   runner: ubuntu-latest
-          #   container: musllinux_1_2
-          # - name: musllinux
-          #   target: aarch64
-          #   runner: ubuntu-latest
-          #   container: musllinux_1_2
-          # - name: musllinux
-          #   target: armv7
-          #   runner: ubuntu-latest
-          #   container: musllinux_1_2
-          # - name: macos
-          #   target: x86_64
-          #   runner: macos-latest
-          #   container: ""
-          # - name: macos
-          #   target: aarch64
-          #   runner: macos-latest
-          #   container: ""
-          # - name: windows
-          #   target: x64
-          #   runner: windows-latest
-          #   container: ""
-          # - name: windows
-          #   target: x86
-          #   runner: windows-latest
-          #   container: ""
+          - name: linux
+            target: i686
+            runner: ubuntu-latest
+            container: 2_28
+          - name: linux
+            target: aarch64
+            runner: ubuntu-latest
+            container: 2_28
+          - name: linux
+            target: armv7l
+            runner: ubuntu-latest
+            container: 2_28
+          - name: linux
+            target: ppc64le
+            runner: ubuntu-latest
+            container: 2_28
+          - name: musllinux
+            target: x86_64
+            runner: ubuntu-latest
+            container: musllinux_1_2
+          - name: musllinux
+            target: x86
+            runner: ubuntu-latest
+            container: musllinux_1_2
+          - name: musllinux
+            target: aarch64
+            runner: ubuntu-latest
+            container: musllinux_1_2
+          - name: musllinux
+            target: armv7
+            runner: ubuntu-latest
+            container: musllinux_1_2
+          - name: macos
+            target: x86_64
+            runner: macos-latest
+            container: ""
+          - name: macos
+            target: aarch64
+            runner: macos-latest
+            container: ""
+          - name: windows
+            target: x64
+            runner: windows-latest
+            container: ""
+          - name: windows
+            target: x86
+            runner: windows-latest
+            container: ""
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -153,7 +153,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.test_publish == false
         uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
         with:
-          packages-dir: dist-does-not-exist-safe-guard # TODO undo after test
+          packages-dir: dist
           skip-existing: true
           verbose: true
           attestations: true
@@ -169,5 +169,3 @@ jobs:
           verbose: true
           attestations: true
           verify-metadata: true
-          user: __token # TEMP
-          password: ${{ secrets.TEST_PYPI_TOKEN }} # TEMP
