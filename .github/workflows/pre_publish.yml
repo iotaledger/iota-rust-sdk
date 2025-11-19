@@ -99,7 +99,7 @@ jobs:
           fi
           latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
           source .github/bump_version.sh
-          new_version=$(bump_semver "$latest_version" "${{ inputs.level }}")
+          new_version=$(bump_semver "$latest_version" "${{ inputs.level || 'patch' }}")
           echo "latest version: $latest_version"
           echo "new version: $new_version"
           # TODO workflow call
