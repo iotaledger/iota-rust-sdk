@@ -89,6 +89,18 @@ jobs:
 
       # TODO @tibo  get version, bump it, trigger workflow call
 
+      - name: Create Pull Request
+        if: inputs.package == 'go-sdk'
+        run: |
+          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="v0.0.0"
+          fi
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest tag: $LATEST_TAG"
+          # TODO bump script
+          # TODO workflow call
+
       - name: Create PR for Rust
         if: startsWith(inputs.package, 'iota-sdk')
         id: pr-create

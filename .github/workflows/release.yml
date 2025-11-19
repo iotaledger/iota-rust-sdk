@@ -1,9 +1,16 @@
 name: Create release
 
 on:
-  # TODO remove?
-  # TODO tibo for Go
-  # workflow_call:
+
+  workflow_call:
+    inputs:
+      package:
+        type: string
+        required: true
+        description: The package to publish.
+      version:
+        type: string
+        description: The exact version.
   workflow_dispatch:
     inputs:
       package:

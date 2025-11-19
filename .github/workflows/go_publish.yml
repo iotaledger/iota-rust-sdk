@@ -134,22 +134,7 @@ jobs:
         with:
           merge-multiple: true
 
-      - name: Get latest tag from iota-sdk-go
-        id: get-latest-tag
-        run: |
-          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="v0.0.0"
-          fi
-          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          echo "Latest tag: $LATEST_TAG"
-
-      - name: Bump the latest tag version
-        uses: actions-ecosystem/action-bump-semver@34e334551143a5301f38c830e44a22273c6ff5c5 # v1.0.0
-        id: bump-semver
-        with:
-          current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: ${{ inputs.level }}
+# TODO take version from release tag
 
       - name: Set version according to inputs
         id: set-version
