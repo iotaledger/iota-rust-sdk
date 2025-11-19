@@ -95,7 +95,7 @@ jobs:
         if: inputs.package == 'iota-python-sdk'
         uses: ./.github/actions/python-pre-publish
         with:
-          bump: ${{ inputs.level }}
+          level: ${{ inputs.level }}
 
       - name: Create Pull Request
         if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
