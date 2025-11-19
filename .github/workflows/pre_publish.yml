@@ -73,17 +73,17 @@ jobs:
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
       # TODO @Thoralf-M
-      - name: Create PR for Kotlin
-        if: inputs.package == 'kotlin-sdk'
-        run: |
-          echo "Creating PR for Kotlin SDK - Not yet implemented."
+      # - name: Create PR for Kotlin
+      #   if: inputs.package == 'kotlin-sdk'
+      #   run: |
+      #     echo "Creating PR for Kotlin SDK - Not yet implemented."
       # TODO @Thoralf-M  get version, bump it, update it
       # TODO @Thoralf-M generate changelog
 
-      - name: Create PR for Python
-        if: inputs.package == 'python-sdk'
-        run: |
-          echo "Creating PR for Python SDK - Not yet implemented."
+      # - name: Create PR for Python
+      #   if: inputs.package == 'python-sdk'
+      #   run: |
+      #     echo "Creating PR for Python SDK - Not yet implemented."
       # TODO @alex  get version, bump it, update it
       # TODO @alex generate changelog
 
