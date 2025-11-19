@@ -9,6 +9,7 @@ on:
         description: The package to publish.
       version:
         type: string
+        required: true
         description: The exact version.
   workflow_dispatch:
     inputs:
@@ -61,6 +62,7 @@ jobs:
 
       # TODO why is it taking the whole changelog file?
       # TODO handle bindings changelog
+      # TODO bring back notes "--notes-file "crates/$PKG/CHANGELOG.md"
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,5 +76,4 @@ jobs:
             gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft
           fi
 
-# TODO bring back notes
-# --notes-file "crates/$PKG/CHANGELOG.md
+
