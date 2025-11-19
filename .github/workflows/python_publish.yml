@@ -169,3 +169,5 @@ jobs:
           verbose: true
           attestations: true
           verify-metadata: true
+          user: __token # TEMP
+          password: ${{ secrets.TEST_PYPI_TOKEN }} # TEMP
