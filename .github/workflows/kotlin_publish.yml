@@ -60,15 +60,13 @@ jobs:
         run: |
           cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
           TARGET_DIR="target/${{ matrix.target }}/release"
-          mkdir -p bindings/kotlin/lib/${{ matrix.folder }}
-          cp "$TARGET_DIR/${{ matrix.lib_name }}" bindings/kotlin/lib/${{ matrix.folder }}/
-          mkdir -p temp
-          cp -r bindings/kotlin/lib/${{ matrix.folder }} temp/
+          mkdir -p temp/${{ matrix.folder }}
+          cp "$TARGET_DIR/${{ matrix.lib_name }}" temp/${{ matrix.folder }}/
 
       - name: Upload native library
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
-          name: native-lib-${{ matrix.os }}-${{ matrix.target }}
+          name: native-lib-${{ matrix.target }}
           path: temp/
 
   publish:
