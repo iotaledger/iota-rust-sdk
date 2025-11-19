@@ -2,6 +2,8 @@ name: Create release
 
 on:
   # TODO remove?
+  # TODO tibo for Go
+  # workflow_call:
   workflow_dispatch:
     inputs:
       package:
