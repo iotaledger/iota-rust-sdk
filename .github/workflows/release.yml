@@ -69,7 +69,8 @@ jobs:
           VERSION: ${{ env.VERSION }}
         run: |
           if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes-file "crates/$PKG/CHANGELOG.md"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease"
           else
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft"
           fi
+#--notes-file "crates/$PKG/CHANGELOG.md
