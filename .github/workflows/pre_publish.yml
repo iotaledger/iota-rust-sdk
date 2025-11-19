@@ -88,30 +88,6 @@ jobs:
       # TODO @alex  get version, bump it, update it
       # TODO @alex generate changelog
 
-      # TODO @tibo  get version, bump it, trigger workflow call
-
-      - name: Bump go version
-        # if: inputs.package == 'go-sdk'
-        id: bump-go-version
-        run: |
-          latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
-          if [ -z "$latest_tag" ]; then
-            latest_tag="iota-go-sdk-v0.0.0"
-          fi
-          latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
-          source .github/bump_version.sh
-          new_version=$(bump_semver "$latest_version" "${{ inputs.level || 'patch' }}")
-          echo "latest version: $latest_version"
-          echo "new version: $new_version"
-          echo "new_version=$new_version" >> $GITHUB_OUTPUT
-
-      - name: Trigger Go release
-        # if: inputs.package == 'go-sdk'
-        uses: ./.github/workflows/release.yml
-        with:
-          package: iota-go-sdk
-          version: ${{ steps.bump-go-version.outputs.new_version }}
-
       # - name: Create PR for Rust
       #   if: startsWith(inputs.package, 'iota-sdk')
       #   id: pr-create
@@ -151,3 +127,34 @@ jobs:
 
       #     $notes")
       #     gh pr edit $pr_num --body "$body"
+
+  go-whatever:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bump-go-version.outputs.new_version }}
+    steps:
+      - name: Bump go version
+        # if: inputs.package == 'go-sdk'
+        id: bump-go-version
+        run: |
+          latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$latest_tag" ]; then
+            latest_tag="iota-go-sdk-v0.0.0"
+          fi
+          latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          new_version=$(bump_semver "$latest_version" "${{ inputs.level || 'patch' }}")
+          echo "latest version: $latest_version"
+          echo "new version: $new_version"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+  go-trigger:
+    runs-on: ubuntu-latest
+    needs: go-whatever
+    steps:
+      - name: Trigger Go release
+        # if: inputs.package == 'go-sdk'
+        uses: ./.github/workflows/release.yml
+        with:
+          package: iota-go-sdk
+          version: ${{ needs.go-whatever.outputs.new_version }}
