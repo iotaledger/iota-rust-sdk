@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    # TODO: uncomment after testing
     # if: contains(github.event.release.tag_name, 'kotlin')
     runs-on: ${{ matrix.os }}
     strategy:
@@ -59,12 +60,14 @@ jobs:
           TARGET_DIR="target/${{ matrix.target }}/release"
           mkdir -p bindings/kotlin/lib/${{ matrix.folder }}
           cp "$TARGET_DIR/${{ matrix.lib_name }}" bindings/kotlin/lib/${{ matrix.folder }}/
+          mkdir -p temp
+          cp -r bindings/kotlin/lib/${{ matrix.folder }} temp/
 
       - name: Upload native library
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: native-lib-${{ matrix.os }}-${{ matrix.target }}
-          path: bindings/kotlin/lib/
+          path: temp/
 
   publish:
     runs-on: ubuntu-latest
@@ -92,6 +95,7 @@ jobs:
           ls -la bindings/kotlin/lib/
 
       # Uncomment for testing publishing without actually releasing
+      # TODO: comment after testing
       - name: Dry run - Local publish only
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
@@ -101,6 +105,7 @@ jobs:
           echo "Dry run: Publishing to local Maven repository only"
           ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
 
+      # TODO: uncomment after testing
       # - name: Publish to Maven Central
       #   env:
       #     ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
