@@ -1,7 +1,6 @@
 name: Create release
 
 on:
-
   workflow_call:
     inputs:
       package:

@@ -134,7 +134,7 @@ jobs:
         with:
           merge-multiple: true
 
-# TODO take version from release tag
+      # TODO take version from release tag
 
       - name: Set version according to inputs
         id: set-version
