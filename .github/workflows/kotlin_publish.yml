@@ -52,13 +52,13 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
       - name: Build the library
         shell: bash
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
         run: |
           cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
           TARGET_DIR="target/${{ matrix.target }}/release"
           mkdir -p bindings/kotlin/lib/${{ matrix.folder }}
           cp "$TARGET_DIR/${{ matrix.lib_name }}" bindings/kotlin/lib/${{ matrix.folder }}/
-        env:
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Upload native library
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
@@ -93,20 +93,20 @@ jobs:
 
       # Uncomment for testing publishing without actually releasing
       - name: Dry run - Local publish only
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
         run: |
           cd bindings/kotlin
           echo "Dry run: Publishing to local Maven repository only"
           ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
-        env:
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
 
       # - name: Publish to Maven Central
-      #   run: |
-      #     cd bindings/kotlin
-      #     ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
       #   env:
       #     ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
       #     ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
       #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
       #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+      #   run: |
+      #     cd bindings/kotlin
+      #     ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
