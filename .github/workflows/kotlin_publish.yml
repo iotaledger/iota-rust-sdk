@@ -3,10 +3,17 @@ name: Publish Kotlin to Maven Central
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      test_publish:
+        description: "Publish to Maven Local"
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   build:
-    if: contains(github.event.release.tag_name, 'kotlin')
+    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'kotlin')) || github.event_name == 'workflow_dispatch'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -40,7 +47,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331 # v1.91.1
+        uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
         with:
           targets: ${{ matrix.target }}
           toolchain: stable
@@ -85,22 +92,23 @@ jobs:
           pattern: native-lib-*
           merge-multiple: true
 
-      # Uncomment for testing publishing without actually releasing
-      # - name: Dry run - Local publish only
-      #   env:
-      #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
-      #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
-      #   run: |
-      #     cd bindings/kotlin
-      #     echo "Dry run: Publishing to local Maven repository only"
-      #     ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
+      - name: Dry run - Local publish only
+        if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
+        run: |
+          cd bindings/kotlin || exit 1
+          echo "Dry run: Publishing to local Maven repository only"
+          ./gradlew publishToMavenLocal --no-daemon --no-parallel --no-configuration-cache
 
       - name: Publish to Maven Central
+        if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.test_publish == false)
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_BASE64_ENCODED_ASCII_ARMORED_SIGNING_KEY }}
         run: |
-          cd bindings/kotlin
+          cd bindings/kotlin || exit 1
           ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --no-configuration-cache
