@@ -92,13 +92,15 @@ jobs:
       - name: Create Pull Request
         if: inputs.package == 'go-sdk'
         run: |
-          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="v0.0.0"
+          latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$latest_tag" ]; then
+            latest_tag="iota-go-sdk-v0.0.0"
           fi
-          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          echo "Latest tag: $LATEST_TAG"
-          # TODO bump script
+          latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
+          source ./github/bump_version.sh
+          new_version=$(bump_semver "$latest_version" "${{ inputs.level }}")
+          echo "latest version: $latest_version"
+          echo "new version: $new_version"
           # TODO workflow call
 
       - name: Create PR for Rust
