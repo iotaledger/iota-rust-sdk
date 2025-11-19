@@ -79,7 +79,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
         with:
-          toolchain: stable # v1.91.1
+          toolchain: stable
 
       - name: Install `uniffi-bindgen` for maturin
         shell: bash
