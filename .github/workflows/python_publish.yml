@@ -91,10 +91,6 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Copy license
-        shell: bash
-        run: cp ./LICENSE bindings/python/src
-
       - name: Build ${{ matrix.platform.name }}-${{ matrix.platform.target }} wheel
         uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
         with:
@@ -117,9 +113,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Copy license
-        run: cp ./LICENSE bindings/python/src
 
       - name: Build sdist
         uses: PyO3/maturin-action@86b9d133d34bc1b40018696f782949dac11bd380 # v1.49.4
