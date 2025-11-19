@@ -1,7 +1,6 @@
 name: Pre-publish
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       level:

@@ -36,14 +36,14 @@ permissions:
 
 jobs:
   create-release:
-    # if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/'))
+    if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Set package and tag from inputs
-        # if: github.event.pull_request == null
+        if: github.event.pull_request == null
         run: |
           echo "TAG=${{ inputs.package }}-v${{ inputs.version }}" >> $GITHUB_ENV
           echo "PKG=${{ inputs.package }}" >> $GITHUB_ENV
@@ -74,4 +74,5 @@ jobs:
             gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft
           fi
 
-#--notes-file "crates/$PKG/CHANGELOG.md
+# TODO bring back notes
+# --notes-file "crates/$PKG/CHANGELOG.md
