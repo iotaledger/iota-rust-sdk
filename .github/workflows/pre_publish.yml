@@ -155,6 +155,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: go-whatever
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      
       - name: Trigger Go release
         # if: inputs.package == 'go-sdk'
         uses: ./.github/workflows/release.yml
