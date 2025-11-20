@@ -35249,11 +35249,11 @@ func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
 
 
-type MnemonicWordCount uint8
+type MnemonicWordCount uint
 
 const (
-	MnemonicWordCountTwelve MnemonicWordCount = 12
-	MnemonicWordCountTwentyFour MnemonicWordCount = 24
+	MnemonicWordCountTwelve MnemonicWordCount = 1
+	MnemonicWordCountTwentyFour MnemonicWordCount = 2
 )
 
 type FfiConverterMnemonicWordCount struct {}

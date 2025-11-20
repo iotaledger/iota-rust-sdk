@@ -6,7 +6,7 @@ use iota_sdk::crypto::mnemonic::MnemonicWordCount;
 use crate::error::Result;
 
 #[uniffi::remote(Enum)]
-#[repr(u8)]
+#[non_exhaustive]
 pub enum MnemonicWordCount {
     Twelve = 12,
     TwentyFour = 24,

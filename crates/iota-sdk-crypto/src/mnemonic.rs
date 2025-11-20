@@ -4,6 +4,7 @@
 use bip39::Mnemonic;
 
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub enum MnemonicWordCount {
     Twelve = 12,
     TwentyFour = 24,

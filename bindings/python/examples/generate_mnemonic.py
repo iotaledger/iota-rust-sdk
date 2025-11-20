@@ -1,12 +1,14 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import generate_mnemonic
+from lib.iota_sdk_ffi import generate_mnemonic, MnemonicWordCount
 
 
 def main():
     mnemonic = generate_mnemonic(None)
-    print("Mnemonic:", mnemonic)
+    print("24 word mnemonic:", mnemonic)
+    mnemonic = generate_mnemonic(MnemonicWordCount.TWELVE)
+    print("12 word mnemonic:", mnemonic)
 
 
 if __name__ == "__main__":

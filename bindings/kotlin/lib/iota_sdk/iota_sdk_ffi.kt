@@ -57647,10 +57647,10 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 
 
-enum class MnemonicWordCount(val value: kotlin.UByte) {
+enum class MnemonicWordCount {
     
-    TWELVE(12u),
-    TWENTY_FOUR(24u);
+    TWELVE,
+    TWENTY_FOUR;
     companion object
 }
 
