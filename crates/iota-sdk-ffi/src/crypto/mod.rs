@@ -3,6 +3,7 @@
 
 pub mod bls12381;
 pub mod ed25519;
+pub mod mnemonic;
 pub mod multisig;
 pub mod passkey;
 pub mod secp256k1;

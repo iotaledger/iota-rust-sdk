@@ -6163,6 +6163,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(RustBuffer bcs, Rust
 RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENERATE_MNEMONIC
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENERATE_MNEMONIC
+RustBuffer uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(RustBuffer word_count, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(RustBuffer bcs, RustCallStatus *out_status
@@ -7622,6 +7627,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENERATE_MNEMONIC
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENERATE_MNEMONIC
+uint16_t uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic(void
     
 );
 #endif

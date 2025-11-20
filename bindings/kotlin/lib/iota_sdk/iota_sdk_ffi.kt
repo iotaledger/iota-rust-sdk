@@ -3077,6 +3077,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3235,6 +3237,8 @@ fun uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs(
 ): Short
@@ -7557,6 +7561,8 @@ fun uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(`bcs`: RustBuffer.ByValue,u
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(`wordCount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8197,6 +8203,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 27063.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482.toShort()) {
@@ -64085,6 +64094,16 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(
         FfiConverterTypeGasPayment.lower(`data`),_status)
+}
+    )
+    }
+    
+
+    @Throws(SdkFfiException::class) fun `generateMnemonic`(`wordCount`: kotlin.UInt?): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
+        FfiConverterOptionalUInt.lower(`wordCount`),_status)
 }
     )
     }

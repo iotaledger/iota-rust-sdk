@@ -605,6 +605,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 27063:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_bcs() != 63349:
@@ -8652,6 +8654,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9886,6 +9893,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs.restype = ctypes.c_uint16
@@ -48448,6 +48458,13 @@ def gas_payment_to_bcs(data: "GasPayment") -> "bytes":
         _UniffiConverterTypeGasPayment.lower(data)))
 
 
+def generate_mnemonic(word_count: "typing.Optional[int]") -> "str":
+    _UniffiConverterOptionalUInt32.check_lower(word_count)
+    
+    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic,
+        _UniffiConverterOptionalUInt32.lower(word_count)))
+
+
 def genesis_object_from_bcs(bcs: "bytes") -> "GenesisObject":
     """
     Create this type from BCS encoded bytes.
@@ -50264,6 +50281,7 @@ __all__ = [
     "gas_cost_summary_to_bcs",
     "gas_payment_from_bcs",
     "gas_payment_to_bcs",
+    "generate_mnemonic",
     "genesis_object_from_bcs",
     "genesis_object_to_bcs",
     "genesis_transaction_from_bcs",

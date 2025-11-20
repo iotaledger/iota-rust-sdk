@@ -1008,6 +1008,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic()
+	})
+	if checksum != 27063 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs()
 	})
 	if checksum != 15482 {
@@ -42990,6 +42999,20 @@ func GasPaymentToBcs(data GasPayment) ([]byte, error) {
 			return _uniffiDefaultValue, _uniffiErr
 		} else {
 			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func GenerateMnemonic(wordCount *uint32) (string, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(FfiConverterOptionalUint32INSTANCE.Lower(wordCount),_uniffiStatus),
+	}
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue string
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterStringINSTANCE.Lift(_uniffiRV), nil
 		}
 }
 
