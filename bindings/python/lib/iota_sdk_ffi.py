@@ -605,7 +605,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 27063:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 58427:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -48459,6 +48459,11 @@ def gas_payment_to_bcs(data: "GasPayment") -> "bytes":
 
 
 def generate_mnemonic(word_count: "typing.Optional[int]") -> "str":
+    """
+    Generate a new BIP-39 mnemonic in English.
+    Supported word counts are 12, 15, 18, 21, and 24 (default).
+    """
+
     _UniffiConverterOptionalUInt32.check_lower(word_count)
     
     return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic,

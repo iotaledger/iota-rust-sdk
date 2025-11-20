@@ -8205,7 +8205,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 27063.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 58427.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482.toShort()) {
@@ -64099,6 +64099,10 @@ public typealias FfiConverterTypeValue = FfiConverterString
     }
     
 
+        /**
+         * Generate a new BIP-39 mnemonic in English.
+         * Supported word counts are 12, 15, 18, 21, and 24 (default).
+         */
     @Throws(SdkFfiException::class) fun `generateMnemonic`(`wordCount`: kotlin.UInt?): kotlin.String {
             return FfiConverterString.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->

@@ -1010,7 +1010,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic()
 	})
-	if checksum != 27063 {
+	if checksum != 58427 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic: UniFFI API checksum mismatch")
 	}
@@ -43002,6 +43002,8 @@ func GasPaymentToBcs(data GasPayment) ([]byte, error) {
 		}
 }
 
+// Generate a new BIP-39 mnemonic in English.
+// Supported word counts are 12, 15, 18, 21, and 24 (default).
 func GenerateMnemonic(wordCount *uint32) (string, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
