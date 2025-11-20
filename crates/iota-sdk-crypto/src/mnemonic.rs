@@ -12,8 +12,8 @@ pub enum MnemonicWordCount {
 
 /// Generate a new BIP-39 mnemonic in English.
 /// Supported word counts are 12 and 24 (default).
-pub fn generate_mnemonic(word_count: Option<MnemonicWordCount>) -> String {
-    let count = word_count.unwrap_or(MnemonicWordCount::TwentyFour) as usize;
+pub fn generate_mnemonic(word_count: impl Into<Option<MnemonicWordCount>>) -> String {
+    let count = word_count.into().unwrap_or(MnemonicWordCount::TwentyFour) as usize;
     Mnemonic::generate(count)
         .expect("mnemonic generation failed") // Safe to unwrap since the word count is controlled
         .to_string()
