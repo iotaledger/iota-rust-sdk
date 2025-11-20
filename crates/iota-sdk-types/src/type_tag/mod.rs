@@ -41,7 +41,7 @@ use super::Address;
 /// type-tag-vector = %x06 type-tag
 /// type-tag-struct = %x07 struct-tag
 /// ```
-#[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TypeTag {
     U8,
