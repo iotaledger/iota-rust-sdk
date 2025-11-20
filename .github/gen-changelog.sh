@@ -1,4 +1,4 @@
 #!/bin/bash
 
-git-cliff --prepend -o "$CRATE_ROOT/CHANGELOG.md" --tag "$NEW_VERSION"
+git-cliff --unreleased --prepend -o "$CRATE_ROOT/CHANGELOG.md"
 git add "*CHANGELOG.md"
