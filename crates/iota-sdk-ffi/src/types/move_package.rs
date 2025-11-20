@@ -46,7 +46,8 @@ impl UpgradePolicy {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct MovePackageData(pub iota_sdk::types::MovePackageData);
 
 #[uniffi::export]
