@@ -605,7 +605,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 58427:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 54158:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -20915,6 +20915,44 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
 
 
 
+class MnemonicWordCount(enum.Enum):
+    TWELVE = 12
+    
+    TWENTY_FOUR = 24
+    
+
+
+class _UniffiConverterTypeMnemonicWordCount(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MnemonicWordCount.TWELVE
+        if variant == 2:
+            return MnemonicWordCount.TWENTY_FOUR
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == MnemonicWordCount.TWELVE:
+            return
+        if value == MnemonicWordCount.TWENTY_FOUR:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == MnemonicWordCount.TWELVE:
+            buf.write_i32(1)
+        if value == MnemonicWordCount.TWENTY_FOUR:
+            buf.write_i32(2)
+
+
+
+
+
+
+
 class MoveAbility(enum.Enum):
     COPY = 0
     
@@ -23955,6 +23993,33 @@ class _UniffiConverterOptionalTypeValidatorSet(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeValidatorSet.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMnemonicWordCount(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMnemonicWordCount.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMnemonicWordCount.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMnemonicWordCount.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -48458,16 +48523,16 @@ def gas_payment_to_bcs(data: "GasPayment") -> "bytes":
         _UniffiConverterTypeGasPayment.lower(data)))
 
 
-def generate_mnemonic(word_count: "typing.Optional[int]") -> "str":
+def generate_mnemonic(word_count: "typing.Optional[MnemonicWordCount]") -> "str":
     """
     Generate a new BIP-39 mnemonic in English.
-    Supported word counts are 12, 15, 18, 21, and 24 (default).
+    Supported word counts are 12 and 24 (default).
     """
 
-    _UniffiConverterOptionalUInt32.check_lower(word_count)
+    _UniffiConverterOptionalTypeMnemonicWordCount.check_lower(word_count)
     
-    return _UniffiConverterString.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic,
-        _UniffiConverterOptionalUInt32.lower(word_count)))
+    return _UniffiConverterString.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic,
+        _UniffiConverterOptionalTypeMnemonicWordCount.lower(word_count)))
 
 
 def genesis_object_from_bcs(bcs: "bytes") -> "GenesisObject":
@@ -50121,6 +50186,7 @@ __all__ = [
     "ExecutionStatus",
     "Feature",
     "IdOperation",
+    "MnemonicWordCount",
     "MoveAbility",
     "MoveVisibility",
     "NameFormat",

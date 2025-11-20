@@ -8205,7 +8205,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 58427.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 54158.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482.toShort()) {
@@ -57647,6 +57647,36 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 
 
+enum class MnemonicWordCount(val value: kotlin.UByte) {
+    
+    TWELVE(12u),
+    TWENTY_FOUR(24u);
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMnemonicWordCount: FfiConverterRustBuffer<MnemonicWordCount> {
+    override fun read(buf: ByteBuffer) = try {
+        MnemonicWordCount.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: MnemonicWordCount) = 4UL
+
+    override fun write(value: MnemonicWordCount, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
 enum class MoveAbility {
     
     COPY,
@@ -60605,6 +60635,38 @@ public object FfiConverterOptionalTypeValidatorSet: FfiConverterRustBuffer<Valid
         } else {
             buf.put(1)
             FfiConverterTypeValidatorSet.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeMnemonicWordCount: FfiConverterRustBuffer<MnemonicWordCount?> {
+    override fun read(buf: ByteBuffer): MnemonicWordCount? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMnemonicWordCount.read(buf)
+    }
+
+    override fun allocationSize(value: MnemonicWordCount?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMnemonicWordCount.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MnemonicWordCount?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMnemonicWordCount.write(value, buf)
         }
     }
 }
@@ -64101,13 +64163,12 @@ public typealias FfiConverterTypeValue = FfiConverterString
 
         /**
          * Generate a new BIP-39 mnemonic in English.
-         * Supported word counts are 12, 15, 18, 21, and 24 (default).
-         */
-    @Throws(SdkFfiException::class) fun `generateMnemonic`(`wordCount`: kotlin.UInt?): kotlin.String {
+         * Supported word counts are 12 and 24 (default).
+         */ fun `generateMnemonic`(`wordCount`: MnemonicWordCount?): kotlin.String {
             return FfiConverterString.lift(
-    uniffiRustCallWithError(SdkFfiException) { _status ->
+    uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
-        FfiConverterOptionalUInt.lower(`wordCount`),_status)
+        FfiConverterOptionalTypeMnemonicWordCount.lower(`wordCount`),_status)
 }
     )
     }

@@ -3,9 +3,7 @@
 
 use iota_crypto::mnemonic::generate_mnemonic;
 
-fn main() -> eyre::Result<()> {
-    let mnemonic = generate_mnemonic(None)?;
+fn main() -> () {
+    let mnemonic = generate_mnemonic(None);
     println!("Mnemonic: {mnemonic}");
-
-    Ok(())
 }

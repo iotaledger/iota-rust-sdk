@@ -10,9 +10,6 @@ import (
 )
 
 func main() {
-	mnemonic, err := iota_sdk.GenerateMnemonic(nil)
-	if err != nil {
-		panic(err)
-	}
+	mnemonic := iota_sdk.GenerateMnemonic(nil)
 	fmt.Println("Mnemonic:", mnemonic)
 }

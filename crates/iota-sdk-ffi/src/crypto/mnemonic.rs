@@ -1,12 +1,20 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_sdk::crypto::mnemonic::MnemonicWordCount;
+
 use crate::error::Result;
 
+#[uniffi::remote(Enum)]
+#[repr(u8)]
+pub enum MnemonicWordCount {
+    Twelve = 12,
+    TwentyFour = 24,
+}
+
 /// Generate a new BIP-39 mnemonic in English.
-/// Supported word counts are 12, 15, 18, 21, and 24 (default).
+/// Supported word counts are 12 and 24 (default).
 #[uniffi::export]
-pub fn generate_mnemonic(word_count: Option<u32>) -> Result<String> {
-    let word_count = word_count.map(|w| w as usize);
-    Ok(iota_sdk::crypto::mnemonic::generate_mnemonic(word_count)?)
+pub fn generate_mnemonic(word_count: Option<MnemonicWordCount>) -> String {
+    iota_sdk::crypto::mnemonic::generate_mnemonic(word_count)
 }
