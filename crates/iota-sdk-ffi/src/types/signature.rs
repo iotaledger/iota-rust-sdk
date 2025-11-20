@@ -62,7 +62,8 @@ pub enum SignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct UserSignature(pub iota_sdk::types::UserSignature);
 
 #[uniffi::export]
@@ -203,7 +204,8 @@ impl UserSignature {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq, Hash)]
 pub struct SimpleSignature(pub iota_sdk::types::SimpleSignature);
 
 #[uniffi::export]
