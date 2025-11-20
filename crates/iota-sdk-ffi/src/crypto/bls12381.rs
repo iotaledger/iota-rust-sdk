@@ -62,7 +62,8 @@ impl Bls12381PrivateKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Bls12381VerifyingKey(pub iota_sdk::crypto::bls12381::Bls12381VerifyingKey);
 
 #[uniffi::export]

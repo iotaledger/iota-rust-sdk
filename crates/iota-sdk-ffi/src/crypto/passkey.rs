@@ -8,7 +8,8 @@ use crate::{
     types::{crypto::passkey::PasskeyAuthenticator, signature::SimpleSignature},
 };
 
-#[derive(uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct PasskeyVerifier(iota_sdk::crypto::passkey::PasskeyVerifier);
 
 #[uniffi::export]

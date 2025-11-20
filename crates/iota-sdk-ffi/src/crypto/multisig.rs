@@ -18,7 +18,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct MultisigVerifier(pub iota_sdk::crypto::multisig::MultisigVerifier);
 
 #[uniffi::export]
@@ -48,7 +49,8 @@ impl MultisigVerifier {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct UserSignatureVerifier(pub iota_sdk::crypto::multisig::UserSignatureVerifier);
 
 #[uniffi::export]
@@ -77,7 +79,8 @@ impl UserSignatureVerifier {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct MultisigAggregator(pub iota_sdk::crypto::multisig::MultisigAggregator);
 
 #[uniffi::export]
