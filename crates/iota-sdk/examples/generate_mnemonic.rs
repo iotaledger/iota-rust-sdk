@@ -3,7 +3,7 @@
 
 use iota_crypto::mnemonic::{MnemonicWordCount, generate_mnemonic};
 
-fn main() -> () {
+fn main() {
     let mnemonic = generate_mnemonic(None);
     println!("24 word mnemonic: {mnemonic}");
     let mnemonic = generate_mnemonic(Some(MnemonicWordCount::Twelve));
