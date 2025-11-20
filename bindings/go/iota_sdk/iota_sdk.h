@@ -438,6 +438,31 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_bytes(void* ptr, RustCallSta
 RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_hex(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_DEBUG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_DEBUG
+RustBuffer uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_display(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_HASH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_UNIFFI_TRAIT_HASH
+uint64_t uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_hash(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ARGUMENT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ARGUMENT
 void* uniffi_iota_sdk_ffi_fn_clone_argument(void* ptr, RustCallStatus *out_status

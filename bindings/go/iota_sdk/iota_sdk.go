@@ -10549,6 +10549,63 @@ func (_self *Address) ToHex() string {
 	}
 	}))
 }
+
+func (_self *Address) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Address) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Address) Eq(other *Address) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_eq(
+		_pointer,FfiConverterAddressINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Address) Ne(other *Address) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_ne(
+		_pointer,FfiConverterAddressINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Address) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Address) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
