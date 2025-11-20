@@ -17,7 +17,8 @@ use crate::{
 macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {
         $(#[$meta])*
-        #[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
+        #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, derive_more::From, derive_more::Deref, uniffi::Object)]
+        #[uniffi::export(Eq, Hash)]
         pub struct $t(pub iota_sdk::types::$t);
 
         #[uniffi::export]
