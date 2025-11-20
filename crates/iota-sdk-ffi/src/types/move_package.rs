@@ -9,8 +9,8 @@ use crate::{
 };
 
 /// Representation of upgrade policy constants in `iota::package`.
-#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
-#[uniffi::export(Display, Eq)]
+#[derive(Debug, derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
+#[uniffi::export(Debug, Display, Eq)]
 pub struct UpgradePolicy(pub iota_sdk::types::UpgradePolicy);
 
 #[uniffi::export]
