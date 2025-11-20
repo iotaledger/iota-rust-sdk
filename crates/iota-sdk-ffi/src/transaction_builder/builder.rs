@@ -27,7 +27,8 @@ use crate::{
 
 /// A builder for creating transactions. Use `finish` to finalize the
 /// transaction data.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct TransactionBuilder(RwLock<iota_sdk::transaction_builder::TransactionBuilder<()>>);
 
 impl TransactionBuilder {

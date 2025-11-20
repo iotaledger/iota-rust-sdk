@@ -3082,6 +3082,260 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5326,6 +5580,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_argument_new_result(`result`: Short,uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result(`ptr`: Pointer,`ix`: Short,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5356,6 +5616,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_bls12381publickey_generate(uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_bls12381publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_bls12381signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_bls12381signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5368,6 +5634,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_bls12381signature_generate(uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_bls12381signature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_bls12381verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5378,6 +5650,8 @@ fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_public_key(`ptr`: Pointer
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_bn254fieldelement(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5392,6 +5666,12 @@ fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_padded(`ptr`: Pointer,uniffi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_cancelledtransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5402,6 +5682,12 @@ fun uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_digest(`ptr`: Pointer,uni
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_version_assignments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_changeepoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_changeepoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5424,6 +5710,12 @@ fun uniffi_iota_sdk_ffi_fn_method_changeepoch_storage_rebate(`ptr`: Pointer,unif
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_changeepochv2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_changeepochv2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5448,6 +5740,12 @@ fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_storage_rebate(`ptr`: Pointer,un
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_changeepochv3(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_changeepochv3(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5474,6 +5772,12 @@ fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_storage_rebate(`ptr`: Pointer,un
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_system_packages(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_checkpointcommitment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_checkpointcommitment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5542,12 +5846,24 @@ fun uniffi_iota_sdk_ffi_fn_free_circomg1(`ptr`: Pointer,uniffi_out_err: UniffiRu
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_circomg1_new(`el0`: Pointer,`el1`: Pointer,`el2`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_circomg2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_circomg2_new(`el00`: Pointer,`el01`: Pointer,`el10`: Pointer,`el11`: Pointer,`el20`: Pointer,`el21`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_clienttransactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5606,6 +5922,8 @@ fun uniffi_iota_sdk_ffi_fn_method_coin_coin_type(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_coin_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_coin_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_command(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_command(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5624,6 +5942,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_command_new_transfer_objects(`transferObj
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_command_new_upgrade(`upgrade`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5642,6 +5966,12 @@ fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_round(`ptr`: Pointer
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_sub_dag_index(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_consensusdeterminedversionassignments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5651,6 +5981,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_consensusdeterminedversionassignments_new
 fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_as_cancelled_transactions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5666,6 +6002,16 @@ fun uniffi_iota_sdk_ffi_fn_method_digest_to_base58(`ptr`: Pointer,uniffi_out_err
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5708,6 +6054,10 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(`ptr`: Pointer
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5726,6 +6076,12 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_bytes(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5738,10 +6094,18 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ed25519signature_generate(uniffi_out_err:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ed25519signature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5764,6 +6128,12 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple(`ptr`: Point
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_endofepochtransactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_endofepochtransactionkind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5778,6 +6148,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoc
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v3(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5788,6 +6164,14 @@ fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_key(`ptr`: Pointer,un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservationkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5806,12 +6190,28 @@ fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_transfer_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_executiontimeobservations(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(`executionTimeObservations`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_faucetclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_faucetclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5846,6 +6246,12 @@ fun uniffi_iota_sdk_ffi_fn_method_genesisobject_owner(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_genesistransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_genesistransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5856,6 +6262,12 @@ fun uniffi_iota_sdk_ffi_fn_method_genesistransaction_events(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_graphqlclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_graphqlclient(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5982,6 +6394,14 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_new(`identifier`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_identifier_as_str(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_clone_input(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -5996,6 +6416,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(`objectRef`: RustBuff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_makemovevector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_makemovevector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6006,6 +6432,12 @@ fun uniffi_iota_sdk_ffi_fn_method_makemovevector_elements(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_makemovevector_type_tag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_mergecoins(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_mergecoins(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6016,6 +6448,12 @@ fun uniffi_iota_sdk_ffi_fn_method_mergecoins_coin(`ptr`: Pointer,uniffi_out_err:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_mergecoins_coins_to_merge(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_movearg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movearg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6086,6 +6524,12 @@ fun uniffi_iota_sdk_ffi_fn_method_movecall_package(`ptr`: Pointer,uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_movecall_type_arguments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_movefunction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movefunction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6101,6 +6545,8 @@ fun uniffi_iota_sdk_ffi_fn_method_movefunction_return_type(`ptr`: Pointer,uniffi
 fun uniffi_iota_sdk_ffi_fn_method_movefunction_type_parameters(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movefunction_visibility(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -6119,6 +6565,14 @@ fun uniffi_iota_sdk_ffi_fn_method_movepackage_modules(`ptr`: Pointer,uniffi_out_
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_clone_movepackagedata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6140,6 +6594,8 @@ fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_base64(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6152,6 +6608,12 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_committee(`ptr`: P
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_signatures(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_multisigaggregator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigaggregator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6168,6 +6630,8 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_signature(`ptr`: Point
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier(`ptr`: Pointer,`verifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_multisigcommittee(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigcommittee(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6184,6 +6648,12 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigcommittee_scheme(`ptr`: Pointer,uniffi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_multisigcommittee_threshold(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Short
+fun uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_multisigmember(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigmember(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6193,6 +6663,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_multisigmember_new(`publicKey`: Pointer,`
 fun uniffi_iota_sdk_ffi_fn_method_multisigmember_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigmember_weight(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6222,6 +6698,12 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(`ptr`: Po
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_multisigmembersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigmembersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6250,6 +6732,12 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_secp256r1(`ptr`: Po
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_multisigverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6261,6 +6749,8 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(`ptr`: Pointer,`messag
 fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(`ptr`: Pointer,`zkloginVerifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -6282,6 +6772,16 @@ fun uniffi_iota_sdk_ffi_fn_method_name_num_labels(`ptr`: Pointer,uniffi_out_err:
 ): Int
 fun uniffi_iota_sdk_ffi_fn_method_name_parent(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_nameregistration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_nameregistration(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6296,6 +6796,12 @@ fun uniffi_iota_sdk_ffi_fn_method_nameregistration_name(`ptr`: Pointer,uniffi_ou
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_nameregistration_name_str(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_object(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6328,6 +6834,12 @@ fun uniffi_iota_sdk_ffi_fn_method_object_storage_rebate(`ptr`: Pointer,uniffi_ou
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_object_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_objectdata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectdata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6344,6 +6856,14 @@ fun uniffi_iota_sdk_ffi_fn_method_objectdata_is_package(`ptr`: Pointer,uniffi_ou
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_objectid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6368,6 +6888,14 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(`ptr`: Pointer,uniffi_out_er
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_clone_objecttype(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6386,8 +6914,14 @@ fun uniffi_iota_sdk_ffi_fn_method_objecttype_is_package(`ptr`: Pointer,uniffi_ou
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6420,8 +6954,16 @@ fun uniffi_iota_sdk_ffi_fn_method_owner_is_object(`ptr`: Pointer,uniffi_out_err:
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_owner_is_shared(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_ptbargument(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ptbargument(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6512,6 +7054,12 @@ fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_public_key(`ptr`: Pointer
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_passkeypublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_passkeypublickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6522,6 +7070,12 @@ fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_derive_address(`ptr`: Pointer
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_passkeyverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6530,6 +7084,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_personalmessage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_personalmessage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6542,6 +7098,12 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(`ptr`: Pointer,
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6552,6 +7114,12 @@ fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_commands(`ptr`: Pointe
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_publish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_publish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6562,6 +7130,12 @@ fun uniffi_iota_sdk_ffi_fn_method_publish_dependencies(`ptr`: Pointer,uniffi_out
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_publish_modules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6604,6 +7178,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(`ptr`: Point
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6622,6 +7200,12 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_bytes(`ptr`: Pointer,uni
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6634,6 +7218,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256k1signature_generate(uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1signature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6644,6 +7234,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(`ptr`: Pointer
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6666,6 +7258,12 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(`ptr`: Poi
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6708,6 +7306,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(`ptr`: Point
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6726,6 +7328,12 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(`ptr`: Pointer,uni
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6738,6 +7346,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6748,6 +7362,8 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(`ptr`: Pointer
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6770,6 +7386,12 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(`ptr`: Poi
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_simplekeypair(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_simplekeypair(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6810,6 +7432,8 @@ fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(`ptr`: Pointer,`me
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_simplesignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_simplesignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6854,6 +7478,14 @@ fun uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig_opt(`ptr`: Point
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_simpleverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_simpleverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6880,6 +7512,12 @@ fun uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_splitcoins(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_splitcoins(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6890,6 +7528,12 @@ fun uniffi_iota_sdk_ffi_fn_method_splitcoins_amounts(`ptr`: Pointer,uniffi_out_e
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_splitcoins_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_structtag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_structtag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6974,12 +7618,16 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6992,6 +7640,12 @@ fun uniffi_iota_sdk_ffi_fn_method_systempackage_modules(`ptr`: Pointer,uniffi_ou
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7018,6 +7672,12 @@ fun uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(`ptr`: Pointer,
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7064,6 +7724,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(`ptr`: Pointer,`pac
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(`ptr`: Pointer,`client`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactioneffects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7075,6 +7737,12 @@ fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(`ptr`: Pointer,uniffi
 fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transactionevents(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7102,6 +7770,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transact
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transactionv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7126,6 +7800,12 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(`ptr`: Pointe
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transferobjects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transferobjects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7136,6 +7816,12 @@ fun uniffi_iota_sdk_ffi_fn_method_transferobjects_address(`ptr`: Pointer,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_typetag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_typetag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7192,8 +7878,16 @@ fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(`ptr`: Pointer,uniffi_out_err: U
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_upgrade(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_upgrade(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7208,6 +7902,12 @@ fun uniffi_iota_sdk_ffi_fn_method_upgrade_package(`ptr`: Pointer,uniffi_out_err:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_upgradepolicy(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7220,6 +7920,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7272,6 +7974,12 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7283,6 +7991,8 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(`ptr`: Pointer,`m
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(`ptr`: Pointer,`zkloginVerifier`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7296,6 +8006,8 @@ fun uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(`ptr`: Poin
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7308,6 +8020,8 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committe
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7322,6 +8036,8 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_agg
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(`ptr`: Pointer,`summary`: Pointer,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7332,6 +8048,14 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(`pt
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_validatorsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_validatorsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7344,6 +8068,12 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(`ptr`: Pointer,u
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7354,6 +8084,12 @@ fun uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(`ptr`: Pointer,uni
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7366,6 +8102,12 @@ fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(`ptr`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_zklogininputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_zklogininputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7386,6 +8128,12 @@ fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(`ptr`: Pointer,unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_zkloginproof(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7398,6 +8146,12 @@ fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(`ptr`: Pointer,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7414,6 +8168,12 @@ fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadde
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_zkloginverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7428,6 +8188,8 @@ fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(`ptr`: Pointer,`message
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(`ptr`: Pointer,`jwks`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -12395,6 +13157,20 @@ open class Argument: Disposable, AutoCloseable, ArgumentInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Argument) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_eq(
+        it, FfiConverterTypeArgument.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -13031,6 +13807,30 @@ open class Bls12381PublicKey: Disposable, AutoCloseable, Bls12381PublicKeyInterf
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Bls12381PublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeBls12381PublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -13332,6 +14132,30 @@ open class Bls12381Signature: Disposable, AutoCloseable, Bls12381SignatureInterf
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Bls12381Signature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeBls12381Signature.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -13902,6 +14726,20 @@ open class Bn254FieldElement: Disposable, AutoCloseable, Bn254FieldElementInterf
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Bn254FieldElement) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(
+        it, FfiConverterTypeBn254FieldElement.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -14214,6 +15052,20 @@ open class CancelledTransaction: Disposable, AutoCloseable, CancelledTransaction
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CancelledTransaction) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_eq(
+        it, FfiConverterTypeCancelledTransaction.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -14641,6 +15493,20 @@ open class ChangeEpoch: Disposable, AutoCloseable, ChangeEpochInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ChangeEpoch) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_eq(
+        it, FfiConverterTypeChangeEpoch.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -15091,6 +15957,20 @@ open class ChangeEpochV2: Disposable, AutoCloseable, ChangeEpochV2Interface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ChangeEpochV2) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_eq(
+        it, FfiConverterTypeChangeEpochV2.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -15523,6 +16403,20 @@ open class ChangeEpochV3: Disposable, AutoCloseable, ChangeEpochV3Interface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ChangeEpochV3) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_eq(
+        it, FfiConverterTypeChangeEpochV3.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -17206,6 +18100,20 @@ open class CircomG1: Disposable, AutoCloseable, CircomG1Interface
     }
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CircomG1) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(
+        it, FfiConverterTypeCircomG1.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -17462,6 +18370,20 @@ open class CircomG2: Disposable, AutoCloseable, CircomG2Interface
         }
     }
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CircomG2) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(
+        it, FfiConverterTypeCircomG2.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -18797,6 +19719,20 @@ open class Command: Disposable, AutoCloseable, CommandInterface
     }
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Command) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_eq(
+        it, FfiConverterTypeCommand.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -19275,6 +20211,20 @@ open class ConsensusCommitPrologueV1: Disposable, AutoCloseable, ConsensusCommit
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ConsensusCommitPrologueV1) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq(
+        it, FfiConverterTypeConsensusCommitPrologueV1.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -19524,6 +20474,20 @@ open class ConsensusDeterminedVersionAssignments: Disposable, AutoCloseable, Con
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ConsensusDeterminedVersionAssignments) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_eq(
+        it, FfiConverterTypeConsensusDeterminedVersionAssignments.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -19818,6 +20782,41 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     
 
     
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Digest) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_eq(
+        it, FfiConverterTypeDigest.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -20294,6 +21293,20 @@ open class Ed25519PrivateKey: Disposable, AutoCloseable, Ed25519PrivateKeyInterf
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Ed25519PrivateKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeEd25519PrivateKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -20706,6 +21719,30 @@ open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterfac
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Ed25519PublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeEd25519PublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -20997,6 +22034,30 @@ open class Ed25519Signature: Disposable, AutoCloseable, Ed25519SignatureInterfac
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Ed25519Signature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeEd25519Signature.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -21579,6 +22640,20 @@ open class Ed25519VerifyingKey: Disposable, AutoCloseable, Ed25519VerifyingKeyIn
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Ed25519VerifyingKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeEd25519VerifyingKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -21883,6 +22958,20 @@ open class EndOfEpochTransactionKind: Disposable, AutoCloseable, EndOfEpochTrans
         }
     }
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is EndOfEpochTransactionKind) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq(
+        it, FfiConverterTypeEndOfEpochTransactionKind.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -22192,6 +23281,30 @@ open class ExecutionTimeObservation: Disposable, AutoCloseable, ExecutionTimeObs
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ExecutionTimeObservation) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(
+        it, FfiConverterTypeExecutionTimeObservation.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     
@@ -22452,6 +23565,30 @@ open class ExecutionTimeObservationKey: Disposable, AutoCloseable, ExecutionTime
     }
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ExecutionTimeObservationKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeExecutionTimeObservationKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -22777,6 +23914,30 @@ open class ExecutionTimeObservations: Disposable, AutoCloseable, ExecutionTimeOb
     }
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ExecutionTimeObservations) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(
+        it, FfiConverterTypeExecutionTimeObservations.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -23500,6 +24661,20 @@ open class GenesisObject: Disposable, AutoCloseable, GenesisObjectInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is GenesisObject) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq(
+        it, FfiConverterTypeGenesisObject.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -23778,6 +24953,20 @@ open class GenesisTransaction: Disposable, AutoCloseable, GenesisTransactionInte
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is GenesisTransaction) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_eq(
+        it, FfiConverterTypeGenesisTransaction.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -26057,6 +27246,31 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
     
 
     
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Identifier) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_eq(
+        it, FfiConverterTypeIdentifier.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
     override fun hashCode(): Int {
         return FfiConverterULong.lift(
     callWithPointer {
@@ -26320,6 +27534,20 @@ open class Input: Disposable, AutoCloseable, InputInterface
         }
     }
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Input) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq(
+        it, FfiConverterTypeInput.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -26669,6 +27897,20 @@ open class MakeMoveVector: Disposable, AutoCloseable, MakeMoveVectorInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MakeMoveVector) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMakeMoveVector.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -26963,6 +28205,20 @@ open class MergeCoins: Disposable, AutoCloseable, MergeCoinsInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MergeCoins) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMergeCoins.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -27812,6 +29068,20 @@ open class MoveCall: Disposable, AutoCloseable, MoveCallInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MoveCall) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMoveCall.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -28458,6 +29728,30 @@ open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MovePackage) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMovePackage.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     
@@ -29153,6 +30447,20 @@ open class MultisigAggregatedSignature: Disposable, AutoCloseable, MultisigAggre
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MultisigAggregatedSignature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMultisigAggregatedSignature.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -29885,6 +31193,20 @@ open class MultisigCommittee: Disposable, AutoCloseable, MultisigCommitteeInterf
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MultisigCommittee) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMultisigCommittee.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -30194,6 +31516,20 @@ open class MultisigMember: Disposable, AutoCloseable, MultisigMemberInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MultisigMember) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMultisigMember.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -30645,6 +31981,20 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MultisigMemberPublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMultisigMemberPublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -31072,6 +32422,20 @@ open class MultisigMemberSignature: Disposable, AutoCloseable, MultisigMemberSig
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MultisigMemberSignature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeMultisigMemberSignature.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -31710,6 +33074,41 @@ open class Name: Disposable, AutoCloseable, NameInterface
     
 
     
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Name) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_eq(
+        it, FfiConverterTypeName.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -32012,6 +33411,20 @@ open class NameRegistration: Disposable, AutoCloseable, NameRegistrationInterfac
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is NameRegistration) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_eq(
+        it, FfiConverterTypeNameRegistration.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -32534,6 +33947,20 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Object) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq(
+        it, FfiConverterTypeObject.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -32864,6 +34291,30 @@ open class ObjectData: Disposable, AutoCloseable, ObjectDataInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ObjectData) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_eq(
+        it, FfiConverterTypeObjectData.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -33218,6 +34669,31 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+    
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ObjectId) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_eq(
+        it, FfiConverterTypeObjectId.lower(`other`),_status)
+}
+    }
+    )
+    }
     
     override fun hashCode(): Int {
         return FfiConverterULong.lift(
@@ -33586,6 +35062,20 @@ open class ObjectType: Disposable, AutoCloseable, ObjectTypeInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display(
         it, _status)
+}
+    }
+    )
+    }
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ObjectType) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_eq(
+        it, FfiConverterTypeObjectType.lower(`other`),_status)
 }
     }
     )
@@ -34017,6 +35507,30 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     )
     }
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Owner) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_eq(
+        it, FfiConverterTypeOwner.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -35051,6 +36565,20 @@ open class PasskeyAuthenticator: Disposable, AutoCloseable, PasskeyAuthenticator
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PasskeyAuthenticator) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_eq(
+        it, FfiConverterTypePasskeyAuthenticator.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -35351,6 +36879,20 @@ open class PasskeyPublicKey: Disposable, AutoCloseable, PasskeyPublicKeyInterfac
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PasskeyPublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypePasskeyPublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -35866,6 +37408,20 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PersonalMessage) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(
+        it, FfiConverterTypePersonalMessage.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -36165,6 +37721,20 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ProgrammableTransaction) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(
+        it, FfiConverterTypeProgrammableTransaction.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -36457,6 +38027,20 @@ open class Publish: Disposable, AutoCloseable, PublishInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Publish) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq(
+        it, FfiConverterTypePublish.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -36901,6 +38485,20 @@ open class Secp256k1PrivateKey: Disposable, AutoCloseable, Secp256k1PrivateKeyIn
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256k1PrivateKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256k1PrivateKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -37315,6 +38913,30 @@ open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256k1PublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256k1PublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -37606,6 +39228,30 @@ open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256k1Signature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256k1Signature.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -38223,6 +39869,20 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256k1VerifyingKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256k1VerifyingKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -38719,6 +40379,20 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256r1PrivateKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256r1PrivateKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -39136,6 +40810,30 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256r1PublicKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256r1PublicKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -39427,6 +41125,30 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256r1Signature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256r1Signature.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -40043,6 +41765,20 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Secp256r1VerifyingKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSecp256r1VerifyingKey.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -41092,6 +42828,30 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SimpleSignature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSimpleSignature.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -41672,6 +43432,20 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SimpleVerifyingKey) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSimpleVerifyingKey.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -41992,6 +43766,20 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SplitCoins) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSplitCoins.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -42395,6 +44183,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     )
     }
     
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -43023,6 +44821,20 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SystemPackage) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(
+        it, FfiConverterTypeSystemPackage.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -43414,6 +45226,20 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Transaction) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(
+        it, FfiConverterTypeTransaction.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -44482,6 +46308,20 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TransactionEffects) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(
+        it, FfiConverterTypeTransactionEffects.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -45032,6 +46872,20 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
     }
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TransactionKind) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
+        it, FfiConverterTypeTransactionKind.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -45478,6 +47332,20 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TransactionV1) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
+        it, FfiConverterTypeTransactionV1.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     companion object {
@@ -45783,6 +47651,20 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TransferObjects) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
+        it, FfiConverterTypeTransferObjects.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -46293,6 +48175,30 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     )
     }
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is TypeTag) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
+        it, FfiConverterTypeTypeTag.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
@@ -46740,6 +48646,20 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Upgrade) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
+        it, FfiConverterTypeUpgrade.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -47538,6 +49458,20 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is UserSignature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeUserSignature.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -49034,6 +50968,30 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ValidatorExecutionTimeObservation) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
+        it, FfiConverterTypeValidatorExecutionTimeObservation.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     
@@ -49331,6 +51289,20 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ValidatorSignature) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
+        it, FfiConverterTypeValidatorSignature.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -49609,6 +51581,20 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is VersionAssignment) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
+        it, FfiConverterTypeVersionAssignment.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -49922,6 +51908,20 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ZkLoginAuthenticator) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
+        it, FfiConverterTypeZkLoginAuthenticator.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -50280,6 +52280,20 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
     
 
     
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ZkLoginInputs) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
+        it, FfiConverterTypeZkLoginInputs.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
 
     
     
@@ -50572,6 +52586,20 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ZkLoginProof) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
+        it, FfiConverterTypeZkLoginProof.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -51027,6 +53055,20 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ZkLoginPublicIdentifier) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
+        it, FfiConverterTypeZkLoginPublicIdentifier.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
