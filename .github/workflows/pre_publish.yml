@@ -1,11 +1,21 @@
 name: Pre-publish
 
+# TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+# These changes hardcode the default values for push triggers to test the workflow
+# without relying on the complex input logic. Remove these changes after testing.
+
 on:
+  # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+  push:
+    branches:
+      - feat/kotlin-release-trigger
   workflow_dispatch:
     inputs:
       level:
         type: choice
         required: true
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        default: alpha
         description: |
           The level of version bump to make.
 
@@ -28,6 +38,8 @@ on:
       package:
         type: choice
         required: true
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        default: iota-kotlin-sdk
         description: The package to publish.
         options:
           - iota-sdk-types
@@ -42,13 +54,27 @@ on:
 
 jobs:
   publish:
-    name: Setup for publishing ${{ inputs.package }}
+    # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+    name: Setup for publishing ${{ inputs.package || 'iota-kotlin-sdk' }}
+    # name: Setup for publishing ${{ inputs.package }}
     permissions:
       id-token: write # Enable OIDC
       pull-requests: write
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Set values for push trigger
+        if: github.event_name == 'push'
+        run: |
+          echo "BUMP_LEVEL=alpha" >> $GITHUB_ENV
+          echo "TARGET_PACKAGE=iota-kotlin-sdk" >> $GITHUB_ENV
+
+      - name: Set values from manual trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "BUMP_LEVEL=${{ inputs.level }}" >> $GITHUB_ENV
+          echo "TARGET_PACKAGE=${{ inputs.package }}" >> $GITHUB_ENV
+
       - name: Exit if the branch is not develop
         if: github.ref != 'refs/heads/develop'
         run: |
@@ -59,7 +85,8 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install cargo-release
-        if: startsWith(inputs.package, 'iota-sdk')
+        if: startsWith(inputs.package || 'iota-kotlin-sdk', 'iota-sdk')
+        # if: startsWith(inputs.package, 'iota-sdk')
         uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
         with:
           tool: cargo-release@0.25.20
@@ -72,13 +99,32 @@ jobs:
       # TODO does this actually work?
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
-      # TODO @Thoralf-M
-      # - name: Create PR for Kotlin
-      #   if: inputs.package == 'kotlin-sdk'
-      #   run: |
-      #     echo "Creating PR for Kotlin SDK - Not yet implemented."
-      # TODO @Thoralf-M  get version, bump it, update it
-      # TODO @Thoralf-M generate changelog
+      - name: Bump Kotlin version
+        if: (inputs.package || 'iota-kotlin-sdk') == 'iota-kotlin-sdk'
+        # if: inputs.package == 'iota-kotlin-sdk'
+        id: bump-kotlin
+        run: |
+          # Read current version from build.gradle.kts
+          CURRENT_VERSION=$(grep '^version = ' bindings/kotlin/build.gradle.kts | sed 's/version = "\(.*\)"/\1/')
+          echo "Current version: $CURRENT_VERSION"
+
+          # Bump the version using the input level
+          source ./.github/bump_version.sh
+          export NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level || 'alpha' }}")
+          # export NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          echo "New version: $NEW_VERSION"
+
+          # Update the version in build.gradle.kts
+          sed -i "s/version = \"$CURRENT_VERSION\"/version = \"$NEW_VERSION\"/" bindings/kotlin/build.gradle.kts
+          echo "Updated build.gradle.kts with new version: $NEW_VERSION"
+
+          # Generate changelog for Kotlin
+          export CRATE_ROOT="bindings/kotlin"
+          ./.github/gen-changelog.sh
+
+          # Set output for the next step
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       # - name: Create PR for Python
       #   if: inputs.package == 'python-sdk'
@@ -88,38 +134,78 @@ jobs:
       # TODO @alex generate changelog
 
       - name: Create PR for Rust
-        if: startsWith(inputs.package, 'iota-sdk')
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        if: startsWith(inputs.package || 'iota-kotlin-sdk', 'iota-sdk')
+        # if: startsWith(inputs.package, 'iota-sdk')
         id: pr-create
         uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version: ${{ inputs.level }}
-          crate-name: ${{ inputs.package }}
+          # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+          version: ${{ inputs.level || 'alpha' }}
+          crate-name: ${{ inputs.package || 'iota-kotlin-sdk' }}
+          # version: ${{ inputs.level }}
+          # crate-name: ${{ inputs.package }}
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
           base-branch: develop
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Create Pull Request
-        if: inputs.package == 'kotlin-sdk' || inputs.package == 'python-sdk'
-        uses: peter-evans/create-pull-request@v7 # TODO pin
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        if: (inputs.package || 'iota-kotlin-sdk') == 'iota-kotlin-sdk' || (inputs.package || 'iota-kotlin-sdk') == 'iota-python-sdk'
+        # if: inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
+        id: create-pr
+        uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: "Bump ${{ inputs.package }} version to ${{ steps.bump.outputs.new_version }}"
-          title: "Bump ${{ inputs.package }} version to ${{ steps.bump.outputs.new_version }}"
-          body: "Automated semver bump of ${{ inputs.package }} version."
-          branch: "release/${{ inputs.package }}/${{ steps.bump.outputs.new_version }}"
+          # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+          commit-message: "Bump ${{ inputs.package || 'iota-kotlin-sdk' }} version to ${{ steps.bump-kotlin.outputs.new_version }}"
+          title: "Bump ${{ inputs.package || 'iota-kotlin-sdk' }} version to ${{ steps.bump-kotlin.outputs.new_version }}"
+          body: "Automated semver bump of ${{ inputs.package || 'iota-kotlin-sdk' }} version."
+          branch: "release/${{ inputs.package || 'iota-kotlin-sdk' }}/${{ steps.bump-kotlin.outputs.new_version }}"
+          # commit-message: "Bump ${{ inputs.package }} version to ${{ steps.bump-kotlin.outputs.new_version }}"
+          # title: "Bump ${{ inputs.package }} version to ${{ steps.bump-kotlin.outputs.new_version }}"
+          # body: "Automated semver bump of ${{ inputs.package }} version."
+          # branch: "release/${{ inputs.package }}/${{ steps.bump-kotlin.outputs.new_version }}"
           delete-branch: true
 
-      # TODO extra step to set the pr URL and version?
+      - name: Set release notes env vars (Rust)
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        if: startsWith(inputs.package || 'iota-kotlin-sdk', 'iota-sdk')
+        # if: startsWith(inputs.package, 'iota-sdk')
+        run: |
+          echo "PR_NUM=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')" >> $GITHUB_ENV
+          # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+          echo "CHANGELOG_DIR=crates/${{ inputs.package || 'iota-kotlin-sdk' }}" >> $GITHUB_ENV
+          # echo "CHANGELOG_DIR=crates/${{ inputs.package }}" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ steps.pr-create.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Kotlin)
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        if: (inputs.package || 'iota-kotlin-sdk') == 'iota-kotlin-sdk'
+        # if: inputs.package == 'iota-kotlin-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "CHANGELOG_DIR=bindings/kotlin" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ steps.bump-kotlin.outputs.new_version }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Python)
+        # TEMPORARY CHANGES FOR TESTING - REVERT AFTER TESTING
+        if: (inputs.package || 'iota-kotlin-sdk') == 'iota-python-sdk'
+        # if: inputs.package == 'iota-python-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "CHANGELOG_DIR=bindings/python" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ steps.bump-kotlin.outputs.new_version }}" >> $GITHUB_ENV
 
       - name: Add release notes
+        if: steps.pr-create.outputs.pr-url || steps.create-pr.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
-          body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
-          cd crates/${{ inputs.package }}
-          notes=$(git-cliff --tag v${{ steps.pr-create.outputs.version }})
+          body=$(gh pr view "$PR_NUM" --json body | jq -r '.["body"]')
+          cd "$CHANGELOG_DIR"
+          notes=$(git-cliff --tag "$VERSION_TAG")
           body=$(echo "$body
           # Release Notes
 
@@ -154,3 +240,4 @@ jobs:
     with:
       package: iota-go-sdk
       version: ${{ needs.bump-go-version.outputs.new_version }}
+        gh pr edit "$PR_NUM" --body "$body"
