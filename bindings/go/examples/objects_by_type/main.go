@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
-	stakedIotas, err := client.Objects(&sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
 

@@ -6,27 +6,27 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *sdk.ObjectId {
-	id, err := sdk.ObjectIdFromHex(hex)
+func objIdFromHex(hex string) *iota_sdk.ObjectId {
+	id, err := iota_sdk.ObjectIdFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	return id
 }
 
-func addrFromHex(hex string) *sdk.Address {
-	address, err := sdk.AddressFromHex(hex)
+func addrFromHex(hex string) *iota_sdk.Address {
+	address, err := iota_sdk.AddressFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 	return address
 }
 
-func identifier(ident string) *sdk.Identifier {
-	identifier, err := sdk.NewIdentifier(ident)
+func identifier(ident string) *iota_sdk.Identifier {
+	identifier, err := iota_sdk.NewIdentifier(ident)
 	if err != nil {
 		log.Fatalf("Failed to parse identifier: %v", err)
 	}
@@ -34,14 +34,14 @@ func identifier(ident string) *sdk.Identifier {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	sender := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	sponsor := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
-	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	packageAddr := sdk.AddressStdLib()
+	packageAddr := iota_sdk.AddressStdLib()
 	moduleName := identifier("u8")
 	functionName := identifier("max")
 
@@ -49,7 +49,7 @@ func main() {
 		packageAddr,
 		moduleName,
 		functionName,
-		[]*sdk.PtbArgument{sdk.PtbArgumentU8(0), sdk.PtbArgumentU8(1)},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentU8(0), iota_sdk.PtbArgumentU8(1)},
 		nil,
 		nil,
 	)
@@ -57,7 +57,7 @@ func main() {
 	builder.Sponsor(sponsor)
 
 	txn, err := builder.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -65,7 +65,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := client.DryRunTx(txn, false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to send gas sponsor tx: %v", err)
 	}
 

@@ -4,13 +4,13 @@
 package main
 
 import (
-	sdk "bindings/iota_sdk"
 	"fmt"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 	"log"
 )
 
-func identifier(ident string) *sdk.Identifier {
-	identifier, err := sdk.NewIdentifier(ident)
+func identifier(ident string) *iota_sdk.Identifier {
+	identifier, err := iota_sdk.NewIdentifier(ident)
 	if err != nil {
 		log.Fatalf("Failed to parse identifier: %v", err)
 	}
@@ -18,16 +18,16 @@ func identifier(ident string) *sdk.Identifier {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewLocalnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 	gasStationUrl := "http://0.0.0.0:9527"
 	gasStationAuthToken := "test"
-	keypair := sdk.Ed25519PrivateKeyGenerate()
+	keypair := iota_sdk.Ed25519PrivateKeyGenerate()
 	sender := keypair.PublicKey().DeriveAddress()
-	simpleKey := sdk.SimpleKeypairFromEd25519(keypair)
+	simpleKey := iota_sdk.SimpleKeypairFromEd25519(keypair)
 
-	builder := sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	package_id := sdk.AddressStdLib()
+	package_id := iota_sdk.AddressStdLib()
 	module_name := identifier("u64")
 	function_name := identifier("sqrt")
 
@@ -35,7 +35,7 @@ func main() {
 		package_id,
 		module_name,
 		function_name,
-		[]*sdk.PtbArgument{sdk.PtbArgumentU64(64)},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentU64(64)},
 		nil,
 		nil,
 	)
@@ -46,7 +46,7 @@ func main() {
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
 	res, err := builder.Execute(simpleKey, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}
 

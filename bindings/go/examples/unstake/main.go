@@ -6,15 +6,15 @@ package main
 import (
 	"log"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
-	stakedIotaType := sdk.StructTagNewStakedIota().String()
-	stakedIotas, err := client.Objects(&sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
+	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
 	if len(stakedIotas.Data) == 0 {
@@ -22,11 +22,11 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	builder := sdk.NewTransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client)
-	builder.Unstake(sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
+	builder := iota_sdk.NewTransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client)
+	builder.Unstake(iota_sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
 
 	res, err := builder.DryRun(false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to unstake: %v", err)
 	}
 

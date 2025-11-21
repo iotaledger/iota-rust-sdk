@@ -110,23 +110,23 @@
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
 
-mod address;
-mod checkpoint;
-mod crypto;
-mod digest;
-mod effects;
-mod events;
-mod execution_status;
+pub mod address;
+pub mod checkpoint;
+pub mod crypto;
+pub mod digest;
+pub mod effects;
+pub mod events;
+pub mod execution_status;
 pub mod framework;
-mod gas;
+pub mod gas;
 pub mod iota_names;
-mod move_package;
-mod object;
-mod object_id;
-mod transaction;
-mod type_tag;
-mod u256;
-mod validator;
+pub mod move_package;
+pub mod object;
+pub mod object_id;
+pub mod transaction;
+pub mod type_tag;
+pub mod u256;
+pub mod validator;
 
 pub use address::{Address, AddressParseError};
 pub use checkpoint::{

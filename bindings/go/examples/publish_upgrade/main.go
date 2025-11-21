@@ -25,7 +25,7 @@ import (
 	"os"
 	"time"
 
-	sdk "bindings/iota_sdk"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 		fmt.Println("Using custom Move package found in env var.")
 	}
 
-	packageData, err := sdk.MovePackageDataFromJson(packageDataString)
+	packageData, err := iota_sdk.MovePackageDataFromJson(packageDataString)
 	if err != nil {
 		log.Fatalf("Failed to deserialize Move package data: %v", err)
 	}
@@ -50,15 +50,15 @@ func main() {
 	fmt.Printf("Digest: %s\n", digest.ToBase58())
 
 	// Create a random private key to derive a sender address and for signing
-	privateKey := sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
 	publicKey := privateKey.PublicKey()
 	sender := publicKey.DeriveAddress()
 	fmt.Printf("Sender: %s\n", sender.ToHex())
 
 	// Fund the sender address for gas payment
-	faucet := sdk.FaucetClientNewLocalnet()
+	faucet := iota_sdk.FaucetClientNewLocalnet()
 	faucetReceipt, err := faucet.RequestAndWait(sender)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
 	totalBalance := uint64(0)
@@ -66,23 +66,23 @@ func main() {
 		totalBalance += coin.Amount
 	}
 
-	client := sdk.GraphQlClientNewLocalnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	// Build the `publish` PTB
-	builderPublish := sdk.NewTransactionBuilder(sender).WithClient(client)
+	builderPublish := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 	// Publish the package and receive the upgrade cap in return
 	builderPublish.Publish(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
-	builderPublish.TransferObjects(sender, []*sdk.PtbArgument{sdk.PtbArgumentRes("upgrade_cap")})
+	builderPublish.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
 	}
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Publishing package (dry run):")
 	resultPublish, err := client.DryRunTx(txPublish, false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
 	if resultPublish.Error != nil {
@@ -99,9 +99,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	waitFor := sdk.WaitForTxFinalized
-	effectsPublish, err := client.ExecuteTx([]*sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
-	if err.(*sdk.SdkFfiError) != nil {
+	waitFor := iota_sdk.WaitForTxFinalized
+	effectsPublish, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
@@ -110,28 +110,28 @@ func main() {
 	time.Sleep(3 * time.Second)
 
 	// Resolve UpgradeCap and PackageId via the client
-	var upgradeCap *sdk.ObjectId
-	var packageId *sdk.ObjectId
+	var upgradeCap *iota_sdk.ObjectId
+	var packageId *iota_sdk.ObjectId
 	for _, changedObj := range (*effectsPublish).AsV1().ChangedObjects {
-		if objectWrite, ok := changedObj.OutputState.(sdk.ObjectOutObjectWrite); ok {
+		if objectWrite, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
-			if err.(*sdk.SdkFfiError) != nil {
+			if err.(*iota_sdk.SdkFfiError) != nil {
 				log.Fatalf("Failed to get object: %v", err)
 			}
 			obj := *objPtr
 			if obj.AsStructOpt() != nil {
-				upgradeCapType := sdk.StructTagNewUpgradeCap()
+				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
 				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())
 					fmt.Printf("UpgradeCapOwner: %s\n", objectWrite.Owner.AsAddress().ToHex())
 					upgradeCap = objectId
 				}
 			}
-		} else if _, ok := changedObj.OutputState.(sdk.ObjectOutPackageWrite); ok {
+		} else if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
 			fmt.Printf("Package ID: %s\n", pkgId.ToHex())
-			version := changedObj.OutputState.(sdk.ObjectOutPackageWrite).Version
+			version := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite).Version
 			fmt.Printf("Package version: %d\n", version)
 			packageId = pkgId
 		}
@@ -144,48 +144,48 @@ func main() {
 	}
 
 	// Build the `upgrade` PTB
-	builderUpgrade := sdk.NewTransactionBuilder(sender).WithClient(client)
+	builderUpgrade := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	// Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
 	// ticket
 	upgradeTicketName := "upgrade_ticket"
-	packageIdent, _ := sdk.NewIdentifier("package")
-	authorizeUpgrade, _ := sdk.NewIdentifier("authorize_upgrade")
-	upgradeCapArg := sdk.PtbArgumentObjectId(upgradeCap)
-	upgradePolicy := sdk.PtbArgumentU8(sdk.UpgradePolicyCompatible().AsU8())
+	packageIdent, _ := iota_sdk.NewIdentifier("package")
+	authorizeUpgrade, _ := iota_sdk.NewIdentifier("authorize_upgrade")
+	upgradeCapArg := iota_sdk.PtbArgumentObjectId(upgradeCap)
+	upgradePolicy := iota_sdk.PtbArgumentU8(iota_sdk.UpgradePolicyCompatible().AsU8())
 	builderUpgrade.MoveCall(
-		sdk.AddressFramework(),
+		iota_sdk.AddressFramework(),
 		packageIdent,
 		authorizeUpgrade,
-		[]*sdk.PtbArgument{upgradeCapArg, upgradePolicy, sdk.PtbArgumentU8Vec(digest.ToBytes())},
+		[]*iota_sdk.PtbArgument{upgradeCapArg, upgradePolicy, iota_sdk.PtbArgumentU8Vec(digest.ToBytes())},
 		nil,
 		[]string{upgradeTicketName},
 	)
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(packageId, packageData, sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
+	builderUpgrade.Upgrade(packageId, packageData, iota_sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
-	commitUpgrade, _ := sdk.NewIdentifier("commit_upgrade")
+	commitUpgrade, _ := iota_sdk.NewIdentifier("commit_upgrade")
 	builderUpgrade.MoveCall(
-		sdk.AddressFramework(),
+		iota_sdk.AddressFramework(),
 		packageIdent,
 		commitUpgrade,
-		[]*sdk.PtbArgument{upgradeCapArg, sdk.PtbArgumentRes(upgradeReceiptName)},
+		[]*iota_sdk.PtbArgument{upgradeCapArg, iota_sdk.PtbArgumentRes(upgradeReceiptName)},
 		nil,
 		nil,
 	)
 
 	txUpgrade, err := builderUpgrade.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
 	}
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Upgrading package (dry run):")
 	resultUpgrade, err := client.DryRunTx(txUpgrade, false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
 	if resultUpgrade.Error != nil {
@@ -202,8 +202,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	effectsUpgrade, err := client.ExecuteTx([]*sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	effectsUpgrade, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
@@ -213,10 +213,10 @@ func main() {
 
 	// Print the new package version (should now be 2)
 	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects {
-		if _, ok := changedObj.OutputState.(sdk.ObjectOutPackageWrite); ok {
+		if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
 			fmt.Printf("New Package ID: %s\n", pkgId.ToHex())
-			version := changedObj.OutputState.(sdk.ObjectOutPackageWrite).Version
+			version := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite).Version
 			fmt.Printf("New Package version: %d\n", version)
 		}
 	}
