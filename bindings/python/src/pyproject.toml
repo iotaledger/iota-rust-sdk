@@ -7,7 +7,7 @@ name = "iota-sdk"
 version = "3.0.0a1"
 description = "IOTA SDK Python bindings"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
 requires-python = ">=3.9"
 authors = [{ name = "IOTA Foundation", email = "info@iota.org" }]
 
@@ -18,11 +18,3 @@ homepage = "https://iota.org"
 bindings = "uniffi"
 module-name = "iota_sdk"
 manifest-path = "../../../crates/iota-sdk-ffi/Cargo.toml"
-
-[tool.commitizen]
-name = "cz_conventional_commits"
-version_provider = "pep621"
-version_scheme = "semver2" #"pep440"
-tag_format = "iota-python-sdk-v$version"
-update_changelog_on_bump = true
-changelog_file = "changelog.md"

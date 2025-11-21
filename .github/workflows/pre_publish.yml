@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Install cargo-release
-        if: inputs.package == 'iota-sdk' || inputs.package == 'iota-sdk-types' || inputs.package == 'iota-sdk-crypto' || inputs.package == 'iota-sdk-graphql-client-build' || inputs.package == 'iota-sdk-graphql-client' || inputs.package == 'iota-sdk-transaction-builder'
+        if: startsWith(inputs.package, 'iota-sdk')
         uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
         with:
           tool: cargo-release@0.25.20
@@ -72,10 +72,49 @@ jobs:
       # TODO does this actually work?
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
+      # TODO @Thoralf-M
+      # - name: Create PR for Kotlin
+      #   if: inputs.package == 'kotlin-sdk'
+      #   run: |
+      #     echo "Creating PR for Kotlin SDK - Not yet implemented."
+      # TODO @Thoralf-M  get version, bump it, update it
+      # TODO @Thoralf-M generate changelog
+
+      - name: Bump Python version
+        if: inputs.package == 'iota-python-sdk'
+        id: bump
+        run: |
+          # Read current version from pyproject.toml
+          CONFIG="bindings/python/src/pyproject.toml"
+          CURRENT_VERSION_PEP440=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
+
+          source ./.github/bump_version.sh
+          CURRENT_VERSION=$(pep440_to_semver "$CURRENT_VERSION_PEP440")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Bump the version using the input level
+          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level || 'alpha' }}")
+          export NEW_VERSION
+          echo "New version: $NEW_VERSION"
+
+          NEW_VERSION_PEP440=$(semver_to_pep440 "$NEW_VERSION")
+
+          # Update the version in pyproject.toml
+          sed -i "s/version = \"$CURRENT_VERSION_PEP440\"/version = \"$NEW_VERSION_PEP440\"/" "$CONFIG"
+          echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
+
+          # Generate changelog for Python
+          export CRATE_ROOT="bindings/python"
+          ./.github/gen-changelog.shpython
+
+          # Set output for the next step
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
       - name: Create PR for Rust
+        if: startsWith(inputs.package, 'iota-sdk')
         id: pr-create
         uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
-        if: inputs.package == 'iota-sdk' || inputs.package == 'iota-sdk-types' || inputs.package == 'iota-sdk-crypto' || inputs.package == 'iota-sdk-graphql-client-build' || inputs.package == 'iota-sdk-graphql-client' || inputs.package == 'iota-sdk-transaction-builder'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ inputs.level }}
@@ -85,20 +124,8 @@ jobs:
           base-branch: develop
           pr-template-file: ./.github/release-pr-template.ejs
 
-      # - name: Create PR for Kotlin
-      #   if: inputs.package == 'kotlin-sdk'
-      #   runs: |
-      #     echo "Creating PR for Kotlin SDK - Not yet implemented."
-      # TODO generate changelog
-
-      - name: Bump version and create changelog for Python
-        if: inputs.package == 'iota-python-sdk'
-        uses: ./.github/actions/python-pre-publish
-        with:
-          level: ${{ inputs.level }}
-
-      - name: Create Pull Request
-        if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
+      - name: Create PR for Binding
+        if: inputs.package == 'kotlin-sdk' || inputs.package == 'python-sdk'
         uses: peter-evans/create-pull-request@v7 # TODO pin
         with:
           commit-message: "Bump ${{ inputs.package }} version to ${{ steps.bump.outputs.new_version }}"
@@ -107,7 +134,6 @@ jobs:
           branch: "release/${{ inputs.package }}/${{ steps.bump.outputs.new_version }}"
           delete-branch: true
 
-      # TODO what about go?
       # TODO extra step to set the pr URL and version?
 
       - name: Add release notes
@@ -123,3 +149,32 @@ jobs:
 
           $notes")
           gh pr edit $pr_num --body "$body"
+
+  bump-go-version:
+    if: inputs.package == 'iota-go-sdk'
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bump-go-version.outputs.new_version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Bump go version
+        id: bump-go-version
+        run: |
+          git fetch --tags
+          latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$latest_tag" ]; then
+            latest_tag="iota-go-sdk-v0.0.0"
+          fi
+          latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          new_version=$(bump_semver "$latest_version" "${{ inputs.level || 'patch' }}")
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+  go-release:
+    needs: bump-go-version
+    uses: ./.github/workflows/release.yml
+    with:
+      package: iota-go-sdk
+      version: ${{ needs.bump-go-version.outputs.new_version }}
