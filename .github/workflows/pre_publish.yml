@@ -84,8 +84,7 @@ jobs:
 
           # Bump the version using the input level
           source ./.github/bump_version.sh
-          export NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level || 'alpha' }}")
-          # export NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          export NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
           echo "New version: $NEW_VERSION"
 
           # Update the version in build.gradle.kts
