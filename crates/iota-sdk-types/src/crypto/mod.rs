@@ -14,7 +14,7 @@ mod zklogin;
 
 pub use bls12381::{Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PublicKey, Ed25519Signature};
-pub use intent::{Intent, IntentAppId, IntentScope, IntentVersion};
+pub use intent::{Intent, IntentAppId, IntentMessage, IntentScope, IntentVersion};
 pub use multisig::{
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature,

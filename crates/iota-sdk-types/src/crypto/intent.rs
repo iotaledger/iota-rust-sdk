@@ -2,6 +2,13 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(feature = "serde")]
+use bcs;
+#[cfg(feature = "serde")]
+use eyre::eyre;
+
+pub const INTENT_PREFIX_LENGTH: usize = 3;
+
 /// A Signing Intent
 ///
 /// An intent is a compact struct serves as the domain separator for a message
@@ -21,7 +28,8 @@
 /// ```text
 /// intent = intent-scope intent-version intent-app-id
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Intent {
     pub scope: IntentScope,
     pub version: IntentVersion,
@@ -37,8 +45,20 @@ impl Intent {
         }
     }
 
-    pub fn to_bytes(self) -> [u8; 3] {
+    pub fn to_bytes(self) -> [u8; INTENT_PREFIX_LENGTH] {
         [self.scope as u8, self.version as u8, self.app_id as u8]
+    }
+
+    #[cfg(feature = "serde")]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, eyre::Report> {
+        if bytes.len() != INTENT_PREFIX_LENGTH {
+            return Err(eyre!("Invalid Intent"));
+        }
+        Ok(Self {
+            scope: bytes[0].try_into()?,
+            version: bytes[1].try_into()?,
+            app_id: bytes[2].try_into()?,
+        })
     }
 
     pub fn scope(self) -> IntentScope {
@@ -52,6 +72,38 @@ impl Intent {
     pub fn app_id(self) -> IntentAppId {
         self.app_id
     }
+
+    pub fn iota_app(scope: IntentScope) -> Self {
+        Self {
+            version: IntentVersion::V0,
+            scope,
+            app_id: IntentAppId::Iota,
+        }
+    }
+
+    pub const fn iota_transaction() -> Self {
+        Self {
+            scope: IntentScope::TransactionData,
+            version: IntentVersion::V0,
+            app_id: IntentAppId::Iota,
+        }
+    }
+
+    pub const fn personal_message() -> Self {
+        Self {
+            scope: IntentScope::PersonalMessage,
+            version: IntentVersion::V0,
+            app_id: IntentAppId::Iota,
+        }
+    }
+
+    pub const fn consensus_app(scope: IntentScope) -> Self {
+        Self {
+            scope,
+            version: IntentVersion::V0,
+            app_id: IntentAppId::Consensus,
+        }
+    }
 }
 
 /// Byte signifying the scope of an [`Intent`]
@@ -63,7 +115,8 @@ impl Intent {
 /// ```text
 /// intent-scope = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum IntentScope {
@@ -73,10 +126,12 @@ pub enum IntentScope {
     PersonalMessage = 3,         // Used for a user signature on a personal message.
     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
     ProofOfPossession = 5,       /* Used as a signature representing an authority's proof of
-                                  * possession of its authority protocol key. */
-    HeaderDigest = 6,      // Used for narwhal authority signature on header digest.
-    BridgeEventUnused = 7, // for bridge purposes but it's currently not included in messages.
-    ConsensusBlock = 8,    // Used for consensus authority signature on block's digest
+                                  * possession of its authority key. */
+    BridgeEventDeprecated = 6, /* Deprecated. Should not be reused. Introduced for bridge
+                                * purposes but was never included in messages. */
+    ConsensusBlock = 7, // Used for consensus authority signature on block's digest.
+    DiscoveryPeers = 8, // Used for reporting peer addresses in discovery
+    AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
 }
 
 impl IntentScope {
@@ -87,10 +142,19 @@ impl IntentScope {
         PersonalMessage,
         SenderSignedTransaction,
         ProofOfPossession,
-        HeaderDigest,
-        BridgeEventUnused,
+        BridgeEventDeprecated,
         ConsensusBlock,
+        DiscoveryPeers,
+        AuthorityCapabilities,
     );
+}
+
+#[cfg(feature = "serde")]
+impl TryFrom<u8> for IntentScope {
+    type Error = eyre::Report;
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentScope"))
+    }
 }
 
 /// Byte signifying the version of an [`Intent`]
@@ -102,7 +166,8 @@ impl IntentScope {
 /// ```text
 /// intent-version = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum IntentVersion {
@@ -111,6 +176,14 @@ pub enum IntentVersion {
 
 impl IntentVersion {
     crate::def_is!(V0);
+}
+
+#[cfg(feature = "serde")]
+impl TryFrom<u8> for IntentVersion {
+    type Error = eyre::Report;
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentVersion"))
+    }
 }
 
 /// Byte signifying the application id of an [`Intent`]
@@ -122,7 +195,8 @@ impl IntentVersion {
 /// ```text
 /// intent-app-id = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum IntentAppId {
@@ -132,4 +206,33 @@ pub enum IntentAppId {
 
 impl IntentAppId {
     crate::def_is!(Iota, Consensus);
+}
+
+#[cfg(feature = "serde")]
+impl TryFrom<u8> for IntentAppId {
+    type Error = eyre::Report;
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentAppId"))
+    }
+}
+
+/// Intent Message is a wrapper around a message with its intent. The message
+/// can be any type that implements [trait Serialize]. *ALL* signatures in IOTA
+/// must commits to the intent message, not the message itself. This guarantees
+/// any intent message signed in the system cannot collide with another since
+/// they are domain separated by intent.
+///
+/// The serialization of an IntentMessage is compact: it only appends three
+/// bytes to the message itself.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IntentMessage<T> {
+    pub intent: Intent,
+    pub value: T,
+}
+
+impl<T> IntentMessage<T> {
+    pub fn new(intent: Intent, value: T) -> Self {
+        Self { intent, value }
+    }
 }
