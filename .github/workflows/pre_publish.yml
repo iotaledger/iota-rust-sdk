@@ -105,7 +105,7 @@ jobs:
 
           # Generate changelog for Python
           export CRATE_ROOT="bindings/python"
-          ./.github/gen-changelog.shpython
+          ./.github/gen-changelog.sh
 
           # Set output for the next step
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
