@@ -97,7 +97,6 @@ jobs:
           ./.github/gen-changelog.sh
 
           # Set output for the next step
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       # - name: Create PR for Python
@@ -125,10 +124,10 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: "Bump ${{ inputs.package }} version to ${{ steps.bump-kotlin.outputs.new_version }}"
-          title: "Bump ${{ inputs.package }} version to ${{ steps.bump-kotlin.outputs.new_version }}"
+          commit-message: "Bump ${{ inputs.package }} version to ${{ env.NEW_VERSION }}"
+          title: "Bump ${{ inputs.package }} version to ${{ env.NEW_VERSION }}"
           body: "Automated semver bump of ${{ inputs.package }} version."
-          branch: "release/${{ inputs.package }}/${{ steps.bump-kotlin.outputs.new_version }}"
+          branch: "release/${{ inputs.package }}/${{ env.NEW_VERSION }}"
           delete-branch: true
 
       - name: Set release notes env vars (Rust)
@@ -143,14 +142,14 @@ jobs:
         run: |
           echo "PR_NUM=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "CHANGELOG_DIR=bindings/kotlin" >> $GITHUB_ENV
-          echo "VERSION_TAG=v${{ steps.bump-kotlin.outputs.new_version }}" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Python)
         if: inputs.package == 'iota-python-sdk'
         run: |
           echo "PR_NUM=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "CHANGELOG_DIR=bindings/python" >> $GITHUB_ENV
-          echo "VERSION_TAG=v${{ steps.bump-kotlin.outputs.new_version }}" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Add release notes
         if: steps.pr-create.outputs.pr-url || steps.create-pr.outputs.pull-request-number
