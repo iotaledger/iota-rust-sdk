@@ -20916,9 +20916,9 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
 
 
 class MnemonicWordCount(enum.Enum):
-    TWELVE = 12
+    WORDS12 = 12
     
-    TWENTY_FOUR = 24
+    WORDS24 = 24
     
 
 
@@ -20927,24 +20927,24 @@ class _UniffiConverterTypeMnemonicWordCount(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return MnemonicWordCount.TWELVE
+            return MnemonicWordCount.WORDS12
         if variant == 2:
-            return MnemonicWordCount.TWENTY_FOUR
+            return MnemonicWordCount.WORDS24
         raise InternalError("Raw enum value doesn't match any cases")
 
     @staticmethod
     def check_lower(value):
-        if value == MnemonicWordCount.TWELVE:
+        if value == MnemonicWordCount.WORDS12:
             return
-        if value == MnemonicWordCount.TWENTY_FOUR:
+        if value == MnemonicWordCount.WORDS24:
             return
         raise ValueError(value)
 
     @staticmethod
     def write(value, buf):
-        if value == MnemonicWordCount.TWELVE:
+        if value == MnemonicWordCount.WORDS12:
             buf.write_i32(1)
-        if value == MnemonicWordCount.TWENTY_FOUR:
+        if value == MnemonicWordCount.WORDS24:
             buf.write_i32(2)
 
 

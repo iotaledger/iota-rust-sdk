@@ -8,6 +8,6 @@ import kotlin.io.println
 fun main() {
     val mnemonic = generateMnemonic(null)
     println("24 word mnemonic: $mnemonic")
-    val mnemonic12 = generateMnemonic(MnemonicWordCount.TWELVE)
+    val mnemonic12 = generateMnemonic(MnemonicWordCount.WORDS12)
     println("12 word mnemonic: $mnemonic12")
 }

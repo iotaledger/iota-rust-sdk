@@ -7,7 +7,7 @@ from lib.iota_sdk_ffi import generate_mnemonic, MnemonicWordCount
 def main():
     mnemonic = generate_mnemonic(None)
     print("24 word mnemonic:", mnemonic)
-    mnemonic = generate_mnemonic(MnemonicWordCount.TWELVE)
+    mnemonic = generate_mnemonic(MnemonicWordCount.WORDS12)
     print("12 word mnemonic:", mnemonic)
 
 

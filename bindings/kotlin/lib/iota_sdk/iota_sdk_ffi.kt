@@ -57649,8 +57649,8 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 enum class MnemonicWordCount {
     
-    TWELVE,
-    TWENTY_FOUR;
+    WORDS12,
+    WORDS24;
     companion object
 }
 

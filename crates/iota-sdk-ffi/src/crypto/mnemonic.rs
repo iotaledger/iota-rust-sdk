@@ -8,8 +8,8 @@ use crate::error::Result;
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
 pub enum MnemonicWordCount {
-    Twelve = 12,
-    TwentyFour = 24,
+    Words12 = 12,
+    Words24 = 24,
 }
 
 /// Generate a new BIP-39 mnemonic in English.
