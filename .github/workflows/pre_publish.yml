@@ -93,7 +93,7 @@ jobs:
           echo "Current version: $CURRENT_VERSION"
 
           # Bump the version using the input level
-          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level || 'alpha' }}")
+          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
           export NEW_VERSION
           echo "New version: $NEW_VERSION"
 
