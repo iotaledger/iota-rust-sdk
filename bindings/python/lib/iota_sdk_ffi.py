@@ -605,7 +605,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 54158:
+    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 15726:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -20915,36 +20915,36 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
 
 
 
-class MnemonicWordCount(enum.Enum):
+class MnemonicLength(enum.Enum):
     WORDS12 = 12
     
     WORDS24 = 24
     
 
 
-class _UniffiConverterTypeMnemonicWordCount(_UniffiConverterRustBuffer):
+class _UniffiConverterTypeMnemonicLength(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return MnemonicWordCount.WORDS12
+            return MnemonicLength.WORDS12
         if variant == 2:
-            return MnemonicWordCount.WORDS24
+            return MnemonicLength.WORDS24
         raise InternalError("Raw enum value doesn't match any cases")
 
     @staticmethod
     def check_lower(value):
-        if value == MnemonicWordCount.WORDS12:
+        if value == MnemonicLength.WORDS12:
             return
-        if value == MnemonicWordCount.WORDS24:
+        if value == MnemonicLength.WORDS24:
             return
         raise ValueError(value)
 
     @staticmethod
     def write(value, buf):
-        if value == MnemonicWordCount.WORDS12:
+        if value == MnemonicLength.WORDS12:
             buf.write_i32(1)
-        if value == MnemonicWordCount.WORDS24:
+        if value == MnemonicLength.WORDS24:
             buf.write_i32(2)
 
 
@@ -23998,11 +23998,11 @@ class _UniffiConverterOptionalTypeValidatorSet(_UniffiConverterRustBuffer):
 
 
 
-class _UniffiConverterOptionalTypeMnemonicWordCount(_UniffiConverterRustBuffer):
+class _UniffiConverterOptionalTypeMnemonicLength(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
         if value is not None:
-            _UniffiConverterTypeMnemonicWordCount.check_lower(value)
+            _UniffiConverterTypeMnemonicLength.check_lower(value)
 
     @classmethod
     def write(cls, value, buf):
@@ -24011,7 +24011,7 @@ class _UniffiConverterOptionalTypeMnemonicWordCount(_UniffiConverterRustBuffer):
             return
 
         buf.write_u8(1)
-        _UniffiConverterTypeMnemonicWordCount.write(value, buf)
+        _UniffiConverterTypeMnemonicLength.write(value, buf)
 
     @classmethod
     def read(cls, buf):
@@ -24019,7 +24019,7 @@ class _UniffiConverterOptionalTypeMnemonicWordCount(_UniffiConverterRustBuffer):
         if flag == 0:
             return None
         elif flag == 1:
-            return _UniffiConverterTypeMnemonicWordCount.read(buf)
+            return _UniffiConverterTypeMnemonicLength.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -48523,16 +48523,16 @@ def gas_payment_to_bcs(data: "GasPayment") -> "bytes":
         _UniffiConverterTypeGasPayment.lower(data)))
 
 
-def generate_mnemonic(word_count: "typing.Optional[MnemonicWordCount]") -> "str":
+def generate_mnemonic(word_count: "typing.Optional[MnemonicLength]") -> "str":
     """
     Generate a new BIP-39 mnemonic in English.
     Supported word counts are 12 and 24 (default).
     """
 
-    _UniffiConverterOptionalTypeMnemonicWordCount.check_lower(word_count)
+    _UniffiConverterOptionalTypeMnemonicLength.check_lower(word_count)
     
     return _UniffiConverterString.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic,
-        _UniffiConverterOptionalTypeMnemonicWordCount.lower(word_count)))
+        _UniffiConverterOptionalTypeMnemonicLength.lower(word_count)))
 
 
 def genesis_object_from_bcs(bcs: "bytes") -> "GenesisObject":
@@ -50186,7 +50186,7 @@ __all__ = [
     "ExecutionStatus",
     "Feature",
     "IdOperation",
-    "MnemonicWordCount",
+    "MnemonicLength",
     "MoveAbility",
     "MoveVisibility",
     "NameFormat",

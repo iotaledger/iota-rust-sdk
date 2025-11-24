@@ -12,7 +12,7 @@ import (
 func main() {
 	mnemonic := iota_sdk.GenerateMnemonic(nil)
 	fmt.Println("24 word mnemonic:", mnemonic)
-	wordCount := iota_sdk.MnemonicWordCountWords12
+	wordCount := iota_sdk.MnemonicLengthWords12
 	mnemonic = iota_sdk.GenerateMnemonic(&wordCount)
 	fmt.Println("12 word mnemonic:", mnemonic)
 }
