@@ -605,6 +605,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 15726:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_bcs() != 63349:
@@ -8652,6 +8654,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9886,6 +9893,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs.restype = ctypes.c_uint16
@@ -20905,6 +20915,44 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
 
 
 
+class MnemonicLength(enum.Enum):
+    WORDS12 = 12
+    
+    WORDS24 = 24
+    
+
+
+class _UniffiConverterTypeMnemonicLength(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MnemonicLength.WORDS12
+        if variant == 2:
+            return MnemonicLength.WORDS24
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == MnemonicLength.WORDS12:
+            return
+        if value == MnemonicLength.WORDS24:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == MnemonicLength.WORDS12:
+            buf.write_i32(1)
+        if value == MnemonicLength.WORDS24:
+            buf.write_i32(2)
+
+
+
+
+
+
+
 class MoveAbility(enum.Enum):
     COPY = 0
     
@@ -23945,6 +23993,33 @@ class _UniffiConverterOptionalTypeValidatorSet(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterTypeValidatorSet.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalTypeMnemonicLength(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMnemonicLength.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMnemonicLength.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMnemonicLength.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -48448,6 +48523,18 @@ def gas_payment_to_bcs(data: "GasPayment") -> "bytes":
         _UniffiConverterTypeGasPayment.lower(data)))
 
 
+def generate_mnemonic(word_count: "typing.Optional[MnemonicLength]") -> "str":
+    """
+    Generate a new BIP-39 mnemonic in English.
+    Supported word counts are 12 and 24 (default).
+    """
+
+    _UniffiConverterOptionalTypeMnemonicLength.check_lower(word_count)
+    
+    return _UniffiConverterString.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic,
+        _UniffiConverterOptionalTypeMnemonicLength.lower(word_count)))
+
+
 def genesis_object_from_bcs(bcs: "bytes") -> "GenesisObject":
     """
     Create this type from BCS encoded bytes.
@@ -50099,6 +50186,7 @@ __all__ = [
     "ExecutionStatus",
     "Feature",
     "IdOperation",
+    "MnemonicLength",
     "MoveAbility",
     "MoveVisibility",
     "NameFormat",
@@ -50264,6 +50352,7 @@ __all__ = [
     "gas_cost_summary_to_bcs",
     "gas_payment_from_bcs",
     "gas_payment_to_bcs",
+    "generate_mnemonic",
     "genesis_object_from_bcs",
     "genesis_object_to_bcs",
     "genesis_transaction_from_bcs",
