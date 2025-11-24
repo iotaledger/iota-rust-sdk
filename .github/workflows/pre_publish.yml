@@ -108,7 +108,7 @@ jobs:
 
       - name: Create PR for Rust
         if: startsWith(inputs.package, 'iota-sdk')
-        id: pr-create
+        id: pr-create-rust
         uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -121,7 +121,7 @@ jobs:
 
       - name: Create Pull Request
         if: inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
-        id: create-pr
+        id: pr-create-bindings
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: "Bump ${{ inputs.package }} version to ${{ env.NEW_VERSION }}"
@@ -133,26 +133,26 @@ jobs:
       - name: Set release notes env vars (Rust)
         if: startsWith(inputs.package, 'iota-sdk')
         run: |
-          echo "PR_NUM=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')" >> $GITHUB_ENV
+          echo "PR_NUM=$(echo "${{ steps.pr-create-rust.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')" >> $GITHUB_ENV
           echo "CHANGELOG_DIR=crates/${{ inputs.package }}" >> $GITHUB_ENV
-          echo "VERSION_TAG=v${{ steps.pr-create.outputs.version }}" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ steps.pr-create-rust.outputs.version }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Kotlin)
         if: inputs.package == 'iota-kotlin-sdk'
         run: |
-          echo "PR_NUM=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "CHANGELOG_DIR=bindings/kotlin" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Python)
         if: inputs.package == 'iota-python-sdk'
         run: |
-          echo "PR_NUM=${{ steps.create-pr.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "CHANGELOG_DIR=bindings/python" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Add release notes
-        if: steps.pr-create.outputs.pr-url || steps.create-pr.outputs.pull-request-number
+        if: steps.pr-create-rust.outputs.pr-url || steps.pr-create-bindings.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
