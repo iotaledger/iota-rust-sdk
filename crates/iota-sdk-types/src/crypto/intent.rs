@@ -6,11 +6,7 @@
 use std::str::FromStr;
 
 #[cfg(feature = "serde")]
-use bcs;
-#[cfg(feature = "serde")]
 use eyre::eyre;
-#[cfg(feature = "serde")]
-use hex;
 
 pub const INTENT_PREFIX_LENGTH: usize = 3;
 
@@ -131,7 +127,10 @@ impl FromStr for Intent {
 /// intent-scope = u8
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+)]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum IntentScope {
@@ -182,7 +181,10 @@ impl TryFrom<u8> for IntentScope {
 /// intent-version = u8
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+)]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum IntentVersion {
@@ -211,7 +213,10 @@ impl TryFrom<u8> for IntentVersion {
 /// intent-app-id = u8
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+)]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum IntentAppId {
@@ -257,7 +262,10 @@ impl<T> IntentMessage<T> {
 /// derived as the hash of `flag || pubkey`. See
 /// `iota_types::crypto::SignatureScheme::flag()`.
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
+)]
 #[repr(u8)]
 pub enum HashingIntentScope {
     ChildObjectId = 0xf0,

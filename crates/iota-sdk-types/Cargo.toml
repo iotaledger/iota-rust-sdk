@@ -31,6 +31,7 @@ serde = [
   "dep:serde_json",
   "roaring/std",
   "dep:itertools",
+  "dep:serde_repr",
 ]
 schemars = ["serde", "dep:schemars", "dep:serde_json"]
 rand = ["dep:rand_core"]
@@ -54,6 +55,7 @@ bcs = { workspace = true, optional = true }
 itertools = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
+serde_repr = { version = "0.1", optional = true }
 serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
 
 # JsonSchema definitions for types, useful for generating an OpenAPI Specificaiton.
