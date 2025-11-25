@@ -22,9 +22,6 @@ bump_semver() {
     local version="$1"
     local bump="$2"
 
-    # Remove leading 'v' if present
-    version="${version#v}"
-
     # Parse version into components
     local major minor patch pre_tag pre_num
     if ! parse_version "$version" major minor patch pre_tag pre_num; then
@@ -122,9 +119,6 @@ handle_prerelease() {
 semver_to_pep440() {
     local version="$1"
 
-    # Remove leading 'v' if present
-    version="${version#v}"
-
     local major minor patch pre_tag pre_num
     if ! parse_version "$version" major minor patch pre_tag pre_num; then
         echo "Invalid semver: $version" >&2
@@ -149,8 +143,6 @@ semver_to_pep440() {
 
 pep440_to_semver() {
     local version="${1#v}"
-    # Normalize to lowercase to accept RC/RC style inputs
-    version="${version,,}"
 
     if [[ "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)([ab]|rc)?([0-9]+)?$ ]]; then
         local major="${BASH_REMATCH[1]}"

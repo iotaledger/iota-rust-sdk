@@ -82,7 +82,7 @@ jobs:
 
       - name: Bump Python version
         if: inputs.package == 'iota-python-sdk'
-        id: bump
+        id: bump-python
         run: |
           # Read current version from pyproject.toml
           CONFIG="bindings/python/src/pyproject.toml"
