@@ -115,7 +115,8 @@ impl Intent {
 impl FromStr for Intent {
     type Err = eyre::Report;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let bytes: Vec<u8> = hex::decode(s).map_err(|_| eyre!("Invalid Intent"))?;
+        let bytes: Vec<u8> =
+            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| eyre!("Invalid Intent"))?;
         Self::from_bytes(bytes.as_slice())
     }
 }
