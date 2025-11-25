@@ -16,7 +16,7 @@ pub const INTENT_PREFIX_LENGTH: usize = 3;
 /// that a signature commits to. It consists of three parts:
 ///     1. [enum IntentScope] (what the type of the message is)
 ///     2. [enum IntentVersion]
-///     3. [enum AppId] (what application that the signature refers to).
+///     3. [enum IntentAppId] (what application that the signature refers to).
 ///
 /// The serialization of an Intent is a 3-byte array where each field is
 /// represented by a byte and it is prepended onto a message before it is signed
@@ -44,22 +44,6 @@ impl Intent {
             version,
             app_id,
         }
-    }
-
-    pub fn to_bytes(self) -> [u8; INTENT_PREFIX_LENGTH] {
-        [self.scope as u8, self.version as u8, self.app_id as u8]
-    }
-
-    #[cfg(feature = "serde")]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, eyre::Report> {
-        if bytes.len() != INTENT_PREFIX_LENGTH {
-            return Err(eyre!("Invalid Intent"));
-        }
-        Ok(Self {
-            scope: bytes[0].try_into()?,
-            version: bytes[1].try_into()?,
-            app_id: bytes[2].try_into()?,
-        })
     }
 
     pub fn scope(self) -> IntentScope {
@@ -105,11 +89,28 @@ impl Intent {
             app_id: IntentAppId::Consensus,
         }
     }
+
+    pub fn to_bytes(self) -> [u8; INTENT_PREFIX_LENGTH] {
+        [self.scope as u8, self.version as u8, self.app_id as u8]
+    }
+
+    #[cfg(feature = "serde")]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, eyre::Report> {
+        if bytes.len() != INTENT_PREFIX_LENGTH {
+            return Err(eyre!("Invalid Intent"));
+        }
+        Ok(Self {
+            scope: bytes[0].try_into()?,
+            version: bytes[1].try_into()?,
+            app_id: bytes[2].try_into()?,
+        })
+    }
 }
 
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
     type Err = eyre::Report;
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let bytes: Vec<u8> =
             hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| eyre!("Invalid Intent"))?;
@@ -118,6 +119,10 @@ impl FromStr for Intent {
 }
 
 /// Byte signifying the scope of an [`Intent`]
+///
+/// This enums specifies the intent scope. Two intents for different scope
+/// should never collide, so no signature provided for one intent scope can be
+/// used for another, even when the serialized data itself may be the same.
 ///
 /// # BCS
 ///
@@ -173,6 +178,15 @@ impl TryFrom<u8> for IntentScope {
 
 /// Byte signifying the version of an [`Intent`]
 ///
+/// An intent is a compact struct serves as the domain separator for a message
+/// that a signature commits to. It consists of three parts: [enum IntentScope]
+/// (what the type of the message is), [enum IntentVersion], [enum IntentAppId]
+/// (what application that the signature refers to). It is used to construct
+/// [struct IntentMessage] that what a signature commits to.
+///
+/// The serialization of an Intent is a 3-byte array where each field is
+/// represented by a byte.
+///
 /// # BCS
 ///
 /// The BCS serialized form for this type is defined by the following ABNF:
@@ -204,6 +218,12 @@ impl TryFrom<u8> for IntentVersion {
 }
 
 /// Byte signifying the application id of an [`Intent`]
+///
+/// This enums specifies the application ID. Two intents in two different
+/// applications (i.e., IOTA, Ethereum etc) should never collide, so
+/// that even when a signing key is reused, nobody can take a signature
+/// designated for app_1 and present it as a valid signature for an (any) intent
+/// in app_2.
 ///
 /// # BCS
 ///
@@ -267,6 +287,7 @@ impl<T> IntentMessage<T> {
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
 )]
 #[repr(u8)]
+#[non_exhaustive]
 pub enum HashingIntentScope {
     ChildObjectId = 0xf0,
     RegularObjectId = 0xf1,

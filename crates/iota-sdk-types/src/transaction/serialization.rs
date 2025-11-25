@@ -763,16 +763,7 @@ mod signed_transaction {
     /// struct Intent {
     ///     scope: IntentScope,
     ///     version: IntentVersion,
-    ///     app_id: AppId,
-    /// }
-    ///
-    /// enum IntentVersion {
-    ///     V0 = 0,
-    /// }
-    ///
-    /// enum AppId {
-    ///     Iota = 0,
-    ///     Consensus = 1,
+    ///     app_id: IntendAppId,
     /// }
     ///
     /// enum IntentScope {
@@ -788,6 +779,15 @@ mod signed_transaction {
     ///     ConsensusBlock = 7, // Used for consensus authority signature on block's digest.
     ///     DiscoveryPeers = 8, // Used for reporting peer addresses in discovery
     ///     AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
+    /// }
+    ///
+    /// enum IntentVersion {
+    ///     V0 = 0,
+    /// }
+    ///
+    /// enum IntendAppId {
+    ///     Iota = 0,
+    ///     Consensus = 1,
     /// }
     /// ```
     struct IntentMessageWrappedTransaction;
