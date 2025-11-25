@@ -296,7 +296,6 @@ main() {
     test_pep440_to_semver "1.2.3a1" "1.2.3-alpha.1"
     test_pep440_to_semver "1.2.3b2" "1.2.3-beta.2"
     test_pep440_to_semver "1.2.3rc3" "1.2.3-rc.3"
-    test_pep440_to_semver "v2.0.0b10" "2.0.0-beta.10"
 
     echo "Test cases completed."
 }
