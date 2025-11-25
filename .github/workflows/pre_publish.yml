@@ -76,7 +76,6 @@ jobs:
 
       - name: Bump Kotlin version
         if: inputs.package == 'iota-kotlin-sdk'
-        id: bump-kotlin
         run: |
           source ./.github/bump_version.sh
 
@@ -101,7 +100,6 @@ jobs:
 
       - name: Bump Python version
         if: inputs.package == 'iota-python-sdk'
-        id: bump-python
         run: |
           source ./.github/bump_version.sh
 
