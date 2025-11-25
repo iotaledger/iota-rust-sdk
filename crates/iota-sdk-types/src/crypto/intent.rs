@@ -171,6 +171,7 @@ impl IntentScope {
 #[cfg(feature = "serde")]
 impl TryFrom<u8> for IntentScope {
     type Error = eyre::Report;
+
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentScope"))
     }
@@ -212,6 +213,7 @@ impl IntentVersion {
 #[cfg(feature = "serde")]
 impl TryFrom<u8> for IntentVersion {
     type Error = eyre::Report;
+
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentVersion"))
     }
@@ -251,6 +253,7 @@ impl IntentAppId {
 #[cfg(feature = "serde")]
 impl TryFrom<u8> for IntentAppId {
     type Error = eyre::Report;
+
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentAppId"))
     }
