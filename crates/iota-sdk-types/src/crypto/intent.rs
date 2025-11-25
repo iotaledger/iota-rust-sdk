@@ -3,9 +3,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #[cfg(feature = "serde")]
+use std::str::FromStr;
+
+#[cfg(feature = "serde")]
 use bcs;
 #[cfg(feature = "serde")]
 use eyre::eyre;
+#[cfg(feature = "serde")]
+use hex;
 
 pub const INTENT_PREFIX_LENGTH: usize = 3;
 
@@ -103,6 +108,15 @@ impl Intent {
             version: IntentVersion::V0,
             app_id: IntentAppId::Consensus,
         }
+    }
+}
+
+#[cfg(feature = "serde")]
+impl FromStr for Intent {
+    type Err = eyre::Report;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let bytes: Vec<u8> = hex::decode(s).map_err(|_| eyre!("Invalid Intent"))?;
+        Self::from_bytes(bytes.as_slice())
     }
 }
 
@@ -235,4 +249,16 @@ impl<T> IntentMessage<T> {
     pub fn new(intent: Intent, value: T) -> Self {
         Self { intent, value }
     }
+}
+
+/// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
+/// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
+/// derived as the hash of `flag || pubkey`. See
+/// `iota_types::crypto::SignatureScheme::flag()`.
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(u8)]
+pub enum HashingIntentScope {
+    ChildObjectId = 0xf0,
+    RegularObjectId = 0xf1,
 }
