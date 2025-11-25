@@ -93,8 +93,7 @@ jobs:
           echo "Updated build.gradle.kts with new version: $NEW_VERSION"
 
           # Generate changelog for Kotlin
-          export CRATE_ROOT="bindings/kotlin"
-          ./.github/gen-changelog.sh
+          ./.github/gen-changelog.sh bindings/kotlin "$NEW_VERSION"
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
