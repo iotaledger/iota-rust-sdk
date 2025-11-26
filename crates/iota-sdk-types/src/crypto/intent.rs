@@ -295,3 +295,8 @@ pub enum HashingIntentScope {
     ChildObjectId = 0xf0,
     RegularObjectId = 0xf1,
 }
+
+/// A person message that wraps around a byte array.
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);

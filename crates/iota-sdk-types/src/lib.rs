@@ -139,7 +139,7 @@ pub use crypto::{
     Ed25519Signature, HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentMessage,
     IntentScope, IntentVersion, InvalidSignatureScheme, InvalidZkLoginAuthenticatorError, Jwk,
     JwkId, MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PublicKeyExt,
+    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt,
     Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
     SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator, ZkLoginClaim,
     ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
@@ -183,10 +183,6 @@ pub use validator::{
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
 
 #[macro_export]
 macro_rules! def_is {
