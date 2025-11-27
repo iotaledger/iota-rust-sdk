@@ -60,8 +60,8 @@ impl Intent {
 
     pub fn iota_app(scope: IntentScope) -> Self {
         Self {
-            version: IntentVersion::V0,
             scope,
+            version: IntentVersion::V0,
             app_id: IntentAppId::Iota,
         }
     }
