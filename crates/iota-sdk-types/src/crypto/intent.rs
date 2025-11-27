@@ -260,7 +260,7 @@ impl TryFrom<u8> for IntentAppId {
 /// any intent message signed in the system cannot collide with another since
 /// they are domain separated by intent.
 ///
-/// The serialization of an IntentMessage is compact: it only appends three
+/// The serialization of an IntentMessage is compact: it only prepends three
 /// bytes to the message itself.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
