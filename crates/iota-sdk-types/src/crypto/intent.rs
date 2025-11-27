@@ -179,14 +179,9 @@ impl TryFrom<u8> for IntentScope {
 
 /// Byte signifying the version of an [`Intent`]
 ///
-/// An intent is a compact struct serves as the domain separator for a message
-/// that a signature commits to. It consists of three parts: [enum IntentScope]
-/// (what the type of the message is), [enum IntentVersion], [enum IntentAppId]
-/// (what application that the signature refers to). It is used to construct
-/// [struct IntentMessage] that what a signature commits to.
-///
-/// The serialization of an Intent is a 3-byte array where each field is
-/// represented by a byte.
+/// The version here is to distinguish between signing different versions of the
+/// struct or enum. Serialized output between two different versions of the same
+/// struct/enum might accidentally (or maliciously on purpose) match.
 ///
 /// # BCS
 ///
