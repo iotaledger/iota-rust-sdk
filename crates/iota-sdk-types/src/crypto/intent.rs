@@ -256,7 +256,7 @@ impl TryFrom<u8> for IntentAppId {
 
 /// Intent Message is a wrapper around a message with its intent. The message
 /// can be any type that implements [trait Serialize]. *ALL* signatures in IOTA
-/// must commits to the intent message, not the message itself. This guarantees
+/// must commit to the intent message, not the message itself. This guarantees
 /// any intent message signed in the system cannot collide with another since
 /// they are domain separated by intent.
 ///
@@ -291,7 +291,7 @@ pub enum HashingIntentScope {
     RegularObjectId = 0xf1,
 }
 
-/// A person message that wraps around a byte array.
+/// A personal message that wraps around a byte array.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
