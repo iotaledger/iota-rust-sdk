@@ -76,19 +76,20 @@ jobs:
 
       - name: Bump Kotlin version
         if: inputs.package == 'iota-kotlin-sdk'
-        id: bump-kotlin
         run: |
+          source ./.github/bump_version.sh
+
           # Read current version from build.gradle.kts
-          CURRENT_VERSION=$(grep '^version = ' bindings/kotlin/build.gradle.kts | sed 's/version = "\(.*\)"/\1/')
+          CONFIG="bindings/kotlin/build.gradle.kts"
+          CURRENT_VERSION=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
           echo "Current version: $CURRENT_VERSION"
 
           # Bump the version using the input level
-          source ./.github/bump_version.sh
           NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
           echo "New version: $NEW_VERSION"
 
           # Update the version in build.gradle.kts
-          sed -i "s/version = \"$CURRENT_VERSION\"/version = \"$NEW_VERSION\"/" bindings/kotlin/build.gradle.kts
+          sed -i "s/version = \"$CURRENT_VERSION\"/version = \"$NEW_VERSION\"/" "$CONFIG"
           echo "Updated build.gradle.kts with new version: $NEW_VERSION"
 
           # Generate changelog for Kotlin
@@ -97,12 +98,31 @@ jobs:
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
-      # - name: Create PR for Python
-      #   if: inputs.package == 'python-sdk'
-      #   run: |
-      #     echo "Creating PR for Python SDK - Not yet implemented."
-      # TODO @alex  get version, bump it, update it
-      # TODO @alex generate changelog
+      - name: Bump Python version
+        if: inputs.package == 'iota-python-sdk'
+        run: |
+          source ./.github/bump_version.sh
+
+          # Read current version from pyproject.toml
+          CONFIG="bindings/python/src/pyproject.toml"
+          CURRENT_VERSION_PEP440=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
+          CURRENT_VERSION=$(pep440_to_semver "$CURRENT_VERSION_PEP440")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Bump the version using the input level
+          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          echo "New version: $NEW_VERSION"
+
+          # Update the version in pyproject.toml
+          NEW_VERSION_PEP440=$(semver_to_pep440 "$NEW_VERSION")
+          sed -i "s/version = \"$CURRENT_VERSION_PEP440\"/version = \"$NEW_VERSION_PEP440\"/" "$CONFIG"
+          echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
+
+          # Generate changelog for Python
+          ./.github/gen-changelog.sh bindings/python "$NEW_VERSION"
+
+          # Set output for the next step
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Create PR for Rust
         if: startsWith(inputs.package, 'iota-sdk')

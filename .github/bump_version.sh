@@ -22,9 +22,6 @@ bump_semver() {
     local version="$1"
     local bump="$2"
 
-    # Remove leading 'v' if present
-    version="${version#v}"
-
     # Parse version into components
     local major minor patch pre_tag pre_num
     if ! parse_version "$version" major minor patch pre_tag pre_num; then
@@ -119,6 +116,70 @@ handle_prerelease() {
     fi
 }
 
+semver_to_pep440() {
+    local version="$1"
+
+    local major minor patch pre_tag pre_num
+    if ! parse_version "$version" major minor patch pre_tag pre_num; then
+        echo "Invalid semver: $version" >&2
+        return 1
+    fi
+
+    local pep="$major.$minor.$patch"
+    if [[ -n "$pre_tag" ]]; then
+        case "$pre_tag" in
+            alpha) pep+="a$pre_num" ;;
+            beta)  pep+="b$pre_num" ;;
+            rc)    pep+="rc$pre_num" ;;
+            *)
+                echo "Unsupported prerelease tag: $pre_tag" >&2
+                return 1
+                ;;
+        esac
+    fi
+
+    echo "$pep"
+}
+
+pep440_to_semver() {
+    local version="${1#v}"
+
+    if [[ "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)([ab]|rc)?([0-9]+)?$ ]]; then
+        local major="${BASH_REMATCH[1]}"
+        local minor="${BASH_REMATCH[2]}"
+        local patch="${BASH_REMATCH[3]}"
+        local pre_code="${BASH_REMATCH[4]}"
+        local pre_num="${BASH_REMATCH[5]}"
+        local semver="$major.$minor.$patch"
+
+        if [[ -z "$pre_code" ]]; then
+            echo "$semver"
+            return 0
+        fi
+
+        if [[ -z "$pre_num" ]]; then
+            echo "Invalid prerelease format in PEP 440 version: $version" >&2
+            return 1
+        fi
+
+        local pre_tag
+        case "$pre_code" in
+            a) pre_tag="alpha" ;;
+            b) pre_tag="beta" ;;
+            rc) pre_tag="rc" ;;
+            *)
+                echo "Unsupported prerelease tag: $pre_code" >&2
+                return 1
+                ;;
+        esac
+
+        echo "$semver-$pre_tag.$pre_num"
+        return 0
+    fi
+
+    echo "Invalid PEP 440 version: $version" >&2
+    return 1
+}
 
 main() {
     # Test cases for version bumping
@@ -132,6 +193,42 @@ main() {
             echo "✓ PASS: bump_semver '$version' '$bump' -> '$result'"
         else
             echo "✗ FAIL: bump_semver '$version' '$bump' expected '$expected', got '$result'"
+            return 1
+        fi
+    }
+
+    # Test semver to PEP 440 conversions
+    test_semver_to_pep440() {
+        local version="$1"
+        local expected="$2"
+        local result
+        if result=$(semver_to_pep440 "$version"); then
+            if [[ "$result" == "$expected" ]]; then
+                echo "✓ PASS: semver_to_pep440 '$version' -> '$result'"
+            else
+                echo "✗ FAIL: semver_to_pep440 '$version' expected '$expected', got '$result'"
+                return 1
+            fi
+        else
+            echo "✗ FAIL: semver_to_pep440 '$version' expected '$expected', got error"
+            return 1
+        fi
+    }
+
+    # Test PEP 440 to semver conversions
+    test_pep440_to_semver() {
+        local version="$1"
+        local expected="$2"
+        local result
+        if result=$(pep440_to_semver "$version"); then
+            if [[ "$result" == "$expected" ]]; then
+                echo "✓ PASS: pep440_to_semver '$version' -> '$result'"
+            else
+                echo "✗ FAIL: pep440_to_semver '$version' expected '$expected', got '$result'"
+                return 1
+            fi
+        else
+            echo "✗ FAIL: pep440_to_semver '$version' expected '$expected', got error"
             return 1
         fi
     }
@@ -187,6 +284,18 @@ main() {
     test_bump_semver "1.2.3-alpha.1" "rc" "1.2.3-rc.1"
     test_bump_semver "1.2.3-beta.2" "rc" "1.2.3-rc.1"
     test_bump_semver "1.2.3-rc.5" "rc" "1.2.3-rc.6"
+
+    # Test semver to PEP440 conversions
+    test_semver_to_pep440 "1.0.0" "1.0.0"
+    test_semver_to_pep440 "1.2.3-alpha.1" "1.2.3a1"
+    test_semver_to_pep440 "1.2.3-beta.2" "1.2.3b2"
+    test_semver_to_pep440 "1.2.3-rc.3" "1.2.3rc3"
+
+    # Test PEP 440 to semver conversions
+    test_pep440_to_semver "1.0.0" "1.0.0"
+    test_pep440_to_semver "1.2.3a1" "1.2.3-alpha.1"
+    test_pep440_to_semver "1.2.3b2" "1.2.3-beta.2"
+    test_pep440_to_semver "1.2.3rc3" "1.2.3-rc.3"
 
     echo "Test cases completed."
 }
