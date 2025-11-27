@@ -120,7 +120,7 @@ impl FromStr for Intent {
 
 /// Byte signifying the scope of an [`Intent`]
 ///
-/// This enums specifies the intent scope. Two intents for different scope
+/// This enum specifies the intent scope. Two intents for different scope
 /// should never collide, so no signature provided for one intent scope can be
 /// used for another, even when the serialized data itself may be the same.
 ///
