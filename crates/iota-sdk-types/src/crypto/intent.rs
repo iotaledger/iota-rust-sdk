@@ -12,11 +12,11 @@ pub const INTENT_PREFIX_LENGTH: usize = 3;
 
 /// A Signing Intent
 ///
-/// An intent is a compact struct serves as the domain separator for a message
-/// that a signature commits to. It consists of three parts:
+/// An intent is a compact struct that serves as the domain separator for a
+/// message that a signature commits to. It consists of three parts:
 ///     1. [enum IntentScope] (what the type of the message is)
 ///     2. [enum IntentVersion]
-///     3. [enum IntentAppId] (what application that the signature refers to).
+///     3. [enum IntentAppId] (what application the signature refers to).
 ///
 /// The serialization of an Intent is a 3-byte array where each field is
 /// represented by a byte and it is prepended onto a message before it is signed
@@ -120,7 +120,7 @@ impl FromStr for Intent {
 
 /// Byte signifying the scope of an [`Intent`]
 ///
-/// This enum specifies the intent scope. Two intents for different scope
+/// This enum specifies the intent scope. Two intents for different scopes
 /// should never collide, so no signature provided for one intent scope can be
 /// used for another, even when the serialized data itself may be the same.
 ///
@@ -216,7 +216,7 @@ impl TryFrom<u8> for IntentVersion {
 
 /// Byte signifying the application id of an [`Intent`]
 ///
-/// This enums specifies the application ID. Two intents in two different
+/// This enum specifies the application ID. Two intents in two different
 /// applications (i.e., IOTA, Ethereum etc) should never collide, so
 /// that even when a signing key is reused, nobody can take a signature
 /// designated for app_1 and present it as a valid signature for an (any) intent
@@ -275,7 +275,7 @@ impl<T> IntentMessage<T> {
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
+/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`. See
 /// `iota_types::crypto::SignatureScheme::flag()`.
