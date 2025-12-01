@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Archive Go SDK source
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
@@ -61,6 +63,8 @@ jobs:
     steps:
       - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Install rust target ${{ matrix.target }}
         run: rustup target add ${{ matrix.target }}
