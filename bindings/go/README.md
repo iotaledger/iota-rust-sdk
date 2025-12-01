@@ -100,7 +100,3 @@ make go
 ```sh
 make go-example chain_id
 ```
-
-## License
-
-Apache-2.0
