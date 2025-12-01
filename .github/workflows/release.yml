@@ -1,16 +1,6 @@
 name: Create release
 
 on:
-  workflow_call:
-    inputs:
-      package:
-        type: string
-        required: true
-        description: The package to publish.
-      version:
-        type: string
-        required: true
-        description: The exact version.
   workflow_dispatch:
     inputs:
       package:

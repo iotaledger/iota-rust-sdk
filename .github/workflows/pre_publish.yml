@@ -74,6 +74,19 @@ jobs:
       # TODO does this actually work?
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
+      - name: Bump Go version
+        if: inputs.package == 'iota-go-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-go-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level || 'patch' }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
       - name: Bump Kotlin version
         if: inputs.package == 'iota-kotlin-sdk'
         run: |
@@ -138,7 +151,7 @@ jobs:
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Create Pull Request
-        if: inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
+        if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
         id: pr-create-bindings
         uses: peter-evans/create-pull-request@v7
         with:
@@ -154,6 +167,13 @@ jobs:
           echo "PR_NUM=$(echo "${{ steps.pr-create-rust.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')" >> $GITHUB_ENV
           echo "CHANGELOG_DIR=crates/${{ inputs.package }}" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ steps.pr-create-rust.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Go)
+        if: inputs.package == 'iota-go-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "CHANGELOG_DIR=bindings/go" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Kotlin)
         if: inputs.package == 'iota-kotlin-sdk'
@@ -182,32 +202,3 @@ jobs:
 
           $notes")
           gh pr edit "$PR_NUM" --body "$body"
-
-  bump-go-version:
-    if: inputs.package == 'iota-go-sdk'
-    runs-on: ubuntu-latest
-    outputs:
-      new_version: ${{ steps.bump-go-version.outputs.new_version }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Bump go version
-        id: bump-go-version
-        run: |
-          git fetch --tags
-          latest_tag=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
-          if [ -z "$latest_tag" ]; then
-            latest_tag="iota-go-sdk-v0.0.0"
-          fi
-          latest_version=$(echo "$latest_tag" | sed -nr 's|.*-v(.*)|\1|p')
-          source .github/bump_version.sh
-          new_version=$(bump_semver "$latest_version" "${{ inputs.level || 'patch' }}")
-          echo "new_version=$new_version" >> $GITHUB_OUTPUT
-
-  go-release:
-    needs: bump-go-version
-    uses: ./.github/workflows/release.yml
-    with:
-      package: iota-go-sdk
-      version: ${{ needs.bump-go-version.outputs.new_version }}
