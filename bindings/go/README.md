@@ -10,7 +10,8 @@ To use the IOTA SDK in your Go project, add it as a dependency:
 go get github.com/iotaledger/iota-sdk-go
 ```
 
-The SDK requires the native IOTA SDK FFI library to be installed on your system. Pre-built libraries are available for:
+The package includes pre-built native libraries for:
+
 - macOS (x86_64 and ARM64)
 - Linux (x86_64 and ARM64)
 - Windows (x86_64 and ARM64)
