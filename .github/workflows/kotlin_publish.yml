@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'kotlin')) || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-kotlin-sdk')) || github.event_name == 'workflow_dispatch'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

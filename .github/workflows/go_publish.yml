@@ -13,7 +13,7 @@ on:
 jobs:
   prepare-source-archive:
     name: Prepare source archive
-    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'iota-go-sdk')) || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-go-sdk')) || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout iota-rust-sdk
