@@ -1,6 +1,6 @@
 # IOTA SDK - Go Bindings
 
-Go bindings for the IOTA SDK, enabling Go developers to interact with the IOTA blockchain.
+Go bindings for the IOTA SDK, enabling Go developers to interact with the IOTA network.
 
 ## Installation
 
