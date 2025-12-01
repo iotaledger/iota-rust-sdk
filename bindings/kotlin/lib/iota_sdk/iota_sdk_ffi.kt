@@ -3077,6 +3077,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3235,6 +3237,8 @@ fun uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs(
 ): Short
@@ -7557,6 +7561,8 @@ fun uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(`bcs`: RustBuffer.ByValue,u
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(`data`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(`wordCount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8197,6 +8203,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() != 2681.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() != 15726.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() != 15482.toShort()) {
@@ -57638,6 +57647,36 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 
 
+enum class MnemonicLength {
+    
+    WORDS12,
+    WORDS24;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMnemonicLength: FfiConverterRustBuffer<MnemonicLength> {
+    override fun read(buf: ByteBuffer) = try {
+        MnemonicLength.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: MnemonicLength) = 4UL
+
+    override fun write(value: MnemonicLength, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
 enum class MoveAbility {
     
     COPY,
@@ -60596,6 +60635,38 @@ public object FfiConverterOptionalTypeValidatorSet: FfiConverterRustBuffer<Valid
         } else {
             buf.put(1)
             FfiConverterTypeValidatorSet.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeMnemonicLength: FfiConverterRustBuffer<MnemonicLength?> {
+    override fun read(buf: ByteBuffer): MnemonicLength? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMnemonicLength.read(buf)
+    }
+
+    override fun allocationSize(value: MnemonicLength?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMnemonicLength.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MnemonicLength?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMnemonicLength.write(value, buf)
         }
     }
 }
@@ -64085,6 +64156,19 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(
         FfiConverterTypeGasPayment.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Generate a new BIP-39 mnemonic in English.
+         * Supported word counts are 12 and 24 (default).
+         */ fun `generateMnemonic`(`wordCount`: MnemonicLength?): kotlin.String {
+            return FfiConverterString.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
+        FfiConverterOptionalTypeMnemonicLength.lower(`wordCount`),_status)
 }
     )
     }

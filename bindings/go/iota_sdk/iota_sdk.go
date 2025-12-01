@@ -1008,6 +1008,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic()
+	})
+	if checksum != 15726 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs()
 	})
 	if checksum != 15482 {
@@ -35240,6 +35249,39 @@ func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
 
 
+type MnemonicLength uint
+
+const (
+	MnemonicLengthWords12 MnemonicLength = 1
+	MnemonicLengthWords24 MnemonicLength = 2
+)
+
+type FfiConverterMnemonicLength struct {}
+
+var FfiConverterMnemonicLengthINSTANCE = FfiConverterMnemonicLength{}
+
+func (c FfiConverterMnemonicLength) Lift(rb RustBufferI) MnemonicLength {
+	return LiftFromRustBuffer[MnemonicLength](c, rb)
+}
+
+func (c FfiConverterMnemonicLength) Lower(value MnemonicLength) C.RustBuffer {
+	return LowerIntoRustBuffer[MnemonicLength](c, value)
+}
+func (FfiConverterMnemonicLength) Read(reader io.Reader) MnemonicLength {
+	id := readInt32(reader)
+	return MnemonicLength(id)
+}
+
+func (FfiConverterMnemonicLength) Write(writer io.Writer, value MnemonicLength) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerMnemonicLength struct {}
+
+func (_ FfiDestroyerMnemonicLength) Destroy(value MnemonicLength) {
+}
+
+
 type MoveAbility uint
 
 const (
@@ -38281,6 +38323,43 @@ type FfiDestroyerOptionalValidatorSet struct {}
 func (_ FfiDestroyerOptionalValidatorSet) Destroy(value *ValidatorSet) {
 	if value != nil {
 		FfiDestroyerValidatorSet{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMnemonicLength struct{}
+
+var FfiConverterOptionalMnemonicLengthINSTANCE = FfiConverterOptionalMnemonicLength{}
+
+func (c FfiConverterOptionalMnemonicLength) Lift(rb RustBufferI) *MnemonicLength {
+	return LiftFromRustBuffer[*MnemonicLength](c, rb)
+}
+
+func (_ FfiConverterOptionalMnemonicLength) Read(reader io.Reader) *MnemonicLength {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMnemonicLengthINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMnemonicLength) Lower(value *MnemonicLength) C.RustBuffer {
+	return LowerIntoRustBuffer[*MnemonicLength](c, value)
+}
+
+func (_ FfiConverterOptionalMnemonicLength) Write(writer io.Writer, value *MnemonicLength) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMnemonicLengthINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMnemonicLength struct {}
+
+func (_ FfiDestroyerOptionalMnemonicLength) Destroy(value *MnemonicLength) {
+	if value != nil {
+		FfiDestroyerMnemonicLength{}.Destroy(*value)
 	}
 }
 
@@ -42991,6 +43070,16 @@ func GasPaymentToBcs(data GasPayment) ([]byte, error) {
 		} else {
 			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+// Generate a new BIP-39 mnemonic in English.
+// Supported word counts are 12 and 24 (default).
+func GenerateMnemonic(wordCount *MnemonicLength) string {
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(FfiConverterOptionalMnemonicLengthINSTANCE.Lower(wordCount),_uniffiStatus),
+	}
+	}))
 }
 
 // Create this type from BCS encoded bytes.
