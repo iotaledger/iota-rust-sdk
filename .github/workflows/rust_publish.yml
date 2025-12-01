@@ -1,4 +1,4 @@
-name: Publish Rust SDK crate
+name: Publish Rust SDK to crates.io
 
 on:
   release:

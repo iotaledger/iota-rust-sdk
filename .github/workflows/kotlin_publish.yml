@@ -1,4 +1,4 @@
-name: Publish Kotlin to Maven Central
+name: Publish Kotlin SDK to Maven Central
 
 on:
   release:

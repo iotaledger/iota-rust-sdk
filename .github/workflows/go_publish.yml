@@ -1,4 +1,4 @@
-name: Publish Go SDK package
+name: Publish Go SDK to iotaledger/iota-sdk-go
 
 on:
   release:
