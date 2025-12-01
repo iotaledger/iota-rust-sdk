@@ -18,7 +18,7 @@ The package includes pre-built native libraries for:
 
 ## Quick Start
 
-Here's a simple example that queries the chain ID from the IOTA network:
+Here is a simple example that queries the chain ID from the IOTA network:
 
 ```go
 package main
