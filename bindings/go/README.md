@@ -63,7 +63,7 @@ client := iota_sdk.GraphQlClientNew("https://your-endpoint.com")
 
 ## Examples
 
-More examples are available in the [examples directory](examples/), including:
+More examples are available in the [examples directory](https://github.com/iotaledger/iota-rust-sdk/tree/develop/bindings/go/examples), including:
 - Getting chain information
 - Querying coin balances
 - Working with transactions
