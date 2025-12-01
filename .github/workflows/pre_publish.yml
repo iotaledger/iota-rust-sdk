@@ -93,7 +93,7 @@ jobs:
           echo "Updated build.gradle.kts with new version: $NEW_VERSION"
 
           # Generate changelog for Kotlin
-          ./.github/gen-changelog.sh bindings/kotlin "$NEW_VERSION"
+          ./.github/gen_changelog.sh bindings/kotlin "$NEW_VERSION"
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -119,7 +119,7 @@ jobs:
           echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
 
           # Generate changelog for Python
-          ./.github/gen-changelog.sh bindings/python "$NEW_VERSION"
+          ./.github/gen_changelog.sh bindings/python "$NEW_VERSION"
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
