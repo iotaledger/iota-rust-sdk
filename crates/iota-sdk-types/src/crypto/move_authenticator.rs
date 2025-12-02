@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Address, Digest, Input, ObjectId, ObjectReference, TypeTag, hash::Hasher};
+use crate::{Address, Input, ObjectId, ObjectReference, TypeTag};
 
 /// MoveAuthenticator is a signature variant that enables a new
 /// method of authentication through Move code.
@@ -83,8 +83,9 @@ impl MoveAuthenticator {
         }
     }
 
-    pub fn digest(&self) -> Digest {
-        let mut hasher = Hasher::new();
+    #[cfg(feature = "hash")]
+    pub fn digest(&self) -> crate::Digest {
+        let mut hasher = crate::hash::Hasher::new();
         hasher.update(self.to_bytes());
         hasher.finalize()
     }
