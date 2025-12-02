@@ -46137,7 +46137,7 @@ class UserSignatureProtocol(typing.Protocol):
 
     ```text
     user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-    user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey
+    user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
     ```
 
     Note: Due to historical reasons, signatures are serialized slightly
@@ -46201,7 +46201,7 @@ class UserSignature():
 
     ```text
     user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-    user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey
+    user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
     ```
 
     Note: Due to historical reasons, signatures are serialized slightly
