@@ -88,7 +88,7 @@ jobs:
 
           # Generate changelog for Go
           entry=$(./.github/gen_changelog.sh iota-go-sdk bindings/go "$NEW_VERSION")
-          echo -e "$entry\n$(cat bindings/go/CHANGELOG.md)" > bindings/go/CHANGELOG.md 
+          echo -e "$entry\n$(cat bindings/go/CHANGELOG.md)" > bindings/go/CHANGELOG.md
           git add bindings/go/CHANGELOG.md
 
       - name: Bump Kotlin version
