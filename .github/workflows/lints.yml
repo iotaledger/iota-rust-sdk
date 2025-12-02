@@ -55,7 +55,7 @@ jobs:
         run: cargo deny --manifest-path './Cargo.toml' check bans licenses sources advisories --hide-inclusion-graph
 
   check-unused-deps:
-    name: Check Unused Dependencies (${{ matrix.flags }})
+    name: Check Unused Dependencies (${{ matrix.flags }}) #FOR-TESTING
     if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     strategy:
       matrix:
