@@ -112,6 +112,7 @@ serialization_test!(ZkLoginPublicIdentifier);
 serialization_test!(CircomG1);
 serialization_test!(CircomG2);
 serialization_test!(PasskeyAuthenticator);
+serialization_test!(MoveAuthenticator);
 serialization_test!(Digest);
 serialization_test!(ChangedObject);
 serialization_test!(IdOperation);
