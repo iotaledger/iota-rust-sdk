@@ -247,6 +247,9 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::Passkey(passkey_authenticator) => {
                 crate::passkey::PasskeyVerifier::default().verify(message, passkey_authenticator)
             }
+            UserSignature::Move(_) => Err(SignatureError::from_source(
+                "move authenticators cannot be verified",
+            )),
         }
     }
 }
@@ -392,7 +395,7 @@ fn multisig_pubkey_and_signature_from_user_signature(
             ))
         }
 
-        UserSignature::Multisig(_) | UserSignature::Passkey(_) => {
+        UserSignature::Multisig(_) | UserSignature::Passkey(_) | UserSignature::Move(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))
         }
     }

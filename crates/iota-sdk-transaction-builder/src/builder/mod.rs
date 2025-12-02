@@ -12,9 +12,9 @@ use std::{
 use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_graphql_client::Client;
 use iota_types::{
-    Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
-    Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionV1, TypeTag,
+    Address, DryRunResult, GasPayment, Identifier, MoveAuthenticator, MovePackageData, ObjectId,
+    ObjectReference, Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
+    TransactionExpiration, TransactionV1, TypeTag, UserSignature,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -23,6 +23,7 @@ use crate::{
     ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
+        move_authenticator::MoveAuthenticatorData,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
     },
@@ -36,6 +37,7 @@ use crate::{
 
 pub(crate) mod client_methods;
 pub(crate) mod gas_station;
+mod move_authenticator;
 mod named_results;
 /// Argument types for PTBs
 pub mod ptb_arguments;
@@ -77,6 +79,8 @@ pub struct TransactionBuildData {
     named_results: HashMap<String, Argument>,
     /// The data used for gas station sponsorship.
     gas_station_data: Option<GasStationData>,
+    /// The data used to authenticate via Account Abstraction
+    move_authenticator: Option<MoveAuthenticatorData>,
 }
 
 impl TransactionBuildData {
@@ -198,6 +202,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 named_results: Default::default(),
                 gas_station_data: Default::default(),
+                move_authenticator: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -272,6 +277,19 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Set the gas station sponsor. Optional.
     pub fn gas_station_sponsor(&mut self, url: Url) -> &mut TransactionBuilder<C, GasStationData> {
         self.data.gas_station_data = Some(GasStationData::new(url));
+        self.state_change()
+    }
+
+    /// Set the move authenticator for Account Abstraction.
+    pub fn move_authenticator<P: PTBArgument>(
+        &mut self,
+        input: P,
+    ) -> &mut TransactionBuilder<C, MoveAuthenticatorData> {
+        self.data.move_authenticator = Some(MoveAuthenticatorData {
+            inputs: Default::default(),
+            type_arguments: Default::default(),
+            object_to_authenticate: input.arg(&mut self.data),
+        });
         self.state_change()
     }
 
@@ -1203,6 +1221,119 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             .await
             .map_err(Error::client)
     }
+
+    /// Execute the transaction with the provided move authenticator data and
+    /// optionally wait for finalization.
+    pub async fn execute_with_move_authenticator(
+        mut self,
+        wait_for: impl Into<Option<WaitForTx>>,
+    ) -> Result<TransactionEffects, Error> {
+        let data = self
+            .data
+            .move_authenticator
+            .take()
+            .ok_or_else(|| Error::MissingMoveAuthData)?;
+        let object_to_authenticate = match data.object_to_authenticate {
+            Argument::Input(input) => match &self.data.inputs[&input].kind {
+                InputKind::ImmutableOrOwned(object_id) => {
+                    let obj = self
+                        .client
+                        .object(*object_id, None)
+                        .await
+                        .map_err(Error::client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                    iota_types::Input::ImmutableOrOwned(obj.object_ref())
+                }
+                InputKind::Shared { object_id, mutable } if *mutable == false => {
+                    let obj = self
+                        .client
+                        .object(*object_id, None)
+                        .await
+                        .map_err(Error::client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+                    match obj.owner() {
+                        Owner::Shared(version) => iota_types::Input::Shared {
+                            object_id: *object_id,
+                            initial_shared_version: *version,
+                            mutable: false,
+                        },
+                        _ => {
+                            return Err(Error::InvalidMoveAuthInput(format!(
+                                "object {object_id} was passed as shared, but is not"
+                            )));
+                        }
+                    }
+                }
+                InputKind::Input(input) => input.clone(),
+                _ => {
+                    return Err(Error::InvalidMoveAuthInput(format!(
+                        "must be immutable/owned or read-only shared"
+                    )));
+                }
+            },
+            _ => {
+                return Err(Error::InvalidMoveAuthInput(format!(
+                    "must not be gas or a command result"
+                )));
+            }
+        };
+        let mut inputs = Vec::new();
+        for input in data.inputs {
+            inputs.push(match input {
+                Argument::Input(input) => match &self.data.inputs[&input].kind {
+                    InputKind::ImmutableOrOwned(object_id) => {
+                        let obj = self
+                            .client
+                            .object(*object_id, None)
+                            .await
+                            .map_err(Error::client)?
+                            .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                        iota_types::Input::ImmutableOrOwned(obj.object_ref())
+                    }
+                    InputKind::Shared { object_id, mutable } => {
+                        let obj = self
+                            .client
+                            .object(*object_id, None)
+                            .await
+                            .map_err(Error::client)?
+                            .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+                        match obj.owner() {
+                            Owner::Shared(version) => iota_types::Input::Shared {
+                                object_id: *object_id,
+                                initial_shared_version: *version,
+                                mutable: *mutable,
+                            },
+                            _ => {
+                                return Err(Error::InvalidMoveAuthInput(format!(
+                                    "object {object_id} was passed as shared, but is not"
+                                )));
+                            }
+                        }
+                    }
+                    InputKind::Input(input) => input.clone(),
+                    _ => {
+                        return Err(Error::InvalidMoveAuthInput(format!(
+                            "call arguments must not be receiving"
+                        )));
+                    }
+                },
+                _ => {
+                    return Err(Error::InvalidMoveAuthInput(format!(
+                        "must not be gas or a command result"
+                    )));
+                }
+            })
+        }
+        let move_authenticator =
+            MoveAuthenticator::new(inputs, data.type_arguments, object_to_authenticate).unwrap();
+        let txn = self.finish_internal().await?;
+        self.client
+            .execute_tx(&[UserSignature::Move(move_authenticator)], &txn, wait_for)
+            .await
+            .map_err(Error::client)
+    }
 }
 
 impl<C> TransactionBuilder<C, MoveCall> {
@@ -1301,6 +1432,34 @@ impl<C> TransactionBuilder<C, GasStationData> {
         if let Some(data) = &mut self.data.gas_station_data {
             data.add_header(name, value);
         }
+        self
+    }
+}
+
+impl<C> TransactionBuilder<C, MoveAuthenticatorData> {
+    /// Set the move authenticator type parameters.
+    pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
+        self.data
+            .move_authenticator
+            .as_mut()
+            .unwrap()
+            .type_arguments = G::type_tags();
+        self
+    }
+
+    /// Set the move authenticator type parameters manually.
+    pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
+        self.data
+            .move_authenticator
+            .as_mut()
+            .unwrap()
+            .type_arguments = tags.into_iter().collect();
+        self
+    }
+
+    /// Set the move authenticator inputs.
+    pub fn inputs<U: PTBArgumentList>(&mut self, inputs: U) -> &mut Self {
+        self.data.move_authenticator.as_mut().unwrap().inputs = inputs.args(&mut self.data);
         self
     }
 }

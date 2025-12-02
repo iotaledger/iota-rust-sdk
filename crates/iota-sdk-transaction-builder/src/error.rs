@@ -43,10 +43,14 @@ pub enum Error {
     MissingPureValue,
     #[error("Missing gas station data")]
     MissingGasStationData,
+    #[error("Missing move authenticator data")]
+    MissingMoveAuthData,
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
     UnsupportedLiteral,
+    #[error("Invalid input for move authenticator: {0}")]
+    InvalidMoveAuthInput(String),
     #[error(transparent)]
     InvalidUrl(<reqwest::Url as std::str::FromStr>::Err),
     #[error("Request to gas station `{gas_station_url}` failed: {source}")]

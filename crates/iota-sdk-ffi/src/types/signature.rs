@@ -9,8 +9,9 @@ use crate::{
     error::Result,
     types::crypto::{
         Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
-        Secp256r1PublicKey, Secp256r1Signature, multisig::MultisigAggregatedSignature,
-        passkey::PasskeyAuthenticator, zklogin::ZkLoginAuthenticator,
+        Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
+        multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
+        zklogin::ZkLoginAuthenticator,
     },
 };
 
@@ -41,6 +42,7 @@ pub enum SignatureScheme {
     Bls12381 = 0x04,
     ZkLogin = 0x05,
     Passkey = 0x06,
+    Move = 0x07,
 }
 
 /// A signature from a user
@@ -89,6 +91,13 @@ impl UserSignature {
     #[uniffi::constructor]
     pub fn new_passkey(authenticator: &PasskeyAuthenticator) -> Self {
         Self(iota_sdk::types::UserSignature::Passkey(
+            authenticator.0.clone(),
+        ))
+    }
+
+    #[uniffi::constructor]
+    pub fn new_move(authenticator: &MoveAuthenticator) -> Self {
+        Self(iota_sdk::types::UserSignature::Move(
             authenticator.0.clone(),
         ))
     }

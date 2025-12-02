@@ -7,6 +7,7 @@ use super::{
     Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
     ZkLoginAuthenticator,
 };
+use crate::crypto::move_authenticator::MoveAuthenticator;
 
 /// A basic signature
 ///
@@ -224,6 +225,7 @@ pub enum SignatureScheme {
     Bls12381 = 0x04, // This is currently not supported for user addresses
     ZkLogin = 0x05,
     Passkey = 0x06,
+    Move = 0x07,
 }
 
 impl SignatureScheme {
@@ -300,6 +302,7 @@ pub enum UserSignature {
     Multisig(MultisigAggregatedSignature),
     ZkLogin(Box<ZkLoginAuthenticator>),
     Passkey(PasskeyAuthenticator),
+    Move(MoveAuthenticator),
 }
 
 impl UserSignature {
@@ -345,6 +348,7 @@ impl UserSignature {
             UserSignature::Multisig(_) => SignatureScheme::Multisig,
             UserSignature::ZkLogin(_) => SignatureScheme::ZkLogin,
             UserSignature::Passkey(_) => SignatureScheme::Passkey,
+            UserSignature::Move(_) => SignatureScheme::Multisig,
         }
     }
 }
@@ -457,7 +461,8 @@ mod serialization {
                 SignatureScheme::Multisig
                 | SignatureScheme::Bls12381
                 | SignatureScheme::ZkLogin
-                | SignatureScheme::Passkey => {
+                | SignatureScheme::Passkey
+                | SignatureScheme::Move => {
                     Err(SignatureFromBytesError::new("invalid signature scheme"))
                 }
             }
@@ -622,6 +627,7 @@ mod serialization {
                 UserSignature::Multisig(m) => m.to_bytes(),
                 UserSignature::ZkLogin(z) => z.to_bytes(),
                 UserSignature::Passkey(p) => p.to_bytes(),
+                UserSignature::Move(m) => m.to_bytes(),
             }
         }
 
@@ -661,6 +667,10 @@ mod serialization {
                     let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)?;
                     Ok(Self::Passkey(passkey))
                 }
+                SignatureScheme::Move => {
+                    let move_auth = MoveAuthenticator::from_serialized_bytes(bytes)?;
+                    Ok(Self::Move(move_auth))
+                }
             }
         }
 
@@ -695,6 +705,7 @@ mod serialization {
         Multisig(&'a MultisigAggregatedSignature),
         ZkLogin(&'a ZkLoginAuthenticator),
         Passkey(&'a PasskeyAuthenticator),
+        Move(&'a MoveAuthenticator),
     }
 
     #[derive(serde::Deserialize)]
@@ -717,6 +728,7 @@ mod serialization {
         Multisig(MultisigAggregatedSignature),
         ZkLogin(Box<ZkLoginAuthenticator>),
         Passkey(PasskeyAuthenticator),
+        Move(MoveAuthenticator),
     }
 
     #[cfg(feature = "schemars")]
@@ -763,6 +775,7 @@ mod serialization {
                     }
                     UserSignature::ZkLogin(zklogin) => ReadableUserSignatureRef::ZkLogin(zklogin),
                     UserSignature::Passkey(passkey) => ReadableUserSignatureRef::Passkey(passkey),
+                    UserSignature::Move(move_auth) => ReadableUserSignatureRef::Move(move_auth),
                 };
                 readable.serialize(serializer)
             } else {
@@ -771,6 +784,7 @@ mod serialization {
                     UserSignature::Multisig(multisig) => multisig.serialize(serializer),
                     UserSignature::ZkLogin(zklogin) => zklogin.serialize(serializer),
                     UserSignature::Passkey(passkey) => passkey.serialize(serializer),
+                    UserSignature::Move(move_auth) => move_auth.serialize(serializer),
                 }
             }
         }
@@ -808,6 +822,7 @@ mod serialization {
                     ReadableUserSignature::Multisig(multisig) => Self::Multisig(multisig),
                     ReadableUserSignature::ZkLogin(zklogin) => Self::ZkLogin(zklogin),
                     ReadableUserSignature::Passkey(passkey) => Self::Passkey(passkey),
+                    ReadableUserSignature::Move(move_auth) => Self::Move(move_auth),
                 })
             } else {
                 use serde_with::DeserializeAs;
