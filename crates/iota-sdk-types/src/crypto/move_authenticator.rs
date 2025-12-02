@@ -83,7 +83,7 @@ impl MoveAuthenticator {
         }
     }
 
-    #[cfg(feature = "hash")]
+    #[cfg(all(feature = "hash", feature = "serde"))]
     pub fn digest(&self) -> crate::Digest {
         let mut hasher = crate::hash::Hasher::new();
         hasher.update(self.to_bytes());
