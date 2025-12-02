@@ -59,7 +59,7 @@ impl MoveAuthenticator {
     pub fn inputs(&self) -> Vec<Arc<Input>> {
         self.0
             .inputs()
-            .into_iter()
+            .iter()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -69,7 +69,7 @@ impl MoveAuthenticator {
     pub fn type_arguments(&self) -> Vec<Arc<TypeTag>> {
         self.0
             .type_arguments()
-            .into_iter()
+            .iter()
             .cloned()
             .map(Into::into)
             .map(Arc::new)

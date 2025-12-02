@@ -1284,15 +1284,15 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                     InputKind::Input(input) => input.clone(),
                     _ => {
-                        return Err(Error::InvalidMoveAuthInput(format!(
-                            "call arguments must not be receiving"
-                        )));
+                        return Err(Error::InvalidMoveAuthInput(
+                            "call arguments must not be receiving".to_owned(),
+                        ));
                     }
                 },
                 _ => {
-                    return Err(Error::InvalidMoveAuthInput(format!(
-                        "must not be gas or a command result"
-                    )));
+                    return Err(Error::InvalidMoveAuthInput(
+                        "must not be gas or a command result".to_owned(),
+                    ));
                 }
             })
         }

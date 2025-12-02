@@ -39,7 +39,7 @@ impl MoveAuthenticator {
                 object_id,
                 initial_shared_version,
                 mutable,
-            } if mutable == false => Self::new_immutable_shared(
+            } if !mutable => Self::new_immutable_shared(
                 inputs,
                 type_arguments,
                 object_id,
