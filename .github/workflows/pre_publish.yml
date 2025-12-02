@@ -87,7 +87,8 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Go
-          ./.github/gen_changelog.sh iota-go-sdk bindings/go "$NEW_VERSION"
+          entry=$(./.github/gen_changelog.sh iota-go-sdk bindings/go "$NEW_VERSION")
+          echo -e "$entry\n$(cat bindings/go/CHANGELOG.md)" > bindings/go/CHANGELOG.md 
           git add bindings/go/CHANGELOG.md
 
       - name: Bump Kotlin version
@@ -109,7 +110,8 @@ jobs:
           echo "Updated build.gradle.kts with new version: $NEW_VERSION"
 
           # Generate changelog for Kotlin
-          ./.github/gen_changelog.sh iota-kotlin-sdk bindings/kotlin "$NEW_VERSION"
+          entry=$(./.github/gen_changelog.sh iota-kotlin-sdk bindings/kotlin "$NEW_VERSION")
+          echo -e "$entry\n$(cat bindings/kotlin/CHANGELOG.md)" > bindings/kotlin/CHANGELOG.md
           git add bindings/kotlin/CHANGELOG.md
 
           # Set output for the next step
@@ -136,7 +138,8 @@ jobs:
           echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
 
           # Generate changelog for Python
-          ./.github/gen_changelog.sh iota-python-sdk bindings/python "$NEW_VERSION"
+          entry=$(./.github/gen_changelog.sh iota-python-sdk bindings/python "$NEW_VERSION")
+          echo -e "$entry\n$(cat bindings/python/CHANGELOG.md)" > bindings/python/CHANGELOG.md
           git add bindings/python/CHANGELOG.md
 
           # Set output for the next step
