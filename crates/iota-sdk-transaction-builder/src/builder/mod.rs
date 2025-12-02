@@ -281,14 +281,13 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Set the move authenticator for Account Abstraction.
-    pub fn move_authenticator<P: PTBArgument>(
+    pub fn move_authenticator<U: PTBArgumentList>(
         &mut self,
-        input: P,
+        inputs: U,
     ) -> &mut TransactionBuilder<C, MoveAuthenticatorData> {
         self.data.move_authenticator = Some(MoveAuthenticatorData {
-            inputs: Default::default(),
+            inputs: inputs.args(&mut self.data),
             type_arguments: Default::default(),
-            object_to_authenticate: input.arg(&mut self.data),
         });
         self.state_change()
     }
@@ -1233,50 +1232,21 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             .move_authenticator
             .take()
             .ok_or_else(|| Error::MissingMoveAuthData)?;
-        let object_to_authenticate = match data.object_to_authenticate {
-            Argument::Input(input) => match &self.data.inputs[&input].kind {
-                InputKind::ImmutableOrOwned(object_id) => {
-                    let obj = self
-                        .client
-                        .object(*object_id, None)
-                        .await
-                        .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-                    iota_types::Input::ImmutableOrOwned(obj.object_ref())
-                }
-                InputKind::Shared { object_id, mutable } if *mutable == false => {
-                    let obj = self
-                        .client
-                        .object(*object_id, None)
-                        .await
-                        .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-
-                    match obj.owner() {
-                        Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id: *object_id,
-                            initial_shared_version: *version,
-                            mutable: false,
-                        },
-                        _ => {
-                            return Err(Error::InvalidMoveAuthInput(format!(
-                                "object {object_id} was passed as shared, but is not"
-                            )));
-                        }
-                    }
-                }
-                InputKind::Input(input) => input.clone(),
-                _ => {
-                    return Err(Error::InvalidMoveAuthInput(format!(
-                        "must be immutable/owned or read-only shared"
-                    )));
-                }
-            },
-            _ => {
-                return Err(Error::InvalidMoveAuthInput(format!(
-                    "must not be gas or a command result"
-                )));
+        let account_obj = self
+            .client
+            .object(self.data.sender.into(), None)
+            .await
+            .map_err(Error::client)?
+            .ok_or_else(|| Error::Input(format!("missing account {}", self.data.sender)))?;
+        let object_to_authenticate = match account_obj.owner() {
+            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
+                iota_types::Input::ImmutableOrOwned(account_obj.object_ref())
             }
+            Owner::Shared(version) => iota_types::Input::Shared {
+                object_id: account_obj.object_id(),
+                initial_shared_version: *version,
+                mutable: false,
+            },
         };
         let mut inputs = Vec::new();
         for input in data.inputs {
@@ -1454,12 +1424,6 @@ impl<C> TransactionBuilder<C, MoveAuthenticatorData> {
             .as_mut()
             .unwrap()
             .type_arguments = tags.into_iter().collect();
-        self
-    }
-
-    /// Set the move authenticator inputs.
-    pub fn inputs<U: PTBArgumentList>(&mut self, inputs: U) -> &mut Self {
-        self.data.move_authenticator.as_mut().unwrap().inputs = inputs.args(&mut self.data);
         self
     }
 }

@@ -12,7 +12,4 @@ pub struct MoveAuthenticatorData {
     pub inputs: Vec<Argument>,
     /// Type arguments for the Move authenticate function
     pub type_arguments: Vec<TypeTag>,
-    /// The object that is authenticated. Represents the account being the
-    /// sender of the transaction.
-    pub object_to_authenticate: Argument,
 }
