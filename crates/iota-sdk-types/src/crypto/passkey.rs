@@ -259,7 +259,7 @@ mod serialization {
                     SignatureFromBytesError::new("missing signature scheme flag")
                 })?)
                 .map_err(SignatureFromBytesError::new)?;
-            if flag != SignatureScheme::Passkey {
+            if flag != SignatureScheme::PasskeyAuthenticator {
                 return Err(SignatureFromBytesError::new("invalid passkey flag"));
             }
             let bcs_bytes = &bytes[1..];
@@ -280,7 +280,7 @@ mod serialization {
             };
 
             let mut buf = Vec::new();
-            buf.push(SignatureScheme::Passkey as u8);
+            buf.push(SignatureScheme::PasskeyAuthenticator as u8);
 
             bcs::serialize_into(&mut buf, &authenticator_ref).expect("serialization cannot fail");
             buf

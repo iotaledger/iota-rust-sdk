@@ -40,9 +40,9 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04,
-    ZkLogin = 0x05,
-    Passkey = 0x06,
-    Move = 0x07,
+    ZkLoginAuthenticator = 0x05,
+    PasskeyAuthenticator = 0x06,
+    MoveAuthenticator = 0x07,
 }
 
 /// A signature from a user

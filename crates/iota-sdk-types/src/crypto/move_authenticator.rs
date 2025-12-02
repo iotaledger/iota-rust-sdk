@@ -129,7 +129,7 @@ mod serialization {
                     SignatureFromBytesError::new("missing signature scheme flag")
                 })?)
                 .map_err(SignatureFromBytesError::new)?;
-            if flag != SignatureScheme::Move {
+            if flag != SignatureScheme::MoveAuthenticator {
                 return Err(SignatureFromBytesError::new(
                     "invalid move authenticator flag",
                 ));
@@ -142,7 +142,7 @@ mod serialization {
         pub fn to_bytes(&self) -> Vec<u8> {
             let as_bytes = bcs::to_bytes(self).expect("BCS serialization should not fail");
             let mut bytes = Vec::with_capacity(1 + as_bytes.len());
-            bytes.push(SignatureScheme::Move as u8);
+            bytes.push(SignatureScheme::MoveAuthenticator as u8);
             bytes.extend(as_bytes);
             bytes
         }

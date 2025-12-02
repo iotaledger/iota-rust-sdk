@@ -223,14 +223,21 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04, // This is currently not supported for user addresses
-    ZkLogin = 0x05,
-    Passkey = 0x06,
-    Move = 0x07,
+    ZkLoginAuthenticator = 0x05,
+    PasskeyAuthenticator = 0x06,
+    MoveAuthenticator = 0x07,
 }
 
 impl SignatureScheme {
     crate::def_is!(
-        Ed25519, Secp256k1, Secp256r1, Multisig, Bls12381, ZkLogin, Passkey,
+        Ed25519,
+        Secp256k1,
+        Secp256r1,
+        Multisig,
+        Bls12381,
+        ZkLoginAuthenticator,
+        PasskeyAuthenticator,
+        MoveAuthenticator,
     );
 
     /// Try constructing from a byte flag
@@ -241,8 +248,9 @@ impl SignatureScheme {
             0x02 => Ok(Self::Secp256r1),
             0x03 => Ok(Self::Multisig),
             0x04 => Ok(Self::Bls12381),
-            0x05 => Ok(Self::ZkLogin),
-            0x06 => Ok(Self::Passkey),
+            0x05 => Ok(Self::ZkLoginAuthenticator),
+            0x06 => Ok(Self::PasskeyAuthenticator),
+            0x07 => Ok(Self::MoveAuthenticator),
             invalid => Err(InvalidSignatureScheme(invalid)),
         }
     }
@@ -256,14 +264,14 @@ impl SignatureScheme {
 impl super::ZkLoginPublicIdentifier {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::ZkLogin
+        SignatureScheme::ZkLoginAuthenticator
     }
 }
 
 impl super::PasskeyPublicKey {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::Passkey
+        SignatureScheme::PasskeyAuthenticator
     }
 }
 
@@ -347,9 +355,9 @@ impl UserSignature {
         match self {
             UserSignature::Simple(simple) => simple.scheme(),
             UserSignature::Multisig(_) => SignatureScheme::Multisig,
-            UserSignature::ZkLogin(_) => SignatureScheme::ZkLogin,
-            UserSignature::Passkey(_) => SignatureScheme::Passkey,
-            UserSignature::Move(_) => SignatureScheme::Move,
+            UserSignature::ZkLogin(_) => SignatureScheme::ZkLoginAuthenticator,
+            UserSignature::Passkey(_) => SignatureScheme::PasskeyAuthenticator,
+            UserSignature::Move(_) => SignatureScheme::MoveAuthenticator,
         }
     }
 }
@@ -461,9 +469,9 @@ mod serialization {
                 }
                 SignatureScheme::Multisig
                 | SignatureScheme::Bls12381
-                | SignatureScheme::ZkLogin
-                | SignatureScheme::Passkey
-                | SignatureScheme::Move => {
+                | SignatureScheme::ZkLoginAuthenticator
+                | SignatureScheme::PasskeyAuthenticator
+                | SignatureScheme::MoveAuthenticator => {
                     Err(SignatureFromBytesError::new("invalid signature scheme"))
                 }
             }
@@ -660,15 +668,15 @@ mod serialization {
                 SignatureScheme::Bls12381 => Err(SignatureFromBytesError::new(
                     "bls not supported for user signatures",
                 )),
-                SignatureScheme::ZkLogin => {
+                SignatureScheme::ZkLoginAuthenticator => {
                     let zklogin = ZkLoginAuthenticator::from_serialized_bytes(bytes)?;
                     Ok(Self::ZkLogin(Box::new(zklogin)))
                 }
-                SignatureScheme::Passkey => {
+                SignatureScheme::PasskeyAuthenticator => {
                     let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)?;
                     Ok(Self::Passkey(passkey))
                 }
-                SignatureScheme::Move => {
+                SignatureScheme::MoveAuthenticator => {
                     let move_auth = MoveAuthenticator::from_serialized_bytes(bytes)?;
                     Ok(Self::Move(move_auth))
                 }
@@ -930,7 +938,7 @@ mod serialization {
                 let bcs = Base64::decode_vec(fixture).unwrap();
 
                 let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-                assert_eq!(SignatureScheme::ZkLogin, sig.scheme());
+                assert_eq!(SignatureScheme::ZkLoginAuthenticator, sig.scheme());
                 let bytes = bcs::to_bytes(&sig).unwrap();
                 assert_eq!(bcs, bytes);
 
@@ -950,7 +958,7 @@ mod serialization {
                 let bcs = Base64::decode_vec(fixture).unwrap();
 
                 let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-                assert_eq!(SignatureScheme::Passkey, sig.scheme());
+                assert_eq!(SignatureScheme::PasskeyAuthenticator, sig.scheme());
                 let bytes = bcs::to_bytes(&sig).unwrap();
                 assert_eq!(bcs, bytes);
 
