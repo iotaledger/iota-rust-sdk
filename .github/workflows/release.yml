@@ -51,5 +51,5 @@ jobs:
           if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
             gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes "$CHANGELOG"
           else
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "$CHANGELOG"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes "$CHANGELOG"
           fi
