@@ -197,7 +197,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           body=$(gh pr view "$PR_NUM" --json body | jq -r '.["body"]')
-          notes=$(./.github/gen_changelog.sh "${{inputs.package}}" "${{ env.PKG_ROOT }}" ${{ github.sha }} "${{ env.NEW_VERSION }}" false)
+          notes=$(./.github/gen_changelog.sh "${{inputs.package}}" "${{ env.PKG_ROOT }}" ${{ github.sha }} "${{ env.NEW_VERSION }}")
           body=$(echo "$body
           # Release Notes
 

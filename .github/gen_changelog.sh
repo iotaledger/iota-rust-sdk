@@ -4,7 +4,7 @@ PACKAGE=$1
 PACKAGE_ROOT=$2
 COMMIT_TO=$3
 VERSION=$4
-ADD=$5
+ADD=${5:-"false"}
 
 git fetch --tags
 
