@@ -174,6 +174,7 @@ mod serialization {
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct Authenticator {
         inputs: Vec<Input>,
+        #[cfg_attr(feature = "schemars", schemars(with = "Vec<String>"))]
         type_arguments: Vec<TypeTag>,
         object_to_authenticate: Input,
     }
