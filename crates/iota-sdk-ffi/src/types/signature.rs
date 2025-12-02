@@ -188,6 +188,18 @@ impl UserSignature {
     pub fn as_passkey(&self) -> PasskeyAuthenticator {
         self.0.as_passkey().clone().into()
     }
+
+    pub fn is_move(&self) -> bool {
+        self.0.is_move()
+    }
+
+    pub fn as_move_opt(&self) -> Option<Arc<MoveAuthenticator>> {
+        self.0.as_move_opt().cloned().map(Into::into).map(Arc::new)
+    }
+
+    pub fn as_move(&self) -> MoveAuthenticator {
+        self.0.as_move().clone().into()
+    }
 }
 
 /// A basic signature

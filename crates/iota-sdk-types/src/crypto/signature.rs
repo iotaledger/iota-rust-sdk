@@ -309,7 +309,8 @@ impl UserSignature {
     crate::def_is_as_into_opt!(
         Simple(SimpleSignature),
         Multisig(MultisigAggregatedSignature),
-        Passkey(PasskeyAuthenticator)
+        Passkey(PasskeyAuthenticator),
+        Move(MoveAuthenticator)
     );
 
     pub fn is_zklogin(&self) -> bool {
@@ -348,7 +349,7 @@ impl UserSignature {
             UserSignature::Multisig(_) => SignatureScheme::Multisig,
             UserSignature::ZkLogin(_) => SignatureScheme::ZkLogin,
             UserSignature::Passkey(_) => SignatureScheme::Passkey,
-            UserSignature::Move(_) => SignatureScheme::Multisig,
+            UserSignature::Move(_) => SignatureScheme::Move,
         }
     }
 }
