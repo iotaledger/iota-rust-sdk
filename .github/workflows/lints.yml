@@ -19,7 +19,6 @@ env:
 
 jobs:
   lint:
-    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -40,6 +39,7 @@ jobs:
         run: make doc
 
       - name: feature compatibility
+        if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
         run: make check-features
 
       - run: make is-dirty
