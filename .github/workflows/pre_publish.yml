@@ -86,6 +86,10 @@ jobs:
           NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level || 'patch' }}")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
+          # Generate changelog for Go
+          ./.github/gen_changelog.sh iota-go-sdk bindings/go "$NEW_VERSION"
+          git add bindings/go/CHANGELOG.md
+
       - name: Bump Kotlin version
         if: inputs.package == 'iota-kotlin-sdk'
         run: |
@@ -105,7 +109,8 @@ jobs:
           echo "Updated build.gradle.kts with new version: $NEW_VERSION"
 
           # Generate changelog for Kotlin
-          ./.github/gen_changelog.sh bindings/kotlin "$NEW_VERSION"
+          ./.github/gen_changelog.sh iota-kotlin-sdk bindings/kotlin "$NEW_VERSION"
+          git add bindings/kotlin/CHANGELOG.md
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -131,7 +136,8 @@ jobs:
           echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
 
           # Generate changelog for Python
-          ./.github/gen_changelog.sh bindings/python "$NEW_VERSION"
+          ./.github/gen_changelog.sh iota-python-sdk bindings/python "$NEW_VERSION"
+          git add bindings/python/CHANGELOG.md
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -164,28 +170,28 @@ jobs:
         if: startsWith(inputs.package, 'iota-sdk')
         run: |
           echo "PR_NUM=$(echo "${{ steps.pr-create-rust.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')" >> $GITHUB_ENV
-          echo "CHANGELOG_DIR=crates/${{ inputs.package }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=crates/${{ inputs.package }}" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ steps.pr-create-rust.outputs.version }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Go)
         if: inputs.package == 'iota-go-sdk'
         run: |
           echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
-          echo "CHANGELOG_DIR=bindings/go" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/go" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Kotlin)
         if: inputs.package == 'iota-kotlin-sdk'
         run: |
           echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
-          echo "CHANGELOG_DIR=bindings/kotlin" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/kotlin" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Python)
         if: inputs.package == 'iota-python-sdk'
         run: |
           echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
-          echo "CHANGELOG_DIR=bindings/python" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/python" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Add release notes
@@ -194,8 +200,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           body=$(gh pr view "$PR_NUM" --json body | jq -r '.["body"]')
-          cd "$CHANGELOG_DIR"
-          notes=$(git-cliff --unreleased --tag "$VERSION_TAG" --include-path ".")
+          notes=$(./.github/gen_changelog.sh "${{inputs.package}}" "${{ env.PKG_ROOT }}" "${{ env.NEW_VERSION }}")
           body=$(echo "$body
           # Release Notes
 

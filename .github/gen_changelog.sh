@@ -1,8 +1,19 @@
 #!/bin/bash
 
-PACKAGE_ROOT=$1
-NEW_VERSION=$2
+PKG=$1
+PKG_ROOT=$2
+VERSION=$3
 
-sed -i '1i\\' "$PACKAGE_ROOT/CHANGELOG.md"  # Prepend a newline for separation
-git-cliff --unreleased --tag "$NEW_VERSION" --include-path "${PACKAGE_ROOT}/**" --prepend "$PACKAGE_ROOT/CHANGELOG.md"
-git add "*CHANGELOG.md"
+git fetch --tags
+
+LATEST_TAG=$(git tag -l "$PKG-v*" --sort=-v:refname | head -n 1)
+echo "Latest tag: $LATEST_TAG"
+
+COMMIT_FROM=$(git show-ref $LATEST_TAG | cut -f 1 -d' ')
+echo "Commit from: $COMMIT_FROM"
+
+COMMIT_TO=$(git show-ref $VERSION | cut -f 1 -d' ')
+echo "Commit to: $COMMIT_TO"
+
+CHANGELOG=$(git-cliff $COMMIT_FROM..$COMMIT_TO --tag $VERSION --include-path $PKG_ROOT)
+echo $CHANGELOG
