@@ -1,7 +1,6 @@
 enable-all-features = true
 pre-release-hook = [
   "../../.github/gen_changelog.sh \"$CRATE_ROOT\" \"$NEW_VERSION\"",
-  "git add \"*CHANGELOG.md\"",
 ]
 owners = ["github:iotaledger:dev-tools"]
 sign-commit = true
