@@ -124,7 +124,8 @@ jobs:
           if [ -n "${{ inputs.version }}" ]; then
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           else
-            echo "version=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|.*-v(.*)|\1|p')" >> $GITHUB_OUTPUT
+            version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-go-sdk-v(.*)|\1|p')
+            echo "version=$version" >> $GITHUB_OUTPUT
           fi
 
       - name: Tag the Go SDK
