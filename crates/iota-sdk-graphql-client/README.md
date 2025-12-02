@@ -2,7 +2,6 @@
 
 [![iota-sdk-graphql-client on crates.io](https://img.shields.io/crates/v/iota-sdk-graphql-client)](https://crates.io/crates/iota-sdk-graphql-client)
 [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-graphql-client)
-[![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota-sdk-graphql-client/)
 
 The IOTA GraphQL client is a client for interacting with the IOTA blockchain via GraphQL.
 It provides a set of APIs for querying the blockchain for information such as chain identifier,
