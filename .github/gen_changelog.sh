@@ -2,8 +2,9 @@
 
 PKG=$1
 PKG_ROOT=$2
-VERSION=$3
-ADD=$4
+COMMIT_TO=$3
+VERSION=$4
+ADD=$5
 
 git fetch --tags
 
@@ -13,7 +14,6 @@ echo "Latest tag: $LATEST_TAG"
 COMMIT_FROM=$(git show-ref $LATEST_TAG | cut -f 1 -d' ')
 echo "Commit from: $COMMIT_FROM"
 
-COMMIT_TO=$(git show-ref $VERSION | cut -f 1 -d' ')
 echo "Commit to: $COMMIT_TO"
 
 ENTRY=$(git-cliff $COMMIT_FROM..$COMMIT_TO --tag $VERSION --include-path $PKG_ROOT)

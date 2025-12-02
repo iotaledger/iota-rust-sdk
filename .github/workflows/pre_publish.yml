@@ -87,7 +87,7 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Go
-          ./.github/gen_changelog.sh iota-go-sdk bindings/go "$NEW_VERSION" true
+          ./.github/gen_changelog.sh iota-go-sdk bindings/go ${{ github.sha }} "$NEW_VERSION" true
 
       - name: Bump Kotlin version
         if: inputs.package == 'iota-kotlin-sdk'
@@ -108,7 +108,7 @@ jobs:
           echo "Updated build.gradle.kts with new version: $NEW_VERSION"
 
           # Generate changelog for Kotlin
-          ./.github/gen_changelog.sh iota-kotlin-sdk bindings/kotlin "$NEW_VERSION" true
+          ./.github/gen_changelog.sh iota-kotlin-sdk bindings/kotlin ${{ github.sha }} "$NEW_VERSION" true
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -134,7 +134,7 @@ jobs:
           echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
 
           # Generate changelog for Python
-          ./.github/gen_changelog.sh iota-python-sdk bindings/python "$NEW_VERSION" true
+          ./.github/gen_changelog.sh iota-python-sdk bindings/python ${{ github.sha }} "$NEW_VERSION" true
 
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -197,7 +197,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           body=$(gh pr view "$PR_NUM" --json body | jq -r '.["body"]')
-          notes=$(./.github/gen_changelog.sh "${{inputs.package}}" "${{ env.PKG_ROOT }}" "${{ env.NEW_VERSION }}" false)
+          notes=$(./.github/gen_changelog.sh "${{inputs.package}}" "${{ env.PKG_ROOT }}" ${{ github.sha }} "${{ env.NEW_VERSION }}" false)
           body=$(echo "$body
           # Release Notes
 
