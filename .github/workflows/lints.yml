@@ -19,8 +19,8 @@ env:
 
 jobs:
   lint:
+    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -45,6 +45,7 @@ jobs:
       - run: make is-dirty
 
   cargo-deny:
+    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -55,6 +56,7 @@ jobs:
 
   check-unused-deps:
     name: Check Unused Dependencies (${{ matrix.flags }})
+    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     strategy:
       matrix:
         flags: ["--all-features", "--no-default-features"]

@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   go:
+    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -47,6 +48,7 @@ jobs:
       - name: Run the examples
         run: make go-examples
   kotlin:
+    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -80,6 +82,7 @@ jobs:
       - name: Run the examples
         run: make kotlin-examples
   python:
+    if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
     runs-on: ubuntu-latest
     services:
       postgres:
