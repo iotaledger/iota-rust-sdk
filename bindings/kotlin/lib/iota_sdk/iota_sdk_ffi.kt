@@ -3079,6 +3079,30 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3918,6 +3942,16 @@ fun uniffi_iota_sdk_ffi_checksum_method_mergecoins_coin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_inputs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_arguments(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_movecall_arguments(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_movecall_function(
@@ -4482,6 +4516,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt(
@@ -4497,6 +4535,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt(
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_opt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig(
 ): Short
@@ -4829,6 +4869,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u64_vec(
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movecall_new(
 ): Short
@@ -5195,6 +5239,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_upgradepolicy_dep_only(
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig(
 ): Short
@@ -6059,6 +6105,24 @@ fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u8(`value`: Byte,uniffi_out_err: 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_u8_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_moveauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_moveauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_or_owned(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_inputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_arguments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7223,6 +7287,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(`base64`: RustB
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7231,6 +7297,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(`signature`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7247,6 +7317,8 @@ fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin(`ptr`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_move(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9225,6 +9297,21 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address() != 24164.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_digest() != 46221.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_inputs() != 43344.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate() != 40516.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_arguments() != 10429.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments() != 17202.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10071,6 +10158,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move() != 4699.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_opt() != 50617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10093,6 +10186,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_opt() != 43934.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move() != 40559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839.toShort()) {
@@ -10591,6 +10687,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned() != 18640.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared() != 34056.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
@@ -11140,6 +11242,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() != 37499.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move() != 147.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig() != 39922.toShort()) {
@@ -27433,6 +27538,331 @@ public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
     override fun allocationSize(value: MoveArg) = 8UL
 
     override fun write(value: MoveArg, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * MoveAuthenticator is a signature variant that enables a new
+ * method of authentication through Move code.
+ * This function represents the data received by the Move authenticate function
+ * during the Account Abstraction authentication flow.
+ */
+public interface MoveAuthenticatorInterface {
+    
+    fun `address`(): Address
+    
+    fun `digest`(): Digest
+    
+    fun `inputs`(): List<Input>
+    
+    fun `objectToAuthenticate`(): Input
+    
+    fun `typeArguments`(): List<TypeTag>
+    
+    companion object
+}
+
+/**
+ * MoveAuthenticator is a signature variant that enables a new
+ * method of authentication through Move code.
+ * This function represents the data received by the Move authenticate function
+ * during the Account Abstraction authentication flow.
+ */
+open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_moveauthenticator(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_moveauthenticator(pointer!!, status)
+        }
+    }
+
+    override fun `address`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `digest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `inputs`(): List<Input> {
+            return FfiConverterSequenceTypeInput.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_inputs(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `objectToAuthenticate`(): Input {
+            return FfiConverterTypeInput.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `typeArguments`(): List<TypeTag> {
+            return FfiConverterSequenceTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_arguments(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+         fun `newImmutableOrOwned`(`inputs`: List<Input>, `typeArguments`: List<TypeTag>, `objectToAuthenticate`: ObjectReference): MoveAuthenticator {
+            return FfiConverterTypeMoveAuthenticator.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_or_owned(
+        FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterTypeObjectReference.lower(`objectToAuthenticate`),_status)
+}
+    )
+    }
+    
+
+         fun `newImmutableShared`(`inputs`: List<Input>, `typeArguments`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
+            return FfiConverterTypeMoveAuthenticator.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared(
+        FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveAuthenticator: FfiConverter<MoveAuthenticator, Pointer> {
+
+    override fun lower(value: MoveAuthenticator): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): MoveAuthenticator {
+        return MoveAuthenticator(value)
+    }
+
+    override fun read(buf: ByteBuffer): MoveAuthenticator {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: MoveAuthenticator) = 8UL
+
+    override fun write(value: MoveAuthenticator, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -47175,6 +47605,10 @@ public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer
  */
 public interface UserSignatureInterface {
     
+    fun `asMove`(): MoveAuthenticator
+    
+    fun `asMoveOpt`(): MoveAuthenticator?
+    
     fun `asMultisig`(): MultisigAggregatedSignature
     
     fun `asMultisigOpt`(): MultisigAggregatedSignature?
@@ -47190,6 +47624,8 @@ public interface UserSignatureInterface {
     fun `asZklogin`(): ZkLoginAuthenticator
     
     fun `asZkloginOpt`(): ZkLoginAuthenticator?
+    
+    fun `isMove`(): kotlin.Boolean
     
     fun `isMultisig`(): kotlin.Boolean
     
@@ -47314,6 +47750,30 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         }
     }
 
+    override fun `asMove`(): MoveAuthenticator {
+            return FfiConverterTypeMoveAuthenticator.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `asMoveOpt`(): MoveAuthenticator? {
+            return FfiConverterOptionalTypeMoveAuthenticator.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `asMultisig`(): MultisigAggregatedSignature {
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     callWithPointer {
@@ -47403,6 +47863,18 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isMove`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move(
         it, _status)
 }
     }
@@ -47518,6 +47990,16 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+         fun `newMove`(`authenticator`: MoveAuthenticator): UserSignature {
+            return FfiConverterTypeUserSignature.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move(
+        FfiConverterTypeMoveAuthenticator.lower(`authenticator`),_status)
 }
     )
     }
@@ -58329,8 +58811,9 @@ enum class SignatureScheme(val value: kotlin.UByte) {
     SECP256R1(2u),
     MULTISIG(3u),
     BLS12381(4u),
-    ZK_LOGIN(5u),
-    PASSKEY(6u);
+    ZK_LOGIN_AUTHENTICATOR(5u),
+    PASSKEY_AUTHENTICATOR(6u),
+    MOVE_AUTHENTICATOR(7u);
     companion object
 }
 
@@ -59291,6 +59774,38 @@ public object FfiConverterOptionalTypeMoveArg: FfiConverterRustBuffer<MoveArg?> 
         } else {
             buf.put(1)
             FfiConverterTypeMoveArg.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeMoveAuthenticator: FfiConverterRustBuffer<MoveAuthenticator?> {
+    override fun read(buf: ByteBuffer): MoveAuthenticator? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveAuthenticator.read(buf)
+    }
+
+    override fun allocationSize(value: MoveAuthenticator?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveAuthenticator.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveAuthenticator?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveAuthenticator.write(value, buf)
         }
     }
 }
