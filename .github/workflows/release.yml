@@ -37,7 +37,7 @@ jobs:
           elif [[ "$PKG" == "iota-python-sdk" ]]; then
             echo "PKG_ROOT=bindings/python" >> $GITHUB_ENV
           fi
-          CHANGELOG=$(./.github/gen_changelog.sh "$PKG" "$PKG_ROOT" "$VERSION")
+          CHANGELOG=$(./.github/gen_changelog.sh "$PKG" "$PKG_ROOT" "$VERSION" false)
           echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
 
       - name: Create GitHub release

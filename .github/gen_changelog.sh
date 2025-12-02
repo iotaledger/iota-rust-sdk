@@ -3,6 +3,7 @@
 PKG=$1
 PKG_ROOT=$2
 VERSION=$3
+ADD=$4
 
 git fetch --tags
 
@@ -15,5 +16,10 @@ echo "Commit from: $COMMIT_FROM"
 COMMIT_TO=$(git show-ref $VERSION | cut -f 1 -d' ')
 echo "Commit to: $COMMIT_TO"
 
-CHANGELOG=$(git-cliff $COMMIT_FROM..$COMMIT_TO --tag $VERSION --include-path $PKG_ROOT)
-echo $CHANGELOG
+ENTRY=$(git-cliff $COMMIT_FROM..$COMMIT_TO --tag $VERSION --include-path $PKG_ROOT)
+echo "$ENTRY"
+
+if [ "$ADD" = "true" ]; then
+    echo -e "$ENTRY\n$(cat $PKG_ROOT/CHANGELOG.md)" > $PKG_ROOT/CHANGELOG.md
+    git add $PKG/CHANGELOG.md
+fi
