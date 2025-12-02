@@ -110,6 +110,21 @@ impl ClientTransactionBuilder {
         self
     }
 
+    /// Set the move authenticator for Account Abstraction.
+    #[uniffi::method(default(type_args = []))]
+    pub fn move_authenticator(
+        self: Arc<Self>,
+        arguments: Vec<Arc<PTBArgument>>,
+        type_args: Vec<Arc<TypeTag>>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder
+                .move_authenticator(arguments)
+                .type_tags(type_args.into_iter().map(|v| v.0.clone()));
+        });
+        self
+    }
+
     /// Set the expiration of the transaction to be a specific epoch.
     pub fn expiration(self: Arc<Self>, epoch: u64) -> Arc<Self> {
         self.write(|builder| {
@@ -362,6 +377,19 @@ impl ClientTransactionBuilder {
                     .clone()
                     .execute_with_sponsor(&keypair.0, &sponsor_keypair.0, wait_for)
             })
+            .await?
+            .into())
+    }
+
+    /// Execute the transaction with the provided move authenticator data and
+    /// optionally wait for finalization.
+    #[uniffi::method(default(wait_for = None))]
+    pub async fn execute_with_move_authenticator(
+        &self,
+        wait_for: Option<WaitForTx>,
+    ) -> Result<TransactionEffects> {
+        Ok(self
+            .read(|builder| builder.clone().execute_with_move_authenticator(wait_for))
             .await?
             .into())
     }
