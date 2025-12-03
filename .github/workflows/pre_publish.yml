@@ -83,7 +83,7 @@ jobs:
           fi
           LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
           source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level || 'patch' }}")
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Go
