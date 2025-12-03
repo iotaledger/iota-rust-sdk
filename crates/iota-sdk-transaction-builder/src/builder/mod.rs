@@ -9,7 +9,6 @@ use std::{
     time::Duration,
 };
 
-use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_graphql_client::Client;
 use iota_types::{
     Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
@@ -25,6 +24,7 @@ use crate::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
+        signer::Signer,
     },
     error::Error,
     types::{MoveType, MoveTypes},
@@ -39,6 +39,7 @@ pub(crate) mod gas_station;
 mod named_results;
 /// Argument types for PTBs
 pub mod ptb_arguments;
+pub mod signer;
 
 const IOTA_SYSTEM_MODULE: &str = "iota_system";
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
@@ -876,7 +877,7 @@ impl<L> TransactionBuilder<(), L> {
     /// [`TransactionEffects`]
     pub async fn execute_with_gas_station(
         mut self,
-        keypair: &SimpleKeypair,
+        keypair: &impl Signer,
     ) -> Result<serde_json::Value, Error> {
         let gas_station_data = self.data.gas_station_data.take();
 
@@ -1148,7 +1149,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,
-        keypair: &SimpleKeypair,
+        keypair: &impl Signer,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
@@ -1171,7 +1172,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         } else {
             self.client
                 .execute_tx(
-                    &[keypair.sign_transaction(&txn).map_err(Error::Signature)?],
+                    &[keypair.sign(&txn).await.map_err(Error::signature)?],
                     &txn,
                     wait_for,
                 )
@@ -1184,19 +1185,15 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// finalization.
     pub async fn execute_with_sponsor(
         mut self,
-        keypair: &SimpleKeypair,
-        sponsor_keypair: &SimpleKeypair,
+        keypair: &impl Signer,
+        sponsor_keypair: &impl Signer,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
 
-        let mut signatures = vec![keypair.sign_transaction(&txn).map_err(Error::Signature)?];
-        signatures.push(
-            sponsor_keypair
-                .sign_transaction(&txn)
-                .map_err(Error::Signature)?,
-        );
+        let mut signatures = vec![keypair.sign(&txn).await.map_err(Error::signature)?];
+        signatures.push(sponsor_keypair.sign(&txn).await.map_err(Error::signature)?);
 
         self.client
             .execute_tx(&signatures, &txn, wait_for)

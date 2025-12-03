@@ -4,7 +4,6 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
-use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
 use reqwest::{
     Url,
@@ -12,7 +11,7 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::error::Error;
+use crate::{builder::signer::Signer, error::Error};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -353,7 +352,7 @@ impl GasStationData {
     pub(crate) async fn execute_txn(
         self,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        keypair: &impl Signer,
     ) -> Result<Digest, Error> {
         let url = self
             .url
@@ -370,7 +369,7 @@ impl GasStationData {
     pub(crate) async fn execute_txn_json(
         self,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        keypair: &impl Signer,
     ) -> Result<serde_json::Value, Error> {
         let url = self
             .url
@@ -383,7 +382,7 @@ impl GasStationData {
         mut self,
         url: &Url,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        keypair: &impl Signer,
     ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
@@ -413,8 +412,9 @@ impl GasStationData {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
         let user_sig = keypair
-            .sign_transaction(txn)
-            .map_err(Error::Signature)?
+            .sign(txn)
+            .await
+            .map_err(Error::signature)?
             .to_base64();
 
         let response = client
