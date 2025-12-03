@@ -1300,7 +1300,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             MoveAuthenticator::new(inputs, data.type_arguments, object_to_authenticate).unwrap();
         let txn = self.finish_internal().await?;
         self.client
-            .execute_tx(&[UserSignature::Move(move_authenticator)], &txn, wait_for)
+            .execute_tx(
+                &[UserSignature::MoveAuthenticator(move_authenticator)],
+                &txn,
+                wait_for,
+            )
             .await
             .map_err(Error::client)
     }

@@ -82,22 +82,22 @@ impl UserSignature {
     }
 
     #[uniffi::constructor]
-    pub fn new_zklogin(authenticator: &ZkLoginAuthenticator) -> Self {
-        Self(iota_sdk::types::UserSignature::ZkLogin(Box::new(
-            authenticator.0.clone(),
-        )))
+    pub fn new_zklogin_authenticator(authenticator: &ZkLoginAuthenticator) -> Self {
+        Self(iota_sdk::types::UserSignature::ZkLoginAuthenticator(
+            Box::new(authenticator.0.clone()),
+        ))
     }
 
     #[uniffi::constructor]
-    pub fn new_passkey(authenticator: &PasskeyAuthenticator) -> Self {
-        Self(iota_sdk::types::UserSignature::Passkey(
+    pub fn new_passkey_authenticator(authenticator: &PasskeyAuthenticator) -> Self {
+        Self(iota_sdk::types::UserSignature::PasskeyAuthenticator(
             authenticator.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_move(authenticator: &MoveAuthenticator) -> Self {
-        Self(iota_sdk::types::UserSignature::Move(
+    pub fn new_move_authenticator(authenticator: &MoveAuthenticator) -> Self {
+        Self(iota_sdk::types::UserSignature::MoveAuthenticator(
             authenticator.0.clone(),
         ))
     }
@@ -157,48 +157,52 @@ impl UserSignature {
         self.0.as_multisig().clone().into()
     }
 
-    pub fn is_zklogin(&self) -> bool {
-        self.0.is_zklogin()
+    pub fn is_zklogin_authenticator(&self) -> bool {
+        self.0.is_zklogin_authenticator()
     }
 
-    pub fn as_zklogin_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
+    pub fn as_zklogin_authenticator_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
         self.0
-            .as_zklogin_opt()
+            .as_zklogin_authenticator_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn as_zklogin(&self) -> ZkLoginAuthenticator {
-        self.0.as_zklogin().clone().into()
+    pub fn as_zklogin_authenticator(&self) -> ZkLoginAuthenticator {
+        self.0.as_zklogin_authenticator().clone().into()
     }
 
-    pub fn is_passkey(&self) -> bool {
-        self.0.is_passkey()
+    pub fn is_passkey_authenticator(&self) -> bool {
+        self.0.is_passkey_authenticator()
     }
 
-    pub fn as_passkey_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
+    pub fn as_passkey_authenticator_opt(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
-            .as_passkey_opt()
+            .as_passkey_authenticator_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn as_passkey(&self) -> PasskeyAuthenticator {
-        self.0.as_passkey().clone().into()
+    pub fn as_passkey_authenticator(&self) -> PasskeyAuthenticator {
+        self.0.as_passkey_authenticator().clone().into()
     }
 
-    pub fn is_move(&self) -> bool {
-        self.0.is_move()
+    pub fn is_move_authenticator(&self) -> bool {
+        self.0.is_move_authenticator()
     }
 
-    pub fn as_move_opt(&self) -> Option<Arc<MoveAuthenticator>> {
-        self.0.as_move_opt().cloned().map(Into::into).map(Arc::new)
+    pub fn as_move_authenticator_opt(&self) -> Option<Arc<MoveAuthenticator>> {
+        self.0
+            .as_move_authenticator_opt()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
     }
 
-    pub fn as_move(&self) -> MoveAuthenticator {
-        self.0.as_move().clone().into()
+    pub fn as_move_authenticator(&self) -> MoveAuthenticator {
+        self.0.as_move_authenticator().clone().into()
     }
 }
 

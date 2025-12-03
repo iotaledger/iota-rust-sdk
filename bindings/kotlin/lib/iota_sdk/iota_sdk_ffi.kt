@@ -4524,35 +4524,35 @@ fun uniffi_iota_sdk_ffi_checksum_method_upgrade_ticket(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_opt(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_opt(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_opt(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin(
+fun uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme(
 ): Short
@@ -5248,15 +5248,15 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_base64(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move(
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey(
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin(
+fun uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new(
 ): Short
@@ -7299,45 +7299,45 @@ fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(`base64`: RustB
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_move(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -10176,10 +10176,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgradepolicy_as_u8() != 10203.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move() != 4699.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator() != 62044.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_opt() != 50617.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt() != 31940.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig() != 36332.toShort()) {
@@ -10188,10 +10188,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig_opt() != 21895.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey() != 17710.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator() != 38663.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_opt() != 53755.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt() != 5213.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple() != 57455.toShort()) {
@@ -10200,25 +10200,25 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_simple_opt() != 47248.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin() != 53484.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator() != 64789.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_opt() != 43934.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt() != 62080.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move() != 40559.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator() != 59771.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_multisig() != 61839.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey() != 35671.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator() != 7851.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_simple() != 58211.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin() != 38693.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator() != 35546.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() != 25381.toShort()) {
@@ -11262,19 +11262,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_from_bytes() != 37499.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move() != 147.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator() != 7262.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig() != 39922.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey() != 25378.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator() != 45324.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() != 31310.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin() != 43856.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() != 30659.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() != 32322.toShort()) {
@@ -47674,35 +47674,35 @@ public object FfiConverterTypeUpgradePolicy: FfiConverter<UpgradePolicy, Pointer
  */
 public interface UserSignatureInterface {
     
-    fun `asMove`(): MoveAuthenticator
+    fun `asMoveAuthenticator`(): MoveAuthenticator
     
-    fun `asMoveOpt`(): MoveAuthenticator?
+    fun `asMoveAuthenticatorOpt`(): MoveAuthenticator?
     
     fun `asMultisig`(): MultisigAggregatedSignature
     
     fun `asMultisigOpt`(): MultisigAggregatedSignature?
     
-    fun `asPasskey`(): PasskeyAuthenticator
+    fun `asPasskeyAuthenticator`(): PasskeyAuthenticator
     
-    fun `asPasskeyOpt`(): PasskeyAuthenticator?
+    fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator?
     
     fun `asSimple`(): SimpleSignature
     
     fun `asSimpleOpt`(): SimpleSignature?
     
-    fun `asZklogin`(): ZkLoginAuthenticator
+    fun `asZkloginAuthenticator`(): ZkLoginAuthenticator
     
-    fun `asZkloginOpt`(): ZkLoginAuthenticator?
+    fun `asZkloginAuthenticatorOpt`(): ZkLoginAuthenticator?
     
-    fun `isMove`(): kotlin.Boolean
+    fun `isMoveAuthenticator`(): kotlin.Boolean
     
     fun `isMultisig`(): kotlin.Boolean
     
-    fun `isPasskey`(): kotlin.Boolean
+    fun `isPasskeyAuthenticator`(): kotlin.Boolean
     
     fun `isSimple`(): kotlin.Boolean
     
-    fun `isZklogin`(): kotlin.Boolean
+    fun `isZkloginAuthenticator`(): kotlin.Boolean
     
     /**
      * Return the flag for this signature scheme
@@ -47819,11 +47819,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         }
     }
 
-    override fun `asMove`(): MoveAuthenticator {
+    override fun `asMoveAuthenticator`(): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
         it, _status)
 }
     }
@@ -47831,11 +47831,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asMoveOpt`(): MoveAuthenticator? {
+    override fun `asMoveAuthenticatorOpt`(): MoveAuthenticator? {
             return FfiConverterOptionalTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_opt(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
         it, _status)
 }
     }
@@ -47867,11 +47867,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asPasskey`(): PasskeyAuthenticator {
+    override fun `asPasskeyAuthenticator`(): PasskeyAuthenticator {
             return FfiConverterTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
         it, _status)
 }
     }
@@ -47879,11 +47879,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asPasskeyOpt`(): PasskeyAuthenticator? {
+    override fun `asPasskeyAuthenticatorOpt`(): PasskeyAuthenticator? {
             return FfiConverterOptionalTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_opt(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
         it, _status)
 }
     }
@@ -47915,11 +47915,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asZklogin`(): ZkLoginAuthenticator {
+    override fun `asZkloginAuthenticator`(): ZkLoginAuthenticator {
             return FfiConverterTypeZkLoginAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
         it, _status)
 }
     }
@@ -47927,11 +47927,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `asZkloginOpt`(): ZkLoginAuthenticator? {
+    override fun `asZkloginAuthenticatorOpt`(): ZkLoginAuthenticator? {
             return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
         it, _status)
 }
     }
@@ -47939,11 +47939,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isMove`(): kotlin.Boolean {
+    override fun `isMoveAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
         it, _status)
 }
     }
@@ -47963,11 +47963,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isPasskey`(): kotlin.Boolean {
+    override fun `isPasskeyAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
         it, _status)
 }
     }
@@ -47987,11 +47987,11 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-    override fun `isZklogin`(): kotlin.Boolean {
+    override fun `isZkloginAuthenticator`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
         it, _status)
 }
     }
@@ -48064,10 +48064,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-         fun `newMove`(`authenticator`: MoveAuthenticator): UserSignature {
+         fun `newMoveAuthenticator`(`authenticator`: MoveAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -48084,10 +48084,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-         fun `newPasskey`(`authenticator`: PasskeyAuthenticator): UserSignature {
+         fun `newPasskeyAuthenticator`(`authenticator`: PasskeyAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
         FfiConverterTypePasskeyAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -48104,10 +48104,10 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     }
     
 
-         fun `newZklogin`(`authenticator`: ZkLoginAuthenticator): UserSignature {
+         fun `newZkloginAuthenticator`(`authenticator`: ZkLoginAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(
         FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
 }
     )

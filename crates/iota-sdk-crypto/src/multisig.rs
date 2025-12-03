@@ -228,11 +228,11 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             }
             UserSignature::Multisig(multisig) => self.inner.verify(message, multisig),
             #[cfg(not(feature = "zklogin"))]
-            UserSignature::ZkLogin(_) => Err(SignatureError::from_source(
+            UserSignature::ZkLoginAuthenticator(_) => Err(SignatureError::from_source(
                 "support for zklogin is not enabled",
             )),
             #[cfg(feature = "zklogin")]
-            UserSignature::ZkLogin(zklogin_authenticator) => {
+            UserSignature::ZkLoginAuthenticator(zklogin_authenticator) => {
                 let zklogin_verifier = self
                     .zklogin_verifier()
                     .ok_or_else(|| SignatureError::from_source("no zklogin verifier provided"))?;
@@ -240,14 +240,14 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 zklogin_verifier.verify(message, zklogin_authenticator.as_ref())
             }
             #[cfg(not(feature = "passkey"))]
-            UserSignature::Passkey(_) => Err(SignatureError::from_source(
+            UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
             )),
             #[cfg(feature = "passkey")]
-            UserSignature::Passkey(passkey_authenticator) => {
+            UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 crate::passkey::PasskeyVerifier::default().verify(message, passkey_authenticator)
             }
-            UserSignature::Move(_) => Err(SignatureError::from_source(
+            UserSignature::MoveAuthenticator(_) => Err(SignatureError::from_source(
                 "move authenticators cannot be verified",
             )),
         }
@@ -383,11 +383,11 @@ fn multisig_pubkey_and_signature_from_user_signature(
             MultisigMemberSignature::Secp256r1(signature),
         )),
         #[cfg(not(feature = "zklogin"))]
-        UserSignature::ZkLogin(_) => Err(SignatureError::from_source(
+        UserSignature::ZkLoginAuthenticator(_) => Err(SignatureError::from_source(
             "support for zklogin is not enabled",
         )),
         #[cfg(feature = "zklogin")]
-        UserSignature::ZkLogin(zklogin_authenticator) => {
+        UserSignature::ZkLoginAuthenticator(zklogin_authenticator) => {
             let zklogin_identifier = zklogin_authenticator.inputs.public_identifier().to_owned();
             Ok((
                 MultisigMemberPublicKey::ZkLogin(zklogin_identifier),
@@ -395,7 +395,7 @@ fn multisig_pubkey_and_signature_from_user_signature(
             ))
         }
 
-        UserSignature::Multisig(_) | UserSignature::Passkey(_) | UserSignature::Move(_) => {
+        UserSignature::Multisig(_) | UserSignature::PasskeyAuthenticator(_) | UserSignature::MoveAuthenticator(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))
         }
     }

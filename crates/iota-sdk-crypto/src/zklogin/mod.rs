@@ -78,7 +78,7 @@ impl Verifier<ZkLoginAuthenticator> for ZkloginVerifier {
 
 impl Verifier<UserSignature> for ZkloginVerifier {
     fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<(), SignatureError> {
-        let UserSignature::ZkLogin(zklogin_authenticator) = signature else {
+        let UserSignature::ZkLoginAuthenticator(zklogin_authenticator) = signature else {
             return Err(SignatureError::from_source("not a zklogin signature"));
         };
 
