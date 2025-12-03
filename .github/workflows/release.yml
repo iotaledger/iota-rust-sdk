@@ -38,13 +38,13 @@ jobs:
       - name: Create changelog
         run: |
           if [[ "$PACKAGE" == iota-sdk* ]]; then
-            echo "PACKAGE_ROOT=crates/$PACKAGE" >> $GITHUB_ENV
+            PACKAGE_ROOT="crates/$PACKAGE"
           elif [[ "$PACKAGE" == "iota-go-sdk" ]]; then
-            echo "PACKAGE_ROOT=bindings/go" >> $GITHUB_ENV
+            PACKAGE_ROOT="bindings/go"
           elif [[ "$PACKAGE" == "iota-kotlin-sdk" ]]; then
-            echo "PACKAGE_ROOT=bindings/kotlin" >> $GITHUB_ENV
+            PACKAGE_ROOT="bindings/kotlin"
           elif [[ "$PACKAGE" == "iota-python-sdk" ]]; then
-            echo "PACKAGE_ROOT=bindings/python" >> $GITHUB_ENV
+            PACKAGE_ROOT="bindings/python"
           fi
           CHANGELOG=$(./.github/gen_changelog.sh "$PACKAGE" "$PACKAGE_ROOT" ${{ github.sha }} "$VERSION")
           echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
