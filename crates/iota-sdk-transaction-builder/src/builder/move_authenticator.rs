@@ -37,9 +37,7 @@ impl<I> MoveAuthenticatorFnCall<I> {
             type_arguments: G::type_tags(),
         }
     }
-}
 
-impl<I> MoveAuthenticatorFnCall<I> {
     /// Set the move authenticator call type parameters manually.
     pub fn type_tags(self, tags: impl IntoIterator<Item = TypeTag>) -> MoveAuthenticatorFnCall<I> {
         MoveAuthenticatorFnCall {
