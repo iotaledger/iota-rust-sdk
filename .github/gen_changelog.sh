@@ -8,6 +8,8 @@ ADD=${5:-"false"}
 
 git fetch --tags
 
+echo "Generating changelog for package: $PACKAGE version $VERSION at $PACKAGE_ROOT"
+
 LATEST_TAG=$(git tag -l "$PACKAGE-v*" --sort=-v:refname | head -n 1)
 echo "Latest tag: $LATEST_TAG"
 
@@ -20,6 +22,7 @@ ENTRY=$(git-cliff $COMMIT_FROM..$COMMIT_TO --tag $VERSION --include-path $PACKAG
 echo "$ENTRY"
 
 if [ "$ADD" = "true" ]; then
+    echo "git add $PACKAGE_ROOT/CHANGELOG.md"
     echo -e "$ENTRY\n$(cat $PACKAGE_ROOT/CHANGELOG.md)" > $PACKAGE_ROOT/CHANGELOG.md
-    git add $PACKAGE/CHANGELOG.md
+    git add $PACKAGE_ROOT/CHANGELOG.md
 fi

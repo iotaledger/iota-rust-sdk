@@ -139,6 +139,10 @@ jobs:
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
+      - name: Set COMMIT_TO environment variable
+        if: startsWith(inputs.package, 'iota-sdk')
+        run: echo "COMMIT_TO=${{ github.sha }}" >> $GITHUB_ENV
+
       - name: Create PR for Rust
         if: startsWith(inputs.package, 'iota-sdk')
         id: pr-create-rust
