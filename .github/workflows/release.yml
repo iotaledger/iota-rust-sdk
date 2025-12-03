@@ -21,11 +21,11 @@ jobs:
           tag=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
           echo "Tag: $tag"
           echo "TAG=$tag" >> $GITHUB_ENV
-          
+
           package=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
           echo "Package: $package"
           echo "PACKAGE=$package" >> $GITHUB_ENV
-          
+
           version=$(echo "${{ github.head_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
           echo "Version: $version"
           echo "VERSION=$version" >> $GITHUB_ENV
