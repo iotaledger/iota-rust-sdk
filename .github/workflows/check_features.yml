@@ -1,0 +1,37 @@
+name: Feature Compatibility
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # every day at 1am (UTC)
+  workflow_dispatch:
+    inputs:
+      branch-or-commit:
+        description: "Branch or commit to run feature compatibility checks."
+        type: string
+        required: false
+        default: ""
+
+concurrency:
+  group: feature-compat-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  check-features:
+    name: Feature compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event.inputs.branch-or-commit || github.ref }}
+
+      - uses: taiki-e/install-action@cargo-hack
+
+      - name: Check feature compatibility
+        run: make check-features
