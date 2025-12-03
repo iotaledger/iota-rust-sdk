@@ -24,10 +24,6 @@ In an effort to be modular, functionality is split between a number of crates. T
 - [`iota-sdk`](crates/iota-sdk)
   [![iota-sdk on crates.io](https://img.shields.io/crates/v/iota-sdk)](https://crates.io/crates/iota-sdk)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk)
-  [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota_sdk_types/)
-- [`iota-sdk-types`](crates/iota-sdk-types)
-  [![iota-sdk-types on crates.io](https://img.shields.io/crates/v/iota-sdk-types)](https://crates.io/crates/iota-sdk-types)
-  [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-types)
 - [`iota-sdk-crypto`](crates/iota-sdk-crypto)
   [![iota-sdk-crypto on crates.io](https://img.shields.io/crates/v/iota-sdk-crypto)](https://crates.io/crates/iota-sdk-crypto)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-crypto)
@@ -37,6 +33,9 @@ In an effort to be modular, functionality is split between a number of crates. T
 - [`iota-sdk-transaction-builder`](crates/iota-sdk-transaction-builder)
   [![iota-sdk-transaction-builder on crates.io](https://img.shields.io/crates/v/iota-sdk-transaction-builder)](https://crates.io/crates/iota-sdk-transaction-builder)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-transaction-builder)
+- [`iota-sdk-types`](crates/iota-sdk-types)
+  [![iota-sdk-types on crates.io](https://img.shields.io/crates/v/iota-sdk-types)](https://crates.io/crates/iota-sdk-types)
+  [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-types)
 
 ## License
 
