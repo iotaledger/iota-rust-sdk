@@ -161,8 +161,8 @@ jobs:
         id: pr-create-bindings
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: "Bump ${{ inputs.package }} version to ${{ env.NEW_VERSION }}"
-          title: "Bump ${{ inputs.package }} version to ${{ env.NEW_VERSION }}"
+          commit-message: "release: bump `${{ inputs.package }}` version to `${{ env.NEW_VERSION }}`"
+          title: "release: bump `${{ inputs.package }}` version to `${{ env.NEW_VERSION }}`"
           body: "Automated semver bump of ${{ inputs.package }} version."
           branch: "release/${{ inputs.package }}/${{ env.NEW_VERSION }}"
           delete-branch: true
