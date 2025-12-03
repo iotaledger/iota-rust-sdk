@@ -2954,7 +2954,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator()
 	})
-	if checksum != 36124 {
+	if checksum != 36216 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator: UniFFI API checksum mismatch")
 	}
@@ -3038,15 +3038,6 @@ func uniffiCheckChecksums() {
 	if checksum != 43478 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator()
-	})
-	if checksum != 21388 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13047,9 +13038,9 @@ type ClientTransactionBuilderInterface interface {
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
 	Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
-	// Execute the transaction with the provided move authenticator data and
-	// optionally wait for finalization.
-	ExecuteWithMoveAuthenticator(waitFor *WaitForTx) (*TransactionEffects, error)
+	// Execute the transaction with the provided move authenticator call data
+	// and optionally wait for finalization.
+	ExecuteWithMoveAuthenticator(inputs []*PtbArgument, typeArgs []*TypeTag, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
 	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
@@ -13074,8 +13065,6 @@ type ClientTransactionBuilderInterface interface {
 	// from all `consumed_coins`. After merging, the `consumed_coins` will
 	// be consumed and no longer exist.
 	MergeCoins(primaryCoin *PtbArgument, consumedCoins []*PtbArgument) *ClientTransactionBuilder
-	// Set the move authenticator for Account Abstraction.
-	MoveAuthenticator(arguments []*PtbArgument, typeArgs []*TypeTag) *ClientTransactionBuilder
 	// Call a Move function with the given arguments.
 	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *ClientTransactionBuilder
 	// Publish a list of modules with the given dependencies. The result
@@ -13212,9 +13201,9 @@ func (_self *ClientTransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *
 	return res, err 
 }
 
-// Execute the transaction with the provided move authenticator data and
-// optionally wait for finalization.
-func (_self *ClientTransactionBuilder) ExecuteWithMoveAuthenticator(waitFor *WaitForTx) (*TransactionEffects, error) {
+// Execute the transaction with the provided move authenticator call data
+// and optionally wait for finalization.
+func (_self *ClientTransactionBuilder) ExecuteWithMoveAuthenticator(inputs []*PtbArgument, typeArgs []*TypeTag, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13229,7 +13218,7 @@ func (_self *ClientTransactionBuilder) ExecuteWithMoveAuthenticator(waitFor *Wai
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(
-		_pointer,FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		_pointer,FfiConverterSequencePtbArgumentINSTANCE.Lower(inputs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -13376,16 +13365,6 @@ func (_self *ClientTransactionBuilder) MergeCoins(primaryCoin *PtbArgument, cons
 	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(
 		_pointer,FfiConverterPtbArgumentINSTANCE.Lower(primaryCoin), FfiConverterSequencePtbArgumentINSTANCE.Lower(consumedCoins),_uniffiStatus)
-	}))
-}
-
-// Set the move authenticator for Account Abstraction.
-func (_self *ClientTransactionBuilder) MoveAuthenticator(arguments []*PtbArgument, typeArgs []*TypeTag) *ClientTransactionBuilder {
-	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterClientTransactionBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_authenticator(
-		_pointer,FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs),_uniffiStatus)
 	}))
 }
 

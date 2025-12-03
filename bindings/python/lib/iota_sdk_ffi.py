@@ -1037,7 +1037,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 45165:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator() != 36124:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator() != 36216:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 64410:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1056,8 +1056,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec() != 4858:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins() != 43478:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator() != 21388:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3438,6 +3436,8 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor.argtypes = (
@@ -3498,13 +3498,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins.ar
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_authenticator.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_authenticator.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10679,9 +10672,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_mov
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call.restype = ctypes.c_uint16
@@ -29376,10 +29366,10 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute_with_move_authenticator(self, wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
+    def execute_with_move_authenticator(self, inputs: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
-        Execute the transaction with the provided move authenticator data and
-        optionally wait for finalization.
+        Execute the transaction with the provided move authenticator call data
+        and optionally wait for finalization.
         """
 
         raise NotImplementedError
@@ -29440,12 +29430,6 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         type into a single coin. The `primary_coin` will receive the balances
         from all `consumed_coins`. After merging, the `consumed_coins` will
         be consumed and no longer exist.
-        """
-
-        raise NotImplementedError
-    def move_authenticator(self, arguments: "typing.List[PtbArgument]",type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT):
-        """
-        Set the move authenticator for Account Abstraction.
         """
 
         raise NotImplementedError
@@ -29640,12 +29624,20 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_with_move_authenticator(self, wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
+    async def execute_with_move_authenticator(self, inputs: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
-        Execute the transaction with the provided move authenticator data and
-        optionally wait for finalization.
+        Execute the transaction with the provided move authenticator call data
+        and optionally wait for finalization.
         """
 
+        if inputs is _DEFAULT:
+            inputs = []
+        _UniffiConverterSequenceTypePtbArgument.check_lower(inputs)
+        
+        if type_args is _DEFAULT:
+            type_args = []
+        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
+        
         if wait_for is _DEFAULT:
             wait_for = None
         _UniffiConverterOptionalTypeWaitForTx.check_lower(wait_for)
@@ -29653,6 +29645,8 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(
                 self._uniffi_clone_pointer(), 
+        _UniffiConverterSequenceTypePtbArgument.lower(inputs),
+        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
         _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
@@ -29855,27 +29849,6 @@ _UniffiConverterTypeSdkFfiError,
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins,self._uniffi_clone_pointer(),
         _UniffiConverterTypePtbArgument.lower(primary_coin),
         _UniffiConverterSequenceTypePtbArgument.lower(consumed_coins))
-        )
-
-
-
-
-
-    def move_authenticator(self, arguments: "typing.List[PtbArgument]",type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT) -> "ClientTransactionBuilder":
-        """
-        Set the move authenticator for Account Abstraction.
-        """
-
-        _UniffiConverterSequenceTypePtbArgument.check_lower(arguments)
-        
-        if type_args is _DEFAULT:
-            type_args = []
-        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
-        
-        return _UniffiConverterTypeClientTransactionBuilder.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_authenticator,self._uniffi_clone_pointer(),
-        _UniffiConverterSequenceTypePtbArgument.lower(arguments),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_args))
         )
 
 

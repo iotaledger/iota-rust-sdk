@@ -7,7 +7,9 @@ use std::{
     time::Duration,
 };
 
-use iota_sdk::{graphql_client::WaitForTx, types::Input};
+use iota_sdk::{
+    graphql_client::WaitForTx, transaction_builder::MoveAuthenticatorFnCall, types::Input,
+};
 
 use crate::{
     crypto::simple::SimpleKeypair,
@@ -106,21 +108,6 @@ impl ClientTransactionBuilder {
                     }
                 }
             }
-        });
-        self
-    }
-
-    /// Set the move authenticator for Account Abstraction.
-    #[uniffi::method(default(type_args = []))]
-    pub fn move_authenticator(
-        self: Arc<Self>,
-        arguments: Vec<Arc<PTBArgument>>,
-        type_args: Vec<Arc<TypeTag>>,
-    ) -> Arc<Self> {
-        self.write(|builder| {
-            builder
-                .move_authenticator(arguments)
-                .type_tags(type_args.into_iter().map(|v| v.0.clone()));
         });
         self
     }
@@ -381,15 +368,23 @@ impl ClientTransactionBuilder {
             .into())
     }
 
-    /// Execute the transaction with the provided move authenticator data and
-    /// optionally wait for finalization.
-    #[uniffi::method(default(wait_for = None))]
+    /// Execute the transaction with the provided move authenticator call data
+    /// and optionally wait for finalization.
+    #[uniffi::method(default(inputs = [], type_args = [], wait_for = None))]
     pub async fn execute_with_move_authenticator(
         &self,
+        inputs: Vec<Arc<PTBArgument>>,
+        type_args: Vec<Arc<TypeTag>>,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .read(|builder| builder.clone().execute_with_move_authenticator(wait_for))
+            .read(|builder| {
+                builder.clone().execute_with_move_authenticator(
+                    MoveAuthenticatorFnCall::inputs(inputs)
+                        .type_tags(type_args.into_iter().map(|v| v.0.clone())),
+                    wait_for,
+                )
+            })
             .await?
             .into())
     }

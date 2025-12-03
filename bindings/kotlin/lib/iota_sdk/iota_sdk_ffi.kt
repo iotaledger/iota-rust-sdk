@@ -3105,8 +3105,6 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3717,8 +3715,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_gas_station_spo
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call(
 ): Short
@@ -5599,7 +5595,7 @@ fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_dry_run(`ptr`: Pointe
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(`ptr`: Pointer,`keypair`: Pointer,`waitFor`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(`ptr`: Pointer,`waitFor`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(`ptr`: Pointer,`inputs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`waitFor`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(`ptr`: Pointer,`keypair`: Pointer,`sponsorKeypair`: Pointer,`waitFor`: RustBuffer.ByValue,
 ): Long
@@ -5618,8 +5614,6 @@ fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_gas_station_sponsor(`
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_make_move_vec(`ptr`: Pointer,`elements`: RustBuffer.ByValue,`typeTag`: Pointer,`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(`ptr`: Pointer,`primaryCoin`: Pointer,`consumedCoins`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_authenticator(`ptr`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8937,7 +8931,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 45165.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator() != 36124.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator() != 36216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 64410.toShort()) {
@@ -8965,9 +8959,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins() != 43478.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_authenticator() != 21388.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617.toShort()) {
@@ -17696,10 +17687,10 @@ public interface ClientTransactionBuilderInterface {
     suspend fun `execute`(`keypair`: SimpleKeypair, `waitFor`: WaitForTx? = null): TransactionEffects
     
     /**
-     * Execute the transaction with the provided move authenticator data and
-     * optionally wait for finalization.
+     * Execute the transaction with the provided move authenticator call data
+     * and optionally wait for finalization.
      */
-    suspend fun `executeWithMoveAuthenticator`(`waitFor`: WaitForTx? = null): TransactionEffects
+    suspend fun `executeWithMoveAuthenticator`(`inputs`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `waitFor`: WaitForTx? = null): TransactionEffects
     
     /**
      * Execute the transaction and optionally wait for finalization.
@@ -17751,11 +17742,6 @@ public interface ClientTransactionBuilderInterface {
      * be consumed and no longer exist.
      */
     fun `mergeCoins`(`primaryCoin`: PtbArgument, `consumedCoins`: List<PtbArgument>): ClientTransactionBuilder
-    
-    /**
-     * Set the move authenticator for Account Abstraction.
-     */
-    fun `moveAuthenticator`(`arguments`: List<PtbArgument>, `typeArgs`: List<TypeTag> = listOf()): ClientTransactionBuilder
     
     /**
      * Call a Move function with the given arguments.
@@ -17990,17 +17976,17 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
 
     
     /**
-     * Execute the transaction with the provided move authenticator data and
-     * optionally wait for finalization.
+     * Execute the transaction with the provided move authenticator call data
+     * and optionally wait for finalization.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `executeWithMoveAuthenticator`(`waitFor`: WaitForTx?) : TransactionEffects {
+    override suspend fun `executeWithMoveAuthenticator`(`inputs`: List<PtbArgument>, `typeArgs`: List<TypeTag>, `waitFor`: WaitForTx?) : TransactionEffects {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(
                 thisPtr,
-                FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
+                FfiConverterSequenceTypePTBArgument.lower(`inputs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
         { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
@@ -18166,21 +18152,6 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(
         it, FfiConverterTypePTBArgument.lower(`primaryCoin`),FfiConverterSequenceTypePTBArgument.lower(`consumedCoins`),_status)
-}
-    }
-    )
-    }
-    
-
-    
-    /**
-     * Set the move authenticator for Account Abstraction.
-     */override fun `moveAuthenticator`(`arguments`: List<PtbArgument>, `typeArgs`: List<TypeTag>): ClientTransactionBuilder {
-            return FfiConverterTypeClientTransactionBuilder.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_authenticator(
-        it, FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),_status)
 }
     }
     )

@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::{OptionExt, Result, bail};
 use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
-use iota_transaction_builder::{TransactionBuilder, res};
+use iota_transaction_builder::{MoveAuthenticatorFnCall, TransactionBuilder, res};
 use iota_types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut, StructTag};
 use rand::rngs::OsRng;
 
@@ -23,7 +23,6 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(from_address).with_client(&client);
 
     builder.send_iota(to_address, 5000000000u64);
-    builder.move_authenticator(["hello"]);
 
     let txn = builder.clone().finish().await?;
 
@@ -31,7 +30,10 @@ async fn main() -> Result<()> {
     println!("Txn Bytes: {}", txn.to_base64());
 
     builder
-        .execute_with_move_authenticator(WaitForTx::Finalized)
+        .execute_with_move_authenticator(
+            MoveAuthenticatorFnCall::inputs(["hello"]),
+            WaitForTx::Finalized,
+        )
         .await?;
 
     println!("Send IOTA via abstract account was successful!");

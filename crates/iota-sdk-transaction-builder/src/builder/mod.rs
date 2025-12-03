@@ -23,7 +23,7 @@ use crate::{
     ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
-        move_authenticator::MoveAuthenticatorData,
+        move_authenticator::MoveAuthenticatorFnCall,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
     },
@@ -37,7 +37,7 @@ use crate::{
 
 pub(crate) mod client_methods;
 pub(crate) mod gas_station;
-mod move_authenticator;
+pub mod move_authenticator;
 mod named_results;
 /// Argument types for PTBs
 pub mod ptb_arguments;
@@ -79,8 +79,6 @@ pub struct TransactionBuildData {
     named_results: HashMap<String, Argument>,
     /// The data used for gas station sponsorship.
     gas_station_data: Option<GasStationData>,
-    /// The data used to authenticate via Account Abstraction
-    move_authenticator: Option<MoveAuthenticatorData>,
 }
 
 impl TransactionBuildData {
@@ -202,7 +200,6 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 named_results: Default::default(),
                 gas_station_data: Default::default(),
-                move_authenticator: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -277,18 +274,6 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Set the gas station sponsor. Optional.
     pub fn gas_station_sponsor(&mut self, url: Url) -> &mut TransactionBuilder<C, GasStationData> {
         self.data.gas_station_data = Some(GasStationData::new(url));
-        self.state_change()
-    }
-
-    /// Set the move authenticator for Account Abstraction.
-    pub fn move_authenticator<U: PTBArgumentList>(
-        &mut self,
-        inputs: U,
-    ) -> &mut TransactionBuilder<C, MoveAuthenticatorData> {
-        self.data.move_authenticator = Some(MoveAuthenticatorData {
-            inputs: inputs.args(&mut self.data),
-            type_arguments: Default::default(),
-        });
         self.state_change()
     }
 
@@ -1221,17 +1206,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             .map_err(Error::client)
     }
 
-    /// Execute the transaction with the provided move authenticator data and
-    /// optionally wait for finalization.
-    pub async fn execute_with_move_authenticator(
+    /// Execute the transaction with the provided move authenticator call data
+    /// and optionally wait for finalization.
+    pub async fn execute_with_move_authenticator<I: PTBArgumentList>(
         mut self,
+        fn_call: MoveAuthenticatorFnCall<I>,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
-        let data = self
-            .data
-            .move_authenticator
-            .take()
-            .ok_or_else(|| Error::MissingMoveAuthData)?;
         let account_obj = self
             .client
             .object(self.data.sender.into(), None)
@@ -1249,7 +1230,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             },
         };
         let mut inputs = Vec::new();
-        for input in data.inputs {
+        for input in fn_call.inputs.args(&mut self.data) {
             inputs.push(match input {
                 Argument::Input(input) => match &self.data.inputs[&input].kind {
                     InputKind::ImmutableOrOwned(object_id) => {
@@ -1297,7 +1278,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             })
         }
         let move_authenticator =
-            MoveAuthenticator::new(inputs, data.type_arguments, object_to_authenticate).unwrap();
+            MoveAuthenticator::new(inputs, fn_call.type_arguments, object_to_authenticate).unwrap();
         let txn = self.finish_internal().await?;
         self.client
             .execute_tx(
@@ -1406,28 +1387,6 @@ impl<C> TransactionBuilder<C, GasStationData> {
         if let Some(data) = &mut self.data.gas_station_data {
             data.add_header(name, value);
         }
-        self
-    }
-}
-
-impl<C> TransactionBuilder<C, MoveAuthenticatorData> {
-    /// Set the move authenticator type parameters.
-    pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
-        self.data
-            .move_authenticator
-            .as_mut()
-            .unwrap()
-            .type_arguments = G::type_tags();
-        self
-    }
-
-    /// Set the move authenticator type parameters manually.
-    pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
-        self.data
-            .move_authenticator
-            .as_mut()
-            .unwrap()
-            .type_arguments = tags.into_iter().collect();
         self
     }
 }
