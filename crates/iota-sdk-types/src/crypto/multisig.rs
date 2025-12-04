@@ -7,6 +7,7 @@ use super::{
     Secp256r1Signature, SignatureScheme,
     zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
 };
+use crate::PublicKeyExt;
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -60,6 +61,21 @@ impl MultisigMemberPublicKey {
         Secp256r1(Secp256r1PublicKey),
         ZkLogin as zklogin(ZkLoginPublicIdentifier),
     );
+
+    pub fn scheme(&self) -> SignatureScheme {
+        match self {
+            MultisigMemberPublicKey::Ed25519(ed25519_public_key) => ed25519_public_key.scheme(),
+            MultisigMemberPublicKey::Secp256k1(secp256k1_public_key) => {
+                secp256k1_public_key.scheme()
+            }
+            MultisigMemberPublicKey::Secp256r1(secp256r1_public_key) => {
+                secp256r1_public_key.scheme()
+            }
+            MultisigMemberPublicKey::ZkLogin(zk_login_public_identifier) => {
+                zk_login_public_identifier.scheme()
+            }
+        }
+    }
 }
 
 /// A member in a multisig committee

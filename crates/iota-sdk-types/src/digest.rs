@@ -88,6 +88,18 @@ impl Digest {
             .map_err(|_| DigestParseError)
             .map(Self)
     }
+
+    pub fn next_lexicographical(&self) -> Option<Self> {
+        let mut next_digest = *self;
+        let pos = next_digest.0.iter().rposition(|&byte| byte != 255)?;
+        next_digest.0[pos] += 1;
+        next_digest
+            .0
+            .iter_mut()
+            .skip(pos + 1)
+            .for_each(|byte| *byte = 0);
+        Some(next_digest)
+    }
 }
 
 impl std::str::FromStr for Digest {
