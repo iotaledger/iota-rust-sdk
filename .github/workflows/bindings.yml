@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   diff:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     outputs:
       isBindings: ${{ steps.diff.outputs.isBindings }}
@@ -28,8 +29,8 @@ jobs:
               - "crates/iota-sdk-ffi/**"
 
   go:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
     needs: diff
-    if: ((!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]')) && !cancelled() && needs.diff.outputs.isBindings == 'true')
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -62,8 +63,8 @@ jobs:
         run: make go-examples
 
   kotlin:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
     needs: diff
-    if: ((!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]')) && !cancelled() && needs.diff.outputs.isBindings == 'true')
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -98,8 +99,8 @@ jobs:
         run: make kotlin-examples
 
   python:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
     needs: diff
-    if: ((!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]')) && !cancelled() && needs.diff.outputs.isBindings == 'true')
     runs-on: ubuntu-latest
     services:
       postgres:
