@@ -33,9 +33,11 @@ jobs:
         run: make check-fmt
 
       - name: clippy
+        if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
         run: make clippy
 
       - name: rustdoc
+        if: ${{ !github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') }}
         run: make doc
 
       - name: feature compatibility
