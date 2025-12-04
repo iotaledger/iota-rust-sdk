@@ -37,21 +37,6 @@ jobs:
 
   tests-with-network:
     runs-on: ubuntu-latest
-    services:
-      postgres: # we need this postgres instance for running a local network with indexer and graphql
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgrespw
-          POSTGRES_DB: iota_indexer_v2
-          POSTGRES_HOST_AUTH_METHOD: trust
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -69,6 +54,17 @@ jobs:
         env:
           NETWORK: "local"
         run: make test-with-localnet
+
+  examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: ./.github/actions/start-local-network
+
+      - name: Run examples
+        run: make examples
 
   doctests:
     runs-on: ubuntu-latest

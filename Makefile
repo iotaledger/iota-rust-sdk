@@ -210,6 +210,20 @@ python-examples-format-check: ## Check format of all Python bindings examples
 python-examples-format: ## Format all Python bindings examples
 	@yapf --style google -i bindings/python/examples/*
 
+.PHONY: example
+example: ## Run a specific Rust example. Usage: make example example
+%:
+	@true
+example:
+	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cargo run --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+
+.PHONY: examples
+examples: ## Run all Rust examples
+	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -exec basename {} .rs \;); do \
+		$(MAKE) example "$$example" || exit $$?; \
+	done
+
 .PHONY: help
 help: ## Show this help
 	@printf "Available targets:\n"
