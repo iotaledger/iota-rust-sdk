@@ -24,12 +24,12 @@ async fn main() -> Result<()> {
         .name(("coin1", "coin2", "coin3"))
         .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
 
-    let txn = builder.finish().await?;
+    let txn = builder.clone().finish().await?;
 
     println!("Signing Digest: {}", txn.signing_digest_hex());
     println!("Txn Bytes: {}", txn.to_base64());
 
-    let res = client.dry_run_tx(&txn, false).await?;
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to split coin: {err}");
