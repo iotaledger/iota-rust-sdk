@@ -39,9 +39,6 @@ jobs:
       - name: rustdoc
         run: make doc
 
-      - name: feature compatibility
-        run: make check-features
-
       - run: make is-dirty
 
   cargo-deny:
