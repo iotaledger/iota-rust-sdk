@@ -29,7 +29,7 @@ jobs:
 
   go:
     needs: diff
-    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') && !cancelled() && needs.diff.outputs.isBindings == 'true')
+    if: ((!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]')) && !cancelled() && needs.diff.outputs.isBindings == 'true')
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -63,7 +63,7 @@ jobs:
 
   kotlin:
     needs: diff
-    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') && !cancelled() && needs.diff.outputs.isBindings == 'true')
+    if: ((!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]')) && !cancelled() && needs.diff.outputs.isBindings == 'true')
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -99,7 +99,7 @@ jobs:
 
   python:
     needs: diff
-    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]') && !cancelled() && needs.diff.outputs.isBindings == 'true')
+    if: ((!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]')) && !cancelled() && needs.diff.outputs.isBindings == 'true')
     runs-on: ubuntu-latest
     services:
       postgres:
