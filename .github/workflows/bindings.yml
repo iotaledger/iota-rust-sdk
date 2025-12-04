@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   go:
+    if: (!cancelled())
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -50,7 +51,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make go-examples
+
   kotlin:
+    if: (!cancelled())
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -83,7 +86,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make kotlin-examples
+
   python:
+    if: (!cancelled())
     runs-on: ubuntu-latest
     services:
       postgres:
