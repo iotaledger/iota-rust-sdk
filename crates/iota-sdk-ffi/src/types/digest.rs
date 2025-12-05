@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use crate::error::Result;
 
 /// A 32-byte Blake2b256 hash output.
@@ -44,6 +46,10 @@ impl Digest {
 
     pub fn to_base58(&self) -> String {
         self.0.to_base58()
+    }
+
+    pub fn next_lexicographical(&self) -> Option<Arc<Self>> {
+        self.0.next_lexicographical().map(Into::into).map(Arc::new)
     }
 }
 
