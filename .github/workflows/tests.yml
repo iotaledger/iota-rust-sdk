@@ -20,6 +20,7 @@ env:
 
 jobs:
   tests:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -36,6 +37,7 @@ jobs:
         run: make test
 
   tests-with-network:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -56,6 +58,7 @@ jobs:
         run: make test-with-localnet
 
   examples:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -67,6 +70,7 @@ jobs:
         run: make examples
 
   doctests:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
