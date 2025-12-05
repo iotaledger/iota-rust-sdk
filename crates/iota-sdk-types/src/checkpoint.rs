@@ -2,11 +2,13 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::collections::{BTreeMap, HashSet};
+
 use super::{
     Digest, GasCostSummary, Object, SignedTransaction, TransactionEffects, TransactionEvents,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommitteeMember,
 };
-use crate::{IdOperation, ObjectIn, ObjectOut, ObjectReference};
+use crate::{IdOperation, ObjectId, ObjectIn, ObjectOut, ObjectReference};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -237,6 +239,69 @@ pub struct CheckpointData {
     pub checkpoint_contents: CheckpointContents,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=1).lift()))]
     pub transactions: Vec<CheckpointTransaction>,
+}
+
+impl CheckpointData {
+    // returns the latest versions of the output objects that still exist at the end
+    // of the checkpoint
+    pub fn latest_live_output_objects(&self) -> impl Iterator<Item = &Object> {
+        let mut latest_live_objects = BTreeMap::new();
+        for tx in self.transactions.iter() {
+            for obj in tx.output_objects.iter() {
+                latest_live_objects.insert(obj.object_id(), obj);
+            }
+            for obj_ref in tx.removed_object_refs_post_version() {
+                latest_live_objects.remove(&(&obj_ref.object_id));
+            }
+        }
+        latest_live_objects.into_values()
+    }
+
+    // returns the object refs that are eventually deleted or wrapped in the current
+    // checkpoint
+    pub fn eventually_removed_object_refs_post_version(
+        &self,
+    ) -> impl Iterator<Item = ObjectReference> + '_ {
+        let mut eventually_removed_object_refs = BTreeMap::new();
+        for tx in self.transactions.iter() {
+            for obj_ref in tx.removed_object_refs_post_version() {
+                eventually_removed_object_refs.insert(obj_ref.object_id, obj_ref);
+            }
+            for obj in tx.output_objects.iter() {
+                eventually_removed_object_refs.remove(&obj.object_id());
+            }
+        }
+        eventually_removed_object_refs.into_values()
+    }
+
+    /// Returns all objects that are used as input to the transactions in the
+    /// checkpoint, and already exist prior to the checkpoint.
+    pub fn checkpoint_input_objects(&self) -> BTreeMap<ObjectId, &Object> {
+        let mut output_objects_seen = HashSet::new();
+        let mut checkpoint_input_objects = BTreeMap::new();
+        for tx in self.transactions.iter() {
+            for obj in tx.input_objects.iter() {
+                let id = obj.object_id();
+                if output_objects_seen.contains(&id) || checkpoint_input_objects.contains_key(&id) {
+                    continue;
+                }
+                checkpoint_input_objects.insert(id, obj);
+            }
+            for obj in tx.output_objects.iter() {
+                // We want to track input objects that are not output objects
+                // in the previous transactions.
+                output_objects_seen.insert(obj.object_id());
+            }
+        }
+        checkpoint_input_objects
+    }
+
+    pub fn all_objects(&self) -> impl Iterator<Item = &Object> {
+        self.transactions
+            .iter()
+            .flat_map(|tx| &tx.input_objects)
+            .chain(self.transactions.iter().flat_map(|tx| &tx.output_objects))
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
