@@ -4941,11 +4941,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string()
+	})
+	if checksum != 62489 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex()
 	})
 	if checksum != 4418 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string()
+	})
+	if checksum != 63526 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -21282,7 +21300,13 @@ type ObjectIdInterface interface {
 	DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId
 	ToAddress() *Address
 	ToBytes() []byte
+	// Returns the string representation of this object ID using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	ToHex() string
+	// Returns the shortest possible string representation of the object ID
+	// (i.e. with leading zeroes trimmed).
+	ToShortString(withPrefix bool) string
 }
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
@@ -21391,6 +21415,19 @@ func (_self *ObjectId) ToBytes() []byte {
 	}))
 }
 
+// Returns the string representation of this object ID using the
+// canonical display, with or without a `0x` prefix.
+func (_self *ObjectId) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *ObjectId) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
@@ -21398,6 +21435,19 @@ func (_self *ObjectId) ToHex() string {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(
 		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object ID
+// (i.e. with leading zeroes trimmed).
+func (_self *ObjectId) ToShortString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
 	}
 	}))
 }
