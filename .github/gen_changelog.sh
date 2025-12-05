@@ -25,6 +25,6 @@ echo "$ENTRY"
 
 if [ "$ADD" = "true" ]; then
     echo "git add $PACKAGE_ROOT/CHANGELOG.md" 1>&2
-    echo -e "$ENTRY\n$(cat $PACKAGE_ROOT/CHANGELOG.md)" > $PACKAGE_ROOT/CHANGELOG.md
+    echo -e "$ENTRY\n\n$(cat $PACKAGE_ROOT/CHANGELOG.md)" > $PACKAGE_ROOT/CHANGELOG.md
     git add $PACKAGE_ROOT/CHANGELOG.md
 fi
