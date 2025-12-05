@@ -350,6 +350,12 @@ mod serialization {
         crypto::SignatureFromBytesError,
     };
 
+    impl std::hash::Hash for MultisigAggregatedSignature {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.to_bytes().hash(state);
+        }
+    }
+
     #[derive(serde::Deserialize)]
     pub struct Multisig {
         signatures: Vec<MultisigMemberSignature>,

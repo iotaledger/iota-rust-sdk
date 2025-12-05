@@ -697,6 +697,12 @@ mod serialization {
     use super::*;
     use crate::{SignatureScheme, crypto::SignatureFromBytesError};
 
+    impl std::hash::Hash for ZkLoginAuthenticator {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.to_bytes().hash(state);
+        }
+    }
+
     // Serialized format is: iss_bytes_len || iss_bytes ||
     // padded_32_byte_address_seed.
     impl Serialize for ZkLoginPublicIdentifier {

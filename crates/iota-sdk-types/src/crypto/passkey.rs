@@ -127,6 +127,12 @@ mod serialization {
     use super::*;
     use crate::{SignatureScheme, SimpleSignature, crypto::SignatureFromBytesError};
 
+    impl std::hash::Hash for PasskeyAuthenticator {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.to_bytes().hash(state);
+        }
+    }
+
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
         authenticator_data: &'a Vec<u8>,
