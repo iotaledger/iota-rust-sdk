@@ -24,7 +24,7 @@ jobs:
         with:
           filters: |
             isBindings:
-              - ".github/workflow/bindings.yml"
+              - ".github/workflows/bindings.yml"
               - "bindings/**"
               - "crates/iota-sdk-ffi/**"
 
