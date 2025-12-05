@@ -63,7 +63,7 @@ impl ObjectId {
     }
 
     pub fn to_hex(&self) -> String {
-        self.0.as_address().to_hex()
+        self.0.to_hex()
     }
 
     /// Create an ObjectId from a transaction digest and the number of objects
