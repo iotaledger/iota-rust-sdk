@@ -58,6 +58,7 @@ jobs:
         run: make test-with-localnet
 
   examples:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
