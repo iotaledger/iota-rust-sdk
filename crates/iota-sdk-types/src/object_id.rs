@@ -67,6 +67,18 @@ impl ObjectId {
     pub const fn as_address(&self) -> &Address {
         &self.0
     }
+
+    /// Returns the string representation of this object ID using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
+
+    /// Returns the shortest possible string representation of the object ID
+    /// (i.e. with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        self.0.to_short_string(with_prefix)
+    }
 }
 
 impl AsRef<[u8]> for ObjectId {
@@ -115,6 +127,6 @@ impl std::str::FromStr for ObjectId {
 
 impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.fmt(f)
+        self.to_canonical_string(true).fmt(f)
     }
 }

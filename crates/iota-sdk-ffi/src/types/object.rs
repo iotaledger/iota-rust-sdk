@@ -81,6 +81,18 @@ impl ObjectId {
             .derive_dynamic_child_id(&key_type_tag.0, key_bytes)
             .into()
     }
+
+    /// Returns the string representation of this object ID using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
+
+    /// Returns the shortest possible string representation of the object ID
+    /// (i.e. with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        self.0.to_short_string(with_prefix)
+    }
 }
 
 macro_rules! named_object_id {
