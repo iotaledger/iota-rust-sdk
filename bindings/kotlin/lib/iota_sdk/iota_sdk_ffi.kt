@@ -8985,7 +8985,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 2536.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638.toShort()) {
@@ -19745,6 +19745,9 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
  */
 public interface DigestInterface {
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
     fun `nextLexicographical`(): Digest
     
     fun `toBase58`(): kotlin.String
@@ -19852,7 +19855,10 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
         }
     }
 
-    override fun `nextLexicographical`(): Digest {
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */override fun `nextLexicographical`(): Digest {
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->

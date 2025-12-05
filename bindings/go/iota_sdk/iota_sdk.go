@@ -3242,7 +3242,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical()
 	})
-	if checksum != 2536 {
+	if checksum != 53914 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical: UniFFI API checksum mismatch")
 	}
@@ -14039,6 +14039,7 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 // compact 32 bytes.
 type DigestInterface interface {
+	// Returns the next digest in byte-increasing order.
 	NextLexicographical() *Digest
 	ToBase58() string
 	ToBytes() []byte
@@ -14094,6 +14095,7 @@ func DigestGenerate() *Digest {
 
 
 
+// Returns the next digest in byte-increasing order.
 func (_self *Digest) NextLexicographical() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
 	defer _self.ffiObject.decrementPointer()
