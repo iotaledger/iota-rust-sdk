@@ -13,7 +13,7 @@ plugins {
 
 group = "org.iota"
 
-version = "0.0.1-alpha.3"
+version = "0.0.1-alpha.4"
 
 repositories { mavenCentral() }
 
