@@ -5680,7 +5680,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(`bytes`: RustBuffer.ByV
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_generate(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_base58(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8985,7 +8985,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 24057.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 2536.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638.toShort()) {
@@ -19745,7 +19745,7 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
  */
 public interface DigestInterface {
     
-    fun `nextLexicographical`(): Digest?
+    fun `nextLexicographical`(): Digest
     
     fun `toBase58`(): kotlin.String
     
@@ -19852,8 +19852,8 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
         }
     }
 
-    override fun `nextLexicographical`(): Digest? {
-            return FfiConverterOptionalTypeDigest.lift(
+    override fun `nextLexicographical`(): Digest {
+            return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(

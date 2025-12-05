@@ -89,16 +89,17 @@ impl Digest {
             .map(Self)
     }
 
-    pub fn next_lexicographical(&self) -> Option<Self> {
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
         let mut next_digest = *self;
-        let pos = next_digest.0.iter().rposition(|&byte| byte != 255)?;
-        next_digest.0[pos] += 1;
+        for byte in next_digest.0.iter_mut().rev() {
+            let (new_byte, overflow) = byte.overflowing_add(1);
+            *byte = new_byte;
+            if !overflow {
+                break;
+            }
+        }
         next_digest
-            .0
-            .iter_mut()
-            .skip(pos + 1)
-            .for_each(|byte| *byte = 0);
-        Some(next_digest)
     }
 }
 
@@ -235,5 +236,32 @@ mod tests {
         let s = digest.to_string();
         let d = s.parse::<Digest>().unwrap();
         assert_eq!(digest, d);
+    }
+
+    #[test]
+    fn test_lexical_order() {
+        fn digest_from_str(s: &str) -> Digest {
+            Digest::new(hex::decode(s).unwrap().try_into().unwrap())
+        }
+        assert_eq!(
+            digest_from_str("0000000000000000000000000000000000000000000000000000000000000000")
+                .next_lexicographical(),
+            digest_from_str("0000000000000000000000000000000000000000000000000000000000000001"),
+        );
+        assert_eq!(
+            digest_from_str("000000000000000000000000000000000000000000000000000000000000ffff")
+                .next_lexicographical(),
+            digest_from_str("0000000000000000000000000000000000000000000000000000000000010000"),
+        );
+        assert_eq!(
+            digest_from_str("000000000000000000000000000000000000000000000000000000000001002c")
+                .next_lexicographical(),
+            digest_from_str("000000000000000000000000000000000000000000000000000000000001002d"),
+        );
+        assert_eq!(
+            digest_from_str("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+                .next_lexicographical(),
+            digest_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
+        );
     }
 }

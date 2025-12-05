@@ -3242,7 +3242,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical()
 	})
-	if checksum != 24057 {
+	if checksum != 2536 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical: UniFFI API checksum mismatch")
 	}
@@ -14039,7 +14039,7 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 // compact 32 bytes.
 type DigestInterface interface {
-	NextLexicographical() **Digest
+	NextLexicographical() *Digest
 	ToBase58() string
 	ToBytes() []byte
 }
@@ -14094,14 +14094,12 @@ func DigestGenerate() *Digest {
 
 
 
-func (_self *Digest) NextLexicographical() **Digest {
+func (_self *Digest) NextLexicographical() *Digest {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
-		_pointer,_uniffiStatus),
-	}
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
+		_pointer,_uniffiStatus)
 	}))
 }
 

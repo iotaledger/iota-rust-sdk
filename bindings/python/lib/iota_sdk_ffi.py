@@ -1101,7 +1101,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 24057:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 2536:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3745,7 +3745,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.argtypes = 
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_base58.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -30738,8 +30738,8 @@ class Digest():
 
 
 
-    def next_lexicographical(self, ) -> "typing.Optional[Digest]":
-        return _UniffiConverterOptionalTypeDigest.lift(
+    def next_lexicographical(self, ) -> "Digest":
+        return _UniffiConverterTypeDigest.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical,self._uniffi_clone_pointer(),)
         )
 

@@ -1330,7 +1330,7 @@ void* uniffi_iota_sdk_ffi_fn_constructor_digest_generate(RustCallStatus *out_sta
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
-RustBuffer uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(void* ptr, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_TO_BASE58

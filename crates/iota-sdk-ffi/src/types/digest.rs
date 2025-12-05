@@ -48,8 +48,9 @@ impl Digest {
         self.0.to_base58()
     }
 
-    pub fn next_lexicographical(&self) -> Option<Arc<Self>> {
-        self.0.next_lexicographical().map(Into::into).map(Arc::new)
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        self.0.next_lexicographical().into()
     }
 }
 
