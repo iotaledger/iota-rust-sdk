@@ -1278,7 +1278,8 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             })
         }
         let move_authenticator =
-            MoveAuthenticator::new(inputs, fn_call.type_arguments, object_to_authenticate).unwrap();
+            MoveAuthenticator::new(inputs, fn_call.type_arguments, object_to_authenticate)
+                .expect("authenticator inputs are checked above");
         let txn = self.finish_internal().await?;
         self.client
             .execute_tx(
