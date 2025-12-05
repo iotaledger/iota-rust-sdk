@@ -412,6 +412,11 @@ impl Object {
         self.as_struct_opt().expect("not a move struct")
     }
 
+    /// Returns whether this object is a move struct
+    pub fn is_struct(&self) -> bool {
+        matches!(self.data, ObjectData::Struct(_))
+    }
+
     /// Try to interpret this object as a move package
     pub fn as_package_opt(&self) -> Option<&MovePackage> {
         match &self.data {
@@ -423,6 +428,11 @@ impl Object {
     /// Interpret this object as a move package
     pub fn as_package(&self) -> &MovePackage {
         self.as_package_opt().expect("not a move package")
+    }
+
+    /// Returns whether this object is a move package
+    pub fn is_package(&self) -> bool {
+        matches!(self.data, ObjectData::Package(_))
     }
 
     /// Return this object's owner
