@@ -480,7 +480,7 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```text
 /// genesis-object = object-data owner
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
     pub data: ObjectData,
