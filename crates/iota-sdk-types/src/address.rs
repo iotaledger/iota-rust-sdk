@@ -87,6 +87,17 @@ impl Address {
         address
     }
 
+    pub fn is_system_package(&self) -> bool {
+        [
+            Self::STD_LIB,
+            Self::FRAMEWORK,
+            Self::SYSTEM,
+            Self::GENESIS_BRIDGE,
+            Self::STARDUST,
+        ]
+        .contains(self)
+    }
+
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn generate<R>(mut rng: R) -> Self
