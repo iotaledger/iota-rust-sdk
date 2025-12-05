@@ -32,6 +32,15 @@ impl Digest {
     /// A constant representing a zero digest.
     pub const ZERO: Self = Self([0; Self::LENGTH]);
 
+    /// A marker that signifies the object is deleted.
+    pub const OBJECT_DELETED: Digest = Digest::new([99; 32]);
+
+    /// A marker that signifies the object is wrapped into another object.
+    pub const OBJECT_WRAPPED: Digest = Digest::new([88; 32]);
+
+    /// A marker that signifies the object is cancelled.
+    pub const OBJECT_CANCELLED: Digest = Digest::new([77; 32]);
+
     /// Generates a new digest from the provided 32 byte array containing [`u8`]
     /// values.
     pub const fn new(digest: [u8; Self::LENGTH]) -> Self {

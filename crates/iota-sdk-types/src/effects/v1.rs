@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId,
+    Digest, EpochId, GasCostSummary, ObjectId, ObjectReference,
     execution_status::ExecutionStatus,
     object::{Owner, Version},
 };
@@ -85,6 +85,135 @@ impl TransactionEffectsV1 {
     /// The gas used in this transaction.
     pub fn gas_summary(&self) -> &GasCostSummary {
         &self.gas_used
+    }
+
+    pub fn modified_at_versions(&self) -> impl Iterator<Item = (ObjectId, Version)> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            if let ObjectIn::Data { version, .. } = &obj.input_state {
+                Some((obj.object_id, *version))
+            } else {
+                None
+            }
+        })
+    }
+
+    pub fn old_object_metadata(&self) -> impl Iterator<Item = (ObjectReference, Owner)> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            if let ObjectIn::Data {
+                version,
+                digest,
+                owner,
+            } = &obj.input_state
+            {
+                Some((
+                    ObjectReference::new(obj.object_id, *version, *digest),
+                    *owner,
+                ))
+            } else {
+                None
+            }
+        })
+    }
+
+    pub fn created(&self) -> impl Iterator<Item = (ObjectReference, Owner)> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            match (&obj.input_state, &obj.output_state, &obj.id_operation) {
+                (
+                    ObjectIn::Missing,
+                    ObjectOut::ObjectWrite { digest, owner },
+                    IdOperation::Created,
+                ) => Some((
+                    ObjectReference::new(obj.object_id, self.lamport_version, *digest),
+                    *owner,
+                )),
+                (
+                    ObjectIn::Missing,
+                    ObjectOut::PackageWrite { version, digest },
+                    IdOperation::Created,
+                ) => Some((
+                    ObjectReference::new(obj.object_id, *version, *digest),
+                    Owner::Immutable,
+                )),
+                _ => None,
+            }
+        })
+    }
+
+    pub fn mutated(&self) -> impl Iterator<Item = (ObjectReference, Owner)> + '_ {
+        self.changed_objects
+            .iter()
+            .filter_map(|obj| match (&obj.input_state, &obj.output_state) {
+                (ObjectIn::Data { .. }, ObjectOut::ObjectWrite { digest, owner }) => Some((
+                    ObjectReference::new(obj.object_id, self.lamport_version, *digest),
+                    *owner,
+                )),
+                (ObjectIn::Data { .. }, ObjectOut::PackageWrite { version, digest }) => Some((
+                    ObjectReference::new(obj.object_id, *version, *digest),
+                    Owner::Immutable,
+                )),
+                _ => None,
+            })
+    }
+
+    pub fn unwrapped(&self) -> impl Iterator<Item = (ObjectReference, Owner)> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            match (&obj.input_state, &obj.output_state, &obj.id_operation) {
+                (
+                    ObjectIn::Missing,
+                    ObjectOut::ObjectWrite { digest, owner },
+                    IdOperation::None,
+                ) => Some((
+                    ObjectReference::new(obj.object_id, self.lamport_version, *digest),
+                    *owner,
+                )),
+                _ => None,
+            }
+        })
+    }
+
+    pub fn deleted(&self) -> impl Iterator<Item = ObjectReference> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            match (&obj.input_state, &obj.output_state, &obj.id_operation) {
+                (ObjectIn::Data { .. }, ObjectOut::Missing, IdOperation::Deleted) => {
+                    Some(ObjectReference::new(
+                        obj.object_id,
+                        self.lamport_version,
+                        Digest::OBJECT_DELETED,
+                    ))
+                }
+                _ => None,
+            }
+        })
+    }
+
+    pub fn unwrapped_then_deleted(&self) -> impl Iterator<Item = ObjectReference> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            match (&obj.input_state, &obj.output_state, &obj.id_operation) {
+                (ObjectIn::Missing, ObjectOut::Missing, IdOperation::Deleted) => {
+                    Some(ObjectReference::new(
+                        obj.object_id,
+                        self.lamport_version,
+                        Digest::OBJECT_DELETED,
+                    ))
+                }
+                _ => None,
+            }
+        })
+    }
+
+    pub fn wrapped(&self) -> impl Iterator<Item = ObjectReference> + '_ {
+        self.changed_objects.iter().filter_map(|obj| {
+            match (&obj.input_state, &obj.output_state, &obj.id_operation) {
+                (ObjectIn::Data { .. }, ObjectOut::Missing, IdOperation::None) => {
+                    Some(ObjectReference::new(
+                        obj.object_id,
+                        self.lamport_version,
+                        Digest::OBJECT_WRAPPED,
+                    ))
+                }
+                _ => None,
+            }
+        })
     }
 }
 
