@@ -39,6 +39,10 @@ impl ObjectId {
         Self(Address::new(bytes))
     }
 
+    pub fn to_hex(&self) -> String {
+        self.to_string()
+    }
+
     /// Parse an ObjectId from a hex string.
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, super::address::AddressParseError> {
         Address::from_hex(hex).map(Self)
