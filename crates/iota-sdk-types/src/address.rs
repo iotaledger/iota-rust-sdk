@@ -69,17 +69,21 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const STD_LIB: Self = Self::from_u8(1);
-    pub const FRAMEWORK: Self = Self::from_u8(2);
-    pub const SYSTEM: Self = Self::from_u8(3);
+    pub const STD_LIB: Self = Self::from_u16(1);
+    pub const FRAMEWORK: Self = Self::from_u16(2);
+    pub const SYSTEM: Self = Self::from_u16(3);
+    pub const GENESIS_BRIDGE: Self = Self::from_u16(0xb);
+    pub const STARDUST: Self = Self::from_u16(0x107a);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(bytes)
     }
 
-    pub(crate) const fn from_u8(byte: u8) -> Self {
+    pub(crate) const fn from_u16(suffix: u16) -> Self {
         let mut address = Self::ZERO;
-        address.0[31] = byte;
+        let [hi, lo] = suffix.to_be_bytes();
+        address.0[Address::LENGTH - 2] = hi;
+        address.0[Address::LENGTH - 1] = lo;
         address
     }
 

@@ -855,6 +855,27 @@ pub enum Input {
 }
 
 impl Input {
+    pub const IOTA_SYSTEM_MUT: Self = Self::Shared {
+        object_id: ObjectId::SYSTEM,
+        initial_shared_version: 1,
+        mutable: true,
+    };
+    pub const CLOCK_IMM: Self = Self::Shared {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: 1,
+        mutable: false,
+    };
+    pub const CLOCK_MUT: Self = Self::Shared {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: 1,
+        mutable: true,
+    };
+    pub const AUTHENTICATOR_MUT: Self = Self::Shared {
+        object_id: ObjectId::AUTHENTICATOR_STATE,
+        initial_shared_version: 1,
+        mutable: true,
+    };
+
     crate::def_is!(Pure, Shared);
 
     crate::def_is_as_into_opt!(

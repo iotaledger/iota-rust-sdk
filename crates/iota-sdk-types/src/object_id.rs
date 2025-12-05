@@ -31,8 +31,12 @@ pub struct ObjectId(Address);
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);
-    pub const SYSTEM: Self = Self(Address::from_u8(5));
-    pub const CLOCK: Self = Self(Address::from_u8(6));
+    pub const SYSTEM: Self = Self(Address::from_u16(5));
+    pub const CLOCK: Self = Self(Address::from_u16(6));
+    pub const AUTHENTICATOR_STATE: Self = Self(Address::from_u16(7));
+    pub const RANDOMNESS_STATE: Self = Self(Address::from_u16(8));
+    pub const GENESIS_IOTA_BRIDGE: Self = Self(Address::from_u16(9));
+    pub const DENY_LIST: Self = Self(Address::from_u16(0x403));
 
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
