@@ -57,6 +57,13 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
+impl TransactionV1 {
+    /// Check if the transaction is sponsored (namely gas owner != sender)
+    pub fn is_sponsored_tx(&self) -> bool {
+        self.gas_payment.owner != self.sender
+    }
+}
+
 #[cfg_attr(feature = "serde", derive(serde::Deserialize))]
 pub struct SenderSignedTransaction(
     #[cfg_attr(
