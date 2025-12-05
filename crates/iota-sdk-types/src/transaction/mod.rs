@@ -220,6 +220,18 @@ impl TransactionKind {
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     }
+
+    /// Returns whether the transaction kind is a system transaction.
+    pub fn is_system_tx(&self) -> bool {
+        match self {
+            Self::Genesis(_)
+            | Self::ConsensusCommitPrologueV1(_)
+            | Self::AuthenticatorStateUpdateV1(_)
+            | Self::RandomnessStateUpdate(_)
+            | Self::EndOfEpoch(_) => true,
+            Self::ProgrammableTransaction(_) => false,
+        }
+    }
 }
 
 /// Operation run at the end of an epoch
