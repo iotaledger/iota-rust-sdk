@@ -1479,7 +1479,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes() != 38367:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5584,11 +5588,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -11250,9 +11266,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.restype = ctypes.c_uint16
@@ -38388,7 +38410,21 @@ class ObjectIdProtocol(typing.Protocol):
         raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
+    def to_canonical_string(self, with_prefix: "bool"):
+        """
+        Returns the string representation of this object ID using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        raise NotImplementedError
     def to_hex(self, ):
+        raise NotImplementedError
+    def to_short_string(self, with_prefix: "bool"):
+        """
+        Returns the shortest possible string representation of the object ID
+        (i.e. with leading zeroes trimmed).
+        """
+
         raise NotImplementedError
 # ObjectId is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ObjectId():
@@ -38529,9 +38565,43 @@ class ObjectId():
 
 
 
+    def to_canonical_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the string representation of this object ID using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
+        )
+
+
+
+
+
     def to_hex(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_short_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the shortest possible string representation of the object ID
+        (i.e. with leading zeroes trimmed).
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
         )
 
 

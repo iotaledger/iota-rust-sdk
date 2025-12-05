@@ -3119,9 +3119,19 @@ void* uniffi_iota_sdk_ffi_fn_method_objectid_to_address(void* ptr, RustCallStatu
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_CANONICAL_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_SHORT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_SHORT_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_UNIFFI_TRAIT_HASH
@@ -10282,9 +10292,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_CANONICAL_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_SHORT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_SHORT_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(void
     
 );
 #endif

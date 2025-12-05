@@ -3091,6 +3091,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4124,7 +4128,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
 ): Short
@@ -6387,7 +6395,11 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_address(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
@@ -9552,7 +9564,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes() != 38367.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
@@ -33149,7 +33167,19 @@ public interface ObjectIdInterface {
     
     fun `toBytes`(): kotlin.ByteArray
     
+    /**
+     * Returns the string representation of this object ID using the
+     * canonical display, with or without a `0x` prefix.
+     */
+    fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */
+    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
     companion object
 }
@@ -33297,12 +33327,44 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+    
+    /**
+     * Returns the string representation of this object ID using the
+     * canonical display, with or without a `0x` prefix.
+     */override fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+}
+    }
+    )
+    }
+    
+
     override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
     )
