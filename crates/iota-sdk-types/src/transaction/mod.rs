@@ -350,6 +350,40 @@ impl TransactionKind {
     }
 }
 
+impl std::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            Self::Genesis(_) => {
+                writeln!(f, "Transaction Kind : Genesis")?;
+            }
+            Self::ConsensusCommitPrologueV1(p) => {
+                writeln!(f, "Transaction Kind : Consensus Commit Prologue V1")?;
+                writeln!(f, "Timestamp : {}", p.commit_timestamp_ms)?;
+                writeln!(f, "Consensus Digest: {}", p.consensus_commit_digest)?;
+                writeln!(
+                    f,
+                    "Consensus determined version assignment: {:?}",
+                    p.consensus_determined_version_assignments
+                )?;
+            }
+            Self::ProgrammableTransaction(p) => {
+                writeln!(f, "Transaction Kind : Programmable")?;
+                write!(f, "{p}")?;
+            }
+            Self::AuthenticatorStateUpdateV1(_) => {
+                writeln!(f, "Transaction Kind : Authenticator State Update")?;
+            }
+            Self::RandomnessStateUpdate(_) => {
+                writeln!(f, "Transaction Kind : Randomness State Update")?;
+            }
+            Self::EndOfEpoch(_) => {
+                writeln!(f, "Transaction Kind : End of Epoch")?;
+            }
+        }
+        Ok(())
+    }
+}
+
 /// Operation run at the end of an epoch
 ///
 /// # BCS
@@ -995,6 +1029,18 @@ impl ProgrammableTransaction {
     }
 }
 
+impl std::fmt::Display for ProgrammableTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let ProgrammableTransaction { inputs, commands } = self;
+        writeln!(f, "Inputs: {inputs:?}")?;
+        writeln!(f, "Commands: [")?;
+        for c in commands {
+            writeln!(f, "  {c},")?;
+        }
+        writeln!(f, "]")
+    }
+}
+
 /// An input to a user transaction
 ///
 /// # BCS
@@ -1145,6 +1191,20 @@ impl Command {
     );
 }
 
+impl std::fmt::Display for Command {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Command::MoveCall(call) => call.fmt(f),
+            Command::MakeMoveVector(make_vec) => make_vec.fmt(f),
+            Command::TransferObjects(transfer) => transfer.fmt(f),
+            Command::SplitCoins(split) => split.fmt(f),
+            Command::MergeCoins(merge) => merge.fmt(f),
+            Command::Publish(publish) => publish.fmt(f),
+            Command::Upgrade(upgrade) => upgrade.fmt(f),
+        }
+    }
+}
+
 /// Command to transfer ownership of a set of objects to an address
 ///
 /// # BCS
@@ -1164,6 +1224,14 @@ pub struct TransferObjects {
     pub objects: Vec<Argument>,
     /// The address to transfer ownership to
     pub address: Argument,
+}
+
+impl std::fmt::Display for TransferObjects {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "TransferObjects([")?;
+        write_sep(f, &self.objects, ",")?;
+        write!(f, "],{})", self.address)
+    }
 }
 
 /// Command to split a single coin object into multiple coins
@@ -1187,6 +1255,14 @@ pub struct SplitCoins {
     pub amounts: Vec<Argument>,
 }
 
+impl std::fmt::Display for SplitCoins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SplitCoins({}", self.coin)?;
+        write_sep(f, &self.amounts, ",")?;
+        write!(f, ")")
+    }
+}
+
 /// Command to merge multiple coins of the same type into a single coin
 ///
 /// # BCS
@@ -1208,6 +1284,14 @@ pub struct MergeCoins {
     /// All listed coins must be of the same type and be the same type as `coin`
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub coins_to_merge: Vec<Argument>,
+}
+
+impl std::fmt::Display for MergeCoins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MergeCoins({},", self.coin)?;
+        write_sep(f, &self.coins_to_merge, ",")?;
+        write!(f, ")")
+    }
 }
 
 /// Command to publish a new move package
@@ -1238,6 +1322,14 @@ pub struct Publish {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl std::fmt::Display for Publish {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Publish(_,")?;
+        write_sep(f, &self.dependencies, ",")?;
+        write!(f, ")")
+    }
+}
+
 /// Command to build a move vector out of a set of individual elements
 ///
 /// # BCS
@@ -1261,6 +1353,20 @@ pub struct MakeMoveVector {
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
+}
+
+impl std::fmt::Display for MakeMoveVector {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MakeMoveVector(")?;
+        if let Some(ty) = &self.type_ {
+            write!(f, "{ty}, ")?;
+        } else {
+            write!(f, "")?;
+        }
+        write!(f, "[")?;
+        write_sep(f, &self.elements, ",")?;
+        write!(f, "])")
+    }
 }
 
 /// Command to upgrade an already published package
@@ -1295,6 +1401,16 @@ pub struct Upgrade {
     pub package: ObjectId,
     /// Ticket authorizing the upgrade
     pub ticket: Argument,
+}
+
+impl std::fmt::Display for Upgrade {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Upgrade(")?;
+        write_sep(f, &self.dependencies, ",")?;
+        write!(f, ", {}", self.package)?;
+        write!(f, ", {}", self.ticket)?;
+        write!(f, ")")
+    }
 }
 
 /// An argument to a programmable transaction command
@@ -1381,6 +1497,17 @@ impl Argument {
     }
 }
 
+impl std::fmt::Display for Argument {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Argument::Gas => write!(f, "Gas"),
+            Argument::Input(i) => write!(f, "Input({i})"),
+            Argument::Result(i) => write!(f, "Result({i})"),
+            Argument::NestedResult(i, j) => write!(f, "NestedResult({i},{j})"),
+        }
+    }
+}
+
 /// Command to call a move function
 ///
 /// Functions that can be called by a `MoveCall` command are those that have a
@@ -1415,4 +1542,42 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
+}
+
+impl std::fmt::Display for MoveCall {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        } = self;
+        write!(f, "MoveCall(")?;
+        write!(f, "{package}::{module}::{function}")?;
+        if !type_arguments.is_empty() {
+            write!(f, "<")?;
+            write_sep(f, type_arguments, ",")?;
+            write!(f, ">")?;
+        }
+        write!(f, "(")?;
+        write_sep(f, arguments, ",")?;
+        write!(f, "))")
+    }
+}
+
+pub fn write_sep<T: std::fmt::Display>(
+    f: &mut std::fmt::Formatter<'_>,
+    items: impl IntoIterator<Item = T>,
+    sep: &str,
+) -> std::fmt::Result {
+    let mut xs = items.into_iter();
+    let Some(x) = xs.next() else {
+        return Ok(());
+    };
+    write!(f, "{x}")?;
+    for x in xs {
+        write!(f, "{sep}{x}")?;
+    }
+    Ok(())
 }
