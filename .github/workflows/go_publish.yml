@@ -1,49 +1,37 @@
-name: Go Release
+name: Publish Go SDK to iotaledger/iota-sdk-go
+
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: "Version for the go package (bypass the level if present)"
-        required: false
-        type: string
-      level:
-        description: |
-          The level of version bump to make.
-
-          Possible values:
-          - major:   Increase the major version (x.0.0)
-          - minor:   Increase the minor version (x.y.0)
-          - patch:   Increase the patch version (x.y.z)
-          - release: Remove the pre-version (x.y.z)
-          - rc:      Increase the rc pre-version (x.y.z-rc.M)
-          - beta:    Increase the beta pre-version (x.y.z-beta.M)
-          - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
-        type: choice
+        description: "Version of iota-sdk-go to publish"
         required: true
-        options: # TODO adjust in followup PR
-          - major
-          - minor
-          - patch
-          - release
-          - rc
-          - beta
-          - alpha
+        type: string
 
 jobs:
   prepare-source-archive:
     name: Prepare source archive
+    if: (github.event_name == 'release' && startsWith(github.event.release.tag_name, 'iota-go-sdk')) || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Archive Go SDK source
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: source
-          path: bindings/go/iota_sdk
+          path: |
+            bindings/go/iota_sdk
+            bindings/go/README.md
 
   prepare-libraries-archives:
+    name: Prepare libraries archives
+    if: (github.event_name == 'release' && contains(github.event.release.tag_name, 'iota-go-sdk')) || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         include:
@@ -75,13 +63,15 @@ jobs:
     steps:
       - name: Checkout iota-rust-sdk
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Install rust target ${{ matrix.target }}
         run: rustup target add ${{ matrix.target }}
 
       - name: Install gcc-aarch64-linux-gnu
         if: matrix.target == 'aarch64-unknown-linux-gnu'
-        run: sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Build ${{ matrix.os }} ${{ matrix.target }} library
         if: matrix.os == 'macos-latest'
@@ -128,30 +118,14 @@ jobs:
         with:
           merge-multiple: true
 
-      - name: Get latest tag from iota-sdk-go
-        id: get-latest-tag
-        run: |
-          LATEST_TAG=$(git tag --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="v0.0.0"
-          fi
-          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          echo "Latest tag: $LATEST_TAG"
-
-      - name: Bump the latest tag version
-        uses: actions-ecosystem/action-bump-semver@34e334551143a5301f38c830e44a22273c6ff5c5 # v1.0.0
-        id: bump-semver
-        with:
-          current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: ${{ inputs.level }}
-
-      - name: Set version according to inputs
+      - name: Set version to input or release tag
         id: set-version
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
           else
-            echo "version=${{ steps.bump-semver.outputs.new_version }}" >> $GITHUB_OUTPUT
+            version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-go-sdk-v(.*)|\1|p')
+            echo "version=$version" >> $GITHUB_OUTPUT
           fi
 
       - name: Tag the Go SDK

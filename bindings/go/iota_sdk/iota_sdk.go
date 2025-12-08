@@ -2376,11 +2376,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string()
+	})
+	if checksum != 50168 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_hex()
 	})
 	if checksum != 22032 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string()
+	})
+	if checksum != 56908 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_short_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -3227,6 +3245,15 @@ func uniffiCheckChecksums() {
 	if checksum != 10241 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical()
+	})
+	if checksum != 53914 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4545,6 +4572,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme()
+	})
+	if checksum != 44341 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519()
 	})
 	if checksum != 22855 {
@@ -4959,11 +4995,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string()
+	})
+	if checksum != 62489 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex()
 	})
 	if checksum != 4418 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string()
+	})
+	if checksum != 63526 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6048,6 +6102,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string()
+	})
+	if checksum != 21212 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args()
 	})
 	if checksum != 48594 {
@@ -6611,6 +6674,15 @@ func uniffiCheckChecksums() {
 	if checksum != 49992 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string()
+	})
+	if checksum != 24741 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10542,7 +10614,13 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 // ```
 type AddressInterface interface {
 	ToBytes() []byte
+	// Returns the string representation of this address using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	ToHex() string
+	// Returns the shortest possible string representation of the address (i.e.
+	// with leading zeroes trimmed).
+	ToShortString(withPrefix bool) string
 }
 // Unique identifier for an Account on the IOTA blockchain.
 //
@@ -10656,6 +10734,19 @@ func (_self *Address) ToBytes() []byte {
 	}))
 }
 
+// Returns the string representation of this address using the
+// canonical display, with or without a `0x` prefix.
+func (_self *Address) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *Address) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
 	defer _self.ffiObject.decrementPointer()
@@ -10663,6 +10754,19 @@ func (_self *Address) ToHex() string {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_hex(
 		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the address (i.e.
+// with leading zeroes trimmed).
+func (_self *Address) ToShortString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
 	}
 	}))
 }
@@ -14095,6 +14199,8 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 // compact 32 bytes.
 type DigestInterface interface {
+	// Returns the next digest in byte-increasing order.
+	NextLexicographical() *Digest
 	ToBase58() string
 	ToBytes() []byte
 }
@@ -14148,6 +14254,16 @@ func DigestGenerate() *Digest {
 }
 
 
+
+// Returns the next digest in byte-increasing order.
+func (_self *Digest) NextLexicographical() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 func (_self *Digest) ToBase58() string {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
@@ -20215,6 +20331,7 @@ type MultisigMemberPublicKeyInterface interface {
 	IsSecp256k1() bool
 	IsSecp256r1() bool
 	IsZklogin() bool
+	Scheme() SignatureScheme
 }
 // Enum of valid public keys for multisig committee members
 //
@@ -20364,6 +20481,17 @@ func (_self *MultisigMemberPublicKey) IsZklogin() bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 func (object *MultisigMemberPublicKey) Destroy() {
@@ -21448,7 +21576,13 @@ type ObjectIdInterface interface {
 	DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId
 	ToAddress() *Address
 	ToBytes() []byte
+	// Returns the string representation of this object ID using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	ToHex() string
+	// Returns the shortest possible string representation of the object ID
+	// (i.e. with leading zeroes trimmed).
+	ToShortString(withPrefix bool) string
 }
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
@@ -21557,6 +21691,19 @@ func (_self *ObjectId) ToBytes() []byte {
 	}))
 }
 
+// Returns the string representation of this object ID using the
+// canonical display, with or without a `0x` prefix.
+func (_self *ObjectId) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *ObjectId) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
@@ -21564,6 +21711,19 @@ func (_self *ObjectId) ToHex() string {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(
 		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object ID
+// (i.e. with leading zeroes trimmed).
+func (_self *ObjectId) ToShortString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
 	}
 	}))
 }
@@ -25865,6 +26025,9 @@ type StructTagInterface interface {
 	Module() *Identifier
 	// Returns the name part of a `StructTag`
 	Name() *Identifier
+	// Returns the string representation of this struct tag using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	// Returns the type params part of a `StructTag`
 	TypeArgs() []*TypeTag
 }
@@ -26139,6 +26302,19 @@ func (_self *StructTag) Name() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_name(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the string representation of this struct tag using the
+// canonical display, with or without a `0x` prefix.
+func (_self *StructTag) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
 	}))
 }
 
@@ -27717,6 +27893,9 @@ type TypeTagInterface interface {
 	IsU64() bool
 	IsU8() bool
 	IsVector() bool
+	// Returns the string representation of this type tag using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 }
 // Type of a move value
 //
@@ -27958,6 +28137,19 @@ func (_self *TypeTag) IsVector() bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the string representation of this type tag using the
+// canonical display, with or without a `0x` prefix.
+func (_self *TypeTag) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
 	}))
 }
 

@@ -39,6 +39,10 @@ impl ObjectId {
         Self(Address::new(bytes))
     }
 
+    pub fn to_hex(&self) -> String {
+        self.to_string()
+    }
+
     /// Parse an ObjectId from a hex string.
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, super::address::AddressParseError> {
         Address::from_hex(hex).map(Self)
@@ -62,6 +66,18 @@ impl ObjectId {
     /// Returns the underlying Address of an ObjectId.
     pub const fn as_address(&self) -> &Address {
         &self.0
+    }
+
+    /// Returns the string representation of this object ID using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
+
+    /// Returns the shortest possible string representation of the object ID
+    /// (i.e. with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        self.0.to_short_string(with_prefix)
     }
 }
 
@@ -111,6 +127,6 @@ impl std::str::FromStr for ObjectId {
 
 impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.fmt(f)
+        self.to_canonical_string(true).fmt(f)
     }
 }

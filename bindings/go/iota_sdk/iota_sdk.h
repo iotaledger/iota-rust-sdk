@@ -433,9 +433,19 @@ void* uniffi_iota_sdk_ffi_fn_constructor_address_zero(RustCallStatus *out_status
 RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_CANONICAL_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_HEX
 RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_hex(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_SHORT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_SHORT_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_short_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ARGUMENT
@@ -1321,6 +1331,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(RustBuffer bytes, Rus
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_DIGEST_GENERATE
 void* uniffi_iota_sdk_ffi_fn_constructor_digest_generate(RustCallStatus *out_status
     
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
+void* uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_TO_BASE58
@@ -2785,6 +2800,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(void* 
 int8_t uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MULTISIGMEMBERPUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MULTISIGMEMBERPUBLICKEY_SCHEME
+RustBuffer uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MULTISIGMEMBERSIGNATURE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MULTISIGMEMBERSIGNATURE
 void* uniffi_iota_sdk_ffi_fn_clone_multisigmembersignature(void* ptr, RustCallStatus *out_status
@@ -3149,9 +3169,19 @@ void* uniffi_iota_sdk_ffi_fn_method_objectid_to_address(void* ptr, RustCallStatu
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_CANONICAL_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_HEX
 RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_SHORT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_SHORT_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_UNIFFI_TRAIT_HASH
@@ -4698,6 +4728,11 @@ void* uniffi_iota_sdk_ffi_fn_method_structtag_module(void* ptr, RustCallStatus *
 void* uniffi_iota_sdk_ffi_fn_method_structtag_name(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_TO_CANONICAL_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_TYPE_ARGS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_TYPE_ARGS
 RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_type_args(void* ptr, RustCallStatus *out_status
@@ -5255,6 +5290,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(void* ptr, RustCallStatus *ou
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_VECTOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_IS_VECTOR
 int8_t uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_TO_CANONICAL_STRING
+RustBuffer uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(void* ptr, int8_t with_prefix, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TYPETAG_UNIFFI_TRAIT_DISPLAY
@@ -8612,9 +8652,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_CANONICAL_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_SHORT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_SHORT_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_short_string(void
     
 );
 #endif
@@ -9179,6 +9231,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignmen
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CONSENSUSDETERMINEDVERSIONASSIGNMENTS_IS_CANCELLED_TRANSACTIONS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CONSENSUSDETERMINEDVERSIONASSIGNMENTS_IS_CANCELLED_TRANSACTIONS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
+uint16_t uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(void
     
 );
 #endif
@@ -10058,6 +10116,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin(
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MULTISIGMEMBERPUBLICKEY_SCHEME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MULTISIGMEMBERPUBLICKEY_SCHEME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MULTISIGMEMBERSIGNATURE_AS_ED25519
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MULTISIGMEMBERSIGNATURE_AS_ED25519
 uint16_t uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519(void
@@ -10334,9 +10398,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_CANONICAL_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_SHORT_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_TO_SHORT_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(void
     
 );
 #endif
@@ -11060,6 +11136,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_name(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_TO_CANONICAL_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_TYPE_ARGS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_TYPE_ARGS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_type_args(void
@@ -11435,6 +11517,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_VECTOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_IS_VECTOR
 uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_TO_CANONICAL_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TYPETAG_TO_CANONICAL_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string(void
     
 );
 #endif

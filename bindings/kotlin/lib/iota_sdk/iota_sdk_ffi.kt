@@ -3095,6 +3095,7 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -3105,6 +3106,8 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
 
 
 
+=======
+>>>>>>> develop
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3568,7 +3571,11 @@ fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(
 ): Short
@@ -3757,6 +3764,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index(
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_to_base58(
 ): Short
@@ -4050,6 +4059,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp256r1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt(
@@ -4142,7 +4153,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
 ): Short
@@ -4384,6 +4399,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_name(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_type_args(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies(
@@ -4509,6 +4526,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u64(
 fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies(
 ): Short
@@ -5349,7 +5368,11 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_zero(uniffi_out_err: UniffiRustCa
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_address_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_argument(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -5702,6 +5725,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_base58(`base58`: RustBuffer.B
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_generate(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_base58(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -6281,6 +6306,8 @@ fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_secp256r1(`ptr`: Po
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_multisigmembersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigmembersignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6425,7 +6452,11 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_address(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
@@ -7031,6 +7062,8 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_module(`ptr`: Pointer,uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7251,6 +7284,8 @@ fun uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(`ptr`: Pointer,uniffi_out_err: U
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_upgrade(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8739,7 +8774,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358.toShort()) {
@@ -9022,6 +9063,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638.toShort()) {
@@ -9462,6 +9506,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin() != 37193.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() != 22855.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -9600,7 +9647,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes() != 38367.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
@@ -9963,6 +10016,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 62865.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string() != 21212.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args() != 48594.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10150,6 +10206,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies() != 7113.toShort()) {
@@ -11959,7 +12018,19 @@ public interface AddressInterface {
     
     fun `toBytes`(): kotlin.ByteArray
     
+    /**
+     * Returns the string representation of this address using the
+     * canonical display, with or without a `0x` prefix.
+     */
+    fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed).
+     */
+    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
     companion object
 }
@@ -12100,12 +12171,44 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
+    
+    /**
+     * Returns the string representation of this address using the
+     * canonical display, with or without a `0x` prefix.
+     */override fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+}
+    }
+    )
+    }
+    
+
     override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_hex(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed).
+     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
     )
@@ -19792,6 +19895,11 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
  */
 public interface DigestInterface {
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    fun `nextLexicographical`(): Digest
+    
     fun `toBase58`(): kotlin.String
     
     fun `toBytes`(): kotlin.ByteArray
@@ -19896,6 +20004,21 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_digest(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */override fun `nextLexicographical`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `toBase58`(): kotlin.String {
             return FfiConverterString.lift(
@@ -30814,6 +30937,8 @@ public interface MultisigMemberPublicKeyInterface {
     
     fun `isZklogin`(): kotlin.Boolean
     
+    fun `scheme`(): SignatureScheme
+    
     companion object
 }
 
@@ -31066,6 +31191,18 @@ open class MultisigMemberPublicKey: Disposable, AutoCloseable, MultisigMemberPub
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `scheme`(): SignatureScheme {
+            return FfiConverterTypeSignatureScheme.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(
         it, _status)
 }
     }
@@ -33487,7 +33624,19 @@ public interface ObjectIdInterface {
     
     fun `toBytes`(): kotlin.ByteArray
     
+    /**
+     * Returns the string representation of this object ID using the
+     * canonical display, with or without a `0x` prefix.
+     */
+    fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */
+    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
     companion object
 }
@@ -33635,12 +33784,44 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+    
+    /**
+     * Returns the string representation of this object ID using the
+     * canonical display, with or without a `0x` prefix.
+     */override fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+}
+    }
+    )
+    }
+    
+
     override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
     )
@@ -42598,6 +42779,12 @@ public interface StructTagInterface {
     fun `name`(): Identifier
     
     /**
+     * Returns the string representation of this struct tag using the
+     * canonical display, with or without a `0x` prefix.
+     */
+    fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    
+    /**
      * Returns the type params part of a `StructTag`
      */
     fun `typeArgs`(): List<TypeTag>
@@ -42777,6 +42964,22 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the string representation of this struct tag using the
+     * canonical display, with or without a `0x` prefix.
+     */override fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
     )
@@ -46412,6 +46615,12 @@ public interface TypeTagInterface {
     
     fun `isVector`(): kotlin.Boolean
     
+    /**
+     * Returns the string representation of this type tag using the
+     * canonical display, with or without a `0x` prefix.
+     */
+    fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    
     companion object
 }
 
@@ -46704,6 +46913,22 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
         it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the string representation of this type tag using the
+     * canonical display, with or without a `0x` prefix.
+     */override fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
+        it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
     )
