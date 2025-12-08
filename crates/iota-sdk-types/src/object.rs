@@ -303,6 +303,7 @@ pub struct MoveStruct {
 
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
