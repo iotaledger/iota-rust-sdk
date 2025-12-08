@@ -10,11 +10,6 @@ on:
         required: false
         default: true
         type: boolean
-      branch-or-commit:
-        description: "Branch or commit to run feature compatibility checks."
-        type: string
-        required: false
-        default: ""
 
 permissions:
   contents: read
@@ -82,7 +77,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          ref: ${{ github.event.release.tag_name || github.event.inputs.branch-or-commit || github.ref }}
+          ref: ${{ github.event.release.tag_name || github.ref }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@0f44b27771c32bda9f458f75a1e241b09791b331
