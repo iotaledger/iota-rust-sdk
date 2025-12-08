@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::collections::HashSet;
+
 use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
@@ -80,6 +82,52 @@ pub struct SenderSignedTransaction(
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub enum InputObject {
+    // A Move package, must be immutable.
+    Package(ObjectId),
+    // A Move object, either immutable or owned and mutable.
+    ImmutableOrOwned(ObjectReference),
+    // A Move object that's shared and mutable.
+    Shared {
+        object_id: ObjectId,
+        initial_shared_version: Version,
+        mutable: bool,
+    },
+}
+
+impl InputObject {
+    pub fn object_id(&self) -> ObjectId {
+        match self {
+            Self::Package(id) => *id,
+            Self::ImmutableOrOwned(obj_ref) => obj_ref.object_id,
+            Self::Shared { object_id: id, .. } => *id,
+        }
+    }
+
+    pub fn version(&self) -> Option<Version> {
+        match self {
+            Self::Package(..) => None,
+            Self::ImmutableOrOwned(obj_ref) => Some(obj_ref.version.into()),
+            Self::Shared { .. } => None,
+        }
+    }
+
+    pub fn is_shared_object(&self) -> bool {
+        matches!(self, Self::Shared { .. })
+    }
+
+    pub fn is_mutable(&self) -> bool {
+        match self {
+            Self::Package(..) => false,
+            Self::ImmutableOrOwned(_) => true,
+            Self::Shared { mutable, .. } => *mutable,
+        }
+    }
 }
 
 /// A TTL for a transaction
@@ -238,6 +286,67 @@ impl TransactionKind {
             | Self::EndOfEpoch(_) => true,
             Self::ProgrammableTransaction(_) => false,
         }
+    }
+
+    pub fn input_objects(&self) -> impl Iterator<Item = InputObject> {
+        let input_objects = match &self {
+            Self::Genesis(_) => HashSet::new(),
+            Self::ConsensusCommitPrologueV1(_) => HashSet::from([InputObject::Shared {
+                object_id: ObjectId::CLOCK,
+                initial_shared_version: 1,
+                mutable: true,
+            }]),
+            Self::AuthenticatorStateUpdateV1(update) => HashSet::from([InputObject::Shared {
+                object_id: ObjectId::AUTHENTICATOR_STATE,
+                initial_shared_version: update.authenticator_obj_initial_shared_version,
+                mutable: true,
+            }]),
+            Self::RandomnessStateUpdate(update) => HashSet::from([InputObject::Shared {
+                object_id: ObjectId::RANDOMNESS_STATE,
+                initial_shared_version: update.randomness_obj_initial_shared_version,
+                mutable: true,
+            }]),
+            Self::EndOfEpoch(txns) => {
+                let mut set = HashSet::new();
+                for txn in txns {
+                    match txn {
+                        EndOfEpochTransactionKind::ChangeEpoch(_) => {
+                            set.insert(InputObject::Shared {
+                                object_id: ObjectId::SYSTEM,
+                                initial_shared_version: 1,
+                                mutable: true,
+                            });
+                        }
+                        EndOfEpochTransactionKind::ChangeEpochV2(_) => {
+                            set.insert(InputObject::Shared {
+                                object_id: ObjectId::SYSTEM,
+                                initial_shared_version: 1,
+                                mutable: true,
+                            });
+                        }
+                        EndOfEpochTransactionKind::ChangeEpochV3(_) => {
+                            set.insert(InputObject::Shared {
+                                object_id: ObjectId::SYSTEM,
+                                initial_shared_version: 1,
+                                mutable: true,
+                            });
+                        }
+                        EndOfEpochTransactionKind::AuthenticatorStateCreate => (),
+                        EndOfEpochTransactionKind::AuthenticatorStateExpire(expire) => {
+                            set.insert(InputObject::Shared {
+                                object_id: ObjectId::AUTHENTICATOR_STATE,
+                                initial_shared_version: expire
+                                    .authenticator_obj_initial_shared_version,
+                                mutable: true,
+                            });
+                        }
+                    }
+                }
+                set
+            }
+            Self::ProgrammableTransaction(p) => p.input_objects().collect(),
+        };
+        input_objects.into_iter()
     }
 }
 
@@ -825,6 +934,65 @@ pub struct ProgrammableTransaction {
     /// result in the failure of the entire transaction.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub commands: Vec<Command>,
+}
+
+impl ProgrammableTransaction {
+    pub fn input_objects(&self) -> impl Iterator<Item = InputObject> + '_ {
+        let ProgrammableTransaction { inputs, commands } = self;
+        inputs
+            .iter()
+            .filter_map(|arg| match arg {
+                Input::ImmutableOrOwned(object_reference) => {
+                    Some(InputObject::ImmutableOrOwned(*object_reference))
+                }
+                Input::Shared {
+                    object_id,
+                    initial_shared_version,
+                    mutable,
+                } => Some(InputObject::Shared {
+                    object_id: *object_id,
+                    initial_shared_version: *initial_shared_version,
+                    mutable: *mutable,
+                }),
+                _ => None,
+            })
+            .chain(commands.iter().flat_map(|command| {
+                match command {
+                    Command::MoveCall(move_call) => {
+                        vec![InputObject::Package(move_call.package)]
+                    }
+                    Command::Publish(publish) => publish
+                        .dependencies
+                        .iter()
+                        .map(|id| InputObject::Package(*id))
+                        .collect(),
+                    Command::Upgrade(upgrade) => upgrade
+                        .dependencies
+                        .iter()
+                        .map(|id| InputObject::Package(*id))
+                        .chain([InputObject::Package(upgrade.package)])
+                        .collect(),
+                    Command::MakeMoveVector(MakeMoveVector {
+                        type_: Some(type_), ..
+                    }) => {
+                        let mut packages = Vec::new();
+                        let mut stack = vec![type_];
+                        while let Some(ty) = stack.pop() {
+                            match ty {
+                                TypeTag::Vector(type_tag) => stack.push(type_tag),
+                                TypeTag::Struct(struct_tag) => {
+                                    packages.push(InputObject::Package(struct_tag.address.into()));
+                                    stack.extend(struct_tag.type_params.iter());
+                                }
+                                _ => (),
+                            }
+                        }
+                        packages
+                    }
+                    _ => vec![],
+                }
+            }))
+    }
 }
 
 /// An input to a user transaction
