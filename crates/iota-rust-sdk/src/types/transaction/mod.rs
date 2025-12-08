@@ -479,6 +479,8 @@ pub struct ChangeEpochV4 {
     /// Vector of scores relative to the past epoch performance of each
     /// validator, ordered by the past epoch's validator index.
     pub scores: Vec<u64>,
+    /// Whether to adjust validator rewards based on score.
+    pub adjust_rewards_by_score: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
