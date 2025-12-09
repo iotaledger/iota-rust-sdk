@@ -1645,7 +1645,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_signer_sign() != 32681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign() != 5143:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign() != 4758:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 11009:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -17326,6 +17326,39 @@ class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeSignedTransaction.write(value.data, buf)
 
 
+class SignerFnOutput:
+    """
+    The result of an async sign call containing the `UserSignature`.
+    """
+
+    sig: "UserSignature"
+    def __init__(self, *, sig: "UserSignature"):
+        self.sig = sig
+
+    def __str__(self):
+        return "SignerFnOutput(sig={})".format(self.sig)
+
+    def __eq__(self, other):
+        if self.sig != other.sig:
+            return False
+        return True
+
+class _UniffiConverterTypeSignerFnOutput(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return SignerFnOutput(
+            sig=_UniffiConverterTypeUserSignature.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeUserSignature.check_lower(value.sig)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeUserSignature.write(value.sig, buf)
+
+
 class TransactionDataEffects:
     tx: "SignedTransaction"
     effects: "TransactionEffects"
@@ -26595,7 +26628,7 @@ class SignerFnImpl():
         inst._pointer = pointer
         return inst
 
-    async def sign(self, transaction: "Transaction") -> "bytes":
+    async def sign(self, transaction: "Transaction") -> "SignerFnOutput":
         """
         Sign a transaction and return a BCS serialized `UserSignature`.
         """
@@ -26611,7 +26644,7 @@ class SignerFnImpl():
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
-            _UniffiConverterBytes.lift,
+            _UniffiConverterTypeSignerFnOutput.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -26644,7 +26677,7 @@ class _UniffiTraitImplSignerFn:
             uniffi_future_callback(
                 uniffi_callback_data,
                 _UniffiForeignFutureStructRustBuffer(
-                    _UniffiConverterBytes.lower(return_value),
+                    _UniffiConverterTypeSignerFnOutput.lower(return_value),
                     _UniffiRustCallStatus.default()
                 )
             )
@@ -51002,6 +51035,7 @@ __all__ = [
     "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
+    "SignerFnOutput",
     "TransactionDataEffects",
     "TransactionDataEffectsPage",
     "TransactionEffectsPage",

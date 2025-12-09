@@ -5693,7 +5693,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign()
 	})
-	if checksum != 5143 {
+	if checksum != 4758 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signerfn_sign: UniFFI API checksum mismatch")
 	}
@@ -24957,7 +24957,7 @@ func (_ FfiDestroyerSigner) Destroy(value *Signer) {
 // `TransactionBuilder::execute` function.
 type SignerFn interface {
 	// Sign a transaction and return a BCS serialized `UserSignature`.
-	Sign(transaction *Transaction) ([]byte, error)
+	Sign(transaction *Transaction) (SignerFnOutput, error)
 }
 // Defines a type which can sign a transaction asynchronously.
 //
@@ -24971,7 +24971,7 @@ type SignerFnImpl struct {
 
 
 // Sign a transaction and return a BCS serialized `UserSignature`.
-func (_self *SignerFnImpl) Sign(transaction *Transaction) ([]byte, error) {
+func (_self *SignerFnImpl) Sign(transaction *Transaction) (SignerFnOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("SignerFn")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -24984,8 +24984,8 @@ func (_self *SignerFnImpl) Sign(transaction *Transaction) ([]byte, error) {
 	}
 		},
 		// liftFn
-		func(ffi RustBufferI) []byte {
-			return FfiConverterBytesINSTANCE.Lift(ffi)
+		func(ffi RustBufferI) SignerFnOutput {
+			return FfiConverterSignerFnOutputINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_signerfn_sign(
 		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction)),
@@ -25163,7 +25163,7 @@ func iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnMethod0(uniffiHandle C.ui
 	}
 
 
-	*uniffiOutReturn = FfiConverterBytesINSTANCE.Lower(res)
+	*uniffiOutReturn = FfiConverterSignerFnOutputINSTANCE.Lower(res)
 	}()
 }
 
@@ -33666,6 +33666,42 @@ func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value SignedT
 type FfiDestroyerSignedTransactionPage struct {}
 
 func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
+	value.Destroy()
+}
+// The result of an async sign call containing the `UserSignature`.
+type SignerFnOutput struct {
+	Sig *UserSignature
+}
+
+func (r *SignerFnOutput) Destroy() {
+		FfiDestroyerUserSignature{}.Destroy(r.Sig);
+}
+
+type FfiConverterSignerFnOutput struct {}
+
+var FfiConverterSignerFnOutputINSTANCE = FfiConverterSignerFnOutput{}
+
+func (c FfiConverterSignerFnOutput) Lift(rb RustBufferI) SignerFnOutput {
+	return LiftFromRustBuffer[SignerFnOutput](c, rb)
+}
+
+func (c FfiConverterSignerFnOutput) Read(reader io.Reader) SignerFnOutput {
+	return SignerFnOutput {
+			FfiConverterUserSignatureINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterSignerFnOutput) Lower(value SignerFnOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[SignerFnOutput](c, value)
+}
+
+func (c FfiConverterSignerFnOutput) Write(writer io.Writer, value SignerFnOutput) {
+		FfiConverterUserSignatureINSTANCE.Write(writer, value.Sig);
+}
+
+type FfiDestroyerSignerFnOutput struct {}
+
+func (_ FfiDestroyerSignerFnOutput) Destroy(value SignerFnOutput) {
 	value.Destroy()
 }
 type TransactionDataEffects struct {

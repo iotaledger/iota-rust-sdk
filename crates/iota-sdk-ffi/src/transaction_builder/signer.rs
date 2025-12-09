@@ -14,6 +14,12 @@ use crate::{
     types::{signature::UserSignature, transaction::Transaction},
 };
 
+/// The result of an async sign call containing the `UserSignature`.
+#[derive(uniffi::Record)]
+pub struct SignerFnOutput {
+    sig: Arc<UserSignature>,
+}
+
 /// Defines a type which can sign a transaction asynchronously.
 ///
 /// This trait can be implemented downstream to enable signing when using the
@@ -22,38 +28,46 @@ use crate::{
 #[async_trait::async_trait]
 pub trait SignerFn: Send + Sync + std::fmt::Debug {
     /// Sign a transaction and return a BCS serialized `UserSignature`.
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<Vec<u8>>;
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput>;
 }
 
 #[async_trait::async_trait]
 impl SignerFn for Ed25519PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<Vec<u8>> {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(bcs::to_bytes(&sig)?)
+        Ok(SignerFnOutput {
+            sig: Arc::new(sig.into()),
+        })
     }
 }
 
 #[async_trait::async_trait]
 impl SignerFn for Secp256k1PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<Vec<u8>> {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(bcs::to_bytes(&sig)?)
+        Ok(SignerFnOutput {
+            sig: Arc::new(sig.into()),
+        })
     }
 }
 
 #[async_trait::async_trait]
 impl SignerFn for Secp256r1PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<Vec<u8>> {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(bcs::to_bytes(&sig)?)
+        Ok(SignerFnOutput {
+            sig: Arc::new(sig.into()),
+        })
     }
 }
 
 #[async_trait::async_trait]
 impl SignerFn for SimpleKeypair {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<Vec<u8>> {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(bcs::to_bytes(&sig)?)
+        Ok(SignerFnOutput {
+            sig: Arc::new(sig.into()),
+        })
     }
 }
 
@@ -89,10 +103,8 @@ impl Signer {
         Self(key as Arc<_>)
     }
 
-    pub async fn sign(&self, txn: Arc<Transaction>) -> Result<UserSignature> {
-        let bytes = self.0.sign(txn).await?;
-        let sig: iota_sdk::types::UserSignature = bcs::from_bytes(&bytes)?;
-        Ok(sig.into())
+    pub async fn sign(&self, txn: Arc<Transaction>) -> Result<Arc<UserSignature>> {
+        Ok(self.0.sign(txn).await?.sig)
     }
 }
 
@@ -119,6 +131,7 @@ impl iota_sdk::transaction_builder::Signer for Signer {
             .sign(Arc::new(transaction.clone().into()))
             .await
             .map_err(SignerError)?
-            .0)
+            .0
+            .clone())
     }
 }

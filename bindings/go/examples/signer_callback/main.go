@@ -13,12 +13,9 @@ type AsyncSigner struct {
 	Key *iota_sdk.Ed25519PrivateKey
 }
 
-func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) ([]byte, error) {
+func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.SignerFnOutput, error) {
 	sig, err := signer.Key.SignTransaction(transaction)
-	if err != nil {
-		return nil, err
-	}
-	return sig.ToBytes(), nil
+	return iota_sdk.SignerFnOutput{Sig: sig}, err
 }
 
 func main() {

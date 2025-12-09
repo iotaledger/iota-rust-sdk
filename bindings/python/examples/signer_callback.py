@@ -12,8 +12,7 @@ class AsyncSigner(SignerFn):
         self.key = key
 
     def sign(self, transaction: Transaction):
-        sig = self.key.sign_transaction(transaction)
-        sig.to_bytes()
+        SignerFnOutput(sig=self.key.sign_transaction(transaction))
 
 
 async def main():

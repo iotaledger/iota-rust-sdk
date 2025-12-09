@@ -9890,7 +9890,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_signer_sign() != 32681.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign() != 5143.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign() != 4758.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 11009.toShort()) {
@@ -40874,7 +40874,7 @@ public interface SignerFn {
     /**
      * Sign a transaction and return a BCS serialized `UserSignature`.
      */
-    suspend fun `sign`(`transaction`: Transaction): kotlin.ByteArray
+    suspend fun `sign`(`transaction`: Transaction): SignerFnOutput
     
     companion object
 }
@@ -40973,7 +40973,7 @@ open class SignerFnImpl: Disposable, AutoCloseable, SignerFn
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `sign`(`transaction`: Transaction) : kotlin.ByteArray {
+    override suspend fun `sign`(`transaction`: Transaction) : SignerFnOutput {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_signerfn_sign(
@@ -40985,7 +40985,7 @@ open class SignerFnImpl: Disposable, AutoCloseable, SignerFn
         { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
         { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
-        { FfiConverterByteArray.lift(it) },
+        { FfiConverterTypeSignerFnOutput.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -41010,9 +41010,9 @@ internal object uniffiCallbackInterfaceSignerFn {
                     FfiConverterTypeTransaction.lift(`transaction`),
                 )
             }
-            val uniffiHandleSuccess = { returnValue: kotlin.ByteArray ->
+            val uniffiHandleSuccess = { returnValue: SignerFnOutput ->
                 val uniffiResult = UniffiForeignFutureStructRustBuffer.UniffiByValue(
-                    FfiConverterByteArray.lower(returnValue),
+                    FfiConverterTypeSignerFnOutput.lower(returnValue),
                     UniffiRustCallStatus.ByValue()
                 )
                 uniffiResult.write()
@@ -55777,6 +55777,45 @@ public object FfiConverterTypeSignedTransactionPage: FfiConverterRustBuffer<Sign
     override fun write(value: SignedTransactionPage, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
             FfiConverterSequenceTypeSignedTransaction.write(value.`data`, buf)
+    }
+}
+
+
+
+/**
+ * The result of an async sign call containing the `UserSignature`.
+ */
+data class SignerFnOutput (
+    var `sig`: UserSignature
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`sig`
+    )
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeSignerFnOutput: FfiConverterRustBuffer<SignerFnOutput> {
+    override fun read(buf: ByteBuffer): SignerFnOutput {
+        return SignerFnOutput(
+            FfiConverterTypeUserSignature.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: SignerFnOutput) = (
+            FfiConverterTypeUserSignature.allocationSize(value.`sig`)
+    )
+
+    override fun write(value: SignerFnOutput, buf: ByteBuffer) {
+            FfiConverterTypeUserSignature.write(value.`sig`, buf)
     }
 }
 

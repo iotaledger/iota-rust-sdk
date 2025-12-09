@@ -4,6 +4,12 @@
 import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
+class AsyncSigner(val key: Ed25519PrivateKey) : SignerFn {
+    override suspend fun sign(transaction: Transaction): SignerFnOutput {
+        return SignerFnOutput(key.signTransaction(transaction))
+    }
+}
+
 fun main() = runBlocking {
     try {
         // Amount to send in nanos
@@ -16,12 +22,7 @@ fun main() = runBlocking {
         val senderAddress = publicKey.deriveAddress()
         println("Sender address: ${senderAddress.toHex()}")
 
-        class AsyncSigner(val key: Ed25519PrivateKey) : SignerFn {
-            override suspend fun sign(transaction: Transaction): ByteArray {
-                val sig = key.signTransaction(transaction)
-                return sig.toBytes()
-            }
-        }
+        
 
         val signer = Signer(AsyncSigner(privateKey))
 
