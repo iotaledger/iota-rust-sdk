@@ -43,8 +43,6 @@ pub enum Error {
     MissingPureValue,
     #[error("Missing gas station data")]
     MissingGasStationData,
-    #[error("Missing move authenticator data")]
-    MissingMoveAuthData,
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
