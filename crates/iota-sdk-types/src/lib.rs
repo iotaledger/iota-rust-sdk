@@ -130,9 +130,10 @@ pub mod validator;
 
 pub use address::{Address, AddressParseError};
 pub use checkpoint::{
-    CheckpointCommitment, CheckpointContents, CheckpointData, CheckpointSequenceNumber,
-    CheckpointSummary, CheckpointTimestamp, CheckpointTransaction, CheckpointTransactionInfo,
-    EndOfEpochData, EpochId, ProtocolVersion, SignedCheckpointSummary, StakeUnit,
+    CheckpointCommitment, CheckpointContents, CheckpointContentsV1, CheckpointData,
+    CheckpointSequenceNumber, CheckpointSummary, CheckpointTimestamp, CheckpointTransaction,
+    CheckpointTransactionInfo, EndOfEpochData, EpochId, ProtocolVersion, SignedCheckpointSummary,
+    StakeUnit,
 };
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,

@@ -194,24 +194,39 @@ pub struct SignedCheckpointSummary {
 ///                                                               ; length as the vector of digests
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct CheckpointContents(
+pub enum CheckpointContents {
+    // #[cfg_attr(feature = "serde", serde(rename = "1"))]
+    V1(CheckpointContentsV1),
+}
+
+impl CheckpointContents {
+    crate::def_is_as_into_opt!(V1(CheckpointContentsV1));
+}
+
+impl From<CheckpointContentsV1> for CheckpointContents {
+    fn from(v1: CheckpointContentsV1) -> Self {
+        CheckpointContents::V1(v1)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct CheckpointContentsV1(
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub  Vec<CheckpointTransactionInfo>,
 );
 
-impl CheckpointContents {
+impl CheckpointContentsV1 {
     pub fn new(transactions: Vec<CheckpointTransactionInfo>) -> Self {
         Self(transactions)
     }
 
     pub fn transactions(&self) -> &[CheckpointTransactionInfo] {
         &self.0
-    }
-
-    pub fn into_v1(self) -> Vec<CheckpointTransactionInfo> {
-        self.0
     }
 }
 
@@ -453,7 +468,7 @@ mod serialization {
         }
     }
 
-    impl Serialize for CheckpointContents {
+    impl Serialize for CheckpointContentsV1 {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
@@ -461,7 +476,7 @@ mod serialization {
             use serde::ser::{SerializeSeq, SerializeTupleVariant};
 
             if serializer.is_human_readable() {
-                serializer.serialize_newtype_struct("CheckpointContents", &self.0)
+                serializer.serialize_newtype_struct("CheckpointContentsV1", &self.0)
             } else {
                 #[derive(serde::Serialize)]
                 struct Digests<'a> {
@@ -469,7 +484,7 @@ mod serialization {
                     effects: &'a Digest,
                 }
 
-                struct DigestSeq<'a>(&'a CheckpointContents);
+                struct DigestSeq<'a>(&'a CheckpointContentsV1);
                 impl Serialize for DigestSeq<'_> {
                     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                     where
@@ -487,7 +502,7 @@ mod serialization {
                     }
                 }
 
-                struct SignatureSeq<'a>(&'a CheckpointContents);
+                struct SignatureSeq<'a>(&'a CheckpointContentsV1);
                 impl Serialize for SignatureSeq<'_> {
                     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                     where
@@ -526,7 +541,7 @@ mod serialization {
         V1(BinaryContentsV1),
     }
 
-    impl<'de> Deserialize<'de> for CheckpointContents {
+    impl<'de> Deserialize<'de> for CheckpointContentsV1 {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: Deserializer<'de>,

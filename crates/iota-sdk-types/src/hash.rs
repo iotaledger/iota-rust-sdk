@@ -310,6 +310,14 @@ mod type_digest {
         }
     }
 
+    impl crate::CheckpointContentsV1 {
+        pub fn digest(&self) -> Digest {
+            // TODO
+            const SALT: &str = "CheckpointContents::";
+            type_digest(SALT, self)
+        }
+    }
+
     impl crate::Transaction {
         pub fn digest(&self) -> Digest {
             const SALT: &str = "TransactionData::";

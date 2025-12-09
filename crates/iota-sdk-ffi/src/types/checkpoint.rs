@@ -195,8 +195,29 @@ pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
 #[uniffi::export]
 impl CheckpointContents {
     #[uniffi::constructor]
+    pub fn new_v1(checkpoint_contents_v1: &CheckpointContentsV1) -> Self {
+        Self(iota_sdk::types::CheckpointContents::V1(
+            checkpoint_contents_v1.0.clone(),
+        ))
+    }
+
+    pub fn as_v1(&self) -> Arc<CheckpointContentsV1> {
+        match &self.0 {
+            iota_sdk::types::CheckpointContents::V1(tx) => {
+                Arc::new(CheckpointContentsV1(tx.clone()))
+            }
+        }
+    }
+}
+
+#[derive(derive_more::From, uniffi::Object)]
+pub struct CheckpointContentsV1(pub iota_sdk::types::CheckpointContentsV1);
+
+#[uniffi::export]
+impl CheckpointContentsV1 {
+    #[uniffi::constructor]
     pub fn new(transaction_info: Vec<Arc<CheckpointTransactionInfo>>) -> Self {
-        Self(iota_sdk::types::CheckpointContents::new(
+        Self(iota_sdk::types::CheckpointContentsV1::new(
             transaction_info.into_iter().map(|v| v.0.clone()).collect(),
         ))
     }
