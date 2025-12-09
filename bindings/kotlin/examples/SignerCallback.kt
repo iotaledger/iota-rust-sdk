@@ -16,9 +16,7 @@ fun main() = runBlocking {
         val senderAddress = publicKey.deriveAddress()
         println("Sender address: ${senderAddress.toHex()}")
 
-        class AsyncSigner(
-            val key: Ed25519PrivateKey
-        ): SignerFn {
+        class AsyncSigner(val key: Ed25519PrivateKey) : SignerFn {
             override suspend fun sign(transaction: Transaction): ByteArray {
                 val sig = key.signTransaction(transaction)
                 return sig.toBytes()
