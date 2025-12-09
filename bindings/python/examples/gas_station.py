@@ -12,7 +12,7 @@ async def main():
     gas_station_auth_token = "test"
     keypair = Ed25519PrivateKey.generate()
     sender = keypair.public_key().derive_address()
-    simple_key = SimpleKeypair.from_ed25519(keypair)
+    signer = Signer.from_keypair(SimpleKeypair.from_ed25519(keypair))
 
     builder = TransactionBuilder(sender).with_client(client)
 
@@ -27,7 +27,7 @@ async def main():
         gas_station_url,
         headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
 
-    res = await builder.execute(simple_key)
+    res = await builder.execute(signer)
 
     print(res)
 

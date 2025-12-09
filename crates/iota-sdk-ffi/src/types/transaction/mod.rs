@@ -40,7 +40,7 @@ pub mod v1;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, uniffi::Object)]
+#[derive(Clone, uniffi::Object, derive_more::From)]
 pub struct Transaction(pub iota_sdk::types::Transaction);
 
 #[uniffi::export]

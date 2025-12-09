@@ -1,3 +1,6 @@
+// Copyright (c) 2025 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 //! Defines the [`Signer`] trait, which allows users to implement any
 //! type which can sign a transaction asynchronously.
 

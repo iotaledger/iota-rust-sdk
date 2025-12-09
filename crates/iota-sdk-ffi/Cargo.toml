@@ -15,6 +15,7 @@ name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
 [dependencies]
+async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }

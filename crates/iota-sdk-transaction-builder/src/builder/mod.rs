@@ -1149,7 +1149,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,
-        keypair: &impl Signer,
+        signer: &impl Signer,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
@@ -1157,7 +1157,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         let mut txn = self.finish_internal().await?;
 
         Ok(if let Some(gas_station_data) = gas_station_data {
-            let digest = gas_station_data.execute_txn(&mut txn, keypair).await?;
+            let digest = gas_station_data.execute_txn(&mut txn, signer).await?;
             if let Some(wait_for) = wait_for {
                 self.client
                     .wait_for_tx(digest, wait_for)
@@ -1172,7 +1172,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         } else {
             self.client
                 .execute_tx(
-                    &[keypair.sign(&txn).await.map_err(Error::signature)?],
+                    &[signer.sign(&txn).await.map_err(Error::signature)?],
                     &txn,
                     wait_for,
                 )
