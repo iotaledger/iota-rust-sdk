@@ -909,7 +909,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1096,6 +1100,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1379,6 +1385,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin() != 37193:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme() != 44341:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519() != 22855:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519_opt() != 56690:
@@ -1471,7 +1479,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes() != 38367:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1717,6 +1729,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_name() != 62865:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string() != 21212:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args() != 48594:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_dependencies() != 25411:
@@ -1842,6 +1856,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8() != 18761:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector() != 49992:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string() != 24741:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies() != 7113:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2769,11 +2785,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_hex.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_argument.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3738,6 +3766,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_digest_generate.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_digest_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_base58.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5201,6 +5234,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigmembersignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5571,11 +5609,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7169,6 +7219,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_name.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_name.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_type_args.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7757,6 +7813,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10429,9 +10491,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result.restype = ctypes.c_uint16
@@ -10711,6 +10779,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignm
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.restype = ctypes.c_uint16
@@ -11134,6 +11205,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_secp25
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_is_zklogin.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519.restype = ctypes.c_uint16
@@ -11272,9 +11346,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.restype = ctypes.c_uint16
@@ -11641,6 +11721,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_module.restype = ctypes
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_name.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_name.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args.restype = ctypes.c_uint16
@@ -11830,6 +11913,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_u8.restype = ctypes.c_
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_typetag_is_vector.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies.restype = ctypes.c_uint16
@@ -26659,7 +26745,21 @@ class AddressProtocol(typing.Protocol):
 
     def to_bytes(self, ):
         raise NotImplementedError
+    def to_canonical_string(self, with_prefix: "bool"):
+        """
+        Returns the string representation of this address using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        raise NotImplementedError
     def to_hex(self, ):
+        raise NotImplementedError
+    def to_short_string(self, with_prefix: "bool"):
+        """
+        Returns the shortest possible string representation of the address (i.e.
+        with leading zeroes trimmed).
+        """
+
         raise NotImplementedError
 # Address is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Address():
@@ -26787,9 +26887,43 @@ class Address():
 
 
 
+    def to_canonical_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the string representation of this address using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
+        )
+
+
+
+
+
     def to_hex(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_short_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the shortest possible string representation of the address (i.e.
+        with leading zeroes trimmed).
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
         )
 
 
@@ -30858,6 +30992,12 @@ class DigestProtocol(typing.Protocol):
     compact 32 bytes.
     """
 
+    def next_lexicographical(self, ):
+        """
+        Returns the next digest in byte-increasing order.
+        """
+
+        raise NotImplementedError
     def to_base58(self, ):
         raise NotImplementedError
     def to_bytes(self, ):
@@ -30926,6 +31066,19 @@ class Digest():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_digest_generate,)
         return cls._make_instance_(pointer)
+
+
+
+    def next_lexicographical(self, ) -> "Digest":
+        """
+        Returns the next digest in byte-increasing order.
+        """
+
+        return _UniffiConverterTypeDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -37143,6 +37296,8 @@ class MultisigMemberPublicKeyProtocol(typing.Protocol):
         raise NotImplementedError
     def is_zklogin(self, ):
         raise NotImplementedError
+    def scheme(self, ):
+        raise NotImplementedError
 # MultisigMemberPublicKey is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MultisigMemberPublicKey():
     """
@@ -37302,6 +37457,15 @@ class MultisigMemberPublicKey():
     def is_zklogin(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scheme(self, ) -> "SignatureScheme":
+        return _UniffiConverterTypeSignatureScheme.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme,self._uniffi_clone_pointer(),)
         )
 
 
@@ -38551,7 +38715,21 @@ class ObjectIdProtocol(typing.Protocol):
         raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
+    def to_canonical_string(self, with_prefix: "bool"):
+        """
+        Returns the string representation of this object ID using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        raise NotImplementedError
     def to_hex(self, ):
+        raise NotImplementedError
+    def to_short_string(self, with_prefix: "bool"):
+        """
+        Returns the shortest possible string representation of the object ID
+        (i.e. with leading zeroes trimmed).
+        """
+
         raise NotImplementedError
 # ObjectId is a Rust-only trait - it's a wrapper around a Rust implementation.
 class ObjectId():
@@ -38692,9 +38870,43 @@ class ObjectId():
 
 
 
+    def to_canonical_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the string representation of this object ID using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
+        )
+
+
+
+
+
     def to_hex(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_short_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the shortest possible string representation of the object ID
+        (i.e. with leading zeroes trimmed).
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
         )
 
 
@@ -43280,6 +43492,13 @@ class StructTagProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def to_canonical_string(self, with_prefix: "bool"):
+        """
+        Returns the string representation of this struct tag using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        raise NotImplementedError
     def type_args(self, ):
         """
         Returns the type params part of a `StructTag`
@@ -43636,6 +43855,23 @@ class StructTag():
 
         return _UniffiConverterTypeIdentifier.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_name,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_canonical_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the string representation of this struct tag using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
         )
 
 
@@ -45537,6 +45773,13 @@ class TypeTagProtocol(typing.Protocol):
         raise NotImplementedError
     def is_vector(self, ):
         raise NotImplementedError
+    def to_canonical_string(self, with_prefix: "bool"):
+        """
+        Returns the string representation of this type tag using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        raise NotImplementedError
 # TypeTag is a Rust-only trait - it's a wrapper around a Rust implementation.
 class TypeTag():
     """
@@ -45798,6 +46041,23 @@ class TypeTag():
     def is_vector(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_canonical_string(self, with_prefix: "bool") -> "str":
+        """
+        Returns the string representation of this type tag using the
+        canonical display, with or without a `0x` prefix.
+        """
+
+        _UniffiConverterBool.check_lower(with_prefix)
+        
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string,self._uniffi_clone_pointer(),
+        _UniffiConverterBool.lower(with_prefix))
         )
 
 

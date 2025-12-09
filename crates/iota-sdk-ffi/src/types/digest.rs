@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use crate::error::Result;
 
 /// A 32-byte Blake2b256 hash output.
@@ -44,6 +46,11 @@ impl Digest {
 
     pub fn to_base58(&self) -> String {
         self.0.to_base58()
+    }
+
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        self.0.next_lexicographical().into()
     }
 }
 
