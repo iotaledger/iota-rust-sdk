@@ -745,12 +745,9 @@ pub struct ChangeEpochV3 {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
-#[cfg_attr(test, derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ChangeEpochV4 {
     /// The next (to become) epoch ID.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]

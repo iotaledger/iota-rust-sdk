@@ -125,6 +125,7 @@ async fn main() -> eyre::Result<()> {
                                 got_epoch_change = true;
                             }
                         }
+                        _ => (),
                     }
                 }
             }

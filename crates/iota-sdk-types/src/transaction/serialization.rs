@@ -166,7 +166,7 @@ mod transaction_kind {
 
 mod end_of_epoch {
     use super::*;
-    use crate::types::transaction::{
+    use crate::transaction::{
         AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
         EndOfEpochTransactionKind,
     };
