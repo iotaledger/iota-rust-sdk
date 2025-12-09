@@ -1,0 +1,82 @@
+name: Tests
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+  schedule: [cron: "40 1 * * *"]
+
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  tests:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: rust version
+        run: |
+          rustc --version
+          cargo --version
+
+      - uses: taiki-e/install-action@cargo-nextest
+
+      - name: Run tests
+        run: make test
+
+  tests-with-network:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: rust version
+        run: |
+          rustc --version
+          cargo --version
+
+      - uses: taiki-e/install-action@cargo-nextest
+
+      - uses: ./.github/actions/start-local-network
+
+      - name: Run tests that require local network (GraphQL Client and Tx Builder)
+        env:
+          NETWORK: "local"
+        run: make test-with-localnet
+
+  examples:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: ./.github/actions/start-local-network
+
+      - name: Run examples
+        run: make examples
+
+  doctests:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: doctests
+        run: |
+          make test-docs
+      - name: rustdoc
+        run: |
+          make build-docs

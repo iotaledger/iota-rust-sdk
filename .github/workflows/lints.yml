@@ -1,0 +1,68 @@
+name: Lints
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: lints-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: taiki-e/install-action@cargo-hack
+
+      - name: Install latest nightly
+        run: rustup toolchain install nightly --component rustfmt --allow-downgrade
+
+      - name: rustfmt
+        run: make check-fmt
+
+      - name: clippy
+        if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+        run: make clippy
+
+      - name: rustdoc
+        if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+        run: make doc
+
+      - run: make is-dirty
+
+  cargo-deny:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install cargo-deny
+        run: cargo install cargo-deny
+      - name: cargo deny (bans, licenses, sources, advisories)
+        run: cargo deny --manifest-path './Cargo.toml' check bans licenses sources advisories --hide-inclusion-graph
+
+  check-unused-deps:
+    name: Check Unused Dependencies (${{ matrix.flags }})
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    strategy:
+      matrix:
+        flags: ["--all-features", "--no-default-features"]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install nightly cargo-udeps
+        run: cargo +nightly install cargo-udeps
+      - name: Run Cargo Udeps
+        run: cargo +nightly udeps ${{ matrix.flags }}

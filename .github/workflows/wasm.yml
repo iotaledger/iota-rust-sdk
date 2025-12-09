@@ -1,0 +1,41 @@
+name: WASM
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: wasm-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  wasm:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: rust version
+        run: |
+          rustc --version
+          cargo --version
+
+      - uses: taiki-e/install-action@wasm-pack
+
+      - name: Install clang
+        run: sudo apt-get install -y clang
+
+      - name: Run tests in wasm
+        run: RUSTFLAGS='-Dwarnings --cfg getrandom_backend="wasm_js"' make wasm
+
+      - run: make is-dirty

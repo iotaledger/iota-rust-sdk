@@ -1,0 +1,17 @@
+---
+signer-config:
+  local:
+    keypair: <keypair>
+rpc-host-ip: 0.0.0.0
+rpc-port: 9527
+metrics-port: 9185
+storage-config:
+  redis:
+    redis_url: "redis://redis:6379"
+fullnode-url: "http://localhost:9000"
+coin-init-config:
+  target-init-balance: 100000000
+  refresh-interval-sec: 86400
+daily-gas-usage-cap: 1500000000000
+access-controller:
+  access-policy: disabled

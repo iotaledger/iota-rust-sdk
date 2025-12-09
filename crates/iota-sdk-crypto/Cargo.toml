@@ -1,0 +1,124 @@
+[package]
+name = "iota-sdk-crypto"
+version = "0.0.1-alpha.1"
+authors = ["IOTA Foundation <info@iota.org>"]
+edition = "2021"
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "Defines the interface for signing and verifying messages in the IOTA ecosystem"
+
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
+all-features = true
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
+[features]
+default = []
+ed25519 = ["dep:ed25519-dalek", "dep:rand_core"]
+secp256r1 = ["dep:p256", "dep:rand_core"]
+passkey = ["secp256r1", "dep:sha2"]
+secp256k1 = ["dep:k256", "dep:rand_core", "signature/std"]
+bech32 = ["dep:bech32", "signature/std"]
+zklogin = [
+  "dep:ark-bn254",
+  "dep:ark-ff",
+  "dep:ark-groth16",
+  "dep:ark-snark",
+  "dep:ark-std",
+  "dep:base64ct",
+  "dep:bnum",
+  "dep:itertools",
+  "dep:serde_json",
+  "signature/std",
+]
+pem = [
+  "dep:pkcs8",
+  "dep:pem-rfc7468",
+  "ed25519-dalek?/pkcs8",
+  "p256?/pkcs8",
+  "k256?/pkcs8",
+  "ed25519-dalek?/pem",
+  "p256?/pem",
+  "k256?/pem",
+]
+bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
+mnemonic = ["dep:bip32", "dep:bip39", "dep:slip10_ed25519"]
+
+[dependencies]
+iota-types = { workspace = true, features = ["hash", "serde"] }
+signature = "2.2"
+thiserror.workspace = true
+
+# RNG support
+rand_core = { workspace = true, optional = true }
+
+# ed25519 support
+ed25519-dalek = { version = "2.1.1", optional = true }
+
+# secp256r1 support
+p256 = { version = "0.13.2", default-features = false, features = ["ecdsa", "std"], optional = true }
+
+# passkey verification support
+sha2 = { version = "0.10.8", optional = true }
+
+# secp256k1 support
+k256 = { version = "0.13.4", default-features = false, features = ["ecdsa"], optional = true }
+
+# zklogin verification support
+ark-bn254 = { version = "0.4.0", optional = true }
+ark-ff = { version = "0.4.2", features = ["asm"], optional = true }
+ark-groth16 = { version = "0.4.0", default-features = false, optional = true }
+ark-snark = { version = "0.4.0", optional = true }
+ark-std = { version = "0.4.0", optional = true }
+base64ct = { workspace = true, features = ["alloc"], optional = true }
+bnum = { workspace = true, optional = true }
+itertools = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+
+# pkcs8 der and pem support
+pem-rfc7468 = { version = "0.7", optional = true, features = ["std"] }
+pkcs8 = { version = "0.10", optional = true, features = ["std"] }
+
+# bls12381 support
+blst = { version = "0.3.13", optional = true }
+roaring = { workspace = true, optional = true }
+
+# bech32 encoding support
+bech32 = { version = "0.11.0", optional = true }
+
+# mnemonic support
+bip32 = { version = "0.5.3", optional = true }
+bip39 = { version = "2.0.0", features = ["rand"], optional = true }
+slip10_ed25519 = { version = "0.1.3", optional = true }
+
+[dev-dependencies]
+bcs.workspace = true
+hex.workspace = true
+rand.workspace = true
+serde_json.workspace = true
+
+# proptest support in tests
+iota-types = { workspace = true, features = ["proptest"] }
+proptest = { workspace = true, features = ["std"] }
+test-strategy.workspace = true
+
+[target.wasm32-unknown-unknown.dev-dependencies]
+wasm-bindgen-test = "0.3"
+# `getrandom` renamed the WebAssembly support feature from "js" to "wasm_js"
+# Since both versions are in our dependency tree, we need to overwrite them with the proper feature
+getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
+getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
+test-strategy = "=0.4.1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }
