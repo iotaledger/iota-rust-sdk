@@ -22,8 +22,6 @@ fun main() = runBlocking {
         val senderAddress = publicKey.deriveAddress()
         println("Sender address: ${senderAddress.toHex()}")
 
-        
-
         val signer = Signer(AsyncSigner(privateKey))
 
         // Request funds from faucet

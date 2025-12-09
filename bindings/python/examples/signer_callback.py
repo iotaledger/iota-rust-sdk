@@ -11,7 +11,7 @@ class AsyncSigner(SignerFn):
     def __init__(self, key: Ed25519PrivateKey):
         self.key = key
 
-    def sign(self, transaction: Transaction):
+    async def sign(self, transaction: Transaction):
         SignerFnOutput(sig=self.key.sign_transaction(transaction))
 
 
