@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use super::Address;
+use super::{Address, address::AddressParseError};
 
 /// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 /// the IOTA blockchain.
@@ -48,12 +48,18 @@ impl ObjectId {
     }
 
     /// Parse an ObjectId from a hex string.
-    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, super::address::AddressParseError> {
+    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_hex(hex).map(Self)
     }
 
     pub const fn from_address(address: Address) -> Self {
         Self(address)
+    }
+
+    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+        <[u8; Self::LENGTH]>::try_from(bytes.as_ref())
+            .map_err(|_| AddressParseError)
+            .map(Self::new)
     }
 
     /// Returns the underlying byte array of an ObjectId.
@@ -126,7 +132,7 @@ impl From<ObjectId> for Vec<u8> {
 }
 
 impl std::str::FromStr for ObjectId {
-    type Err = super::address::AddressParseError;
+    type Err = AddressParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Address::from_str(s).map(Self)
