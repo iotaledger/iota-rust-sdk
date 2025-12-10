@@ -26,7 +26,7 @@ use super::Address;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct ObjectId(Address);
+pub struct ObjectId(pub(crate) Address);
 
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
@@ -52,14 +52,18 @@ impl ObjectId {
         Address::from_hex(hex).map(Self)
     }
 
+    pub const fn from_address(address: Address) -> Self {
+        Self(address)
+    }
+
     /// Returns the underlying byte array of an ObjectId.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
-        self.0.into_inner()
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
+        self.0.into_bytes()
     }
 
     /// Returns a reference to the underlying byte array of an ObjectId.
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        self.0.inner()
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
+        self.0.bytes()
     }
 
     /// Returns a slice of bytes of an ObjectId.
@@ -99,7 +103,7 @@ impl AsRef<[u8; 32]> for ObjectId {
 
 impl From<ObjectId> for [u8; 32] {
     fn from(object_id: ObjectId) -> Self {
-        object_id.into_inner()
+        object_id.into_bytes()
     }
 }
 

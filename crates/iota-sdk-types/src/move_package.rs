@@ -64,7 +64,7 @@ impl MovePackageData {
         use crate::hash::Hasher;
         let mut components = dependencies
             .iter()
-            .map(|o| o.into_inner())
+            .map(|o| o.into_bytes())
             .chain(modules.iter().map(|module| {
                 let mut hasher = Hasher::new();
                 hasher.update(module);
