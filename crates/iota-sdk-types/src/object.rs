@@ -187,7 +187,7 @@ pub struct ObjectReference {
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
+    pub const fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
         Self {
             object_id,
             version,
@@ -197,24 +197,24 @@ impl ObjectReference {
 
     /// Returns a reference to the object id that this ObjectReference is
     /// referring to.
-    pub fn object_id(&self) -> &ObjectId {
+    pub const fn object_id(&self) -> &ObjectId {
         &self.object_id
     }
 
     /// Returns the version of the object that this ObjectReference is referring
     /// to.
-    pub fn version(&self) -> Version {
+    pub const fn version(&self) -> Version {
         self.version
     }
 
     /// Returns the digest of the object that this ObjectReference is referring
     /// to.
-    pub fn digest(&self) -> &Digest {
+    pub const fn digest(&self) -> &Digest {
         &self.digest
     }
 
     /// Returns a 3-tuple containing the object id, version, and digest.
-    pub fn into_parts(self) -> (ObjectId, Version, Digest) {
+    pub const fn into_parts(self) -> (ObjectId, Version, Digest) {
         let Self {
             object_id,
             version,
