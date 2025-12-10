@@ -2,6 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+const OBJECT_DIGEST_DELETED_BYTE_VAL: u8 = 99;
+const OBJECT_DIGEST_WRAPPED_BYTE_VAL: u8 = 88;
+const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
+
 /// A 32-byte Blake2b256 hash output.
 ///
 /// # BCS
@@ -29,17 +33,24 @@ pub struct Digest(
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
+
     /// A constant representing a zero digest.
     pub const ZERO: Self = Self([0; Self::LENGTH]);
 
+    /// The lexicographically minimum digest
+    pub const MIN: Self = Self([u8::MIN; 32]);
+
+    /// The lexicographically maximum digest
+    pub const MAX: Self = Self([u8::MAX; 32]);
+
     /// A marker that signifies the object is deleted.
-    pub const OBJECT_DELETED: Digest = Digest::new([99; 32]);
+    pub const OBJECT_DELETED: Self = Self([OBJECT_DIGEST_DELETED_BYTE_VAL; 32]);
 
     /// A marker that signifies the object is wrapped into another object.
-    pub const OBJECT_WRAPPED: Digest = Digest::new([88; 32]);
+    pub const OBJECT_WRAPPED: Self = Self([OBJECT_DIGEST_WRAPPED_BYTE_VAL; 32]);
 
     /// A marker that signifies the object is cancelled.
-    pub const OBJECT_CANCELLED: Digest = Digest::new([77; 32]);
+    pub const OBJECT_CANCELLED: Self = Self([OBJECT_DIGEST_CANCELLED_BYTE_VAL; 32]);
 
     /// Generates a new digest from the provided 32 byte array containing [`u8`]
     /// values.
