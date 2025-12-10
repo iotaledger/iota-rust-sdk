@@ -8,9 +8,9 @@ use super::{Address, Digest, Identifier, ObjectId, StructTag};
 
 pub type Version = u64;
 
-/// A trait which defines consts for the [`Version`] type, which is a
-/// redefinition of u64.
-pub trait VersionConsts: Sized {
+/// A trait which defines consts and methods for the [`Version`] type, which is
+/// a redefinition of u64.
+pub trait VersionExt: Sized {
     /// An inclusive lower limit on a valid sequence number.
     ///
     /// A valid sequence number means an object, which this sequence number
@@ -79,9 +79,21 @@ pub trait VersionConsts: Sized {
     /// gas price feedback mechanism for transactions cancelled due to
     /// shared object congestion.
     fn get_congested_version_suggested_gas_price(&self) -> u64;
+
+    /// Returns a new version that is greater than all versions
+    /// in `inputs`, assuming this operation will not overflow.
+    fn lamport_increment(inputs: impl IntoIterator<Item = Version>) -> Version;
+
+    /// Checks if this version is cancelled, i.e., the corresponding
+    /// object appears in a cancelled transaction.
+    fn is_cancelled(&self) -> bool;
+
+    /// Checks if this version is valid, i.e., the corresponding
+    /// object does not appear in a cancelled transaction.
+    fn is_valid(&self) -> bool;
 }
 
-impl VersionConsts for Version {
+impl VersionExt for Version {
     const MIN_VALID_INCL: Version = Version::MIN;
 
     const MAX_VALID_EXCL: Version = 0x7fff_ffff_ffff_ffff;
@@ -121,6 +133,28 @@ impl VersionConsts for Version {
         );
 
         self - Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK
+    }
+
+    fn lamport_increment(inputs: impl IntoIterator<Item = Version>) -> Version {
+        let max_input = inputs.into_iter().fold(Version::default(), core::cmp::max);
+
+        assert!(
+            max_input.is_valid(),
+            "cannot increment a version: \
+                maximum valid version has already been reached"
+        );
+
+        max_input + 1
+    }
+
+    fn is_cancelled(&self) -> bool {
+        *self == Version::CANCELLED_READ
+            || *self == Version::RANDOMNESS_UNAVAILABLE
+            || self.is_congested()
+    }
+
+    fn is_valid(&self) -> bool {
+        *self < Version::MAX_VALID_EXCL
     }
 }
 
