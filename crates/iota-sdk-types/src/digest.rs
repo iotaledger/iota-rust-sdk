@@ -52,6 +52,11 @@ impl Digest {
     /// A marker that signifies the object is cancelled.
     pub const OBJECT_CANCELLED: Self = Self([OBJECT_DIGEST_CANCELLED_BYTE_VAL; 32]);
 
+    /// A digest used to signify the parent transaction was the genesis.
+    /// Note that this is not the same as the digest of the genesis transaction,
+    /// which cannot be known ahead of time.
+    pub const GENESIS_MARKER: Self = Self::ZERO;
+
     /// Generates a new digest from the provided 32 byte array containing [`u8`]
     /// values.
     pub const fn new(digest: [u8; Self::LENGTH]) -> Self {
