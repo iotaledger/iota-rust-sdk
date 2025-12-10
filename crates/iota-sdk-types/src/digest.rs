@@ -180,6 +180,20 @@ impl std::fmt::LowerHex for Digest {
     }
 }
 
+impl std::fmt::UpperHex for Digest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if f.alternate() {
+            write!(f, "0x")?;
+        }
+
+        for byte in self.0 {
+            write!(f, "{byte:02X}")?;
+        }
+
+        Ok(())
+    }
+}
+
 // Unfortunately IOTA's binary representation of digests is prefixed with its
 // length meaning its serialized binary form is 33 bytes long (in bcs) vs a more
 // compact 32 bytes.
