@@ -1192,8 +1192,10 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
 
-        let mut signatures = vec![signer.sign(&txn).await.map_err(Error::signature)?];
-        signatures.push(sponsor_signer.sign(&txn).await.map_err(Error::signature)?);
+        let signatures = vec![
+            signer.sign(&txn).await.map_err(Error::signature)?,
+            sponsor_signer.sign(&txn).await.map_err(Error::signature)?,
+        ];
 
         self.client
             .execute_tx(&signatures, &txn, wait_for)
