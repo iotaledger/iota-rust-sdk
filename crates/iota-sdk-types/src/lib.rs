@@ -184,6 +184,19 @@ pub use validator::{
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
 
+/// Returns the next array in byte-increasing order.
+pub fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
+    let mut next = *array;
+    for byte in next.iter_mut().rev() {
+        let (new_byte, overflow) = byte.overflowing_add(1);
+        *byte = new_byte;
+        if !overflow {
+            break;
+        }
+    }
+    next
+}
+
 #[macro_export]
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
@@ -544,5 +557,41 @@ mod _schemars {
         fn is_referenceable() -> bool {
             false
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::next_lexicographical_array;
+
+    #[test]
+    fn test_lexical_order() {
+        fn array_from_str(s: &str) -> [u8; 32] {
+            hex::decode(s).unwrap().try_into().unwrap()
+        }
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000000"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000000001"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000000ffff"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000010000"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002c"
+            )),
+            array_from_str("000000000000000000000000000000000000000000000000000000000001002d"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
+        );
     }
 }

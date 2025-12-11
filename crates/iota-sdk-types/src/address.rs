@@ -186,6 +186,11 @@ impl Address {
             .map_err(|_| AddressParseError)
             .map(Self)
     }
+
+    /// Returns the next address in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        Self::new(crate::next_lexicographical_array(self.bytes()))
+    }
 }
 
 impl std::str::FromStr for Address {

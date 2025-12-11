@@ -93,6 +93,11 @@ impl ObjectId {
     pub fn to_short_string(&self, with_prefix: bool) -> String {
         self.0.to_short_string(with_prefix)
     }
+
+    /// Returns the next object id in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        Self::new(crate::next_lexicographical_array(self.bytes()))
+    }
 }
 
 impl AsRef<[u8]> for ObjectId {
