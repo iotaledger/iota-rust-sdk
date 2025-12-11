@@ -877,13 +877,13 @@ impl<L> TransactionBuilder<(), L> {
     /// [`TransactionEffects`]
     pub async fn execute_with_gas_station(
         mut self,
-        keypair: &impl Signer,
+        signer: &impl Signer,
     ) -> Result<serde_json::Value, Error> {
         let gas_station_data = self.data.gas_station_data.take();
 
         Ok(if let Some(gas_station_data) = gas_station_data {
             let mut txn = self.finish()?;
-            gas_station_data.execute_txn_json(&mut txn, keypair).await?
+            gas_station_data.execute_txn_json(&mut txn, signer).await?
         } else {
             return Err(Error::MissingGasStationData);
         })
@@ -1181,19 +1181,19 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         })
     }
 
-    /// Execute the transaction with a sponsor keypair and optionally wait for
+    /// Execute the transaction with a sponsor signer and optionally wait for
     /// finalization.
     pub async fn execute_with_sponsor(
         mut self,
-        keypair: &impl Signer,
-        sponsor_keypair: &impl Signer,
+        signer: &impl Signer,
+        sponsor_signer: &impl Signer,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
 
-        let mut signatures = vec![keypair.sign(&txn).await.map_err(Error::signature)?];
-        signatures.push(sponsor_keypair.sign(&txn).await.map_err(Error::signature)?);
+        let mut signatures = vec![signer.sign(&txn).await.map_err(Error::signature)?];
+        signatures.push(sponsor_signer.sign(&txn).await.map_err(Error::signature)?);
 
         self.client
             .execute_tx(&signatures, &txn, wait_for)

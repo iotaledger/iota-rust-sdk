@@ -3083,7 +3083,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
 	})
-	if checksum != 64410 {
+	if checksum != 36118 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
 	}
@@ -6305,7 +6305,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
 	})
-	if checksum != 6268 {
+	if checksum != 43023 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station: UniFFI API checksum mismatch")
 	}
@@ -13448,7 +13448,7 @@ type ClientTransactionBuilderInterface interface {
 	// Execute the transaction and optionally wait for finalization.
 	Execute(signer *Signer, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
-	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
+	ExecuteWithSponsor(signer *Signer, sponsorSigner *Signer, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *ClientTransactionBuilder
 	// Convert this builder into a transaction.
@@ -13608,7 +13608,7 @@ func (_self *ClientTransactionBuilder) Execute(signer *Signer, waitFor *WaitForT
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *ClientTransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
+func (_self *ClientTransactionBuilder) ExecuteWithSponsor(signer *Signer, sponsorSigner *Signer, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13623,7 +13623,7 @@ func (_self *ClientTransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		_pointer,FfiConverterSignerINSTANCE.Lower(signer), FfiConverterSignerINSTANCE.Lower(sponsorSigner), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -27249,7 +27249,7 @@ type TransactionBuilderInterface interface {
 	//
 	// NOTE: These effects are not necessarily compatible with
 	// `TransactionEffects`
-	ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error)
+	ExecuteWithGasStation(signer *Signer) (Value, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
@@ -27359,7 +27359,7 @@ func NewTransactionBuilder(sender *Address) *TransactionBuilder {
 //
 // NOTE: These effects are not necessarily compatible with
 // `TransactionEffects`
-func (_self *TransactionBuilder) ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error) {
+func (_self *TransactionBuilder) ExecuteWithGasStation(signer *Signer) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -27376,7 +27376,7 @@ func (_self *TransactionBuilder) ExecuteWithGasStation(keypair *SimpleKeypair) (
 			return FfiConverterTypeValueINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair)),
+		_pointer,FfiConverterSignerINSTANCE.Lower(signer)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)

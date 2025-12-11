@@ -352,13 +352,13 @@ impl GasStationData {
     pub(crate) async fn execute_txn(
         self,
         txn: &mut Transaction,
-        keypair: &impl Signer,
+        signer: &impl Signer,
     ) -> Result<Digest, Error> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
-        let effects = self.execute_txn_inner(&url, txn, keypair).await?;
+        let effects = self.execute_txn_inner(&url, txn, signer).await?;
 
         Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
             message: Some(e.to_string()),

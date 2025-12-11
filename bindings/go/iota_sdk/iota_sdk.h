@@ -1161,7 +1161,7 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(void* pt
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_EXECUTE_WITH_SPONSOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_EXECUTE_WITH_SPONSOR
-uint64_t uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(void* ptr, void* keypair, void* sponsor_keypair, RustBuffer wait_for
+uint64_t uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(void* ptr, void* signer, void* sponsor_signer, RustBuffer wait_for
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_EXPIRATION
@@ -4977,7 +4977,7 @@ void* uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(void* sender, Ru
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_EXECUTE_WITH_GAS_STATION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_EXECUTE_WITH_GAS_STATION
-uint64_t uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(void* ptr, void* keypair
+uint64_t uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(void* ptr, void* signer
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_EXPIRATION

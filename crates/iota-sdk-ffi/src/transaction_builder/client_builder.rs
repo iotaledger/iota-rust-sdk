@@ -355,15 +355,15 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_with_sponsor(
         &self,
-        keypair: &SimpleKeypair,
-        sponsor_keypair: &SimpleKeypair,
+        signer: &Signer,
+        sponsor_signer: &Signer,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
                 builder
                     .clone()
-                    .execute_with_sponsor(&keypair.0, &sponsor_keypair.0, wait_for)
+                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
             })
             .await?
             .into())

@@ -1065,7 +1065,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 38408:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 64410:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 36118:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration() != 32958:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1781,7 +1781,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 51030:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 6268:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 43023:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -30151,7 +30151,7 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
+    def execute_with_sponsor(self, signer: "Signer",sponsor_signer: "Signer",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -30402,14 +30402,14 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_with_sponsor(self, keypair: "SimpleKeypair",sponsor_keypair: "SimpleKeypair",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
+    async def execute_with_sponsor(self, signer: "Signer",sponsor_signer: "Signer",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
 
-        _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
+        _UniffiConverterTypeSigner.check_lower(signer)
         
-        _UniffiConverterTypeSimpleKeypair.check_lower(sponsor_keypair)
+        _UniffiConverterTypeSigner.check_lower(sponsor_signer)
         
         if wait_for is _DEFAULT:
             wait_for = None
@@ -30418,8 +30418,8 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeSimpleKeypair.lower(keypair),
-        _UniffiConverterTypeSimpleKeypair.lower(sponsor_keypair),
+        _UniffiConverterTypeSigner.lower(signer),
+        _UniffiConverterTypeSigner.lower(sponsor_signer),
         _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
@@ -44828,7 +44828,7 @@ class TransactionBuilderProtocol(typing.Protocol):
     transaction data.
     """
 
-    def execute_with_gas_station(self, keypair: "SimpleKeypair"):
+    def execute_with_gas_station(self, signer: "Signer"):
         """
         Execute the transaction using the gas station and return the JSON
         transaction effects. This will fail unless data is set with the
@@ -45035,7 +45035,7 @@ class TransactionBuilder():
         inst._pointer = pointer
         return inst
 
-    async def execute_with_gas_station(self, keypair: "SimpleKeypair") -> "Value":
+    async def execute_with_gas_station(self, signer: "Signer") -> "Value":
         """
         Execute the transaction using the gas station and return the JSON
         transaction effects. This will fail unless data is set with the
@@ -45045,12 +45045,12 @@ class TransactionBuilder():
         `TransactionEffects`
         """
 
-        _UniffiConverterTypeSimpleKeypair.check_lower(keypair)
+        _UniffiConverterTypeSigner.check_lower(signer)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeSimpleKeypair.lower(keypair)
+        _UniffiConverterTypeSigner.lower(signer)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -48960,16 +48960,8 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
         ffi_free(rust_future)
 def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
     async def make_call_and_call_callback():
-        # Note: it's important we call either `handle_success` or `handle_error` exactly once.  Each
-        # call consumes an Arc reference, which means there should be no possibility of a double
-        # call.  The following code is structured so that will will never call both `handle_success`
-        # and `handle_error`, even in the face of weird exceptions.
-        #
-        # In extreme circumstances we may not call either, for example if we fail to make the ctypes
-        # call to `handle_success`.  This means we will leak the Arc reference, which is better than
-        # double-freeing it.
         try:
-            call_result = await make_call()
+            handle_success(await make_call())
         except Exception as e:
             print("UniFFI: Unhandled exception in trait interface call", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
@@ -48977,8 +48969,6 @@ def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
                 _UniffiRustCallStatus.CALL_UNEXPECTED_ERROR,
                 _UniffiConverterString.lower(repr(e)),
             )
-        else:
-            handle_success(call_result)
     eventloop = _uniffi_get_event_loop()
     task = asyncio.run_coroutine_threadsafe(make_call_and_call_callback(), eventloop)
     handle = _UNIFFI_FOREIGN_FUTURE_HANDLE_MAP.insert((eventloop, task))
@@ -48986,18 +48976,14 @@ def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
 
 def _uniffi_trait_interface_call_async_with_error(make_call, handle_success, handle_error, error_type, lower_error):
     async def make_call_and_call_callback():
-        # See the note in _uniffi_trait_interface_call_async for details on `handle_success` and
-        # `handle_error`.
         try:
             try:
-                call_result = await make_call()
+                handle_success(await make_call())
             except error_type as e:
                 handle_error(
                     _UniffiRustCallStatus.CALL_ERROR,
                     lower_error(e),
                 )
-            else:
-                handle_success(call_result)
         except Exception as e:
             print("UniFFI: Unhandled exception in trait interface call", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)

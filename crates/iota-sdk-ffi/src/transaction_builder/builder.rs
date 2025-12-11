@@ -14,7 +14,10 @@ use crate::{
     crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
-    transaction_builder::ptb_arg::{MoveArg, PTBArgument},
+    transaction_builder::{
+        ptb_arg::{MoveArg, PTBArgument},
+        signer::Signer,
+    },
     types::{
         address::Address,
         move_package::MovePackageData,
@@ -342,12 +345,9 @@ impl TransactionBuilder {
     ///
     /// NOTE: These effects are not necessarily compatible with
     /// `TransactionEffects`
-    pub async fn execute_with_gas_station(
-        &self,
-        keypair: &SimpleKeypair,
-    ) -> Result<serde_json::Value> {
+    pub async fn execute_with_gas_station(&self, signer: &Signer) -> Result<serde_json::Value> {
         Ok(self
-            .read(|builder| builder.clone().execute_with_gas_station(&keypair.0))
+            .read(|builder| builder.clone().execute_with_gas_station(signer))
             .await?)
     }
 }
