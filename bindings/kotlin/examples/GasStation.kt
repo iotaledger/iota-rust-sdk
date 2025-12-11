@@ -11,7 +11,7 @@ fun main() = runBlocking {
         var gasStationAuthToken = "test"
         var keypair = Ed25519PrivateKey.generate()
         var sender = keypair.publicKey().deriveAddress()
-        var signer = Signer.fromKeypair(SimpleKeypair.fromEd25519(keypair))
+        var signer = Signer.fromEd25519(keypair)
 
         val builder = TransactionBuilder(sender).withClient(client)
 

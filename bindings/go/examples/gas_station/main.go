@@ -24,7 +24,7 @@ func main() {
 	gasStationAuthToken := "test"
 	keypair := iota_sdk.Ed25519PrivateKeyGenerate()
 	sender := keypair.PublicKey().DeriveAddress()
-	signer := iota_sdk.SignerFromKeypair(iota_sdk.SimpleKeypairFromEd25519(keypair))
+	signer := iota_sdk.SignerFromEd25519(keypair)
 
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
