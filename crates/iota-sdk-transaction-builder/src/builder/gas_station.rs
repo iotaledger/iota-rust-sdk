@@ -369,20 +369,20 @@ impl GasStationData {
     pub(crate) async fn execute_txn_json(
         self,
         txn: &mut Transaction,
-        keypair: &impl Signer,
+        signer: &impl Signer,
     ) -> Result<serde_json::Value, Error> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
-        self.execute_txn_inner(&url, txn, keypair).await
+        self.execute_txn_inner(&url, txn, signer).await
     }
 
     async fn execute_txn_inner(
         mut self,
         url: &Url,
         txn: &mut Transaction,
-        keypair: &impl Signer,
+        signer: &impl Signer,
     ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
@@ -411,7 +411,7 @@ impl GasStationData {
 
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
-        let user_sig = keypair
+        let user_sig = signer
             .sign(txn)
             .await
             .map_err(Error::signature)?
