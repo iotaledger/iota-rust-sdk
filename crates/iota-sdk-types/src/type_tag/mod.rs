@@ -363,17 +363,17 @@ impl IdentifierRef {
     }
 
     /// Returns true if this string is a valid identifier.
-    pub fn is_valid(s: &str) -> bool {
+    pub const fn is_valid(s: &str) -> bool {
         Identifier::is_valid(s)
     }
 
     /// Returns the length of `self` in bytes.
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.0.len()
     }
 
     /// Returns `true` if `self` has a length of zero bytes.
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
@@ -381,12 +381,12 @@ impl IdentifierRef {
     ///
     /// This is not implemented as a `From` trait to discourage automatic
     /// conversions -- these conversions should not typically happen.
-    pub fn as_str(&self) -> &str {
+    pub const fn as_str(&self) -> &str {
         &self.0
     }
 
     /// Converts `self` to a byte slice.
-    pub fn as_bytes(&self) -> &[u8] {
+    pub const fn as_bytes(&self) -> &[u8] {
         self.0.as_bytes()
     }
 }
