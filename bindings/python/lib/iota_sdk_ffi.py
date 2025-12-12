@@ -1829,7 +1829,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign() != 29986:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign() != 28230:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign() != 56946:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest() != 52708:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -26736,7 +26736,7 @@ class TransactionSignerFnProtocol(typing.Protocol):
 
     def sign(self, transaction: "Transaction"):
         """
-        Sign a transaction and return a BCS serialized `UserSignature`.
+        Sign a transaction and return a `UserSignature`.
         """
 
         raise NotImplementedError
@@ -26755,7 +26755,7 @@ class TransactionSignerFn():
 
     def sign(self, transaction: "Transaction"):
         """
-        Sign a transaction and return a BCS serialized `UserSignature`.
+        Sign a transaction and return a `UserSignature`.
         """
 
         raise NotImplementedError
@@ -26793,7 +26793,7 @@ class TransactionSignerFnImpl():
 
     async def sign(self, transaction: "Transaction") -> "TransactionSignerFnOutput":
         """
-        Sign a transaction and return a BCS serialized `UserSignature`.
+        Sign a transaction and return a `UserSignature`.
         """
 
         _UniffiConverterTypeTransaction.check_lower(transaction)
@@ -48960,16 +48960,8 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
         ffi_free(rust_future)
 def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
     async def make_call_and_call_callback():
-        # Note: it's important we call either `handle_success` or `handle_error` exactly once.  Each
-        # call consumes an Arc reference, which means there should be no possibility of a double
-        # call.  The following code is structured so that will will never call both `handle_success`
-        # and `handle_error`, even in the face of weird exceptions.
-        #
-        # In extreme circumstances we may not call either, for example if we fail to make the ctypes
-        # call to `handle_success`.  This means we will leak the Arc reference, which is better than
-        # double-freeing it.
         try:
-            call_result = await make_call()
+            handle_success(await make_call())
         except Exception as e:
             print("UniFFI: Unhandled exception in trait interface call", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
@@ -48977,8 +48969,6 @@ def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
                 _UniffiRustCallStatus.CALL_UNEXPECTED_ERROR,
                 _UniffiConverterString.lower(repr(e)),
             )
-        else:
-            handle_success(call_result)
     eventloop = _uniffi_get_event_loop()
     task = asyncio.run_coroutine_threadsafe(make_call_and_call_callback(), eventloop)
     handle = _UNIFFI_FOREIGN_FUTURE_HANDLE_MAP.insert((eventloop, task))
@@ -48986,18 +48976,14 @@ def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
 
 def _uniffi_trait_interface_call_async_with_error(make_call, handle_success, handle_error, error_type, lower_error):
     async def make_call_and_call_callback():
-        # See the note in _uniffi_trait_interface_call_async for details on `handle_success` and
-        # `handle_error`.
         try:
             try:
-                call_result = await make_call()
+                handle_success(await make_call())
             except error_type as e:
                 handle_error(
                     _UniffiRustCallStatus.CALL_ERROR,
                     lower_error(e),
                 )
-            else:
-                handle_success(call_result)
         except Exception as e:
             print("UniFFI: Unhandled exception in trait interface call", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)

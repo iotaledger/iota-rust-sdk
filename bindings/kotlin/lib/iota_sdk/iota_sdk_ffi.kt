@@ -10256,7 +10256,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign() != 29986.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign() != 28230.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign() != 56946.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest() != 52708.toShort()) {
@@ -11556,17 +11556,9 @@ internal inline fun<T> uniffiTraitInterfaceCallAsync(
     // Uniffi does its best to support structured concurrency across the FFI.
     // If the Rust future is dropped, `uniffiForeignFutureFreeImpl` is called, which will cancel the Kotlin coroutine if it's still running.
     @OptIn(DelicateCoroutinesApi::class)
-    val job = GlobalScope.launch coroutineBlock@ {
-        // Note: it's important we call either `handleSuccess` or `handleError` exactly once.  Each
-        // call consumes an Arc reference, which means there should be no possibility of a double
-        // call.  The following code is structured so that will will never call both `handleSuccess`
-        // and `handleError`, even in the face of weird exceptions.
-        //
-        // In extreme circumstances we may not call either, for example if we fail to make the JNA
-        // call to `handleSuccess`.  This means we will leak the Arc reference, which is better than
-        // double-freeing it.
-        val callResult = try {
-            makeCall()
+    val job = GlobalScope.launch {
+        try {
+            handleSuccess(makeCall())
         } catch(e: kotlin.Exception) {
             handleError(
                 UniffiRustCallStatus.create(
@@ -11574,9 +11566,7 @@ internal inline fun<T> uniffiTraitInterfaceCallAsync(
                     FfiConverterString.lower(e.toString()),
                 )
             )
-            return@coroutineBlock
         }
-        handleSuccess(callResult)
     }
     val handle = uniffiForeignFutureHandleMap.insert(job)
     return UniffiForeignFuture(handle, uniffiForeignFutureFreeImpl)
@@ -11590,11 +11580,9 @@ internal inline fun<T, reified E: Throwable> uniffiTraitInterfaceCallAsyncWithEr
 ): UniffiForeignFuture {
     // See uniffiTraitInterfaceCallAsync for details on `DelicateCoroutinesApi`
     @OptIn(DelicateCoroutinesApi::class)
-    val job = GlobalScope.launch coroutineBlock@ {
-        // See the note in uniffiTraitInterfaceCallAsync for details on `handleSuccess` and
-        // `handleError`.
-        val callResult = try {
-            makeCall()
+    val job = GlobalScope.launch {
+        try {
+            handleSuccess(makeCall())
         } catch(e: kotlin.Exception) {
             if (e is E) {
                 handleError(
@@ -11611,9 +11599,7 @@ internal inline fun<T, reified E: Throwable> uniffiTraitInterfaceCallAsyncWithEr
                     )
                 )
             }
-            return@coroutineBlock
         }
-        handleSuccess(callResult)
     }
     val handle = uniffiForeignFutureHandleMap.insert(job)
     return UniffiForeignFuture(handle, uniffiForeignFutureFreeImpl)
@@ -46545,7 +46531,7 @@ public object FfiConverterTypeTransactionSigner: FfiConverter<TransactionSigner,
 public interface TransactionSignerFn {
     
     /**
-     * Sign a transaction and return a BCS serialized `UserSignature`.
+     * Sign a transaction and return a `UserSignature`.
      */
     suspend fun `sign`(`transaction`: Transaction): TransactionSignerFnOutput
     
@@ -46642,7 +46628,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
 
     
     /**
-     * Sign a transaction and return a BCS serialized `UserSignature`.
+     * Sign a transaction and return a `UserSignature`.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")

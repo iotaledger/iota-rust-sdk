@@ -6521,7 +6521,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign()
 	})
-	if checksum != 28230 {
+	if checksum != 56946 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign: UniFFI API checksum mismatch")
 	}
@@ -27812,7 +27812,7 @@ func (_ FfiDestroyerTransactionSigner) Destroy(value *TransactionSigner) {
 // This trait can be implemented downstream to enable signing when using the
 // `TransactionBuilder::execute` function.
 type TransactionSignerFn interface {
-	// Sign a transaction and return a BCS serialized `UserSignature`.
+	// Sign a transaction and return a `UserSignature`.
 	Sign(transaction *Transaction) (TransactionSignerFnOutput, error)
 }
 // Defines a type which can sign a transaction asynchronously.
@@ -27826,7 +27826,7 @@ type TransactionSignerFnImpl struct {
 
 
 
-// Sign a transaction and return a BCS serialized `UserSignature`.
+// Sign a transaction and return a `UserSignature`.
 func (_self *TransactionSignerFnImpl) Sign(transaction *Transaction) (TransactionSignerFnOutput, error) {
 	_pointer := _self.ffiObject.incrementPointer("TransactionSignerFn")
 	defer _self.ffiObject.decrementPointer()
