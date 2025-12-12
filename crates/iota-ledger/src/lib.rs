@@ -1,22 +1,22 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO signature maybe needs to be wrapped in Signature enum?
+
 use std::{thread, time, vec};
 
 use hex::ToHex;
 use tracing::debug;
 mod transport;
+use iota_types::{
+    Address, Object,
+    crypto::{Ed25519Signature, Intent, IntentMessage, SignatureScheme},
+};
 use serde::Serialize;
 use transport::{APDUAnswer, APDUCommand, LedgerTransport};
 
 pub use crate::api::errors::LedgerError;
 mod api;
-use iota_sdk_types::crypto::{Intent, IntentMessage};
-use iota_types::{
-    base_types::IotaAddress,
-    crypto::{Ed25519IotaSignature, Signature, SignatureScheme, ToFromBytes},
-    object::Object,
-};
 
 pub use crate::api::{get_public_key::PublicKeyResult, get_version::Version};
 use crate::{
@@ -29,8 +29,8 @@ pub struct Ledger {
 }
 
 pub struct SignedTransaction {
-    pub signature: Signature,
-    pub address: IotaAddress,
+    pub signature: Ed25519Signature,
+    pub address: Address,
 }
 
 const IOTA_APP_NAME: &str = "IOTA";
@@ -146,13 +146,13 @@ impl Ledger {
     }
 
     pub fn get_signature_scheme(&self) -> SignatureScheme {
-        SignatureScheme::ED25519
+        SignatureScheme::Ed25519
     }
 
     pub fn sign_intent<T: Serialize>(
         &self,
         bip32: &bip32::DerivationPath,
-        address: &IotaAddress,
+        address: &Address,
         intent: Intent,
         msg: &T,
         objects: Vec<Object>,
@@ -179,15 +179,15 @@ impl Ledger {
         })?;
 
         let mut signature_bytes: Vec<u8> = Vec::new();
-        signature_bytes.extend_from_slice(&[self.get_signature_scheme().flag()]);
+        signature_bytes.extend_from_slice(&[self.get_signature_scheme() as u8]);
         signature_bytes.extend_from_slice(&signature.bytes);
         signature_bytes.extend_from_slice(key_response.public_key.as_ref());
 
         Ok(SignedTransaction {
-            signature: Ed25519IotaSignature::from_bytes(&signature_bytes)
+            signature: Ed25519Signature::from_bytes(&signature_bytes)
                 .map_err(|_| LedgerError::Serialization)?
                 .into(),
-            address: IotaAddress::from_bytes(key_response.address)
+            address: Address::from_bytes(key_response.address)
                 .map_err(|_| LedgerError::Serialization)?,
         })
     }

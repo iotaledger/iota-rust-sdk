@@ -1,10 +1,12 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO public key maybe needs to be wrapped in enum?
+
 use fastcrypto::ed25519::ED25519_PUBLIC_KEY_LENGTH;
 use iota_types::{
-    base_types::IotaAddress,
-    crypto::{PublicKey, SignatureScheme},
+    Address,
+    crypto::{Ed25519PublicKey, PublicKeyExt},
 };
 
 use crate::{
@@ -18,8 +20,8 @@ use crate::{
 };
 
 pub struct PublicKeyResult {
-    pub public_key: PublicKey,
-    pub address: IotaAddress,
+    pub public_key: Ed25519PublicKey,
+    pub address: Address,
 }
 
 impl Unpackable for PublicKeyResult {
@@ -32,8 +34,8 @@ impl Unpackable for PublicKeyResult {
         }
         let mut key = [0_u8; ED25519_PUBLIC_KEY_LENGTH];
         buf.read_exact(&mut key)?;
-        let public_key = PublicKey::try_from_bytes(SignatureScheme::ED25519, &key)
-            .map_err(|_| PackableError::InvalidData)?;
+        let public_key =
+            Ed25519PublicKey::from_bytes(&key).map_err(|_| PackableError::InvalidData)?;
 
         if u8::unpack(buf)? != 32 {
             return Err(PackableError::InvalidAnnouncedLen);
@@ -41,7 +43,7 @@ impl Unpackable for PublicKeyResult {
         let mut address_buffer = [0_u8; 32];
         buf.read_exact(&mut address_buffer)?;
         let address =
-            IotaAddress::from_bytes(address_buffer).map_err(|_| PackableError::InvalidData)?;
+            Address::from_bytes(address_buffer).map_err(|_| PackableError::InvalidData)?;
 
         Ok(Self {
             public_key,
