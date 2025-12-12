@@ -11,6 +11,7 @@ use crate::{
         simple::SimpleKeypair,
     },
     error::Result,
+    ledger::LedgerSigner,
     types::{signature::UserSignature, transaction::Transaction},
 };
 
@@ -74,6 +75,21 @@ impl TransactionSignerFn for SimpleKeypair {
         })
     }
 }
+
+// #[async_trait::async_trait]
+// impl TransactionSignerFn for LedgerSigner {
+//     async fn sign(&self, transaction: Arc<Transaction>) ->
+// Result<TransactionSignerFnOutput> {         let signature = self
+//             .0
+//             .sign_transaction_unchecked(&transaction.0)
+//             .await?
+//             .signature;
+
+//         Ok(TransactionSignerFnOutput {
+//             signature: Arc::new(signature.into()),
+//         })
+//     }
+// }
 
 /// An async signer implementation which wraps a `TransactionSignerFn`
 /// definition, which can be used to sign a transaction with a callback.

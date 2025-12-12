@@ -19,6 +19,7 @@ pub enum LedgerTCPError {
     Inner,
 }
 
+#[derive(Debug)]
 pub struct TransportTCP {
     url: String,
 }

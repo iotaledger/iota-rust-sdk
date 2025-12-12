@@ -50,6 +50,29 @@ impl LedgerSigner {
         Ok(public_key.public_key)
     }
 
+    // TODO
+    pub async fn sign_transaction_unchecked(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<SignedTransaction, LedgerSignerError> {
+        let objects = if let Some(client) = &self.client {
+            match utils::load_objects_with_client(client, transaction).await {
+                Ok(objects) => objects,
+                Err(e) => {
+                    warn!("Failed to load objects: {e}. Falling back to blind-signing.");
+                    vec![]
+                }
+            }
+        } else {
+            vec![]
+        };
+
+        self.ledger
+            .sign_intent_unchecked(&self.path, Intent::iota_transaction(), transaction, objects)
+            .map_err(LedgerSignerError::from)
+    }
+
+    // TODO why address?
     pub async fn sign_transaction(
         &self,
         transaction: &Transaction,

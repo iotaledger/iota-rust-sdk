@@ -6,10 +6,15 @@ use std::{str::FromStr, sync::Arc};
 use iota_sdk::types::crypto::SignatureScheme;
 
 // use crate::graphql::GraphQLClient;
-use crate::types::{address::Address, crypto::Ed25519PublicKey};
+use crate::types::{
+    address::Address,
+    crypto::Ed25519PublicKey,
+    signature::{SimpleSignature, UserSignature},
+    transaction::Transaction,
+};
 
 #[derive(uniffi::Object)]
-pub struct LedgerSigner(iota_ledger_signer::LedgerSigner);
+pub struct LedgerSigner(pub iota_ledger_signer::LedgerSigner);
 
 #[derive(Debug, derive_more::Display, uniffi::Object)]
 pub struct LedgerSignerError(iota_ledger_signer::LedgerSignerError);
@@ -64,6 +69,22 @@ impl LedgerSigner {
             .get_public_key()
             .map(Ed25519PublicKey::from)
             .map_err(LedgerSignerError)?)
+    }
+
+    pub async fn sign_transaction(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<UserSignature, LedgerSignerError> {
+        let signature = self
+            .0
+            .sign_transaction_unchecked(&transaction.0)
+            .await
+            .map_err(LedgerSignerError)?;
+
+        Ok(UserSignature::new_simple(&SimpleSignature::new_ed25519(
+            &(signature.signature.into()),
+            &(signature.public_key.into()),
+        )))
     }
 
     //     pub async fn sign_transaction(

@@ -10,7 +10,9 @@ use tracing::debug;
 mod transport;
 use iota_types::{
     Address, Object,
-    crypto::{Ed25519Signature, Intent, IntentMessage, SignatureScheme},
+    crypto::{
+        Ed25519PublicKey, Ed25519Signature, Intent, IntentMessage, PublicKeyExt, SignatureScheme,
+    },
 };
 use serde::Serialize;
 use transport::{APDUAnswer, APDUCommand, LedgerTransport};
@@ -30,7 +32,7 @@ pub struct Ledger {
 
 pub struct SignedTransaction {
     pub signature: Ed25519Signature,
-    pub address: Address,
+    pub public_key: Ed25519PublicKey,
 }
 
 const IOTA_APP_NAME: &str = "IOTA";
@@ -149,20 +151,16 @@ impl Ledger {
         SignatureScheme::Ed25519
     }
 
-    pub fn sign_intent<T: Serialize>(
+    // TODO
+    pub fn sign_intent_unchecked<T: Serialize>(
         &self,
         bip32: &bip32::DerivationPath,
-        address: &Address,
         intent: Intent,
         msg: &T,
         objects: Vec<Object>,
     ) -> Result<SignedTransaction, LedgerError> {
         let version = self.get_version()?;
         let key_response = self.get_public_key(bip32)?;
-
-        if key_response.address != *address {
-            return Err(LedgerError::AddressMismatch);
-        }
 
         let intent_msg = IntentMessage::new(intent, msg);
         let intent_bytes = bcs::to_bytes(&intent_msg).map_err(|_| LedgerError::Serialization)?;
@@ -187,9 +185,27 @@ impl Ledger {
             signature: Ed25519Signature::from_bytes(&signature_bytes)
                 .map_err(|_| LedgerError::Serialization)?
                 .into(),
-            address: Address::from_bytes(key_response.address)
+            public_key: Ed25519PublicKey::from_bytes(key_response.public_key)
                 .map_err(|_| LedgerError::Serialization)?,
         })
+    }
+
+    // TODO why address?
+    pub fn sign_intent<T: Serialize>(
+        &self,
+        bip32: &bip32::DerivationPath,
+        address: &Address,
+        intent: Intent,
+        msg: &T,
+        objects: Vec<Object>,
+    ) -> Result<SignedTransaction, LedgerError> {
+        let key_response = self.get_public_key(bip32)?;
+
+        if key_response.address != *address {
+            return Err(LedgerError::AddressMismatch);
+        }
+
+        self.sign_intent_unchecked(bip32, intent, msg, objects)
     }
 
     /// Close the IOTA app from within
