@@ -17,6 +17,7 @@ pub mod crypto;
 pub mod error;
 pub mod faucet;
 pub mod graphql;
+pub mod ledger;
 pub mod transaction_builder;
 pub mod types;
 pub mod uniffi_helpers;

@@ -2287,6 +2287,41 @@ void* uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(RustBuffer object_r
 void* uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(void* object_id, uint64_t initial_shared_version, int8_t mutable, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_LEDGERSIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_LEDGERSIGNER
+void* uniffi_iota_sdk_ffi_fn_clone_ledgersigner(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_LEDGERSIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_LEDGERSIGNER
+void uniffi_iota_sdk_ffi_fn_free_ledgersigner(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_LEDGERSIGNER_NEW_WITH_DEFAULT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_LEDGERSIGNER_NEW_WITH_DEFAULT
+void* uniffi_iota_sdk_ffi_fn_constructor_ledgersigner_new_with_default(RustBuffer path, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_LEDGERSIGNER_GET_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_LEDGERSIGNER_GET_ADDRESS
+void* uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_address(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_LEDGERSIGNER_GET_PUBLIC_KEY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_LEDGERSIGNER_GET_PUBLIC_KEY
+void* uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_LEDGERSIGNERERROR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_LEDGERSIGNERERROR
+void* uniffi_iota_sdk_ffi_fn_clone_ledgersignererror(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_LEDGERSIGNERERROR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_LEDGERSIGNERERROR
+void uniffi_iota_sdk_ffi_fn_free_ledgersignererror(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
 void* uniffi_iota_sdk_ffi_fn_clone_makemovevector(void* ptr, RustCallStatus *out_status
@@ -9938,6 +9973,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_LEDGERSIGNER_GET_ADDRESS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_LEDGERSIGNER_GET_ADDRESS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_LEDGERSIGNER_GET_PUBLIC_KEY
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_LEDGERSIGNER_GET_PUBLIC_KEY
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MAKEMOVEVECTOR_ELEMENTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_MAKEMOVEVECTOR_ELEMENTS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements(void
@@ -12587,6 +12634,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_LEDGERSIGNER_NEW_WITH_DEFAULT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_LEDGERSIGNER_NEW_WITH_DEFAULT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ledgersigner_new_with_default(void
     
 );
 #endif

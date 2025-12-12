@@ -1307,6 +1307,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address() != 5173:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key() != 26320:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_type_tag() != 31154:
@@ -2190,6 +2194,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ledgersigner_new_with_default() != 16447:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4769,6 +4775,41 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersigner.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersigner.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ledgersigner.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ledgersigner.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ledgersigner_new_with_default.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ledgersigner_new_with_default.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersignererror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersignererror.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ledgersignererror.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ledgersignererror.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_makemovevector.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -11207,6 +11248,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.restype = ctypes.c_uint16
@@ -12533,6 +12580,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ledgersigner_new_with_default.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ledgersigner_new_with_default.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.restype = ctypes.c_uint16
@@ -13472,6 +13522,10 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
+
+
 
 
 
@@ -35867,6 +35921,167 @@ class _UniffiConverterTypeInput:
     @classmethod
     def write(cls, value: InputProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class LedgerSignerProtocol(typing.Protocol):
+    def get_address(self, ):
+        raise NotImplementedError
+    def get_public_key(self, ):
+        raise NotImplementedError
+# LedgerSigner is a Rust-only trait - it's a wrapper around a Rust implementation.
+class LedgerSigner():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ledgersigner, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersigner, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def new_with_default(cls, path: "str"):
+        _UniffiConverterString.check_lower(path)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeLedgerSignerError__as_error,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ledgersigner_new_with_default,
+        _UniffiConverterString.lower(path))
+        return cls._make_instance_(pointer)
+
+
+
+    def get_address(self, ) -> "Address":
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeLedgerSignerError__as_error,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def get_public_key(self, ) -> "Ed25519PublicKey":
+        return _UniffiConverterTypeEd25519PublicKey.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeLedgerSignerError__as_error,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeLedgerSigner:
+
+    @staticmethod
+    def lift(value: int):
+        return LedgerSigner._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: LedgerSigner):
+        if not isinstance(value, LedgerSigner):
+            raise TypeError("Expected LedgerSigner instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: LedgerSignerProtocol):
+        if not isinstance(value, LedgerSigner):
+            raise TypeError("Expected LedgerSigner instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: LedgerSignerProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class LedgerSignerErrorProtocol(typing.Protocol):
+    pass
+# LedgerSignerError is a Rust-only trait - it's a wrapper around a Rust implementation.
+class LedgerSignerError(Exception):
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_ledgersignererror, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersignererror, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+
+class _UniffiConverterTypeLedgerSignerError__as_error(_UniffiConverterRustBuffer):
+    @classmethod
+    def read(cls, buf):
+        raise NotImplementedError()
+
+    @classmethod
+    def write(cls, value, buf):
+        raise NotImplementedError()
+
+    @staticmethod
+    def lift(value):
+        # Errors are always a rust buffer holding a pointer - which is a "read"
+        with value.consume_with_stream() as stream:
+            return _UniffiConverterTypeLedgerSignerError.read(stream)
+
+    @staticmethod
+    def lower(value):
+        raise NotImplementedError()
+
+class _UniffiConverterTypeLedgerSignerError:
+
+    @staticmethod
+    def lift(value: int):
+        return LedgerSignerError._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: LedgerSignerError):
+        if not isinstance(value, LedgerSignerError):
+            raise TypeError("Expected LedgerSignerError instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: LedgerSignerErrorProtocol):
+        if not isinstance(value, LedgerSignerError):
+            raise TypeError("Expected LedgerSignerError instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: LedgerSignerErrorProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class MakeMoveVectorProtocol(typing.Protocol):
     """
     Command to build a move vector out of a set of individual elements
@@ -51825,6 +52040,8 @@ __all__ = [
     "GraphQlClient",
     "Identifier",
     "Input",
+    "LedgerSigner",
+    "LedgerSignerError",
     "MakeMoveVector",
     "MergeCoins",
     "MoveArg",

@@ -52,7 +52,7 @@ pub enum WaitForTx {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GraphQLClient(RwLock<iota_sdk::graphql_client::Client>);
+pub struct GraphQLClient(pub RwLock<iota_sdk::graphql_client::Client>);
 
 impl GraphQLClient {
     pub fn inner(&self) -> &RwLock<iota_sdk::graphql_client::Client> {

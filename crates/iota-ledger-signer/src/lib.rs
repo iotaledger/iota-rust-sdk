@@ -1,15 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// use iota_sdk::{
-//     IotaClient,
-//     types::{
-//         base_types::IotaAddress,
-//         crypto::{PublicKey, SignatureScheme},
-//         transaction::TransactionData,
-//     },
-// };
-// use iota_sdk_types::Intent;
 use iota_graphql_client::Client as IotaClient;
 use iota_ledger::{Ledger, SignedTransaction};
 use iota_types::{

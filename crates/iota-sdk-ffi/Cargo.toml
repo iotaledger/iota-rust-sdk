@@ -17,6 +17,7 @@ crate-type = ["lib", "cdylib"]
 [dependencies]
 async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
+bip32 = "0.5.3"
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
 hex.workspace = true
@@ -30,3 +31,4 @@ tokio = { workspace = true, features = ["time"] }
 uniffi = { version = "0.29", features = ["cli", "tokio"] }
 
 iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk" }
+iota-ledger-signer.workspace = true
