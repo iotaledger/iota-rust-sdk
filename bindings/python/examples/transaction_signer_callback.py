@@ -16,7 +16,6 @@ class AsyncSigner(TransactionSignerFn):
 
 
 async def main():
-    # Amount to send in nanos
     amount = 1000
     recipient_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
@@ -35,8 +34,8 @@ async def main():
     builder = TransactionBuilder(sender_address).with_client(client)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
 
-    effects = await builder.execute(TransactionSigner(AsyncSigner(private_key)),
-                                    WaitForTx.FINALIZED)
+    signer = TransactionSigner(AsyncSigner(private_key))
+    effects = await builder.execute(signer, WaitForTx.FINALIZED)
 
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
     print(f"Transaction status: {effects.as_v1().status}")

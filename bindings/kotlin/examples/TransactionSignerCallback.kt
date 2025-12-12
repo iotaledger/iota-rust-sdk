@@ -12,7 +12,6 @@ class AsyncSigner(val key: Ed25519PrivateKey) : TransactionSignerFn {
 
 fun main() = runBlocking {
     try {
-        // Amount to send in nanos
         val amount = 1000uL
         val recipientAddress =
             Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
@@ -21,8 +20,6 @@ fun main() = runBlocking {
         val publicKey = privateKey.publicKey()
         val senderAddress = publicKey.deriveAddress()
         println("Sender address: ${senderAddress.toHex()}")
-
-        val signer = TransactionSigner(AsyncSigner(privateKey))
 
         // Request funds from faucet
         val faucet = FaucetClient.newLocalnet()
@@ -33,6 +30,7 @@ fun main() = runBlocking {
         val builder = TransactionBuilder(senderAddress).withClient(client)
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
 
+        val signer = TransactionSigner(AsyncSigner(privateKey))
         val effects = builder.execute(signer, WaitForTx.FINALIZED)
 
         println("Digest: ${hexEncode(effects.digest().toBytes())}")

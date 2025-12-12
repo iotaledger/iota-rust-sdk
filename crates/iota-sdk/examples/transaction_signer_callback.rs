@@ -22,7 +22,6 @@ impl TransactionSigner for AsyncSigner {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Amount to send in nanos
     let amount = 1_000u64;
     let recipient_address =
         Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
@@ -42,9 +41,8 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
     builder.send_iota(recipient_address, amount);
 
-    let effects = builder
-        .execute(&AsyncSigner(private_key), WaitForTx::Finalized)
-        .await?;
+    let signer = AsyncSigner(private_key);
+    let effects = builder.execute(&signer, WaitForTx::Finalized).await?;
 
     println!("Digest: {}", effects.digest());
     println!("Transaction status: {:?}", effects.status());
