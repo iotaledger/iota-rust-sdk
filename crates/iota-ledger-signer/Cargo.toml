@@ -16,6 +16,7 @@ tracing = "0.1"
 iota-ledger.workspace = true
 iota-sdk.workspace = true
 iota-types.workspace = true
+iota-graphql-client.workspace = true
 
 [dev-dependencies]
 anyhow = "1.0"
