@@ -17,7 +17,7 @@ use crate::{
 /// The result of an async sign call containing the `UserSignature`.
 #[derive(uniffi::Record)]
 pub struct TransactionSignerFnOutput {
-    sig: Arc<UserSignature>,
+    signature: Arc<UserSignature>,
 }
 
 /// Defines a type which can sign a transaction asynchronously.
@@ -34,9 +34,10 @@ pub trait TransactionSignerFn: Send + Sync + std::fmt::Debug {
 #[async_trait::async_trait]
 impl TransactionSignerFn for Ed25519PrivateKey {
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let sig = self.0.sign_transaction(&transaction.0)?;
+        let signature = self.0.sign_transaction(&transaction.0)?;
+
         Ok(TransactionSignerFnOutput {
-            sig: Arc::new(sig.into()),
+            signature: Arc::new(signature.into()),
         })
     }
 }
@@ -44,9 +45,10 @@ impl TransactionSignerFn for Ed25519PrivateKey {
 #[async_trait::async_trait]
 impl TransactionSignerFn for Secp256k1PrivateKey {
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let sig = self.0.sign_transaction(&transaction.0)?;
+        let signature = self.0.sign_transaction(&transaction.0)?;
+
         Ok(TransactionSignerFnOutput {
-            sig: Arc::new(sig.into()),
+            signature: Arc::new(signature.into()),
         })
     }
 }
@@ -54,9 +56,10 @@ impl TransactionSignerFn for Secp256k1PrivateKey {
 #[async_trait::async_trait]
 impl TransactionSignerFn for Secp256r1PrivateKey {
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let sig = self.0.sign_transaction(&transaction.0)?;
+        let signature = self.0.sign_transaction(&transaction.0)?;
+
         Ok(TransactionSignerFnOutput {
-            sig: Arc::new(sig.into()),
+            signature: Arc::new(signature.into()),
         })
     }
 }
@@ -64,9 +67,10 @@ impl TransactionSignerFn for Secp256r1PrivateKey {
 #[async_trait::async_trait]
 impl TransactionSignerFn for SimpleKeypair {
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
-        let sig = self.0.sign_transaction(&transaction.0)?;
+        let signature = self.0.sign_transaction(&transaction.0)?;
+
         Ok(TransactionSignerFnOutput {
-            sig: Arc::new(sig.into()),
+            signature: Arc::new(signature.into()),
         })
     }
 }
@@ -104,7 +108,7 @@ impl TransactionSigner {
     }
 
     pub async fn sign(&self, txn: Arc<Transaction>) -> Result<Arc<UserSignature>> {
-        Ok(self.0.sign(txn).await?.sig)
+        Ok(self.0.sign(txn).await?.signature)
     }
 }
 

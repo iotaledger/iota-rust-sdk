@@ -14,12 +14,11 @@ type AsyncSigner struct {
 }
 
 func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.TransactionSignerFnOutput, error) {
-	sig, err := signer.Key.SignTransaction(transaction)
-	return iota_sdk.TransactionSignerFnOutput{Sig: sig}, err
+	signature, err := signer.Key.SignTransaction(transaction)
+	return iota_sdk.TransactionSignerFnOutput{Signature: signature}, err
 }
 
 func main() {
-	amount := 1000
 	recipientAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	if err != nil {
 		log.Fatalf("Failed to parse recipient address: %v", err)
@@ -43,7 +42,7 @@ func main() {
 	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	builder := iota_sdk.NewTransactionBuilder(senderAddress).WithClient(client)
-	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(amount))
+	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 
 	signer := iota_sdk.NewTransactionSigner(&AsyncSigner{Key: privateKey})
 	waitFor := iota_sdk.WaitForTxFinalized

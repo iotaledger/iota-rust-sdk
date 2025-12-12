@@ -17884,15 +17884,15 @@ class TransactionSignerFnOutput:
     The result of an async sign call containing the `UserSignature`.
     """
 
-    sig: "UserSignature"
-    def __init__(self, *, sig: "UserSignature"):
-        self.sig = sig
+    signature: "UserSignature"
+    def __init__(self, *, signature: "UserSignature"):
+        self.signature = signature
 
     def __str__(self):
-        return "TransactionSignerFnOutput(sig={})".format(self.sig)
+        return "TransactionSignerFnOutput(signature={})".format(self.signature)
 
     def __eq__(self, other):
-        if self.sig != other.sig:
+        if self.signature != other.signature:
             return False
         return True
 
@@ -17900,16 +17900,16 @@ class _UniffiConverterTypeTransactionSignerFnOutput(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return TransactionSignerFnOutput(
-            sig=_UniffiConverterTypeUserSignature.read(buf),
+            signature=_UniffiConverterTypeUserSignature.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeUserSignature.check_lower(value.sig)
+        _UniffiConverterTypeUserSignature.check_lower(value.signature)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeUserSignature.write(value.sig, buf)
+        _UniffiConverterTypeUserSignature.write(value.signature, buf)
 
 
 class TransactionsFilter:

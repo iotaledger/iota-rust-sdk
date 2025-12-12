@@ -34314,11 +34314,11 @@ func (_ FfiDestroyerTransactionMetadata) Destroy(value TransactionMetadata) {
 }
 // The result of an async sign call containing the `UserSignature`.
 type TransactionSignerFnOutput struct {
-	Sig *UserSignature
+	Signature *UserSignature
 }
 
 func (r *TransactionSignerFnOutput) Destroy() {
-		FfiDestroyerUserSignature{}.Destroy(r.Sig);
+		FfiDestroyerUserSignature{}.Destroy(r.Signature);
 }
 
 type FfiConverterTransactionSignerFnOutput struct {}
@@ -34340,7 +34340,7 @@ func (c FfiConverterTransactionSignerFnOutput) Lower(value TransactionSignerFnOu
 }
 
 func (c FfiConverterTransactionSignerFnOutput) Write(writer io.Writer, value TransactionSignerFnOutput) {
-		FfiConverterUserSignatureINSTANCE.Write(writer, value.Sig);
+		FfiConverterUserSignatureINSTANCE.Write(writer, value.Signature);
 }
 
 type FfiDestroyerTransactionSignerFnOutput struct {}

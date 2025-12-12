@@ -56766,14 +56766,14 @@ public object FfiConverterTypeTransactionMetadata: FfiConverterRustBuffer<Transa
  * The result of an async sign call containing the `UserSignature`.
  */
 data class TransactionSignerFnOutput (
-    var `sig`: UserSignature
+    var `signature`: UserSignature
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
         
     Disposable.destroy(
-        this.`sig`
+        this.`signature`
     )
     }
     
@@ -56791,11 +56791,11 @@ public object FfiConverterTypeTransactionSignerFnOutput: FfiConverterRustBuffer<
     }
 
     override fun allocationSize(value: TransactionSignerFnOutput) = (
-            FfiConverterTypeUserSignature.allocationSize(value.`sig`)
+            FfiConverterTypeUserSignature.allocationSize(value.`signature`)
     )
 
     override fun write(value: TransactionSignerFnOutput, buf: ByteBuffer) {
-            FfiConverterTypeUserSignature.write(value.`sig`, buf)
+            FfiConverterTypeUserSignature.write(value.`signature`, buf)
     }
 }
 

@@ -13,7 +13,7 @@ class AsyncSigner(TransactionSignerFn):
 
     async def sign(self, transaction: Transaction):
         return TransactionSignerFnOutput(
-            sig=self.key.sign_transaction(transaction))
+            signature=self.key.sign_transaction(transaction))
 
 
 async def main():
