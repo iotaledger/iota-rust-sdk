@@ -3173,6 +3173,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4037,6 +4039,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(
 fun uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements(
 ): Short
@@ -6192,6 +6196,8 @@ fun uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_address(`ptr`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction(`ptr`: Pointer,`transaction`: Pointer,
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_ledgersignererror(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ledgersignererror(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9507,6 +9513,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key() != 26320.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction() != 39180.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773.toShort()) {
@@ -27479,6 +27488,8 @@ public interface LedgerSignerInterface {
     
     fun `getPublicKey`(): Ed25519PublicKey
     
+    suspend fun `signTransaction`(`transaction`: Transaction): UserSignature
+    
     companion object
 }
 
@@ -27589,6 +27600,27 @@ open class LedgerSigner: Disposable, AutoCloseable, LedgerSignerInterface
     )
     }
     
+
+    
+    @Throws(LedgerSignerException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `signTransaction`(`transaction`: Transaction) : UserSignature {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction(
+                thisPtr,
+                FfiConverterTypeTransaction.lower(`transaction`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        // lift function
+        { FfiConverterTypeUserSignature.lift(it) },
+        // Error FFI converter
+        LedgerSignerException.ErrorHandler,
+    )
+    }
 
     
 

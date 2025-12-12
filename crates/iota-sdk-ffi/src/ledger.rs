@@ -75,11 +75,14 @@ impl LedgerSigner {
         &self,
         transaction: &Transaction,
     ) -> Result<UserSignature, LedgerSignerError> {
+        println!("HELLO");
         let signature = self
             .0
             .sign_transaction_unchecked(&transaction.0)
             .await
             .map_err(LedgerSignerError)?;
+
+        println!("HELLO {signature:?}");
 
         Ok(UserSignature::new_simple(&SimpleSignature::new_ed25519(
             &(signature.signature.into()),

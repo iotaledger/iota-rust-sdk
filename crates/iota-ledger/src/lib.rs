@@ -10,9 +10,7 @@ use tracing::debug;
 mod transport;
 use iota_types::{
     Address, Object,
-    crypto::{
-        Ed25519PublicKey, Ed25519Signature, Intent, IntentMessage, PublicKeyExt, SignatureScheme,
-    },
+    crypto::{Ed25519PublicKey, Ed25519Signature, Intent, IntentMessage, SignatureScheme},
 };
 use serde::Serialize;
 use transport::{APDUAnswer, APDUCommand, LedgerTransport};
@@ -30,6 +28,7 @@ pub struct Ledger {
     transport: LedgerTransport,
 }
 
+#[derive(Debug)]
 pub struct SignedTransaction {
     pub signature: Ed25519Signature,
     pub public_key: Ed25519PublicKey,
@@ -176,17 +175,17 @@ impl Ledger {
             sign_transaction::exec(self, bip32, intent_bytes, vec![])
         })?;
 
+        // TODO do we need these?
         let mut signature_bytes: Vec<u8> = Vec::new();
         signature_bytes.extend_from_slice(&[self.get_signature_scheme() as u8]);
         signature_bytes.extend_from_slice(&signature.bytes);
         signature_bytes.extend_from_slice(key_response.public_key.as_ref());
 
         Ok(SignedTransaction {
-            signature: Ed25519Signature::from_bytes(&signature_bytes)
+            signature: Ed25519Signature::from_bytes(&signature.bytes)
                 .map_err(|_| LedgerError::Serialization)?
                 .into(),
-            public_key: Ed25519PublicKey::from_bytes(key_response.public_key)
-                .map_err(|_| LedgerError::Serialization)?,
+            public_key: key_response.public_key,
         })
     }
 

@@ -1311,6 +1311,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key() != 26320:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction() != 39180:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_type_tag() != 31154:
@@ -4800,6 +4802,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ledgersignererror.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -11254,6 +11261,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.restype = ctypes.c_uint16
@@ -35926,6 +35936,8 @@ class LedgerSignerProtocol(typing.Protocol):
         raise NotImplementedError
     def get_public_key(self, ):
         raise NotImplementedError
+    def sign_transaction(self, transaction: "Transaction"):
+        raise NotImplementedError
 # LedgerSigner is a Rust-only trait - it's a wrapper around a Rust implementation.
 class LedgerSigner():
     _pointer: ctypes.c_void_p
@@ -35975,6 +35987,27 @@ class LedgerSigner():
             _uniffi_rust_call_with_error(_UniffiConverterTypeLedgerSignerError__as_error,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key,self._uniffi_clone_pointer(),)
         )
 
+
+
+
+    async def sign_transaction(self, transaction: "Transaction") -> "UserSignature":
+        _UniffiConverterTypeTransaction.check_lower(transaction)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeTransaction.lower(transaction)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
+            # lift function
+            _UniffiConverterTypeUserSignature.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeLedgerSignerError__as_error,
+
+        )
 
 
 

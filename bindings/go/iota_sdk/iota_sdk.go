@@ -4188,6 +4188,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction()
+	})
+	if checksum != 39180 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements()
 	})
 	if checksum != 20773 {
@@ -18727,6 +18736,7 @@ func (_ FfiDestroyerInput) Destroy(value *Input) {
 type LedgerSignerInterface interface {
 	GetAddress() (*Address, error)
 	GetPublicKey() (*Ed25519PublicKey, error)
+	SignTransaction(transaction *Transaction) (*UserSignature, error)
 }
 type LedgerSigner struct {
 	ffiObject FfiObject
@@ -18775,6 +18785,35 @@ func (_self *LedgerSigner) GetPublicKey() (*Ed25519PublicKey, error) {
 		} else {
 			return FfiConverterEd25519PublicKeyINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+func (_self *LedgerSigner) SignTransaction(transaction *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*LedgerSigner")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[LedgerSignerError](
+        FfiConverterLedgerSignerErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *UserSignature {
+			return FfiConverterUserSignatureINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
 }
 func (object *LedgerSigner) Destroy() {
 	runtime.SetFinalizer(object, nil)

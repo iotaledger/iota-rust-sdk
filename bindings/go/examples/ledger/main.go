@@ -10,6 +10,17 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
+type AsyncSigner struct {
+	ledger *iota_sdk.LedgerSigner
+}
+
+func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.TransactionSignerFnOutput, error) {
+	fmt.Println("BEFORE")
+	signature, err := signer.ledger.SignTransaction(transaction)
+	fmt.Println("AFTER")
+	return iota_sdk.TransactionSignerFnOutput{Signature: signature}, err
+}
+
 func main() {
 	ledger, err := iota_sdk.LedgerSignerNewWithDefault("m/44'/4218'/0'/1'/0'")
 
@@ -24,46 +35,31 @@ func main() {
 	}
 
 	fmt.Println("Address:", address.ToHex())
-	
-	// client := iota_sdk.GraphQlClientNewDevnet()
 
-	// packageAddress, err := iota_sdk.AddressFromHex("0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f")
-	// if err != nil {
-	// 	log.Fatalf("Failed to parse address: %v", err)
-	// }
+	// Request funds from faucet
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err = faucet.RequestAndWait(address)
+	if err.(*iota_sdk.SdkFfiError) != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
 
-	// packageOpt, err := client.Package(packageAddress, nil)
-	// if err.(*iota_sdk.SdkFfiError) != nil {
-	// 	log.Fatalf("Failed to get package: %v", err)
-	// }
-	// if packageOpt == nil {
-	// 	log.Fatalf("Missing package: %v", err)
-	// }
-	// pkg := *packageOpt
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	// for moduleId := range pkg.Modules() {
-	// 	moduleOpt, err := client.NormalizedMoveModule(
-	// 		packageAddress,
-	// 		moduleId.AsStr(),
-	// 		nil,
-	// 		nil,
-	// 		nil,
-	// 		nil,
-	// 		nil,
-	// 	)
-	// 	if err.(*iota_sdk.SdkFfiError) != nil {
-	// 		log.Fatalf("Failed to get module: %v", err)
-	// 	}
-	// 	if moduleOpt == nil {
-	// 		log.Fatalf("Module: %v not found", moduleId.AsStr())
-	// 	}
-	// 	module := *moduleOpt
-	// 	if module.Functions != nil {
-	// 		fmt.Println("Module:", moduleId.AsStr())
-	// 		for _, fun := range module.Functions.Nodes {
-	// 			fmt.Println("- ", fun.String())
-	// 		}
-	// 		fmt.Println()
-	// 	}
-	// }
+	recipientAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+	if err != nil {
+		log.Fatalf("Failed to parse recipient address: %v", err)
+	}
+
+	builder := iota_sdk.NewTransactionBuilder(address).WithClient(client)
+	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
+
+	signer := iota_sdk.NewTransactionSigner(&AsyncSigner{ledger: ledger})
+	waitFor := iota_sdk.WaitForTxFinalized
+	effects, err := builder.Execute(signer, &waitFor)
+	if err.(*iota_sdk.SdkFfiError) != nil {
+		log.Fatalf("Failed to execute: %v", err)
+	}
+	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))
+	log.Printf("Transaction status: %v", (*effects).AsV1().Status)
+	log.Printf("Effects: %+v", (*effects).AsV1())
 }
