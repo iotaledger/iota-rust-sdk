@@ -27,7 +27,7 @@ pub struct TransactionSignerFnOutput {
 #[uniffi::export(with_foreign)]
 #[async_trait::async_trait]
 pub trait TransactionSignerFn: Send + Sync + std::fmt::Debug {
-    /// Sign a transaction and return a BCS serialized `UserSignature`.
+    /// Sign a transaction and return a `UserSignature`.
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput>;
 }
 
