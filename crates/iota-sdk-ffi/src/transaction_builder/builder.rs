@@ -16,7 +16,7 @@ use crate::{
     graphql::GraphQLClient,
     transaction_builder::{
         ptb_arg::{MoveArg, PTBArgument},
-        signer::Signer,
+        signer::TransactionSigner,
     },
     types::{
         address::Address,
@@ -345,7 +345,10 @@ impl TransactionBuilder {
     ///
     /// NOTE: These effects are not necessarily compatible with
     /// `TransactionEffects`
-    pub async fn execute_with_gas_station(&self, signer: &Signer) -> Result<serde_json::Value> {
+    pub async fn execute_with_gas_station(
+        &self,
+        signer: &TransactionSigner,
+    ) -> Result<serde_json::Value> {
         Ok(self
             .read(|builder| builder.clone().execute_with_gas_station(signer))
             .await?)

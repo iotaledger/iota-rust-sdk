@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Defines the [`Signer`] trait, which allows users to implement any
+//! Defines the [`TransactionSigner`] trait, which allows users to implement any
 //! type which can sign a transaction asynchronously.
 
 use std::future::Future;
@@ -14,7 +14,7 @@ use iota_types::{Transaction, UserSignature};
 /// This trait can be implemented downstream to enable signing when using the
 /// [`TransactionBuilder`](crate::TransactionBuilder)
 /// [`execute`](crate::TransactionBuilder::execute) function.
-pub trait Signer {
+pub trait TransactionSigner {
     /// The error that can occur during signing.
     type Error: 'static + std::error::Error + Send + Sync;
 
@@ -25,7 +25,7 @@ pub trait Signer {
     ) -> impl Future<Output = Result<UserSignature, Self::Error>>;
 }
 
-impl<T: IotaSigner> Signer for T {
+impl<T: IotaSigner> TransactionSigner for T {
     type Error = SignatureError;
 
     async fn sign(&self, transaction: &Transaction) -> Result<UserSignature, Self::Error> {

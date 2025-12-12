@@ -1063,9 +1063,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run() != 10983:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 38408:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 58102:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 36118:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 8183:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration() != 32958:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1667,10 +1667,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user() != 46052:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_signer_sign() != 32681:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign() != 4758:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() != 11009:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() != 19826:
@@ -1781,7 +1777,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_to_base64() != 51030:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 43023:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station() != 6441:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_expiration() != 5328:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1830,6 +1826,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest() != 55750:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events() != 36651:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign() != 29986:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign() != 28230:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest() != 52708:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2451,16 +2451,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() != 57317:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_ed25519() != 55660:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_keypair() != 37218:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256k1() != 24632:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256r1() != 56042:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_signer_new() != 45305:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() != 51811:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() != 9299:
@@ -2580,6 +2570,16 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 9153:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair() != 13858:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1() != 54758:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1() != 17667:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new() != 8178:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64() != 19681:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2761,11 +2761,11 @@ class _UniffiForeignFutureStructVoid(ctypes.Structure):
     ]
 _UNIFFI_FOREIGN_FUTURE_COMPLETE_VOID = ctypes.CFUNCTYPE(None,ctypes.c_uint64,_UniffiForeignFutureStructVoid,
 )
-_UNIFFI_CALLBACK_INTERFACE_SIGNER_FN_METHOD0 = ctypes.CFUNCTYPE(None,ctypes.c_uint64,ctypes.c_void_p,_UNIFFI_FOREIGN_FUTURE_COMPLETE_RUST_BUFFER,ctypes.c_uint64,ctypes.POINTER(_UniffiForeignFuture),
+_UNIFFI_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0 = ctypes.CFUNCTYPE(None,ctypes.c_uint64,ctypes.c_void_p,_UNIFFI_FOREIGN_FUTURE_COMPLETE_RUST_BUFFER,ctypes.c_uint64,ctypes.POINTER(_UniffiForeignFuture),
 )
-class _UniffiVTableCallbackInterfaceSignerFn(ctypes.Structure):
+class _UniffiVTableCallbackInterfaceTransactionSignerFn(ctypes.Structure):
     _fields_ = [
-        ("sign", _UNIFFI_CALLBACK_INTERFACE_SIGNER_FN_METHOD0),
+        ("sign", _UNIFFI_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0),
         ("uniffi_free", _UNIFFI_CALLBACK_INTERFACE_FREE),
     ]
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_address.argtypes = (
@@ -6780,65 +6780,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_signer.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_signer.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_signer.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_signer.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_ed25519.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_ed25519.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_keypair.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_keypair.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256k1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256k1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256r1.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256r1.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_new.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_signer_sign.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_signer_sign.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_signerfn.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_signerfn.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_signerfn.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_free_signerfn.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_signerfn.argtypes = (
-    ctypes.POINTER(_UniffiVTableCallbackInterfaceSignerFn),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_signerfn.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_signerfn_sign.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_signerfn_sign.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_simplekeypair.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7712,6 +7653,65 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_sta
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsigner.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsigner.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionsigner.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionsigner.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn.argtypes = (
+    ctypes.POINTER(_UniffiVTableCallbackInterfaceTransactionSignerFn),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionv1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -11747,12 +11747,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signer_sign.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signer_sign.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key.restype = ctypes.c_uint16
@@ -11993,6 +11987,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionevents_events.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionv1_digest.restype = ctypes.c_uint16
@@ -12923,21 +12923,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_p
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_ed25519.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_ed25519.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_keypair.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_keypair.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256k1.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256k1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256r1.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256r1.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_signer_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32.restype = ctypes.c_uint16
@@ -13118,6 +13103,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programm
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64.restype = ctypes.c_uint16
@@ -17489,39 +17489,6 @@ class _UniffiConverterTypeSignedTransactionPage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeSignedTransaction.write(value.data, buf)
 
 
-class SignerFnOutput:
-    """
-    The result of an async sign call containing the `UserSignature`.
-    """
-
-    sig: "UserSignature"
-    def __init__(self, *, sig: "UserSignature"):
-        self.sig = sig
-
-    def __str__(self):
-        return "SignerFnOutput(sig={})".format(self.sig)
-
-    def __eq__(self, other):
-        if self.sig != other.sig:
-            return False
-        return True
-
-class _UniffiConverterTypeSignerFnOutput(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return SignerFnOutput(
-            sig=_UniffiConverterTypeUserSignature.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterTypeUserSignature.check_lower(value.sig)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterTypeUserSignature.write(value.sig, buf)
-
-
 class TransactionDataEffects:
     tx: "SignedTransaction"
     effects: "TransactionEffects"
@@ -17910,6 +17877,39 @@ class _UniffiConverterTypeTransactionMetadata(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalUInt64.write(value.gas_price, buf)
         _UniffiConverterOptionalTypeAddress.write(value.gas_sponsor, buf)
         _UniffiConverterOptionalTypeAddress.write(value.sender, buf)
+
+
+class TransactionSignerFnOutput:
+    """
+    The result of an async sign call containing the `UserSignature`.
+    """
+
+    sig: "UserSignature"
+    def __init__(self, *, sig: "UserSignature"):
+        self.sig = sig
+
+    def __str__(self):
+        return "TransactionSignerFnOutput(sig={})".format(self.sig)
+
+    def __eq__(self, other):
+        if self.sig != other.sig:
+            return False
+        return True
+
+class _UniffiConverterTypeTransactionSignerFnOutput(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return TransactionSignerFnOutput(
+            sig=_UniffiConverterTypeUserSignature.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterTypeUserSignature.check_lower(value.sig)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterTypeUserSignature.write(value.sig, buf)
 
 
 class TransactionsFilter:
@@ -26726,7 +26726,7 @@ class _UniffiConverterTypeValue:
         return _UniffiConverterString.lower(value)
 
 # objects.
-class SignerFnProtocol(typing.Protocol):
+class TransactionSignerFnProtocol(typing.Protocol):
     """
     Defines a type which can sign a transaction asynchronously.
 
@@ -26740,12 +26740,12 @@ class SignerFnProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-# SignerFn is a foreign trait so treated like a callback interface, where the
+# TransactionSignerFn is a foreign trait so treated like a callback interface, where the
 # primary use-case is the trait being implemented locally.
 # It is a base-class local implementations might subclass.
 
 
-class SignerFn():
+class TransactionSignerFn():
     """
     Defines a type which can sign a transaction asynchronously.
 
@@ -26759,8 +26759,8 @@ class SignerFn():
         """
 
         raise NotImplementedError
-# `SignerFnImpl` is the implementation for a Rust implemented version.
-class SignerFnImpl():
+# `TransactionSignerFnImpl` is the implementation for a Rust implemented version.
+class TransactionSignerFnImpl():
     """
     Defines a type which can sign a transaction asynchronously.
 
@@ -26777,10 +26777,10 @@ class SignerFnImpl():
         # In case of partial initialization of instances.
         pointer = getattr(self, "_pointer", None)
         if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_signerfn, pointer)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn, pointer)
 
     def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_signerfn, self._pointer)
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn, self._pointer)
 
     # Used by alternative constructors or any methods which return this type.
     @classmethod
@@ -26791,7 +26791,7 @@ class SignerFnImpl():
         inst._pointer = pointer
         return inst
 
-    async def sign(self, transaction: "Transaction") -> "SignerFnOutput":
+    async def sign(self, transaction: "Transaction") -> "TransactionSignerFnOutput":
         """
         Sign a transaction and return a BCS serialized `UserSignature`.
         """
@@ -26799,7 +26799,7 @@ class SignerFnImpl():
         _UniffiConverterTypeTransaction.check_lower(transaction)
         
         return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_signerfn_sign(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeTransaction.lower(transaction)
             ),
@@ -26807,7 +26807,7 @@ class SignerFnImpl():
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
-            _UniffiConverterTypeSignerFnOutput.lift,
+            _UniffiConverterTypeTransactionSignerFnOutput.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -26818,10 +26818,10 @@ _UniffiConverterTypeSdkFfiError,
 
 
 # Put all the bits inside a class to keep the top-level namespace clean
-class _UniffiTraitImplSignerFn:
+class _UniffiTraitImplTransactionSignerFn:
     # For each method, generate a callback function to pass to Rust
 
-    @_UNIFFI_CALLBACK_INTERFACE_SIGNER_FN_METHOD0
+    @_UNIFFI_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0
     def sign(
             uniffi_handle,
             transaction,
@@ -26829,7 +26829,7 @@ class _UniffiTraitImplSignerFn:
             uniffi_callback_data,
             uniffi_out_return,
         ):
-        uniffi_obj = _UniffiConverterTypeSignerFn._handle_map.get(uniffi_handle)
+        uniffi_obj = _UniffiConverterTypeTransactionSignerFn._handle_map.get(uniffi_handle)
         def make_call():
             args = (_UniffiConverterTypeTransaction.lift(transaction), )
             method = uniffi_obj.sign
@@ -26840,7 +26840,7 @@ class _UniffiTraitImplSignerFn:
             uniffi_future_callback(
                 uniffi_callback_data,
                 _UniffiForeignFutureStructRustBuffer(
-                    _UniffiConverterTypeSignerFnOutput.lower(return_value),
+                    _UniffiConverterTypeTransactionSignerFnOutput.lower(return_value),
                     _UniffiRustCallStatus.default()
                 )
             )
@@ -26857,33 +26857,33 @@ class _UniffiTraitImplSignerFn:
 
     @_UNIFFI_CALLBACK_INTERFACE_FREE
     def _uniffi_free(uniffi_handle):
-        _UniffiConverterTypeSignerFn._handle_map.remove(uniffi_handle)
+        _UniffiConverterTypeTransactionSignerFn._handle_map.remove(uniffi_handle)
 
     # Generate the FFI VTable.  This has a field for each callback interface method.
-    _uniffi_vtable = _UniffiVTableCallbackInterfaceSignerFn(
+    _uniffi_vtable = _UniffiVTableCallbackInterfaceTransactionSignerFn(
         sign,
         _uniffi_free
     )
     # Send Rust a pointer to the VTable.  Note: this means we need to keep the struct alive forever,
     # or else bad things will happen when Rust tries to access it.
-    _UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_signerfn(ctypes.byref(_uniffi_vtable))
+    _UniffiLib.uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(ctypes.byref(_uniffi_vtable))
 
 
 
-class _UniffiConverterTypeSignerFn:
+class _UniffiConverterTypeTransactionSignerFn:
     _handle_map = _UniffiHandleMap()
 
     @staticmethod
     def lift(value: int):
-        return SignerFnImpl._make_instance_(value)
+        return TransactionSignerFnImpl._make_instance_(value)
 
     @staticmethod
-    def check_lower(value: SignerFn):
+    def check_lower(value: TransactionSignerFn):
         pass
 
     @staticmethod
-    def lower(value: SignerFnProtocol):
-        return _UniffiConverterTypeSignerFn._handle_map.insert(value)
+    def lower(value: TransactionSignerFnProtocol):
+        return _UniffiConverterTypeTransactionSignerFn._handle_map.insert(value)
 
     @classmethod
     def read(cls, buf: _UniffiRustBuffer):
@@ -26893,7 +26893,7 @@ class _UniffiConverterTypeSignerFn:
         return cls.lift(ptr)
 
     @classmethod
-    def write(cls, value: SignerFnProtocol, buf: _UniffiRustBuffer):
+    def write(cls, value: TransactionSignerFnProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class AddressProtocol(typing.Protocol):
     """
@@ -30145,13 +30145,13 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute(self, signer: "Signer",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
+    def execute(self, signer: "TransactionSigner",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
         """
 
         raise NotImplementedError
-    def execute_with_sponsor(self, signer: "Signer",sponsor_signer: "Signer",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
+    def execute_with_sponsor(self, signer: "TransactionSigner",sponsor_signer: "TransactionSigner",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
         """
@@ -30372,12 +30372,12 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute(self, signer: "Signer",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
+    async def execute(self, signer: "TransactionSigner",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
 
-        _UniffiConverterTypeSigner.check_lower(signer)
+        _UniffiConverterTypeTransactionSigner.check_lower(signer)
         
         if wait_for is _DEFAULT:
             wait_for = None
@@ -30386,7 +30386,7 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeSigner.lower(signer),
+        _UniffiConverterTypeTransactionSigner.lower(signer),
         _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
@@ -30402,14 +30402,14 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def execute_with_sponsor(self, signer: "Signer",sponsor_signer: "Signer",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
+    async def execute_with_sponsor(self, signer: "TransactionSigner",sponsor_signer: "TransactionSigner",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
         """
         Execute the transaction and optionally wait for finalization.
         """
 
-        _UniffiConverterTypeSigner.check_lower(signer)
+        _UniffiConverterTypeTransactionSigner.check_lower(signer)
         
-        _UniffiConverterTypeSigner.check_lower(sponsor_signer)
+        _UniffiConverterTypeTransactionSigner.check_lower(sponsor_signer)
         
         if wait_for is _DEFAULT:
             wait_for = None
@@ -30418,8 +30418,8 @@ _UniffiConverterTypeSdkFfiError,
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeSigner.lower(signer),
-        _UniffiConverterTypeSigner.lower(sponsor_signer),
+        _UniffiConverterTypeTransactionSigner.lower(signer),
+        _UniffiConverterTypeTransactionSigner.lower(sponsor_signer),
         _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
@@ -42851,132 +42851,6 @@ class _UniffiConverterTypeSecp256r1VerifyingKey:
     @classmethod
     def write(cls, value: Secp256r1VerifyingKeyProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
-class SignerProtocol(typing.Protocol):
-    """
-    An async signer implementation which wraps a `SignerFn` definition, which
-    can be used to sign a transaction with a callback.
-    """
-
-    def sign(self, txn: "Transaction"):
-        raise NotImplementedError
-# Signer is a Rust-only trait - it's a wrapper around a Rust implementation.
-class Signer():
-    """
-    An async signer implementation which wraps a `SignerFn` definition, which
-    can be used to sign a transaction with a callback.
-    """
-
-    _pointer: ctypes.c_void_p
-    def __init__(self, signer_fn: "SignerFn"):
-        _UniffiConverterTypeSignerFn.check_lower(signer_fn)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_new,
-        _UniffiConverterTypeSignerFn.lower(signer_fn))
-
-    def __del__(self):
-        # In case of partial initialization of instances.
-        pointer = getattr(self, "_pointer", None)
-        if pointer is not None:
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_signer, pointer)
-
-    def _uniffi_clone_pointer(self):
-        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_signer, self._pointer)
-
-    # Used by alternative constructors or any methods which return this type.
-    @classmethod
-    def _make_instance_(cls, pointer):
-        # Lightly yucky way to bypass the usual __init__ logic
-        # and just create a new instance with the required pointer.
-        inst = cls.__new__(cls)
-        inst._pointer = pointer
-        return inst
-    @classmethod
-    def from_ed25519(cls, key: "Ed25519PrivateKey"):
-        _UniffiConverterTypeEd25519PrivateKey.check_lower(key)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_ed25519,
-        _UniffiConverterTypeEd25519PrivateKey.lower(key))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def from_keypair(cls, key: "SimpleKeypair"):
-        _UniffiConverterTypeSimpleKeypair.check_lower(key)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_keypair,
-        _UniffiConverterTypeSimpleKeypair.lower(key))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def from_secp256k1(cls, key: "Secp256k1PrivateKey"):
-        _UniffiConverterTypeSecp256k1PrivateKey.check_lower(key)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256k1,
-        _UniffiConverterTypeSecp256k1PrivateKey.lower(key))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def from_secp256r1(cls, key: "Secp256r1PrivateKey"):
-        _UniffiConverterTypeSecp256r1PrivateKey.check_lower(key)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256r1,
-        _UniffiConverterTypeSecp256r1PrivateKey.lower(key))
-        return cls._make_instance_(pointer)
-
-
-    async def sign(self, txn: "Transaction") -> "UserSignature":
-        _UniffiConverterTypeTransaction.check_lower(txn)
-        
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_signer_sign(
-                self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeTransaction.lower(txn)
-            ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
-            # lift function
-            _UniffiConverterTypeUserSignature.lift,
-            
-    # Error FFI converter
-_UniffiConverterTypeSdkFfiError,
-
-        )
-
-
-
-
-
-class _UniffiConverterTypeSigner:
-
-    @staticmethod
-    def lift(value: int):
-        return Signer._make_instance_(value)
-
-    @staticmethod
-    def check_lower(value: Signer):
-        if not isinstance(value, Signer):
-            raise TypeError("Expected Signer instance, {} found".format(type(value).__name__))
-
-    @staticmethod
-    def lower(value: SignerProtocol):
-        if not isinstance(value, Signer):
-            raise TypeError("Expected Signer instance, {} found".format(type(value).__name__))
-        return value._uniffi_clone_pointer()
-
-    @classmethod
-    def read(cls, buf: _UniffiRustBuffer):
-        ptr = buf.read_u64()
-        if ptr == 0:
-            raise InternalError("Raw pointer value was null")
-        return cls.lift(ptr)
-
-    @classmethod
-    def write(cls, value: SignerProtocol, buf: _UniffiRustBuffer):
-        buf.write_u64(cls.lower(value))
 class SimpleKeypairProtocol(typing.Protocol):
     def public_key(self, ):
         raise NotImplementedError
@@ -44828,7 +44702,7 @@ class TransactionBuilderProtocol(typing.Protocol):
     transaction data.
     """
 
-    def execute_with_gas_station(self, signer: "Signer"):
+    def execute_with_gas_station(self, signer: "TransactionSigner"):
         """
         Execute the transaction using the gas station and return the JSON
         transaction effects. This will fail unless data is set with the
@@ -45035,7 +44909,7 @@ class TransactionBuilder():
         inst._pointer = pointer
         return inst
 
-    async def execute_with_gas_station(self, signer: "Signer") -> "Value":
+    async def execute_with_gas_station(self, signer: "TransactionSigner") -> "Value":
         """
         Execute the transaction using the gas station and return the JSON
         transaction effects. This will fail unless data is set with the
@@ -45045,12 +44919,12 @@ class TransactionBuilder():
         `TransactionEffects`
         """
 
-        _UniffiConverterTypeSigner.check_lower(signer)
+        _UniffiConverterTypeTransactionSigner.check_lower(signer)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
                 self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeSigner.lower(signer)
+        _UniffiConverterTypeTransactionSigner.lower(signer)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -45895,6 +45769,132 @@ class _UniffiConverterTypeTransactionKind:
 
     @classmethod
     def write(cls, value: TransactionKindProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class TransactionSignerProtocol(typing.Protocol):
+    """
+    An async signer implementation which wraps a `TransactionSignerFn`
+    definition, which can be used to sign a transaction with a callback.
+    """
+
+    def sign(self, txn: "Transaction"):
+        raise NotImplementedError
+# TransactionSigner is a Rust-only trait - it's a wrapper around a Rust implementation.
+class TransactionSigner():
+    """
+    An async signer implementation which wraps a `TransactionSignerFn`
+    definition, which can be used to sign a transaction with a callback.
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, signer_fn: "TransactionSignerFn"):
+        _UniffiConverterTypeTransactionSignerFn.check_lower(signer_fn)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new,
+        _UniffiConverterTypeTransactionSignerFn.lower(signer_fn))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_transactionsigner, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsigner, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def from_ed25519(cls, key: "Ed25519PrivateKey"):
+        _UniffiConverterTypeEd25519PrivateKey.check_lower(key)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519,
+        _UniffiConverterTypeEd25519PrivateKey.lower(key))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_keypair(cls, key: "SimpleKeypair"):
+        _UniffiConverterTypeSimpleKeypair.check_lower(key)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair,
+        _UniffiConverterTypeSimpleKeypair.lower(key))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_secp256k1(cls, key: "Secp256k1PrivateKey"):
+        _UniffiConverterTypeSecp256k1PrivateKey.check_lower(key)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1,
+        _UniffiConverterTypeSecp256k1PrivateKey.lower(key))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_secp256r1(cls, key: "Secp256r1PrivateKey"):
+        _UniffiConverterTypeSecp256r1PrivateKey.check_lower(key)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1,
+        _UniffiConverterTypeSecp256r1PrivateKey.lower(key))
+        return cls._make_instance_(pointer)
+
+
+    async def sign(self, txn: "Transaction") -> "UserSignature":
+        _UniffiConverterTypeTransaction.check_lower(txn)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeTransaction.lower(txn)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
+            # lift function
+            _UniffiConverterTypeUserSignature.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+
+
+class _UniffiConverterTypeTransactionSigner:
+
+    @staticmethod
+    def lift(value: int):
+        return TransactionSigner._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: TransactionSigner):
+        if not isinstance(value, TransactionSigner):
+            raise TypeError("Expected TransactionSigner instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: TransactionSignerProtocol):
+        if not isinstance(value, TransactionSigner):
+            raise TypeError("Expected TransactionSigner instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: TransactionSignerProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class TransactionV1Protocol(typing.Protocol):
     """
@@ -51545,12 +51545,12 @@ __all__ = [
     "ServiceConfig",
     "SignedTransaction",
     "SignedTransactionPage",
-    "SignerFnOutput",
     "TransactionDataEffects",
     "TransactionDataEffectsPage",
     "TransactionEffectsPage",
     "TransactionEffectsV1",
     "TransactionMetadata",
+    "TransactionSignerFnOutput",
     "TransactionsFilter",
     "TypeOrigin",
     "UnchangedSharedObject",
@@ -51863,8 +51863,6 @@ __all__ = [
     "Secp256r1Signature",
     "Secp256r1Verifier",
     "Secp256r1VerifyingKey",
-    "Signer",
-    "SignerFn",
     "SimpleKeypair",
     "SimpleSignature",
     "SimpleVerifier",
@@ -51877,6 +51875,8 @@ __all__ = [
     "TransactionEffects",
     "TransactionEvents",
     "TransactionKind",
+    "TransactionSigner",
+    "TransactionSignerFn",
     "TransactionV1",
     "TransferObjects",
     "TypeTag",

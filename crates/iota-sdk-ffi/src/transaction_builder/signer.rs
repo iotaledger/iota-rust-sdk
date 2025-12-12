@@ -16,7 +16,7 @@ use crate::{
 
 /// The result of an async sign call containing the `UserSignature`.
 #[derive(uniffi::Record)]
-pub struct SignerFnOutput {
+pub struct TransactionSignerFnOutput {
     sig: Arc<UserSignature>,
 }
 
@@ -26,60 +26,60 @@ pub struct SignerFnOutput {
 /// `TransactionBuilder::execute` function.
 #[uniffi::export(with_foreign)]
 #[async_trait::async_trait]
-pub trait SignerFn: Send + Sync + std::fmt::Debug {
+pub trait TransactionSignerFn: Send + Sync + std::fmt::Debug {
     /// Sign a transaction and return a BCS serialized `UserSignature`.
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput>;
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput>;
 }
 
 #[async_trait::async_trait]
-impl SignerFn for Ed25519PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
+impl TransactionSignerFn for Ed25519PrivateKey {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(SignerFnOutput {
+        Ok(TransactionSignerFnOutput {
             sig: Arc::new(sig.into()),
         })
     }
 }
 
 #[async_trait::async_trait]
-impl SignerFn for Secp256k1PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
+impl TransactionSignerFn for Secp256k1PrivateKey {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(SignerFnOutput {
+        Ok(TransactionSignerFnOutput {
             sig: Arc::new(sig.into()),
         })
     }
 }
 
 #[async_trait::async_trait]
-impl SignerFn for Secp256r1PrivateKey {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
+impl TransactionSignerFn for Secp256r1PrivateKey {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(SignerFnOutput {
+        Ok(TransactionSignerFnOutput {
             sig: Arc::new(sig.into()),
         })
     }
 }
 
 #[async_trait::async_trait]
-impl SignerFn for SimpleKeypair {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<SignerFnOutput> {
+impl TransactionSignerFn for SimpleKeypair {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let sig = self.0.sign_transaction(&transaction.0)?;
-        Ok(SignerFnOutput {
+        Ok(TransactionSignerFnOutput {
             sig: Arc::new(sig.into()),
         })
     }
 }
 
-/// An async signer implementation which wraps a `SignerFn` definition, which
-/// can be used to sign a transaction with a callback.
+/// An async signer implementation which wraps a `TransactionSignerFn`
+/// definition, which can be used to sign a transaction with a callback.
 #[derive(uniffi::Object)]
-pub struct Signer(Arc<dyn SignerFn>);
+pub struct TransactionSigner(Arc<dyn TransactionSignerFn>);
 
 #[uniffi::export(async_runtime = "tokio")]
-impl Signer {
+impl TransactionSigner {
     #[uniffi::constructor]
-    pub fn new(signer_fn: Arc<dyn SignerFn>) -> Self {
+    pub fn new(signer_fn: Arc<dyn TransactionSignerFn>) -> Self {
         Self(signer_fn)
     }
 
@@ -109,19 +109,19 @@ impl Signer {
 }
 
 #[derive(Debug)]
-pub struct SignerError(crate::error::SdkFfiError);
+pub struct TransactionSignerError(crate::error::SdkFfiError);
 
-impl std::error::Error for SignerError {}
+impl std::error::Error for TransactionSignerError {}
 
-impl std::fmt::Display for SignerError {
+impl std::fmt::Display for TransactionSignerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let crate::error::SdkFfiError::Generic(s) = &self.0;
         write!(f, "{s}")
     }
 }
 
-impl iota_sdk::transaction_builder::Signer for Signer {
-    type Error = SignerError;
+impl iota_sdk::transaction_builder::TransactionSigner for TransactionSigner {
+    type Error = TransactionSignerError;
 
     async fn sign(
         &self,
@@ -130,7 +130,7 @@ impl iota_sdk::transaction_builder::Signer for Signer {
         Ok(self
             .sign(Arc::new(transaction.clone().into()))
             .await
-            .map_err(SignerError)?
+            .map_err(TransactionSignerError)?
             .0
             .clone())
     }

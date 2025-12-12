@@ -345,7 +345,7 @@ func readFloat64(reader io.Reader) float64 {
 
 func init() {
         
-        FfiConverterSignerFnINSTANCE.register();
+        FfiConverterTransactionSignerFnINSTANCE.register();
         uniffiCheckChecksums()
 }
 
@@ -3074,7 +3074,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute()
 	})
-	if checksum != 38408 {
+	if checksum != 58102 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute: UniFFI API checksum mismatch")
 	}
@@ -3083,7 +3083,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
 	})
-	if checksum != 36118 {
+	if checksum != 8183 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
 	}
@@ -5790,24 +5790,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_signer_sign()
-	})
-	if checksum != 32681 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signer_sign: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_signerfn_sign()
-	})
-	if checksum != 4758 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_signerfn_sign: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key()
 	})
 	if checksum != 11009 {
@@ -6305,7 +6287,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
 	})
-	if checksum != 43023 {
+	if checksum != 6441 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station: UniFFI API checksum mismatch")
 	}
@@ -6524,6 +6506,24 @@ func uniffiCheckChecksums() {
 	if checksum != 36651 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_events: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign()
+	})
+	if checksum != 29986 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign()
+	})
+	if checksum != 28230 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9318,51 +9318,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_ed25519()
-	})
-	if checksum != 55660 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_signer_from_ed25519: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_keypair()
-	})
-	if checksum != 37218 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_signer_from_keypair: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256k1()
-	})
-	if checksum != 24632 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256k1: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256r1()
-	})
-	if checksum != 56042 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256r1: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_signer_new()
-	})
-	if checksum != 45305 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_signer_new: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32()
 	})
 	if checksum != 51811 {
@@ -9899,6 +9854,51 @@ func uniffiCheckChecksums() {
 	if checksum != 37051 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519()
+	})
+	if checksum != 15863 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair()
+	})
+	if checksum != 13858 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1()
+	})
+	if checksum != 54758 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1()
+	})
+	if checksum != 17667 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new()
+	})
+	if checksum != 8178 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13446,9 +13446,9 @@ type ClientTransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
-	Execute(signer *Signer, waitFor *WaitForTx) (*TransactionEffects, error)
+	Execute(signer *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
-	ExecuteWithSponsor(signer *Signer, sponsorSigner *Signer, waitFor *WaitForTx) (*TransactionEffects, error)
+	ExecuteWithSponsor(signer *TransactionSigner, sponsorSigner *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *ClientTransactionBuilder
 	// Convert this builder into a transaction.
@@ -13578,7 +13578,7 @@ func (_self *ClientTransactionBuilder) DryRun(skipChecks bool) (DryRunResult, er
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *ClientTransactionBuilder) Execute(signer *Signer, waitFor *WaitForTx) (*TransactionEffects, error) {
+func (_self *ClientTransactionBuilder) Execute(signer *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13593,7 +13593,7 @@ func (_self *ClientTransactionBuilder) Execute(signer *Signer, waitFor *WaitForT
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
-		_pointer,FfiConverterSignerINSTANCE.Lower(signer), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -13608,7 +13608,7 @@ func (_self *ClientTransactionBuilder) Execute(signer *Signer, waitFor *WaitForT
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *ClientTransactionBuilder) ExecuteWithSponsor(signer *Signer, sponsorSigner *Signer, waitFor *WaitForTx) (*TransactionEffects, error) {
+func (_self *ClientTransactionBuilder) ExecuteWithSponsor(signer *TransactionSigner, sponsorSigner *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13623,7 +13623,7 @@ func (_self *ClientTransactionBuilder) ExecuteWithSponsor(signer *Signer, sponso
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
-		_pointer,FfiConverterSignerINSTANCE.Lower(signer), FfiConverterSignerINSTANCE.Lower(sponsorSigner), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer), FfiConverterTransactionSignerINSTANCE.Lower(sponsorSigner), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -25181,361 +25181,6 @@ func (_ FfiDestroyerSecp256r1VerifyingKey) Destroy(value *Secp256r1VerifyingKey)
 
 
 
-// An async signer implementation which wraps a `SignerFn` definition, which
-// can be used to sign a transaction with a callback.
-type SignerInterface interface {
-	Sign(txn *Transaction) (*UserSignature, error)
-}
-// An async signer implementation which wraps a `SignerFn` definition, which
-// can be used to sign a transaction with a callback.
-type Signer struct {
-	ffiObject FfiObject
-}
-func NewSigner(signerFn SignerFn) *Signer {
-	return FfiConverterSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_signer_new(FfiConverterSignerFnINSTANCE.Lower(signerFn),_uniffiStatus)
-	}))
-}
-
-
-func SignerFromEd25519(key *Ed25519PrivateKey) *Signer {
-	return FfiConverterSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_signer_from_ed25519(FfiConverterEd25519PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
-	}))
-}
-
-func SignerFromKeypair(key *SimpleKeypair) *Signer {
-	return FfiConverterSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_signer_from_keypair(FfiConverterSimpleKeypairINSTANCE.Lower(key),_uniffiStatus)
-	}))
-}
-
-func SignerFromSecp256k1(key *Secp256k1PrivateKey) *Signer {
-	return FfiConverterSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256k1(FfiConverterSecp256k1PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
-	}))
-}
-
-func SignerFromSecp256r1(key *Secp256r1PrivateKey) *Signer {
-	return FfiConverterSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256r1(FfiConverterSecp256r1PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
-	}))
-}
-
-
-
-func (_self *Signer) Sign(txn *Transaction) (*UserSignature, error) {
-	_pointer := _self.ffiObject.incrementPointer("*Signer")
-	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *UserSignature {
-			return FfiConverterUserSignatureINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_signer_sign(
-		_pointer,FfiConverterTransactionINSTANCE.Lower(txn)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res, err 
-}
-func (object *Signer) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterSigner struct {}
-
-var FfiConverterSignerINSTANCE = FfiConverterSigner{}
-
-
-func (c FfiConverterSigner) Lift(pointer unsafe.Pointer) *Signer {
-	result := &Signer {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_signer(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_signer(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*Signer).Destroy)
-	return result
-}
-
-func (c FfiConverterSigner) Read(reader io.Reader) *Signer {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterSigner) Lower(value *Signer) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := value.ffiObject.incrementPointer("*Signer")
-	defer value.ffiObject.decrementPointer()
-	return pointer
-
-}
-
-func (c FfiConverterSigner) Write(writer io.Writer, value *Signer) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerSigner struct {}
-
-func (_ FfiDestroyerSigner) Destroy(value *Signer) {
-		value.Destroy()
-}
-
-
-
-// Defines a type which can sign a transaction asynchronously.
-//
-// This trait can be implemented downstream to enable signing when using the
-// `TransactionBuilder::execute` function.
-type SignerFn interface {
-	// Sign a transaction and return a BCS serialized `UserSignature`.
-	Sign(transaction *Transaction) (SignerFnOutput, error)
-}
-// Defines a type which can sign a transaction asynchronously.
-//
-// This trait can be implemented downstream to enable signing when using the
-// `TransactionBuilder::execute` function.
-type SignerFnImpl struct {
-	ffiObject FfiObject
-}
-
-
-
-
-// Sign a transaction and return a BCS serialized `UserSignature`.
-func (_self *SignerFnImpl) Sign(transaction *Transaction) (SignerFnOutput, error) {
-	_pointer := _self.ffiObject.incrementPointer("SignerFn")
-	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
-			return GoRustBuffer {
-		inner: res,
-	}
-		},
-		// liftFn
-		func(ffi RustBufferI) SignerFnOutput {
-			return FfiConverterSignerFnOutputINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_signerfn_sign(
-		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
-		},
-	)
-
-	return res, err 
-}
-func (object *SignerFnImpl) Destroy() {
-	runtime.SetFinalizer(object, nil)
-	object.ffiObject.destroy()
-}
-
-type FfiConverterSignerFn struct {
-	handleMap *concurrentHandleMap[SignerFn]
-	}
-
-var FfiConverterSignerFnINSTANCE = FfiConverterSignerFn{
-	handleMap: newConcurrentHandleMap[SignerFn](),
-	}
-
-
-func (c FfiConverterSignerFn) Lift(pointer unsafe.Pointer) SignerFn {
-	result := &SignerFnImpl {
-		newFfiObject(
-			pointer,
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
-				return C.uniffi_iota_sdk_ffi_fn_clone_signerfn(pointer, status)
-			},
-			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
-				C.uniffi_iota_sdk_ffi_fn_free_signerfn(pointer, status)
-			},
-		),
-	}
-	runtime.SetFinalizer(result, (*SignerFnImpl).Destroy)
-	return result
-}
-
-func (c FfiConverterSignerFn) Read(reader io.Reader) SignerFn {
-	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
-}
-
-func (c FfiConverterSignerFn) Lower(value SignerFn) unsafe.Pointer {
-	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
-	// because the pointer will be decremented immediately after this function returns,
-	// and someone will be left holding onto a non-locked pointer.
-	pointer := unsafe.Pointer(uintptr(c.handleMap.insert(value)))
-	return pointer
-
-}
-
-func (c FfiConverterSignerFn) Write(writer io.Writer, value SignerFn) {
-	writeUint64(writer, uint64(uintptr(c.Lower(value))))
-}
-
-type FfiDestroyerSignerFn struct {}
-
-func (_ FfiDestroyerSignerFn) Destroy(value SignerFn) {
-	if val, ok := value.(*SignerFnImpl); ok {
-		val.Destroy()
-	} else {
-		panic("Expected *SignerFnImpl")
-	}
-}
-
-type uniffiCallbackResult C.int8_t
-
-const (
-	uniffiIdxCallbackFree               uniffiCallbackResult = 0
-	uniffiCallbackResultSuccess         uniffiCallbackResult = 0
-	uniffiCallbackResultError           uniffiCallbackResult = 1
-	uniffiCallbackUnexpectedResultError uniffiCallbackResult = 2
-	uniffiCallbackCancelled             uniffiCallbackResult = 3
-)
-
-
-type concurrentHandleMap[T any] struct {
-	handles       map[uint64]T
-	currentHandle uint64
-	lock          sync.RWMutex
-}
-
-func newConcurrentHandleMap[T any]() *concurrentHandleMap[T] {
-	return &concurrentHandleMap[T]{
-		handles:  map[uint64]T{},
-	}
-}
-
-func (cm *concurrentHandleMap[T]) insert(obj T) uint64 {
-	cm.lock.Lock()
-	defer cm.lock.Unlock()
-
-	cm.currentHandle = cm.currentHandle + 1
-	cm.handles[cm.currentHandle] = obj
-	return cm.currentHandle
-}
-
-func (cm *concurrentHandleMap[T]) remove(handle uint64) {
-	cm.lock.Lock()
-	defer cm.lock.Unlock()
-
-	delete(cm.handles, handle)
-}
-
-func (cm *concurrentHandleMap[T]) tryGet(handle uint64) (T, bool) {
-	cm.lock.RLock()
-	defer cm.lock.RUnlock()
-
-	val, ok := cm.handles[handle]
-	return val, ok
-}
-
-//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnMethod0
-func iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnMethod0(uniffiHandle C.uint64_t,transaction unsafe.Pointer,uniffiFutureCallback C.UniffiForeignFutureCompleteRustBuffer,uniffiCallbackData C.uint64_t,uniffiOutReturn *C.UniffiForeignFuture,) {
-	handle := uint64(uniffiHandle)
-	uniffiObj, ok := FfiConverterSignerFnINSTANCE.handleMap.tryGet(handle)
-	if !ok {
-		panic(fmt.Errorf("no callback in handle map: %d", handle))
-	}
-
-	
-	result := make(chan C.UniffiForeignFutureStructRustBuffer, 1)
-	cancel := make(chan struct{}, 1)
-	guardHandle := cgo.NewHandle(cancel)
-	*uniffiOutReturn = C.UniffiForeignFuture {
-		handle: C.uint64_t(guardHandle),
-		free: C.UniffiForeignFutureFree(C.iota_sdk_uniffiFreeGorutine),
-	}
-
-	// Wait for compleation or cancel
-	go func() {
-		select {
-			case <-cancel:
-			case res := <-result:
-				C.call_UniffiForeignFutureCompleteRustBuffer(uniffiFutureCallback, uniffiCallbackData, res)
-		}
-	}()
-
-	// Eval callback asynchroniously
-	go func() {
-        asyncResult := &C.UniffiForeignFutureStructRustBuffer{};
-    	uniffiOutReturn := &asyncResult.returnValue
-    	callStatus := &asyncResult.callStatus
-    	defer func() {
-    		result <- *asyncResult
-    	}()
-	
-
-	 res, err :=
-    uniffiObj.Sign(
-        FfiConverterTransactionINSTANCE.Lift(transaction),
-    )
-
-    
-	if err != nil {
-		var actualError *SdkFfiError
-		if errors.As(err, &actualError) {
-			*callStatus = C.RustCallStatus {
-				code: C.int8_t(uniffiCallbackResultError),
-				errorBuf: FfiConverterSdkFfiErrorINSTANCE.Lower(actualError),
-			}
-		} else {
-			*callStatus = C.RustCallStatus {
-				code: C.int8_t(uniffiCallbackUnexpectedResultError),
-			}
-		}
-		return
-	}
-
-
-	*uniffiOutReturn = FfiConverterSignerFnOutputINSTANCE.Lower(res)
-	}()
-}
-
-var UniffiVTableCallbackInterfaceSignerFnINSTANCE = C.UniffiVTableCallbackInterfaceSignerFn {
-	sign: (C.UniffiCallbackInterfaceSignerFnMethod0)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnMethod0),
-
-	uniffiFree: (C.UniffiCallbackInterfaceFree)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnFree),
-}
-
-//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnFree
-func iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnFree(handle C.uint64_t) {
-	FfiConverterSignerFnINSTANCE.handleMap.remove(uint64(handle))
-}
-
-func (c FfiConverterSignerFn) register() {
-	C.uniffi_iota_sdk_ffi_fn_init_callback_vtable_signerfn(&UniffiVTableCallbackInterfaceSignerFnINSTANCE)
-}
-
-
 type SimpleKeypairInterface interface {
 	PublicKey() *MultisigMemberPublicKey
 	Scheme() SignatureScheme
@@ -27249,7 +26894,7 @@ type TransactionBuilderInterface interface {
 	//
 	// NOTE: These effects are not necessarily compatible with
 	// `TransactionEffects`
-	ExecuteWithGasStation(signer *Signer) (Value, error)
+	ExecuteWithGasStation(signer *TransactionSigner) (Value, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
@@ -27359,7 +27004,7 @@ func NewTransactionBuilder(sender *Address) *TransactionBuilder {
 //
 // NOTE: These effects are not necessarily compatible with
 // `TransactionEffects`
-func (_self *TransactionBuilder) ExecuteWithGasStation(signer *Signer) (Value, error) {
+func (_self *TransactionBuilder) ExecuteWithGasStation(signer *TransactionSigner) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -27376,7 +27021,7 @@ func (_self *TransactionBuilder) ExecuteWithGasStation(signer *Signer) (Value, e
 			return FfiConverterTypeValueINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
-		_pointer,FfiConverterSignerINSTANCE.Lower(signer)),
+		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -28037,6 +27682,361 @@ func (_ FfiDestroyerTransactionKind) Destroy(value *TransactionKind) {
 		value.Destroy()
 }
 
+
+
+// An async signer implementation which wraps a `TransactionSignerFn`
+// definition, which can be used to sign a transaction with a callback.
+type TransactionSignerInterface interface {
+	Sign(txn *Transaction) (*UserSignature, error)
+}
+// An async signer implementation which wraps a `TransactionSignerFn`
+// definition, which can be used to sign a transaction with a callback.
+type TransactionSigner struct {
+	ffiObject FfiObject
+}
+func NewTransactionSigner(signerFn TransactionSignerFn) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(FfiConverterTransactionSignerFnINSTANCE.Lower(signerFn),_uniffiStatus)
+	}))
+}
+
+
+func TransactionSignerFromEd25519(key *Ed25519PrivateKey) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(FfiConverterEd25519PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromKeypair(key *SimpleKeypair) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(FfiConverterSimpleKeypairINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromSecp256k1(key *Secp256k1PrivateKey) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(FfiConverterSecp256k1PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromSecp256r1(key *Secp256r1PrivateKey) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(FfiConverterSecp256r1PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *TransactionSigner) Sign(txn *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionSigner")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *UserSignature {
+			return FfiConverterUserSignatureINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(txn)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *TransactionSigner) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionSigner struct {}
+
+var FfiConverterTransactionSignerINSTANCE = FfiConverterTransactionSigner{}
+
+
+func (c FfiConverterTransactionSigner) Lift(pointer unsafe.Pointer) *TransactionSigner {
+	result := &TransactionSigner {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionsigner(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionSigner).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionSigner) Read(reader io.Reader) *TransactionSigner {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionSigner) Lower(value *TransactionSigner) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*TransactionSigner")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterTransactionSigner) Write(writer io.Writer, value *TransactionSigner) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionSigner struct {}
+
+func (_ FfiDestroyerTransactionSigner) Destroy(value *TransactionSigner) {
+		value.Destroy()
+}
+
+
+
+// Defines a type which can sign a transaction asynchronously.
+//
+// This trait can be implemented downstream to enable signing when using the
+// `TransactionBuilder::execute` function.
+type TransactionSignerFn interface {
+	// Sign a transaction and return a BCS serialized `UserSignature`.
+	Sign(transaction *Transaction) (TransactionSignerFnOutput, error)
+}
+// Defines a type which can sign a transaction asynchronously.
+//
+// This trait can be implemented downstream to enable signing when using the
+// `TransactionBuilder::execute` function.
+type TransactionSignerFnImpl struct {
+	ffiObject FfiObject
+}
+
+
+
+
+// Sign a transaction and return a BCS serialized `UserSignature`.
+func (_self *TransactionSignerFnImpl) Sign(transaction *Transaction) (TransactionSignerFnOutput, error) {
+	_pointer := _self.ffiObject.incrementPointer("TransactionSignerFn")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) TransactionSignerFnOutput {
+			return FfiConverterTransactionSignerFnOutputINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *TransactionSignerFnImpl) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionSignerFn struct {
+	handleMap *concurrentHandleMap[TransactionSignerFn]
+	}
+
+var FfiConverterTransactionSignerFnINSTANCE = FfiConverterTransactionSignerFn{
+	handleMap: newConcurrentHandleMap[TransactionSignerFn](),
+	}
+
+
+func (c FfiConverterTransactionSignerFn) Lift(pointer unsafe.Pointer) TransactionSignerFn {
+	result := &TransactionSignerFnImpl {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionSignerFnImpl).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionSignerFn) Read(reader io.Reader) TransactionSignerFn {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionSignerFn) Lower(value TransactionSignerFn) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := unsafe.Pointer(uintptr(c.handleMap.insert(value)))
+	return pointer
+
+}
+
+func (c FfiConverterTransactionSignerFn) Write(writer io.Writer, value TransactionSignerFn) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionSignerFn struct {}
+
+func (_ FfiDestroyerTransactionSignerFn) Destroy(value TransactionSignerFn) {
+	if val, ok := value.(*TransactionSignerFnImpl); ok {
+		val.Destroy()
+	} else {
+		panic("Expected *TransactionSignerFnImpl")
+	}
+}
+
+type uniffiCallbackResult C.int8_t
+
+const (
+	uniffiIdxCallbackFree               uniffiCallbackResult = 0
+	uniffiCallbackResultSuccess         uniffiCallbackResult = 0
+	uniffiCallbackResultError           uniffiCallbackResult = 1
+	uniffiCallbackUnexpectedResultError uniffiCallbackResult = 2
+	uniffiCallbackCancelled             uniffiCallbackResult = 3
+)
+
+
+type concurrentHandleMap[T any] struct {
+	handles       map[uint64]T
+	currentHandle uint64
+	lock          sync.RWMutex
+}
+
+func newConcurrentHandleMap[T any]() *concurrentHandleMap[T] {
+	return &concurrentHandleMap[T]{
+		handles:  map[uint64]T{},
+	}
+}
+
+func (cm *concurrentHandleMap[T]) insert(obj T) uint64 {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	cm.currentHandle = cm.currentHandle + 1
+	cm.handles[cm.currentHandle] = obj
+	return cm.currentHandle
+}
+
+func (cm *concurrentHandleMap[T]) remove(handle uint64) {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	delete(cm.handles, handle)
+}
+
+func (cm *concurrentHandleMap[T]) tryGet(handle uint64) (T, bool) {
+	cm.lock.RLock()
+	defer cm.lock.RUnlock()
+
+	val, ok := cm.handles[handle]
+	return val, ok
+}
+
+//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0
+func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uniffiHandle C.uint64_t,transaction unsafe.Pointer,uniffiFutureCallback C.UniffiForeignFutureCompleteRustBuffer,uniffiCallbackData C.uint64_t,uniffiOutReturn *C.UniffiForeignFuture,) {
+	handle := uint64(uniffiHandle)
+	uniffiObj, ok := FfiConverterTransactionSignerFnINSTANCE.handleMap.tryGet(handle)
+	if !ok {
+		panic(fmt.Errorf("no callback in handle map: %d", handle))
+	}
+
+	
+	result := make(chan C.UniffiForeignFutureStructRustBuffer, 1)
+	cancel := make(chan struct{}, 1)
+	guardHandle := cgo.NewHandle(cancel)
+	*uniffiOutReturn = C.UniffiForeignFuture {
+		handle: C.uint64_t(guardHandle),
+		free: C.UniffiForeignFutureFree(C.iota_sdk_uniffiFreeGorutine),
+	}
+
+	// Wait for compleation or cancel
+	go func() {
+		select {
+			case <-cancel:
+			case res := <-result:
+				C.call_UniffiForeignFutureCompleteRustBuffer(uniffiFutureCallback, uniffiCallbackData, res)
+		}
+	}()
+
+	// Eval callback asynchroniously
+	go func() {
+        asyncResult := &C.UniffiForeignFutureStructRustBuffer{};
+    	uniffiOutReturn := &asyncResult.returnValue
+    	callStatus := &asyncResult.callStatus
+    	defer func() {
+    		result <- *asyncResult
+    	}()
+	
+
+	 res, err :=
+    uniffiObj.Sign(
+        FfiConverterTransactionINSTANCE.Lift(transaction),
+    )
+
+    
+	if err != nil {
+		var actualError *SdkFfiError
+		if errors.As(err, &actualError) {
+			*callStatus = C.RustCallStatus {
+				code: C.int8_t(uniffiCallbackResultError),
+				errorBuf: FfiConverterSdkFfiErrorINSTANCE.Lower(actualError),
+			}
+		} else {
+			*callStatus = C.RustCallStatus {
+				code: C.int8_t(uniffiCallbackUnexpectedResultError),
+			}
+		}
+		return
+	}
+
+
+	*uniffiOutReturn = FfiConverterTransactionSignerFnOutputINSTANCE.Lower(res)
+	}()
+}
+
+var UniffiVTableCallbackInterfaceTransactionSignerFnINSTANCE = C.UniffiVTableCallbackInterfaceTransactionSignerFn {
+	sign: (C.UniffiCallbackInterfaceTransactionSignerFnMethod0)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0),
+
+	uniffiFree: (C.UniffiCallbackInterfaceFree)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree),
+}
+
+//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree
+func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree(handle C.uint64_t) {
+	FfiConverterTransactionSignerFnINSTANCE.handleMap.remove(uint64(handle))
+}
+
+func (c FfiConverterTransactionSignerFn) register() {
+	C.uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(&UniffiVTableCallbackInterfaceTransactionSignerFnINSTANCE)
+}
 
 
 // A transaction
@@ -34021,42 +34021,6 @@ type FfiDestroyerSignedTransactionPage struct {}
 func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
 	value.Destroy()
 }
-// The result of an async sign call containing the `UserSignature`.
-type SignerFnOutput struct {
-	Sig *UserSignature
-}
-
-func (r *SignerFnOutput) Destroy() {
-		FfiDestroyerUserSignature{}.Destroy(r.Sig);
-}
-
-type FfiConverterSignerFnOutput struct {}
-
-var FfiConverterSignerFnOutputINSTANCE = FfiConverterSignerFnOutput{}
-
-func (c FfiConverterSignerFnOutput) Lift(rb RustBufferI) SignerFnOutput {
-	return LiftFromRustBuffer[SignerFnOutput](c, rb)
-}
-
-func (c FfiConverterSignerFnOutput) Read(reader io.Reader) SignerFnOutput {
-	return SignerFnOutput {
-			FfiConverterUserSignatureINSTANCE.Read(reader),
-	}
-}
-
-func (c FfiConverterSignerFnOutput) Lower(value SignerFnOutput) C.RustBuffer {
-	return LowerIntoRustBuffer[SignerFnOutput](c, value)
-}
-
-func (c FfiConverterSignerFnOutput) Write(writer io.Writer, value SignerFnOutput) {
-		FfiConverterUserSignatureINSTANCE.Write(writer, value.Sig);
-}
-
-type FfiDestroyerSignerFnOutput struct {}
-
-func (_ FfiDestroyerSignerFnOutput) Destroy(value SignerFnOutput) {
-	value.Destroy()
-}
 type TransactionDataEffects struct {
 	Tx SignedTransaction
 	Effects *TransactionEffects
@@ -34346,6 +34310,42 @@ func (c FfiConverterTransactionMetadata) Write(writer io.Writer, value Transacti
 type FfiDestroyerTransactionMetadata struct {}
 
 func (_ FfiDestroyerTransactionMetadata) Destroy(value TransactionMetadata) {
+	value.Destroy()
+}
+// The result of an async sign call containing the `UserSignature`.
+type TransactionSignerFnOutput struct {
+	Sig *UserSignature
+}
+
+func (r *TransactionSignerFnOutput) Destroy() {
+		FfiDestroyerUserSignature{}.Destroy(r.Sig);
+}
+
+type FfiConverterTransactionSignerFnOutput struct {}
+
+var FfiConverterTransactionSignerFnOutputINSTANCE = FfiConverterTransactionSignerFnOutput{}
+
+func (c FfiConverterTransactionSignerFnOutput) Lift(rb RustBufferI) TransactionSignerFnOutput {
+	return LiftFromRustBuffer[TransactionSignerFnOutput](c, rb)
+}
+
+func (c FfiConverterTransactionSignerFnOutput) Read(reader io.Reader) TransactionSignerFnOutput {
+	return TransactionSignerFnOutput {
+			FfiConverterUserSignatureINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTransactionSignerFnOutput) Lower(value TransactionSignerFnOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionSignerFnOutput](c, value)
+}
+
+func (c FfiConverterTransactionSignerFnOutput) Write(writer io.Writer, value TransactionSignerFnOutput) {
+		FfiConverterUserSignatureINSTANCE.Write(writer, value.Sig);
+}
+
+type FfiDestroyerTransactionSignerFnOutput struct {}
+
+func (_ FfiDestroyerTransactionSignerFnOutput) Destroy(value TransactionSignerFnOutput) {
 	value.Destroy()
 }
 type TransactionsFilter struct {

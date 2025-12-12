@@ -13,9 +13,9 @@ type AsyncSigner struct {
 	Key *iota_sdk.Ed25519PrivateKey
 }
 
-func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.SignerFnOutput, error) {
+func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.TransactionSignerFnOutput, error) {
 	sig, err := signer.Key.SignTransaction(transaction)
-	return iota_sdk.SignerFnOutput{Sig: sig}, err
+	return iota_sdk.TransactionSignerFnOutput{Sig: sig}, err
 }
 
 func main() {
@@ -46,7 +46,7 @@ func main() {
 
 	waitFor := iota_sdk.WaitForTxFinalized
 
-	effects, err := builder.Execute(iota_sdk.NewSigner(&AsyncSigner{Key: privateKey}), &waitFor)
+	effects, err := builder.Execute(iota_sdk.NewTransactionSigner(&AsyncSigner{Key: privateKey}), &waitFor)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}

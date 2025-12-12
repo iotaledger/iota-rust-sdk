@@ -378,26 +378,26 @@ static void call_UniffiForeignFutureCompleteVoid(
 
 
 #endif
-#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNER_FN_METHOD0
-#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_SIGNER_FN_METHOD0
-typedef void (*UniffiCallbackInterfaceSignerFnMethod0)(uint64_t uniffi_handle, void* transaction, UniffiForeignFutureCompleteRustBuffer uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN_METHOD0
+typedef void (*UniffiCallbackInterfaceTransactionSignerFnMethod0)(uint64_t uniffi_handle, void* transaction, UniffiForeignFutureCompleteRustBuffer uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
 
 // Making function static works arround:
 // https://github.com/golang/go/issues/11263
-static void call_UniffiCallbackInterfaceSignerFnMethod0(
-				UniffiCallbackInterfaceSignerFnMethod0 cb, uint64_t uniffi_handle, void* transaction, UniffiForeignFutureCompleteRustBuffer uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return)
+static void call_UniffiCallbackInterfaceTransactionSignerFnMethod0(
+				UniffiCallbackInterfaceTransactionSignerFnMethod0 cb, uint64_t uniffi_handle, void* transaction, UniffiForeignFutureCompleteRustBuffer uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return)
 {
 	return cb(uniffi_handle, transaction, uniffi_future_callback, uniffi_callback_data, uniffi_out_return);
 }
 
 
 #endif
-#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_SIGNER_FN
-#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_SIGNER_FN
-typedef struct UniffiVTableCallbackInterfaceSignerFn {
-    UniffiCallbackInterfaceSignerFnMethod0 sign;
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_TRANSACTION_SIGNER_FN
+typedef struct UniffiVTableCallbackInterfaceTransactionSignerFn {
+    UniffiCallbackInterfaceTransactionSignerFnMethod0 sign;
     UniffiCallbackInterfaceFree uniffiFree;
-} UniffiVTableCallbackInterfaceSignerFn;
+} UniffiVTableCallbackInterfaceTransactionSignerFn;
 
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ADDRESS
@@ -4253,66 +4253,6 @@ void uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(void* ptr
 void uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIGNER
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIGNER
-void* uniffi_iota_sdk_ffi_fn_clone_signer(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SIGNER
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SIGNER
-void uniffi_iota_sdk_ffi_fn_free_signer(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_ED25519
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_ED25519
-void* uniffi_iota_sdk_ffi_fn_constructor_signer_from_ed25519(void* key, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_KEYPAIR
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_KEYPAIR
-void* uniffi_iota_sdk_ffi_fn_constructor_signer_from_keypair(void* key, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_SECP256K1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_SECP256K1
-void* uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256k1(void* key, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_SECP256R1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_FROM_SECP256R1
-void* uniffi_iota_sdk_ffi_fn_constructor_signer_from_secp256r1(void* key, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_SIGNER_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_signer_new(void* signer_fn, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNER_SIGN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNER_SIGN
-uint64_t uniffi_iota_sdk_ffi_fn_method_signer_sign(void* ptr, void* txn
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIGNERFN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIGNERFN
-void* uniffi_iota_sdk_ffi_fn_clone_signerfn(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SIGNERFN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_SIGNERFN
-void uniffi_iota_sdk_ffi_fn_free_signerfn(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_INIT_CALLBACK_VTABLE_SIGNERFN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_INIT_CALLBACK_VTABLE_SIGNERFN
-void uniffi_iota_sdk_ffi_fn_init_callback_vtable_signerfn(UniffiVTableCallbackInterfaceSignerFn* vtable
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNERFN_SIGN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_SIGNERFN_SIGN
-uint64_t uniffi_iota_sdk_ffi_fn_method_signerfn_sign(void* ptr, void* transaction
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIMPLEKEYPAIR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_SIMPLEKEYPAIR
 void* uniffi_iota_sdk_ffi_fn_clone_simplekeypair(void* ptr, RustCallStatus *out_status
@@ -5168,6 +5108,66 @@ void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transa
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_NEW_RANDOMNESS_STATE_UPDATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONKIND_NEW_RANDOMNESS_STATE_UPDATE
 void* uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(RustBuffer tx, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONSIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONSIGNER
+void* uniffi_iota_sdk_ffi_fn_clone_transactionsigner(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONSIGNER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONSIGNER
+void uniffi_iota_sdk_ffi_fn_free_transactionsigner(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_ED25519
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_ED25519
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(void* key, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_KEYPAIR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_KEYPAIR
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(void* key, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256K1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256K1
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(void* key, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256R1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256R1
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(void* key, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_TRANSACTIONSIGNER_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(void* signer_fn, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONSIGNER_SIGN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONSIGNER_SIGN
+uint64_t uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(void* ptr, void* txn
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONSIGNERFN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONSIGNERFN
+void* uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONSIGNERFN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_TRANSACTIONSIGNERFN
+void uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_INIT_CALLBACK_VTABLE_TRANSACTIONSIGNERFN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_INIT_CALLBACK_VTABLE_TRANSACTIONSIGNERFN
+void uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(UniffiVTableCallbackInterfaceTransactionSignerFn* vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONSIGNERFN_SIGN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONSIGNERFN_SIGN
+uint64_t uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(void* ptr, void* transaction
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_TRANSACTIONV1
@@ -11018,18 +11018,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user(v
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNER_SIGN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNER_SIGN
-uint16_t uniffi_iota_sdk_ffi_checksum_method_signer_sign(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNERFN_SIGN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIGNERFN_SIGN
-uint16_t uniffi_iota_sdk_ffi_checksum_method_signerfn_sign(void
-    
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIMPLEKEYPAIR_PUBLIC_KEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_SIMPLEKEYPAIR_PUBLIC_KEY
 uint16_t uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key(void
@@ -11507,6 +11495,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionevents_digest(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONEVENTS_EVENTS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONEVENTS_EVENTS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionevents_events(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONSIGNER_SIGN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONSIGNER_SIGN
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONSIGNERFN_SIGN
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONSIGNERFN_SIGN
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign(void
     
 );
 #endif
@@ -13370,36 +13370,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_ED25519
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_ED25519
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_signer_from_ed25519(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_KEYPAIR
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_KEYPAIR
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_signer_from_keypair(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_SECP256K1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_SECP256K1
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256k1(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_SECP256R1
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_FROM_SECP256R1
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_signer_from_secp256r1(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIGNER_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_signer_new(void
-    
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIMPLEKEYPAIR_FROM_BECH32
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_SIMPLEKEYPAIR_FROM_BECH32
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32(void
@@ -13760,6 +13730,36 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_ED25519
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_ED25519
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_KEYPAIR
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_KEYPAIR
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256K1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256K1
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256R1
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_FROM_SECP256R1
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONSIGNER_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONV1_FROM_BASE64
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_TRANSACTIONV1_FROM_BASE64
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64(void
@@ -13989,8 +13989,8 @@ uint32_t ffi_iota_sdk_ffi_uniffi_contract_version(void
 );
 #endif
 
- void iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnMethod0(uint64_t uniffi_handle, void* transaction, UniffiForeignFutureCompleteRustBuffer uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
- void iota_sdk_ffi_cgo_dispatchCallbackInterfaceSignerFnFree(uint64_t handle);
+ void iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uint64_t uniffi_handle, void* transaction, UniffiForeignFutureCompleteRustBuffer uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
+ void iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree(uint64_t handle);
 
 void iota_sdk_uniffiFutureContinuationCallback(uint64_t, int8_t);
 void iota_sdk_uniffiFreeGorutine(uint64_t);

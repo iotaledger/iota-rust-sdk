@@ -11,7 +11,7 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{builder::signer::Signer, error::Error};
+use crate::{builder::signer::TransactionSigner, error::Error};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -352,7 +352,7 @@ impl GasStationData {
     pub(crate) async fn execute_txn(
         self,
         txn: &mut Transaction,
-        signer: &impl Signer,
+        signer: &impl TransactionSigner,
     ) -> Result<Digest, Error> {
         let url = self
             .url
@@ -369,7 +369,7 @@ impl GasStationData {
     pub(crate) async fn execute_txn_json(
         self,
         txn: &mut Transaction,
-        signer: &impl Signer,
+        signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, Error> {
         let url = self
             .url
@@ -382,7 +382,7 @@ impl GasStationData {
         mut self,
         url: &Url,
         txn: &mut Transaction,
-        signer: &impl Signer,
+        signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {

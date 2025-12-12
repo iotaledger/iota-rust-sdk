@@ -4,12 +4,12 @@
 use eyre::Result;
 use iota_crypto::{IotaSigner, SignatureError, ed25519::Ed25519PrivateKey};
 use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
-use iota_transaction_builder::{Signer, TransactionBuilder};
+use iota_transaction_builder::{TransactionBuilder, TransactionSigner};
 use iota_types::Address;
 
 struct AsyncSigner(Ed25519PrivateKey);
 
-impl Signer for AsyncSigner {
+impl TransactionSigner for AsyncSigner {
     type Error = SignatureError;
 
     async fn sign(

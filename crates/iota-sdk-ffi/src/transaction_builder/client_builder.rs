@@ -15,7 +15,7 @@ use crate::{
     graphql::GraphQLClient,
     transaction_builder::{
         ptb_arg::{MoveArg, PTBArgument},
-        signer::Signer,
+        signer::TransactionSigner,
     },
     types::{
         address::Address,
@@ -342,7 +342,7 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute(
         &self,
-        signer: &Signer,
+        signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
@@ -355,8 +355,8 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_with_sponsor(
         &self,
-        signer: &Signer,
-        sponsor_signer: &Signer,
+        signer: &TransactionSigner,
+        sponsor_signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self

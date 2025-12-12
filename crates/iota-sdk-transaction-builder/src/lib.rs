@@ -288,7 +288,7 @@ pub use self::{
         TransactionBuilder,
         client_methods::ClientMethods,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
-        signer::Signer,
+        signer::TransactionSigner,
     },
     types::PureBytes,
 };

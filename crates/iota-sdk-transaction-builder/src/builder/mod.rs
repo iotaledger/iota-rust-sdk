@@ -24,7 +24,7 @@ use crate::{
         gas_station::GasStationData,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
-        signer::Signer,
+        signer::TransactionSigner,
     },
     error::Error,
     types::{MoveType, MoveTypes},
@@ -877,7 +877,7 @@ impl<L> TransactionBuilder<(), L> {
     /// [`TransactionEffects`]
     pub async fn execute_with_gas_station(
         mut self,
-        signer: &impl Signer,
+        signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, Error> {
         let gas_station_data = self.data.gas_station_data.take();
 
@@ -1149,7 +1149,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,
-        signer: &impl Signer,
+        signer: &impl TransactionSigner,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
@@ -1185,8 +1185,8 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// finalization.
     pub async fn execute_with_sponsor(
         mut self,
-        signer: &impl Signer,
-        sponsor_signer: &impl Signer,
+        signer: &impl TransactionSigner,
+        sponsor_signer: &impl TransactionSigner,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();

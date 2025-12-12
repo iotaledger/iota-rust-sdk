@@ -6,13 +6,13 @@ from lib.iota_sdk_ffi import *
 import asyncio
 
 
-class AsyncSigner(SignerFn):
+class AsyncSigner(TransactionSignerFn):
 
     def __init__(self, key: Ed25519PrivateKey):
         self.key = key
 
     async def sign(self, transaction: Transaction):
-        return SignerFnOutput(sig=self.key.sign_transaction(transaction))
+        return TransactionSignerFnOutput(sig=self.key.sign_transaction(transaction))
 
 
 async def main():
@@ -35,7 +35,7 @@ async def main():
     builder = TransactionBuilder(sender_address).with_client(client)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
 
-    effects = await builder.execute(Signer(AsyncSigner(private_key)),
+    effects = await builder.execute(TransactionSigner(AsyncSigner(private_key)),
                                     WaitForTx.FINALIZED)
 
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
