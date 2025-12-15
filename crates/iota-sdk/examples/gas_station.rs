@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_crypto::ed25519::Ed25519PrivateKey;
-use iota_graphql_client::Client;
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::Address;
+use iota_sdk::{
+    crypto::ed25519::Ed25519PrivateKey, graphql_client::Client,
+    transaction_builder::TransactionBuilder, types::Address,
+};
 use reqwest::header::HeaderValue;
 
 #[tokio::main]
