@@ -15,8 +15,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Ed25519PrivateKey(iota_sdk::crypto::ed25519::Ed25519PrivateKey);
+#[derive(Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+pub struct Ed25519PrivateKey(pub iota_sdk::crypto::ed25519::Ed25519PrivateKey);
 
 #[uniffi::export]
 impl Ed25519PrivateKey {

@@ -28,7 +28,7 @@ impl SimpleVerifier {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct SimpleKeypair(pub iota_sdk::crypto::simple::SimpleKeypair);
 
 #[uniffi::export]

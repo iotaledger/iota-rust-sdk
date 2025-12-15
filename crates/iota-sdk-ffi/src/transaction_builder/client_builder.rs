@@ -15,7 +15,10 @@ use crate::{
     crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
-    transaction_builder::ptb_arg::{MoveArg, PTBArgument},
+    transaction_builder::{
+        ptb_arg::{MoveArg, PTBArgument},
+        signer::TransactionSigner,
+    },
     types::{
         address::Address,
         move_package::MovePackageData,
@@ -341,11 +344,11 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute(
         &self,
-        keypair: &SimpleKeypair,
+        signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .read(|builder| builder.clone().execute(&keypair.0, wait_for))
+            .read(|builder| builder.clone().execute(signer, wait_for))
             .await?
             .into())
     }
@@ -354,15 +357,15 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_with_sponsor(
         &self,
-        keypair: &SimpleKeypair,
-        sponsor_keypair: &SimpleKeypair,
+        signer: &TransactionSigner,
+        sponsor_signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
                 builder
                     .clone()
-                    .execute_with_sponsor(&keypair.0, &sponsor_keypair.0, wait_for)
+                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
             })
             .await?
             .into())
