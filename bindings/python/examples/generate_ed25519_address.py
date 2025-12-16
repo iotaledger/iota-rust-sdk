@@ -1,7 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import Ed25519PrivateKey, base64_encode
+from lib.iota_sdk import Ed25519PrivateKey, base64_encode
 
 
 def main():
