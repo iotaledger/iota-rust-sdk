@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::{Base64, Encoding};
-use iota_crypto::{
-    DERIVATION_PATH_COIN_TYPE, DERIVATION_PATH_PURPOSE_SECP256R1, FromMnemonic, ToFromBech32,
-    ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
+use iota_sdk::{
+    crypto::{
+        DERIVATION_PATH_COIN_TYPE, DERIVATION_PATH_PURPOSE_SECP256R1, FromMnemonic, ToFromBech32,
+        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
+    },
+    types::PublicKeyExt,
 };
-use iota_types::PublicKeyExt;
 
 const MNEMONIC: &str = "round attack kitchen wink winter music trip tiny nephew hire orange what";
 

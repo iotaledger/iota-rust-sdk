@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::{OptionExt, Result};
-use iota_graphql_client::{Client, query_types::ObjectFilter};
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::StructTag;
+use iota_sdk::{
+    graphql_client::{Client, query_types::ObjectFilter},
+    transaction_builder::TransactionBuilder,
+    types::StructTag,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {

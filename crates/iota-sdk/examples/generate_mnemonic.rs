@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_crypto::mnemonic::{MnemonicLength, generate_mnemonic};
+use iota_sdk::crypto::mnemonic::{MnemonicLength, generate_mnemonic};
 
 fn main() {
     let mnemonic = generate_mnemonic(None);
