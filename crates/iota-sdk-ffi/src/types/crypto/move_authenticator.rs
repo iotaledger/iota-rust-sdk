@@ -11,10 +11,10 @@ use crate::types::{
     type_tag::TypeTag,
 };
 
-/// MoveAuthenticator is a signature variant that enables a new
-/// method of authentication through Move code.
-/// This function represents the data received by the Move authenticate function
-/// during the Account Abstraction authentication flow.
+/// MoveAuthenticator is a signature variant that enables a method of
+/// authentication through Move code. This function represents the data received
+/// by the Move authenticate function during the Account Abstraction
+/// authentication flow.
 #[derive(derive_more::From, uniffi::Object)]
 pub struct MoveAuthenticator(pub iota_sdk::types::MoveAuthenticator);
 

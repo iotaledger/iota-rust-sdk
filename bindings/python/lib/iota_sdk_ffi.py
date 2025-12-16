@@ -36623,10 +36623,10 @@ class _UniffiConverterTypeMoveArg:
         buf.write_u64(cls.lower(value))
 class MoveAuthenticatorProtocol(typing.Protocol):
     """
-    MoveAuthenticator is a signature variant that enables a new
-    method of authentication through Move code.
-    This function represents the data received by the Move authenticate function
-    during the Account Abstraction authentication flow.
+    MoveAuthenticator is a signature variant that enables a method of
+    authentication through Move code. This function represents the data received
+    by the Move authenticate function during the Account Abstraction
+    authentication flow.
     """
 
     def address(self, ):
@@ -36642,10 +36642,10 @@ class MoveAuthenticatorProtocol(typing.Protocol):
 # MoveAuthenticator is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MoveAuthenticator():
     """
-    MoveAuthenticator is a signature variant that enables a new
-    method of authentication through Move code.
-    This function represents the data received by the Move authenticate function
-    during the Account Abstraction authentication flow.
+    MoveAuthenticator is a signature variant that enables a method of
+    authentication through Move code. This function represents the data received
+    by the Move authenticate function during the Account Abstraction
+    authentication flow.
     """
 
     _pointer: ctypes.c_void_p

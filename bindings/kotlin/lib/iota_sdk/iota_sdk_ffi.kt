@@ -28653,10 +28653,10 @@ public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
 
 
 /**
- * MoveAuthenticator is a signature variant that enables a new
- * method of authentication through Move code.
- * This function represents the data received by the Move authenticate function
- * during the Account Abstraction authentication flow.
+ * MoveAuthenticator is a signature variant that enables a method of
+ * authentication through Move code. This function represents the data received
+ * by the Move authenticate function during the Account Abstraction
+ * authentication flow.
  */
 public interface MoveAuthenticatorInterface {
     
@@ -28674,10 +28674,10 @@ public interface MoveAuthenticatorInterface {
 }
 
 /**
- * MoveAuthenticator is a signature variant that enables a new
- * method of authentication through Move code.
- * This function represents the data received by the Move authenticate function
- * during the Account Abstraction authentication flow.
+ * MoveAuthenticator is a signature variant that enables a method of
+ * authentication through Move code. This function represents the data received
+ * by the Move authenticate function during the Account Abstraction
+ * authentication flow.
  */
 open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterface
 {

@@ -19327,10 +19327,10 @@ func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 
 
 
-// MoveAuthenticator is a signature variant that enables a new
-// method of authentication through Move code.
-// This function represents the data received by the Move authenticate function
-// during the Account Abstraction authentication flow.
+// MoveAuthenticator is a signature variant that enables a method of
+// authentication through Move code. This function represents the data received
+// by the Move authenticate function during the Account Abstraction
+// authentication flow.
 type MoveAuthenticatorInterface interface {
 	Address() *Address
 	Digest() *Digest
@@ -19338,10 +19338,10 @@ type MoveAuthenticatorInterface interface {
 	ObjectToAuthenticate() *Input
 	TypeArguments() []*TypeTag
 }
-// MoveAuthenticator is a signature variant that enables a new
-// method of authentication through Move code.
-// This function represents the data received by the Move authenticate function
-// during the Account Abstraction authentication flow.
+// MoveAuthenticator is a signature variant that enables a method of
+// authentication through Move code. This function represents the data received
+// by the Move authenticate function during the Account Abstraction
+// authentication flow.
 type MoveAuthenticator struct {
 	ffiObject FfiObject
 }
