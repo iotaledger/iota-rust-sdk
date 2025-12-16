@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, faucet::FaucetClient};
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::Address;
+use iota_sdk::{
+    crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
+    graphql_client::{Client, faucet::FaucetClient},
+    transaction_builder::TransactionBuilder,
+    types::Address,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
