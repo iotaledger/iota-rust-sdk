@@ -135,6 +135,7 @@ python: ## Build Python bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example

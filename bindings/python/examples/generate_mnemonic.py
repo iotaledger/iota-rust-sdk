@@ -1,7 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import generate_mnemonic, MnemonicLength
+from lib.iota_sdk import generate_mnemonic, MnemonicLength
 
 
 def main():
