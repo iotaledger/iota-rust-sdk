@@ -21,7 +21,7 @@
 # iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 # ```
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 import os
