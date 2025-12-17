@@ -2265,7 +2265,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned() != 18640:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared() != 34056:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 7901:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5004,14 +5004,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_or
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_or_owned.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared.argtypes = (
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.c_void_p,
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12745,9 +12745,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec.restype = cty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.restype = ctypes.c_uint16
@@ -36688,7 +36688,7 @@ class MoveAuthenticator():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_immutable_shared(cls, inputs: "typing.List[Input]",type_arguments: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
+    def new_shared(cls, inputs: "typing.List[Input]",type_arguments: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
         _UniffiConverterSequenceTypeInput.check_lower(inputs)
         
         _UniffiConverterSequenceTypeTypeTag.check_lower(type_arguments)
@@ -36698,7 +36698,7 @@ class MoveAuthenticator():
         _UniffiConverterUInt64.check_lower(initial_shared_version)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared,
         _UniffiConverterSequenceTypeInput.lower(inputs),
         _UniffiConverterSequenceTypeTypeTag.lower(type_arguments),
         _UniffiConverterTypeObjectId.lower(object_to_authenticate),

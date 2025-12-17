@@ -34,13 +34,13 @@ impl MoveAuthenticator {
     }
 
     #[uniffi::constructor]
-    pub fn new_immutable_shared(
+    pub fn new_shared(
         inputs: Vec<Arc<Input>>,
         type_arguments: Vec<Arc<TypeTag>>,
         object_to_authenticate: &ObjectId,
         initial_shared_version: u64,
     ) -> Self {
-        Self(iota_sdk::types::MoveAuthenticator::new_immutable_shared(
+        Self(iota_sdk::types::MoveAuthenticator::new_shared(
             inputs.into_iter().map(|v| v.0.clone()).collect(),
             type_arguments.into_iter().map(|v| v.0.clone()).collect(),
             **object_to_authenticate,

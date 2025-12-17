@@ -22,7 +22,7 @@ pub struct MoveAuthenticator {
 impl MoveAuthenticator {
     /// Create a new move authenticator with an input. Will return Some only if
     /// the input is valid. If possible, use [`Self::new_immutable_or_owned`] or
-    /// [`Self::new_immutable_shared`].
+    /// [`Self::new_shared`].
     pub fn new(
         inputs: Vec<Input>,
         type_arguments: Vec<TypeTag>,
@@ -36,12 +36,9 @@ impl MoveAuthenticator {
                 object_id,
                 initial_shared_version,
                 mutable,
-            } if !mutable => Self::new_immutable_shared(
-                inputs,
-                type_arguments,
-                object_id,
-                initial_shared_version,
-            ),
+            } if !mutable => {
+                Self::new_shared(inputs, type_arguments, object_id, initial_shared_version)
+            }
             _ => return None,
         })
     }
@@ -58,7 +55,7 @@ impl MoveAuthenticator {
         }
     }
 
-    pub fn new_immutable_shared(
+    pub fn new_shared(
         inputs: Vec<Input>,
         type_arguments: Vec<TypeTag>,
         object_to_authenticate: ObjectId,

@@ -8481,11 +8481,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared()
 	})
-	if checksum != 34056 {
+	if checksum != 7901 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19353,9 +19353,9 @@ func MoveAuthenticatorNewImmutableOrOwned(inputs []*Input, typeArguments []*Type
 	}))
 }
 
-func MoveAuthenticatorNewImmutableShared(inputs []*Input, typeArguments []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticator {
+func MoveAuthenticatorNewShared(inputs []*Input, typeArguments []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticator {
 	return FfiConverterMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared(FfiConverterSequenceInputINSTANCE.Lower(inputs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArguments), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(FfiConverterSequenceInputINSTANCE.Lower(inputs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArguments), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
 	}))
 }
 

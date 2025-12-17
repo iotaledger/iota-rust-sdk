@@ -5008,7 +5008,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared(
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movecall_new(
 ): Short
@@ -6298,7 +6298,7 @@ fun uniffi_iota_sdk_ffi_fn_free_moveauthenticator(`ptr`: Pointer,uniffi_out_err:
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_or_owned(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -10988,7 +10988,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_or_owned() != 18640.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable_shared() != 34056.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 7901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
@@ -28835,10 +28835,10 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
     }
     
 
-         fun `newImmutableShared`(`inputs`: List<Input>, `typeArguments`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
+         fun `newShared`(`inputs`: List<Input>, `typeArguments`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable_shared(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(
         FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
 }
     )
