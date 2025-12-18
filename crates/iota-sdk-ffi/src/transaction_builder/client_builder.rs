@@ -8,7 +8,7 @@ use std::{
 };
 
 use iota_sdk::{
-    graphql_client::WaitForTx, transaction_builder::MoveAuthenticatorFnCall, types::Input,
+    graphql_client::WaitForTx, transaction_builder::MoveAuthenticatorArgs, types::Input,
 };
 
 use crate::{
@@ -383,7 +383,7 @@ impl ClientTransactionBuilder {
         Ok(self
             .read(|builder| {
                 builder.clone().execute_with_move_authenticator(
-                    MoveAuthenticatorFnCall::inputs(inputs)
+                    MoveAuthenticatorArgs::inputs(inputs)
                         .type_tags(type_args.into_iter().map(|v| v.0.clone())),
                     wait_for,
                 )

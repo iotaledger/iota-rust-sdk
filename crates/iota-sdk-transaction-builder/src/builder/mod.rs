@@ -22,7 +22,7 @@ use crate::{
     ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
-        move_authenticator::MoveAuthenticatorFnCall,
+        move_authenticator::MoveAuthenticatorArgs,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
@@ -1209,7 +1209,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// and optionally wait for finalization.
     pub async fn execute_with_move_authenticator<I: PTBArgumentList>(
         mut self,
-        fn_call: MoveAuthenticatorFnCall<I>,
+        move_auth_args: MoveAuthenticatorArgs<I>,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let account_obj = self
@@ -1219,9 +1219,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             .map_err(Error::client)?
             .ok_or_else(|| Error::Input(format!("missing account {}", self.data.sender)))?;
 
-        let mut inputs = Vec::new();
-        for input in fn_call.inputs.args(&mut self.data) {
-            inputs.push(match input {
+        let mut call_args = Vec::new();
+        for input in move_auth_args.call_args.args(&mut self.data) {
+            call_args.push(match input {
                 Argument::Input(input) => match &self.data.inputs[&input].kind {
                     InputKind::ImmutableOrOwned(object_id) => {
                         let obj = self
@@ -1269,13 +1269,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         }
         let move_authenticator = match account_obj.owner() {
             Owner::Immutable => MoveAuthenticator::new_immutable(
-                inputs,
-                fn_call.type_arguments,
+                call_args,
+                move_auth_args.type_args,
                 account_obj.object_ref(),
             ),
             Owner::Shared(version) => MoveAuthenticator::new_shared(
-                inputs,
-                fn_call.type_arguments,
+                call_args,
+                move_auth_args.type_args,
                 account_obj.object_id(),
                 *version,
             ),
