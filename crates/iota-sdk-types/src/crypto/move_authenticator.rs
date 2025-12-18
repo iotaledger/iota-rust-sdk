@@ -63,16 +63,8 @@ impl MoveAuthenticator {
         &self.inputs
     }
 
-    pub fn inputs_mut(&mut self) -> &mut Vec<Input> {
-        &mut self.inputs
-    }
-
     pub fn type_arguments(&self) -> &[TypeTag] {
         &self.type_arguments
-    }
-
-    pub fn type_arguments_mut(&mut self) -> &mut Vec<TypeTag> {
-        &mut self.type_arguments
     }
 
     pub fn object_to_authenticate(&self) -> &Input {
