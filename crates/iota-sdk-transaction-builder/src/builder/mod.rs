@@ -1220,49 +1220,42 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             .ok_or_else(|| Error::Input(format!("missing account {}", self.data.sender)))?;
 
         let mut call_args = Vec::new();
-        for input in move_auth_args.call_args.args(&mut self.data) {
+        for input in move_auth_args.call_args.inputs().iter() {
             call_args.push(match input {
-                Argument::Input(input) => match &self.data.inputs[&input].kind {
-                    InputKind::ImmutableOrOwned(object_id) => {
-                        let obj = self
-                            .client
-                            .object(*object_id, None)
-                            .await
-                            .map_err(Error::client)?
-                            .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
-                        iota_types::Input::ImmutableOrOwned(obj.object_ref())
-                    }
-                    InputKind::Shared { object_id, mutable } => {
-                        let obj = self
-                            .client
-                            .object(*object_id, None)
-                            .await
-                            .map_err(Error::client)?
-                            .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                InputKind::ImmutableOrOwned(object_id) => {
+                    let obj = self
+                        .client
+                        .object(*object_id, None)
+                        .await
+                        .map_err(Error::client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                    iota_types::Input::ImmutableOrOwned(obj.object_ref())
+                }
+                InputKind::Shared { object_id, mutable } => {
+                    let obj = self
+                        .client
+                        .object(*object_id, None)
+                        .await
+                        .map_err(Error::client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
 
-                        match obj.owner() {
-                            Owner::Shared(version) => iota_types::Input::Shared {
-                                object_id: *object_id,
-                                initial_shared_version: *version,
-                                mutable: *mutable,
-                            },
-                            _ => {
-                                return Err(Error::InvalidMoveAuthInput(format!(
-                                    "object {object_id} was passed as shared, but is not"
-                                )));
-                            }
+                    match obj.owner() {
+                        Owner::Shared(version) => iota_types::Input::Shared {
+                            object_id: *object_id,
+                            initial_shared_version: *version,
+                            mutable: *mutable,
+                        },
+                        _ => {
+                            return Err(Error::InvalidMoveAuthInput(format!(
+                                "object {object_id} was passed as shared, but is not"
+                            )));
                         }
                     }
-                    InputKind::Input(input) => input.clone(),
-                    _ => {
-                        return Err(Error::InvalidMoveAuthInput(
-                            "call arguments must not be receiving".to_owned(),
-                        ));
-                    }
-                },
+                }
+                InputKind::Input(input) => input.clone(),
                 _ => {
                     return Err(Error::InvalidMoveAuthInput(
-                        "must not be gas or a command result".to_owned(),
+                        "call arguments must not be receiving".to_owned(),
                     ));
                 }
             })
