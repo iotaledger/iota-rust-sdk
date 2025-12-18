@@ -338,9 +338,9 @@ impl Input {
         Self(iota_sdk::types::Input::Pure { value })
     }
 
-    /// A move object that is either immutable or address owned
+    /// A move immutable object
     #[uniffi::constructor]
-    pub fn new_immutable_or_owned(object_ref: ObjectReference) -> Self {
+    pub fn new_immutable(object_ref: ObjectReference) -> Self {
         Self(iota_sdk::types::Input::ImmutableOrOwned(object_ref.into()))
     }
 

@@ -20,30 +20,8 @@ pub struct MoveAuthenticator {
 }
 
 impl MoveAuthenticator {
-    /// Create a new move authenticator with an input. Will return Some only if
-    /// the input is valid. If possible, use [`Self::new_immutable_or_owned`] or
-    /// [`Self::new_shared`].
-    pub fn new(
-        inputs: Vec<Input>,
-        type_arguments: Vec<TypeTag>,
-        object_to_authenticate: Input,
-    ) -> Option<Self> {
-        Some(match object_to_authenticate {
-            Input::ImmutableOrOwned(obj) => {
-                Self::new_immutable_or_owned(inputs, type_arguments, obj)
-            }
-            Input::Shared {
-                object_id,
-                initial_shared_version,
-                mutable,
-            } if !mutable => {
-                Self::new_shared(inputs, type_arguments, object_id, initial_shared_version)
-            }
-            _ => return None,
-        })
-    }
-
-    pub fn new_immutable_or_owned(
+    /// Create a new move authenticator from an immutable object.
+    pub fn new_immutable(
         inputs: Vec<Input>,
         type_arguments: Vec<TypeTag>,
         object_to_authenticate: ObjectReference,
@@ -55,6 +33,7 @@ impl MoveAuthenticator {
         }
     }
 
+    /// Create a new move authenticator from a shared object.
     pub fn new_shared(
         inputs: Vec<Input>,
         type_arguments: Vec<TypeTag>,
@@ -78,13 +57,6 @@ impl MoveAuthenticator {
             | Input::Shared { object_id, .. } => object_id.into(),
             _ => unreachable!(),
         }
-    }
-
-    #[cfg(all(feature = "hash", feature = "serde"))]
-    pub fn digest(&self) -> crate::Digest {
-        let mut hasher = crate::hash::Hasher::new();
-        hasher.update(self.to_bytes());
-        hasher.finalize()
     }
 
     pub fn inputs(&self) -> &[Input] {

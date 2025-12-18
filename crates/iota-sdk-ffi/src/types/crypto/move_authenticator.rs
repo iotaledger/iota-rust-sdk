@@ -20,19 +20,21 @@ pub struct MoveAuthenticator(pub iota_sdk::types::MoveAuthenticator);
 
 #[uniffi::export]
 impl MoveAuthenticator {
+    /// Create a new move authenticator from an immutable object.
     #[uniffi::constructor]
-    pub fn new_immutable_or_owned(
+    pub fn new_immutable(
         inputs: Vec<Arc<Input>>,
         type_arguments: Vec<Arc<TypeTag>>,
         object_to_authenticate: ObjectReference,
     ) -> Self {
-        Self(iota_sdk::types::MoveAuthenticator::new_immutable_or_owned(
+        Self(iota_sdk::types::MoveAuthenticator::new_immutable(
             inputs.into_iter().map(|v| v.0.clone()).collect(),
             type_arguments.into_iter().map(|v| v.0.clone()).collect(),
             object_to_authenticate.into(),
         ))
     }
 
+    /// Create a new move authenticator from a shared object.
     #[uniffi::constructor]
     pub fn new_shared(
         inputs: Vec<Arc<Input>>,
@@ -50,10 +52,6 @@ impl MoveAuthenticator {
 
     pub fn address(&self) -> Address {
         self.0.address().into()
-    }
-
-    pub fn digest(&self) -> Digest {
-        self.0.digest().into()
     }
 
     pub fn inputs(&self) -> Vec<Arc<Input>> {

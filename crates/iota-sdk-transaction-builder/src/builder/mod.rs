@@ -1218,16 +1218,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             .await
             .map_err(Error::client)?
             .ok_or_else(|| Error::Input(format!("missing account {}", self.data.sender)))?;
-        let object_to_authenticate = match account_obj.owner() {
-            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
-                iota_types::Input::ImmutableOrOwned(account_obj.object_ref())
-            }
-            Owner::Shared(version) => iota_types::Input::Shared {
-                object_id: account_obj.object_id(),
-                initial_shared_version: *version,
-                mutable: false,
-            },
-        };
+
         let mut inputs = Vec::new();
         for input in fn_call.inputs.args(&mut self.data) {
             inputs.push(match input {
@@ -1276,9 +1267,26 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 }
             })
         }
-        let move_authenticator =
-            MoveAuthenticator::new(inputs, fn_call.type_arguments, object_to_authenticate)
-                .expect("authenticator inputs are checked above");
+        let move_authenticator = match account_obj.owner() {
+            Owner::Immutable => MoveAuthenticator::new_immutable(
+                inputs,
+                fn_call.type_arguments,
+                account_obj.object_ref(),
+            ),
+            Owner::Shared(version) => MoveAuthenticator::new_shared(
+                inputs,
+                fn_call.type_arguments,
+                account_obj.object_id(),
+                *version,
+            ),
+            _ => {
+                // TODO different error variant
+                return Err(Error::InvalidMoveAuthInput(
+                    "account must be immutable or shared".to_owned(),
+                ));
+            }
+        };
+
         let txn = self.finish_internal().await?;
         self.client
             .execute_tx(
