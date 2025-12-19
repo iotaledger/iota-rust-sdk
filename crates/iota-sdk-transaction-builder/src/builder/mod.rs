@@ -1212,7 +1212,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         move_auth_args: MoveAuthenticatorArgs<I>,
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
-        let account_obj = self
+        let account = self
             .client
             .object(self.data.sender.into(), None)
             .await
@@ -1246,41 +1246,41 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                             mutable: *mutable,
                         },
                         _ => {
-                            return Err(Error::InvalidMoveAuthInput(format!(
+                            return Err(Error::InvalidMoveAuthArg(format!(
                                 "object {object_id} was passed as shared, but is not"
                             )));
                         }
                     }
                 }
-                InputKind::Input(input) => input.clone(),
-                _ => {
-                    return Err(Error::InvalidMoveAuthInput(
+                InputKind::Receiving(_) => {
+                    return Err(Error::InvalidMoveAuthArg(
                         "call arguments must not be receiving".to_owned(),
                     ));
                 }
+                InputKind::Input(input) => input.clone(),
             })
         }
-        let move_authenticator = match account_obj.owner() {
+        let move_authenticator = match account.owner() {
             Owner::Immutable => MoveAuthenticator::new_immutable(
                 call_args,
                 move_auth_args.type_args,
-                account_obj.object_ref(),
+                account.object_ref(),
             ),
             Owner::Shared(version) => MoveAuthenticator::new_shared(
                 call_args,
                 move_auth_args.type_args,
-                account_obj.object_id(),
+                account.object_id(),
                 *version,
             ),
             _ => {
-                // TODO different error variant
-                return Err(Error::InvalidMoveAuthInput(
+                return Err(Error::InvalidMoveAuthAccount(
                     "account must be immutable or shared".to_owned(),
                 ));
             }
         };
 
         let txn = self.finish_internal().await?;
+
         self.client
             .execute_tx(
                 &[UserSignature::MoveAuthenticator(move_authenticator)],
