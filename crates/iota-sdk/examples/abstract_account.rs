@@ -4,64 +4,60 @@
 use std::str::FromStr;
 
 use eyre::{OptionExt, Result, bail};
-use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
-use iota_transaction_builder::{MoveAuthenticatorArgs, Shared, SharedMut, TransactionBuilder, res};
-use iota_types::{
-    Address, Identifier, IdentifierRef, MovePackageData, ObjectId, ObjectOut, StructTag,
+use iota_sdk::{
+    crypto::ed25519::Ed25519PrivateKey,
+    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
+    transaction_builder::{MoveAuthenticatorArgs, Shared, SharedMut, TransactionBuilder, res},
+    types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut},
 };
 use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let account_id = set_up_account().await?;
-
-    let client = Client::new_localnet();
-
-    let from_address = Address::from(account_id);
+    let from_address = Address::from(setup_account().await?);
     let to_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 
     // Fund the sender address for gas payment
-    let faucet = FaucetClient::new_localnet();
-    if faucet.request_and_wait(from_address).await?.is_none() {
+    if FaucetClient::new_localnet()
+        .request_and_wait(from_address)
+        .await?
+        .is_none()
+    {
         bail!("Failed to request coins from faucet");
     };
 
-    let mut builder = TransactionBuilder::new(from_address).with_client(&client);
+    let client = Client::new_localnet();
 
+    let mut builder = TransactionBuilder::new(from_address).with_client(&client);
     builder.send_iota(to_address, 5000000000u64);
 
-    let txn = builder.clone().finish().await?;
-
-    println!("Signing Digest: {}", txn.signing_digest_hex());
-    println!("Txn Bytes: {}", txn.to_base64());
-
-    builder
+    let effects = builder
         .execute_with_move_authenticator(
             MoveAuthenticatorArgs::inputs(("hello", Shared(ObjectId::from_str("0x06")?))),
             WaitForTx::Finalized,
         )
         .await?;
 
-    println!("Send IOTA via abstract account was successful!");
+    println!("Sending IOTA via abstract account: {:?}", effects.status());
 
     Ok(())
 }
 
-async fn set_up_account() -> Result<ObjectId> {
-    println!("Before");
+async fn setup_account() -> Result<ObjectId> {
+    // Parse the precompiled move package
     let package_data = serde_json::from_str::<MovePackageData>(PRECOMPILED_PACKAGE)?;
-    println!("After");
 
-    // Create a random private key to derive a sender address and for signing
+    // Create a random private key to derive a sender address
     let private_key = Ed25519PrivateKey::generate(OsRng);
     let sender = private_key.public_key().derive_address();
-    println!("Sender: {sender}");
 
     // Fund the sender address for gas payment
-    let faucet = FaucetClient::new_localnet();
-    if faucet.request_and_wait(sender).await?.is_none() {
+    if FaucetClient::new_localnet()
+        .request_and_wait(sender)
+        .await?
+        .is_none()
+    {
         bail!("Failed to request coins from faucet");
     };
 
@@ -71,96 +67,74 @@ async fn set_up_account() -> Result<ObjectId> {
     let mut builder = TransactionBuilder::new(sender).with_client(&client);
     builder
         // Publish the package and receive the upgrade cap
-        .publish(package_data.clone())
+        .publish(package_data)
         .name("upgrade_cap")
         // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [res("upgrade_cap")]);
 
-    println!("hello");
-
-    let tx = builder.finish().await?;
-
-    println!("world");
-
     // Sign and execute the transaction (publish the package)
-    let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
-    println!("{:?}", effects.status());
+    let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
+
+    println!("Publishing package: {:?}\n", effects.status());
 
     // Wait some time for the indexer to process the tx
     tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
-    // Resolve UpgradeCap and PackageId via the client
-    let mut account_id = None::<ObjectId>;
+    // Get package, package metadata and account IDs from the effects
     let mut package_id = None::<ObjectId>;
-    let mut metadata = None::<ObjectId>;
+    let mut package_metadata_id = None::<ObjectId>;
+    let mut account_id = None::<ObjectId>;
+
     for changed_obj in effects.as_v1().changed_objects.iter() {
         match changed_obj.output_state {
-            ObjectOut::PackageWrite { version, .. } => {
-                let pkg_id = changed_obj.object_id;
-                println!("Package ID: {pkg_id}");
-                println!("Package version: {version}");
-                package_id.replace(pkg_id);
+            ObjectOut::PackageWrite { .. } => {
+                package_id.replace(changed_obj.object_id);
             }
             ObjectOut::ObjectWrite { .. } => {
-                let obj = client.object(changed_obj.object_id, None).await?;
-                if let Some(obj) = obj {
-                    if obj.as_struct().type_.name == Identifier::new("PackageMetadataV1")? {
-                        println!("PackageMetadataV1: {}", changed_obj.object_id);
-                        metadata.replace(changed_obj.object_id);
+                let object_id = changed_obj.object_id;
+                let object = client.object(object_id, None).await?;
+
+                if let Some(object) = object {
+                    if object.as_struct().type_.name
+                        == IdentifierRef::const_new("PackageMetadataV1")
+                    {
+                        package_metadata_id.replace(object_id);
+                    }
+                    if object.as_struct().type_.name == IdentifierRef::const_new("Account") {
+                        account_id.replace(object_id);
                     }
                 }
             }
             _ => continue,
         }
     }
-    let Some(package_id) = package_id else {
-        bail!("Missing package id");
-    };
-    let account_tag = StructTag {
-        address: package_id.into(),
-        module: IdentifierRef::const_new("account").into(),
-        name: IdentifierRef::const_new("Account").into(),
-        type_params: Vec::new(),
-    };
-    for changed_obj in effects.as_v1().changed_objects.iter() {
-        match changed_obj.output_state {
-            ObjectOut::ObjectWrite { .. } => {
-                let object_id = changed_obj.object_id;
-                let Some(obj) = client.object(object_id, None).await? else {
-                    bail!("Missing object {object_id}");
-                };
 
-                if obj.as_struct().type_ == account_tag {
-                    println!("Account: {object_id}");
-                    account_id.replace(object_id);
-                }
-            }
-            _ => continue,
-        }
-    }
+    let package_id = package_id.ok_or_eyre("Missing package id")?;
+    let package_metadata_id = package_metadata_id.ok_or_eyre("Missing package metadata id")?;
+    let account_id = account_id.ok_or_eyre("Missing account id")?;
 
-    let account_id = account_id.ok_or_eyre("Missing account")?;
-    let metadata_id = metadata.ok_or_eyre("Missing metadata")?;
+    println!("Package ID: {package_id}");
+    println!("PackageMetadataV1 ID: {package_metadata_id}");
+    println!("Account ID: {account_id}\n");
 
+    // Build the `link_auth` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(&client);
     builder
         .move_call(package_id, "account", "link_auth")
         .arguments((
             SharedMut(account_id),
-            metadata_id,
+            package_metadata_id,
             "account",
             "authenticate",
         ));
 
-    println!("hello");
+    // Sign and execute the transaction (link the authenticator)
+    let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
 
-    let tx = builder.finish().await?;
-
-    // Sign and execute the transaction
-    let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
-    println!("{:?}", effects.status());
+    println!(
+        "Linking account to authenticate method: {:?}\n",
+        effects.status()
+    );
 
     Ok(account_id)
 }
@@ -172,7 +146,6 @@ const PRECOMPILED_PACKAGE: &str = r#"{"modules":["oRzrCwYAAAALAQASAhImAzgrBGMGBW
 const PACKAGE: &str = r#"
 module account::account;
 
-use iota::account::AuthenticatorInfoV1CompatibilityProof;
 use iota::package_metadata::PackageMetadataV1;
 
 public struct Account has key, store {
@@ -188,15 +161,9 @@ fun init(_otw: ACCOUNT, ctx: &mut TxContext) {
     });
 }
 
-/// Wrapper because of &mut UID
-public fun attach_auth_info_v1<AccountType: key>(account: &mut Account, authenticator_proof: AuthenticatorInfoV1CompatibilityProof<AccountType>,) {
-    iota::account::attach_auth_info_v1<AccountType>(&mut account.id, authenticator_proof);
-}
-
-public fun link_auth(account: &mut Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
-    let authenticator = iota::account::create_auth_info_v1<Account>(package, module_name, function_name);
-    let authenticator_proof = iota::account::check_auth_info_v1_compatibility<Account>(account, authenticator);
-    iota::account::attach_auth_info_v1<Account>(&mut account.id, authenticator_proof);
+public fun link_auth(account: Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
+    let authenticator_info = iota::account::create_auth_info_v1<Account>(package, module_name, function_name);
+    iota::account::create_account_v1<Account>(account, authenticator_info);
 }
 
 /// An unsecure example authenticator function that checks if the provided message is "hello".
@@ -204,6 +171,7 @@ public fun link_auth(account: &mut Account, package: &PackageMetadataV1, module_
 public fun authenticate(
     _account: &Account,
     msg: std::ascii::String,
+    _clock: &iota::clock::Clock,
     _auth_ctx: &iota::auth_context::AuthContext,
     _ctx: &TxContext,
 ) {

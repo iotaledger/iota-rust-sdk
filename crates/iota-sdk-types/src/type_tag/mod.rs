@@ -333,6 +333,12 @@ impl PartialEq<IdentifierRef> for Identifier {
     }
 }
 
+impl PartialEq<&IdentifierRef> for Identifier {
+    fn eq(&self, other: &&IdentifierRef) -> bool {
+        self.as_ref() == *other
+    }
+}
+
 impl PartialEq<Identifier> for IdentifierRef {
     fn eq(&self, other: &Identifier) -> bool {
         self == other.as_ref()
