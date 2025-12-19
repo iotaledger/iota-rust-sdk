@@ -4060,11 +4060,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_inputs(
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_arguments(
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_movecall_arguments(
 ): Short
@@ -6292,17 +6292,17 @@ fun uniffi_iota_sdk_ffi_fn_clone_moveauthenticator(`ptr`: Pointer,uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_moveauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(`inputs`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_inputs(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_arguments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9563,13 +9563,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address() != 24164.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_inputs() != 43344.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args() != 1111.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate() != 40516.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_arguments() != 10429.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args() != 63576.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments() != 17202.toShort()) {
@@ -10976,10 +10976,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 10885.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 19047.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 55224.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
@@ -28653,11 +28653,11 @@ public interface MoveAuthenticatorInterface {
     
     fun `address`(): Address
     
-    fun `inputs`(): List<Input>
+    fun `callArgs`(): List<Input>
     
     fun `objectToAuthenticate`(): Input
     
-    fun `typeArguments`(): List<TypeTag>
+    fun `typeArgs`(): List<TypeTag>
     
     companion object
 }
@@ -28762,11 +28762,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
     }
     
 
-    override fun `inputs`(): List<Input> {
+    override fun `callArgs`(): List<Input> {
             return FfiConverterSequenceTypeInput.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_inputs(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(
         it, _status)
 }
     }
@@ -28786,11 +28786,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
     }
     
 
-    override fun `typeArguments`(): List<TypeTag> {
+    override fun `typeArgs`(): List<TypeTag> {
             return FfiConverterSequenceTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_arguments(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(
         it, _status)
 }
     }
@@ -28805,11 +28805,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
         
     /**
      * Create a new move authenticator from an immutable object.
-     */ fun `newImmutable`(`inputs`: List<Input>, `typeArguments`: List<TypeTag>, `objectToAuthenticate`: ObjectReference): MoveAuthenticator {
+     */ fun `newImmutable`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectReference): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(
-        FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterTypeObjectReference.lower(`objectToAuthenticate`),_status)
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectReference.lower(`objectToAuthenticate`),_status)
 }
     )
     }
@@ -28818,11 +28818,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
         
     /**
      * Create a new move authenticator from a shared object.
-     */ fun `newShared`(`inputs`: List<Input>, `typeArguments`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
+     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(
-        FfiConverterSequenceTypeInput.lower(`inputs`),FfiConverterSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
 }
     )
     }

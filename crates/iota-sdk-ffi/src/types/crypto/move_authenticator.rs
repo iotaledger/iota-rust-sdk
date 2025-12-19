@@ -23,13 +23,13 @@ impl MoveAuthenticator {
     /// Create a new move authenticator from an immutable object.
     #[uniffi::constructor]
     pub fn new_immutable(
-        inputs: Vec<Arc<Input>>,
-        type_arguments: Vec<Arc<TypeTag>>,
+        call_args: Vec<Arc<Input>>,
+        type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: ObjectReference,
     ) -> Self {
         Self(iota_sdk::types::MoveAuthenticator::new_immutable(
-            inputs.into_iter().map(|v| v.0.clone()).collect(),
-            type_arguments.into_iter().map(|v| v.0.clone()).collect(),
+            call_args.into_iter().map(|v| v.0.clone()).collect(),
+            type_args.into_iter().map(|v| v.0.clone()).collect(),
             object_to_authenticate.into(),
         ))
     }
@@ -37,14 +37,14 @@ impl MoveAuthenticator {
     /// Create a new move authenticator from a shared object.
     #[uniffi::constructor]
     pub fn new_shared(
-        inputs: Vec<Arc<Input>>,
-        type_arguments: Vec<Arc<TypeTag>>,
+        call_args: Vec<Arc<Input>>,
+        type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: &ObjectId,
         initial_shared_version: u64,
     ) -> Self {
         Self(iota_sdk::types::MoveAuthenticator::new_shared(
-            inputs.into_iter().map(|v| v.0.clone()).collect(),
-            type_arguments.into_iter().map(|v| v.0.clone()).collect(),
+            call_args.into_iter().map(|v| v.0.clone()).collect(),
+            type_args.into_iter().map(|v| v.0.clone()).collect(),
             **object_to_authenticate,
             initial_shared_version,
         ))
@@ -54,9 +54,9 @@ impl MoveAuthenticator {
         self.0.address().into()
     }
 
-    pub fn inputs(&self) -> Vec<Arc<Input>> {
+    pub fn call_args(&self) -> Vec<Arc<Input>> {
         self.0
-            .inputs()
+            .call_args()
             .iter()
             .cloned()
             .map(Into::into)
@@ -64,9 +64,9 @@ impl MoveAuthenticator {
             .collect()
     }
 
-    pub fn type_arguments(&self) -> Vec<Arc<TypeTag>> {
+    pub fn type_args(&self) -> Vec<Arc<TypeTag>> {
         self.0
-            .type_arguments()
+            .type_args()
             .iter()
             .cloned()
             .map(Into::into)
