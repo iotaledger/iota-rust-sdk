@@ -8184,11 +8184,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned()
 	})
-	if checksum != 589 {
+	if checksum != 33908 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -18749,10 +18749,10 @@ type Input struct {
 }
 
 
-// A move immutable object
-func InputNewImmutable(objectRef ObjectReference) *Input {
+// A move object that is either immutable or address owned
+func InputNewImmutableOrOwned(objectRef ObjectReference) *Input {
 	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable(FfiConverterObjectReferenceINSTANCE.Lower(objectRef),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned(FfiConverterObjectReferenceINSTANCE.Lower(objectRef),_uniffiStatus)
 	}))
 }
 

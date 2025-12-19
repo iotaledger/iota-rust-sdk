@@ -2272,9 +2272,9 @@ void* uniffi_iota_sdk_ffi_fn_clone_input(void* ptr, RustCallStatus *out_status
 void uniffi_iota_sdk_ffi_fn_free_input(void* ptr, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_IMMUTABLE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_IMMUTABLE
-void* uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable(RustBuffer object_ref, RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_IMMUTABLE_OR_OWNED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_IMMUTABLE_OR_OWNED
+void* uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned(RustBuffer object_ref, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INPUT_NEW_PURE
@@ -12679,9 +12679,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_new(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_IMMUTABLE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_IMMUTABLE
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_IMMUTABLE_OR_OWNED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_IMMUTABLE_OR_OWNED
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned(void
     
 );
 #endif

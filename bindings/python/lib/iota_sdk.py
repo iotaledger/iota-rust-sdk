@@ -2199,7 +2199,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable() != 589:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() != 33908:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure() != 53404:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4776,11 +4776,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_input.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_input.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_pure.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12639,9 +12639,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure.restype = ctypes.c_uint16
@@ -35994,15 +35994,15 @@ class Input():
         inst._pointer = pointer
         return inst
     @classmethod
-    def new_immutable(cls, object_ref: "ObjectReference"):
+    def new_immutable_or_owned(cls, object_ref: "ObjectReference"):
         """
-        A move immutable object
+        A move object that is either immutable or address owned
         """
 
         _UniffiConverterTypeObjectReference.check_lower(object_ref)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned,
         _UniffiConverterTypeObjectReference.lower(object_ref))
         return cls._make_instance_(pointer)
 

@@ -4940,7 +4940,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable(
+fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure(
 ): Short
@@ -6206,7 +6206,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_input(`ptr`: Pointer,uniffi_out_err: UniffiRust
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_input(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable(`objectRef`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned(`objectRef`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_input_new_pure(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -10883,7 +10883,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable() != 589.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() != 33908.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure() != 53404.toShort()) {
@@ -27390,11 +27390,11 @@ open class Input: Disposable, AutoCloseable, InputInterface
     companion object {
         
     /**
-     * A move immutable object
-     */ fun `newImmutable`(`objectRef`: ObjectReference): Input {
+     * A move object that is either immutable or address owned
+     */ fun `newImmutableOrOwned`(`objectRef`: ObjectReference): Input {
             return FfiConverterTypeInput.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_input_new_immutable_or_owned(
         FfiConverterTypeObjectReference.lower(`objectRef`),_status)
 }
     )
