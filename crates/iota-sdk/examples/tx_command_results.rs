@@ -22,17 +22,17 @@ async fn main() -> Result<()> {
         .move_call(Address::STD_LIB, "u64", "max")
         .arguments((0u64, 1000u64))
         // Assign a name to the result of this command
-        .name("res0");
+        .assign("res0");
     builder
         .move_call(Address::STD_LIB, "u64", "max")
         .arguments((1000u64, 2000u64))
-        .name("res1");
+        .assign("res1");
 
     builder
         // Use the named results of previous commands to use as arguments
         .split_coins(Argument::Gas, [res("res0"), res("res1")])
         // For nested results, a tuple or vec can be used to name them
-        .name(vec!["coin0", "coin1"]);
+        .assign(vec!["coin0", "coin1"]);
 
     // Use named results as arguments
     builder.transfer_objects(sender_address, [res("coin0"), res("coin1")]);

@@ -36,19 +36,19 @@ async fn main() -> Result<()> {
             name: Identifier::new("Registry")?,
             type_params: vec![],
         }))])
-        .name("iota_names");
+        .assign("iota_names");
 
     // Step 2: Create the name object from the string
     builder
         .move_call(iota_names_package_address, "name", "new")
         .arguments([name])
-        .name("name");
+        .assign("name");
 
     // Step 3: Look up the name record in the registry
     builder
         .move_call(iota_names_package_address, "registry", "lookup")
         .arguments((res("iota_names"), res("name")))
-        .name("name_record_opt");
+        .assign("name_record_opt");
 
     // Step 4: Borrow the name record from the option
     builder
@@ -60,13 +60,13 @@ async fn main() -> Result<()> {
             name: Identifier::new("NameRecord")?,
             type_params: vec![],
         }))])
-        .name("name_record");
+        .assign("name_record");
 
     // Step 5: Get the target address from the name record
     builder
         .move_call(iota_names_package_address, "name_record", "target_address")
         .arguments([res("name_record")])
-        .name("target_address_opt");
+        .assign("target_address_opt");
 
     // Step 6: Borrow the address from the option (this returns the resolved
     // address)
@@ -74,7 +74,7 @@ async fn main() -> Result<()> {
         .move_call(Address::STD_LIB, "option", "borrow")
         .arguments([res("target_address_opt")])
         .generics::<Address>()
-        .name("target_address");
+        .assign("target_address");
 
     let res = builder.dry_run(true).await?;
 

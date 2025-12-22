@@ -467,7 +467,7 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
-        tx.split_coins(gas, [1_000_000_000u64]).name("coin");
+        tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [res("coin")]);
 
@@ -604,7 +604,7 @@ mod tests {
                 UpgradePolicy::Compatible as u8,
                 updated_package.digest,
             ))
-            .name("ticket");
+            .assign("ticket");
         // now we can upgrade the package
         let receipt = tx
             .upgrade(package_id.unwrap(), updated_package, res("ticket"))

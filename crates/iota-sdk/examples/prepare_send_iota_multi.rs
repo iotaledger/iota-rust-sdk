@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
 
     let labels: Vec<String> = (0..recipients.len()).map(|i| format!("coin{i}")).collect();
 
-    builder.split_coins(coin, amounts).name(labels.clone());
+    builder.split_coins(coin, amounts).assign(labels.clone());
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {

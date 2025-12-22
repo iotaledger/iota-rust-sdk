@@ -151,7 +151,7 @@ impl TransactionBuilder {
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .name(names);
+                .assign(names);
         });
         self
     }
@@ -218,7 +218,7 @@ impl TransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, amounts).name(names);
+            builder.split_coins(coin, amounts).assign(names);
         });
         self
     }
@@ -310,7 +310,7 @@ impl TransactionBuilder {
         self.write(|builder| {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
-                .name(name);
+                .assign(name);
         });
         self
     }

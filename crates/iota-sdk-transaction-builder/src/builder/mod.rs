@@ -356,7 +356,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// #         )?,
     /// #         [1000u64],
     /// #     )
-    /// #     .name(("coin"));
+    /// #     .assign(("coin"));
     ///
     /// builder.transfer_objects(
     ///     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?,
@@ -591,7 +591,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder
     ///     .split_coins(coin, [1000u64, 2000, 3000])
-    ///     .name(("coin1", "coin2", "coin3"))
+    ///     .assign(("coin1", "coin2", "coin3"))
     ///     .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
     /// let txn = builder.finish().await?;
     /// #    Ok(())
@@ -740,7 +740,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// builder
     ///     .make_move_vec([address1, address2])
-    ///     .name("addresses")
+    ///     .assign("addresses")
     ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
     ///     .generics::<(Address, u64)>()
     ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
@@ -1243,7 +1243,7 @@ impl TransactionBuilder<(), Publish> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
-            .name(name)
+            .assign(name)
             .reset()
     }
 }
@@ -1255,7 +1255,7 @@ impl<C: ClientMethods> TransactionBuilder<C, Publish> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
-            .name(name)
+            .assign(name)
             .reset()
     }
 }
@@ -1270,8 +1270,8 @@ impl<C> TransactionBuilder<C, Publish> {
 }
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Set the name for the last command.
-    pub fn name(&mut self, name: impl NamedResults) -> &mut Self {
+    /// Assign a name to the last command's result.
+    pub fn assign(&mut self, name: impl NamedResults) -> &mut Self {
         name.push_named_results(&mut self.data);
         self
     }

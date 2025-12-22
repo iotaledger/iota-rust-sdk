@@ -65,7 +65,7 @@ async fn main() -> Result<()> {
     builder
         // Publish the package and receive the upgrade cap
         .publish(package_data.clone())
-        .name("upgrade_cap")
+        .assign("upgrade_cap")
         // Transfer the upgrade cap to the sender address
         .transfer_objects(sender, [res("upgrade_cap")]);
 
@@ -135,10 +135,10 @@ async fn main() -> Result<()> {
             UpgradePolicy::Compatible as u8,
             package_data.digest,
         ))
-        .name("upgrade_ticket")
+        .assign("upgrade_ticket")
         // Upgrade the package to receive an upgrade receipt
         .upgrade(package_id, package_data, res("upgrade_ticket"))
-        .name("upgrade_receipt")
+        .assign("upgrade_receipt")
         // Commit the upgrade using the receipt
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
         .arguments((upgrade_cap_id, res("upgrade_receipt")));
