@@ -182,7 +182,7 @@ impl ClientMethods for iota_graphql_client::Client {
         Ok(self
             .objects(
                 ObjectFilter {
-                    type_: type_tag.as_ref().map(ToString::to_string),
+                    type_filter: type_tag.as_ref().map(ToString::to_string),
                     owner,
                     object_ids,
                 },
