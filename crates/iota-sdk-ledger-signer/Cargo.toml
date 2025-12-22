@@ -13,10 +13,10 @@ thiserror.workspace = true
 tracing = "0.1"
 
 # internal dependencies
+iota-graphql-client.workspace = true
 iota-ledger.workspace = true
 iota-sdk.workspace = true
 iota-types.workspace = true
-iota-graphql-client.workspace = true
 
 [dev-dependencies]
 anyhow = "1.0"
