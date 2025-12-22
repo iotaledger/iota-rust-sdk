@@ -40,10 +40,11 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 
 .PHONY: wasm
 wasm: ## Build WASM modules
+	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
-	$(MAKE) -C crates/iota-sdk-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
+	$(MAKE) -C crates/iota-sdk-types wasm
 
 .PHONY: doc
 doc: ## Generate documentation
@@ -134,6 +135,7 @@ python: ## Build Python bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example

@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_crypto::{IotaSigner, SignatureError, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
-use iota_transaction_builder::{TransactionBuilder, TransactionSigner};
-use iota_types::{Address, Transaction, UserSignature};
+use iota_sdk::{
+    crypto::{IotaSigner, SignatureError, ed25519::Ed25519PrivateKey},
+    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
+    transaction_builder::{TransactionBuilder, TransactionSigner},
+    types::{Address, Transaction, UserSignature},
+};
 
 struct AsyncSigner(Ed25519PrivateKey);
 

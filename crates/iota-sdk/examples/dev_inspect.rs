@@ -4,9 +4,11 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_transaction_builder::{SharedMut, TransactionBuilder, res};
-use iota_types::{Address, Identifier, ObjectId, StructTag, TypeTag};
+use iota_sdk::{
+    graphql_client::Client,
+    transaction_builder::{SharedMut, TransactionBuilder, res},
+    types::{Address, Identifier, ObjectId, StructTag, TypeTag},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {

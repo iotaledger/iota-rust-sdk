@@ -1,6 +1,14 @@
 [workspace]
 resolver = "2"
-members = ["crates/*"]
+members = [
+  "crates/iota-sdk",
+  "crates/iota-sdk-crypto",
+  "crates/iota-sdk-ffi",
+  "crates/iota-sdk-graphql-client",
+  "crates/iota-sdk-graphql-client-build",
+  "crates/iota-sdk-transaction-builder",
+  "crates/iota-sdk-types",
+]
 
 [workspace.dependencies]
 base64ct = "1.6.0"
@@ -26,11 +34,11 @@ test-strategy = "0.4.0"
 thiserror = "2.0"
 tokio = "1.40.0"
 
-iota-ledger = { package = "iota-ledger", path = "crates/iota-ledger", default-features = false }
-iota-ledger-signer = { package = "iota-ledger-signer", path = "crates/iota-ledger-signer", default-features = false }
-iota-sdk = { package = "iota-sdk", path = "crates/iota-sdk", default-features = false }
-iota-crypto = { package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
-iota-graphql-client = { package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
-iota-graphql-client-build = { package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
-iota-transaction-builder = { package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
-iota-types = { package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
+iota-crypto = { version = "0.0.1-alpha.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
+iota-graphql-client = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
+iota-graphql-client-build = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
+iota-ledger = { version = "0.0.0", package = "iota-ledger", path = "crates/iota-ledger", default-features = false }
+iota-ledger-signer = { version = "0.0.0", package = "iota-ledger-signer", path = "crates/iota-ledger-signer", default-features = false }
+iota-sdk = { version = "3.0.0-alpha.1", package = "iota-sdk", path = "crates/iota-sdk", default-features = false }
+iota-transaction-builder = { version = "0.0.1-alpha.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
+iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }

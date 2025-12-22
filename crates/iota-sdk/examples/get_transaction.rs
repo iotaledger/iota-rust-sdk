@@ -1,8 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{Client, error::Result};
-use iota_types::Digest;
+use iota_sdk::{
+    graphql_client::{Client, error::Result},
+    types::Digest,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
