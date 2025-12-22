@@ -386,7 +386,7 @@ impl GasStationData {
     ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
-            Transaction::V1(ref mut inner_txn) => {
+            Transaction::V1(inner_txn) => {
                 let reservation = self
                     .reserve_gas(inner_txn.gas_payment.budget, &client)
                     .await?;

@@ -49,8 +49,10 @@ mod transaction_kind {
             ReadableTransactionKind::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableTransactionKind::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableTransactionKind::json_schema(generator)
         }
     }
 
@@ -555,7 +557,7 @@ mod argument {
             "GasArgument".to_owned()
         }
 
-        fn json_schema(_gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             schemars::schema::Schema::Object(schemars::schema::SchemaObject {
                 instance_type: Some(schemars::schema::InstanceType::String.into()),
                 enum_values: Some(vec!["gas".into()]),
@@ -574,8 +576,10 @@ mod argument {
             ReadableArgument::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableArgument::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableArgument::json_schema(generator)
         }
     }
 
@@ -1001,7 +1005,9 @@ mod transaction_expiration {
             "TransactionExpiration".into()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
             use schemars::{
                 Map, Set,
                 schema::{
@@ -1015,7 +1021,7 @@ mod transaction_expiration {
                         let mut props = Map::new();
                         props.insert(
                             "epoch".to_owned(),
-                            gen.subschema_for::<crate::_schemars::U64>(),
+                            generator.subschema_for::<crate::_schemars::U64>(),
                         );
                         props
                     },
