@@ -1,4 +1,4 @@
-# iota-ledger
+# iota-sdk-ledger
 
 Low-level IOTA Ledger hardware wallet integration library.
 
