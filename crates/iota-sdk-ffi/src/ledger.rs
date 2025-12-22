@@ -84,9 +84,8 @@ impl LedgerSigner {
 
         println!("HELLO {signature:?}");
 
-        Ok(UserSignature::new_simple(&SimpleSignature::new_ed25519(
-            &(signature.signature.into()),
-            &(signature.public_key.into()),
+        Ok(UserSignature::new_simple(&SimpleSignature::from(
+            signature.signature,
         )))
     }
 

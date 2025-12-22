@@ -17,6 +17,9 @@ type AsyncSigner struct {
 func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.TransactionSignerFnOutput, error) {
 	fmt.Println("BEFORE")
 	signature, err := signer.ledger.SignTransaction(transaction)
+		if err.(*iota_sdk.LedgerSignerError) != nil {
+		log.Fatalf("Failed to execute: %v", err)
+	}
 	fmt.Println("AFTER")
 	return iota_sdk.TransactionSignerFnOutput{Signature: signature}, err
 }

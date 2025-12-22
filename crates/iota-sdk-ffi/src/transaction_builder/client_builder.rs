@@ -345,10 +345,13 @@ impl ClientTransactionBuilder {
         signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
-        Ok(self
+        let res = self
             .read(|builder| builder.clone().execute(signer, wait_for))
-            .await?
-            .into())
+            .await;
+
+        println!("RES {res:?}");
+
+        Ok(res?.into())
     }
 
     /// Execute the transaction and optionally wait for finalization.

@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// TODO signature maybe needs to be wrapped in Signature enum?
-
 use std::{thread, time, vec};
 
 use hex::ToHex;
@@ -10,7 +8,9 @@ use tracing::debug;
 mod transport;
 use iota_types::{
     Address, Object,
-    crypto::{Ed25519PublicKey, Ed25519Signature, Intent, IntentMessage, SignatureScheme},
+    crypto::{
+        Ed25519PublicKey, Ed25519Signature, Intent, IntentMessage, SignatureScheme, SimpleSignature,
+    },
 };
 use serde::Serialize;
 use transport::{APDUAnswer, APDUCommand, LedgerTransport};
@@ -30,7 +30,7 @@ pub struct Ledger {
 
 #[derive(Debug)]
 pub struct SignedTransaction {
-    pub signature: Ed25519Signature,
+    pub signature: SimpleSignature,
     pub public_key: Ed25519PublicKey,
 }
 
@@ -177,14 +177,18 @@ impl Ledger {
 
         // TODO do we need these?
         let mut signature_bytes: Vec<u8> = Vec::new();
-        signature_bytes.extend_from_slice(&[self.get_signature_scheme() as u8]);
+        // TODO ?
+        // signature_bytes.extend_from_slice(&[self.get_signature_scheme() as u8]);
         signature_bytes.extend_from_slice(&signature.bytes);
         signature_bytes.extend_from_slice(key_response.public_key.as_ref());
 
         Ok(SignedTransaction {
-            signature: Ed25519Signature::from_bytes(&signature.bytes)
-                .map_err(|_| LedgerError::Serialization)?
-                .into(),
+            signature: SimpleSignature::Ed25519 {
+                signature: Ed25519Signature::from_bytes(&signature.bytes)
+                    .map_err(|_| LedgerError::Serialization)?,
+                public_key: key_response.public_key.into(),
+            }
+            .into(),
             public_key: key_response.public_key,
         })
     }
