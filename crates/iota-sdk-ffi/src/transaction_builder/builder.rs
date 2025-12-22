@@ -257,7 +257,7 @@ impl TransactionBuilder {
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
             });
-            builder.named_command(cmd, name);
+            builder.assigned_command(cmd, name);
         });
         self
     }

@@ -97,9 +97,10 @@
 //! ### Commands
 //!
 //! Each command method adds one or more commands to the final transaction. Some
-//! commands have optional follow-up methods. All command results can be named
-//! via [name](TransactionBuilder::name). Naming a command allows them to be
-//! used later in the transaction via the [res] method.
+//! commands have optional follow-up methods. All command results can be
+//! assigned a name via [assign](TransactionBuilder::assign). Assigning a name
+//! to a command allows them to be used later in the transaction via the [res]
+//! method.
 //!
 //! - [move_call](TransactionBuilder::move_call): Call a move function.
 //!     - `arguments`: Add arguments to the move call.
@@ -149,7 +150,7 @@
 //! - [pure_bytes](TransactionBuilder::pure_bytes)
 //! - [pure](TransactionBuilder::pure)
 //! - [command](TransactionBuilder::command)
-//! - [named_command](TransactionBuilder::named_command)
+//! - [assigned_command](TransactionBuilder::assigned_command)
 //!
 //! ## Finalization and Execution
 //!
@@ -212,7 +213,7 @@
 //! - [ObjectReference](iota_types::ObjectReference): An object's reference.
 //!   This will be assumed immutable or owned.
 //! - [Res](builder::ptb_arguments::Res): A reference to the result of a
-//!   previous named command, set with [name](TransactionBuilder::name).
+//!   previous assigned command, set with [assign](TransactionBuilder::assign).
 //! - [Shared]: Allows specifying shared immutable move objects.
 //! - [SharedMut]: Allows specifying shared mutable move objects.
 //! - [Receiving]: Allows specifying receiving move objects.

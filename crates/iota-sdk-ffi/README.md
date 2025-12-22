@@ -64,7 +64,7 @@ The following methods are available:
 
 #### Commands
 
-Each command method adds one or more commands to the final transaction. Some commands have optional follow-up methods. Most command results can be named, which allows them to be used later in the transaction via the `PTBArgument::Res` variant. When a single name is provided, the result will be named, and when a list of names is provided, the names will be used for the individual nested results.
+Each command method adds one or more commands to the final transaction. Some commands have optional follow-up methods. Most command results can be assigned a name, which allows them to be used later in the transaction via the `PTBArgument::Res` variant. When a single name is provided, the result will be assigned, and when a list of names is provided, the names will be used for the individual nested results.
 
 - `move_call`: Call a move function.
 - `send_iota`: Send IOTA coins to a recipient address.

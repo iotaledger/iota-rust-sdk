@@ -37,13 +37,13 @@ fun main() = runBlocking {
 
         builder.splitCoins(
             PtbArgument.gas(),
-            // Use the named results of previous commands to use as arguments
+            // Use the assigned results of previous commands to use as arguments
             listOf(PtbArgument.res("res0"), PtbArgument.res("res1")),
-            // For nested results, a tuple or vec can be used to name them
+            // For nested results, a tuple or vec can be used to assign them
             listOf("coin0", "coin1"),
         )
 
-        // Use named results as arguments
+        // Use assigned results as arguments
         builder.transferObjects(sender, listOf(PtbArgument.res("coin0"), PtbArgument.res("coin1")))
 
         val txn = builder.finish()

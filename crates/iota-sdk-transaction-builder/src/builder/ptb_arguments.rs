@@ -274,10 +274,10 @@ impl PTBArgument for Res {
 
 impl PTBArgument for &Res {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        if let Some(arg) = ptb.named_results.get(&self.0) {
+        if let Some(arg) = ptb.assigned_results.get(&self.0) {
             *arg
         } else {
-            panic!("no command result named `{}` exists", self.0)
+            panic!("no command result assigned to `{}` exists", self.0)
         }
     }
 }
