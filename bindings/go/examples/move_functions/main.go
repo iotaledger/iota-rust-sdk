@@ -7,19 +7,19 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
-	packageAddress, err := sdk.AddressFromHex("0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f")
+	packageAddress, err := iota_sdk.AddressFromHex("0x3ec4826f1d6e0d9f00680b2e9a7a41f03788ee610b3d11c24f41ab0ae71da39f")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
 	packageOpt, err := client.Package(packageAddress, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get package: %v", err)
 	}
 	if packageOpt == nil {
@@ -37,7 +37,7 @@ func main() {
 			nil,
 			nil,
 		)
-		if err.(*sdk.SdkFfiError) != nil {
+		if err.(*iota_sdk.SdkFfiError) != nil {
 			log.Fatalf("Failed to get module: %v", err)
 		}
 		if moduleOpt == nil {

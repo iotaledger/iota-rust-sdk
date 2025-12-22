@@ -7,17 +7,17 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	function := "0x3::iota_system::request_add_stake"
-	transactions, err := client.Transactions(&sdk.TransactionsFilter{
+	transactions, err := client.Transactions(&iota_sdk.TransactionsFilter{
 		Function: &function,
 	}, nil)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

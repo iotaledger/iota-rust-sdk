@@ -40,7 +40,7 @@ pub mod v1;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, uniffi::Object)]
+#[derive(Clone, uniffi::Object, derive_more::From)]
 pub struct Transaction(pub iota_sdk::types::Transaction);
 
 #[uniffi::export]
@@ -1262,6 +1262,116 @@ impl ChangeEpochV3 {
     }
 }
 
+#[derive(derive_more::From, uniffi::Object)]
+pub struct ChangeEpochV4(pub iota_sdk::types::ChangeEpochV4);
+
+#[uniffi::export]
+impl ChangeEpochV4 {
+    #[uniffi::constructor]
+    #[expect(clippy::too_many_arguments)]
+    pub fn new(
+        epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<Arc<SystemPackage>>,
+        eligible_active_validators: Vec<u64>,
+        scores: Vec<u64>,
+        adjust_rewards_by_score: bool,
+    ) -> Self {
+        Self(iota_sdk::types::ChangeEpochV4 {
+            epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages: system_packages
+                .into_iter()
+                .map(|package| package.0.clone())
+                .collect(),
+            eligible_active_validators,
+            scores,
+            adjust_rewards_by_score,
+        })
+    }
+
+    /// The next (to become) epoch ID.
+    pub fn epoch(&self) -> EpochId {
+        self.0.epoch
+    }
+
+    /// The protocol version in effect in the new epoch.
+    pub fn protocol_version(&self) -> ProtocolVersion {
+        self.0.protocol_version
+    }
+
+    /// The total amount of gas charged for storage during the epoch.
+    pub fn storage_charge(&self) -> u64 {
+        self.0.storage_charge
+    }
+
+    /// The total amount of gas charged for computation during the epoch.
+    pub fn computation_charge(&self) -> u64 {
+        self.0.computation_charge
+    }
+
+    /// The total amount of gas burned for computation during the epoch.
+    pub fn computation_charge_burned(&self) -> u64 {
+        self.0.computation_charge_burned
+    }
+
+    /// The amount of storage rebate refunded to the txn senders.
+    pub fn storage_rebate(&self) -> u64 {
+        self.0.storage_rebate
+    }
+
+    /// The non-refundable storage fee.
+    pub fn non_refundable_storage_fee(&self) -> u64 {
+        self.0.non_refundable_storage_fee
+    }
+
+    /// Unix timestamp when epoch started
+    pub fn epoch_start_timestamp_ms(&self) -> u64 {
+        self.0.epoch_start_timestamp_ms
+    }
+
+    /// System packages (specifically framework and move stdlib) that are
+    /// written before the new epoch starts.
+    pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
+        self.0
+            .system_packages
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .map(Arc::new)
+            .collect()
+    }
+
+    /// Vector of active validator indices eligible to take part in committee
+    /// selection because they support the new, target protocol version.
+    pub fn eligible_active_validators(&self) -> Vec<u64> {
+        self.0.eligible_active_validators.clone()
+    }
+
+    /// Vector of scores relative to the past epoch performance of each
+    /// validator, ordered by the past epoch's validator index.
+    pub fn scores(&self) -> Vec<u64> {
+        self.0.scores.clone()
+    }
+
+    /// Whether to adjust validator rewards based on score.
+    pub fn adjust_rewards_by_score(&self) -> bool {
+        self.0.adjust_rewards_by_score
+    }
+}
+
 /// Expire old JWKs
 ///
 /// # BCS
@@ -1561,6 +1671,13 @@ impl EndOfEpochTransactionKind {
     }
 
     #[uniffi::constructor]
+    pub fn new_change_epoch_v4(tx: &ChangeEpochV4) -> Self {
+        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
+            tx.0.clone(),
+        ))
+    }
+
+    #[uniffi::constructor]
     pub fn new_authenticator_state_create() -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateCreate)
     }
@@ -1651,6 +1768,184 @@ impl TransactionEffects {
 
     pub fn digest(&self) -> Digest {
         self.0.digest().into()
+    }
+}
+
+/// A transaction argument used in programmable transactions.
+#[derive(uniffi::Enum)]
+pub enum TransactionArgument {
+    /// Reference to the gas coin.
+    GasCoin,
+    /// An input to the programmable transaction block.
+    Input {
+        /// Index of the programmable transaction block input (0-indexed).
+        ix: u32,
+    },
+    /// The result of another transaction command.
+    Result {
+        /// The index of the previous command (0-indexed) that returned this
+        /// result.
+        cmd: u32,
+        /// If the previous command returns multiple values, this is the index
+        /// of the individual result among the multiple results from
+        /// that command (also 0-indexed).
+        ix: Option<u32>,
+    },
+}
+
+impl From<iota_sdk::types::TransactionArgument> for TransactionArgument {
+    fn from(value: iota_sdk::types::TransactionArgument) -> Self {
+        match value {
+            iota_sdk::types::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
+            iota_sdk::types::TransactionArgument::Input { ix } => TransactionArgument::Input { ix },
+            iota_sdk::types::TransactionArgument::Result { cmd, ix } => {
+                TransactionArgument::Result { cmd, ix }
+            }
+        }
+    }
+}
+
+impl From<TransactionArgument> for iota_sdk::types::TransactionArgument {
+    fn from(value: TransactionArgument) -> Self {
+        match value {
+            TransactionArgument::GasCoin => iota_sdk::types::TransactionArgument::GasCoin,
+            TransactionArgument::Input { ix } => iota_sdk::types::TransactionArgument::Input { ix },
+            TransactionArgument::Result { cmd, ix } => {
+                iota_sdk::types::TransactionArgument::Result { cmd, ix }
+            }
+        }
+    }
+}
+
+/// A return value from a command in the dry run.
+#[derive(uniffi::Record)]
+pub struct DryRunReturn {
+    /// The Move type of the return value.
+    pub type_tag: Arc<TypeTag>,
+    /// The BCS representation of the return value.
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_sdk::types::DryRunReturn> for DryRunReturn {
+    fn from(value: iota_sdk::types::DryRunReturn) -> Self {
+        DryRunReturn {
+            type_tag: Arc::new(value.type_tag.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DryRunReturn> for iota_sdk::types::DryRunReturn {
+    fn from(value: DryRunReturn) -> Self {
+        iota_sdk::types::DryRunReturn {
+            type_tag: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// A mutation to an argument that was mutably borrowed by a command.
+#[derive(uniffi::Record)]
+pub struct DryRunMutation {
+    /// The transaction argument that was mutated.
+    pub input: TransactionArgument,
+    /// The Move type of the mutated value.
+    pub type_tag: Arc<TypeTag>,
+    /// The BCS representation of the mutated value.
+    pub bcs: Vec<u8>,
+}
+
+impl From<iota_sdk::types::DryRunMutation> for DryRunMutation {
+    fn from(value: iota_sdk::types::DryRunMutation) -> Self {
+        DryRunMutation {
+            input: value.input.into(),
+            type_tag: Arc::new(value.type_tag.into()),
+            bcs: value.bcs,
+        }
+    }
+}
+
+impl From<DryRunMutation> for iota_sdk::types::DryRunMutation {
+    fn from(value: DryRunMutation) -> Self {
+        iota_sdk::types::DryRunMutation {
+            input: value.input.into(),
+            type_tag: value.type_tag.0.clone(),
+            bcs: value.bcs,
+        }
+    }
+}
+
+/// Effects of a single command in the dry run, including mutated references
+/// and return values.
+#[derive(uniffi::Record)]
+pub struct DryRunEffect {
+    /// Changes made to arguments that were mutably borrowed by this command.
+    pub mutated_references: Vec<DryRunMutation>,
+    /// Return results of this command.
+    pub return_values: Vec<DryRunReturn>,
+}
+
+impl From<iota_sdk::types::DryRunEffect> for DryRunEffect {
+    fn from(value: iota_sdk::types::DryRunEffect) -> Self {
+        DryRunEffect {
+            mutated_references: value
+                .mutated_references
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            return_values: value.return_values.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<DryRunEffect> for iota_sdk::types::DryRunEffect {
+    fn from(value: DryRunEffect) -> Self {
+        iota_sdk::types::DryRunEffect {
+            mutated_references: value
+                .mutated_references
+                .into_iter()
+                .map(Into::into)
+                .collect(),
+            return_values: value.return_values.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+/// The result of a simulation (dry run), which includes the effects of the
+/// transaction, any errors that may have occurred, and intermediate results for
+/// each command.
+#[derive(uniffi::Record)]
+pub struct DryRunResult {
+    /// The error that occurred during dry run execution, if any.
+    pub error: Option<String>,
+    /// The intermediate results for each command of the dry run execution,
+    /// including contents of mutated references and return values.
+    pub results: Vec<DryRunEffect>,
+    /// The transaction block representing the dry run execution.
+    pub transaction: Option<SignedTransaction>,
+    /// The effects of the transaction execution.
+    pub effects: Option<Arc<TransactionEffects>>,
+}
+
+impl From<iota_sdk::types::DryRunResult> for DryRunResult {
+    fn from(value: iota_sdk::types::DryRunResult) -> Self {
+        DryRunResult {
+            error: value.error,
+            results: value.results.into_iter().map(Into::into).collect(),
+            transaction: value.transaction.map(Into::into),
+            effects: value.effects.map(Into::into).map(Arc::new),
+        }
+    }
+}
+
+impl From<DryRunResult> for iota_sdk::types::DryRunResult {
+    fn from(value: DryRunResult) -> Self {
+        iota_sdk::types::DryRunResult {
+            error: value.error,
+            results: value.results.into_iter().map(Into::into).collect(),
+            transaction: value.transaction.map(Into::into),
+            effects: value.effects.map(|v| v.0.clone()),
+        }
     }
 }
 

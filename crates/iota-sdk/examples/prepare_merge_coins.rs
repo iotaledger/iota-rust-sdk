@@ -4,9 +4,11 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::{Address, ObjectId};
+use iota_sdk::{
+    graphql_client::Client,
+    transaction_builder::TransactionBuilder,
+    types::{Address, ObjectId},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -19,7 +21,7 @@ async fn main() -> Result<()> {
     let coin_1 =
         ObjectId::from_str("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    let mut builder = TransactionBuilder::new(sender).with_client(&client);
 
     builder.merge_coins(coin_0, [coin_1]);
 

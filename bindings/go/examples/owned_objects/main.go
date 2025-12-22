@@ -7,23 +7,23 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
-	address := sdk.AddressZero()
+	address := iota_sdk.AddressZero()
 
-	objectFilter := sdk.ObjectFilter{
+	objectFilter := iota_sdk.ObjectFilter{
 		Owner: &address,
 	}
-	paginationFilter := sdk.PaginationFilter{
-		Direction: sdk.DirectionForward,
+	paginationFilter := iota_sdk.PaginationFilter{
+		Direction: iota_sdk.DirectionForward,
 	}
 
 	objectsPage, err := client.Objects(&objectFilter, &paginationFilter)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get owned objects: %v", err)
 	}
 	fmt.Printf("Owned objects (%d):\n", len(objectsPage.Data))

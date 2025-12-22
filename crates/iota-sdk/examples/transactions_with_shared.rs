@@ -3,8 +3,10 @@
 
 use std::str::FromStr;
 
-use iota_graphql_client::{Client, error::Result, query_types::TransactionsFilter};
-use iota_types::ObjectId;
+use iota_sdk::{
+    graphql_client::{Client, error::Result, query_types::TransactionsFilter},
+    types::ObjectId,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {

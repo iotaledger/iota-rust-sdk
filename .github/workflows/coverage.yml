@@ -1,0 +1,125 @@
+name: Code Coverage (llvm-cov)
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # every day at 1am (UTC)
+  workflow_dispatch:
+    inputs:
+      branch-or-commit:
+        description: "Branch or commit to test code coverage."
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  llvm-cov:
+    name: Generate code coverage
+    runs-on: self-hosted-x64
+    timeout-minutes: 180
+    env:
+      CARGO_TERM_COLOR: always
+      RUST_LOG: "error"
+      # Don't emit giant backtraces in the CI logs.
+      RUST_BACKTRACE: short
+      # Disable incremental compilation.
+      #
+      # Incremental compilation is useful as part of an edit-build-test-edit cycle,
+      # as it lets the compiler avoid recompiling code that hasn't changed. However,
+      # on CI, we're not making small edits; we're almost always building the entire
+      # project from scratch. Thus, incremental compilation on CI actually
+      # introduces *additional* overhead to support making future builds
+      # faster...but no future builds will ever occur in any given CI environment.
+      #
+      # See https://matklad.github.io/2021/09/04/fast-rust-builds.html#ci-workflow
+      # for details.
+      CARGO_INCREMENTAL: 0
+      # Find a good balance between runtime performance and accurate code coverage analysis.
+      CARGO_PROFILE_TEST_OPT_LEVEL: 1
+      CARGO_PROFILE_TEST_DEBUG: false
+      CARGO_PROFILE_TEST_DEBUG_ASSERTIONS: false
+      CARGO_PROFILE_TEST_OVERFLOW_CHECKS: false
+      CARGO_PROFILE_TEST_LTO: off
+      CARGO_PROFILE_TEST_CODEGEN_UNITS: 1
+      # Allow more retries for network requests in cargo (downloading crates) and
+      # rustup (installing toolchains). This should help to reduce flaky CI failures
+      # from transient network timeouts or other issues.
+      CARGO_NET_RETRY: 10
+      RUSTUP_MAX_RETRIES: 10
+    steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+        with:
+          ref: ${{ github.event.inputs.branch-or-commit || github.ref }}
+
+      - uses: bmwill/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # v1.4.0
+
+      - name: Set Swap Space
+        uses: actionhippie/swap-space@73376950a0019f8e1f6a3d3d2673fe2aed74ae17 # v1.0.2
+        with:
+          size: 256G
+
+      - name: Get the IOTA alphanet binary
+        shell: bash
+        env:
+          IOTA_BINARY_VERSION: "v1.10.0-alpha"
+        run: |
+          ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
+
+          echo "Downloading alphanet binary from $download_url"
+          wget -q $download_url -O iota.tgz
+          tar -zxvf iota.tgz ./iota
+          chmod +x ./iota
+
+      - name: Install llvm-tools
+        run: |
+          TOOLCHAIN=$(rustup show active-toolchain | grep -Eo '\S+' | head -n 1)
+          rustup component add llvm-tools --toolchain "$TOOLCHAIN"
+          LLVM_PROFDATA="$HOME/.rustup/toolchains/$TOOLCHAIN/lib/rustlib/x86_64-unknown-linux-gnu/bin/llvm-profdata"
+
+          if [ -x "$LLVM_PROFDATA" ]; then
+            $LLVM_PROFDATA --version
+            echo "LLVM_PROFDATA=$LLVM_PROFDATA" >> $GITHUB_ENV
+          else
+            echo "🚨 Error 🚨: llvm-profdata not found at $LLVM_PROFDATA, or is not executable."
+            exit 1
+          fi
+
+      - name: Run code coverage
+        run: |
+          set +e
+
+          ./run_localnet.sh start ./iota
+
+          make package_test_example_v1.json package_test_example_v2.json
+
+          echo "Generating coverage data (.profraw files)."
+          cargo llvm-cov --ignore-run-fail --no-report nextest
+
+          echo "Merging .profraw files."
+          find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \
+            --failure-mode=warn \
+            --sparse \
+            --output target/nextest.profdata
+
+          ./run_localnet.sh stop ./iota
+
+      - name: Create report
+        run: |
+          cd target
+
+          echo "Creating report (lcov.info)."
+          LLVM_PROFILE_FILE="nextest.profdata" cargo llvm-cov report \
+            --lcov \
+            --output-path lcov.info \
+            --ignore-filename-regex "crates/iota-sdk-ffi/*"
+
+          echo "Removing absolute path prefix: ${{ github.workspace }} from report."
+          sed --in-place "s#${{ github.workspace }}#.#g" lcov.info
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@cfd0633edbd2411b532b808ba7a8b5e04f76d2c8 # v2.3.4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: target/lcov.info
+          flag-name: nextest
+          fail-on-error: true

@@ -4,10 +4,26 @@ description: "Downloads and starts a local IOTA network for testing"
 runs:
   using: "composite"
   steps:
-    - name: Get the IOTA testnet binary and start a local network
+    - name: Start PostgreSQL
+      shell: bash
+      run: |
+        docker run -d \
+        --name postgres \
+        -e POSTGRES_USER=postgres \
+        -e POSTGRES_PASSWORD=postgrespw \
+        -e POSTGRES_DB=iota_indexer_v2 \
+        -e POSTGRES_HOST_AUTH_METHOD=trust \
+        -p 5432:5432 \
+        --health-cmd pg_isready \
+        --health-interval 10s \
+        --health-timeout 5s \
+        --health-retries 5 \
+        postgres
+
+    - name: Get the IOTA alphanet binary and start a local network
       shell: bash
       env:
-        IOTA_BINARY_VERSION: "v1.10.0-rc"
+        IOTA_BINARY_VERSION: "v1.10.0-alpha"
         EPOCH_DURATION_MS: "10000"
       run: |
         ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
@@ -36,6 +52,10 @@ runs:
 
         echo "Setting keypair in config"
         sed -i "s|<keypair>|$key|g" ./.github/actions/start-local-network/config.yaml
+
+        echo "Updating fullnode-url to use host IP"
+        HOST_IP=$(hostname -I | awk '{print $1}')
+        sed -i "s|http://localhost:9000|http://$HOST_IP:9000|g" ./.github/actions/start-local-network/config.yaml
 
         echo "Requesting faucet coins"
         ./iota client faucet --address gas_station

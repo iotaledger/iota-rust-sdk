@@ -4,9 +4,11 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res};
-use iota_types::{Address, ObjectId};
+use iota_sdk::{
+    graphql_client::Client,
+    transaction_builder::{TransactionBuilder, res},
+    types::{Address, ObjectId},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -17,19 +19,19 @@ async fn main() -> Result<()> {
     let coin =
         ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    let mut builder = TransactionBuilder::new(sender).with_client(&client);
 
     builder
         .split_coins(coin, [1000u64, 2000, 3000])
         .name(("coin1", "coin2", "coin3"))
         .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
 
-    let txn = builder.finish().await?;
+    let txn = builder.clone().finish().await?;
 
     println!("Signing Digest: {}", txn.signing_digest_hex());
     println!("Txn Bytes: {}", txn.to_base64());
 
-    let res = client.dry_run_tx(&txn, false).await?;
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to split coin: {err}");

@@ -23,10 +23,7 @@ use super::Address;
 /// object-id = 32*OCTET
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectId(Address);
@@ -40,6 +37,10 @@ impl ObjectId {
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(Address::new(bytes))
+    }
+
+    pub fn to_hex(&self) -> String {
+        self.to_string()
     }
 
     /// Parse an ObjectId from a hex string.
@@ -65,6 +66,18 @@ impl ObjectId {
     /// Returns the underlying Address of an ObjectId.
     pub const fn as_address(&self) -> &Address {
         &self.0
+    }
+
+    /// Returns the string representation of this object ID using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
+
+    /// Returns the shortest possible string representation of the object ID
+    /// (i.e. with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        self.0.to_short_string(with_prefix)
     }
 }
 
@@ -114,6 +127,6 @@ impl std::str::FromStr for ObjectId {
 
 impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.fmt(f)
+        self.to_canonical_string(true).fmt(f)
     }
 }

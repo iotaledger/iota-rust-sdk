@@ -15,7 +15,7 @@ mod transaction_kind {
         GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
     };
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
@@ -28,7 +28,7 @@ mod transaction_kind {
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "TransactionKind")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -54,7 +54,7 @@ mod transaction_kind {
         }
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
@@ -63,7 +63,7 @@ mod transaction_kind {
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
@@ -167,44 +167,48 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
         EndOfEpochTransactionKind,
     };
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
+        ChangeEpochV4(&'a ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
+        ChangeEpochV4(ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryEndOfEpochTransactionKindRef<'a> {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
+        ChangeEpochV4(&'a ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryEndOfEpochTransactionKind {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
+        ChangeEpochV4(ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
@@ -223,6 +227,9 @@ mod end_of_epoch {
                     Self::ChangeEpochV3(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV3(k)
                     }
+                    Self::ChangeEpochV4(k) => {
+                        ReadableEndOfEpochTransactionKindRef::ChangeEpochV4(k)
+                    }
                     Self::AuthenticatorStateCreate => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
                     }
@@ -236,6 +243,7 @@ mod end_of_epoch {
                     Self::ChangeEpoch(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpoch(k),
                     Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
                     Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
+                    Self::ChangeEpochV4(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV4(k),
 
                     Self::AuthenticatorStateCreate => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
@@ -264,6 +272,9 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV3(k) => {
                             Self::ChangeEpochV3(k)
                         }
+                        ReadableEndOfEpochTransactionKind::ChangeEpochV4(k) => {
+                            Self::ChangeEpochV4(k)
+                        }
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
                         }
@@ -278,6 +289,7 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
+                        BinaryEndOfEpochTransactionKind::ChangeEpochV4(k) => Self::ChangeEpochV4(k),
 
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
@@ -296,7 +308,7 @@ mod version_assignments {
     use super::*;
     use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions {
@@ -304,7 +316,7 @@ mod version_assignments {
         },
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableConsensusDeterminedVersionAssignments {
         CancelledTransactions {
@@ -312,14 +324,14 @@ mod version_assignments {
         },
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions {
             cancelled_transactions: &'a Vec<CancelledTransaction>,
         },
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryConsensusDeterminedVersionAssignments {
         CancelledTransactions {
             cancelled_transactions: Vec<CancelledTransaction>,
@@ -387,7 +399,7 @@ mod input_argument {
     use super::*;
     use crate::transaction::Input;
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
     enum ReadableInput {
         Pure {
@@ -404,13 +416,13 @@ mod input_argument {
         Receiving(ObjectReference),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum ObjectArg {
         ImmutableOrOwned(ObjectReference),
         Shared {
@@ -517,7 +529,7 @@ mod input_argument {
 mod argument {
     use super::*;
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "Argument", untagged, rename_all = "lowercase")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableArgument {
@@ -531,7 +543,7 @@ mod argument {
         NestedResult { result: (u16, u16) },
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "lowercase")]
     enum Gas {
         Gas,
@@ -567,7 +579,7 @@ mod argument {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryArgument {
         Gas,
         Input(u16),
@@ -639,7 +651,7 @@ mod command {
         Upgrade,
     };
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     #[serde(tag = "command", rename_all = "snake_case")]
     enum ReadableCommandRef<'a> {
         MoveCall(&'a MoveCall),
@@ -651,7 +663,7 @@ mod command {
         Upgrade(&'a Upgrade),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     #[serde(tag = "command", rename_all = "snake_case")]
     enum ReadableCommand {
         MoveCall(MoveCall),
@@ -663,7 +675,7 @@ mod command {
         Upgrade(Upgrade),
     }
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     enum BinaryCommandRef<'a> {
         MoveCall(&'a MoveCall),
         TransferObjects(&'a TransferObjects),
@@ -674,7 +686,7 @@ mod command {
         Upgrade(&'a Upgrade),
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     enum BinaryCommand {
         MoveCall(MoveCall),
         TransferObjects(TransferObjects),
@@ -763,17 +775,7 @@ mod signed_transaction {
     /// struct Intent {
     ///     scope: IntentScope,
     ///     version: IntentVersion,
-    ///     app_id: AppId,
-    /// }
-    ///
-    /// enum IntentVersion {
-    ///     V0 = 0,
-    /// }
-    ///
-    /// enum AppId {
-    ///     Iota = 0,
-    ///     Narwhal = 1,
-    ///     Consensus = 2,
+    ///     app_id: IntendAppId,
     /// }
     ///
     /// enum IntentScope {
@@ -782,9 +784,22 @@ mod signed_transaction {
     ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
     ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
     ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
-    ///     ProofOfPossession = 5, // Used as a signature representing an authority's proof of possession of its authority protocol key.
-    ///     BridgeEventDeprecated = 6, // Deprecated. Should not be reused. Introduced for bridge purposes but was never included in messages.
-    ///     ConsensusBlock = 7,    // Used for consensus authority signature on block's digest
+    ///     ProofOfPossession = 5,       /* Used as a signature representing an authority's proof of
+    ///                                   * possession of its authority key. */
+    ///     BridgeEventDeprecated = 6, /* Deprecated. Should not be reused. Introduced for bridge
+    ///                                 * purposes but was never included in messages. */
+    ///     ConsensusBlock = 7, // Used for consensus authority signature on block's digest.
+    ///     DiscoveryPeers = 8, // Used for reporting peer addresses in discovery
+    ///     AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
+    /// }
+    ///
+    /// enum IntentVersion {
+    ///     V0 = 0,
+    /// }
+    ///
+    /// enum IntendAppId {
+    ///     Iota = 0,
+    ///     Consensus = 1,
     /// }
     /// ```
     struct IntentMessageWrappedTransaction;
@@ -827,14 +842,14 @@ mod signed_transaction {
 
     pub(crate) struct SignedTransactionWithIntentMessage;
 
-    #[derive(serde_derive::Serialize)]
+    #[derive(serde::Serialize)]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
         transaction: &'a Transaction,
         signatures: &'a Vec<UserSignature>,
     }
 
-    #[derive(serde_derive::Deserialize)]
+    #[derive(serde::Deserialize)]
     struct BinarySignedTransactionWithIntentMessage {
         #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
         transaction: Transaction,
@@ -918,7 +933,7 @@ mod transaction_expiration {
 
     use crate::{EpochId, TransactionExpiration};
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
     #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
@@ -929,7 +944,7 @@ mod transaction_expiration {
         ),
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,

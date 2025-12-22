@@ -331,10 +331,7 @@ impl ExecutionError {
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveLocation {
@@ -516,7 +513,7 @@ impl PackageUpgradeError {
 #[derive(Eq, PartialEq, Clone, Copy, Debug)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "snake_case")
 )]
 #[cfg_attr(
@@ -543,7 +540,7 @@ mod serialization {
 
     use super::*;
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "ExecutionStatus")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableExecutionStatus {
@@ -563,7 +560,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct FailureStatus {
         error: ExecutionError,
@@ -571,7 +568,7 @@ mod serialization {
         command: Option<u16>,
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryExecutionStatus {
         Success,
         Failure {
@@ -644,7 +641,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "error", rename_all = "snake_case")]
     enum ReadableExecutionError {
         InsufficientGas,
@@ -739,7 +736,7 @@ mod serialization {
         InvalidLinkage,
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryExecutionError {
         InsufficientGas,
         InvalidGasObject,
@@ -1312,7 +1309,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableCommandArgumentError {
         TypeMismatch,
@@ -1330,7 +1327,7 @@ mod serialization {
         InvalidArgumentArity,
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryCommandArgumentError {
         TypeMismatch,
         InvalidBcsBytes,
@@ -1503,7 +1500,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadablePackageUpgradeError {
         UnableToFetchPackage {
@@ -1525,7 +1522,7 @@ mod serialization {
         },
     }
 
-    #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryPackageUpgradeError {
         UnableToFetchPackage {
             package_id: ObjectId,

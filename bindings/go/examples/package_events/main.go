@@ -7,19 +7,19 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	eventType := string("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent")
-	eventFilter := sdk.EventFilter{
+	eventFilter := iota_sdk.EventFilter{
 		EventType: &eventType,
 	}
 	limit := int32(10)
-	paginationFilter := sdk.PaginationFilter{
-		Direction: sdk.DirectionForward,
+	paginationFilter := iota_sdk.PaginationFilter{
+		Direction: iota_sdk.DirectionForward,
 		Limit:     &limit,
 	}
 
@@ -27,7 +27,7 @@ func main() {
 		&eventFilter,
 		&paginationFilter,
 	)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get events: %v", err)
 	}
 

@@ -18,9 +18,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
-    Object, ObjectId, SenderSignedTransaction, SignedTransaction, StructTag, Transaction,
-    TransactionEffects, TransactionKind, TypeTag, UserSignature,
+    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, DryRunEffect, DryRunResult,
+    IdentifierRef, MovePackage, Object, ObjectId, SenderSignedTransaction, SignedTransaction,
+    StructTag, Transaction, TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };

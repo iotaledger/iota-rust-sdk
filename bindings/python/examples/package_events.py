@@ -1,7 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
@@ -11,7 +11,8 @@ async def main():
 
     events = await client.events(
         EventFilter(
-            event_type="0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent"
+            event_type=
+            "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent"
         ),
         PaginationFilter(direction=Direction.FORWARD, limit=10),
     )

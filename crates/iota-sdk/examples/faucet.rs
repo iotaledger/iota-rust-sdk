@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_graphql_client::faucet::FaucetClient;
-use iota_types::Address;
+use iota_sdk::{graphql_client::faucet::FaucetClient, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {

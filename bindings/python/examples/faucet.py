@@ -1,15 +1,14 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
     address = Address.from_hex(
-        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
-    )
+        "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
     faucet_client = FaucetClient.new_localnet()
     faucet_receipt = await faucet_client.request_and_wait(address)
     if faucet_receipt:

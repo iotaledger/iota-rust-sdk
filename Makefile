@@ -40,10 +40,11 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 
 .PHONY: wasm
 wasm: ## Build WASM modules
+	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
-	$(MAKE) -C crates/iota-sdk-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
+	$(MAKE) -C crates/iota-sdk-types wasm
 
 .PHONY: doc
 doc: ## Generate documentation
@@ -77,17 +78,29 @@ bindings: ## Build all bindings
 	@$(MAKE) kotlin
 	@$(MAKE) python
 
+.PHONY: bindings-example
+bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
+	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
 	@$(MAKE) go-examples
 	@$(MAKE) kotlin-examples
 	@$(MAKE) python-examples
 
-.PHONY: bindings-example
-bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
-	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
-	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
-	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+.PHONY: bindings-examples-format-check
+bindings-examples-format-check: ## Check format of all bindings examples
+	@$(MAKE) go-examples-format-check
+	@$(MAKE) kotlin-examples-format-check
+	@$(MAKE) python-examples-format-check
+
+.PHONY: bindings-examples-format
+bindings-examples-format: ## Format all bindings examples
+	@$(MAKE) go-examples-format
+	@$(MAKE) kotlin-examples-format
+	@$(MAKE) python-examples-format
 
 # Build ffi crate and detect platform
 define build_binding
@@ -104,21 +117,25 @@ endef
 go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
 	@$(build_binding) \
-	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format || exit $$?
-
+	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
+	# TODO: For some reason only the .h file is renamed, not the .go file
+	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
+	@sed -i.bak "s/^package iota_sdk_ffi$$/package iota_sdk/" bindings/go/iota_sdk/iota_sdk.go && rm bindings/go/iota_sdk/iota_sdk.go.bak
+	
 .PHONY: kotlin
 kotlin: ## Build Kotlin bindings
 	@printf "Building Kotlin bindings...\n"
 	@$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
 
 .PHONY: python
 python: ## Build Python bindings
 	@printf "Building Python bindings...\n"
 	@$(build_binding) \
-	cargo run --bin iota_sdk_bindings -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example
@@ -135,6 +152,14 @@ go-examples: ## Run all Go bindings examples
 	@for example in $$(find bindings/go/examples/* -type d -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
+
+.PHONY: go-examples-format-check
+go-examples-format-check: ## Check format of all Go bindings examples
+	@test -z "$$(gofmt -l bindings/go/examples)"
+
+.PHONY: go-examples-format
+go-examples-format: ## Format all Go bindings examples
+	@gofmt -w bindings/go/examples
 
 .PHONY: kotlin-example
 kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
@@ -153,6 +178,18 @@ kotlin-examples: ## Run all Kotlin bindings examples
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
+.PHONY: kotlin-examples-format-check
+kotlin-examples-format-check: ## Check format of all Kotlin bindings examples
+	cd bindings/kotlin; \
+	./gradlew KtfmtCheck || exit $$?; \
+	cd -
+
+.PHONY: kotlin-examples-format
+kotlin-examples-format: ## Format all Kotlin bindings examples
+	cd bindings/kotlin; \
+	./gradlew KtfmtFormat; \
+	cd -
+
 .PHONY: python-example
 python-example: ## Run a specific Python example. Usage: make python-example example
 %:
@@ -165,6 +202,28 @@ python-example:
 python-examples: ## Run all Python bindings examples
 	@for example in $$(find bindings/python/examples -name "*.py" -exec basename {} .py \;); do \
 		$(MAKE) python-example "$$example" || exit $$?; \
+	done
+
+.PHONY: python-examples-format-check
+python-examples-format-check: ## Check format of all Python bindings examples
+	@yapf --style google -d bindings/python/examples/*
+
+.PHONY: python-examples-format
+python-examples-format: ## Format all Python bindings examples
+	@yapf --style google -i bindings/python/examples/*
+
+.PHONY: example
+example: ## Run a specific Rust example. Usage: make example example
+%:
+	@true
+example:
+	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cargo run --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+
+.PHONY: examples
+examples: ## Run all Rust examples
+	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -exec basename {} .rs \;); do \
+		$(MAKE) example "$$example" || exit $$?; \
 	done
 
 .PHONY: help

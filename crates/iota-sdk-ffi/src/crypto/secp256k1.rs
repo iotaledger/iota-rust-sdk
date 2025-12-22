@@ -15,8 +15,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Secp256k1PrivateKey(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey);
+#[derive(Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+pub struct Secp256k1PrivateKey(pub iota_sdk::crypto::secp256k1::Secp256k1PrivateKey);
 
 #[uniffi::export]
 impl Secp256k1PrivateKey {
@@ -137,6 +137,22 @@ impl Secp256k1PrivateKey {
             iota_sdk::crypto::Signer::<iota_sdk::types::UserSignature>::try_sign(&self.0, message)?
                 .into(),
         )
+    }
+
+    /// Sign a transaction and return a UserSignature.
+    pub fn sign_transaction(
+        &self,
+        transaction: &crate::types::transaction::Transaction,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_transaction(&self.0, &transaction.0)?.into())
+    }
+
+    /// Sign a personal message and return a UserSignature.
+    pub fn sign_personal_message(
+        &self,
+        message: &crate::types::PersonalMessage,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 }
 

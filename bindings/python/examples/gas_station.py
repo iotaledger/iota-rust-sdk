@@ -1,9 +1,9 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-import asyncio
+from lib.iota_sdk import *
 
-from lib.iota_sdk_ffi import *
+import asyncio
 
 
 async def main():
@@ -12,9 +12,9 @@ async def main():
     gas_station_auth_token = "test"
     keypair = Ed25519PrivateKey.generate()
     sender = keypair.public_key().derive_address()
-    simple_key = SimpleKeypair.from_ed25519(keypair)
+    signer = TransactionSigner.from_ed25519(keypair)
 
-    builder = await TransactionBuilder.init(sender, client)
+    builder = TransactionBuilder(sender).with_client(client)
 
     builder.move_call(
         Address.std_lib(),
@@ -24,10 +24,10 @@ async def main():
     )
 
     builder.gas_station_sponsor(
-        gas_station_url, headers={"Authorization": [f"Bearer {gas_station_auth_token}"]}
-    )
+        gas_station_url,
+        headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
 
-    res = await builder.execute(simple_key)
+    res = await builder.execute(signer)
 
     print(res)
 

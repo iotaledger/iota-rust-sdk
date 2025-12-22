@@ -161,6 +161,12 @@ impl StructTag {
             .map(Arc::new)
             .collect()
     }
+
+    /// Returns the string representation of this struct tag using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
 }
 
 export_struct_tag_ctors!(

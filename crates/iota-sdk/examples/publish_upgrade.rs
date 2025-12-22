@@ -24,10 +24,12 @@
 use std::env::var;
 
 use eyre::{Result, bail};
-use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
-use iota_transaction_builder::{TransactionBuilder, res};
-use iota_types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy};
+use iota_sdk::{
+    crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
+    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
+    transaction_builder::{TransactionBuilder, res},
+    types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy},
+};
 use rand::rngs::OsRng;
 
 #[tokio::main]

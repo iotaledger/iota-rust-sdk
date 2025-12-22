@@ -7,19 +7,19 @@ import (
 	"fmt"
 	"log"
 
-	sdk "bindings/iota_sdk_ffi"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func objIdFromHex(hex string) *sdk.ObjectId {
-	id, err := sdk.ObjectIdFromHex(hex)
+func objIdFromHex(hex string) *iota_sdk.ObjectId {
+	id, err := iota_sdk.ObjectIdFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 	return id
 }
 
-func addrFromHex(hex string) *sdk.Address {
-	address, err := sdk.AddressFromHex(hex)
+func addrFromHex(hex string) *iota_sdk.Address {
+	address, err := iota_sdk.AddressFromHex(hex)
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
@@ -27,7 +27,7 @@ func addrFromHex(hex string) *sdk.Address {
 }
 
 func main() {
-	client := sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
 	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
@@ -41,26 +41,26 @@ func main() {
 		{"0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522", 2_000_000_000},
 	}
 
-	builder := sdk.TransactionBuilderInit(sender, client)
+	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
 	// Prepare amounts and labels
-	var amounts []*sdk.PtbArgument
+	var amounts []*iota_sdk.PtbArgument
 	var labels []string
 	for idx, r := range recipients {
 		labels = append(labels, fmt.Sprintf("coin%v", idx))
-		amounts = append(amounts, sdk.PtbArgumentU64(r.amount))
+		amounts = append(amounts, iota_sdk.PtbArgumentU64(r.amount))
 	}
 
 	// Split a coin into multiple coins
-	builder.SplitCoins(sdk.PtbArgumentObjectId(coinId), amounts, labels)
+	builder.SplitCoins(iota_sdk.PtbArgumentObjectId(coinId), amounts, labels)
 
 	for idx, r := range recipients {
 		recipient := addrFromHex(r.address)
-		builder.TransferObjects(recipient, []*sdk.PtbArgument{sdk.PtbArgumentRes(labels[idx])})
+		builder.TransferObjects(recipient, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes(labels[idx])})
 	}
 
 	txn, err := builder.Finish()
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -68,7 +68,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := client.DryRunTx(txn, false)
-	if err.(*sdk.SdkFfiError) != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to dry run send IOTA: %v", err)
 	}
 	if res.Error != nil {

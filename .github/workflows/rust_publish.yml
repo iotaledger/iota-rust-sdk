@@ -1,0 +1,34 @@
+name: Publish Rust SDK to crates.io
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: Publish ${{github.event.release.tag_name}} to crates.io
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.release.tag_name, 'iota-sdk')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Install cargo-release
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: cargo-release@0.25.20
+
+      - name: Cargo release publish
+        run: |
+          pkg=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|(.*)-v.*|\1|p')
+          version=$(echo "${{github.event.release.tag_name}}" | sed -nr 's|.*-v(.*)|\1|p')
+
+          cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+          echo "Publishing $pkg at version $version"
+          cargo release publish -p "$pkg" --all-features --allow-branch "*" --no-confirm --execute
+
+          echo "Setting owners of $pkg"
+          cargo release owner -p "$pkg" --allow-branch "*" --no-confirm --execute

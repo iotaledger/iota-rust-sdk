@@ -4,7 +4,6 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
-use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
 use reqwest::{
     Url,
@@ -12,7 +11,7 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::error::Error;
+use crate::{builder::signer::TransactionSigner, error::Error};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -351,10 +350,40 @@ impl GasStationData {
     }
 
     pub(crate) async fn execute_txn(
-        mut self,
+        self,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        signer: &impl TransactionSigner,
     ) -> Result<Digest, Error> {
+        let url = self
+            .url
+            .join(GasStationRequestKind::ExecuteTx.as_path())
+            .map_err(Error::InvalidUrl)?;
+        let effects = self.execute_txn_inner(&url, txn, signer).await?;
+
+        Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
+            message: Some(e.to_string()),
+            gas_station_url: url,
+        })
+    }
+
+    pub(crate) async fn execute_txn_json(
+        self,
+        txn: &mut Transaction,
+        signer: &impl TransactionSigner,
+    ) -> Result<serde_json::Value, Error> {
+        let url = self
+            .url
+            .join(GasStationRequestKind::ExecuteTx.as_path())
+            .map_err(Error::InvalidUrl)?;
+        self.execute_txn_inner(&url, txn, signer).await
+    }
+
+    async fn execute_txn_inner(
+        mut self,
+        url: &Url,
+        txn: &mut Transaction,
+        signer: &impl TransactionSigner,
+    ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
             Transaction::V1(ref mut inner_txn) => {
@@ -380,16 +409,12 @@ impl GasStationData {
             }
         };
 
-        let url = self
-            .url
-            .join(GasStationRequestKind::ExecuteTx.as_path())
-            .map_err(Error::InvalidUrl)?;
-
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
-        let user_sig = keypair
-            .sign_transaction(txn)
-            .map_err(Error::Signature)?
+        let user_sig = signer
+            .sign(txn)
+            .await
+            .map_err(Error::signature)?
             .to_base64();
 
         let response = client
@@ -429,10 +454,7 @@ impl GasStationData {
             });
         };
 
-        Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
-            message: Some(e.to_string()),
-            gas_station_url: url.clone(),
-        })
+        Ok(effects)
     }
 }
 

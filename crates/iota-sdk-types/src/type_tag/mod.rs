@@ -152,25 +152,31 @@ impl TypeTag {
     pub fn signer() -> Self {
         Self::Signer
     }
+
+    /// Returns the string representation of this type tag using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        match self {
+            TypeTag::U8 => "u8".to_owned(),
+            TypeTag::U16 => "u16".to_owned(),
+            TypeTag::U32 => "u32".to_owned(),
+            TypeTag::U64 => "u64".to_owned(),
+            TypeTag::U128 => "u128".to_owned(),
+            TypeTag::U256 => "u256".to_owned(),
+            TypeTag::Bool => "bool".to_owned(),
+            TypeTag::Address => "address".to_owned(),
+            TypeTag::Signer => "signer".to_owned(),
+            TypeTag::Vector(t) => {
+                format!("vector<{}>", t.to_canonical_string(with_prefix))
+            }
+            TypeTag::Struct(s) => s.to_canonical_string(with_prefix),
+        }
+    }
 }
 
 impl std::fmt::Display for TypeTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TypeTag::U8 => write!(f, "u8"),
-            TypeTag::U16 => write!(f, "u16"),
-            TypeTag::U32 => write!(f, "u32"),
-            TypeTag::U64 => write!(f, "u64"),
-            TypeTag::U128 => write!(f, "u128"),
-            TypeTag::U256 => write!(f, "u256"),
-            TypeTag::Bool => write!(f, "bool"),
-            TypeTag::Address => write!(f, "address"),
-            TypeTag::Signer => write!(f, "signer"),
-            TypeTag::Vector(t) => {
-                write!(f, "vector<{t}>")
-            }
-            TypeTag::Struct(s) => s.fmt(f),
-        }
+        self.to_canonical_string(true).fmt(f)
     }
 }
 
@@ -309,11 +315,30 @@ impl std::ops::Deref for Identifier {
     }
 }
 
+impl AsRef<IdentifierRef> for Identifier {
+    fn as_ref(&self) -> &IdentifierRef {
+        self
+    }
+}
+
 impl std::borrow::Borrow<IdentifierRef> for Identifier {
     fn borrow(&self) -> &IdentifierRef {
         self
     }
 }
+
+impl PartialEq<IdentifierRef> for Identifier {
+    fn eq(&self, other: &IdentifierRef) -> bool {
+        self.as_ref() == other
+    }
+}
+
+impl PartialEq<Identifier> for IdentifierRef {
+    fn eq(&self, other: &Identifier) -> bool {
+        self == other.as_ref()
+    }
+}
+
 #[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[repr(transparent)]
 pub struct IdentifierRef(str);
@@ -605,21 +630,30 @@ impl StructTag {
     pub fn type_params(&self) -> &[TypeTag] {
         &self.type_params
     }
+
+    /// Returns the string representation of this struct tag using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        let mut tag = format!(
+            "{}::{}::{}",
+            self.address.to_canonical_string(with_prefix),
+            self.module,
+            self.name
+        );
+        if let Some(first_type) = self.type_params.first() {
+            tag.push_str(&format!("<{first_type}"));
+            for ty in self.type_params.iter().skip(1) {
+                tag.push_str(&format!(", {ty}"));
+            }
+            tag.push('>');
+        }
+        tag
+    }
 }
 
 impl std::fmt::Display for StructTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}::{}::{}", self.address, self.module, self.name)?;
-
-        if let Some(first_type) = self.type_params.first() {
-            write!(f, "<")?;
-            write!(f, "{first_type}")?;
-            for ty in self.type_params.iter().skip(1) {
-                write!(f, ", {ty}")?;
-            }
-            write!(f, ">")?;
-        }
-        Ok(())
+        self.to_canonical_string(true).fmt(f)
     }
 }
 

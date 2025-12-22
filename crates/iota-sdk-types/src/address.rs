@@ -56,10 +56,7 @@
 /// address = 32OCTET
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde_derive::Serialize, serde_derive::Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Address(
     #[cfg_attr(
@@ -139,6 +136,30 @@ impl Address {
         self.to_string()
     }
 
+    /// Returns the string representation of this address using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        let hex_str = hex::encode(self.0);
+        if with_prefix {
+            format!("0x{hex_str}")
+        } else {
+            hex_str
+        }
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        let full_str = self.to_canonical_string(false);
+        let trimmed = full_str.trim_start_matches('0');
+        let hex_str = if trimmed.is_empty() { "0" } else { trimmed };
+        if with_prefix {
+            format!("0x{hex_str}")
+        } else {
+            hex_str.to_owned()
+        }
+    }
+
     pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
         <[u8; Self::LENGTH]>::try_from(bytes.as_ref())
             .map_err(|_| AddressParseError)
@@ -192,12 +213,7 @@ impl From<super::ObjectId> for Address {
 
 impl std::fmt::Display for Address {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "0x")?;
-        for byte in &self.0 {
-            write!(f, "{byte:02x}")?;
-        }
-
-        Ok(())
+        self.to_canonical_string(true).fmt(f)
     }
 }
 

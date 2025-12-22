@@ -15,8 +15,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Ed25519PrivateKey(iota_sdk::crypto::ed25519::Ed25519PrivateKey);
+#[derive(Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+pub struct Ed25519PrivateKey(pub iota_sdk::crypto::ed25519::Ed25519PrivateKey);
 
 #[uniffi::export]
 impl Ed25519PrivateKey {
@@ -135,6 +135,22 @@ impl Ed25519PrivateKey {
             iota_sdk::crypto::Signer::<iota_sdk::types::UserSignature>::try_sign(&self.0, message)?
                 .into(),
         )
+    }
+
+    /// Sign a transaction and return a UserSignature.
+    pub fn sign_transaction(
+        &self,
+        transaction: &crate::types::transaction::Transaction,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_transaction(&self.0, &transaction.0)?.into())
+    }
+
+    /// Sign a personal message and return a UserSignature.
+    pub fn sign_personal_message(
+        &self,
+        message: &crate::types::PersonalMessage,
+    ) -> Result<UserSignature> {
+        Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 }
 

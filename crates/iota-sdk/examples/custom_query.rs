@@ -4,7 +4,7 @@
 
 use cynic::QueryBuilder;
 use eyre::Result;
-use iota_graphql_client::{
+use iota_sdk::graphql_client::{
     Client,
     query_types::{BigInt, schema},
 };

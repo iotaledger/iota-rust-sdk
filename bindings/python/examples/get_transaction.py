@@ -1,9 +1,10 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
+
 
 async def main():
     client = GraphQlClient.new_devnet()
@@ -17,6 +18,7 @@ async def main():
 
     transaction_data_effects = await client.transaction_data_effects(digest)
     print(f"Transaction Data Effects: `{transaction_data_effects}`\n")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

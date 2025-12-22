@@ -1,37 +1,64 @@
-name: Release
+name: Create GitHub release
 
 on:
-  push:
-    tags:
-      - "*-v*.*.*"
+  pull_request:
+    types: closed
+    branches: [develop]
 
-# We need this to be able to create releases.
 permissions:
   contents: write
 
 jobs:
   create-release:
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Show the tag
+      - name: Install git-cliff
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: git-cliff
+
+      - name: Extract tag/package/version from branch name
         run: |
-          echo "tag is: ${{ github.ref_name }}"
+          tag=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
+          echo "Tag: $tag"
+          echo "TAG=$tag" >> $GITHUB_ENV
 
-      - name: Install node
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+          package=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
+          echo "Package: $package"
+          echo "PACKAGE=$package" >> $GITHUB_ENV
 
-      - name: Install conventional-commits
-        run: npm -g i conventional-commits
+          version=$(echo "${{ github.head_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
+          echo "Version: $version"
+          echo "VERSION=$version" >> $GITHUB_ENV
 
-      - name: Generate Release Notes
+      - name: Create changelog
         run: |
-          pkg=$(echo "${{github.ref_name}}" | sed -nr 's|(.*)-v.*|\1|p'
-          conventional-changelog -p conventionalcommits -i notes-${{ github.ref_name }}.md -s --commit-path "crates/$pkg"
+          if [[ "$PACKAGE" == iota-sdk* ]]; then
+            PACKAGE_ROOT="crates/$PACKAGE"
+          elif [[ "$PACKAGE" == "iota-go-sdk" ]]; then
+            PACKAGE_ROOT="bindings/go"
+          elif [[ "$PACKAGE" == "iota-kotlin-sdk" ]]; then
+            PACKAGE_ROOT="bindings/kotlin"
+          elif [[ "$PACKAGE" == "iota-python-sdk" ]]; then
+            PACKAGE_ROOT="bindings/python"
+          fi
+          CHANGELOG=$(./.github/gen_changelog.sh "$PACKAGE" "$PACKAGE_ROOT" ${{ github.sha }} "$VERSION")
+          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create ${{ github.ref_name }} --verify-tag --title ${{ github.ref_name }} --draft --notes-file notes-${{ github.ref_name }}.md
+          TAG: ${{ env.TAG }}
+          PACKAGE: ${{ env.PACKAGE }}
+          VERSION: ${{ env.VERSION }}
+          CHANGELOG: ${{ env.CHANGELOG }}
+        run: |
+          if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes "$CHANGELOG"
+          else
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes "$CHANGELOG"
+          fi
