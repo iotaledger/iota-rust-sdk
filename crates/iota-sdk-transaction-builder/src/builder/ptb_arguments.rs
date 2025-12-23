@@ -16,7 +16,7 @@ pub trait PTBArgument {
     /// Get the argument.
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument;
 
-    /// TODO
+    /// Get the input kind.
     fn input(self) -> InputKind;
 }
 
@@ -32,8 +32,7 @@ impl PTBArgument for Argument {
 
 impl PTBArgument for iota_types::Input {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        // TODO remove?
-        ptb.input(self)
+        ptb.set_input(self.input(), false)
     }
 
     fn input(self) -> InputKind {
@@ -73,8 +72,7 @@ impl PTBArgument for ObjectReference {
 
 impl<T: MoveArg> PTBArgument for T {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        // TODO
-        ptb.pure_bytes(self.pure_bytes().0)
+        ptb.set_input(self.input(), false)
     }
 
     fn input(self) -> InputKind {
@@ -117,7 +115,7 @@ pub trait PTBArgumentList {
     /// Push the args onto the list.
     fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>);
 
-    ///
+    /// Get the inputs.
     fn inputs(self) -> Vec<InputKind>
     where
         Self: Sized,
@@ -127,7 +125,7 @@ pub trait PTBArgumentList {
         inputs
     }
 
-    ///
+    /// Push the inputs onto the list.
     fn push_inputs(self, args: &mut Vec<InputKind>);
 }
 
@@ -400,7 +398,6 @@ impl PTBArgument for &Res {
     }
 
     fn input(self) -> InputKind {
-        // TODO
-        todo!()
+        unreachable!()
     }
 }
