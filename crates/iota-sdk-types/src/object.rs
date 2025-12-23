@@ -588,36 +588,22 @@ mod serialization {
 
     impl<'a> MoveStructTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
-            let StructTag {
-                address,
-                module,
-                name,
-                type_params,
-            } = s;
-
             if let Some(coin_type) = s.coin_type_opt() {
                 if let TypeTag::Struct(s_inner) = coin_type {
-                    let StructTag {
-                        address,
-                        module,
-                        name,
-                        type_params,
-                    } = s_inner.as_ref();
-
-                    if address == &Address::FRAMEWORK
-                        && module == "iota"
-                        && name == "IOTA"
-                        && type_params.is_empty()
+                    if s_inner.address() == Address::FRAMEWORK
+                        && s_inner.module() == "iota"
+                        && s_inner.name() == "IOTA"
+                        && s_inner.type_params().is_empty()
                     {
                         return Self::GasCoin;
                     }
                 }
 
                 Self::Coin(coin_type)
-            } else if address == &Address::SYSTEM
-                && module == "staking_pool"
-                && name == "StakedIota"
-                && type_params.is_empty()
+            } else if s.address() == Address::SYSTEM
+                && s.module() == "staking_pool"
+                && s.name() == "StakedIota"
+                && s.type_params().is_empty()
             {
                 Self::StakedIota
             } else {
@@ -1021,12 +1007,12 @@ mod serialization {
         fn obj() {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
-                    type_: StructTag {
-                        address: Address::FRAMEWORK,
-                        module: Identifier::new("bar").unwrap(),
-                        name: Identifier::new("foo").unwrap(),
-                        type_params: Vec::new(),
-                    },
+                    type_: StructTag::new(
+                        Address::FRAMEWORK,
+                        Identifier::new("bar").unwrap(),
+                        Identifier::new("foo").unwrap(),
+                        Vec::new(),
+                    ),
                     version: 12,
                     contents: ObjectId::ZERO.into(),
                 }),

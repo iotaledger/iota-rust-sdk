@@ -30,12 +30,12 @@ async fn main() -> Result<()> {
     builder
         .move_call(iota_names_package_address, "iota_names", "registry")
         .arguments([SharedMut(iota_names_object_id)])
-        .type_tags([TypeTag::Struct(Box::new(StructTag {
-            address: iota_names_package_address,
-            module: Identifier::new("registry")?,
-            name: Identifier::new("Registry")?,
-            type_params: vec![],
-        }))])
+        .type_tags([TypeTag::Struct(Box::new(StructTag::new(
+            iota_names_package_address,
+            Identifier::new("registry")?,
+            Identifier::new("Registry")?,
+            vec![],
+        )))])
         .name("iota_names");
 
     // Step 2: Create the name object from the string
@@ -54,12 +54,12 @@ async fn main() -> Result<()> {
     builder
         .move_call(Address::STD_LIB, "option", "borrow")
         .arguments([res("name_record_opt")])
-        .type_tags([TypeTag::Struct(Box::new(StructTag {
-            address: iota_names_package_address,
-            module: Identifier::new("name_record")?,
-            name: Identifier::new("NameRecord")?,
-            type_params: vec![],
-        }))])
+        .type_tags([TypeTag::Struct(Box::new(StructTag::new(
+            iota_names_package_address,
+            Identifier::new("name_record")?,
+            Identifier::new("NameRecord")?,
+            vec![],
+        )))])
         .name("name_record");
 
     // Step 5: Get the target address from the name record
