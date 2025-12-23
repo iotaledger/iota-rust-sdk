@@ -17,6 +17,7 @@ use super::{Address, Digest, Identifier, ObjectId};
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
@@ -148,6 +149,7 @@ impl ExecutionStatus {
     schemars(tag = "error", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
     InsufficientGas,
@@ -388,6 +390,7 @@ pub struct MoveLocation {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
@@ -470,6 +473,7 @@ impl CommandArgumentError {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: ObjectId },
@@ -522,6 +526,7 @@ impl PackageUpgradeError {
     schemars(rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,

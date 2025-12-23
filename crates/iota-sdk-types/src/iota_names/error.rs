@@ -5,6 +5,7 @@ use crate::ObjectId;
 
 #[derive(thiserror::Error, Debug, Clone, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[non_exhaustive]
 pub enum IotaNamesError {
     #[error("Name length {0} exceeds maximum length {1}")]
     NameLengthExceeded(usize, usize),

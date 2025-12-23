@@ -29,12 +29,14 @@ impl Input {
                 | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
                     Some(object_id)
                 }
+                _ => unimplemented!(),
             },
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum InputKind {
     ImmutableOrOwned(ObjectId),
     Shared { object_id: ObjectId, mutable: bool },
@@ -61,6 +63,7 @@ impl InputKind {
 }
 
 #[derive(Debug, Clone, derive_more::From)]
+#[non_exhaustive]
 pub enum Command {
     MoveCall(MoveCall),
     TransferObjects(TransferObjects),
@@ -231,6 +234,7 @@ impl Publish {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[non_exhaustive]
 pub enum Argument {
     Gas,
     Input(InputId),

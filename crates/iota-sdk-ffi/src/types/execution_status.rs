@@ -47,6 +47,7 @@ impl From<iota_sdk::types::ExecutionStatus> for ExecutionStatus {
                 error: error.into(),
                 command,
             },
+            _ => unimplemented!(),
         }
     }
 }
@@ -408,6 +409,7 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
+            _ => unimplemented!(),
         }
     }
 }
@@ -613,6 +615,7 @@ impl From<MoveLocation> for iota_sdk::types::MoveLocation {
 /// shared-object-operation-not-allowed         = %x0b
 /// ```
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
@@ -717,6 +720,7 @@ impl From<iota_sdk::types::PackageUpgradeError> for PackageUpgradeError {
                 package_id: Arc::new(package_id.into()),
                 ticket_id: Arc::new(ticket_id.into()),
             },
+            _ => unimplemented!(),
         }
     }
 }
@@ -763,6 +767,7 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
 /// ```
 #[uniffi::remote(Enum)]
 #[repr(u8)]
+#[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,

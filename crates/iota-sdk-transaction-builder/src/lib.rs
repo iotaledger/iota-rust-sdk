@@ -577,6 +577,7 @@ mod tests {
                         }
                     }
                 }
+                _ => unimplemented!(),
             }
         }
         check_effects_status_success(effects).await;

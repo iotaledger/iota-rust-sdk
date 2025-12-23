@@ -252,6 +252,7 @@ impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
                 Self::Cancelled { version }
             }
             iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
+            _ => unimplemented!(),
         }
     }
 }
@@ -311,6 +312,7 @@ impl From<iota_sdk::types::ObjectIn> for ObjectIn {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
             },
+            _ => unimplemented!(),
         }
     }
 }
@@ -374,6 +376,7 @@ impl From<iota_sdk::types::ObjectOut> for ObjectOut {
                 version,
                 digest: Arc::new(digest.into()),
             },
+            _ => unimplemented!(),
         }
     }
 }
@@ -410,6 +413,7 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
 /// id-operation-deleted    = %x02
 /// ```
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 #[repr(u8)]
 pub enum IdOperation {
     None,

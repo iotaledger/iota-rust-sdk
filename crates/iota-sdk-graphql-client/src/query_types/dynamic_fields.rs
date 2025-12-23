@@ -78,6 +78,7 @@ pub struct DynamicField {
 
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DynamicFieldValue")]
+#[non_exhaustive]
 pub enum DynamicFieldValue {
     MoveObject(MoveObjectContents),
     MoveValue(MoveValue),
