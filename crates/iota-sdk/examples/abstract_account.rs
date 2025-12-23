@@ -96,11 +96,11 @@ async fn setup_account() -> Result<ObjectId> {
 
                 if let Some(object) = object {
                     if object.as_struct().type_.name
-                        == IdentifierRef::const_new("PackageMetadataV1")
+                        == *IdentifierRef::const_new("PackageMetadataV1")
                     {
                         package_metadata_id.replace(object_id);
                     }
-                    if object.as_struct().type_.name == IdentifierRef::const_new("Account") {
+                    if object.as_struct().type_.name == *IdentifierRef::const_new("Account") {
                         account_id.replace(object_id);
                     }
                 }
