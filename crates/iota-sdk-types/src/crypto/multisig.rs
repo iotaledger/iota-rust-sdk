@@ -483,8 +483,10 @@ mod serialization {
             ReadableMemberPublicKey::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableMemberPublicKey::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableMemberPublicKey::json_schema(generator)
         }
     }
 
@@ -589,8 +591,10 @@ mod serialization {
             ReadableMemberSignature::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableMemberSignature::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableMemberSignature::json_schema(generator)
         }
     }
 

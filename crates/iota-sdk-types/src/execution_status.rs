@@ -560,8 +560,10 @@ mod serialization {
             ReadableExecutionStatus::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableExecutionStatus::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableExecutionStatus::json_schema(generator)
         }
     }
 

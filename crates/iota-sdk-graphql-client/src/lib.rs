@@ -1313,15 +1313,14 @@ impl Client {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
-        if let Some(block) = response.transaction_block {
-            if block
+        if let Some(block) = response.transaction_block
+            && block
                 .effects
                 .as_ref()
                 .and_then(|e| e.checkpoint.as_ref())
                 .is_some()
-            {
-                return Ok(true);
-            }
+        {
+            return Ok(true);
         }
         Ok(false)
     }

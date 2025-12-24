@@ -274,7 +274,7 @@ impl schemars::JsonSchema for Address {
         "Address".to_owned()
     }
 
-    fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
         use schemars::schema::{InstanceType, Metadata, SchemaObject, StringValidation};
 
         let hex_length = Address::LENGTH * 2;
