@@ -15,7 +15,7 @@ async fn main() -> Result<()> {
     let staked_iota = client
         .objects(
             ObjectFilter {
-                type_: Some(StructTag::new_staked_iota().to_string()),
+                type_filter: Some(StructTag::new_staked_iota().to_string()),
                 ..Default::default()
             },
             Default::default(),

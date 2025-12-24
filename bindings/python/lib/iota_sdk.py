@@ -15129,7 +15129,7 @@ class Event:
     emitted.
     """
 
-    type: "str"
+    type_tag: "str"
     """
     The type of the event emitted
     """
@@ -15154,18 +15154,18 @@ class Event:
     Representation of a Move value in JSON
     """
 
-    def __init__(self, *, package_id: "ObjectId", module: "str", sender: "Address", type: "str", contents: "bytes", timestamp: "str", data: "str", json: "str"):
+    def __init__(self, *, package_id: "ObjectId", module: "str", sender: "Address", type_tag: "str", contents: "bytes", timestamp: "str", data: "str", json: "str"):
         self.package_id = package_id
         self.module = module
         self.sender = sender
-        self.type = type
+        self.type_tag = type_tag
         self.contents = contents
         self.timestamp = timestamp
         self.data = data
         self.json = json
 
     def __str__(self):
-        return "Event(package_id={}, module={}, sender={}, type={}, contents={}, timestamp={}, data={}, json={})".format(self.package_id, self.module, self.sender, self.type, self.contents, self.timestamp, self.data, self.json)
+        return "Event(package_id={}, module={}, sender={}, type_tag={}, contents={}, timestamp={}, data={}, json={})".format(self.package_id, self.module, self.sender, self.type_tag, self.contents, self.timestamp, self.data, self.json)
 
     def __eq__(self, other):
         if self.package_id != other.package_id:
@@ -15174,7 +15174,7 @@ class Event:
             return False
         if self.sender != other.sender:
             return False
-        if self.type != other.type:
+        if self.type_tag != other.type_tag:
             return False
         if self.contents != other.contents:
             return False
@@ -15193,7 +15193,7 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
             package_id=_UniffiConverterTypeObjectId.read(buf),
             module=_UniffiConverterString.read(buf),
             sender=_UniffiConverterTypeAddress.read(buf),
-            type=_UniffiConverterString.read(buf),
+            type_tag=_UniffiConverterString.read(buf),
             contents=_UniffiConverterBytes.read(buf),
             timestamp=_UniffiConverterString.read(buf),
             data=_UniffiConverterString.read(buf),
@@ -15205,7 +15205,7 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeObjectId.check_lower(value.package_id)
         _UniffiConverterString.check_lower(value.module)
         _UniffiConverterTypeAddress.check_lower(value.sender)
-        _UniffiConverterString.check_lower(value.type)
+        _UniffiConverterString.check_lower(value.type_tag)
         _UniffiConverterBytes.check_lower(value.contents)
         _UniffiConverterString.check_lower(value.timestamp)
         _UniffiConverterString.check_lower(value.data)
@@ -15216,7 +15216,7 @@ class _UniffiConverterTypeEvent(_UniffiConverterRustBuffer):
         _UniffiConverterTypeObjectId.write(value.package_id, buf)
         _UniffiConverterString.write(value.module, buf)
         _UniffiConverterTypeAddress.write(value.sender, buf)
-        _UniffiConverterString.write(value.type, buf)
+        _UniffiConverterString.write(value.type_tag, buf)
         _UniffiConverterBytes.write(value.contents, buf)
         _UniffiConverterString.write(value.timestamp, buf)
         _UniffiConverterString.write(value.data, buf)
@@ -15865,21 +15865,21 @@ class _UniffiConverterTypeMoveEnumVariant(_UniffiConverterRustBuffer):
 
 class MoveField:
     name: "str"
-    type: "typing.Optional[OpenMoveType]"
-    def __init__(self, *, name: "str", type: "typing.Optional[OpenMoveType]" = _DEFAULT):
+    type_tag: "typing.Optional[OpenMoveType]"
+    def __init__(self, *, name: "str", type_tag: "typing.Optional[OpenMoveType]" = _DEFAULT):
         self.name = name
-        if type is _DEFAULT:
-            self.type = None
+        if type_tag is _DEFAULT:
+            self.type_tag = None
         else:
-            self.type = type
+            self.type_tag = type_tag
 
     def __str__(self):
-        return "MoveField(name={}, type={})".format(self.name, self.type)
+        return "MoveField(name={}, type_tag={})".format(self.name, self.type_tag)
 
     def __eq__(self, other):
         if self.name != other.name:
             return False
-        if self.type != other.type:
+        if self.type_tag != other.type_tag:
             return False
         return True
 
@@ -15888,18 +15888,18 @@ class _UniffiConverterTypeMoveField(_UniffiConverterRustBuffer):
     def read(buf):
         return MoveField(
             name=_UniffiConverterString.read(buf),
-            type=_UniffiConverterOptionalTypeOpenMoveType.read(buf),
+            type_tag=_UniffiConverterOptionalTypeOpenMoveType.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterString.check_lower(value.name)
-        _UniffiConverterOptionalTypeOpenMoveType.check_lower(value.type)
+        _UniffiConverterOptionalTypeOpenMoveType.check_lower(value.type_tag)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterString.write(value.name, buf)
-        _UniffiConverterOptionalTypeOpenMoveType.write(value.type, buf)
+        _UniffiConverterOptionalTypeOpenMoveType.write(value.type_tag, buf)
 
 
 class MoveFunctionConnection:
@@ -16577,14 +16577,14 @@ class _UniffiConverterTypeNameRegistrationPage(_UniffiConverterRustBuffer):
 
 
 class ObjectFilter:
-    type_tag: "typing.Optional[str]"
+    type_filter: "typing.Optional[str]"
     owner: "typing.Optional[Address]"
     object_ids: "typing.Optional[typing.List[ObjectId]]"
-    def __init__(self, *, type_tag: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]" = _DEFAULT):
-        if type_tag is _DEFAULT:
-            self.type_tag = None
+    def __init__(self, *, type_filter: "typing.Optional[str]" = _DEFAULT, owner: "typing.Optional[Address]" = _DEFAULT, object_ids: "typing.Optional[typing.List[ObjectId]]" = _DEFAULT):
+        if type_filter is _DEFAULT:
+            self.type_filter = None
         else:
-            self.type_tag = type_tag
+            self.type_filter = type_filter
         if owner is _DEFAULT:
             self.owner = None
         else:
@@ -16595,10 +16595,10 @@ class ObjectFilter:
             self.object_ids = object_ids
 
     def __str__(self):
-        return "ObjectFilter(type_tag={}, owner={}, object_ids={})".format(self.type_tag, self.owner, self.object_ids)
+        return "ObjectFilter(type_filter={}, owner={}, object_ids={})".format(self.type_filter, self.owner, self.object_ids)
 
     def __eq__(self, other):
-        if self.type_tag != other.type_tag:
+        if self.type_filter != other.type_filter:
             return False
         if self.owner != other.owner:
             return False
@@ -16610,20 +16610,20 @@ class _UniffiConverterTypeObjectFilter(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return ObjectFilter(
-            type_tag=_UniffiConverterOptionalString.read(buf),
+            type_filter=_UniffiConverterOptionalString.read(buf),
             owner=_UniffiConverterOptionalTypeAddress.read(buf),
             object_ids=_UniffiConverterOptionalSequenceTypeObjectId.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterOptionalString.check_lower(value.type_tag)
+        _UniffiConverterOptionalString.check_lower(value.type_filter)
         _UniffiConverterOptionalTypeAddress.check_lower(value.owner)
         _UniffiConverterOptionalSequenceTypeObjectId.check_lower(value.object_ids)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterOptionalString.write(value.type_tag, buf)
+        _UniffiConverterOptionalString.write(value.type_filter, buf)
         _UniffiConverterOptionalTypeAddress.write(value.owner, buf)
         _UniffiConverterOptionalSequenceTypeObjectId.write(value.object_ids, buf)
 

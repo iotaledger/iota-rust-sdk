@@ -54300,7 +54300,7 @@ data class Event (
     /**
      * The type of the event emitted
      */
-    var `type`: kotlin.String, 
+    var `typeTag`: kotlin.String, 
     /**
      * BCS serialized bytes of the event
      */
@@ -54326,7 +54326,7 @@ data class Event (
         this.`packageId`,
         this.`module`,
         this.`sender`,
-        this.`type`,
+        this.`typeTag`,
         this.`contents`,
         this.`timestamp`,
         this.`data`,
@@ -54358,7 +54358,7 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterTypeObjectId.allocationSize(value.`packageId`) +
             FfiConverterString.allocationSize(value.`module`) +
             FfiConverterTypeAddress.allocationSize(value.`sender`) +
-            FfiConverterString.allocationSize(value.`type`) +
+            FfiConverterString.allocationSize(value.`typeTag`) +
             FfiConverterByteArray.allocationSize(value.`contents`) +
             FfiConverterString.allocationSize(value.`timestamp`) +
             FfiConverterString.allocationSize(value.`data`) +
@@ -54369,7 +54369,7 @@ public object FfiConverterTypeEvent: FfiConverterRustBuffer<Event> {
             FfiConverterTypeObjectId.write(value.`packageId`, buf)
             FfiConverterString.write(value.`module`, buf)
             FfiConverterTypeAddress.write(value.`sender`, buf)
-            FfiConverterString.write(value.`type`, buf)
+            FfiConverterString.write(value.`typeTag`, buf)
             FfiConverterByteArray.write(value.`contents`, buf)
             FfiConverterString.write(value.`timestamp`, buf)
             FfiConverterString.write(value.`data`, buf)
@@ -54952,7 +54952,7 @@ public object FfiConverterTypeMoveEnumVariant: FfiConverterRustBuffer<MoveEnumVa
 
 data class MoveField (
     var `name`: kotlin.String, 
-    var `type`: OpenMoveType? = null
+    var `typeTag`: OpenMoveType? = null
 ) {
     
     companion object
@@ -54971,12 +54971,12 @@ public object FfiConverterTypeMoveField: FfiConverterRustBuffer<MoveField> {
 
     override fun allocationSize(value: MoveField) = (
             FfiConverterString.allocationSize(value.`name`) +
-            FfiConverterOptionalTypeOpenMoveType.allocationSize(value.`type`)
+            FfiConverterOptionalTypeOpenMoveType.allocationSize(value.`typeTag`)
     )
 
     override fun write(value: MoveField, buf: ByteBuffer) {
             FfiConverterString.write(value.`name`, buf)
-            FfiConverterOptionalTypeOpenMoveType.write(value.`type`, buf)
+            FfiConverterOptionalTypeOpenMoveType.write(value.`typeTag`, buf)
     }
 }
 
@@ -55625,7 +55625,7 @@ public object FfiConverterTypeNameRegistrationPage: FfiConverterRustBuffer<NameR
 
 
 data class ObjectFilter (
-    var `typeTag`: kotlin.String? = null, 
+    var `typeFilter`: kotlin.String? = null, 
     var `owner`: Address? = null, 
     var `objectIds`: List<ObjectId>? = null
 ) : Disposable {
@@ -55634,7 +55634,7 @@ data class ObjectFilter (
     override fun destroy() {
         
     Disposable.destroy(
-        this.`typeTag`,
+        this.`typeFilter`,
         this.`owner`,
         this.`objectIds`
     )
@@ -55656,13 +55656,13 @@ public object FfiConverterTypeObjectFilter: FfiConverterRustBuffer<ObjectFilter>
     }
 
     override fun allocationSize(value: ObjectFilter) = (
-            FfiConverterOptionalString.allocationSize(value.`typeTag`) +
+            FfiConverterOptionalString.allocationSize(value.`typeFilter`) +
             FfiConverterOptionalTypeAddress.allocationSize(value.`owner`) +
             FfiConverterOptionalSequenceTypeObjectId.allocationSize(value.`objectIds`)
     )
 
     override fun write(value: ObjectFilter, buf: ByteBuffer) {
-            FfiConverterOptionalString.write(value.`typeTag`, buf)
+            FfiConverterOptionalString.write(value.`typeFilter`, buf)
             FfiConverterOptionalTypeAddress.write(value.`owner`, buf)
             FfiConverterOptionalSequenceTypeObjectId.write(value.`objectIds`, buf)
     }

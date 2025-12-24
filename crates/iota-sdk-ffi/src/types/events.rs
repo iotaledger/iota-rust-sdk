@@ -37,7 +37,7 @@ pub struct Event {
     /// emitted.
     pub sender: Arc<Address>,
     /// The type of the event emitted
-    pub type_: String,
+    pub type_tag: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
     /// UTC timestamp in milliseconds since epoch (1/1/1970)
@@ -57,7 +57,7 @@ impl From<iota_sdk::graphql_client::query_types::Event> for Event {
             ))),
             module: sending_module.name.clone(),
             sender: Arc::new(Address(value.sender.as_ref().unwrap().address)),
-            type_: value.type_.repr.clone(),
+            type_tag: value.type_.repr.clone(),
             contents: base64ct::Base64::decode_vec(&value.bcs.0).unwrap_or_default(),
             timestamp: value.timestamp.as_ref().unwrap().0.clone(),
             data: value.data.0.to_string(),
@@ -72,7 +72,7 @@ impl From<Event> for iota_sdk::types::Event {
             package_id: (**value.package_id),
             module: Identifier::from_str(&value.module).unwrap(),
             sender: (**value.sender),
-            type_: StructTag::from_str(&value.type_).unwrap(),
+            type_tag: StructTag::from_str(&value.type_tag).unwrap(),
             contents: value.contents,
         }
     }
@@ -92,7 +92,7 @@ impl From<Event> for iota_sdk::graphql_client::query_types::Event {
                 address: (**value.sender),
             }),
             type_: MoveType {
-                repr: value.type_.clone(),
+                repr: value.type_tag.clone(),
             },
             bcs: Base64(base64ct::Base64::encode_string(&value.contents)),
             timestamp: Some(DateTime(value.timestamp.clone())),
@@ -108,7 +108,7 @@ impl From<iota_sdk::types::Event> for Event {
             package_id: Arc::new(value.package_id.into()),
             module: value.module.to_string(),
             sender: Arc::new(value.sender.into()),
-            type_: value.type_.to_string(),
+            type_tag: value.type_tag.to_string(),
             contents: value.contents,
             timestamp: String::new(),
             data: String::new(),

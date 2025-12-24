@@ -34,7 +34,7 @@ pub struct DryRunEffect {
 pub struct DryRunMutation {
     pub input: TransactionArgument,
     #[cynic(rename = "type")]
-    pub type_: MoveType,
+    pub move_type: MoveType,
     pub bcs: Base64,
 }
 
@@ -42,7 +42,7 @@ pub struct DryRunMutation {
 #[cynic(schema = "rpc", graphql_type = "DryRunReturn")]
 pub struct DryRunReturn {
     #[cynic(rename = "type")]
-    pub type_: MoveType,
+    pub move_type: MoveType,
     pub bcs: Base64,
 }
 

@@ -89,7 +89,7 @@ pub enum DynamicFieldValue {
 #[cynic(schema = "rpc", graphql_type = "DynamicFieldName")]
 pub struct DynamicFieldName {
     #[cynic(rename = "type")]
-    pub type_: String,
+    pub type_tag: String,
     pub bcs: Base64,
 }
 
@@ -123,12 +123,12 @@ impl DynamicFieldValue {
         match self {
             DynamicFieldValue::MoveObject(mo) => {
                 mo.contents.as_ref().map(|o| crate::DynamicFieldValue {
-                    type_: TypeTag::from_str(&o.type_.repr.clone()).expect("Invalid TypeTag"),
+                    type_tag: TypeTag::from_str(&o.type_.repr.clone()).expect("Invalid TypeTag"),
                     bcs: base64ct::Base64::decode_vec(&o.bcs.0).expect("Invalid Base64"),
                 })
             }
             DynamicFieldValue::MoveValue(mv) => Some(crate::DynamicFieldValue {
-                type_: TypeTag::from_str(&mv.type_.repr.clone()).expect("Invalid TypeTag"),
+                type_tag: TypeTag::from_str(&mv.type_.repr.clone()).expect("Invalid TypeTag"),
                 bcs: base64ct::Base64::decode_vec(&mv.bcs.0).expect("Invalid Base64"),
             }),
             _ => None,
@@ -147,7 +147,7 @@ impl TryFrom<DynamicField> for DynamicFieldOutput {
     type Error = error::Error;
 
     fn try_from(val: DynamicField) -> Result<Self, Self::Error> {
-        let typetag = TypeTag::from_str(
+        let type_tag = TypeTag::from_str(
             val.name
                 .as_ref()
                 .expect("There should be a name in this dynamic field")
@@ -157,7 +157,7 @@ impl TryFrom<DynamicField> for DynamicFieldOutput {
         )?;
         Ok(DynamicFieldOutput {
             name: crate::DynamicFieldName {
-                type_: typetag,
+                type_tag,
                 bcs: base64ct::Base64::decode_vec(val.name.as_ref().unwrap().bcs.0.as_ref())
                     .unwrap(),
                 json: val.name.as_ref().unwrap().json.clone(),

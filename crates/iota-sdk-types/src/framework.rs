@@ -30,7 +30,7 @@ impl Coin {
         match &object.data {
             super::ObjectData::Struct(move_struct) => {
                 let coin_type = move_struct
-                    .type_
+                    .struct_tag
                     .coin_type_opt()
                     .ok_or(CoinFromObjectError::NotACoin)?;
 

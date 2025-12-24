@@ -427,7 +427,7 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
 #[derive(uniffi::Record)]
 pub struct ObjectFilter {
     #[uniffi(default = None)]
-    pub type_tag: Option<String>,
+    pub type_filter: Option<String>,
     #[uniffi(default = None)]
     pub owner: Option<Arc<Address>>,
     #[uniffi(default = None)]
@@ -437,7 +437,7 @@ pub struct ObjectFilter {
 impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter {
     fn from(value: iota_sdk::graphql_client::query_types::ObjectFilter) -> Self {
         Self {
-            type_tag: value.type_,
+            type_filter: value.type_filter,
             owner: value.owner.map(Into::into).map(Arc::new),
             object_ids: value
                 .object_ids
@@ -449,7 +449,7 @@ impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter 
 impl From<ObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
     fn from(value: ObjectFilter) -> Self {
         Self {
-            type_: value.type_tag,
+            type_filter: value.type_filter,
             owner: value.owner.map(|v| **v),
             object_ids: value
                 .object_ids
@@ -508,7 +508,7 @@ pub struct DynamicFieldName {
 impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
     fn from(value: iota_sdk::graphql_client::DynamicFieldName) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
             json: value.json,
         }
@@ -518,7 +518,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
 impl From<DynamicFieldName> for iota_sdk::graphql_client::DynamicFieldName {
     fn from(value: DynamicFieldName) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
             json: value.json,
         }
@@ -535,7 +535,7 @@ pub struct DynamicFieldValue {
 impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
     fn from(value: iota_sdk::graphql_client::DynamicFieldValue) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
         }
     }
@@ -544,7 +544,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
 impl From<DynamicFieldValue> for iota_sdk::graphql_client::DynamicFieldValue {
     fn from(value: DynamicFieldValue) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
     }
@@ -1104,7 +1104,7 @@ pub struct MoveField {
     pub name: String,
     #[uniffi::field(name = "type")]
     #[uniffi(default = None)]
-    pub type_: Option<OpenMoveType>,
+    pub type_tag: Option<OpenMoveType>,
 }
 
 #[uniffi::remote(Record)]
