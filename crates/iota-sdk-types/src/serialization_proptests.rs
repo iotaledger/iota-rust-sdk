@@ -39,7 +39,7 @@ fn assert_valid_json_schema<T>(instance: &T)
 where
     T: serde::Serialize + schemars::JsonSchema,
 {
-    let root_schema = schemars::gen::SchemaGenerator::default().into_root_schema_for::<T>();
+    let root_schema = schemars::r#gen::SchemaGenerator::default().into_root_schema_for::<T>();
     let schema = serde_json::json!(root_schema);
     let validator = jsonschema::Validator::new(&schema).unwrap();
     let instance = serde_json::json!(instance);

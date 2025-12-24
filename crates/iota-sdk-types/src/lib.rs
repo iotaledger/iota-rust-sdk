@@ -428,7 +428,7 @@ mod _schemars {
             "u64".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Radix-10 encoded 64-bit unsigned integer".to_owned()),
@@ -453,7 +453,7 @@ mod _schemars {
             "i128".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
@@ -478,7 +478,7 @@ mod _schemars {
             "u256".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Radix-10 encoded 256-bit unsigned integer".to_owned()),
@@ -503,7 +503,7 @@ mod _schemars {
             "Base64".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Base64 encoded data".to_owned()),
@@ -528,7 +528,7 @@ mod _schemars {
             "Base58".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Base58 encoded data".to_owned()),
