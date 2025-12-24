@@ -1,4 +1,4 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 //! Builder for Programmable Transactions.
@@ -964,10 +964,10 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                     }
                     _ => &[],
                 } {
-                    if let Argument::Input(idx) = arg {
-                        if let Some(obj_id) = self.data.inputs[idx].object_id() {
-                            unusable_object_ids.insert(*obj_id);
-                        }
+                    if let Argument::Input(idx) = arg
+                        && let Some(obj_id) = self.data.inputs[idx].object_id()
+                    {
+                        unusable_object_ids.insert(*obj_id);
                     }
                 }
             }
