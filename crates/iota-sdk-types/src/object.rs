@@ -589,14 +589,13 @@ mod serialization {
     impl<'a> MoveStructTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
             if let Some(coin_type) = s.coin_type_opt() {
-                if let TypeTag::Struct(s_inner) = coin_type {
-                    if s_inner.address() == Address::FRAMEWORK
-                        && s_inner.module() == "iota"
-                        && s_inner.name() == "IOTA"
-                        && s_inner.type_params().is_empty()
-                    {
-                        return Self::GasCoin;
-                    }
+                if let TypeTag::Struct(s_inner) = coin_type
+                    && s_inner.address() == Address::FRAMEWORK
+                    && s_inner.module() == "iota"
+                    && s_inner.name() == "IOTA"
+                    && s_inner.type_params().is_empty()
+                {
+                    return Self::GasCoin;
                 }
 
                 Self::Coin(coin_type)
