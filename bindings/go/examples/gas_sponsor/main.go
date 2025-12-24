@@ -41,7 +41,7 @@ func main() {
 
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	packageAddr := iota_sdk.AddressStdLib()
+	packageAddr := iota_sdk.AddressStd()
 	moduleName := identifier("u8")
 	functionName := identifier("max")
 

@@ -17,7 +17,7 @@ async def main():
     builder = TransactionBuilder(sender).with_client(client)
 
     builder.move_call(
-        Address.std_lib(),
+        Address.std(),
         Identifier("u64"),
         Identifier("sqrt"),
         [PtbArgument.u64(64)],

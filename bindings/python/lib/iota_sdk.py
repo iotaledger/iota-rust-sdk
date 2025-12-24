@@ -2013,7 +2013,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib() != 35825:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2796,10 +2796,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_system.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -12266,9 +12266,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex.restype = c
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_system.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_system.restype = ctypes.c_uint16
@@ -27055,9 +27055,9 @@ class Address():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def std_lib(cls, ):
+    def std(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std,)
         return cls._make_instance_(pointer)
 
     @classmethod
