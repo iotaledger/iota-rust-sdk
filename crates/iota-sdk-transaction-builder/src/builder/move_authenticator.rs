@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Defines the [`MoveAuthenticatorArgs`] which represents a call to an
+//! Defines the [`MoveAuthenticator`] builder that represents a call to an
 //! authenticator function in move which can authorize a transaction as part of
 //! Account Abstraction.
 
