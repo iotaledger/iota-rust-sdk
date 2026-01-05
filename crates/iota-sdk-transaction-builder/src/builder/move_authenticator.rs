@@ -48,7 +48,7 @@ impl MoveAuthenticatorArgs {
 
     /// Resolve this move authenticator call into a [`MoveAuthenticator`] which
     /// can be used to execute the given transaction (using a
-    /// [`UserSignature::MoveAuthenticator`](iota_crypto::UserSignature::MoveAuthenticator)).
+    /// `UserSignature::MoveAuthenticator`).
     pub async fn resolve(
         self,
         tx: &Transaction,
