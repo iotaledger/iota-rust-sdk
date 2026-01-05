@@ -15,7 +15,7 @@ Please follow the general install instructions for your platform.
 
 Verify by running `make --version` and `python3 --version`.
 
-## Generate Python bindings module `iota_sdk_ffi.py`
+## Generate Python bindings module `iota_sdk.py`
 
 1. Build the bindings: `make python`
 2. Test by running the following minimal example: `make python-example chain_id`

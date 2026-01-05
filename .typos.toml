@@ -27,6 +27,6 @@ typ = "typ"
 extend-exclude = [
   "bindings/go/iota_sdk/iota_sdk.go",
   "bindings/go/iota_sdk/iota_sdk.h",
-  "bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt",
-  "bindings/python/lib/iota_sdk_ffi.py",
+  "bindings/kotlin/lib/iota_sdk/iota_sdk.kt",
+  "bindings/python/lib/iota_sdk.py",
 ]
