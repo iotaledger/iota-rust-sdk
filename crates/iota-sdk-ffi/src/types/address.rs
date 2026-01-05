@@ -104,6 +104,6 @@ macro_rules! named_address {
     }
 }
 
-named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);
+named_address!(ZERO, STD, FRAMEWORK, SYSTEM);
 
 crate::export_iota_types_objects_bcs_conversion!(Address);

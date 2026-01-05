@@ -16,7 +16,7 @@ async def main():
 
     builder = TransactionBuilder(sender).with_client(client)
 
-    package_addr = Address.std_lib()
+    package_addr = Address.std()
     module_name = Identifier("u8")
     function_name = Identifier("max")
 

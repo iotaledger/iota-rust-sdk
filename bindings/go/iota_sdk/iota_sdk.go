@@ -7347,11 +7347,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_std()
 	})
-	if checksum != 35825 {
+	if checksum != 28998 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_std: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10787,9 +10787,9 @@ func AddressGenerate() *Address {
 	}))
 }
 
-func AddressStdLib() *Address {
+func AddressStd() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_std(_uniffiStatus)
 	}))
 }
 
