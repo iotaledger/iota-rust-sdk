@@ -25,12 +25,12 @@ pub enum FaucetError {
     Request(String),
     #[error("Reqwest error: {0}")]
     Reqwest(#[from] reqwest::Error),
-    #[error("Faucet request was unsuccessful: {0}")]
+    #[error("Faucet request was unsuccessful with status code {0}")]
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
     #[error(
-        "Faucet service received too many requests from this IP address. Please try again after 60 minutes."
+        "Faucet service received too many requests from this IP address. Please try again later."
     )]
     TooManyRequests,
     #[error("Faucet service is currently overloaded or unavailable. Please try again later.")]
