@@ -1,4 +1,4 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 //! Defines the [`MoveAuthenticatorArgs`] which represents a call to an
@@ -80,9 +80,9 @@ impl MoveAuthenticatorArgs {
 
                     match obj.owner() {
                         Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id: object_id,
+                            object_id,
                             initial_shared_version: *version,
-                            mutable: mutable,
+                            mutable,
                         },
                         _ => {
                             return Err(Error::InvalidMoveAuthArg(format!(
