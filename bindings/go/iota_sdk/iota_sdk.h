@@ -432,9 +432,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_address_generate(RustCallStatus *out_st
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_STD_LIB
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_STD_LIB
-void* uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_STD
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ADDRESS_STD
+void* uniffi_iota_sdk_ffi_fn_constructor_address_std(RustCallStatus *out_status
     
 );
 #endif
@@ -12189,9 +12189,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_generate(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_STD_LIB
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_STD_LIB
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_STD
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ADDRESS_STD
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_address_std(void
     
 );
 #endif

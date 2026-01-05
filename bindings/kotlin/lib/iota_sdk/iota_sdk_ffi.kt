@@ -4776,7 +4776,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_generate(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib(
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_std(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_system(
 ): Short
@@ -5490,7 +5490,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(`hex`: RustBuffer.ByValu
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_generate(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_address_std(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_system(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -10646,7 +10646,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib() != 35825.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297.toShort()) {
@@ -12637,10 +12637,10 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
-         fun `stdLib`(): Address {
+         fun `std`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_std(
         _status)
 }
     )
