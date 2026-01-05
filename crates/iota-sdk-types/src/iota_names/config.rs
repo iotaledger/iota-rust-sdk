@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use crate::{Address, ObjectId};
+use crate::{ObjectId, address::Address, iota_names::error::IotaNamesError};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
@@ -48,7 +48,7 @@ impl IotaNamesConfig {
         }
     }
 
-    pub fn from_env() -> eyre::Result<Self> {
+    pub fn from_env() -> Result<Self, IotaNamesError> {
         Ok(Self::new(
             std::env::var("IOTA_NAMES_PACKAGE_ADDRESS")?.parse()?,
             std::env::var("IOTA_NAMES_OBJECT_ID")?.parse()?,
