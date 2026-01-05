@@ -72,12 +72,12 @@ impl Name {
         const IOTA_NAMES_NAME_MODULE: &IdentifierRef = IdentifierRef::const_new("name");
         const IOTA_NAMES_NAME_STRUCT: &IdentifierRef = IdentifierRef::const_new("Name");
 
-        StructTag {
-            address: package_address,
-            module: IOTA_NAMES_NAME_MODULE.to_owned(),
-            name: IOTA_NAMES_NAME_STRUCT.to_owned(),
-            type_params: vec![],
-        }
+        StructTag::new(
+            package_address,
+            IOTA_NAMES_NAME_MODULE.to_owned(),
+            IOTA_NAMES_NAME_STRUCT.to_owned(),
+            vec![],
+        )
     }
 
     /// Derive the parent name for a given name. Only subnames have

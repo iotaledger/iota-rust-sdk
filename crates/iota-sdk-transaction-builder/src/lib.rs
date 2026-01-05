@@ -452,7 +452,7 @@ mod tests {
         // set up the sender, gas object, gas budget, and gas price and return the pk to
         // sign
         let (mut tx, _, pk, _) = helper_setup().await;
-        tx.move_call(Address::STD_LIB, "option", "is_none")
+        tx.move_call(Address::STD, "option", "is_none")
             .generics::<u64>()
             .arguments([Some(1u64)]);
 
@@ -587,7 +587,7 @@ mod tests {
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();
             match obj.object_type() {
-                ObjectType::Struct(x) if x.name.to_string() == "UpgradeCap" => {
+                ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                     upgrade_cap = Some(obj.object_id());
                     break;
                 }
