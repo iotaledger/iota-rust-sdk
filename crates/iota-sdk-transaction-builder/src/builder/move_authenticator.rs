@@ -13,7 +13,6 @@ use crate::{
 
 /// A function call to authorize a transaction via move.
 #[derive(Debug, Clone)]
-#[repr(C)]
 pub struct MoveAuthenticatorBuilder {
     /// Input objects or primitive values
     call_args: Vec<InputKind>,

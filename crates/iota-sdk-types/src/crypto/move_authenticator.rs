@@ -4,7 +4,7 @@
 use crate::{Address, Input, ObjectId, ObjectReference, TypeTag};
 
 /// MoveAuthenticator is a signature variant that enables a method of
-/// authentication through Move code. This function represents the data received
+/// authentication through Move code. This type represents the data received
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
 #[derive(Debug, Clone, PartialEq, Eq)]
