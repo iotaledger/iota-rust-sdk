@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
 
     let effects = builder
         .execute_with_move_authenticator(
-            MoveAuthenticatorArgs::inputs(("hello", Shared(ObjectId::from_str("0x06")?))),
+            MoveAuthenticatorArgs::inputs(("hello", Shared(ObjectId::CLOCK))),
             WaitForTx::Finalized,
         )
         .await?;

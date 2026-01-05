@@ -12,9 +12,11 @@ use crate::{
 /// A trait which defines a single argument for a
 /// [`TransactionBuilder`](crate::TransactionBuilder).
 #[diagnostic::on_unimplemented(message = "Provided value is not a valid move argument.")]
-pub trait PTBArgument {
+pub trait PTBArgument: Sized {
     /// Get the argument.
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument;
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        ptb.set_input(self.input(), false)
+    }
 
     /// Get the input kind.
     fn input(self) -> InputKind;
@@ -26,25 +28,17 @@ impl PTBArgument for Argument {
     }
 
     fn input(self) -> InputKind {
-        unreachable!()
+        panic!("Transaction inputs cannot be derived from command arguments")
     }
 }
 
 impl PTBArgument for iota_types::Input {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Input(self)
     }
 }
 
 impl PTBArgument for ObjectId {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::ImmutableOrOwned(self)
     }
@@ -61,20 +55,12 @@ impl PTBArgument for &ObjectId {
 }
 
 impl PTBArgument for ObjectReference {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Input(iota_types::Input::ImmutableOrOwned(self))
     }
 }
 
 impl<T: MoveArg> PTBArgument for T {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Input(iota_types::Input::Pure {
             value: self.pure_bytes().0,
@@ -220,10 +206,6 @@ impl PTBArgument for Shared<ObjectId> {
 }
 
 impl PTBArgument for &Shared<ObjectId> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Shared {
             object_id: self.0,
@@ -243,10 +225,6 @@ impl PTBArgument for Shared<ObjectReference> {
 }
 
 impl PTBArgument for &Shared<ObjectReference> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Input(iota_types::Input::Shared {
             object_id: self.0.object_id,
@@ -280,10 +258,6 @@ impl PTBArgument for SharedMut<ObjectId> {
 }
 
 impl PTBArgument for &SharedMut<ObjectId> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Shared {
             object_id: self.0,
@@ -303,10 +277,6 @@ impl PTBArgument for SharedMut<ObjectReference> {
 }
 
 impl PTBArgument for &SharedMut<ObjectReference> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Input(iota_types::Input::Shared {
             object_id: self.0.object_id,
@@ -340,10 +310,6 @@ impl PTBArgument for Receiving<ObjectId> {
 }
 
 impl PTBArgument for &Receiving<ObjectId> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Receiving(self.0)
     }
@@ -360,10 +326,6 @@ impl PTBArgument for Receiving<ObjectReference> {
 }
 
 impl PTBArgument for &Receiving<ObjectReference> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(self.input(), false)
-    }
-
     fn input(self) -> InputKind {
         InputKind::Input(iota_types::Input::Receiving(self.0.clone()))
     }
@@ -398,6 +360,6 @@ impl PTBArgument for &Res {
     }
 
     fn input(self) -> InputKind {
-        unreachable!()
+        panic!("Transaction inputs cannot be derived from command results")
     }
 }
