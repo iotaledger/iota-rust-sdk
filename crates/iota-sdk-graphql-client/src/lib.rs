@@ -1703,7 +1703,7 @@ mod tests {
     async fn test_balance_query() {
         let client = test_client();
         client
-            .balance(Address::STD_LIB, None)
+            .balance(Address::STD, None)
             .await
             .map_err(|e| {
                 format!(
@@ -2013,7 +2013,7 @@ mod tests {
     async fn test_coins_query() {
         let client = test_client();
         client
-            .coins(Address::STD_LIB, None, PaginationFilter::default())
+            .coins(Address::STD, None, PaginationFilter::default())
             .await
             .map_err(|e| {
                 format!(

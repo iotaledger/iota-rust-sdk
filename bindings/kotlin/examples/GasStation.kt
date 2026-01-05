@@ -16,7 +16,7 @@ fun main() = runBlocking {
         val builder = TransactionBuilder(sender).withClient(client)
 
         builder.moveCall(
-            Address.stdLib(),
+            Address.std(),
             Identifier("u64"),
             Identifier("sqrt"),
             listOf(PtbArgument.u64(64uL)),

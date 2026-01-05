@@ -69,7 +69,7 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const STD_LIB: Self = Self::from_u8(1);
+    pub const STD: Self = Self::from_u8(1);
     pub const FRAMEWORK: Self = Self::from_u8(2);
     pub const SYSTEM: Self = Self::from_u8(3);
 

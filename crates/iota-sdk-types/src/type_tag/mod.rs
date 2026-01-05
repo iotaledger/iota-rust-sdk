@@ -587,8 +587,8 @@ impl StructTag {
     add_struct_tag_ctor!(SYSTEM, "staking_pool", "StakedIota");
     add_struct_tag_ctor!(SYSTEM, "timelocked_staking", "TimelockedStakedIota");
     add_struct_tag_ctor!(SYSTEM, "iota_system_state_inner", "SystemEpochInfoEvent");
-    add_struct_tag_ctor!(STD_LIB, "ascii", "String", "with-module");
-    add_struct_tag_ctor!(STD_LIB, "string", "String");
+    add_struct_tag_ctor!(STD, "ascii", "String", "with-module");
+    add_struct_tag_ctor!(STD, "string", "String");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "CoinMetadata");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "TreasuryCap");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin_manager", "CoinManager");
