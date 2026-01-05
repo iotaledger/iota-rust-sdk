@@ -600,11 +600,13 @@ impl Client {
                 coin_type
                     .into()
                     .map(StructTag::new_coin)
-                    .unwrap_or_else(|| StructTag {
-                        address: Address::FRAMEWORK,
-                        module: IdentifierRef::const_new("coin").into(),
-                        name: IdentifierRef::const_new("Coin").into(),
-                        type_params: Default::default(),
+                    .unwrap_or_else(|| {
+                        StructTag::new(
+                            Address::FRAMEWORK,
+                            IdentifierRef::const_new("coin").into(),
+                            IdentifierRef::const_new("Coin").into(),
+                            Default::default(),
+                        )
                     })
                     .to_string(),
             ),
