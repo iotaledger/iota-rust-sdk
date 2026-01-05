@@ -432,7 +432,7 @@ impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
             PTBArgument::Shared(shared) => shared.input(),
             PTBArgument::SharedMut(shared_mut) => shared_mut.input(),
             PTBArgument::Receiving(receiving) => receiving.input(),
-            _ => panic!(),
+            PTBArgument::Gas => panic!("Transaction inputs cannot be derived from gas arguments"),
         }
     }
 }
