@@ -15,7 +15,7 @@ use crate::types::{
 /// authentication through Move code. This function represents the data received
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveAuthenticator(pub iota_sdk::types::MoveAuthenticator);
 
 #[uniffi::export]

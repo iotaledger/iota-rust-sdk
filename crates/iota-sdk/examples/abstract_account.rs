@@ -7,7 +7,7 @@ use eyre::{OptionExt, Result, bail};
 use iota_sdk::{
     crypto::ed25519::Ed25519PrivateKey,
     graphql_client::{Client, WaitForTx, faucet::FaucetClient},
-    transaction_builder::{MoveAuthenticatorArgs, Shared, SharedMut, TransactionBuilder, res},
+    transaction_builder::{MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, res},
     types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut},
 };
 use rand::rngs::OsRng;
@@ -32,11 +32,13 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(from_address).with_client(&client);
     builder.send_iota(to_address, 5000000000u64);
 
+    let move_authenticator = MoveAuthenticatorBuilder::new(from_address.into())
+        .call_args(("hello", Shared(ObjectId::CLOCK)))
+        .finish(&client)
+        .await?;
+
     let effects = builder
-        .execute_with_move_authenticator(
-            MoveAuthenticatorArgs::inputs(("hello", Shared(ObjectId::CLOCK))),
-            WaitForTx::Finalized,
-        )
+        .execute(&move_authenticator, WaitForTx::Finalized)
         .await?;
 
     println!("Sending IOTA via abstract account: {:?}", effects.status());

@@ -8,7 +8,7 @@ use std::{
 };
 
 use iota_sdk::{
-    graphql_client::WaitForTx, transaction_builder::MoveAuthenticatorArgs, types::Input,
+    graphql_client::WaitForTx, transaction_builder::MoveAuthenticatorBuilder, types::Input,
 };
 
 use crate::{
@@ -366,27 +366,6 @@ impl ClientTransactionBuilder {
                 builder
                     .clone()
                     .execute_with_sponsor(signer, sponsor_signer, wait_for)
-            })
-            .await?
-            .into())
-    }
-
-    /// Execute the transaction with the provided move authenticator call data
-    /// and optionally wait for finalization.
-    #[uniffi::method(default(inputs = [], type_args = [], wait_for = None))]
-    pub async fn execute_with_move_authenticator(
-        &self,
-        inputs: Vec<Arc<PTBArgument>>,
-        type_args: Vec<Arc<TypeTag>>,
-        wait_for: Option<WaitForTx>,
-    ) -> Result<TransactionEffects> {
-        Ok(self
-            .read(|builder| {
-                builder.clone().execute_with_move_authenticator(
-                    MoveAuthenticatorArgs::inputs(inputs)
-                        .type_tags(type_args.into_iter().map(|v| v.0.clone())),
-                    wait_for,
-                )
             })
             .await?
             .into())

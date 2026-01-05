@@ -5,7 +5,7 @@
 //! authenticator function in move which can authorize a transaction as part of
 //! Account Abstraction.
 
-use iota_types::{MoveAuthenticator, Owner, Transaction, TypeTag};
+use iota_types::{MoveAuthenticator, ObjectId, Owner, TypeTag};
 
 use crate::{
     ClientMethods, PTBArgumentList, error::Error, types::MoveTypes, unresolved::InputKind,
@@ -14,51 +14,52 @@ use crate::{
 /// A function call to authorize a transaction via move.
 #[derive(Debug, Clone)]
 #[repr(C)]
-pub struct MoveAuthenticatorArgs {
+pub struct MoveAuthenticatorBuilder {
     /// Input objects or primitive values
-    pub call_args: Vec<InputKind>,
+    call_args: Vec<InputKind>,
     /// Type arguments for the Move authenticate function
-    pub type_args: Vec<TypeTag>,
+    type_args: Vec<TypeTag>,
+    /// The account ID, which is the sender of the transaction.
+    account_id: ObjectId,
 }
 
-impl MoveAuthenticatorArgs {
-    /// Create a new move authenticator call with the function inputs.
-    pub fn inputs<I: PTBArgumentList>(call_args: I) -> MoveAuthenticatorArgs {
-        MoveAuthenticatorArgs {
-            call_args: call_args.inputs(),
+impl MoveAuthenticatorBuilder {
+    /// Create a new Move Authenticator builder from an account ID, which is the
+    /// sender of a transaction that this will be used to authenticate.
+    pub fn new(account_id: ObjectId) -> Self {
+        Self {
+            call_args: Default::default(),
             type_args: Default::default(),
+            account_id,
         }
+    }
+
+    /// Set the move authenticator call inputs.
+    pub fn call_args<I: PTBArgumentList>(mut self, call_args: I) -> Self {
+        self.call_args = call_args.inputs();
+        self
     }
 
     /// Set the move authenticator call type parameters.
-    pub fn generics<G: MoveTypes>(self) -> MoveAuthenticatorArgs {
-        MoveAuthenticatorArgs {
-            call_args: self.call_args,
-            type_args: G::type_tags(),
-        }
+    pub fn generics<G: MoveTypes>(mut self) -> Self {
+        self.type_args = G::type_tags();
+        self
     }
 
     /// Set the move authenticator call type parameters manually.
-    pub fn type_tags(self, tags: impl IntoIterator<Item = TypeTag>) -> MoveAuthenticatorArgs {
-        MoveAuthenticatorArgs {
-            call_args: self.call_args,
-            type_args: tags.into_iter().collect(),
-        }
+    pub fn type_args(mut self, tags: impl IntoIterator<Item = TypeTag>) -> Self {
+        self.type_args = tags.into_iter().collect();
+        self
     }
 
-    /// Resolve this move authenticator call into a [`MoveAuthenticator`] which
-    /// can be used to execute the given transaction (using a
-    /// `UserSignature::MoveAuthenticator`).
-    pub async fn resolve(
-        self,
-        tx: &Transaction,
-        client: &(impl ClientMethods + ?Sized),
-    ) -> Result<MoveAuthenticator, Error> {
+    /// Resolve this move authenticator builder into a [`MoveAuthenticator`]
+    /// which can be used to execute the given transaction.
+    pub async fn finish(self, client: impl ClientMethods) -> Result<MoveAuthenticator, Error> {
         let account = client
-            .object(tx.as_v1().sender.into(), None)
+            .object(self.account_id, None)
             .await
             .map_err(Error::client)?
-            .ok_or_else(|| Error::Input(format!("missing account {}", tx.as_v1().sender)))?;
+            .ok_or_else(|| Error::Input(format!("missing account {}", self.account_id)))?;
 
         let mut call_args = Vec::new();
         for input in self.call_args {

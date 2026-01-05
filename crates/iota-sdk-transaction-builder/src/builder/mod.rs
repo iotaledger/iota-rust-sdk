@@ -13,7 +13,7 @@ use iota_graphql_client::Client;
 use iota_types::{
     Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
     Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionV1, TypeTag, UserSignature,
+    TransactionExpiration, TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -22,7 +22,6 @@ use crate::{
     ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
         gas_station::GasStationData,
-        move_authenticator::MoveAuthenticatorArgs,
         named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
@@ -1201,27 +1200,6 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
 
         self.client
             .execute_tx(&signatures, &txn, wait_for)
-            .await
-            .map_err(Error::client)
-    }
-
-    /// Execute the transaction with the provided move authenticator call data
-    /// and optionally wait for finalization.
-    pub async fn execute_with_move_authenticator(
-        mut self,
-        move_auth_args: MoveAuthenticatorArgs,
-        wait_for: impl Into<Option<WaitForTx>>,
-    ) -> Result<TransactionEffects, Error> {
-        let txn = self.finish_internal().await?;
-
-        self.client
-            .execute_tx(
-                &[UserSignature::MoveAuthenticator(
-                    move_auth_args.resolve(&txn, &self.client).await?,
-                )],
-                &txn,
-                wait_for,
-            )
             .await
             .map_err(Error::client)
     }

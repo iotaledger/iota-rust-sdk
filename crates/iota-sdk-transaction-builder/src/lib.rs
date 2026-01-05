@@ -287,7 +287,7 @@ pub use self::{
     builder::{
         TransactionBuilder,
         client_methods::ClientMethods,
-        move_authenticator::MoveAuthenticatorArgs,
+        move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
         signer::TransactionSigner,
     },

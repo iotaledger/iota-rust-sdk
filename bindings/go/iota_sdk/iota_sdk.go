@@ -3081,15 +3081,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator()
-	})
-	if checksum != 36216 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
 	})
 	if checksum != 8183 {
@@ -4247,6 +4238,15 @@ func uniffiCheckChecksums() {
 	if checksum != 63576 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish()
+	})
+	if checksum != 16948 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8481,6 +8481,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new()
+	})
+	if checksum != 1961 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new()
 	})
 	if checksum != 30411 {
@@ -9962,6 +9971,15 @@ func uniffiCheckChecksums() {
 	if checksum != 13858 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator()
+	})
+	if checksum != 17379 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13546,9 +13564,6 @@ type ClientTransactionBuilderInterface interface {
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
 	Execute(signer *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error)
-	// Execute the transaction with the provided move authenticator call data
-	// and optionally wait for finalization.
-	ExecuteWithMoveAuthenticator(inputs []*PtbArgument, typeArgs []*TypeTag, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
 	ExecuteWithSponsor(signer *TransactionSigner, sponsorSigner *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
@@ -13696,37 +13711,6 @@ func (_self *ClientTransactionBuilder) Execute(signer *TransactionSigner, waitFo
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
 		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
-		},
-	)
-
-	return res, err 
-}
-
-// Execute the transaction with the provided move authenticator call data
-// and optionally wait for finalization.
-func (_self *ClientTransactionBuilder) ExecuteWithMoveAuthenticator(inputs []*PtbArgument, typeArgs []*TypeTag, waitFor *WaitForTx) (*TransactionEffects, error) {
-	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
-			return res
-		},
-		// liftFn
-		func(ffi unsafe.Pointer) *TransactionEffects {
-			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(
-		_pointer,FfiConverterSequencePtbArgumentINSTANCE.Lower(inputs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -19439,6 +19423,107 @@ func (c FfiConverterMoveAuthenticator) Write(writer io.Writer, value *MoveAuthen
 type FfiDestroyerMoveAuthenticator struct {}
 
 func (_ FfiDestroyerMoveAuthenticator) Destroy(value *MoveAuthenticator) {
+		value.Destroy()
+}
+
+
+
+type MoveAuthenticatorBuilderInterface interface {
+	// Resolve this move authenticator builder into a `MoveAuthenticator` which
+	// can be used to execute a transaction.
+	Finish(client *GraphQlClient) (*MoveAuthenticator, error)
+}
+type MoveAuthenticatorBuilder struct {
+	ffiObject FfiObject
+}
+// Create a new move authenticator call with the account ID, function
+// inputs, and generic types.
+func NewMoveAuthenticatorBuilder(accountId *ObjectId, callArgs []*PtbArgument, typeArgs []*TypeTag) *MoveAuthenticatorBuilder {
+	return FfiConverterMoveAuthenticatorBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new(FfiConverterObjectIdINSTANCE.Lower(accountId), FfiConverterSequencePtbArgumentINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs),_uniffiStatus)
+	}))
+}
+
+
+
+
+// Resolve this move authenticator builder into a `MoveAuthenticator` which
+// can be used to execute a transaction.
+func (_self *MoveAuthenticatorBuilder) Finish(client *GraphQlClient) (*MoveAuthenticator, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticatorBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *MoveAuthenticator {
+			return FfiConverterMoveAuthenticatorINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(
+		_pointer,FfiConverterGraphQlClientINSTANCE.Lower(client)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *MoveAuthenticatorBuilder) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoveAuthenticatorBuilder struct {}
+
+var FfiConverterMoveAuthenticatorBuilderINSTANCE = FfiConverterMoveAuthenticatorBuilder{}
+
+
+func (c FfiConverterMoveAuthenticatorBuilder) Lift(pointer unsafe.Pointer) *MoveAuthenticatorBuilder {
+	result := &MoveAuthenticatorBuilder {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoveAuthenticatorBuilder).Destroy)
+	return result
+}
+
+func (c FfiConverterMoveAuthenticatorBuilder) Read(reader io.Reader) *MoveAuthenticatorBuilder {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMoveAuthenticatorBuilder) Lower(value *MoveAuthenticatorBuilder) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MoveAuthenticatorBuilder")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMoveAuthenticatorBuilder) Write(writer io.Writer, value *MoveAuthenticatorBuilder) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMoveAuthenticatorBuilder struct {}
+
+func (_ FfiDestroyerMoveAuthenticatorBuilder) Destroy(value *MoveAuthenticatorBuilder) {
 		value.Destroy()
 }
 
@@ -27969,6 +28054,12 @@ func TransactionSignerFromEd25519(key *Ed25519PrivateKey) *TransactionSigner {
 func TransactionSignerFromKeypair(key *SimpleKeypair) *TransactionSigner {
 	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(FfiConverterSimpleKeypairINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromMoveAuthenticator(auth *MoveAuthenticator) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(FfiConverterMoveAuthenticatorINSTANCE.Lower(auth),_uniffiStatus)
 	}))
 }
 

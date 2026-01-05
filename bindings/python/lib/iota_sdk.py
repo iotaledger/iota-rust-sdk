@@ -1065,8 +1065,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute() != 58102:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator() != 36216:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor() != 8183:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_expiration() != 32958:
@@ -1324,6 +1322,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate() != 40516:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args() != 63576:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments() != 17202:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2265,6 +2265,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() != 1961:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506:
@@ -2594,6 +2596,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair() != 13858:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator() != 17379:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1() != 54758:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3594,13 +3598,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute.argtyp
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator.argtypes = (
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -5030,6 +5027,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movecall.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7747,6 +7766,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10938,9 +10962,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_dry_run.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_move_authenticator.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor.restype = ctypes.c_uint16
@@ -11328,6 +11349,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authe
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments.restype = ctypes.c_uint16
@@ -12738,6 +12762,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immuta
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.restype = ctypes.c_uint16
@@ -13233,6 +13260,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed255
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1.restype = ctypes.c_uint16
@@ -13599,6 +13629,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -30317,13 +30349,6 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def execute_with_move_authenticator(self, inputs: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
-        """
-        Execute the transaction with the provided move authenticator call data
-        and optionally wait for finalization.
-        """
-
-        raise NotImplementedError
     def execute_with_sponsor(self, signer: "TransactionSigner",sponsor_signer: "TransactionSigner",wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT):
         """
         Execute the transaction and optionally wait for finalization.
@@ -30560,44 +30585,6 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeTransactionSigner.lower(signer),
-        _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
-            ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
-            # lift function
-            _UniffiConverterTypeTransactionEffects.lift,
-            
-    # Error FFI converter
-_UniffiConverterTypeSdkFfiError,
-
-        )
-
-
-
-    async def execute_with_move_authenticator(self, inputs: "typing.Union[object, typing.List[PtbArgument]]" = _DEFAULT,type_args: "typing.Union[object, typing.List[TypeTag]]" = _DEFAULT,wait_for: "typing.Union[object, typing.Optional[WaitForTx]]" = _DEFAULT) -> "TransactionEffects":
-        """
-        Execute the transaction with the provided move authenticator call data
-        and optionally wait for finalization.
-        """
-
-        if inputs is _DEFAULT:
-            inputs = []
-        _UniffiConverterSequenceTypePtbArgument.check_lower(inputs)
-        
-        if type_args is _DEFAULT:
-            type_args = []
-        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
-        
-        if wait_for is _DEFAULT:
-            wait_for = None
-        _UniffiConverterOptionalTypeWaitForTx.check_lower(wait_for)
-        
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_move_authenticator(
-                self._uniffi_clone_pointer(), 
-        _UniffiConverterSequenceTypePtbArgument.lower(inputs),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
         _UniffiConverterOptionalTypeWaitForTx.lower(wait_for)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
@@ -36766,6 +36753,107 @@ class _UniffiConverterTypeMoveAuthenticator:
 
     @classmethod
     def write(cls, value: MoveAuthenticatorProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class MoveAuthenticatorBuilderProtocol(typing.Protocol):
+    def finish(self, client: "GraphQlClient"):
+        """
+        Resolve this move authenticator builder into a `MoveAuthenticator` which
+        can be used to execute a transaction.
+        """
+
+        raise NotImplementedError
+# MoveAuthenticatorBuilder is a Rust-only trait - it's a wrapper around a Rust implementation.
+class MoveAuthenticatorBuilder():
+    _pointer: ctypes.c_void_p
+    def __init__(self, account_id: "ObjectId",call_args: "typing.List[PtbArgument]",type_args: "typing.List[TypeTag]"):
+        """
+        Create a new move authenticator call with the account ID, function
+        inputs, and generic types.
+        """
+
+        _UniffiConverterTypeObjectId.check_lower(account_id)
+        
+        _UniffiConverterSequenceTypePtbArgument.check_lower(call_args)
+        
+        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new,
+        _UniffiConverterTypeObjectId.lower(account_id),
+        _UniffiConverterSequenceTypePtbArgument.lower(call_args),
+        _UniffiConverterSequenceTypeTypeTag.lower(type_args))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+    async def finish(self, client: "GraphQlClient") -> "MoveAuthenticator":
+        """
+        Resolve this move authenticator builder into a `MoveAuthenticator` which
+        can be used to execute a transaction.
+        """
+
+        _UniffiConverterTypeGraphQlClient.check_lower(client)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeGraphQlClient.lower(client)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_pointer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_pointer,
+            # lift function
+            _UniffiConverterTypeMoveAuthenticator.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+
+
+class _UniffiConverterTypeMoveAuthenticatorBuilder:
+
+    @staticmethod
+    def lift(value: int):
+        return MoveAuthenticatorBuilder._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: MoveAuthenticatorBuilder):
+        if not isinstance(value, MoveAuthenticatorBuilder):
+            raise TypeError("Expected MoveAuthenticatorBuilder instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: MoveAuthenticatorBuilderProtocol):
+        if not isinstance(value, MoveAuthenticatorBuilder):
+            raise TypeError("Expected MoveAuthenticatorBuilder instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: MoveAuthenticatorBuilderProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MoveCallProtocol(typing.Protocol):
     """
@@ -46193,6 +46281,15 @@ class TransactionSigner():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def from_move_authenticator(cls, auth: "MoveAuthenticator"):
+        _UniffiConverterTypeMoveAuthenticator.check_lower(auth)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator,
+        _UniffiConverterTypeMoveAuthenticator.lower(auth))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def from_secp256k1(cls, key: "Secp256k1PrivateKey"):
         _UniffiConverterTypeSecp256k1PrivateKey.check_lower(key)
         
@@ -52236,6 +52333,7 @@ __all__ = [
     "MergeCoins",
     "MoveArg",
     "MoveAuthenticator",
+    "MoveAuthenticatorBuilder",
     "MoveCall",
     "MoveFunction",
     "MovePackage",
