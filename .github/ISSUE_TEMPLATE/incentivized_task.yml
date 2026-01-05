@@ -1,0 +1,65 @@
+name: Create Incentivized Task
+description: Create an incentivized task.
+title: "[Incentivized] "
+labels:
+  - "incentivized"
+
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the task and its goal.
+      placeholder: "What should be done and why does it matter? What components does this affect?"
+    validations:
+    required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Suggested complexity
+      description: Estimated implementation complexity.
+      options:
+      - easy
+      - medium
+      - hard
+    validations:
+      required: true
+
+  - type: input
+    id: duration
+    attributes:
+      label: Suggested duration
+      description: >
+        Estimated duration for planning purposes.
+      placeholder: "2 days"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details & acceptance criteria
+      description: >
+        Provide a clear description, scope, and acceptance criteria for this incentivized task.
+      placeholder: |
+        - Background / context
+        - Exact scope - What is _in_ scope - What is explicitly _out_ of scope - Acceptance criteria (what must be true for the task to be considered done)
+        - What is _in_ scope
+        - What is explicitly _out_ of scope
+        - Acceptance criteria (what must be true for the task to be considered done)
+      render: markdown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pr_required
+    attributes:
+      label: Pull request required?
+      description: >
+        Does this task require a code change via PR?
+      options:
+      - "No"
+      - "Yes"
+    validations:
+      required: true
