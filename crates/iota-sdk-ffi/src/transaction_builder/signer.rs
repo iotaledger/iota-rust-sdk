@@ -84,7 +84,7 @@ impl TransactionSignerFn for MoveAuthenticator {
         let signature = UserSignature::new_move_authenticator(self);
 
         Ok(TransactionSignerFnOutput {
-            signature: Arc::new(signature.into()),
+            signature: Arc::new(signature),
         })
     }
 }
