@@ -1,10 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::ObjectId;
+use crate::{ObjectId, address::AddressParseError};
 
 #[derive(thiserror::Error, Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum IotaNamesError {
     #[error("Name length {0} exceeds maximum length {1}")]
     NameLengthExceeded(usize, usize),
@@ -26,4 +25,8 @@ pub enum IotaNamesError {
     MalformedObject(ObjectId),
     #[error("Invalid TLN {0}")]
     InvalidTln(String),
+    #[error("Missing environment variable {0}")]
+    MissingEnvVar(#[from] std::env::VarError),
+    #[error("Address parser error {0}")]
+    AddressParser(#[from] AddressParseError),
 }
