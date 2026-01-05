@@ -68,7 +68,9 @@ impl MoveAuthenticatorBuilder {
                         .object(object_id, None)
                         .await
                         .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                        .ok_or_else(|| {
+                            Error::InvalidMoveAuthArg(format!("missing object {object_id}"))
+                        })?;
                     iota_types::Input::ImmutableOrOwned(obj.object_ref())
                 }
                 InputKind::Shared { object_id, mutable } => {
@@ -76,7 +78,9 @@ impl MoveAuthenticatorBuilder {
                         .object(object_id, None)
                         .await
                         .map_err(Error::client)?
-                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+                        .ok_or_else(|| {
+                            Error::InvalidMoveAuthArg(format!("missing object {object_id}"))
+                        })?;
 
                     match obj.owner() {
                         Owner::Shared(version) => iota_types::Input::Shared {
