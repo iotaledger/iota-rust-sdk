@@ -98,15 +98,15 @@ impl StructTag {
         name: &Identifier,
         type_params: Vec<Arc<TypeTag>>,
     ) -> Self {
-        Self(iota_sdk::types::StructTag {
-            address: address.0,
-            module: module.0.clone(),
-            name: name.0.clone(),
-            type_params: type_params
+        Self(iota_sdk::types::StructTag::new(
+            address.0,
+            module.0.clone(),
+            name.0.clone(),
+            type_params
                 .iter()
                 .map(|type_tag| type_tag.0.clone())
                 .collect(),
-        })
+        ))
     }
 
     #[uniffi::constructor]

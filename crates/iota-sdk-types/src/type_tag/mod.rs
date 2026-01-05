@@ -501,14 +501,28 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct StructTag {
-    pub address: Address,
-    pub module: Identifier,
-    pub name: Identifier,
+    address: Address,
+    module: Identifier,
+    name: Identifier,
     #[cfg_attr(feature = "proptest", strategy(proptest::strategy::Just(Vec::new())))]
-    pub type_params: Vec<TypeTag>,
+    type_params: Vec<TypeTag>,
 }
 
 impl StructTag {
+    pub fn new(
+        address: Address,
+        module: Identifier,
+        name: Identifier,
+        type_params: Vec<TypeTag>,
+    ) -> Self {
+        Self {
+            address,
+            module,
+            name,
+            type_params,
+        }
+    }
+
     pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,

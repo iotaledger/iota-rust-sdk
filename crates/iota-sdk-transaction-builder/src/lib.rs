@@ -587,7 +587,7 @@ mod tests {
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();
             match obj.object_type() {
-                ObjectType::Struct(x) if x.name.to_string() == "UpgradeCap" => {
+                ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                     upgrade_cap = Some(obj.object_id());
                     break;
                 }
