@@ -7,9 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_sdk::{
-    graphql_client::WaitForTx, transaction_builder::MoveAuthenticatorBuilder, types::Input,
-};
+use iota_sdk::{graphql_client::WaitForTx, types::Input};
 
 use crate::{
     crypto::simple::SimpleKeypair,
