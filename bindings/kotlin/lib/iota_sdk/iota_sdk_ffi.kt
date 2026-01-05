@@ -3193,6 +3193,12 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3911,6 +3917,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes(
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key(
 ): Short
@@ -4885,6 +4895,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_bytes(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der(
 ): Short
@@ -5965,6 +5977,12 @@ fun uniffi_iota_sdk_ffi_fn_method_ed25519signature_to_bytes(`ptr`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_ed25519verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9350,6 +9368,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() != 31911.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple() != 6579.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user() != 16895.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() != 55026.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -10809,6 +10833,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() != 41607.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new() != 6910.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der() != 1677.toShort()) {
@@ -22213,6 +22240,10 @@ public object FfiConverterTypeEd25519Signature: FfiConverter<Ed25519Signature, P
 
 public interface Ed25519VerifierInterface {
     
+    fun `verifySimple`(`message`: kotlin.ByteArray, `signature`: SimpleSignature)
+    
+    fun `verifyUser`(`message`: kotlin.ByteArray, `signature`: UserSignature)
+    
     companion object
 }
 
@@ -22234,6 +22265,13 @@ open class Ed25519Verifier: Disposable, AutoCloseable, Ed25519VerifierInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    constructor() :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(
+        _status)
+}
+    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -22297,6 +22335,30 @@ open class Ed25519Verifier: Disposable, AutoCloseable, Ed25519VerifierInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(pointer!!, status)
         }
     }
+
+    
+    @Throws(SdkFfiException::class)override fun `verifySimple`(`message`: kotlin.ByteArray, `signature`: SimpleSignature)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(
+        it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
+}
+    }
+    
+    
+
+    
+    @Throws(SdkFfiException::class)override fun `verifyUser`(`message`: kotlin.ByteArray, `signature`: UserSignature)
+        = 
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(
+        it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
+}
+    }
+    
+    
 
     
 
@@ -28638,7 +28700,7 @@ public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
 
 /**
  * MoveAuthenticator is a signature variant that enables a method of
- * authentication through Move code. This function represents the data received
+ * authentication through Move code. This type represents the data received
  * by the Move authenticate function during the Account Abstraction
  * authentication flow.
  */
@@ -28657,7 +28719,7 @@ public interface MoveAuthenticatorInterface {
 
 /**
  * MoveAuthenticator is a signature variant that enables a method of
- * authentication through Move code. This function represents the data received
+ * authentication through Move code. This type represents the data received
  * by the Move authenticate function during the Account Abstraction
  * authentication flow.
  */

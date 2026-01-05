@@ -1633,6 +1633,22 @@ void* uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(void* ptr, RustCallStatus *ou
 void uniffi_iota_sdk_ffi_fn_free_ed25519verifier(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ED25519VERIFIER_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_ED25519VERIFIER_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519VERIFIER_VERIFY_SIMPLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519VERIFIER_VERIFY_SIMPLE
+void uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519VERIFIER_VERIFY_USER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ED25519VERIFIER_VERIFY_USER
+void uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(void* ptr, RustBuffer message, void* signature, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ED25519VERIFYINGKEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_ED25519VERIFYINGKEY
 void* uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(void* ptr, RustCallStatus *out_status
@@ -9597,6 +9613,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519VERIFIER_VERIFY_SIMPLE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519VERIFIER_VERIFY_SIMPLE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519VERIFIER_VERIFY_USER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519VERIFIER_VERIFY_USER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519VERIFYINGKEY_PUBLIC_KEY
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ED25519VERIFYINGKEY_PUBLIC_KEY
 uint16_t uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key(void
@@ -12516,6 +12544,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ED25519SIGNATURE_GENERATE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ED25519SIGNATURE_GENERATE
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ED25519VERIFIER_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_ED25519VERIFIER_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new(void
     
 );
 #endif

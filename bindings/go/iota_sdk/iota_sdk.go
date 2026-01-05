@@ -3531,6 +3531,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple()
+	})
+	if checksum != 6579 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user()
+	})
+	if checksum != 16895 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key()
 	})
 	if checksum != 55026 {
@@ -7910,6 +7928,15 @@ func uniffiCheckChecksums() {
 	if checksum != 41607 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new()
+	})
+	if checksum != 6910 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -15354,13 +15381,42 @@ func (_ FfiDestroyerEd25519Signature) Destroy(value *Ed25519Signature) {
 
 
 type Ed25519VerifierInterface interface {
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
 }
 type Ed25519Verifier struct {
 	ffiObject FfiObject
 }
+func NewEd25519Verifier() *Ed25519Verifier {
+	return FfiConverterEd25519VerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(_uniffiStatus)
+	}))
+}
 
 
 
+
+func (_self *Ed25519Verifier) VerifySimple(message []byte, signature *SimpleSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Verifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Ed25519Verifier) VerifyUser(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Verifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
 func (object *Ed25519Verifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -19303,7 +19359,7 @@ func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 
 
 // MoveAuthenticator is a signature variant that enables a method of
-// authentication through Move code. This function represents the data received
+// authentication through Move code. This type represents the data received
 // by the Move authenticate function during the Account Abstraction
 // authentication flow.
 type MoveAuthenticatorInterface interface {
@@ -19313,7 +19369,7 @@ type MoveAuthenticatorInterface interface {
 	TypeArgs() []*TypeTag
 }
 // MoveAuthenticator is a signature variant that enables a method of
-// authentication through Move code. This function represents the data received
+// authentication through Move code. This type represents the data received
 // by the Move authenticate function during the Account Abstraction
 // authentication flow.
 type MoveAuthenticator struct {
