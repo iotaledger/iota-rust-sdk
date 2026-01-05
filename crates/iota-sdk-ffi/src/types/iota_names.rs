@@ -36,7 +36,6 @@ impl NameRegistration {
     }
 
     pub fn expiration_timestamp_ms(&self) -> u64 {
-        iota_sdk::types::iota_names::NameRegistration::MODULE;
         self.0.expiration_timestamp_ms()
     }
 }

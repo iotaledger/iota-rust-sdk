@@ -5,10 +5,7 @@ use std::sync::Arc;
 
 use iota_sdk::types::{CommandArgumentError, Identifier, TypeArgumentError};
 
-use crate::{
-    error::Result,
-    types::{address::Address, digest::Digest, object::ObjectId},
-};
+use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
 /// The status of an executed Transaction
 ///

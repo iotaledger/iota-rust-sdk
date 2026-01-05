@@ -80,7 +80,7 @@ impl TransactionSignerFn for SimpleKeypair {
 
 #[async_trait::async_trait]
 impl TransactionSignerFn for MoveAuthenticator {
-    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+    async fn sign(&self, _transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let signature = UserSignature::new_move_authenticator(self);
 
         Ok(TransactionSignerFnOutput {

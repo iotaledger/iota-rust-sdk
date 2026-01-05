@@ -7,10 +7,7 @@ use crate::{
     error::Result,
     graphql::GraphQLClient,
     transaction_builder::ptb_arg::PTBArgument,
-    types::{
-        crypto::move_authenticator::MoveAuthenticator, object::ObjectId, transaction::Transaction,
-        type_tag::TypeTag,
-    },
+    types::{crypto::move_authenticator::MoveAuthenticator, object::ObjectId, type_tag::TypeTag},
 };
 
 #[derive(uniffi::Object)]

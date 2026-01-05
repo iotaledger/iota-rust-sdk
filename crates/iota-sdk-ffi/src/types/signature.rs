@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{SignatureScheme, ZkLoginClaim};
+use iota_sdk::types::SignatureScheme;
 
 use crate::{
     error::Result,

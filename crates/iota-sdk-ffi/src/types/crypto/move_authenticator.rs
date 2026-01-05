@@ -5,7 +5,6 @@ use std::sync::Arc;
 
 use crate::types::{
     address::Address,
-    digest::Digest,
     object::{ObjectId, ObjectReference},
     transaction::Input,
     type_tag::TypeTag,

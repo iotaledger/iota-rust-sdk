@@ -8,7 +8,6 @@ use crate::{
     types::{
         checkpoint::EpochId,
         crypto::{Bls12381PublicKey, Bls12381Signature},
-        signature,
     },
 };
 
