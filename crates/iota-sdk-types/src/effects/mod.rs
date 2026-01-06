@@ -28,6 +28,7 @@ use crate::{SignedTransaction, TypeTag, execution_status::ExecutionStatus};
     schemars(tag = "version")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum TransactionEffects {
     #[cfg_attr(feature = "schemars", schemars(rename = "1"))]
     V1(Box<TransactionEffectsV1>),
@@ -121,6 +122,7 @@ pub struct DryRunReturn {
 /// A transaction argument used in programmable transactions.
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[non_exhaustive]
 pub enum TransactionArgument {
     /// Reference to the gas coin.
     GasCoin,

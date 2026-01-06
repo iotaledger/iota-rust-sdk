@@ -735,6 +735,7 @@ pub struct ValidatorCredentials {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
@@ -960,6 +961,7 @@ impl MoveFunction {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum MoveVisibility {
     Public,
     Private,
@@ -967,6 +969,7 @@ pub enum MoveVisibility {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum MoveAbility {
     Copy,
     Drop,
@@ -1238,6 +1241,7 @@ pub struct ServiceConfig {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum Feature {
     Analytics,
     Coins,

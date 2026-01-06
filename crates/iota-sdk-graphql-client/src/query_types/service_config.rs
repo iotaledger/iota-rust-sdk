@@ -80,6 +80,7 @@ pub struct ServiceConfig {
     graphql_type = "Feature",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
+#[non_exhaustive]
 pub enum Feature {
     Analytics,
     Coins,
