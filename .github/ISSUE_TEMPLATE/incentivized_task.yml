@@ -10,7 +10,7 @@ body:
     attributes:
       label: Summary
       description: Briefly describe the task and its goal.
-      placeholder: "What should be done and why does it matter?"
+      placeholder: "What should be done and why?"
     validations:
     required: true
 
