@@ -44,7 +44,7 @@ func main() {
 	)
 	builder.TransferObjects(
 		sender,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("coin1"), iota_sdk.PtbArgumentRes("coin2"), iota_sdk.PtbArgumentRes("coin3")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("coin1"), iota_sdk.PtbArgumentAssigned("coin2"), iota_sdk.PtbArgumentAssigned("coin3")},
 	)
 
 	txn, err := builder.Finish()

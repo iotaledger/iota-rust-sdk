@@ -289,7 +289,7 @@ pub use self::{
         TransactionBuilder,
         client_methods::ClientMethods,
         move_authenticator::MoveAuthenticatorBuilder,
-        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
+        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
     },
     types::PureBytes,
@@ -309,7 +309,7 @@ mod tests {
         ObjectType, TransactionEffects, UpgradePolicy,
     };
 
-    use crate::{TransactionBuilder, error::Error, res};
+    use crate::{TransactionBuilder, assigned, error::Error};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -471,7 +471,7 @@ mod tests {
         let gas = tx.get_gas()[0];
         tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, [res("coin")]);
+        tx.transfer_objects(recipient, [assigned("coin")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
@@ -543,7 +543,7 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [assigned("cap")]);
 
         let effects = tx.execute(&pk, WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
@@ -556,7 +556,7 @@ mod tests {
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [assigned("cap")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         let mut package_id: Option<ObjectId> = None;
@@ -610,7 +610,7 @@ mod tests {
             .assign("ticket");
         // now we can upgrade the package
         let receipt = tx
-            .upgrade(package_id.unwrap(), updated_package, res("ticket"))
+            .upgrade(package_id.unwrap(), updated_package, assigned("ticket"))
             .arg();
 
         // commit the upgrade

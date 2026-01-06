@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{TransactionBuilder, res, unresolved::Argument},
+    transaction_builder::{TransactionBuilder, assigned, unresolved::Argument},
     types::Address,
 };
 
@@ -30,12 +30,12 @@ async fn main() -> Result<()> {
 
     builder
         // Use the assigned results of previous commands to use as arguments
-        .split_coins(Argument::Gas, [res("res0"), res("res1")])
+        .split_coins(Argument::Gas, [assigned("res0"), assigned("res1")])
         // For nested results, a tuple or vec can be used to name them
         .assign(vec!["coin0", "coin1"]);
 
     // Use assigned results as arguments
-    builder.transfer_objects(sender_address, [res("coin0"), res("coin1")]);
+    builder.transfer_objects(sender_address, [assigned("coin0"), assigned("coin1")]);
 
     let tx = builder.finish().await?;
 

@@ -62,7 +62,7 @@ async def main():
     # Publish the package and receive the upgrade cap in return
     builder.publish(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
-    builder.transfer_objects(sender, [PtbArgument.res("upgrade_cap")])
+    builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
     tx = await builder.finish()
 
     # Perform a dry-run first to check if everything is correct
@@ -131,7 +131,7 @@ async def main():
     builder.upgrade(
         package_id,
         package_data,
-        PtbArgument.res("upgrade_ticket"),
+        PtbArgument.assigned("upgrade_ticket"),
         "upgrade_receipt",
     )
 
@@ -142,7 +142,7 @@ async def main():
         Identifier("commit_upgrade"),
         [
             PtbArgument.object_id(upgrade_cap),
-            PtbArgument.res("upgrade_receipt")
+            PtbArgument.assigned("upgrade_receipt")
         ],
     )
 

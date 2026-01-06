@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{TransactionBuilder, res},
+    transaction_builder::{TransactionBuilder, assigned},
     types::{Address, ObjectId},
 };
 
@@ -24,7 +24,10 @@ async fn main() -> Result<()> {
     builder
         .split_coins(coin, [1000u64, 2000, 3000])
         .assign(("coin1", "coin2", "coin3"))
-        .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
+        .transfer_objects(
+            sender,
+            (assigned("coin1"), assigned("coin2"), assigned("coin3")),
+        );
 
     let txn = builder.clone().finish().await?;
 

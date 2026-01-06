@@ -375,7 +375,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///             version: 435090179,
     ///         },
     ///         // The result of a previous command can also be used
-    ///         res("coin"),
+    ///         assigned("coin"),
     ///     ),
     /// );
     ///
@@ -593,7 +593,10 @@ impl<C, L> TransactionBuilder<C, L> {
     /// builder
     ///     .split_coins(coin, [1000u64, 2000, 3000])
     ///     .assign(("coin1", "coin2", "coin3"))
-    ///     .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
+    ///     .transfer_objects(
+    ///         sender,
+    ///         (assigned("coin1"), assigned("coin2"), assigned("coin3")),
+    ///     );
     /// let txn = builder.finish().await?;
     /// #    Ok(())
     /// # }
@@ -744,7 +747,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     .assign("addresses")
     ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
     ///     .generics::<(Address, u64)>()
-    ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
+    ///     .arguments((assigned("addresses"), [10000000u64, 20000000u64]));
     ///
     /// let txn: Transaction = builder.finish().await?;
     /// # Ok(())
