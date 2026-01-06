@@ -1,5 +1,5 @@
-name: Create Incentivized Task
-description: Create an incentivized task.
+name: Create incentivized task
+description: Create a task for the SDK Incentivized Program.
 title: "[Incentivized] "
 labels:
   - "incentivized"
@@ -10,7 +10,7 @@ body:
     attributes:
       label: Summary
       description: Briefly describe the task and its goal.
-      placeholder: "What should be done and why does it matter? What components does this affect?"
+      placeholder: "What should be done and why does it matter?"
     validations:
     required: true
 
@@ -44,7 +44,6 @@ body:
         Provide a clear description, scope, and acceptance criteria for this incentivized task.
       placeholder: |
         - Background / context
-        - Exact scope - What is _in_ scope - What is explicitly _out_ of scope - Acceptance criteria (what must be true for the task to be considered done)
         - What is _in_ scope
         - What is explicitly _out_ of scope
         - Acceptance criteria (what must be true for the task to be considered done)
