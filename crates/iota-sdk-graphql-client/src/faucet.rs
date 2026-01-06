@@ -57,6 +57,7 @@ struct BatchStatusFaucetResponse {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "UPPERCASE")]
+#[non_exhaustive]
 pub enum BatchSendStatusType {
     InProgress,
     Succeeded,

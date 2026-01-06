@@ -4,6 +4,7 @@
 use crate::{ObjectId, address::AddressParseError};
 
 #[derive(thiserror::Error, Debug, Clone, Eq, PartialEq)]
+#[non_exhaustive]
 pub enum IotaNamesError {
     #[error("Name length {0} exceeds maximum length {1}")]
     NameLengthExceeded(usize, usize),

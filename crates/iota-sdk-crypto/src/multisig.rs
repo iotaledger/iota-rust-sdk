@@ -247,6 +247,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::Passkey(passkey_authenticator) => {
                 crate::passkey::PasskeyVerifier::default().verify(message, passkey_authenticator)
             }
+            _ => Err(SignatureError::from_source("unknown signature scheme")),
         }
     }
 }
@@ -391,9 +392,9 @@ fn multisig_pubkey_and_signature_from_user_signature(
                 MultisigMemberSignature::ZkLogin(zklogin_authenticator),
             ))
         }
-
         UserSignature::Multisig(_) | UserSignature::Passkey(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))
         }
+        _ => Err(SignatureError::from_source("unknown signature scheme")),
     }
 }
