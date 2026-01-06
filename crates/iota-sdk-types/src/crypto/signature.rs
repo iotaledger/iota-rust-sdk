@@ -7,6 +7,7 @@ use super::{
     Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
     ZkLoginAuthenticator,
 };
+use crate::crypto::move_authenticator::MoveAuthenticator;
 
 /// A basic signature
 ///
@@ -204,14 +205,16 @@ impl SimpleSignature {
 ///
 /// ```text
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / zklogin-flag / passkey-flag
-/// ed25519-flag     = %x00
-/// secp256k1-flag   = %x01
-/// secp256r1-flag   = %x02
-/// multisig-flag    = %x03
-/// bls-flag         = %x04
-/// zklogin-flag     = %x05
-/// passkey-flag     = %x06
+///                    multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+///                    move-auth-flag
+/// ed25519-flag        = %x00
+/// secp256k1-flag      = %x01
+/// secp256r1-flag      = %x02
+/// multisig-flag       = %x03
+/// bls-flag            = %x04
+/// zklogin-auth-flag   = %x05
+/// passkey-auth-flag   = %x06
+/// move-auth-flag      = %x07
 /// ```
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, strum::Display)]
 #[strum(serialize_all = "lowercase")]
@@ -224,13 +227,21 @@ pub enum SignatureScheme {
     Secp256r1 = 0x02,
     Multisig = 0x03,
     Bls12381 = 0x04, // This is currently not supported for user addresses
-    ZkLogin = 0x05,
-    Passkey = 0x06,
+    ZkLoginAuthenticator = 0x05,
+    PasskeyAuthenticator = 0x06,
+    MoveAuthenticator = 0x07,
 }
 
 impl SignatureScheme {
     crate::def_is!(
-        Ed25519, Secp256k1, Secp256r1, Multisig, Bls12381, ZkLogin, Passkey,
+        Ed25519,
+        Secp256k1,
+        Secp256r1,
+        Multisig,
+        Bls12381,
+        ZkLoginAuthenticator,
+        PasskeyAuthenticator,
+        MoveAuthenticator,
     );
 
     /// Try constructing from a byte flag
@@ -241,8 +252,9 @@ impl SignatureScheme {
             0x02 => Ok(Self::Secp256r1),
             0x03 => Ok(Self::Multisig),
             0x04 => Ok(Self::Bls12381),
-            0x05 => Ok(Self::ZkLogin),
-            0x06 => Ok(Self::Passkey),
+            0x05 => Ok(Self::ZkLoginAuthenticator),
+            0x06 => Ok(Self::PasskeyAuthenticator),
+            0x07 => Ok(Self::MoveAuthenticator),
             invalid => Err(InvalidSignatureScheme(invalid)),
         }
     }
@@ -256,14 +268,14 @@ impl SignatureScheme {
 impl super::ZkLoginPublicIdentifier {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::ZkLogin
+        SignatureScheme::ZkLoginAuthenticator
     }
 }
 
 impl super::PasskeyPublicKey {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        SignatureScheme::Passkey
+        SignatureScheme::PasskeyAuthenticator
     }
 }
 
@@ -287,7 +299,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 ///
 /// ```text
 /// user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey
+/// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -301,43 +313,46 @@ impl std::fmt::Display for InvalidSignatureScheme {
 pub enum UserSignature {
     Simple(SimpleSignature),
     Multisig(MultisigAggregatedSignature),
-    ZkLogin(Box<ZkLoginAuthenticator>),
-    Passkey(PasskeyAuthenticator),
+    ZkLoginAuthenticator(Box<ZkLoginAuthenticator>),
+    PasskeyAuthenticator(PasskeyAuthenticator),
+    MoveAuthenticator(MoveAuthenticator),
 }
 
 impl UserSignature {
     crate::def_is_as_into_opt!(
         Simple(SimpleSignature),
         Multisig(MultisigAggregatedSignature),
-        Passkey(PasskeyAuthenticator)
+        PasskeyAuthenticator(PasskeyAuthenticator),
+        MoveAuthenticator(MoveAuthenticator)
     );
 
-    pub fn is_zklogin(&self) -> bool {
-        matches!(self, Self::ZkLogin(_))
+    pub fn is_zklogin_authenticator(&self) -> bool {
+        matches!(self, Self::ZkLoginAuthenticator(_))
     }
 
-    pub fn as_zklogin_opt(&self) -> Option<&ZkLoginAuthenticator> {
-        if let Self::ZkLogin(auth) = self {
+    pub fn as_zklogin_authenticator_opt(&self) -> Option<&ZkLoginAuthenticator> {
+        if let Self::ZkLoginAuthenticator(auth) = self {
             Some(auth)
         } else {
             None
         }
     }
 
-    pub fn as_zklogin(&self) -> &ZkLoginAuthenticator {
-        self.as_zklogin_opt().expect("not a ZkLogin authenticator")
+    pub fn as_zklogin_authenticator(&self) -> &ZkLoginAuthenticator {
+        self.as_zklogin_authenticator_opt()
+            .expect("not a ZkLogin authenticator")
     }
 
-    pub fn into_zklogin_opt(self) -> Option<ZkLoginAuthenticator> {
-        if let Self::ZkLogin(auth) = self {
+    pub fn into_zklogin_authenticator_opt(self) -> Option<ZkLoginAuthenticator> {
+        if let Self::ZkLoginAuthenticator(auth) = self {
             Some(*auth)
         } else {
             None
         }
     }
 
-    pub fn into_zklogin(self) -> ZkLoginAuthenticator {
-        self.into_zklogin_opt()
+    pub fn into_zklogin_authenticator(self) -> ZkLoginAuthenticator {
+        self.into_zklogin_authenticator_opt()
             .expect("not a ZkLogin authenticator")
     }
 
@@ -346,8 +361,9 @@ impl UserSignature {
         match self {
             UserSignature::Simple(simple) => simple.scheme(),
             UserSignature::Multisig(_) => SignatureScheme::Multisig,
-            UserSignature::ZkLogin(_) => SignatureScheme::ZkLogin,
-            UserSignature::Passkey(_) => SignatureScheme::Passkey,
+            UserSignature::ZkLoginAuthenticator(_) => SignatureScheme::ZkLoginAuthenticator,
+            UserSignature::PasskeyAuthenticator(_) => SignatureScheme::PasskeyAuthenticator,
+            UserSignature::MoveAuthenticator(_) => SignatureScheme::MoveAuthenticator,
         }
     }
 }
@@ -459,8 +475,9 @@ mod serialization {
                 }
                 SignatureScheme::Multisig
                 | SignatureScheme::Bls12381
-                | SignatureScheme::ZkLogin
-                | SignatureScheme::Passkey => {
+                | SignatureScheme::ZkLoginAuthenticator
+                | SignatureScheme::PasskeyAuthenticator
+                | SignatureScheme::MoveAuthenticator => {
                     Err(SignatureFromBytesError::new("invalid signature scheme"))
                 }
             }
@@ -623,8 +640,9 @@ mod serialization {
             match self {
                 UserSignature::Simple(s) => s.to_bytes(),
                 UserSignature::Multisig(m) => m.to_bytes(),
-                UserSignature::ZkLogin(z) => z.to_bytes(),
-                UserSignature::Passkey(p) => p.to_bytes(),
+                UserSignature::ZkLoginAuthenticator(z) => z.to_bytes(),
+                UserSignature::PasskeyAuthenticator(p) => p.to_bytes(),
+                UserSignature::MoveAuthenticator(m) => m.to_bytes(),
             }
         }
 
@@ -656,13 +674,17 @@ mod serialization {
                 SignatureScheme::Bls12381 => Err(SignatureFromBytesError::new(
                     "bls not supported for user signatures",
                 )),
-                SignatureScheme::ZkLogin => {
+                SignatureScheme::ZkLoginAuthenticator => {
                     let zklogin = ZkLoginAuthenticator::from_serialized_bytes(bytes)?;
-                    Ok(Self::ZkLogin(Box::new(zklogin)))
+                    Ok(Self::ZkLoginAuthenticator(Box::new(zklogin)))
                 }
-                SignatureScheme::Passkey => {
+                SignatureScheme::PasskeyAuthenticator => {
                     let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)?;
-                    Ok(Self::Passkey(passkey))
+                    Ok(Self::PasskeyAuthenticator(passkey))
+                }
+                SignatureScheme::MoveAuthenticator => {
+                    let move_auth = MoveAuthenticator::from_serialized_bytes(bytes)?;
+                    Ok(Self::MoveAuthenticator(move_auth))
                 }
             }
         }
@@ -698,6 +720,7 @@ mod serialization {
         Multisig(&'a MultisigAggregatedSignature),
         ZkLogin(&'a ZkLoginAuthenticator),
         Passkey(&'a PasskeyAuthenticator),
+        Move(&'a MoveAuthenticator),
     }
 
     #[derive(serde::Deserialize)]
@@ -720,6 +743,7 @@ mod serialization {
         Multisig(MultisigAggregatedSignature),
         ZkLogin(Box<ZkLoginAuthenticator>),
         Passkey(PasskeyAuthenticator),
+        Move(MoveAuthenticator),
     }
 
     #[cfg(feature = "schemars")]
@@ -766,16 +790,24 @@ mod serialization {
                     UserSignature::Multisig(multisig) => {
                         ReadableUserSignatureRef::Multisig(multisig)
                     }
-                    UserSignature::ZkLogin(zklogin) => ReadableUserSignatureRef::ZkLogin(zklogin),
-                    UserSignature::Passkey(passkey) => ReadableUserSignatureRef::Passkey(passkey),
+                    UserSignature::ZkLoginAuthenticator(zklogin) => {
+                        ReadableUserSignatureRef::ZkLogin(zklogin)
+                    }
+                    UserSignature::PasskeyAuthenticator(passkey) => {
+                        ReadableUserSignatureRef::Passkey(passkey)
+                    }
+                    UserSignature::MoveAuthenticator(move_auth) => {
+                        ReadableUserSignatureRef::Move(move_auth)
+                    }
                 };
                 readable.serialize(serializer)
             } else {
                 match self {
                     UserSignature::Simple(simple) => simple.serialize(serializer),
                     UserSignature::Multisig(multisig) => multisig.serialize(serializer),
-                    UserSignature::ZkLogin(zklogin) => zklogin.serialize(serializer),
-                    UserSignature::Passkey(passkey) => passkey.serialize(serializer),
+                    UserSignature::ZkLoginAuthenticator(zklogin) => zklogin.serialize(serializer),
+                    UserSignature::PasskeyAuthenticator(passkey) => passkey.serialize(serializer),
+                    UserSignature::MoveAuthenticator(move_auth) => move_auth.serialize(serializer),
                 }
             }
         }
@@ -811,8 +843,9 @@ mod serialization {
                         public_key,
                     }),
                     ReadableUserSignature::Multisig(multisig) => Self::Multisig(multisig),
-                    ReadableUserSignature::ZkLogin(zklogin) => Self::ZkLogin(zklogin),
-                    ReadableUserSignature::Passkey(passkey) => Self::Passkey(passkey),
+                    ReadableUserSignature::ZkLogin(zklogin) => Self::ZkLoginAuthenticator(zklogin),
+                    ReadableUserSignature::Passkey(passkey) => Self::PasskeyAuthenticator(passkey),
+                    ReadableUserSignature::Move(move_auth) => Self::MoveAuthenticator(move_auth),
                 })
             } else {
                 use serde_with::DeserializeAs;
@@ -919,7 +952,7 @@ mod serialization {
                 let bcs = Base64::decode_vec(fixture).unwrap();
 
                 let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-                assert_eq!(SignatureScheme::ZkLogin, sig.scheme());
+                assert_eq!(SignatureScheme::ZkLoginAuthenticator, sig.scheme());
                 let bytes = bcs::to_bytes(&sig).unwrap();
                 assert_eq!(bcs, bytes);
 
@@ -939,7 +972,7 @@ mod serialization {
                 let bcs = Base64::decode_vec(fixture).unwrap();
 
                 let sig: UserSignature = bcs::from_bytes(&bcs).unwrap();
-                assert_eq!(SignatureScheme::Passkey, sig.scheme());
+                assert_eq!(SignatureScheme::PasskeyAuthenticator, sig.scheme());
                 let bytes = bcs::to_bytes(&sig).unwrap();
                 assert_eq!(bcs, bytes);
 

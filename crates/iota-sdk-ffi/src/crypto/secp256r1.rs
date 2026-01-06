@@ -1,10 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
 use iota_sdk::{
-    crypto::{FromMnemonic, Signer, ToFromBech32, ToFromBytes, Verifier},
+    crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier},
     types::SignatureScheme,
 };
 use rand::rngs::OsRng;

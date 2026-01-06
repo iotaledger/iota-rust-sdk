@@ -56,7 +56,7 @@ impl Verifier<PasskeyAuthenticator> for PasskeyVerifier {
 
 impl Verifier<UserSignature> for PasskeyVerifier {
     fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<(), SignatureError> {
-        let UserSignature::Passkey(authenticator) = signature else {
+        let UserSignature::PasskeyAuthenticator(authenticator) = signature else {
             return Err(SignatureError::from_source("not a passkey authenticator"));
         };
 

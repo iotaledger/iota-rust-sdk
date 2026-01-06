@@ -12,26 +12,35 @@ use crate::{
 /// A trait which defines a single argument for a
 /// [`TransactionBuilder`](crate::TransactionBuilder).
 #[diagnostic::on_unimplemented(message = "Provided value is not a valid move argument.")]
-pub trait PTBArgument {
+pub trait PTBArgument: Sized {
     /// Get the argument.
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument;
+    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
+        ptb.set_input(self.input(), false)
+    }
+
+    /// Get the input kind.
+    fn input(self) -> InputKind;
 }
 
 impl PTBArgument for Argument {
     fn arg(self, _ptb: &mut TransactionBuildData) -> Argument {
         self
     }
+
+    fn input(self) -> InputKind {
+        panic!("Transaction inputs cannot be derived from command arguments")
+    }
 }
 
 impl PTBArgument for iota_types::Input {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.input(self)
+    fn input(self) -> InputKind {
+        InputKind::Input(self)
     }
 }
 
 impl PTBArgument for ObjectId {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(InputKind::ImmutableOrOwned(self), false)
+    fn input(self) -> InputKind {
+        InputKind::ImmutableOrOwned(self)
     }
 }
 
@@ -39,20 +48,23 @@ impl PTBArgument for &ObjectId {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (*self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (*self).input()
+    }
 }
 
 impl PTBArgument for ObjectReference {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(
-            InputKind::Input(iota_types::Input::ImmutableOrOwned(self)),
-            false,
-        )
+    fn input(self) -> InputKind {
+        InputKind::Input(iota_types::Input::ImmutableOrOwned(self))
     }
 }
 
 impl<T: MoveArg> PTBArgument for T {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.pure_bytes(self.pure_bytes().0)
+    fn input(self) -> InputKind {
+        InputKind::Input(iota_types::Input::Pure {
+            value: self.pure_bytes().0,
+        })
     }
 }
 
@@ -62,6 +74,10 @@ where
 {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         self.as_ref().arg(ptb)
+    }
+
+    fn input(self) -> InputKind {
+        self.as_ref().input()
     }
 }
 
@@ -84,6 +100,19 @@ pub trait PTBArgumentList {
 
     /// Push the args onto the list.
     fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>);
+
+    /// Get the inputs.
+    fn inputs(self) -> Vec<InputKind>
+    where
+        Self: Sized,
+    {
+        let mut inputs = Vec::new();
+        self.push_inputs(&mut inputs);
+        inputs
+    }
+
+    /// Push the inputs onto the list.
+    fn push_inputs(self, args: &mut Vec<InputKind>);
 }
 
 macro_rules! impl_ptb_args_tuple {
@@ -94,6 +123,12 @@ macro_rules! impl_ptb_args_tuple {
             fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
                 $(
                     args.push(self.$n.arg(ptb));
+                )+
+            }
+
+            fn push_inputs(self, args: &mut Vec<InputKind>) {
+                $(
+                    args.push(self.$n.input());
                 )+
             }
         }
@@ -108,12 +143,24 @@ impl<T: PTBArgument> PTBArgumentList for Vec<T> {
             args.push(input.arg(ptb));
         }
     }
+
+    fn push_inputs(self, args: &mut Vec<InputKind>) {
+        for input in self {
+            args.push(input.input());
+        }
+    }
 }
 
 impl<const N: usize, T: PTBArgument> PTBArgumentList for [T; N] {
     fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
         for input in self {
             args.push(input.arg(ptb));
+        }
+    }
+
+    fn push_inputs(self, args: &mut Vec<InputKind>) {
+        for input in self {
+            args.push(input.input());
         }
     }
 }
@@ -127,6 +174,12 @@ where
             args.push(input.arg(ptb));
         }
     }
+
+    fn push_inputs(self, args: &mut Vec<InputKind>) {
+        for input in self {
+            args.push(input.input());
+        }
+    }
 }
 
 /// Allows specifying shared parameters.
@@ -136,23 +189,28 @@ impl<T: MoveArg> PTBArgument for Shared<T> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         self.0.arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        self.0.input()
+    }
 }
 
 impl PTBArgument for Shared<ObjectId> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &Shared<ObjectId> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(
-            InputKind::Shared {
-                object_id: self.0,
-                mutable: false,
-            },
-            false,
-        )
+    fn input(self) -> InputKind {
+        InputKind::Shared {
+            object_id: self.0,
+            mutable: false,
+        }
     }
 }
 
@@ -160,18 +218,19 @@ impl PTBArgument for Shared<ObjectReference> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &Shared<ObjectReference> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(
-            InputKind::Input(iota_types::Input::Shared {
-                object_id: self.0.object_id,
-                mutable: false,
-                initial_shared_version: self.0.version,
-            }),
-            false,
-        )
+    fn input(self) -> InputKind {
+        InputKind::Input(iota_types::Input::Shared {
+            object_id: self.0.object_id,
+            mutable: false,
+            initial_shared_version: self.0.version,
+        })
     }
 }
 
@@ -182,23 +241,28 @@ impl<T: MoveArg> PTBArgument for SharedMut<T> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         self.0.arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        self.0.input()
+    }
 }
 
 impl PTBArgument for SharedMut<ObjectId> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &SharedMut<ObjectId> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(
-            InputKind::Shared {
-                object_id: self.0,
-                mutable: true,
-            },
-            false,
-        )
+    fn input(self) -> InputKind {
+        InputKind::Shared {
+            object_id: self.0,
+            mutable: true,
+        }
     }
 }
 
@@ -206,18 +270,19 @@ impl PTBArgument for SharedMut<ObjectReference> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &SharedMut<ObjectReference> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(
-            InputKind::Input(iota_types::Input::Shared {
-                object_id: self.0.object_id,
-                mutable: true,
-                initial_shared_version: self.0.version,
-            }),
-            false,
-        )
+    fn input(self) -> InputKind {
+        InputKind::Input(iota_types::Input::Shared {
+            object_id: self.0.object_id,
+            mutable: true,
+            initial_shared_version: self.0.version,
+        })
     }
 }
 
@@ -228,17 +293,25 @@ impl<T: MoveArg> PTBArgument for Receiving<T> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         self.0.arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        self.0.input()
+    }
 }
 
 impl PTBArgument for Receiving<ObjectId> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &Receiving<ObjectId> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(InputKind::Receiving(self.0), false)
+    fn input(self) -> InputKind {
+        InputKind::Receiving(self.0)
     }
 }
 
@@ -246,14 +319,15 @@ impl PTBArgument for Receiving<ObjectReference> {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &Receiving<ObjectReference> {
-    fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        ptb.set_input(
-            InputKind::Input(iota_types::Input::Receiving(self.0.clone())),
-            false,
-        )
+    fn input(self) -> InputKind {
+        InputKind::Input(iota_types::Input::Receiving(self.0.clone()))
     }
 }
 
@@ -270,6 +344,10 @@ impl PTBArgument for Res {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
+
+    fn input(self) -> InputKind {
+        (&self).input()
+    }
 }
 
 impl PTBArgument for &Res {
@@ -279,5 +357,9 @@ impl PTBArgument for &Res {
         } else {
             panic!("no command result named `{}` exists", self.0)
         }
+    }
+
+    fn input(self) -> InputKind {
+        panic!("Transaction inputs cannot be derived from command results")
     }
 }

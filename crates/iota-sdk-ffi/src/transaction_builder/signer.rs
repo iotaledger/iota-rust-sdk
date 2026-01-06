@@ -11,7 +11,10 @@ use crate::{
         simple::SimpleKeypair,
     },
     error::Result,
-    types::{signature::UserSignature, transaction::Transaction},
+    types::{
+        crypto::move_authenticator::MoveAuthenticator, signature::UserSignature,
+        transaction::Transaction,
+    },
 };
 
 /// The result of an async sign call containing the `UserSignature`.
@@ -75,6 +78,17 @@ impl TransactionSignerFn for SimpleKeypair {
     }
 }
 
+#[async_trait::async_trait]
+impl TransactionSignerFn for MoveAuthenticator {
+    async fn sign(&self, _transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+        let signature = UserSignature::new_move_authenticator(self);
+
+        Ok(TransactionSignerFnOutput {
+            signature: Arc::new(signature),
+        })
+    }
+}
+
 /// An async signer implementation which wraps a `TransactionSignerFn`
 /// definition, which can be used to sign a transaction with a callback.
 #[derive(uniffi::Object)]
@@ -105,6 +119,11 @@ impl TransactionSigner {
     #[uniffi::constructor]
     pub fn from_keypair(key: Arc<SimpleKeypair>) -> Self {
         Self(key as Arc<_>)
+    }
+
+    #[uniffi::constructor]
+    pub fn from_move_authenticator(auth: Arc<MoveAuthenticator>) -> Self {
+        Self(auth as Arc<_>)
     }
 
     pub async fn sign(&self, txn: Arc<Transaction>) -> Result<Arc<UserSignature>> {

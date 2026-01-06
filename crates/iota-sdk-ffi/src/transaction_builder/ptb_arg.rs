@@ -422,4 +422,17 @@ impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
             PTBArgument::Gas => iota_sdk::transaction_builder::unresolved::Argument::Gas,
         }
     }
+
+    fn input(self) -> iota_sdk::transaction_builder::unresolved::InputKind {
+        match self {
+            PTBArgument::ObjectId(object_id) => object_id.input(),
+            PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().input(),
+            PTBArgument::Move(arg) => arg.input(),
+            PTBArgument::Res(res) => res.input(),
+            PTBArgument::Shared(shared) => shared.input(),
+            PTBArgument::SharedMut(shared_mut) => shared_mut.input(),
+            PTBArgument::Receiving(receiving) => receiving.input(),
+            PTBArgument::Gas => panic!("Transaction inputs cannot be derived from gas arguments"),
+        }
+    }
 }
