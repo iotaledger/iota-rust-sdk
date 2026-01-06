@@ -18,11 +18,14 @@ body:
     id: complexity
     attributes:
       label: Estimated complexity
-      description: Estimated implementation complexity.
+      description: >
+        An easy task may require changing a few files, or adding some documentation.
+        A medium difficulty task may require more knowledge of IOTA and the SDK, and may take as much as a day.
+        A hard task could take multiple days and require a strong understanding of IOTA and the SDK.
       options:
-        - easy
-        - medium
-        - hard
+        - Easy
+        - Medium
+        - Hard
     validations:
       required: true
 
@@ -31,7 +34,7 @@ body:
     attributes:
       label: Estimated duration
       description: >
-        Estimated time required to complete the task. For planning purposes.
+        This should approximately correlate with the complexity.
       placeholder: "2 days"
     validations:
       required: true
@@ -62,3 +65,10 @@ body:
         - "Yes"
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: >
+        ## Important
+
+        - When submitting PRs to resolve incentivised issues, your commits should be signed in order to guarantee that the account can be verified.
