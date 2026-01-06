@@ -407,7 +407,7 @@ impl GasStationData {
                 inner_txn.gas_payment.objects = objects;
                 reservation_id
             }
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         };
 
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);

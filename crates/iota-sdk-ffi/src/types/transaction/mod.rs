@@ -53,7 +53,7 @@ impl Transaction {
     pub fn as_v1(&self) -> Arc<TransactionV1> {
         match &self.0 {
             iota_sdk::types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 
@@ -1802,7 +1802,7 @@ impl From<iota_sdk::types::TransactionArgument> for TransactionArgument {
             iota_sdk::types::TransactionArgument::Result { cmd, ix } => {
                 TransactionArgument::Result { cmd, ix }
             }
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }

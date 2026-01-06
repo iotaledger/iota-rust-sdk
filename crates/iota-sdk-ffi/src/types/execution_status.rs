@@ -47,7 +47,7 @@ impl From<iota_sdk::types::ExecutionStatus> for ExecutionStatus {
                 error: error.into(),
                 command,
             },
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }
@@ -409,7 +409,7 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::ExecutionCancelledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }
@@ -720,7 +720,7 @@ impl From<iota_sdk::types::PackageUpgradeError> for PackageUpgradeError {
                 package_id: Arc::new(package_id.into()),
                 ticket_id: Arc::new(ticket_id.into()),
             },
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }

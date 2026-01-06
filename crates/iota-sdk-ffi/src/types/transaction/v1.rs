@@ -252,7 +252,7 @@ impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
                 Self::Cancelled { version }
             }
             iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }
@@ -312,7 +312,7 @@ impl From<iota_sdk::types::ObjectIn> for ObjectIn {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
             },
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }
@@ -376,7 +376,7 @@ impl From<iota_sdk::types::ObjectOut> for ObjectOut {
                 version,
                 digest: Arc::new(digest.into()),
             },
-            _ => unimplemented!(),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }

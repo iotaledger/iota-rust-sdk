@@ -29,7 +29,7 @@ impl Input {
                 | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
                     Some(object_id)
                 }
-                _ => unimplemented!(),
+                _ => unimplemented!("a new enum variant was added and needs to be handled"),
             },
         }
     }

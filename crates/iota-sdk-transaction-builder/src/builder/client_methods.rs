@@ -229,7 +229,7 @@ impl ClientMethods for iota_graphql_client::Client {
         skip_checks: bool,
     ) -> Result<DryRunResult, Self::Error> {
         let Transaction::V1(tx) = &tx else {
-            unimplemented!()
+            unimplemented!("a new enum variant was added and needs to be handled")
         };
         let gas_objects = tx
             .gas_payment
