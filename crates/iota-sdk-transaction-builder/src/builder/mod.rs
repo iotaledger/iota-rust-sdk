@@ -338,7 +338,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -578,7 +578,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```rust
     /// use iota_graphql_client::Client;
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -727,7 +727,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -776,7 +776,7 @@ impl<L> TransactionBuilder<(), L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// let sender =
@@ -917,7 +917,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]

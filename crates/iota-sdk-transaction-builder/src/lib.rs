@@ -99,8 +99,8 @@
 //! Each command method adds one or more commands to the final transaction. Some
 //! commands have optional follow-up methods. All command results can be
 //! assigned a name via [assign](TransactionBuilder::assign). Assigning a name
-//! to a command allows them to be used later in the transaction via the [res]
-//! method.
+//! to a command allows them to be used later in the transaction via the
+//! [assigned] method.
 //!
 //! - [move_call](TransactionBuilder::move_call): Call a move function.
 //!     - `arguments`: Add arguments to the move call.
@@ -212,8 +212,9 @@
 //!   client is provided. This will be assumed immutable or owned.
 //! - [ObjectReference](iota_types::ObjectReference): An object's reference.
 //!   This will be assumed immutable or owned.
-//! - [Res](builder::ptb_arguments::Res): A reference to the result of a
-//!   previous assigned command, set with [assign](TransactionBuilder::assign).
+//! - [Assigned](builder::ptb_arguments::Assigned): A reference to the result of
+//!   a previous assigned command, set with
+//!   [assign](TransactionBuilder::assign).
 //! - [Shared]: Allows specifying shared immutable move objects.
 //! - [SharedMut]: Allows specifying shared mutable move objects.
 //! - [Receiving]: Allows specifying receiving move objects.
