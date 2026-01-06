@@ -76,7 +76,7 @@ fn zklogin_sign_personal_message() {
         .verify(&message.signing_digest(), &zklogin_authenticator)
         .unwrap();
 
-    let user_signature = UserSignature::ZkLogin(zklogin_authenticator.into());
+    let user_signature = UserSignature::ZkLoginAuthenticator(zklogin_authenticator.into());
     verifier
         .verify_personal_message(&message, &user_signature)
         .unwrap();

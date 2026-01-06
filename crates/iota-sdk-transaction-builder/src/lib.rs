@@ -242,7 +242,7 @@
 //! builder
 //!     .move_call(Address::TWO, "vec_map", "from_keys_values")
 //!     .generics::<(Address, u64)>()
-//!     .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
+//!     .arguments(([address1, address2], [10000000u64, 20000000u64]));
 //! ```
 //!
 //! ### Custom Type
@@ -288,6 +288,7 @@ pub use self::{
     builder::{
         TransactionBuilder,
         client_methods::ClientMethods,
+        move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
         signer::TransactionSigner,
     },

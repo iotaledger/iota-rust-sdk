@@ -5,6 +5,7 @@
 mod bls12381;
 mod ed25519;
 mod intent;
+mod move_authenticator;
 mod multisig;
 mod passkey;
 mod secp256k1;
@@ -18,6 +19,7 @@ pub use intent::{
     HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage,
     IntentScope, IntentVersion, PersonalMessage,
 };
+pub use move_authenticator::MoveAuthenticator;
 pub use multisig::{
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature,

@@ -4,21 +4,18 @@
 use std::sync::Arc;
 
 use iota_sdk::types::{
-    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, GasCostSummary, Jwk, JwkId,
+    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, Jwk, JwkId,
     RandomnessStateUpdate, TransactionExpiration,
 };
 
 use crate::{
-    base64_encode,
     error::Result,
-    hex_encode,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
         crypto::Bls12381PublicKey,
         digest::Digest,
         events::Event,
-        execution_status::ExecutionStatus,
         object::{GenesisObject, ObjectId, ObjectReference, Version},
         signature::UserSignature,
         struct_tag::Identifier,

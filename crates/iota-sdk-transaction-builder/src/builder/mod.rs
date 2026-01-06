@@ -37,6 +37,7 @@ use crate::{
 mod assigned_results;
 pub(crate) mod client_methods;
 pub(crate) mod gas_station;
+pub mod move_authenticator;
 /// Argument types for PTBs
 pub mod ptb_arguments;
 pub mod signer;
