@@ -3,8 +3,6 @@
 
 use iota_sdk::crypto::mnemonic::MnemonicLength;
 
-use crate::error::Result;
-
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
 pub enum MnemonicLength {

@@ -216,6 +216,7 @@ impl Ed25519VerifyingKey {
 #[derive(derive_more::From, uniffi::Object)]
 pub struct Ed25519Verifier(iota_sdk::crypto::ed25519::Ed25519Verifier);
 
+#[uniffi::export]
 impl Ed25519Verifier {
     #[uniffi::constructor]
     pub fn new() -> Self {

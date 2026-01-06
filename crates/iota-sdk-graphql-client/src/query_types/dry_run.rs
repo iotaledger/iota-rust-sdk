@@ -48,6 +48,7 @@ pub struct DryRunReturn {
 
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionArgument")]
+#[non_exhaustive]
 pub enum TransactionArgument {
     GasCoin(GasCoin),
     Input(Input),

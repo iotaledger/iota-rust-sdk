@@ -47,6 +47,10 @@ pub enum Error {
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
     UnsupportedLiteral,
+    #[error("Invalid account for move authenticator: {0}")]
+    InvalidMoveAuthAccount(String),
+    #[error("Invalid argument for move authenticator: {0}")]
+    InvalidMoveAuthArg(String),
     #[error(transparent)]
     InvalidUrl(<reqwest::Url as std::str::FromStr>::Err),
     #[error("Request to gas station `{gas_station_url}` failed: {source}")]

@@ -1,4 +1,4 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 //! # IOTA Transaction Builder
@@ -241,7 +241,7 @@
 //! builder
 //!     .move_call(Address::TWO, "vec_map", "from_keys_values")
 //!     .generics::<(Address, u64)>()
-//!     .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
+//!     .arguments(([address1, address2], [10000000u64, 20000000u64]));
 //! ```
 //!
 //! ### Custom Type
@@ -287,6 +287,7 @@ pub use self::{
     builder::{
         TransactionBuilder,
         client_methods::ClientMethods,
+        move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
         signer::TransactionSigner,
     },
@@ -452,7 +453,7 @@ mod tests {
         // set up the sender, gas object, gas budget, and gas price and return the pk to
         // sign
         let (mut tx, _, pk, _) = helper_setup().await;
-        tx.move_call(Address::STD_LIB, "option", "is_none")
+        tx.move_call(Address::STD, "option", "is_none")
             .generics::<u64>()
             .arguments([Some(1u64)]);
 
@@ -577,6 +578,7 @@ mod tests {
                         }
                     }
                 }
+                _ => unimplemented!("a new enum variant was added and needs to be handled"),
             }
         }
         check_effects_status_success(effects).await;
@@ -587,7 +589,7 @@ mod tests {
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();
             match obj.object_type() {
-                ObjectType::Struct(x) if x.name.to_string() == "UpgradeCap" => {
+                ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                     upgrade_cap = Some(obj.object_id());
                     break;
                 }

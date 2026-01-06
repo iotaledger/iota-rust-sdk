@@ -1,7 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-#![expect(unused)]
 #![allow(
     clippy::wrong_self_convention,
     clippy::should_implement_trait,
@@ -9,7 +8,6 @@
 )]
 
 use base64ct::Encoding;
-use serde::Deserialize;
 
 mod macros;
 
@@ -21,8 +19,6 @@ pub mod ledger;
 pub mod transaction_builder;
 pub mod types;
 pub mod uniffi_helpers;
-
-pub(crate) use macros::*;
 
 uniffi::setup_scaffolding!();
 

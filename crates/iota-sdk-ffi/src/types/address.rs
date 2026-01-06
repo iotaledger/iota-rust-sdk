@@ -1,12 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
-
-use crate::{
-    base64_encode,
-    error::{Result, SdkFfiError},
-};
+use crate::error::Result;
 
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
@@ -104,6 +99,6 @@ macro_rules! named_address {
     }
 }
 
-named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);
+named_address!(ZERO, STD, FRAMEWORK, SYSTEM);
 
 crate::export_iota_types_objects_bcs_conversion!(Address);
