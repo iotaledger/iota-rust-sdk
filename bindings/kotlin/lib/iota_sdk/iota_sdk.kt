@@ -3211,6 +3211,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5376,6 +5378,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ledger(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1(
@@ -7421,6 +7425,8 @@ fun uniffi_iota_sdk_ffi_fn_free_transactionsigner(`ptr`: Pointer,uniffi_out_err:
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ledger(`ledger`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(`auth`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -11571,6 +11577,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair() != 13858.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ledger() != 39213.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator() != 17379.toShort()) {
@@ -47718,6 +47727,16 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
         FfiConverterTypeSimpleKeypair.lower(`key`),_status)
+}
+    )
+    }
+    
+
+         fun `fromLedger`(`ledger`: LedgerSigner): TransactionSigner {
+            return FfiConverterTypeTransactionSigner.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ledger(
+        FfiConverterTypeLedgerSigner.lower(`ledger`),_status)
 }
     )
     }

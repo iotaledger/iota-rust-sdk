@@ -13,7 +13,8 @@ use crate::{
     error::Result,
     ledger::LedgerSigner,
     types::{
-        crypto::move_authenticator::MoveAuthenticator, signature::UserSignature,
+        crypto::move_authenticator::MoveAuthenticator,
+        signature::{SimpleSignature, UserSignature},
         transaction::Transaction,
     },
 };
@@ -79,25 +80,26 @@ impl TransactionSignerFn for SimpleKeypair {
     }
 }
 
-// #[async_trait::async_trait]
-// impl TransactionSignerFn for LedgerSigner {
-//     async fn sign(&self, transaction: Arc<Transaction>) ->
-// Result<TransactionSignerFnOutput> {         let signature = self
-//             .0
-//             .sign_transaction_unchecked(&transaction.0)
-//             .await?
-//             .signature;
-
-//         Ok(TransactionSignerFnOutput {
-//             signature: Arc::new(signature.into()),
-//         })
-//     }
-// }
-
 #[async_trait::async_trait]
 impl TransactionSignerFn for MoveAuthenticator {
     async fn sign(&self, _transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let signature = UserSignature::new_move_authenticator(self);
+
+        Ok(TransactionSignerFnOutput {
+            signature: Arc::new(signature),
+        })
+    }
+}
+
+#[async_trait::async_trait]
+impl TransactionSignerFn for LedgerSigner {
+    async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
+        let signature = UserSignature::new_simple(&SimpleSignature(
+            self.0
+                .sign_transaction_unchecked(&transaction.0)
+                .await?
+                .signature,
+        ));
 
         Ok(TransactionSignerFnOutput {
             signature: Arc::new(signature),
@@ -140,6 +142,11 @@ impl TransactionSigner {
     #[uniffi::constructor]
     pub fn from_move_authenticator(auth: Arc<MoveAuthenticator>) -> Self {
         Self(auth as Arc<_>)
+    }
+
+    #[uniffi::constructor]
+    pub fn from_ledger(ledger: Arc<LedgerSigner>) -> Self {
+        Self(ledger as Arc<_>)
     }
 
     pub async fn sign(&self, txn: Arc<Transaction>) -> Result<Arc<UserSignature>> {

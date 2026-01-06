@@ -10,20 +10,6 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-type AsyncSigner struct {
-	ledger *iota_sdk.LedgerSigner
-}
-
-func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.TransactionSignerFnOutput, error) {
-	fmt.Println("BEFORE")
-	signature, err := signer.ledger.SignTransaction(transaction)
-		if err.(*iota_sdk.LedgerSignerError) != nil {
-		log.Fatalf("Failed to execute: %v", err)
-	}
-	fmt.Println("AFTER")
-	return iota_sdk.TransactionSignerFnOutput{Signature: signature}, err
-}
-
 func main() {
 	ledger, err := iota_sdk.LedgerSignerNewWithDefault("m/44'/4218'/0'/1'/0'")
 
@@ -56,7 +42,7 @@ func main() {
 	builder := iota_sdk.NewTransactionBuilder(address).WithClient(client)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 
-	signer := iota_sdk.NewTransactionSigner(&AsyncSigner{ledger: ledger})
+	signer := iota_sdk.TransactionSignerFromLedger(ledger)
 	waitFor := iota_sdk.WaitForTxFinalized
 	effects, err := builder.Execute(signer, &waitFor)
 	if err.(*iota_sdk.SdkFfiError) != nil {

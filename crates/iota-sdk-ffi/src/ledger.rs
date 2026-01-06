@@ -16,6 +16,13 @@ use crate::types::{
 #[derive(uniffi::Object)]
 pub struct LedgerSigner(pub iota_ledger_signer::LedgerSigner);
 
+// TODO
+impl std::fmt::Debug for LedgerSigner {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("LedgerSigner").finish()
+    }
+}
+
 #[derive(Debug, derive_more::Display, uniffi::Object)]
 pub struct LedgerSignerError(iota_ledger_signer::LedgerSignerError);
 
