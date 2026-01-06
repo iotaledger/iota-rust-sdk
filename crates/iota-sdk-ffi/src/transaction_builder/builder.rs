@@ -3,15 +3,12 @@
 
 use std::{
     collections::HashMap,
-    sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    sync::{Arc, RwLock},
     time::Duration,
 };
 
-use iota_sdk::{graphql_client::WaitForTx, types::Input};
-
 use super::client_builder::ClientTransactionBuilder;
 use crate::{
-    crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
     transaction_builder::{
@@ -23,7 +20,7 @@ use crate::{
         move_package::MovePackageData,
         object::{ObjectId, ObjectReference},
         struct_tag::Identifier,
-        transaction::{Argument, Transaction, TransactionEffects},
+        transaction::Transaction,
         type_tag::TypeTag,
     },
 };

@@ -1,12 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    borrow::Cow,
-    sync::{Arc, RwLock},
-};
+use std::{borrow::Cow, sync::Arc};
 
-use iota_sdk::crypto::{SignatureError, Verifier};
+use iota_sdk::crypto::Verifier;
 
 use crate::{
     crypto::zklogin::ZkloginVerifier,
@@ -119,7 +116,7 @@ impl MultisigAggregator {
     }
 
     pub fn finish(&self) -> Result<MultisigAggregatedSignature> {
-        let mut aggregator = self.0.clone();
+        let aggregator = self.0.clone();
         Ok(aggregator.finish()?.into())
     }
 }

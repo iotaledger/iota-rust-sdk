@@ -1,18 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod move_authenticator;
 pub mod multisig;
 pub mod passkey;
 pub mod zklogin;
 
-use std::sync::Arc;
-
 use iota_sdk::types::{PublicKeyExt, SignatureScheme};
 
-use crate::{
-    error::Result,
-    types::{address::Address, signature::SimpleSignature},
-};
+use crate::{error::Result, types::address::Address};
 
 macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {

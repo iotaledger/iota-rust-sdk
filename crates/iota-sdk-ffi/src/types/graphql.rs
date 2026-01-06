@@ -1,21 +1,18 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::sync::Arc;
 
 use base64ct::Encoding;
-use iota_sdk::{
-    graphql_client::{
-        pagination::{Direction, PaginationFilter},
-        query_types::{
-            Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
-            MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection,
-            MoveStructQuery, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
-            ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig,
-            TransactionBlockKindInput, ValidatorCredentials,
-        },
+use iota_sdk::graphql_client::{
+    pagination::{Direction, PaginationFilter},
+    query_types::{
+        Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
+        MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
+        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ProtocolConfigAttr,
+        ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig, TransactionBlockKindInput,
+        ValidatorCredentials,
     },
-    types::{Digest, Identifier, StructTag},
 };
 
 use crate::types::{

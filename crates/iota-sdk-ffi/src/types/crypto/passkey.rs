@@ -1,14 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
-use iota_sdk::crypto::Verifier;
-
-use crate::{
-    error::Result,
-    types::{address::Address, crypto::Secp256r1PublicKey, signature::SimpleSignature},
-};
+use crate::types::{address::Address, crypto::Secp256r1PublicKey, signature::SimpleSignature};
 
 /// A passkey authenticator.
 ///
