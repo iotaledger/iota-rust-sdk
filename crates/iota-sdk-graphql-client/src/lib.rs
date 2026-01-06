@@ -601,11 +601,13 @@ impl Client {
                 coin_type
                     .into()
                     .map(StructTag::new_coin)
-                    .unwrap_or_else(|| StructTag {
-                        address: Address::FRAMEWORK,
-                        module: IdentifierRef::const_new("coin").into(),
-                        name: IdentifierRef::const_new("Coin").into(),
-                        type_params: Default::default(),
+                    .unwrap_or_else(|| {
+                        StructTag::new(
+                            Address::FRAMEWORK,
+                            IdentifierRef::const_new("coin").into(),
+                            IdentifierRef::const_new("Coin").into(),
+                            Default::default(),
+                        )
                     })
                     .to_string(),
             ),
@@ -1702,7 +1704,7 @@ mod tests {
     async fn test_balance_query() {
         let client = test_client();
         client
-            .balance(Address::STD_LIB, None)
+            .balance(Address::STD, None)
             .await
             .map_err(|e| {
                 format!(
@@ -2012,7 +2014,7 @@ mod tests {
     async fn test_coins_query() {
         let client = test_client();
         client
-            .coins(Address::STD_LIB, None, PaginationFilter::default())
+            .coins(Address::STD, None, PaginationFilter::default())
             .await
             .map_err(|e| {
                 format!(

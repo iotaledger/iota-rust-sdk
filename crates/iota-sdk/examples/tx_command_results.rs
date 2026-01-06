@@ -19,12 +19,12 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
     builder
-        .move_call(Address::STD_LIB, "u64", "max")
+        .move_call(Address::STD, "u64", "max")
         .arguments((0u64, 1000u64))
         // Assign a name to the result of this command
         .name("res0");
     builder
-        .move_call(Address::STD_LIB, "u64", "max")
+        .move_call(Address::STD, "u64", "max")
         .arguments((1000u64, 2000u64))
         .name("res1");
 
