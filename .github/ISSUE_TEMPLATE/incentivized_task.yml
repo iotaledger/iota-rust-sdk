@@ -50,7 +50,6 @@ body:
         - What is _in_ scope
         - What is explicitly _out_ of scope
         - Acceptance criteria (what must be true for the task to be considered done)
-      render: markdown
     validations:
       required: true
 
