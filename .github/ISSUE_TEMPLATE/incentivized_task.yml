@@ -20,9 +20,9 @@ body:
       label: Suggested complexity
       description: Estimated implementation complexity.
       options:
-      - easy
-      - medium
-      - hard
+        - easy
+        - medium
+        - hard
     validations:
       required: true
 
@@ -59,7 +59,7 @@ body:
       description: >
         Does this task require a code change via PR?
       options:
-      - "No"
-      - "Yes"
+        - "No"
+        - "Yes"
     validations:
       required: true
