@@ -12,7 +12,7 @@ body:
       description: Briefly describe the task and its goal.
       placeholder: "What should be done and why?"
     validations:
-    required: true
+      required: true
 
   - type: dropdown
     id: complexity
@@ -71,4 +71,4 @@ body:
       value: >
         ## Important
 
-        - When submitting PRs to resolve incentivised issues, your commits should be signed in order to guarantee that the account can be verified.
+        - When submitting PRs to resolve incentivized issues, your commits should be signed in order to guarantee that the account can be verified.
