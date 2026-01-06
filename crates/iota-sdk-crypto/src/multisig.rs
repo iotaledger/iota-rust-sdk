@@ -250,6 +250,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::MoveAuthenticator(_) => Err(SignatureError::from_source(
                 "move authenticators cannot be verified",
             )),
+            _ => Err(SignatureError::from_source("unknown signature scheme")),
         }
     }
 }
@@ -400,5 +401,6 @@ fn multisig_pubkey_and_signature_from_user_signature(
         | UserSignature::MoveAuthenticator(_) => {
             Err(SignatureError::from_source("invalid signature scheme"))
         }
+        _ => Err(SignatureError::from_source("unknown signature scheme")),
     }
 }

@@ -39,8 +39,9 @@ use crate::{
     },
 };
 
-#[uniffi::remote(Enum)]
 /// Determines what to wait for after executing a transaction.
+#[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.

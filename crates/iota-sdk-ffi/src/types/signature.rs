@@ -35,6 +35,7 @@ use crate::{
 /// move-auth-flag      = %x07
 /// ```
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 #[repr(u8)]
 pub enum SignatureScheme {
     Ed25519 = 0x00,

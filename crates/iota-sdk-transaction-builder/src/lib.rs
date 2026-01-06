@@ -578,6 +578,7 @@ mod tests {
                         }
                     }
                 }
+                _ => unimplemented!("a new enum variant was added and needs to be handled"),
             }
         }
         check_effects_status_success(effects).await;

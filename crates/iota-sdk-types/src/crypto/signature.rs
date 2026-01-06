@@ -38,6 +38,7 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
     schemars(tag = "scheme", rename_all = "lowercase")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum SimpleSignature {
     Ed25519 {
         signature: Ed25519Signature,
@@ -219,6 +220,7 @@ impl SimpleSignature {
 #[strum(serialize_all = "lowercase")]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
+#[non_exhaustive]
 pub enum SignatureScheme {
     Ed25519 = 0x00,
     Secp256k1 = 0x01,
@@ -307,6 +309,7 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// the completely serialized signature.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum UserSignature {
     Simple(SimpleSignature),
     Multisig(MultisigAggregatedSignature),

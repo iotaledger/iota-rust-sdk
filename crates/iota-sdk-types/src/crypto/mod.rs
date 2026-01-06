@@ -16,8 +16,8 @@ mod zklogin;
 pub use bls12381::{Bls12381PublicKey, Bls12381Signature};
 pub use ed25519::{Ed25519PublicKey, Ed25519Signature};
 pub use intent::{
-    HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentMessage, IntentScope,
-    IntentVersion, PersonalMessage,
+    HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage,
+    IntentScope, IntentVersion, PersonalMessage,
 };
 pub use move_authenticator::MoveAuthenticator;
 pub use multisig::{

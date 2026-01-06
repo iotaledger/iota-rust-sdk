@@ -1028,6 +1028,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                                 initial_shared_version: *v,
                                 mutable: false,
                             },
+                            _ => unimplemented!(
+                                "a new enum variant was added and needs to be handled"
+                            ),
                         };
                         let idx = inputs.len();
                         inputs.push(input);
@@ -1114,7 +1117,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .await
                 .map_err(Error::client)?
                 .ok_or(Error::MissingGasBudget)?;
-            let Transaction::V1(txn) = &mut txn;
+            let Transaction::V1(txn) = &mut txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
             txn.gas_payment.budget = budget
         }
 
@@ -1130,7 +1135,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
         {
-            let Transaction::V1(txn) = &txn;
+            let Transaction::V1(txn) = &txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
             if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
                 return Err(Error::DryRun(
                     "gas coins were provided without a gas budget".to_owned(),

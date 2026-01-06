@@ -170,6 +170,7 @@ pub struct TransactionBlockCheckpoint {
     graphql_type = "TransactionBlockKindInput",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
+#[non_exhaustive]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,

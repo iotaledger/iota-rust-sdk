@@ -76,6 +76,7 @@ fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, crate::Error> {
 }
 
 /// Determines what to wait for after executing a transaction.
+#[non_exhaustive]
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
