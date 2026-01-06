@@ -13,7 +13,7 @@ fun main() = runBlocking {
 
         val builder = TransactionBuilder(sender).withClient(client)
 
-        val packageAddr = Address.stdLib()
+        val packageAddr = Address.std()
         val moduleName = Identifier("u64")
         val functionName = Identifier("max")
 

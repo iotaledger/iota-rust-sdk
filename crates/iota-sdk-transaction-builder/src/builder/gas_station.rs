@@ -1,4 +1,4 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use std::{str::FromStr, time::Duration};
@@ -386,7 +386,7 @@ impl GasStationData {
     ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
-            Transaction::V1(ref mut inner_txn) => {
+            Transaction::V1(inner_txn) => {
                 let reservation = self
                     .reserve_gas(inner_txn.gas_payment.budget, &client)
                     .await?;
@@ -407,6 +407,7 @@ impl GasStationData {
                 inner_txn.gas_payment.objects = objects;
                 reservation_id
             }
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         };
 
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);

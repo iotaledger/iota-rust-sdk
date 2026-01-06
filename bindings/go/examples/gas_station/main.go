@@ -28,7 +28,7 @@ func main() {
 
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	package_id := iota_sdk.AddressStdLib()
+	package_id := iota_sdk.AddressStd()
 	module_name := identifier("u64")
 	function_name := identifier("sqrt")
 

@@ -47,6 +47,7 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum MultisigMemberPublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
@@ -320,6 +321,7 @@ impl Eq for MultisigAggregatedSignature {}
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum MultisigMemberSignature {
     Ed25519(Ed25519Signature),
     Secp256k1(Secp256k1Signature),
@@ -481,8 +483,10 @@ mod serialization {
             ReadableMemberPublicKey::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableMemberPublicKey::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableMemberPublicKey::json_schema(generator)
         }
     }
 
@@ -587,8 +591,10 @@ mod serialization {
             ReadableMemberSignature::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableMemberSignature::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableMemberSignature::json_schema(generator)
         }
     }
 

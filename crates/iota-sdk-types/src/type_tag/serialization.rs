@@ -261,7 +261,7 @@ mod json_schema {
             "Identifier".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     title: Some(Self::schema_name()),
@@ -285,7 +285,7 @@ mod json_schema {
             "TypeTag".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     title: Some(Self::schema_name()),
@@ -305,7 +305,7 @@ mod json_schema {
             "StructTag".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     title: Some(Self::schema_name()),

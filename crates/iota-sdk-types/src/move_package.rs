@@ -1,4 +1,4 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{Digest, ObjectId};
@@ -7,6 +7,7 @@ use crate::{Digest, ObjectId};
 #[repr(u8)]
 #[derive(strum::Display, Debug, Clone, Copy, PartialEq, Eq)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
+#[non_exhaustive]
 pub enum UpgradePolicy {
     /// The least restrictive policy. Permits changes to all function
     /// implementations, the removal of ability constraints on generic type
