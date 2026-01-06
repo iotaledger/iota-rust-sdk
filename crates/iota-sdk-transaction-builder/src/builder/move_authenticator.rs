@@ -5,7 +5,7 @@
 //! authenticator function in move which can authorize a transaction as part of
 //! Account Abstraction.
 
-use iota_types::{MoveAuthenticator, ObjectId, Owner, TypeTag};
+use iota_types::{MoveAuthenticator, ObjectId, ObjectReference, Owner, TypeTag};
 
 use crate::{
     ClientMethods, PTBArgumentList, error::Error, types::MoveTypes, unresolved::InputKind,
@@ -63,7 +63,11 @@ impl MoveAuthenticatorBuilder {
         let mut call_args = Vec::new();
         for input in self.call_args {
             call_args.push(match input {
-                InputKind::ImmutableOrOwned(object_id) => {
+                InputKind::ImmutableOrOwned(object_id)
+                | InputKind::Input(iota_types::Input::ImmutableOrOwned(ObjectReference {
+                    object_id,
+                    ..
+                })) => {
                     let obj = client
                         .object(object_id, None)
                         .await
@@ -71,9 +75,17 @@ impl MoveAuthenticatorBuilder {
                         .ok_or_else(|| {
                             Error::InvalidMoveAuthArg(format!("missing object {object_id}"))
                         })?;
+                    if !obj.owner().is_immutable() {
+                        return Err(Error::InvalidMoveAuthArg(
+                            "call arguments must not be owned".to_owned(),
+                        ));
+                    }
                     iota_types::Input::ImmutableOrOwned(obj.object_ref())
                 }
-                InputKind::Shared { object_id, mutable } => {
+                InputKind::Shared { object_id, mutable }
+                | InputKind::Input(iota_types::Input::Shared {
+                    object_id, mutable, ..
+                }) => {
                     let obj = client
                         .object(object_id, None)
                         .await
@@ -82,20 +94,19 @@ impl MoveAuthenticatorBuilder {
                             Error::InvalidMoveAuthArg(format!("missing object {object_id}"))
                         })?;
 
-                    match obj.owner() {
-                        Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id,
-                            initial_shared_version: *version,
-                            mutable,
-                        },
-                        _ => {
-                            return Err(Error::InvalidMoveAuthArg(format!(
-                                "object {object_id} was passed as shared, but is not"
-                            )));
-                        }
+                    let Owner::Shared(version) = obj.owner() else {
+                        return Err(Error::InvalidMoveAuthArg(format!(
+                            "object {object_id} was passed as shared, but is not"
+                        )));
+                    };
+
+                    iota_types::Input::Shared {
+                        object_id,
+                        initial_shared_version: *version,
+                        mutable,
                     }
                 }
-                InputKind::Receiving(_) => {
+                InputKind::Receiving(_) | InputKind::Input(iota_types::Input::Receiving(_)) => {
                     return Err(Error::InvalidMoveAuthArg(
                         "call arguments must not be receiving".to_owned(),
                     ));
