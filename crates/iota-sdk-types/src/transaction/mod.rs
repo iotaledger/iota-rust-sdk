@@ -29,6 +29,7 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[non_exhaustive]
 pub enum Transaction {
     #[cfg_attr(feature = "serde", serde(rename = "1"))]
     V1(TransactionV1),
@@ -87,6 +88,7 @@ pub struct SignedTransaction {
 /// ```
 #[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     #[default]
@@ -189,6 +191,7 @@ pub struct RandomnessStateUpdate {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
     ProgrammableTransaction(ProgrammableTransaction),
@@ -254,6 +257,7 @@ impl TransactionKind {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum EndOfEpochTransactionKind {
     /// End the epoch and start the next one
     ChangeEpoch(ChangeEpoch),
@@ -293,6 +297,7 @@ impl EndOfEpochTransactionKind {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[non_exhaustive]
 pub enum ExecutionTimeObservations {
     V1(Vec<ExecutionTimeObservation>),
 }
@@ -351,6 +356,7 @@ pub struct ValidatorExecutionTimeObservation {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[non_exhaustive]
 pub enum ExecutionTimeObservationKey {
     // Contains all the fields from `ProgrammableMoveCall` besides `arguments`.
     MoveEntryPoint {
@@ -472,6 +478,7 @@ pub struct ActiveJwk {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
     CancelledTransactions {
@@ -886,6 +893,7 @@ pub struct ProgrammableTransaction {
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum Input {
     /// A move value serialized as BCS.
     ///
@@ -950,6 +958,7 @@ impl Input {
     schemars(tag = "command", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum Command {
     /// A call to either an entry or a public Move function
     MoveCall(MoveCall),
@@ -1165,6 +1174,7 @@ pub struct Upgrade {
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum Argument {
     /// The gas coin. The gas coin can only be used by-ref, except for with
     /// `TransferObjects`, which can use it by-value.

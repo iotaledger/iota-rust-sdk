@@ -97,6 +97,7 @@ impl ObjectReference {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum Owner {
     /// Object is exclusively owned by a single address, and is mutable.
     Address(Address),

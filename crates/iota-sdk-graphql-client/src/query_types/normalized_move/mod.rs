@@ -17,6 +17,7 @@ use crate::query_types::schema;
 #[derive(cynic::Enum, Copy, Debug, Clone, strum::Display)]
 #[cynic(schema = "rpc", graphql_type = "MoveAbility")]
 #[strum(serialize_all = "snake_case")]
+#[non_exhaustive]
 pub enum MoveAbility {
     Copy,
     Drop,
@@ -27,6 +28,7 @@ pub enum MoveAbility {
 #[derive(cynic::Enum, Copy, Debug, Clone, strum::Display)]
 #[cynic(schema = "rpc", graphql_type = "MoveVisibility")]
 #[strum(serialize_all = "snake_case")]
+#[non_exhaustive]
 pub enum MoveVisibility {
     Public,
     Private,

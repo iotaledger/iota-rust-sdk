@@ -1,15 +1,15 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
         WaitForTx,
         pagination::PaginationFilter,
-        query_types::{ObjectKey, ProtocolConfigs, ServiceConfig},
+        query_types::{ProtocolConfigs, ServiceConfig},
     },
-    types::{CheckpointSequenceNumber, def_is, iota_names::NameFormat},
+    types::{CheckpointSequenceNumber, iota_names::NameFormat},
 };
 use tokio::sync::RwLock;
 
@@ -33,14 +33,15 @@ use crate::{
         type_tag::TypeTag,
     },
     uniffi_helpers::{
-        CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EpochPage, EventPage,
-        MovePackagePage, NameRegistrationPage, ObjectPage, SignedTransactionPage,
-        TransactionDataEffectsPage, TransactionEffectsPage, ValidatorPage,
+        CheckpointSummaryPage, CoinPage, DynamicFieldOutputPage, EventPage, MovePackagePage,
+        NameRegistrationPage, ObjectPage, SignedTransactionPage, TransactionDataEffectsPage,
+        TransactionEffectsPage, ValidatorPage,
     },
 };
 
-#[uniffi::remote(Enum)]
 /// Determines what to wait for after executing a transaction.
+#[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.

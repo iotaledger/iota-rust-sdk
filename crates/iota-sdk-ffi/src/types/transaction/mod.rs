@@ -4,21 +4,18 @@
 use std::sync::Arc;
 
 use iota_sdk::types::{
-    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, GasCostSummary, Jwk, JwkId,
+    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, Jwk, JwkId,
     RandomnessStateUpdate, TransactionExpiration,
 };
 
 use crate::{
-    base64_encode,
     error::Result,
-    hex_encode,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
         crypto::Bls12381PublicKey,
         digest::Digest,
         events::Event,
-        execution_status::ExecutionStatus,
         object::{GenesisObject, ObjectId, ObjectReference, Version},
         signature::UserSignature,
         struct_tag::Identifier,
@@ -53,6 +50,7 @@ impl Transaction {
     pub fn as_v1(&self) -> Arc<TransactionV1> {
         match &self.0 {
             iota_sdk::types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 
@@ -1801,6 +1799,7 @@ impl From<iota_sdk::types::TransactionArgument> for TransactionArgument {
             iota_sdk::types::TransactionArgument::Result { cmd, ix } => {
                 TransactionArgument::Result { cmd, ix }
             }
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
 }
@@ -1960,6 +1959,7 @@ impl From<DryRunResult> for iota_sdk::types::DryRunResult {
 ///                        =/ %x01 u64  ; epoch
 /// ```
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     None,
