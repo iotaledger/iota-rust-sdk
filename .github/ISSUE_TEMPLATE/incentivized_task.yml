@@ -31,7 +31,7 @@ body:
     attributes:
       label: Estimated duration
       description: >
-        Estimated duration for planning purposes.
+        Estimated time required to complete the task. For planning purposes.
       placeholder: "2 days"
     validations:
       required: true
