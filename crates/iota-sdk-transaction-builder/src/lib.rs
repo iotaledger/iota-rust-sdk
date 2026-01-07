@@ -97,9 +97,10 @@
 //! ### Commands
 //!
 //! Each command method adds one or more commands to the final transaction. Some
-//! commands have optional follow-up methods. All command results can be named
-//! via [name](TransactionBuilder::name). Naming a command allows them to be
-//! used later in the transaction via the [res] method.
+//! commands have optional follow-up methods. All command results can be
+//! assigned a name via [assign](TransactionBuilder::assign). Assigning a name
+//! to a command allows them to be used later in the transaction via the
+//! [assigned] method.
 //!
 //! - [move_call](TransactionBuilder::move_call): Call a move function.
 //!     - `arguments`: Add arguments to the move call.
@@ -149,7 +150,7 @@
 //! - [pure_bytes](TransactionBuilder::pure_bytes)
 //! - [pure](TransactionBuilder::pure)
 //! - [command](TransactionBuilder::command)
-//! - [named_command](TransactionBuilder::named_command)
+//! - [assigned_command](TransactionBuilder::assigned_command)
 //!
 //! ## Finalization and Execution
 //!
@@ -211,8 +212,9 @@
 //!   client is provided. This will be assumed immutable or owned.
 //! - [ObjectReference](iota_types::ObjectReference): An object's reference.
 //!   This will be assumed immutable or owned.
-//! - [Res](builder::ptb_arguments::Res): A reference to the result of a
-//!   previous named command, set with [name](TransactionBuilder::name).
+//! - [Assigned](builder::ptb_arguments::Assigned): A reference to the result of
+//!   a previous assigned command, set with
+//!   [assign](TransactionBuilder::assign).
 //! - [Shared]: Allows specifying shared immutable move objects.
 //! - [SharedMut]: Allows specifying shared mutable move objects.
 //! - [Receiving]: Allows specifying receiving move objects.
@@ -288,7 +290,7 @@ pub use self::{
         TransactionBuilder,
         client_methods::ClientMethods,
         move_authenticator::MoveAuthenticatorBuilder,
-        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
+        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
     },
     types::PureBytes,
@@ -308,7 +310,7 @@ mod tests {
         ObjectType, TransactionEffects, UpgradePolicy,
     };
 
-    use crate::{TransactionBuilder, error::Error, res};
+    use crate::{TransactionBuilder, assigned, error::Error};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -468,9 +470,9 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
-        tx.split_coins(gas, [1_000_000_000u64]).name("coin");
+        tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, [res("coin")]);
+        tx.transfer_objects(recipient, [assigned("coin")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
@@ -542,7 +544,7 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [assigned("cap")]);
 
         let effects = tx.execute(&pk, WaitForTx::Indexed).await;
         check_effects_status_success(effects).await;
@@ -555,7 +557,7 @@ mod tests {
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [assigned("cap")]);
 
         let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         let mut package_id: Option<ObjectId> = None;
@@ -606,10 +608,10 @@ mod tests {
                 UpgradePolicy::Compatible as u8,
                 updated_package.digest,
             ))
-            .name("ticket");
+            .assign("ticket");
         // now we can upgrade the package
         let receipt = tx
-            .upgrade(package_id.unwrap(), updated_package, res("ticket"))
+            .upgrade(package_id.unwrap(), updated_package, assigned("ticket"))
             .arg();
 
         // commit the upgrade

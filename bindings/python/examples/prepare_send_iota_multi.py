@@ -32,7 +32,7 @@ async def main():
     builder.split_coins(PtbArgument.object_id(coin_id), amounts, labels)
     for i, r in enumerate(recipients):
         builder.transfer_objects(Address.from_hex(r[0]),
-                                 [PtbArgument.res(labels[i])])
+                                 [PtbArgument.assigned(labels[i])])
 
     txn = await builder.finish()
 

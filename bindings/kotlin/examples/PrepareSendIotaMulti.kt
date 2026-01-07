@@ -43,7 +43,10 @@ fun main() = runBlocking {
         builder.splitCoins(PtbArgument.objectId(coinId), amounts, labels)
 
         for ((i, r) in recipients.withIndex()) {
-            builder.transferObjects(Address.fromHex(r.first), listOf(PtbArgument.res(labels[i])))
+            builder.transferObjects(
+                Address.fromHex(r.first),
+                listOf(PtbArgument.assigned(labels[i])),
+            )
         }
 
         val txn = builder.finish()

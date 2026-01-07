@@ -24,7 +24,11 @@ fun main() = runBlocking {
             )
             .transferObjects(
                 sender,
-                listOf(PtbArgument.res("coin1"), PtbArgument.res("coin2"), PtbArgument.res("coin3")),
+                listOf(
+                    PtbArgument.assigned("coin1"),
+                    PtbArgument.assigned("coin2"),
+                    PtbArgument.assigned("coin3"),
+                ),
             )
 
         val txn = builder.finish()

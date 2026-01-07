@@ -53,8 +53,8 @@ async def main():
         iota_names_package_address,
         Identifier("registry"),
         Identifier("lookup"),
-        [PtbArgument.res("iota_names"),
-         PtbArgument.res("name")],
+        [PtbArgument.assigned("iota_names"),
+         PtbArgument.assigned("name")],
         names=["name_record_opt"],
     )
 
@@ -63,7 +63,7 @@ async def main():
         std_address,
         Identifier("option"),
         Identifier("borrow"),
-        [PtbArgument.res("name_record_opt")],
+        [PtbArgument.assigned("name_record_opt")],
         [
             TypeTag.new_struct(
                 StructTag(
@@ -80,7 +80,7 @@ async def main():
         iota_names_package_address,
         Identifier("name_record"),
         Identifier("target_address"),
-        [PtbArgument.res("name_record")],
+        [PtbArgument.assigned("name_record")],
         names=["target_address_opt"],
     )
 
@@ -89,7 +89,7 @@ async def main():
         std_address,
         Identifier("option"),
         Identifier("borrow"),
-        [PtbArgument.res("target_address_opt")],
+        [PtbArgument.assigned("target_address_opt")],
         [TypeTag.new_address()],
         ["target_address"],
     )
