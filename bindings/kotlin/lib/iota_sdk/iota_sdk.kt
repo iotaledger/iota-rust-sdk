@@ -5090,6 +5090,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec(
@@ -5117,8 +5119,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_option(
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared(
 ): Short
@@ -6708,6 +6708,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec(`addresses`: Rust
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -6735,8 +6737,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_option(`value`: RustBuffer.By
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(`name`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -11126,6 +11126,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex() != 60030.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned() != 10192.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool() != 51030.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11166,9 +11169,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() != 48453.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619.toShort()) {
@@ -36083,6 +36083,16 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     }
     
 
+         fun `assigned`(`name`: kotlin.String): PtbArgument {
+            return FfiConverterTypePTBArgument.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned(
+        FfiConverterString.lower(`name`),_status)
+}
+    )
+    }
+    
+
          fun `bool`(`value`: kotlin.Boolean): PtbArgument {
             return FfiConverterTypePTBArgument.lift(
     uniffiRustCall() { _status ->
@@ -36222,16 +36232,6 @@ open class PtbArgument: Disposable, AutoCloseable, PtbArgumentInterface
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(
         FfiConverterString.lower(`hex`),_status)
-}
-    )
-    }
-    
-
-         fun `res`(`name`: kotlin.String): PtbArgument {
-            return FfiConverterTypePTBArgument.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(
-        FfiConverterString.lower(`name`),_status)
 }
     )
     }

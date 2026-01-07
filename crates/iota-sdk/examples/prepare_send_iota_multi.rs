@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{TransactionBuilder, res},
+    transaction_builder::{TransactionBuilder, assigned},
     types::{Address, ObjectId},
 };
 
@@ -39,11 +39,11 @@ async fn main() -> Result<()> {
 
     let labels: Vec<String> = (0..recipients.len()).map(|i| format!("coin{i}")).collect();
 
-    builder.split_coins(coin, amounts).name(labels.clone());
+    builder.split_coins(coin, amounts).assign(labels.clone());
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {
-        builder.transfer_objects(Address::from_str(address)?, [res(&labels[i])]);
+        builder.transfer_objects(Address::from_str(address)?, [assigned(&labels[i])]);
     }
 
     let txn = builder.finish().await?;

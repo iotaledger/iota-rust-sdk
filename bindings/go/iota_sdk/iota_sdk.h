@@ -3479,6 +3479,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec(RustBuffer addr
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex(RustBuffer addresses, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_ASSIGNED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_ASSIGNED
+void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned(RustBuffer name, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_BOOL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_BOOL
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(int8_t value, RustCallStatus *out_status
@@ -3548,11 +3553,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving(void* id, RustCal
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RECEIVING_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RECEIVING_FROM_HEX
 void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex(RustBuffer hex, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_RES
-void* uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(RustBuffer name, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_PTBARGUMENT_SHARED
@@ -13129,6 +13129,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_h
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_ASSIGNED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_ASSIGNED
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_BOOL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_BOOL
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool(void
@@ -13210,12 +13216,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RECEIVING_FROM_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RECEIVING_FROM_HEX
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_PTBARGUMENT_RES
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res(void
     
 );
 #endif
