@@ -7,11 +7,18 @@ use std::str::FromStr;
 
 pub const INTENT_PREFIX_LENGTH: usize = 3;
 
+#[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
 pub enum IntentError {
+    #[error("")]
     Bytes,
+    #[error("")]
     Intent,
+    #[error("")]
     Scope,
+    #[error("")]
     Version,
+    #[error("")]
     AppId,
 }
 
