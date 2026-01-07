@@ -125,7 +125,7 @@ impl FromStr for Intent {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let bytes: Vec<u8> =
-            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| IntentError::Intent)?;
+            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| IntentError::String)?;
         Self::from_bytes(bytes.as_slice())
     }
 }
