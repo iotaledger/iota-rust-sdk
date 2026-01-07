@@ -11,7 +11,7 @@ use iota_sdk::graphql_client::WaitForTx;
 
 use crate::{
     error::Result,
-    graphql::GraphQLClient,
+    graphql::{DryRunResult, GraphQLClient},
     transaction_builder::{
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
@@ -21,7 +21,7 @@ use crate::{
         move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{DryRunResult, Transaction, TransactionEffects},
+        transaction::{Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };

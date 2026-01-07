@@ -11,9 +11,9 @@ use std::{
 
 use iota_graphql_client::Client;
 use iota_types::{
-    Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
-    Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionV1, TypeTag,
+    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -945,6 +945,88 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         self
     }
 
+    /// Consume the builder and create a [`ProgrammableTransaction`], which
+    /// can be used for dry runs.
+    pub async fn into_programmable_transaction(self) -> Result<ProgrammableTransaction, Error> {
+        let mut inputs = Vec::new();
+        let mut input_map = HashMap::new();
+
+        for (id, input) in self.data.inputs {
+            match input.kind {
+                InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
+                    let obj = self
+                        .client
+                        .object(object_id, None)
+                        .await
+                        .map_err(Error::client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+                    if !input.is_gas {
+                        let input = match obj.owner() {
+                            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
+                                iota_types::Input::ImmutableOrOwned(ObjectReference::new(
+                                    object_id,
+                                    obj.version(),
+                                    obj.digest(),
+                                ))
+                            }
+                            Owner::Shared(v) => iota_types::Input::Shared {
+                                object_id,
+                                initial_shared_version: *v,
+                                mutable: false,
+                            },
+                            _ => unimplemented!(
+                                "a new enum variant was added and needs to be handled"
+                            ),
+                        };
+                        let idx = inputs.len();
+                        inputs.push(input);
+                        input_map.insert(id, idx as u16);
+                    }
+                }
+                InputKind::Shared { object_id, mutable } => {
+                    let obj = self
+                        .client
+                        .object(object_id, None)
+                        .await
+                        .map_err(Error::client)?
+                        .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
+
+                    let input = match obj.owner() {
+                        Owner::Shared(version) => iota_types::Input::Shared {
+                            object_id,
+                            initial_shared_version: *version,
+                            mutable,
+                        },
+                        _ => {
+                            return Err(Error::Input(format!(
+                                "object {object_id} was passed as shared, but is not"
+                            )));
+                        }
+                    };
+                    let idx = inputs.len();
+                    inputs.push(input);
+                    input_map.insert(id, idx as u16);
+                }
+                InputKind::Input(inp) => {
+                    if !input.is_gas {
+                        let idx = inputs.len();
+                        inputs.push(inp);
+                        input_map.insert(id, idx as u16);
+                    }
+                }
+            };
+        }
+        let commands = self
+            .data
+            .commands
+            .clone()
+            .into_iter()
+            .map(|c| c.resolve(&input_map))
+            .collect();
+        Ok(ProgrammableTransaction { inputs, commands })
+    }
+
     async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
@@ -1132,7 +1214,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Dry run the transaction.
-    pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
+    pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
         {
             let Transaction::V1(txn) = &txn else {
