@@ -10,15 +10,15 @@ pub const INTENT_PREFIX_LENGTH: usize = 3;
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
 pub enum IntentError {
-    #[error("Invalid bytes for Intent")]
+    #[error("invalid bytes for Intent")]
     Bytes,
-    #[error("Invalid String for Intent")]
+    #[error("invalid hex String for Intent")]
     String,
-    #[error("Invalid Scope for Intent")]
+    #[error("invalid Scope for Intent")]
     Scope,
-    #[error("Invalid Version for Intent")]
+    #[error("invalid Version for Intent")]
     Version,
-    #[error("Invalid AppId for Intent")]
+    #[error("invalid AppId for Intent")]
     AppId,
 }
 
