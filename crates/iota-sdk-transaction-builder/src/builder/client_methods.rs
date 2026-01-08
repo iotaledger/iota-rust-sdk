@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_graphql_client::{
-    DryRunResult,
+    DryRunResult, WaitForTx,
     pagination::{Direction, PaginationFilter},
     query_types::{ObjectFilter, TransactionMetadata},
 };
@@ -10,8 +10,6 @@ use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
     UserSignature,
 };
-
-use crate::WaitForTx;
 
 /// A trait which defines methods needed from the client for the Transaction
 /// Builder.
