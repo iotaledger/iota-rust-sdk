@@ -57,14 +57,14 @@ func main() {
 
 	builder.SplitCoins(
 		iota_sdk.PtbArgumentGas(),
-		// Use the named results of previous commands to use as arguments
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("res0"), iota_sdk.PtbArgumentRes("res1")},
-		// For nested results, a tuple or vec can be used to name them
+		// Use the assigned results of previous commands to use as arguments
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("res0"), iota_sdk.PtbArgumentAssigned("res1")},
+		// For nested results, a tuple or vec can be used to assign them
 		[]string{"coin0", "coin1"},
 	)
 
-	// Use named results as arguments
-	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("coin0"), iota_sdk.PtbArgumentRes("coin1")})
+	// Use assigned results as arguments
+	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("coin0"), iota_sdk.PtbArgumentAssigned("coin1")})
 
 	txn, err := builder.Finish()
 	if err.(*iota_sdk.SdkFfiError) != nil {

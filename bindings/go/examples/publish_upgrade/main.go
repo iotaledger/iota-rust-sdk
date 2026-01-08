@@ -73,7 +73,7 @@ func main() {
 	// Publish the package and receive the upgrade cap in return
 	builderPublish.Publish(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
-	builderPublish.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("upgrade_cap")})
+	builderPublish.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
@@ -164,7 +164,7 @@ func main() {
 
 	// Upgrade the package to receive an upgrade receipt
 	upgradeReceiptName := "upgrade_receipt"
-	builderUpgrade.Upgrade(packageId, packageData, iota_sdk.PtbArgumentRes(upgradeTicketName), &upgradeReceiptName)
+	builderUpgrade.Upgrade(packageId, packageData, iota_sdk.PtbArgumentAssigned(upgradeTicketName), &upgradeReceiptName)
 
 	// Commit the upgrade using the receipt
 	commitUpgrade, _ := iota_sdk.NewIdentifier("commit_upgrade")
@@ -172,7 +172,7 @@ func main() {
 		iota_sdk.AddressFramework(),
 		packageIdent,
 		commitUpgrade,
-		[]*iota_sdk.PtbArgument{upgradeCapArg, iota_sdk.PtbArgumentRes(upgradeReceiptName)},
+		[]*iota_sdk.PtbArgument{upgradeCapArg, iota_sdk.PtbArgumentAssigned(upgradeReceiptName)},
 		nil,
 		nil,
 	)
