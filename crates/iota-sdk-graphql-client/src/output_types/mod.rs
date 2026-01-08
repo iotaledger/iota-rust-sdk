@@ -72,7 +72,7 @@ pub enum TransactionArgument {
     /// An input to the programmable transaction block.
     Input {
         /// Index of the programmable transaction block input (0-indexed).
-        ix: u32,
+        index: u32,
     },
     /// The result of another transaction command.
     Result {
@@ -82,7 +82,7 @@ pub enum TransactionArgument {
         /// If the previous command returns multiple values, this is the
         /// index of the individual result among the multiple
         /// results from that command (also 0-indexed).
-        ix: Option<u32>,
+        index: Option<u32>,
     },
 }
 
@@ -148,13 +148,13 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
             crate::query_types::TransactionArgument::GasCoin(_) => Ok(TransactionArgument::GasCoin),
             crate::query_types::TransactionArgument::Input(input) => {
                 Ok(TransactionArgument::Input {
-                    ix: input.ix as u32,
+                    index: input.ix as u32,
                 })
             }
             crate::query_types::TransactionArgument::Result(result) => {
                 Ok(TransactionArgument::Result {
                     cmd: result.cmd as u32,
-                    ix: result.ix.map(|ix| ix as u32),
+                    index: result.ix.map(|ix| ix as u32),
                 })
             }
             crate::query_types::TransactionArgument::Unknown => Err(Error::from_error(
