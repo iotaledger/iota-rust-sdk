@@ -990,7 +990,7 @@ pub enum TransactionArgument {
     /// An input to the programmable transaction block.
     Input {
         /// Index of the programmable transaction block input (0-indexed).
-        ix: u32,
+        index: u32,
     },
     /// The result of another transaction command.
     Result {
@@ -1000,7 +1000,7 @@ pub enum TransactionArgument {
         /// If the previous command returns multiple values, this is the index
         /// of the individual result among the multiple results from
         /// that command (also 0-indexed).
-        ix: Option<u32>,
+        index: Option<u32>,
     },
 }
 
@@ -1009,10 +1009,10 @@ impl From<iota_sdk::graphql_client::TransactionArgument> for TransactionArgument
         match value {
             iota_sdk::graphql_client::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
             iota_sdk::graphql_client::TransactionArgument::Input { ix } => {
-                TransactionArgument::Input { ix }
+                TransactionArgument::Input { index: ix }
             }
             iota_sdk::graphql_client::TransactionArgument::Result { cmd, ix } => {
-                TransactionArgument::Result { cmd, ix }
+                TransactionArgument::Result { cmd, index: ix }
             }
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
@@ -1023,10 +1023,10 @@ impl From<TransactionArgument> for iota_sdk::graphql_client::TransactionArgument
     fn from(value: TransactionArgument) -> Self {
         match value {
             TransactionArgument::GasCoin => iota_sdk::graphql_client::TransactionArgument::GasCoin,
-            TransactionArgument::Input { ix } => {
+            TransactionArgument::Input { index: ix } => {
                 iota_sdk::graphql_client::TransactionArgument::Input { ix }
             }
-            TransactionArgument::Result { cmd, ix } => {
+            TransactionArgument::Result { cmd, index: ix } => {
                 iota_sdk::graphql_client::TransactionArgument::Result { cmd, ix }
             }
         }
