@@ -93,7 +93,7 @@ jobs:
           make package_test_example_v1.json package_test_example_v2.json
 
           echo "Generating coverage data (.profraw files)."
-          cargo llvm-cov --ignore-run-fail --no-report nextest --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build
+          cargo llvm-cov --ignore-run-fail --no-report nextest --workspace --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build
 
           echo "Merging .profraw files."
           find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \
