@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_crypto::ed25519::Ed25519PrivateKey;
-use iota_graphql_client::Client;
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::Address;
+use iota_sdk::{
+    crypto::ed25519::Ed25519PrivateKey, graphql_client::Client,
+    transaction_builder::TransactionBuilder, types::Address,
+};
 use reqwest::header::HeaderValue;
 
 #[tokio::main]
@@ -19,7 +19,7 @@ async fn main() -> Result<()> {
     let mut builder = TransactionBuilder::new(sender).with_client(&client);
 
     builder
-        .move_call(Address::STD_LIB, "u64", "sqrt")
+        .move_call(Address::STD, "u64", "sqrt")
         .arguments([64_u64])
         .gas_station_sponsor(gas_station_url)
         .add_gas_station_header(
@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
         );
 
-    let effects = builder.execute(&keypair.into(), None).await?;
+    let effects = builder.execute(&keypair, None).await?;
 
     println!("{effects:#?}");
 

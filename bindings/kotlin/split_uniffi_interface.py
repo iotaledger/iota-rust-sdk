@@ -91,7 +91,12 @@ def main() -> None:
         m = re.match(r"^\s*fun\s+([A-Za-z0-9_`]+)\s*\(", signature)
         if not m:
             raise SystemExit(f"Could not parse method name from line {start_idx+1}: {signature}")
-        moved_names.append(m.group(1))
+        name = m.group(1)
+        # skip methods that can't be moved
+        print(f"name={name}")
+        if name == "uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn":
+            continue
+        moved_names.append(name)
         for idx in range(start_idx, end_idx + 1):
             lines[idx] = None  # Mark for removal
 

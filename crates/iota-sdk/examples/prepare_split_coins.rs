@@ -4,9 +4,11 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res};
-use iota_types::{Address, ObjectId};
+use iota_sdk::{
+    graphql_client::Client,
+    transaction_builder::{TransactionBuilder, assigned},
+    types::{Address, ObjectId},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -21,15 +23,18 @@ async fn main() -> Result<()> {
 
     builder
         .split_coins(coin, [1000u64, 2000, 3000])
-        .name(("coin1", "coin2", "coin3"))
-        .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
+        .assign(("coin1", "coin2", "coin3"))
+        .transfer_objects(
+            sender,
+            (assigned("coin1"), assigned("coin2"), assigned("coin3")),
+        );
 
-    let txn = builder.finish().await?;
+    let txn = builder.clone().finish().await?;
 
     println!("Signing Digest: {}", txn.signing_digest_hex());
     println!("Txn Bytes: {}", txn.to_base64());
 
-    let res = client.dry_run_tx(&txn, false).await?;
+    let res = builder.dry_run(false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to split coin: {err}");

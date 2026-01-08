@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::RwLock;
-
 use iota_sdk::types::SignatureScheme;
 use rand::rngs::OsRng;
 
@@ -11,7 +9,7 @@ use crate::{
     types::{
         checkpoint::CheckpointSummary,
         crypto::{Bls12381PublicKey, Bls12381Signature},
-        validator::{ValidatorCommittee, ValidatorSignature},
+        validator::ValidatorSignature,
     },
 };
 

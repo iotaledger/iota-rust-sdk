@@ -18,9 +18,9 @@ use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::{Error, Kind};
 use futures::Stream;
 use iota_types::{
-    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, DryRunEffect, DryRunResult,
-    IdentifierRef, MovePackage, Object, ObjectId, SenderSignedTransaction, SignedTransaction,
-    StructTag, Transaction, TransactionEffects, TransactionKind, TypeTag, UserSignature,
+    Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
+    Object, ObjectId, SenderSignedTransaction, SignedTransaction, StructTag, Transaction,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };
@@ -76,6 +76,7 @@ fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, crate::Error> {
 }
 
 /// Determines what to wait for after executing a transaction.
+#[non_exhaustive]
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
@@ -600,11 +601,13 @@ impl Client {
                 coin_type
                     .into()
                     .map(StructTag::new_coin)
-                    .unwrap_or_else(|| StructTag {
-                        address: Address::FRAMEWORK,
-                        module: IdentifierRef::const_new("coin").into(),
-                        name: IdentifierRef::const_new("Coin").into(),
-                        type_params: Default::default(),
+                    .unwrap_or_else(|| {
+                        StructTag::new(
+                            Address::FRAMEWORK,
+                            IdentifierRef::const_new("coin").into(),
+                            IdentifierRef::const_new("Coin").into(),
+                            Default::default(),
+                        )
                     })
                     .to_string(),
             ),
@@ -1312,15 +1315,14 @@ impl Client {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
-        if let Some(block) = response.transaction_block {
-            if block
+        if let Some(block) = response.transaction_block
+            && block
                 .effects
                 .as_ref()
                 .and_then(|e| e.checkpoint.as_ref())
                 .is_some()
-            {
-                return Ok(true);
-            }
+        {
+            return Ok(true);
         }
         Ok(false)
     }
@@ -1702,7 +1704,7 @@ mod tests {
     async fn test_balance_query() {
         let client = test_client();
         client
-            .balance(Address::STD_LIB, None)
+            .balance(Address::STD, None)
             .await
             .map_err(|e| {
                 format!(
@@ -2012,7 +2014,7 @@ mod tests {
     async fn test_coins_query() {
         let client = test_client();
         client
-            .coins(Address::STD_LIB, None, PaginationFilter::default())
+            .coins(Address::STD, None, PaginationFilter::default())
             .await
             .map_err(|e| {
                 format!(

@@ -1,4 +1,4 @@
-name: Publish
+name: Publish Rust SDK to crates.io
 
 on:
   release:
@@ -6,8 +6,9 @@ on:
 
 jobs:
   publish:
-    name: Publish to crates.io
+    name: Publish ${{github.event.release.tag_name}} to crates.io
     runs-on: ubuntu-latest
+    if: startsWith(github.event.release.tag_name, 'iota-sdk')
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0

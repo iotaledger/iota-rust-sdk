@@ -1,12 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
-
-use crate::{
-    base64_encode,
-    error::{Result, SdkFfiError},
-};
+use crate::error::Result;
 
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
@@ -88,6 +83,18 @@ impl Address {
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
     }
+
+    /// Returns the string representation of this address using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        self.0.to_short_string(with_prefix)
+    }
 }
 
 macro_rules! named_address {
@@ -104,6 +111,6 @@ macro_rules! named_address {
     }
 }
 
-named_address!(ZERO, STD_LIB, FRAMEWORK, SYSTEM);
+named_address!(ZERO, STD, FRAMEWORK, SYSTEM);
 
 crate::export_iota_types_objects_bcs_conversion!(Address);

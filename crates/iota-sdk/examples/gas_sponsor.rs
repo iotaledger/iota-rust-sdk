@@ -4,9 +4,7 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::Address;
+use iota_sdk::{graphql_client::Client, transaction_builder::TransactionBuilder, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -19,7 +17,7 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
     let tx = builder
-        .move_call(Address::STD_LIB, "u8", "max")
+        .move_call(Address::STD, "u8", "max")
         .arguments((0u8, 1u8))
         .sponsor(sponsor_address)
         .to_owned()

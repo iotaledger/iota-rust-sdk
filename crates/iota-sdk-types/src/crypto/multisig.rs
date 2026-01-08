@@ -7,6 +7,7 @@ use super::{
     Secp256r1Signature, SignatureScheme,
     zklogin::{ZkLoginAuthenticator, ZkLoginPublicIdentifier},
 };
+use crate::PublicKeyExt;
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -46,6 +47,7 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum MultisigMemberPublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
@@ -60,6 +62,21 @@ impl MultisigMemberPublicKey {
         Secp256r1(Secp256r1PublicKey),
         ZkLogin as zklogin(ZkLoginPublicIdentifier),
     );
+
+    pub fn scheme(&self) -> SignatureScheme {
+        match self {
+            MultisigMemberPublicKey::Ed25519(ed25519_public_key) => ed25519_public_key.scheme(),
+            MultisigMemberPublicKey::Secp256k1(secp256k1_public_key) => {
+                secp256k1_public_key.scheme()
+            }
+            MultisigMemberPublicKey::Secp256r1(secp256r1_public_key) => {
+                secp256r1_public_key.scheme()
+            }
+            MultisigMemberPublicKey::ZkLogin(zk_login_public_identifier) => {
+                zk_login_public_identifier.scheme()
+            }
+        }
+    }
 }
 
 /// A member in a multisig committee
@@ -304,6 +321,7 @@ impl Eq for MultisigAggregatedSignature {}
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum MultisigMemberSignature {
     Ed25519(Ed25519Signature),
     Secp256k1(Secp256k1Signature),
@@ -465,8 +483,10 @@ mod serialization {
             ReadableMemberPublicKey::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableMemberPublicKey::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableMemberPublicKey::json_schema(generator)
         }
     }
 
@@ -571,8 +591,10 @@ mod serialization {
             ReadableMemberSignature::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableMemberSignature::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableMemberSignature::json_schema(generator)
         }
     }
 

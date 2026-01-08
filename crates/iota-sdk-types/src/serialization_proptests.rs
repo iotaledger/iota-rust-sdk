@@ -39,7 +39,7 @@ fn assert_valid_json_schema<T>(instance: &T)
 where
     T: serde::Serialize + schemars::JsonSchema,
 {
-    let root_schema = schemars::gen::SchemaGenerator::default().into_root_schema_for::<T>();
+    let root_schema = schemars::r#gen::SchemaGenerator::default().into_root_schema_for::<T>();
     let schema = serde_json::json!(root_schema);
     let validator = jsonschema::Validator::new(&schema).unwrap();
     let instance = serde_json::json!(instance);
@@ -112,6 +112,7 @@ serialization_test!(ZkLoginPublicIdentifier);
 serialization_test!(CircomG1);
 serialization_test!(CircomG2);
 serialization_test!(PasskeyAuthenticator);
+serialization_test!(MoveAuthenticator);
 serialization_test!(Digest);
 serialization_test!(ChangedObject);
 serialization_test!(IdOperation);
@@ -166,11 +167,6 @@ serialization_test!(TransactionV1);
 serialization_test!(TransactionExpiration);
 serialization_test!(TransactionKind);
 serialization_test!(TransferObjects);
-// serialization_test!(UnresolvedGasPayment);
-// serialization_test!(UnresolvedInputArgument);
-// serialization_test!(UnresolvedObjectReference);
-// serialization_test!(UnresolvedProgrammableTransaction);
-// serialization_test!(UnresolvedTransaction);
 serialization_test!(Upgrade);
 serialization_test!(Identifier);
 serialization_test!(StructTag);

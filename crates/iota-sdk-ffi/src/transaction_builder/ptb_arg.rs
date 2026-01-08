@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_sdk::transaction_builder::{
-    PureBytes, Receiving, Shared, SharedMut, builder::ptb_arguments::Res, res,
+    PureBytes, Receiving, Shared, SharedMut, assigned, builder::ptb_arguments::Assigned,
 };
 use primitive_types::U256;
 
@@ -210,7 +210,7 @@ pub enum PTBArgument {
     ObjectId(iota_sdk::types::ObjectId),
     ObjectRef(iota_sdk::types::ObjectReference),
     Move(MoveArg),
-    Res(Res),
+    Assigned(Assigned),
     Shared(Shared<iota_sdk::types::ObjectId>),
     SharedMut(SharedMut<iota_sdk::types::ObjectId>),
     Receiving(Receiving<iota_sdk::types::ObjectId>),
@@ -220,8 +220,8 @@ pub enum PTBArgument {
 #[uniffi::export]
 impl PTBArgument {
     #[uniffi::constructor]
-    pub fn res(name: String) -> Self {
-        Self::Res(res(name))
+    pub fn assigned(name: String) -> Self {
+        Self::Assigned(assigned(name))
     }
 
     #[uniffi::constructor]
@@ -415,11 +415,24 @@ impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
             PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
             PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().arg(ptb),
             PTBArgument::Move(arg) => arg.arg(ptb),
-            PTBArgument::Res(res) => res.arg(ptb),
+            PTBArgument::Assigned(assigned) => assigned.arg(ptb),
             PTBArgument::Shared(shared) => shared.arg(ptb),
             PTBArgument::SharedMut(shared_mut) => shared_mut.arg(ptb),
             PTBArgument::Receiving(receiving) => receiving.arg(ptb),
             PTBArgument::Gas => iota_sdk::transaction_builder::unresolved::Argument::Gas,
+        }
+    }
+
+    fn input(self) -> iota_sdk::transaction_builder::unresolved::InputKind {
+        match self {
+            PTBArgument::ObjectId(object_id) => object_id.input(),
+            PTBArgument::ObjectRef(obj_ref) => obj_ref.clone().input(),
+            PTBArgument::Move(arg) => arg.input(),
+            PTBArgument::Assigned(assigned) => assigned.input(),
+            PTBArgument::Shared(shared) => shared.input(),
+            PTBArgument::SharedMut(shared_mut) => shared_mut.input(),
+            PTBArgument::Receiving(receiving) => receiving.input(),
+            PTBArgument::Gas => panic!("Transaction inputs cannot be derived from gas arguments"),
         }
     }
 }

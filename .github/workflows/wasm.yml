@@ -19,6 +19,7 @@ env:
 
 jobs:
   wasm:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

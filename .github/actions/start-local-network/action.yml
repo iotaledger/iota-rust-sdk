@@ -4,6 +4,22 @@ description: "Downloads and starts a local IOTA network for testing"
 runs:
   using: "composite"
   steps:
+    - name: Start PostgreSQL
+      shell: bash
+      run: |
+        docker run -d \
+        --name postgres \
+        -e POSTGRES_USER=postgres \
+        -e POSTGRES_PASSWORD=postgrespw \
+        -e POSTGRES_DB=iota_indexer_v2 \
+        -e POSTGRES_HOST_AUTH_METHOD=trust \
+        -p 5432:5432 \
+        --health-cmd pg_isready \
+        --health-interval 10s \
+        --health-timeout 5s \
+        --health-retries 5 \
+        postgres
+
     - name: Get the IOTA alphanet binary and start a local network
       shell: bash
       env:

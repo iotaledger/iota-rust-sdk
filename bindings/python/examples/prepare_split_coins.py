@@ -1,7 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
@@ -26,9 +26,9 @@ async def main():
     ).transfer_objects(
         sender,
         [
-            PtbArgument.res("coin1"),
-            PtbArgument.res("coin2"),
-            PtbArgument.res("coin3"),
+            PtbArgument.assigned("coin1"),
+            PtbArgument.assigned("coin2"),
+            PtbArgument.assigned("coin3"),
         ],
     )
 

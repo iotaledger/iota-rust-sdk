@@ -1,10 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
 use iota_sdk::{
-    crypto::{FromMnemonic, Signer, ToFromBech32, ToFromBytes, Verifier},
+    crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier},
     types::SignatureScheme,
 };
 use rand::rngs::OsRng;
@@ -17,8 +15,8 @@ use crate::{
     },
 };
 
-#[derive(PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
-#[uniffi::export(Eq)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Secp256r1PrivateKey(pub iota_sdk::crypto::secp256r1::Secp256r1PrivateKey);
 
 #[uniffi::export]

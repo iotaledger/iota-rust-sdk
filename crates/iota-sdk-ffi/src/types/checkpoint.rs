@@ -5,10 +5,7 @@ use std::sync::Arc;
 
 use iota_sdk::types::GasCostSummary;
 
-use crate::{
-    error::Result,
-    types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember},
-};
+use crate::types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;

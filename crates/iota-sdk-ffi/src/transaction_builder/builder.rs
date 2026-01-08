@@ -3,24 +3,24 @@
 
 use std::{
     collections::HashMap,
-    sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    sync::{Arc, RwLock},
     time::Duration,
 };
 
-use iota_sdk::{graphql_client::WaitForTx, types::Input};
-
 use super::client_builder::ClientTransactionBuilder;
 use crate::{
-    crypto::simple::SimpleKeypair,
     error::Result,
     graphql::GraphQLClient,
-    transaction_builder::ptb_arg::{MoveArg, PTBArgument},
+    transaction_builder::{
+        ptb_arg::{MoveArg, PTBArgument},
+        signer::TransactionSigner,
+    },
     types::{
         address::Address,
         move_package::MovePackageData,
         object::{ObjectId, ObjectReference},
         struct_tag::Identifier,
-        transaction::{Argument, Transaction, TransactionEffects},
+        transaction::Transaction,
         type_tag::TypeTag,
     },
 };
@@ -149,7 +149,7 @@ impl TransactionBuilder {
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .name(names);
+                .assign(names);
         });
         self
     }
@@ -216,7 +216,7 @@ impl TransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, amounts).name(names);
+            builder.split_coins(coin, amounts).assign(names);
         });
         self
     }
@@ -255,7 +255,7 @@ impl TransactionBuilder {
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
             });
-            builder.named_command(cmd, name);
+            builder.assigned_command(cmd, name);
         });
         self
     }
@@ -308,7 +308,7 @@ impl TransactionBuilder {
         self.write(|builder| {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
-                .name(name);
+                .assign(name);
         });
         self
     }
@@ -345,10 +345,10 @@ impl TransactionBuilder {
     /// `TransactionEffects`
     pub async fn execute_with_gas_station(
         &self,
-        keypair: &SimpleKeypair,
+        signer: &TransactionSigner,
     ) -> Result<serde_json::Value> {
         Ok(self
-            .read(|builder| builder.clone().execute_with_gas_station(&keypair.0))
+            .read(|builder| builder.clone().execute_with_gas_station(signer))
             .await?)
     }
 }

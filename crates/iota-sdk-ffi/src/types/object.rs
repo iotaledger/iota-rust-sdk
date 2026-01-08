@@ -1,10 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    collections::{BTreeMap, HashMap},
-    sync::Arc,
-};
+use std::{collections::HashMap, sync::Arc};
 
 pub type Version = iota_sdk::types::Version;
 
@@ -72,7 +69,7 @@ impl ObjectId {
     }
 
     pub fn to_hex(&self) -> String {
-        self.0.as_address().to_hex()
+        self.0.to_hex()
     }
 
     /// Create an ObjectId from a transaction digest and the number of objects
@@ -89,6 +86,18 @@ impl ObjectId {
         self.0
             .derive_dynamic_child_id(&key_type_tag.0, key_bytes)
             .into()
+    }
+
+    /// Returns the string representation of this object ID using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
+
+    /// Returns the shortest possible string representation of the object ID
+    /// (i.e. with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        self.0.to_short_string(with_prefix)
     }
 }
 

@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{
+use iota_sdk::graphql_client::{
     Client, error::Result, pagination::PaginationFilter, query_types::TransactionsFilter,
 };
 

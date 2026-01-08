@@ -57,6 +57,11 @@ impl Digest {
     pub fn to_base58(&self) -> String {
         self.0.to_base58()
     }
+
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        self.0.next_lexicographical().into()
+    }
 }
 
 crate::export_iota_types_objects_bcs_conversion!(Digest);

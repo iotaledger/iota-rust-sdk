@@ -199,6 +199,10 @@ impl MultisigMemberPublicKey {
     pub fn as_zklogin(&self) -> ZkLoginPublicIdentifier {
         self.0.as_zklogin().clone().into()
     }
+
+    pub fn scheme(&self) -> SignatureScheme {
+        self.0.scheme()
+    }
 }
 
 /// Aggregated signature from members of a multisig committee.

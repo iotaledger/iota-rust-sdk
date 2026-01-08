@@ -40,10 +40,11 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 
 .PHONY: wasm
 wasm: ## Build WASM modules
+	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
-	$(MAKE) -C crates/iota-sdk-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
+	$(MAKE) -C crates/iota-sdk-types wasm
 
 .PHONY: doc
 doc: ## Generate documentation
@@ -117,7 +118,7 @@ go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
 	@$(build_binding) \
 	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
-	# TODO: For some reason only the .h file is renamed, not the .go file
+	@# TODO: For some reason only the .h file is renamed, not the .go file
 	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
 	@sed -i.bak "s/^package iota_sdk_ffi$$/package iota_sdk/" bindings/go/iota_sdk/iota_sdk.go && rm bindings/go/iota_sdk/iota_sdk.go.bak
 	
@@ -126,8 +127,9 @@ kotlin: ## Build Kotlin bindings
 	@printf "Building Kotlin bindings...\n"
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
-	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
 	python bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
+	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
 python: ## Build Python bindings
@@ -135,6 +137,7 @@ python: ## Build Python bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
+	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example
@@ -210,6 +213,20 @@ python-examples-format-check: ## Check format of all Python bindings examples
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
 	@yapf --style google -i bindings/python/examples/*
+
+.PHONY: example
+example: ## Run a specific Rust example. Usage: make example example
+%:
+	@true
+example:
+	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cargo run --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+
+.PHONY: examples
+examples: ## Run all Rust examples
+	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -exec basename {} .rs \;); do \
+		$(MAKE) example "$$example" || exit $$?; \
+	done
 
 .PHONY: help
 help: ## Show this help

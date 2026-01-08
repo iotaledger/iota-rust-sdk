@@ -1,7 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
@@ -32,7 +32,7 @@ async def main():
     builder.split_coins(PtbArgument.object_id(coin_id), amounts, labels)
     for i, r in enumerate(recipients):
         builder.transfer_objects(Address.from_hex(r[0]),
-                                 [PtbArgument.res(labels[i])])
+                                 [PtbArgument.assigned(labels[i])])
 
     txn = await builder.finish()
 

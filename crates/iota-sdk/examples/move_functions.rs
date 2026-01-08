@@ -4,8 +4,7 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_types::Address;
+use iota_sdk::{graphql_client::Client, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {

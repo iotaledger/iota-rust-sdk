@@ -1,7 +1,7 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
@@ -16,7 +16,7 @@ async def main():
 
     builder = TransactionBuilder(sender).with_client(client)
 
-    package_addr = Address.std_lib()
+    package_addr = Address.std()
     module_name = Identifier("u8")
     function_name = Identifier("max")
 

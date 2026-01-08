@@ -11,8 +11,10 @@ import (
 	"unsafe"
 	"encoding/binary"
 	"runtime/cgo"
+	"errors"
 	"math"
 	"runtime"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -343,6 +345,7 @@ func readFloat64(reader io.Reader) float64 {
 
 func init() {
         
+        FfiConverterTransactionSignerFnINSTANCE.register();
         uniffiCheckChecksums()
 }
 
@@ -1004,6 +1007,15 @@ func uniffiCheckChecksums() {
 	if checksum != 2681 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic()
+	})
+	if checksum != 15726 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2367,11 +2379,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string()
+	})
+	if checksum != 50168 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_hex()
 	})
 	if checksum != 22032 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string()
+	})
+	if checksum != 56908 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_short_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -2745,6 +2775,114 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_adjust_rewards_by_score()
+	})
+	if checksum != 4486 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_adjust_rewards_by_score: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge()
+	})
+	if checksum != 1611 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge_burned()
+	})
+	if checksum != 43788 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_computation_charge_burned: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_eligible_active_validators()
+	})
+	if checksum != 8119 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_eligible_active_validators: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch()
+	})
+	if checksum != 51880 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch_start_timestamp_ms()
+	})
+	if checksum != 44908 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_epoch_start_timestamp_ms: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_non_refundable_storage_fee()
+	})
+	if checksum != 53698 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_non_refundable_storage_fee: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_protocol_version()
+	})
+	if checksum != 53730 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_protocol_version: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_scores()
+	})
+	if checksum != 33143 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_scores: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_charge()
+	})
+	if checksum != 40410 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_charge: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_rebate()
+	})
+	if checksum != 15234 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_storage_rebate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_changeepochv4_system_packages()
+	})
+	if checksum != 2075 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_changeepochv4_system_packages: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_checkpointcommitment_as_ecmh_live_object_set_digest()
 	})
 	if checksum != 41616 {
@@ -2936,7 +3074,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute()
 	})
-	if checksum != 45165 {
+	if checksum != 58102 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute: UniFFI API checksum mismatch")
 	}
@@ -2945,7 +3083,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor()
 	})
-	if checksum != 64410 {
+	if checksum != 8183 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_execute_with_sponsor: UniFFI API checksum mismatch")
 	}
@@ -3213,6 +3351,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical()
+	})
+	if checksum != 53914 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58()
 	})
 	if checksum != 54638 {
@@ -3380,6 +3527,24 @@ func uniffiCheckChecksums() {
 	if checksum != 31911 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple()
+	})
+	if checksum != 6579 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user()
+	})
+	if checksum != 16895 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -4059,6 +4224,51 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address()
+	})
+	if checksum != 24164 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args()
+	})
+	if checksum != 1111 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate()
+	})
+	if checksum != 40516 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args()
+	})
+	if checksum != 63576 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish()
+	})
+	if checksum != 16948 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments()
 	})
 	if checksum != 17202 {
@@ -4482,6 +4692,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme()
+	})
+	if checksum != 44341 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_multisigmemberpublickey_scheme: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_as_ed25519()
 	})
 	if checksum != 22855 {
@@ -4896,11 +5115,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string()
+	})
+	if checksum != 62489 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex()
 	})
 	if checksum != 4418 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string()
+	})
+	if checksum != 63526 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -5985,6 +6222,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string()
+	})
+	if checksum != 21212 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_type_args()
 	})
 	if checksum != 48594 {
@@ -6104,7 +6350,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station()
 	})
-	if checksum != 6268 {
+	if checksum != 6441 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_execute_with_gas_station: UniFFI API checksum mismatch")
 	}
@@ -6323,6 +6569,24 @@ func uniffiCheckChecksums() {
 	if checksum != 36651 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionevents_events: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign()
+	})
+	if checksum != 29986 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionsigner_sign: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign()
+	})
+	if checksum != 56946 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionsignerfn_sign: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6552,6 +6816,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string()
+	})
+	if checksum != 24741 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_typetag_to_canonical_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_upgrade_dependencies()
 	})
 	if checksum != 7113 {
@@ -6597,6 +6870,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator()
+	})
+	if checksum != 62044 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt()
+	})
+	if checksum != 31940 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_move_authenticator_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_multisig()
 	})
 	if checksum != 36332 {
@@ -6615,20 +6906,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator()
 	})
-	if checksum != 17710 {
+	if checksum != 38663 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt()
 	})
-	if checksum != 53755 {
+	if checksum != 5213 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_passkey_authenticator_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6651,20 +6942,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator()
 	})
-	if checksum != 53484 {
+	if checksum != 64789 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_opt()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt()
 	})
-	if checksum != 43934 {
+	if checksum != 62080 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_opt: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_as_zklogin_authenticator_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator()
+	})
+	if checksum != 59771 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_move_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6678,11 +6978,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator()
 	})
-	if checksum != 35671 {
+	if checksum != 7851 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_passkey_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6696,11 +6996,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin()
+		return C.uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator()
 	})
-	if checksum != 38693 {
+	if checksum != 35546 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_usersignature_is_zklogin_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7137,11 +7437,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_std()
 	})
-	if checksum != 35825 {
+	if checksum != 28998 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_std_lib: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_std: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7340,6 +7640,15 @@ func uniffiCheckChecksums() {
 	if checksum != 2388 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_changeepochv3_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_changeepochv4_new()
+	})
+	if checksum != 38653 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_changeepochv4_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7623,6 +7932,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new()
+	})
+	if checksum != 6910 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der()
 	})
 	if checksum != 1677 {
@@ -7691,6 +8009,15 @@ func uniffiCheckChecksums() {
 	if checksum != 21107 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v3: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4()
+	})
+	if checksum != 45170 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_change_epoch_v4: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8163,6 +8490,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable()
+	})
+	if checksum != 19047 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared()
+	})
+	if checksum != 5389 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new()
+	})
+	if checksum != 1961 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new()
 	})
 	if checksum != 30411 {
@@ -8451,6 +8805,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned()
+	})
+	if checksum != 10192 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool()
 	})
 	if checksum != 51030 {
@@ -8573,15 +8936,6 @@ func uniffiCheckChecksums() {
 	if checksum != 48453 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res()
-	})
-	if checksum != 47661 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9630,6 +9984,60 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519()
+	})
+	if checksum != 15863 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair()
+	})
+	if checksum != 13858 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator()
+	})
+	if checksum != 17379 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1()
+	})
+	if checksum != 54758 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1()
+	})
+	if checksum != 17667 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new()
+	})
+	if checksum != 8178 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64()
 	})
 	if checksum != 19681 {
@@ -9810,6 +10218,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator()
+	})
+	if checksum != 7262 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_move_authenticator: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_multisig()
 	})
 	if checksum != 39922 {
@@ -9819,11 +10236,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator()
 	})
-	if checksum != 25378 {
+	if checksum != 45324 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9837,11 +10254,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator()
 	})
-	if checksum != 43856 {
+	if checksum != 30659 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10425,7 +10842,13 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 // ```
 type AddressInterface interface {
 	ToBytes() []byte
+	// Returns the string representation of this address using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	ToHex() string
+	// Returns the shortest possible string representation of the address (i.e.
+	// with leading zeroes trimmed).
+	ToShortString(withPrefix bool) string
 }
 // Unique identifier for an Account on the IOTA blockchain.
 //
@@ -10508,9 +10931,9 @@ func AddressGenerate() *Address {
 	}))
 }
 
-func AddressStdLib() *Address {
+func AddressStd() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_address_std_lib(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_std(_uniffiStatus)
 	}))
 }
 
@@ -10539,6 +10962,19 @@ func (_self *Address) ToBytes() []byte {
 	}))
 }
 
+// Returns the string representation of this address using the
+// canonical display, with or without a `0x` prefix.
+func (_self *Address) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *Address) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
 	defer _self.ffiObject.decrementPointer()
@@ -10546,6 +10982,19 @@ func (_self *Address) ToHex() string {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_hex(
 		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the address (i.e.
+// with leading zeroes trimmed).
+func (_self *Address) ToShortString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
 	}
 	}))
 }
@@ -12413,6 +12862,227 @@ func (_ FfiDestroyerChangeEpochV3) Destroy(value *ChangeEpochV3) {
 
 
 
+type ChangeEpochV4Interface interface {
+	// Whether to adjust validator rewards based on score.
+	AdjustRewardsByScore() bool
+	// The total amount of gas charged for computation during the epoch.
+	ComputationCharge() uint64
+	// The total amount of gas burned for computation during the epoch.
+	ComputationChargeBurned() uint64
+	// Vector of active validator indices eligible to take part in committee
+	// selection because they support the new, target protocol version.
+	EligibleActiveValidators() []uint64
+	// The next (to become) epoch ID.
+	Epoch() uint64
+	// Unix timestamp when epoch started
+	EpochStartTimestampMs() uint64
+	// The non-refundable storage fee.
+	NonRefundableStorageFee() uint64
+	// The protocol version in effect in the new epoch.
+	ProtocolVersion() uint64
+	// Vector of scores relative to the past epoch performance of each
+	// validator, ordered by the past epoch's validator index.
+	Scores() []uint64
+	// The total amount of gas charged for storage during the epoch.
+	StorageCharge() uint64
+	// The amount of storage rebate refunded to the txn senders.
+	StorageRebate() uint64
+	// System packages (specifically framework and move stdlib) that are
+	// written before the new epoch starts.
+	SystemPackages() []*SystemPackage
+}
+type ChangeEpochV4 struct {
+	ffiObject FfiObject
+}
+func NewChangeEpochV4(epoch uint64, protocolVersion uint64, storageCharge uint64, computationCharge uint64, computationChargeBurned uint64, storageRebate uint64, nonRefundableStorageFee uint64, epochStartTimestampMs uint64, systemPackages []*SystemPackage, eligibleActiveValidators []uint64, scores []uint64, adjustRewardsByScore bool) *ChangeEpochV4 {
+	return FfiConverterChangeEpochV4INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_changeepochv4_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(protocolVersion), FfiConverterUint64INSTANCE.Lower(storageCharge), FfiConverterUint64INSTANCE.Lower(computationCharge), FfiConverterUint64INSTANCE.Lower(computationChargeBurned), FfiConverterUint64INSTANCE.Lower(storageRebate), FfiConverterUint64INSTANCE.Lower(nonRefundableStorageFee), FfiConverterUint64INSTANCE.Lower(epochStartTimestampMs), FfiConverterSequenceSystemPackageINSTANCE.Lower(systemPackages), FfiConverterSequenceUint64INSTANCE.Lower(eligibleActiveValidators), FfiConverterSequenceUint64INSTANCE.Lower(scores), FfiConverterBoolINSTANCE.Lower(adjustRewardsByScore),_uniffiStatus)
+	}))
+}
+
+
+
+
+// Whether to adjust validator rewards based on score.
+func (_self *ChangeEpochV4) AdjustRewardsByScore() bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_adjust_rewards_by_score(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The total amount of gas charged for computation during the epoch.
+func (_self *ChangeEpochV4) ComputationCharge() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_computation_charge(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The total amount of gas burned for computation during the epoch.
+func (_self *ChangeEpochV4) ComputationChargeBurned() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_computation_charge_burned(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Vector of active validator indices eligible to take part in committee
+// selection because they support the new, target protocol version.
+func (_self *ChangeEpochV4) EligibleActiveValidators() []uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_eligible_active_validators(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// The next (to become) epoch ID.
+func (_self *ChangeEpochV4) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Unix timestamp when epoch started
+func (_self *ChangeEpochV4) EpochStartTimestampMs() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_epoch_start_timestamp_ms(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The non-refundable storage fee.
+func (_self *ChangeEpochV4) NonRefundableStorageFee() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_non_refundable_storage_fee(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The protocol version in effect in the new epoch.
+func (_self *ChangeEpochV4) ProtocolVersion() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_protocol_version(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Vector of scores relative to the past epoch performance of each
+// validator, ordered by the past epoch's validator index.
+func (_self *ChangeEpochV4) Scores() []uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_scores(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// The total amount of gas charged for storage during the epoch.
+func (_self *ChangeEpochV4) StorageCharge() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_storage_charge(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The amount of storage rebate refunded to the txn senders.
+func (_self *ChangeEpochV4) StorageRebate() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_storage_rebate(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// System packages (specifically framework and move stdlib) that are
+// written before the new epoch starts.
+func (_self *ChangeEpochV4) SystemPackages() []*SystemPackage {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceSystemPackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepochv4_system_packages(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *ChangeEpochV4) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterChangeEpochV4 struct {}
+
+var FfiConverterChangeEpochV4INSTANCE = FfiConverterChangeEpochV4{}
+
+
+func (c FfiConverterChangeEpochV4) Lift(pointer unsafe.Pointer) *ChangeEpochV4 {
+	result := &ChangeEpochV4 {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_changeepochv4(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_changeepochv4(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ChangeEpochV4).Destroy)
+	return result
+}
+
+func (c FfiConverterChangeEpochV4) Read(reader io.Reader) *ChangeEpochV4 {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterChangeEpochV4) Lower(value *ChangeEpochV4) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ChangeEpochV4")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterChangeEpochV4) Write(writer io.Writer, value *ChangeEpochV4) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerChangeEpochV4 struct {}
+
+func (_ FfiDestroyerChangeEpochV4) Destroy(value *ChangeEpochV4) {
+		value.Destroy()
+}
+
+
+
 // A commitment made by a checkpoint.
 //
 // # BCS
@@ -13316,9 +13986,9 @@ type ClientTransactionBuilderInterface interface {
 	// Dry run the transaction.
 	DryRun(skipChecks bool) (DryRunResult, error)
 	// Execute the transaction and optionally wait for finalization.
-	Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
+	Execute(signer *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Execute the transaction and optionally wait for finalization.
-	ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error)
+	ExecuteWithSponsor(signer *TransactionSigner, sponsorSigner *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *ClientTransactionBuilder
 	// Convert this builder into a transaction.
@@ -13448,7 +14118,7 @@ func (_self *ClientTransactionBuilder) DryRun(skipChecks bool) (DryRunResult, er
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *ClientTransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
+func (_self *ClientTransactionBuilder) Execute(signer *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13463,7 +14133,7 @@ func (_self *ClientTransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -13478,7 +14148,7 @@ func (_self *ClientTransactionBuilder) Execute(keypair *SimpleKeypair, waitFor *
 }
 
 // Execute the transaction and optionally wait for finalization.
-func (_self *ClientTransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair, sponsorKeypair *SimpleKeypair, waitFor *WaitForTx) (*TransactionEffects, error) {
+func (_self *ClientTransactionBuilder) ExecuteWithSponsor(signer *TransactionSigner, sponsorSigner *TransactionSigner, waitFor *WaitForTx) (*TransactionEffects, error) {
 	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -13493,7 +14163,7 @@ func (_self *ClientTransactionBuilder) ExecuteWithSponsor(keypair *SimpleKeypair
 			return FfiConverterTransactionEffectsINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_execute_with_sponsor(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair), FfiConverterSimpleKeypairINSTANCE.Lower(sponsorKeypair), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
+		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer), FfiConverterTransactionSignerINSTANCE.Lower(sponsorSigner), FfiConverterOptionalWaitForTxINSTANCE.Lower(waitFor)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
@@ -14452,6 +15122,8 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 // compact 32 bytes.
 type DigestInterface interface {
+	// Returns the next digest in byte-increasing order.
+	NextLexicographical() *Digest
 	ToBase58() string
 	ToBytes() []byte
 }
@@ -14505,6 +15177,16 @@ func DigestGenerate() *Digest {
 }
 
 
+
+// Returns the next digest in byte-increasing order.
+func (_self *Digest) NextLexicographical() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 func (_self *Digest) ToBase58() string {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
@@ -14921,6 +15603,19 @@ func (_self *Ed25519PrivateKey) VerifyingKey() *Ed25519VerifyingKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Ed25519PrivateKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 
 func (_self *Ed25519PrivateKey) Eq(other *Ed25519PrivateKey) bool {
 	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
@@ -15346,13 +16041,42 @@ func (_ FfiDestroyerEd25519Signature) Destroy(value *Ed25519Signature) {
 
 
 type Ed25519VerifierInterface interface {
+	VerifySimple(message []byte, signature *SimpleSignature) error
+	VerifyUser(message []byte, signature *UserSignature) error
 }
 type Ed25519Verifier struct {
 	ffiObject FfiObject
 }
+func NewEd25519Verifier() *Ed25519Verifier {
+	return FfiConverterEd25519VerifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(_uniffiStatus)
+	}))
+}
 
 
 
+
+func (_self *Ed25519Verifier) VerifySimple(message []byte, signature *SimpleSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Verifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterSimpleSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
+
+func (_self *Ed25519Verifier) VerifyUser(message []byte, signature *UserSignature) error {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Verifier")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(
+		_pointer,FfiConverterBytesINSTANCE.Lower(message), FfiConverterUserSignatureINSTANCE.Lower(signature),_uniffiStatus)
+		return false
+	})
+		return _uniffiErr.AsError()
+}
 
 func (_self *Ed25519Verifier) DebugString() string {
 	_pointer := _self.ffiObject.incrementPointer("*Ed25519Verifier")
@@ -15718,6 +16442,12 @@ func EndOfEpochTransactionKindNewChangeEpochV2(tx *ChangeEpochV2) *EndOfEpochTra
 func EndOfEpochTransactionKindNewChangeEpochV3(tx *ChangeEpochV3) *EndOfEpochTransactionKind {
 	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v3(FfiConverterChangeEpochV3INSTANCE.Lower(tx),_uniffiStatus)
+	}))
+}
+
+func EndOfEpochTransactionKindNewChangeEpochV4(tx *ChangeEpochV4) *EndOfEpochTransactionKind {
+	return FfiConverterEndOfEpochTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v4(FfiConverterChangeEpochV4INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
@@ -19710,6 +20440,233 @@ func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 
 
 
+// MoveAuthenticator is a signature variant that enables a method of
+// authentication through Move code. This type represents the data received
+// by the Move authenticate function during the Account Abstraction
+// authentication flow.
+type MoveAuthenticatorInterface interface {
+	Address() *Address
+	CallArgs() []*Input
+	ObjectToAuthenticate() *Input
+	TypeArgs() []*TypeTag
+}
+// MoveAuthenticator is a signature variant that enables a method of
+// authentication through Move code. This type represents the data received
+// by the Move authenticate function during the Account Abstraction
+// authentication flow.
+type MoveAuthenticator struct {
+	ffiObject FfiObject
+}
+
+
+// Create a new move authenticator from an immutable object.
+func MoveAuthenticatorNewImmutable(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate ObjectReference) *MoveAuthenticator {
+	return FfiConverterMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectReferenceINSTANCE.Lower(objectToAuthenticate),_uniffiStatus)
+	}))
+}
+
+// Create a new move authenticator from a shared object.
+func MoveAuthenticatorNewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticator {
+	return FfiConverterMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *MoveAuthenticator) Address() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MoveAuthenticator) CallArgs() []*Input {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MoveAuthenticator) ObjectToAuthenticate() *Input {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MoveAuthenticator) TypeArgs() []*TypeTag {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *MoveAuthenticator) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoveAuthenticator struct {}
+
+var FfiConverterMoveAuthenticatorINSTANCE = FfiConverterMoveAuthenticator{}
+
+
+func (c FfiConverterMoveAuthenticator) Lift(pointer unsafe.Pointer) *MoveAuthenticator {
+	result := &MoveAuthenticator {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_moveauthenticator(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_moveauthenticator(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoveAuthenticator).Destroy)
+	return result
+}
+
+func (c FfiConverterMoveAuthenticator) Read(reader io.Reader) *MoveAuthenticator {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMoveAuthenticator) Lower(value *MoveAuthenticator) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MoveAuthenticator")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMoveAuthenticator) Write(writer io.Writer, value *MoveAuthenticator) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMoveAuthenticator struct {}
+
+func (_ FfiDestroyerMoveAuthenticator) Destroy(value *MoveAuthenticator) {
+		value.Destroy()
+}
+
+
+
+type MoveAuthenticatorBuilderInterface interface {
+	// Resolve this move authenticator builder into a `MoveAuthenticator` which
+	// can be used to execute a transaction.
+	Finish(client *GraphQlClient) (*MoveAuthenticator, error)
+}
+type MoveAuthenticatorBuilder struct {
+	ffiObject FfiObject
+}
+// Create a new move authenticator call with the account ID, function
+// inputs, and generic types.
+func NewMoveAuthenticatorBuilder(accountId *ObjectId, callArgs []*PtbArgument, typeArgs []*TypeTag) *MoveAuthenticatorBuilder {
+	return FfiConverterMoveAuthenticatorBuilderINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new(FfiConverterObjectIdINSTANCE.Lower(accountId), FfiConverterSequencePtbArgumentINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs),_uniffiStatus)
+	}))
+}
+
+
+
+
+// Resolve this move authenticator builder into a `MoveAuthenticator` which
+// can be used to execute a transaction.
+func (_self *MoveAuthenticatorBuilder) Finish(client *GraphQlClient) (*MoveAuthenticator, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticatorBuilder")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *MoveAuthenticator {
+			return FfiConverterMoveAuthenticatorINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(
+		_pointer,FfiConverterGraphQlClientINSTANCE.Lower(client)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *MoveAuthenticatorBuilder) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoveAuthenticatorBuilder struct {}
+
+var FfiConverterMoveAuthenticatorBuilderINSTANCE = FfiConverterMoveAuthenticatorBuilder{}
+
+
+func (c FfiConverterMoveAuthenticatorBuilder) Lift(pointer unsafe.Pointer) *MoveAuthenticatorBuilder {
+	result := &MoveAuthenticatorBuilder {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoveAuthenticatorBuilder).Destroy)
+	return result
+}
+
+func (c FfiConverterMoveAuthenticatorBuilder) Read(reader io.Reader) *MoveAuthenticatorBuilder {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMoveAuthenticatorBuilder) Lower(value *MoveAuthenticatorBuilder) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MoveAuthenticatorBuilder")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMoveAuthenticatorBuilder) Write(writer io.Writer, value *MoveAuthenticatorBuilder) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMoveAuthenticatorBuilder struct {}
+
+func (_ FfiDestroyerMoveAuthenticatorBuilder) Destroy(value *MoveAuthenticatorBuilder) {
+		value.Destroy()
+}
+
+
+
 // Command to call a move function
 //
 // Functions that can be called by a `MoveCall` command are those that have a
@@ -21214,6 +22171,7 @@ type MultisigMemberPublicKeyInterface interface {
 	IsSecp256k1() bool
 	IsSecp256r1() bool
 	IsZklogin() bool
+	Scheme() SignatureScheme
 }
 // Enum of valid public keys for multisig committee members
 //
@@ -21363,6 +22321,17 @@ func (_self *MultisigMemberPublicKey) IsZklogin() bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_is_zklogin(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) Scheme() SignatureScheme {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSignatureSchemeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
@@ -22693,7 +23662,13 @@ type ObjectIdInterface interface {
 	DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId
 	ToAddress() *Address
 	ToBytes() []byte
+	// Returns the string representation of this object ID using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	ToHex() string
+	// Returns the shortest possible string representation of the object ID
+	// (i.e. with leading zeroes trimmed).
+	ToShortString(withPrefix bool) string
 }
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
@@ -22802,6 +23777,19 @@ func (_self *ObjectId) ToBytes() []byte {
 	}))
 }
 
+// Returns the string representation of this object ID using the
+// canonical display, with or without a `0x` prefix.
+func (_self *ObjectId) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
+	}))
+}
+
 func (_self *ObjectId) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
@@ -22809,6 +23797,19 @@ func (_self *ObjectId) ToHex() string {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(
 		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object ID
+// (i.e. with leading zeroes trimmed).
+func (_self *ObjectId) ToShortString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
 	}
 	}))
 }
@@ -23401,6 +24402,12 @@ func PtbArgumentAddressVecFromHex(addresses []string) (*PtbArgument, error) {
 		}
 }
 
+func PtbArgumentAssigned(name string) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
+}
+
 func PtbArgumentBool(value bool) *PtbArgument {
 	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool(FfiConverterBoolINSTANCE.Lower(value),_uniffiStatus)
@@ -23507,12 +24514,6 @@ func PtbArgumentReceivingFromHex(hex string) (*PtbArgument, error) {
 		} else {
 			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
 		}
-}
-
-func PtbArgumentRes(name string) *PtbArgument {
-	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
-	}))
 }
 
 func PtbArgumentShared(id *ObjectId) *PtbArgument {
@@ -24899,6 +25900,19 @@ func (_self *Secp256k1PrivateKey) VerifyingKey() *Secp256k1VerifyingKey {
 	}))
 }
 
+func (_self *Secp256k1PrivateKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
 func (_self *Secp256k1PrivateKey) Eq(other *Secp256k1PrivateKey) bool {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
 	defer _self.ffiObject.decrementPointer()
@@ -25936,6 +26950,19 @@ func (_self *Secp256r1PrivateKey) VerifyingKey() *Secp256r1VerifyingKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Secp256r1PrivateKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 
 func (_self *Secp256r1PrivateKey) Eq(other *Secp256r1PrivateKey) bool {
 	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
@@ -27790,6 +28817,9 @@ type StructTagInterface interface {
 	Module() *Identifier
 	// Returns the name part of a `StructTag`
 	Name() *Identifier
+	// Returns the string representation of this struct tag using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 	// Returns the type params part of a `StructTag`
 	TypeArgs() []*TypeTag
 }
@@ -28064,6 +29094,19 @@ func (_self *StructTag) Name() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_name(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the string representation of this struct tag using the
+// canonical display, with or without a `0x` prefix.
+func (_self *StructTag) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
 	}))
 }
 
@@ -28590,7 +29633,7 @@ type TransactionBuilderInterface interface {
 	//
 	// NOTE: These effects are not necessarily compatible with
 	// `TransactionEffects`
-	ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error)
+	ExecuteWithGasStation(signer *TransactionSigner) (Value, error)
 	// Set the expiration of the transaction to be a specific epoch.
 	Expiration(epoch uint64) *TransactionBuilder
 	// Convert this builder into a transaction.
@@ -28700,7 +29743,7 @@ func NewTransactionBuilder(sender *Address) *TransactionBuilder {
 //
 // NOTE: These effects are not necessarily compatible with
 // `TransactionEffects`
-func (_self *TransactionBuilder) ExecuteWithGasStation(keypair *SimpleKeypair) (Value, error) {
+func (_self *TransactionBuilder) ExecuteWithGasStation(signer *TransactionSigner) (Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -28717,7 +29760,7 @@ func (_self *TransactionBuilder) ExecuteWithGasStation(keypair *SimpleKeypair) (
 			return FfiConverterTypeValueINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
-		_pointer,FfiConverterSimpleKeypairINSTANCE.Lower(keypair)),
+		_pointer,FfiConverterTransactionSignerINSTANCE.Lower(signer)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -29459,6 +30502,367 @@ func (_ FfiDestroyerTransactionKind) Destroy(value *TransactionKind) {
 
 
 
+// An async signer implementation which wraps a `TransactionSignerFn`
+// definition, which can be used to sign a transaction with a callback.
+type TransactionSignerInterface interface {
+	Sign(txn *Transaction) (*UserSignature, error)
+}
+// An async signer implementation which wraps a `TransactionSignerFn`
+// definition, which can be used to sign a transaction with a callback.
+type TransactionSigner struct {
+	ffiObject FfiObject
+}
+func NewTransactionSigner(signerFn TransactionSignerFn) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(FfiConverterTransactionSignerFnINSTANCE.Lower(signerFn),_uniffiStatus)
+	}))
+}
+
+
+func TransactionSignerFromEd25519(key *Ed25519PrivateKey) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(FfiConverterEd25519PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromKeypair(key *SimpleKeypair) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(FfiConverterSimpleKeypairINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromMoveAuthenticator(auth *MoveAuthenticator) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(FfiConverterMoveAuthenticatorINSTANCE.Lower(auth),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromSecp256k1(key *Secp256k1PrivateKey) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(FfiConverterSecp256k1PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromSecp256r1(key *Secp256r1PrivateKey) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(FfiConverterSecp256r1PrivateKeyINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *TransactionSigner) Sign(txn *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionSigner")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *UserSignature {
+			return FfiConverterUserSignatureINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(txn)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *TransactionSigner) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionSigner struct {}
+
+var FfiConverterTransactionSignerINSTANCE = FfiConverterTransactionSigner{}
+
+
+func (c FfiConverterTransactionSigner) Lift(pointer unsafe.Pointer) *TransactionSigner {
+	result := &TransactionSigner {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionsigner(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionSigner).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionSigner) Read(reader io.Reader) *TransactionSigner {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionSigner) Lower(value *TransactionSigner) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*TransactionSigner")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterTransactionSigner) Write(writer io.Writer, value *TransactionSigner) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionSigner struct {}
+
+func (_ FfiDestroyerTransactionSigner) Destroy(value *TransactionSigner) {
+		value.Destroy()
+}
+
+
+
+// Defines a type which can sign a transaction asynchronously.
+//
+// This trait can be implemented downstream to enable signing when using the
+// `TransactionBuilder::execute` function.
+type TransactionSignerFn interface {
+	// Sign a transaction and return a `UserSignature`.
+	Sign(transaction *Transaction) (TransactionSignerFnOutput, error)
+}
+// Defines a type which can sign a transaction asynchronously.
+//
+// This trait can be implemented downstream to enable signing when using the
+// `TransactionBuilder::execute` function.
+type TransactionSignerFnImpl struct {
+	ffiObject FfiObject
+}
+
+
+
+
+// Sign a transaction and return a `UserSignature`.
+func (_self *TransactionSignerFnImpl) Sign(transaction *Transaction) (TransactionSignerFnOutput, error) {
+	_pointer := _self.ffiObject.incrementPointer("TransactionSignerFn")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) TransactionSignerFnOutput {
+			return FfiConverterTransactionSignerFnOutputINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *TransactionSignerFnImpl) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterTransactionSignerFn struct {
+	handleMap *concurrentHandleMap[TransactionSignerFn]
+	}
+
+var FfiConverterTransactionSignerFnINSTANCE = FfiConverterTransactionSignerFn{
+	handleMap: newConcurrentHandleMap[TransactionSignerFn](),
+	}
+
+
+func (c FfiConverterTransactionSignerFn) Lift(pointer unsafe.Pointer) TransactionSignerFn {
+	result := &TransactionSignerFnImpl {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*TransactionSignerFnImpl).Destroy)
+	return result
+}
+
+func (c FfiConverterTransactionSignerFn) Read(reader io.Reader) TransactionSignerFn {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterTransactionSignerFn) Lower(value TransactionSignerFn) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := unsafe.Pointer(uintptr(c.handleMap.insert(value)))
+	return pointer
+
+}
+
+func (c FfiConverterTransactionSignerFn) Write(writer io.Writer, value TransactionSignerFn) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerTransactionSignerFn struct {}
+
+func (_ FfiDestroyerTransactionSignerFn) Destroy(value TransactionSignerFn) {
+	if val, ok := value.(*TransactionSignerFnImpl); ok {
+		val.Destroy()
+	} else {
+		panic("Expected *TransactionSignerFnImpl")
+	}
+}
+
+type uniffiCallbackResult C.int8_t
+
+const (
+	uniffiIdxCallbackFree               uniffiCallbackResult = 0
+	uniffiCallbackResultSuccess         uniffiCallbackResult = 0
+	uniffiCallbackResultError           uniffiCallbackResult = 1
+	uniffiCallbackUnexpectedResultError uniffiCallbackResult = 2
+	uniffiCallbackCancelled             uniffiCallbackResult = 3
+)
+
+
+type concurrentHandleMap[T any] struct {
+	handles       map[uint64]T
+	currentHandle uint64
+	lock          sync.RWMutex
+}
+
+func newConcurrentHandleMap[T any]() *concurrentHandleMap[T] {
+	return &concurrentHandleMap[T]{
+		handles:  map[uint64]T{},
+	}
+}
+
+func (cm *concurrentHandleMap[T]) insert(obj T) uint64 {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	cm.currentHandle = cm.currentHandle + 1
+	cm.handles[cm.currentHandle] = obj
+	return cm.currentHandle
+}
+
+func (cm *concurrentHandleMap[T]) remove(handle uint64) {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	delete(cm.handles, handle)
+}
+
+func (cm *concurrentHandleMap[T]) tryGet(handle uint64) (T, bool) {
+	cm.lock.RLock()
+	defer cm.lock.RUnlock()
+
+	val, ok := cm.handles[handle]
+	return val, ok
+}
+
+//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0
+func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uniffiHandle C.uint64_t,transaction unsafe.Pointer,uniffiFutureCallback C.UniffiForeignFutureCompleteRustBuffer,uniffiCallbackData C.uint64_t,uniffiOutReturn *C.UniffiForeignFuture,) {
+	handle := uint64(uniffiHandle)
+	uniffiObj, ok := FfiConverterTransactionSignerFnINSTANCE.handleMap.tryGet(handle)
+	if !ok {
+		panic(fmt.Errorf("no callback in handle map: %d", handle))
+	}
+
+	
+	result := make(chan C.UniffiForeignFutureStructRustBuffer, 1)
+	cancel := make(chan struct{}, 1)
+	guardHandle := cgo.NewHandle(cancel)
+	*uniffiOutReturn = C.UniffiForeignFuture {
+		handle: C.uint64_t(guardHandle),
+		free: C.UniffiForeignFutureFree(C.iota_sdk_uniffiFreeGorutine),
+	}
+
+	// Wait for compleation or cancel
+	go func() {
+		select {
+			case <-cancel:
+			case res := <-result:
+				C.call_UniffiForeignFutureCompleteRustBuffer(uniffiFutureCallback, uniffiCallbackData, res)
+		}
+	}()
+
+	// Eval callback asynchroniously
+	go func() {
+        asyncResult := &C.UniffiForeignFutureStructRustBuffer{};
+    	uniffiOutReturn := &asyncResult.returnValue
+    	callStatus := &asyncResult.callStatus
+    	defer func() {
+    		result <- *asyncResult
+    	}()
+	
+
+	 res, err :=
+    uniffiObj.Sign(
+        FfiConverterTransactionINSTANCE.Lift(transaction),
+    )
+
+    
+	if err != nil {
+		var actualError *SdkFfiError
+		if errors.As(err, &actualError) {
+			*callStatus = C.RustCallStatus {
+				code: C.int8_t(uniffiCallbackResultError),
+				errorBuf: FfiConverterSdkFfiErrorINSTANCE.Lower(actualError),
+			}
+		} else {
+			*callStatus = C.RustCallStatus {
+				code: C.int8_t(uniffiCallbackUnexpectedResultError),
+			}
+		}
+		return
+	}
+
+
+	*uniffiOutReturn = FfiConverterTransactionSignerFnOutputINSTANCE.Lower(res)
+	}()
+}
+
+var UniffiVTableCallbackInterfaceTransactionSignerFnINSTANCE = C.UniffiVTableCallbackInterfaceTransactionSignerFn {
+	sign: (C.UniffiCallbackInterfaceTransactionSignerFnMethod0)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0),
+
+	uniffiFree: (C.UniffiCallbackInterfaceFree)(C.iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree),
+}
+
+//export iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree
+func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree(handle C.uint64_t) {
+	FfiConverterTransactionSignerFnINSTANCE.handleMap.remove(uint64(handle))
+}
+
+func (c FfiConverterTransactionSignerFn) register() {
+	C.uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(&UniffiVTableCallbackInterfaceTransactionSignerFnINSTANCE)
+}
+
+
 // A transaction
 //
 // # BCS
@@ -29877,6 +31281,9 @@ type TypeTagInterface interface {
 	IsU64() bool
 	IsU8() bool
 	IsVector() bool
+	// Returns the string representation of this type tag using the
+	// canonical display, with or without a `0x` prefix.
+	ToCanonicalString(withPrefix bool) string
 }
 // Type of a move value
 //
@@ -30118,6 +31525,19 @@ func (_self *TypeTag) IsVector() bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the string representation of this type tag using the
+// canonical display, with or without a `0x` prefix.
+func (_self *TypeTag) ToCanonicalString(withPrefix bool) string {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
+		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+	}
 	}))
 }
 
@@ -30560,7 +31980,7 @@ func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 //
 // ```text
 // user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey
+// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
 // ```
 //
 // Note: Due to historical reasons, signatures are serialized slightly
@@ -30569,18 +31989,21 @@ func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 // as `bytes` meaning it has a length prefix that defines the length of
 // the completely serialized signature.
 type UserSignatureInterface interface {
+	AsMoveAuthenticator() *MoveAuthenticator
+	AsMoveAuthenticatorOpt() **MoveAuthenticator
 	AsMultisig() *MultisigAggregatedSignature
 	AsMultisigOpt() **MultisigAggregatedSignature
-	AsPasskey() *PasskeyAuthenticator
-	AsPasskeyOpt() **PasskeyAuthenticator
+	AsPasskeyAuthenticator() *PasskeyAuthenticator
+	AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator
 	AsSimple() *SimpleSignature
 	AsSimpleOpt() **SimpleSignature
-	AsZklogin() *ZkLoginAuthenticator
-	AsZkloginOpt() **ZkLoginAuthenticator
+	AsZkloginAuthenticator() *ZkLoginAuthenticator
+	AsZkloginAuthenticatorOpt() **ZkLoginAuthenticator
+	IsMoveAuthenticator() bool
 	IsMultisig() bool
-	IsPasskey() bool
+	IsPasskeyAuthenticator() bool
 	IsSimple() bool
-	IsZklogin() bool
+	IsZkloginAuthenticator() bool
 	// Return the flag for this signature scheme
 	Scheme() SignatureScheme
 	ToBase64() string
@@ -30597,7 +32020,7 @@ type UserSignatureInterface interface {
 //
 // ```text
 // user-signature-bcs = bytes ; where the contents of the bytes are defined by <user-signature>
-// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey
+// user-signature = simple-signature / multisig / multisig-legacy / zklogin / passkey / move-authenticator
 // ```
 //
 // Note: Due to historical reasons, signatures are serialized slightly
@@ -30634,15 +32057,21 @@ func UserSignatureFromBytes(bytes []byte) (*UserSignature, error) {
 		}
 }
 
+func UserSignatureNewMoveAuthenticator(authenticator *MoveAuthenticator) *UserSignature {
+	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(FfiConverterMoveAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+	}))
+}
+
 func UserSignatureNewMultisig(signature *MultisigAggregatedSignature) *UserSignature {
 	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(FfiConverterMultisigAggregatedSignatureINSTANCE.Lower(signature),_uniffiStatus)
 	}))
 }
 
-func UserSignatureNewPasskey(authenticator *PasskeyAuthenticator) *UserSignature {
+func UserSignatureNewPasskeyAuthenticator(authenticator *PasskeyAuthenticator) *UserSignature {
 	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(FfiConverterPasskeyAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(FfiConverterPasskeyAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
 	}))
 }
 
@@ -30652,13 +32081,33 @@ func UserSignatureNewSimple(signature *SimpleSignature) *UserSignature {
 	}))
 }
 
-func UserSignatureNewZklogin(authenticator *ZkLoginAuthenticator) *UserSignature {
+func UserSignatureNewZkloginAuthenticator(authenticator *ZkLoginAuthenticator) *UserSignature {
 	return FfiConverterUserSignatureINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(FfiConverterZkLoginAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(FfiConverterZkLoginAuthenticatorINSTANCE.Lower(authenticator),_uniffiStatus)
 	}))
 }
 
 
+
+func (_self *UserSignature) AsMoveAuthenticator() *MoveAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *UserSignature) AsMoveAuthenticatorOpt() **MoveAuthenticator {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *UserSignature) AsMultisig() *MultisigAggregatedSignature {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
@@ -30680,21 +32129,21 @@ func (_self *UserSignature) AsMultisigOpt() **MultisigAggregatedSignature {
 	}))
 }
 
-func (_self *UserSignature) AsPasskey() *PasskeyAuthenticator {
+func (_self *UserSignature) AsPasskeyAuthenticator() *PasskeyAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey(
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
 		_pointer,_uniffiStatus)
 	}))
 }
 
-func (_self *UserSignature) AsPasskeyOpt() **PasskeyAuthenticator {
+func (_self *UserSignature) AsPasskeyAuthenticatorOpt() **PasskeyAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalPasskeyAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -30720,23 +32169,32 @@ func (_self *UserSignature) AsSimpleOpt() **SimpleSignature {
 	}))
 }
 
-func (_self *UserSignature) AsZklogin() *ZkLoginAuthenticator {
+func (_self *UserSignature) AsZkloginAuthenticator() *ZkLoginAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin(
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
 		_pointer,_uniffiStatus)
 	}))
 }
 
-func (_self *UserSignature) AsZkloginOpt() **ZkLoginAuthenticator {
+func (_self *UserSignature) AsZkloginAuthenticatorOpt() **ZkLoginAuthenticator {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterOptionalZkLoginAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+func (_self *UserSignature) IsMoveAuthenticator() bool {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -30749,11 +32207,11 @@ func (_self *UserSignature) IsMultisig() bool {
 	}))
 }
 
-func (_self *UserSignature) IsPasskey() bool {
+func (_self *UserSignature) IsPasskeyAuthenticator() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey(
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -30767,11 +32225,11 @@ func (_self *UserSignature) IsSimple() bool {
 	}))
 }
 
-func (_self *UserSignature) IsZklogin() bool {
+func (_self *UserSignature) IsZkloginAuthenticator() bool {
 	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin(
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -36212,6 +37670,42 @@ type FfiDestroyerTransactionMetadata struct {}
 func (_ FfiDestroyerTransactionMetadata) Destroy(value TransactionMetadata) {
 	value.Destroy()
 }
+// The result of an async sign call containing the `UserSignature`.
+type TransactionSignerFnOutput struct {
+	Signature *UserSignature
+}
+
+func (r *TransactionSignerFnOutput) Destroy() {
+		FfiDestroyerUserSignature{}.Destroy(r.Signature);
+}
+
+type FfiConverterTransactionSignerFnOutput struct {}
+
+var FfiConverterTransactionSignerFnOutputINSTANCE = FfiConverterTransactionSignerFnOutput{}
+
+func (c FfiConverterTransactionSignerFnOutput) Lift(rb RustBufferI) TransactionSignerFnOutput {
+	return LiftFromRustBuffer[TransactionSignerFnOutput](c, rb)
+}
+
+func (c FfiConverterTransactionSignerFnOutput) Read(reader io.Reader) TransactionSignerFnOutput {
+	return TransactionSignerFnOutput {
+			FfiConverterUserSignatureINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTransactionSignerFnOutput) Lower(value TransactionSignerFnOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[TransactionSignerFnOutput](c, value)
+}
+
+func (c FfiConverterTransactionSignerFnOutput) Write(writer io.Writer, value TransactionSignerFnOutput) {
+		FfiConverterUserSignatureINSTANCE.Write(writer, value.Signature);
+}
+
+type FfiDestroyerTransactionSignerFnOutput struct {}
+
+func (_ FfiDestroyerTransactionSignerFnOutput) Destroy(value TransactionSignerFnOutput) {
+	value.Destroy()
+}
 type TransactionsFilter struct {
 	Function *string
 	Kind *TransactionBlockKindInput
@@ -38115,6 +39609,39 @@ func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
 
 
+type MnemonicLength uint
+
+const (
+	MnemonicLengthWords12 MnemonicLength = 1
+	MnemonicLengthWords24 MnemonicLength = 2
+)
+
+type FfiConverterMnemonicLength struct {}
+
+var FfiConverterMnemonicLengthINSTANCE = FfiConverterMnemonicLength{}
+
+func (c FfiConverterMnemonicLength) Lift(rb RustBufferI) MnemonicLength {
+	return LiftFromRustBuffer[MnemonicLength](c, rb)
+}
+
+func (c FfiConverterMnemonicLength) Lower(value MnemonicLength) C.RustBuffer {
+	return LowerIntoRustBuffer[MnemonicLength](c, value)
+}
+func (FfiConverterMnemonicLength) Read(reader io.Reader) MnemonicLength {
+	id := readInt32(reader)
+	return MnemonicLength(id)
+}
+
+func (FfiConverterMnemonicLength) Write(writer io.Writer, value MnemonicLength) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerMnemonicLength struct {}
+
+func (_ FfiDestroyerMnemonicLength) Destroy(value MnemonicLength) {
+}
+
+
 type MoveAbility uint
 
 const (
@@ -38661,14 +40188,16 @@ func (_ FfiDestroyerSdkFfiError) Destroy(value *SdkFfiError) {
 //
 // ```text
 // signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-// multisig-flag / bls-flag / zklogin-flag / passkey-flag
-// ed25519-flag     = %x00
-// secp256k1-flag   = %x01
-// secp256r1-flag   = %x02
-// multisig-flag    = %x03
-// bls-flag         = %x04
-// zklogin-flag     = %x05
-// passkey-flag     = %x06
+// multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
+// move-auth-flag
+// ed25519-flag        = %x00
+// secp256k1-flag      = %x01
+// secp256r1-flag      = %x02
+// multisig-flag       = %x03
+// bls-flag            = %x04
+// zklogin-auth-flag   = %x05
+// passkey-auth-flag   = %x06
+// move-auth-flag      = %x07
 // ```
 type SignatureScheme uint8
 
@@ -38678,8 +40207,9 @@ const (
 	SignatureSchemeSecp256r1 SignatureScheme = 2
 	SignatureSchemeMultisig SignatureScheme = 3
 	SignatureSchemeBls12381 SignatureScheme = 4
-	SignatureSchemeZkLogin SignatureScheme = 5
-	SignatureSchemePasskey SignatureScheme = 6
+	SignatureSchemeZkLoginAuthenticator SignatureScheme = 5
+	SignatureSchemePasskeyAuthenticator SignatureScheme = 6
+	SignatureSchemeMoveAuthenticator SignatureScheme = 7
 )
 
 type FfiConverterSignatureScheme struct {}
@@ -38720,21 +40250,21 @@ func (e TransactionArgumentGasCoin) Destroy() {
 }
 // An input to the programmable transaction block.
 type TransactionArgumentInput struct {
-	Ix uint32
+	Index uint32
 }
 
 func (e TransactionArgumentInput) Destroy() {
-		FfiDestroyerUint32{}.Destroy(e.Ix);
+		FfiDestroyerUint32{}.Destroy(e.Index);
 }
 // The result of another transaction command.
 type TransactionArgumentResult struct {
 	Cmd uint32
-	Ix *uint32
+	Index *uint32
 }
 
 func (e TransactionArgumentResult) Destroy() {
 		FfiDestroyerUint32{}.Destroy(e.Cmd);
-		FfiDestroyerOptionalUint32{}.Destroy(e.Ix);
+		FfiDestroyerOptionalUint32{}.Destroy(e.Index);
 }
 
 type FfiConverterTransactionArgument struct {}
@@ -38774,11 +40304,11 @@ func (FfiConverterTransactionArgument) Write(writer io.Writer, value Transaction
 			writeInt32(writer, 1)
 		case TransactionArgumentInput:
 			writeInt32(writer, 2)
-			FfiConverterUint32INSTANCE.Write(writer, variant_value.Ix)
+			FfiConverterUint32INSTANCE.Write(writer, variant_value.Index)
 		case TransactionArgumentResult:
 			writeInt32(writer, 3)
 			FfiConverterUint32INSTANCE.Write(writer, variant_value.Cmd)
-			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Ix)
+			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Index)
 		default:
 			_ = variant_value
 			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionArgument.Write", value))
@@ -39602,6 +41132,43 @@ type FfiDestroyerOptionalMoveArg struct {}
 func (_ FfiDestroyerOptionalMoveArg) Destroy(value **MoveArg) {
 	if value != nil {
 		FfiDestroyerMoveArg{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMoveAuthenticator struct{}
+
+var FfiConverterOptionalMoveAuthenticatorINSTANCE = FfiConverterOptionalMoveAuthenticator{}
+
+func (c FfiConverterOptionalMoveAuthenticator) Lift(rb RustBufferI) **MoveAuthenticator {
+	return LiftFromRustBuffer[**MoveAuthenticator](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveAuthenticator) Read(reader io.Reader) **MoveAuthenticator {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveAuthenticatorINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveAuthenticator) Lower(value **MoveAuthenticator) C.RustBuffer {
+	return LowerIntoRustBuffer[**MoveAuthenticator](c, value)
+}
+
+func (_ FfiConverterOptionalMoveAuthenticator) Write(writer io.Writer, value **MoveAuthenticator) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveAuthenticatorINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveAuthenticator struct {}
+
+func (_ FfiDestroyerOptionalMoveAuthenticator) Destroy(value **MoveAuthenticator) {
+	if value != nil {
+		FfiDestroyerMoveAuthenticator{}.Destroy(*value)
 	}
 }
 
@@ -41156,6 +42723,43 @@ type FfiDestroyerOptionalValidatorSet struct {}
 func (_ FfiDestroyerOptionalValidatorSet) Destroy(value *ValidatorSet) {
 	if value != nil {
 		FfiDestroyerValidatorSet{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMnemonicLength struct{}
+
+var FfiConverterOptionalMnemonicLengthINSTANCE = FfiConverterOptionalMnemonicLength{}
+
+func (c FfiConverterOptionalMnemonicLength) Lift(rb RustBufferI) *MnemonicLength {
+	return LiftFromRustBuffer[*MnemonicLength](c, rb)
+}
+
+func (_ FfiConverterOptionalMnemonicLength) Read(reader io.Reader) *MnemonicLength {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMnemonicLengthINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMnemonicLength) Lower(value *MnemonicLength) C.RustBuffer {
+	return LowerIntoRustBuffer[*MnemonicLength](c, value)
+}
+
+func (_ FfiConverterOptionalMnemonicLength) Write(writer io.Writer, value *MnemonicLength) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMnemonicLengthINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMnemonicLength struct {}
+
+func (_ FfiDestroyerOptionalMnemonicLength) Destroy(value *MnemonicLength) {
+	if value != nil {
+		FfiDestroyerMnemonicLength{}.Destroy(*value)
 	}
 }
 
@@ -45866,6 +47470,16 @@ func GasPaymentToBcs(data GasPayment) ([]byte, error) {
 		} else {
 			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+// Generate a new BIP-39 mnemonic in English.
+// Supported word counts are 12 and 24 (default).
+func GenerateMnemonic(wordCount *MnemonicLength) string {
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(FfiConverterOptionalMnemonicLengthINSTANCE.Lower(wordCount),_uniffiStatus),
+	}
+	}))
 }
 
 // Create this type from BCS encoded bytes.

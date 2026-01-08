@@ -49,8 +49,10 @@ mod transaction_kind {
             ReadableTransactionKind::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableTransactionKind::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableTransactionKind::json_schema(generator)
         }
     }
 
@@ -167,7 +169,7 @@ mod transaction_kind {
 mod end_of_epoch {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
+        AuthenticatorStateExpire, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
         EndOfEpochTransactionKind,
     };
 
@@ -177,6 +179,7 @@ mod end_of_epoch {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
+        ChangeEpochV4(&'a ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
@@ -187,6 +190,7 @@ mod end_of_epoch {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
+        ChangeEpochV4(ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
@@ -196,6 +200,7 @@ mod end_of_epoch {
         ChangeEpoch(&'a ChangeEpoch),
         ChangeEpochV2(&'a ChangeEpochV2),
         ChangeEpochV3(&'a ChangeEpochV3),
+        ChangeEpochV4(&'a ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(&'a AuthenticatorStateExpire),
     }
@@ -205,6 +210,7 @@ mod end_of_epoch {
         ChangeEpoch(ChangeEpoch),
         ChangeEpochV2(ChangeEpochV2),
         ChangeEpochV3(ChangeEpochV3),
+        ChangeEpochV4(ChangeEpochV4),
         AuthenticatorStateCreate,
         AuthenticatorStateExpire(AuthenticatorStateExpire),
     }
@@ -223,6 +229,9 @@ mod end_of_epoch {
                     Self::ChangeEpochV3(k) => {
                         ReadableEndOfEpochTransactionKindRef::ChangeEpochV3(k)
                     }
+                    Self::ChangeEpochV4(k) => {
+                        ReadableEndOfEpochTransactionKindRef::ChangeEpochV4(k)
+                    }
                     Self::AuthenticatorStateCreate => {
                         ReadableEndOfEpochTransactionKindRef::AuthenticatorStateCreate
                     }
@@ -236,6 +245,7 @@ mod end_of_epoch {
                     Self::ChangeEpoch(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpoch(k),
                     Self::ChangeEpochV2(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV2(k),
                     Self::ChangeEpochV3(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV3(k),
+                    Self::ChangeEpochV4(k) => BinaryEndOfEpochTransactionKindRef::ChangeEpochV4(k),
 
                     Self::AuthenticatorStateCreate => {
                         BinaryEndOfEpochTransactionKindRef::AuthenticatorStateCreate
@@ -264,6 +274,9 @@ mod end_of_epoch {
                         ReadableEndOfEpochTransactionKind::ChangeEpochV3(k) => {
                             Self::ChangeEpochV3(k)
                         }
+                        ReadableEndOfEpochTransactionKind::ChangeEpochV4(k) => {
+                            Self::ChangeEpochV4(k)
+                        }
                         ReadableEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
                         }
@@ -278,6 +291,7 @@ mod end_of_epoch {
                         BinaryEndOfEpochTransactionKind::ChangeEpoch(k) => Self::ChangeEpoch(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV2(k) => Self::ChangeEpochV2(k),
                         BinaryEndOfEpochTransactionKind::ChangeEpochV3(k) => Self::ChangeEpochV3(k),
+                        BinaryEndOfEpochTransactionKind::ChangeEpochV4(k) => Self::ChangeEpochV4(k),
 
                         BinaryEndOfEpochTransactionKind::AuthenticatorStateCreate => {
                             Self::AuthenticatorStateCreate
@@ -543,7 +557,7 @@ mod argument {
             "GasArgument".to_owned()
         }
 
-        fn json_schema(_gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             schemars::schema::Schema::Object(schemars::schema::SchemaObject {
                 instance_type: Some(schemars::schema::InstanceType::String.into()),
                 enum_values: Some(vec!["gas".into()]),
@@ -562,8 +576,10 @@ mod argument {
             ReadableArgument::schema_name()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
-            ReadableArgument::json_schema(gen)
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableArgument::json_schema(generator)
         }
     }
 
@@ -763,17 +779,7 @@ mod signed_transaction {
     /// struct Intent {
     ///     scope: IntentScope,
     ///     version: IntentVersion,
-    ///     app_id: AppId,
-    /// }
-    ///
-    /// enum IntentVersion {
-    ///     V0 = 0,
-    /// }
-    ///
-    /// enum AppId {
-    ///     Iota = 0,
-    ///     Narwhal = 1,
-    ///     Consensus = 2,
+    ///     app_id: IntendAppId,
     /// }
     ///
     /// enum IntentScope {
@@ -782,9 +788,22 @@ mod signed_transaction {
     ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
     ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
     ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
-    ///     ProofOfPossession = 5, // Used as a signature representing an authority's proof of possession of its authority protocol key.
-    ///     BridgeEventDeprecated = 6, // Deprecated. Should not be reused. Introduced for bridge purposes but was never included in messages.
-    ///     ConsensusBlock = 7,    // Used for consensus authority signature on block's digest
+    ///     ProofOfPossession = 5,       /* Used as a signature representing an authority's proof of
+    ///                                   * possession of its authority key. */
+    ///     BridgeEventDeprecated = 6, /* Deprecated. Should not be reused. Introduced for bridge
+    ///                                 * purposes but was never included in messages. */
+    ///     ConsensusBlock = 7, // Used for consensus authority signature on block's digest.
+    ///     DiscoveryPeers = 8, // Used for reporting peer addresses in discovery
+    ///     AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
+    /// }
+    ///
+    /// enum IntentVersion {
+    ///     V0 = 0,
+    /// }
+    ///
+    /// enum IntendAppId {
+    ///     Iota = 0,
+    ///     Consensus = 1,
     /// }
     /// ```
     struct IntentMessageWrappedTransaction;
@@ -986,7 +1005,9 @@ mod transaction_expiration {
             "TransactionExpiration".into()
         }
 
-        fn json_schema(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
             use schemars::{
                 Map, Set,
                 schema::{
@@ -1000,7 +1021,7 @@ mod transaction_expiration {
                         let mut props = Map::new();
                         props.insert(
                             "epoch".to_owned(),
-                            gen.subschema_for::<crate::_schemars::U64>(),
+                            generator.subschema_for::<crate::_schemars::U64>(),
                         );
                         props
                     },

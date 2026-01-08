@@ -15,9 +15,9 @@ use crate::{
     },
 };
 
-#[derive(PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
-#[uniffi::export(Eq)]
-pub struct Ed25519PrivateKey(iota_sdk::crypto::ed25519::Ed25519PrivateKey);
+#[derive(Debug, PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct Ed25519PrivateKey(pub iota_sdk::crypto::ed25519::Ed25519PrivateKey);
 
 #[uniffi::export]
 impl Ed25519PrivateKey {
@@ -219,6 +219,7 @@ impl Ed25519VerifyingKey {
 #[uniffi::export(Debug)]
 pub struct Ed25519Verifier(iota_sdk::crypto::ed25519::Ed25519Verifier);
 
+#[uniffi::export]
 impl Ed25519Verifier {
     #[uniffi::constructor]
     pub fn new() -> Self {

@@ -3,23 +3,25 @@
 
 use std::{
     collections::HashMap,
-    sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    sync::{Arc, RwLock},
     time::Duration,
 };
 
-use iota_sdk::{graphql_client::WaitForTx, types::Input};
+use iota_sdk::graphql_client::WaitForTx;
 
 use crate::{
-    crypto::simple::SimpleKeypair,
     error::Result,
-    graphql::GraphQLClient,
-    transaction_builder::ptb_arg::{MoveArg, PTBArgument},
+    graphql::{DryRunResult, GraphQLClient},
+    transaction_builder::{
+        ptb_arg::{MoveArg, PTBArgument},
+        signer::TransactionSigner,
+    },
     types::{
         address::Address,
         move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{Argument, DryRunResult, Transaction, TransactionEffects},
+        transaction::{Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -136,7 +138,7 @@ impl ClientTransactionBuilder {
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .name(names);
+                .assign(names);
         });
         self
     }
@@ -203,7 +205,7 @@ impl ClientTransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, amounts).name(names);
+            builder.split_coins(coin, amounts).assign(names);
         });
         self
     }
@@ -242,7 +244,7 @@ impl ClientTransactionBuilder {
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
             });
-            builder.named_command(cmd, name);
+            builder.assigned_command(cmd, name);
         });
         self
     }
@@ -295,7 +297,7 @@ impl ClientTransactionBuilder {
         self.write(|builder| {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
-                .name(name);
+                .assign(name);
         });
         self
     }
@@ -339,11 +341,11 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute(
         &self,
-        keypair: &SimpleKeypair,
+        signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .read(|builder| builder.clone().execute(&keypair.0, wait_for))
+            .read(|builder| builder.clone().execute(signer, wait_for))
             .await?
             .into())
     }
@@ -352,15 +354,15 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_with_sponsor(
         &self,
-        keypair: &SimpleKeypair,
-        sponsor_keypair: &SimpleKeypair,
+        signer: &TransactionSigner,
+        sponsor_signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
                 builder
                     .clone()
-                    .execute_with_sponsor(&keypair.0, &sponsor_keypair.0, wait_for)
+                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
             })
             .await?
             .into())
