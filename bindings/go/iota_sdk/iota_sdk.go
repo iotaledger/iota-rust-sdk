@@ -37336,21 +37336,21 @@ func (e TransactionArgumentGasCoin) Destroy() {
 }
 // An input to the programmable transaction block.
 type TransactionArgumentInput struct {
-	Ix uint32
+	Index uint32
 }
 
 func (e TransactionArgumentInput) Destroy() {
-		FfiDestroyerUint32{}.Destroy(e.Ix);
+		FfiDestroyerUint32{}.Destroy(e.Index);
 }
 // The result of another transaction command.
 type TransactionArgumentResult struct {
 	Cmd uint32
-	Ix *uint32
+	Index *uint32
 }
 
 func (e TransactionArgumentResult) Destroy() {
 		FfiDestroyerUint32{}.Destroy(e.Cmd);
-		FfiDestroyerOptionalUint32{}.Destroy(e.Ix);
+		FfiDestroyerOptionalUint32{}.Destroy(e.Index);
 }
 
 type FfiConverterTransactionArgument struct {}
@@ -37390,11 +37390,11 @@ func (FfiConverterTransactionArgument) Write(writer io.Writer, value Transaction
 			writeInt32(writer, 1)
 		case TransactionArgumentInput:
 			writeInt32(writer, 2)
-			FfiConverterUint32INSTANCE.Write(writer, variant_value.Ix)
+			FfiConverterUint32INSTANCE.Write(writer, variant_value.Index)
 		case TransactionArgumentResult:
 			writeInt32(writer, 3)
 			FfiConverterUint32INSTANCE.Write(writer, variant_value.Cmd)
-			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Ix)
+			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Index)
 		default:
 			_ = variant_value
 			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionArgument.Write", value))
