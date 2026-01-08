@@ -11,9 +11,9 @@ use std::{
 
 use iota_graphql_client::Client;
 use iota_types::{
-    Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
-    Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionV1, TypeTag,
+    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -1135,7 +1135,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Dry run the transaction.
-    pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
+    pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
         {
             let Transaction::V1(txn) = &txn else {
