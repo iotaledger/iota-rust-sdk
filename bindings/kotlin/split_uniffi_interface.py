@@ -23,12 +23,22 @@ def find_block(lines: list[str], start_line: int) -> int:
     raise ValueError("Did not find matching brace for block starting at line %d" % start_line)
 
 
-def parse_methods(lines: list[str], start: int, end: int) -> list[tuple[int, str]]:
-    """Collect method declarations directly inside the interface block."""
-    methods: list[tuple[int, str]] = []
-    for i in range(start + 1, end):
-        if re.match(r"^\s*fun\s", lines[i]):
-            methods.append((i, lines[i]))
+def parse_methods(lines: list[str], start: int, end: int) -> list[tuple[int, int, list[str]]]:
+    """
+    Collect method declarations (assumed to span exactly two lines) directly inside the interface block.
+    Returns (start_idx, end_idx, [line1, line2]) tuples.
+    """
+    methods: list[tuple[int, int, list[str]]] = []
+    i = start + 1
+    while i < end:
+        line = lines[i]
+        if not re.match(r"^\s*fun\s", line):
+            i += 1
+            continue
+        if i + 1 >= end:
+            raise SystemExit(f"Expected second line of function signature at line {i+2}")
+        methods.append((i, i + 1, [lines[i], lines[i + 1]]))
+        i += 2
     return methods
 
 
@@ -62,21 +72,28 @@ def main() -> None:
         raise SystemExit("Could not find `internal interface UniffiLib : Library {` in the file.")
 
     interface_end = find_block(lines, interface_start)
-    methods = parse_methods(lines, interface_start, interface_end)
 
+    methods = parse_methods(lines, interface_start, interface_end)
     if not methods:
         raise SystemExit("No methods found in UniffiLib interface; nothing to split.")
+    if len(methods) <= args.batch_size:
+        print(
+            f"Interface has {len(methods)} methods (<= batch size {args.batch_size}); "
+            "skipping split."
+        )
+        return
 
     move_count = min(args.batch_size, len(methods))
     moved = methods[-move_count:]
     moved_names = []
-    for idx, _ in moved:
-        signature = lines[idx]
+    for start_idx, end_idx, sig_lines in moved:
+        signature = sig_lines[0]
         m = re.match(r"^\s*fun\s+([A-Za-z0-9_`]+)\s*\(", signature)
         if not m:
-            raise SystemExit(f"Could not parse method name from line {idx+1}: {signature}")
+            raise SystemExit(f"Could not parse method name from line {start_idx+1}: {signature}")
         moved_names.append(m.group(1))
-        lines[idx] = None  # Mark for removal
+        for idx in range(start_idx, end_idx + 1):
+            lines[idx] = None  # Mark for removal
 
     # Remove marked lines from UniffiLib block
     lines = [ln for ln in lines if ln is not None]
@@ -89,11 +106,12 @@ def main() -> None:
         pattern = re.compile(rf"\bUniffiLib\.INSTANCE\.{re.escape(name)}\b")
         text, n = pattern.subn(f"UniffiLibBatch2.INSTANCE.{name}", text)
         if n == 0:
-            # Best-effort: warn but continue
-            print(f"Warning: did not rewrite any call sites for {name}")
+            print(f"no call sites found for {name}")
 
     # Build the new interface block
-    moved_signatures = [sig for _, sig in moved]
+    moved_signatures: list[str] = []
+    for _, _, sig_lines in moved:
+        moved_signatures.extend(sig_lines)
     batch_block = [
         "",
         "internal interface UniffiLibBatch2 : Library {",

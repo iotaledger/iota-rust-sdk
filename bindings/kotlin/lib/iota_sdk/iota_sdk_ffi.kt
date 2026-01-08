@@ -66,7 +66,7 @@ open class RustBuffer : Structure() {
     companion object {
         internal fun alloc(size: ULong = 0UL) = uniffiRustCall() { status ->
             // Note: need to convert the size to a `Long` value to make this work with JVM.
-            UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rustbuffer_alloc(size.toLong(), status)
+            UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rustbuffer_alloc(size.toLong(), status)
         }.also {
             if(it.data == null) {
                throw RuntimeException("RustBuffer.alloc() returned null data pointer (size=${size})")
@@ -82,7 +82,7 @@ open class RustBuffer : Structure() {
         }
 
         internal fun free(buf: RustBuffer.ByValue) = uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rustbuffer_free(buf, status)
+            UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rustbuffer_free(buf, status)
         }
     }
 
@@ -7746,6 +7746,17 @@ fun uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_ne(`ptr`: P
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_transactionevents(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_free_transactionevents(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(`events`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -8746,7 +8757,6 @@ fun ffi_iota_sdk_ffi_rust_future_free_void(`handle`: Long,
 ): Unit
 fun ffi_iota_sdk_ffi_rust_future_complete_void(`handle`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-
 }
 
 private fun uniffiCheckContractApiVersion(lib: IntegrityCheckingUniffiLib) {
@@ -18783,9 +18793,9 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
                 FfiConverterBoolean.lower(`skipChecks`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeDryRunResult.lift(it) },
         // Error FFI converter
@@ -18807,9 +18817,9 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
                 FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
         { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
@@ -18831,9 +18841,9 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
                 FfiConverterTypeSimpleKeypair.lower(`keypair`),FfiConverterTypeSimpleKeypair.lower(`sponsorKeypair`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
         { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
@@ -18870,9 +18880,9 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
         { FfiConverterTypeTransaction.lift(it) },
         // Error FFI converter
@@ -24227,9 +24237,9 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
                 FfiConverterTypeAddress.lower(`address`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalString.lift(it) },
         // Error FFI converter
@@ -24257,9 +24267,9 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
                 FfiConverterTypeAddress.lower(`address`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeFaucetReceipt.lift(it) },
         // Error FFI converter
@@ -24283,9 +24293,9 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
                 FfiConverterString.lower(`id`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeBatchSendStatus.lift(it) },
         // Error FFI converter
@@ -25581,9 +25591,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`epoch`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeValidatorPage.lift(it) },
         // Error FFI converter
@@ -25607,9 +25617,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalString.lower(`coinType`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -25631,9 +25641,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterString.lift(it) },
         // Error FFI converter
@@ -25657,9 +25667,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypeDigest.lower(`digest`),FfiConverterOptionalULong.lower(`seqNum`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeCheckpointSummary.lift(it) },
         // Error FFI converter
@@ -25681,9 +25691,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeCheckpointSummaryPage.lift(it) },
         // Error FFI converter
@@ -25705,9 +25715,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterString.lower(`coinType`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeCoinMetadata.lift(it) },
         // Error FFI converter
@@ -25732,9 +25742,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),FfiConverterOptionalTypeStructTag.lower(`coinType`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeCoinPage.lift(it) },
         // Error FFI converter
@@ -25762,9 +25772,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeTransaction.lower(`tx`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeDryRunResult.lift(it) },
         // Error FFI converter
@@ -25794,9 +25804,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeTransactionKind.lower(`txKind`),FfiConverterTypeTransactionMetadata.lower(`txMeta`),FfiConverterBoolean.lower(`skipChecks`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeDryRunResult.lift(it) },
         // Error FFI converter
@@ -25825,9 +25835,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterTypeValue.lower(`name`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeDynamicFieldOutput.lift(it) },
         // Error FFI converter
@@ -25852,9 +25862,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeDynamicFieldOutputPage.lift(it) },
         // Error FFI converter
@@ -25883,9 +25893,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterTypeValue.lower(`name`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeDynamicFieldOutput.lift(it) },
         // Error FFI converter
@@ -25908,9 +25918,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`epoch`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeEpoch.lift(it) },
         // Error FFI converter
@@ -25934,9 +25944,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`epoch`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -25960,9 +25970,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`epoch`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -25985,9 +25995,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypeEventFilter.lower(`filter`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeEventPage.lift(it) },
         // Error FFI converter
@@ -26009,9 +26019,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterSequenceTypeUserSignature.lower(`signatures`),FfiConverterTypeTransaction.lower(`tx`),FfiConverterOptionalTypeWaitForTx.lower(`waitFor`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_pointer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_pointer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_pointer(future) },
         // lift function
         { FfiConverterTypeTransactionEffects.lift(it) },
         // Error FFI converter
@@ -26033,9 +26043,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`owner`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeCoinPage.lift(it) },
         // Error FFI converter
@@ -26057,9 +26067,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeNameFormat.lower(`format`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeName.lift(it) },
         // Error FFI converter
@@ -26081,9 +26091,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterString.lower(`name`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeAddress.lift(it) },
         // Error FFI converter
@@ -26105,9 +26115,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeNameRegistrationPage.lift(it) },
         // Error FFI converter
@@ -26130,9 +26140,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
         // lift function
         { FfiConverterBoolean.lift(it) },
         // Error FFI converter
@@ -26157,9 +26167,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i8(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i8(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i8(future) },
         // lift function
         { FfiConverterBoolean.lift(it) },
         // Error FFI converter
@@ -26182,9 +26192,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -26206,9 +26216,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i32(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i32(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i32(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_i32(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_i32(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_i32(future) },
         // lift function
         { FfiConverterInt.lift(it) },
         // Error FFI converter
@@ -26234,9 +26244,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeValue.lift(it) },
         // Error FFI converter
@@ -26262,9 +26272,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalByteArray.lift(it) },
         // Error FFI converter
@@ -26287,9 +26297,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeMoveFunction.lift(it) },
         // Error FFI converter
@@ -26311,9 +26321,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeMoveModule.lift(it) },
         // Error FFI converter
@@ -26339,9 +26349,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeObject.lift(it) },
         // Error FFI converter
@@ -26364,9 +26374,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeObjectId.lower(`objectId`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalByteArray.lift(it) },
         // Error FFI converter
@@ -26391,9 +26401,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypeObjectFilter.lower(`filter`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeObjectPage.lift(it) },
         // Error FFI converter
@@ -26425,9 +26435,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`version`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeMovePackage.lift(it) },
         // Error FFI converter
@@ -26451,9 +26461,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeMovePackage.lift(it) },
         // Error FFI converter
@@ -26477,9 +26487,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`afterVersion`),FfiConverterOptionalULong.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeMovePackagePage.lift(it) },
         // Error FFI converter
@@ -26507,9 +26517,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`afterCheckpoint`),FfiConverterOptionalULong.lower(`beforeCheckpoint`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeMovePackagePage.lift(it) },
         // Error FFI converter
@@ -26531,9 +26541,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`version`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeProtocolConfigs.lift(it) },
         // Error FFI converter
@@ -26559,9 +26569,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalULong.lower(`epoch`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -26583,9 +26593,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeQuery.lower(`query`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeValue.lift(it) },
         // Error FFI converter
@@ -26608,9 +26618,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeServiceConfig.lift(it) },
         // Error FFI converter
@@ -26633,9 +26643,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterString.lower(`server`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
         // lift function
         { Unit },
         
@@ -26658,9 +26668,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterString.lower(`coinType`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -26683,9 +26693,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -26708,9 +26718,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -26733,9 +26743,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterULong.lower(`seqNum`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalULong.lift(it) },
         // Error FFI converter
@@ -26757,9 +26767,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeSignedTransaction.lift(it) },
         // Error FFI converter
@@ -26781,9 +26791,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeTransactionDataEffects.lift(it) },
         // Error FFI converter
@@ -26805,9 +26815,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalTypeTransactionEffects.lift(it) },
         // Error FFI converter
@@ -26829,9 +26839,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeSignedTransactionPage.lift(it) },
         // Error FFI converter
@@ -26854,9 +26864,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeTransactionDataEffectsPage.lift(it) },
         // Error FFI converter
@@ -26878,9 +26888,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterOptionalTypeTransactionsFilter.lower(`filter`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeTransactionEffectsPage.lift(it) },
         // Error FFI converter
@@ -26904,9 +26914,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
                 FfiConverterTypeDigest.lower(`digest`),FfiConverterTypeWaitForTx.lower(`waitFor`),FfiConverterOptionalDuration.lower(`timeout`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_void(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_void(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_void(future) },
         // lift function
         { Unit },
         
@@ -45676,9 +45686,9 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
                 FfiConverterTypeSimpleKeypair.lower(`keypair`),
             )
         },
-        { future, callback, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLib.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeValue.lift(it) },
         // Error FFI converter
@@ -46519,7 +46529,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
     constructor(`events`: List<Event>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(
         FfiConverterSequenceTypeEvent.lower(`events`),_status)
 }
     )
@@ -46575,7 +46585,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionevents(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionevents(ptr, status)
                 }
             }
         }
@@ -46591,7 +46601,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
         it, _status)
 }
     }
@@ -46603,7 +46613,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
             return FfiConverterSequenceTypeEvent.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
         it, _status)
 }
     }
@@ -46859,7 +46869,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionkind(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionkind(ptr, status)
                 }
             }
         }
@@ -46867,7 +46877,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionkind(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionkind(pointer!!, status)
         }
     }
 
@@ -46879,7 +46889,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionKind.lower(`other`),_status)
 }
     }
@@ -46892,7 +46902,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newAuthenticatorStateUpdateV1`(`tx`: AuthenticatorStateUpdateV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
         FfiConverterTypeAuthenticatorStateUpdateV1.lower(`tx`),_status)
 }
     )
@@ -46902,7 +46912,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newConsensusCommitPrologueV1`(`tx`: ConsensusCommitPrologueV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
         FfiConverterTypeConsensusCommitPrologueV1.lower(`tx`),_status)
 }
     )
@@ -46912,7 +46922,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newEndOfEpoch`(`tx`: List<EndOfEpochTransactionKind>): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
         FfiConverterSequenceTypeEndOfEpochTransactionKind.lower(`tx`),_status)
 }
     )
@@ -46922,7 +46932,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newGenesis`(`tx`: GenesisTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
         FfiConverterTypeGenesisTransaction.lower(`tx`),_status)
 }
     )
@@ -46932,7 +46942,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newProgrammableTransaction`(`tx`: ProgrammableTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
         FfiConverterTypeProgrammableTransaction.lower(`tx`),_status)
 }
     )
@@ -46942,7 +46952,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newRandomnessStateUpdate`(`tx`: RandomnessStateUpdate): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
         FfiConverterTypeRandomnessStateUpdate.lower(`tx`),_status)
 }
     )
@@ -47158,7 +47168,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
         FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
 }
     )
@@ -47214,7 +47224,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
                 }
             }
         }
@@ -47222,7 +47232,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
         }
     }
 
@@ -47230,7 +47240,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
         it, _status)
 }
     }
@@ -47242,7 +47252,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionExpiration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
         it, _status)
 }
     }
@@ -47254,7 +47264,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeGasPayment.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
         it, _status)
 }
     }
@@ -47266,7 +47276,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionKind.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
         it, _status)
 }
     }
@@ -47278,7 +47288,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
         it, _status)
 }
     }
@@ -47293,7 +47303,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
         it, _status)
 }
     }
@@ -47308,7 +47318,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
         it, _status)
 }
     }
@@ -47323,7 +47333,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
         it, _status)
 }
     }
@@ -47339,7 +47349,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionV1.lower(`other`),_status)
 }
     }
@@ -47356,7 +47366,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     @Throws(SdkFfiException::class) fun `fromBase64`(`bytes`: kotlin.String): TransactionV1 {
             return FfiConverterTypeTransactionV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
         FfiConverterString.lower(`bytes`),_status)
 }
     )
@@ -47553,7 +47563,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
     constructor(`objects`: List<Argument>, `address`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
         FfiConverterSequenceTypeArgument.lower(`objects`),FfiConverterTypeArgument.lower(`address`),_status)
 }
     )
@@ -47609,7 +47619,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
                 }
             }
         }
@@ -47617,7 +47627,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
         }
     }
 
@@ -47628,7 +47638,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
         it, _status)
 }
     }
@@ -47643,7 +47653,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterSequenceTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
         it, _status)
 }
     }
@@ -47659,7 +47669,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransferObjects.lower(`other`),_status)
 }
     }
@@ -47971,7 +47981,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
                 }
             }
         }
@@ -47979,7 +47989,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
         }
     }
 
@@ -47987,7 +47997,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
         it, _status)
 }
     }
@@ -47999,7 +48009,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterOptionalTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
         it, _status)
 }
     }
@@ -48011,7 +48021,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
         it, _status)
 }
     }
@@ -48023,7 +48033,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
         it, _status)
 }
     }
@@ -48035,7 +48045,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
         it, _status)
 }
     }
@@ -48047,7 +48057,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
         it, _status)
 }
     }
@@ -48059,7 +48069,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
         it, _status)
 }
     }
@@ -48071,7 +48081,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
         it, _status)
 }
     }
@@ -48083,7 +48093,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
         it, _status)
 }
     }
@@ -48095,7 +48105,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
         it, _status)
 }
     }
@@ -48107,7 +48117,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
         it, _status)
 }
     }
@@ -48119,7 +48129,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
         it, _status)
 }
     }
@@ -48131,7 +48141,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
         it, _status)
 }
     }
@@ -48143,7 +48153,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
         it, _status)
 }
     }
@@ -48155,7 +48165,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
         it, _status)
 }
     }
@@ -48168,7 +48178,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
         it, _status)
 }
     }
@@ -48182,7 +48192,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
         it, FfiConverterTypeTypeTag.lower(`other`),_status)
 }
     }
@@ -48193,7 +48203,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -48205,7 +48215,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newAddress`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
         _status)
 }
     )
@@ -48215,7 +48225,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newBool`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
         _status)
 }
     )
@@ -48225,7 +48235,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newSigner`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
         _status)
 }
     )
@@ -48235,7 +48245,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newStruct`(`structTag`: StructTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -48245,7 +48255,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU128`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
         _status)
 }
     )
@@ -48255,7 +48265,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU16`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
         _status)
 }
     )
@@ -48265,7 +48275,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU256`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
         _status)
 }
     )
@@ -48275,7 +48285,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU32`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
         _status)
 }
     )
@@ -48285,7 +48295,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU64`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
         _status)
 }
     )
@@ -48295,7 +48305,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU8`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
         _status)
 }
     )
@@ -48305,7 +48315,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newVector`(`typeTag`: TypeTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -48518,7 +48528,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
     constructor(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
         FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypeArgument.lower(`ticket`),_status)
 }
     )
@@ -48574,7 +48584,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
                 }
             }
         }
@@ -48582,7 +48592,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
         }
     }
 
@@ -48593,7 +48603,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
         it, _status)
 }
     }
@@ -48608,7 +48618,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
         it, _status)
 }
     }
@@ -48623,7 +48633,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
         it, _status)
 }
     }
@@ -48638,7 +48648,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
         it, _status)
 }
     }
@@ -48654,7 +48664,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgrade.lower(`other`),_status)
 }
     }
@@ -48881,7 +48891,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
                 }
             }
         }
@@ -48889,7 +48899,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
         }
     }
 
@@ -48900,7 +48910,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
             return FfiConverterUByte.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
         it, _status)
 }
     }
@@ -48913,7 +48923,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
         it, _status)
 }
     }
@@ -48927,7 +48937,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgradePolicy.lower(`other`),_status)
 }
     }
@@ -48944,7 +48954,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `additive`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
         _status)
 }
     )
@@ -48961,7 +48971,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `compatible`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
         _status)
 }
     )
@@ -48974,7 +48984,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `depOnly`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
         _status)
 }
     )
@@ -49263,7 +49273,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
                 }
             }
         }
@@ -49271,7 +49281,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
         }
     }
 
@@ -49279,7 +49289,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
         it, _status)
 }
     }
@@ -49291,7 +49301,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
         it, _status)
 }
     }
@@ -49303,7 +49313,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey(
         it, _status)
 }
     }
@@ -49315,7 +49325,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_opt(
         it, _status)
 }
     }
@@ -49327,7 +49337,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
         it, _status)
 }
     }
@@ -49339,7 +49349,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
         it, _status)
 }
     }
@@ -49351,7 +49361,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeZkLoginAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin(
         it, _status)
 }
     }
@@ -49363,7 +49373,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_opt(
         it, _status)
 }
     }
@@ -49375,7 +49385,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
         it, _status)
 }
     }
@@ -49387,7 +49397,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey(
         it, _status)
 }
     }
@@ -49399,7 +49409,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
         it, _status)
 }
     }
@@ -49411,7 +49421,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin(
         it, _status)
 }
     }
@@ -49426,7 +49436,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
         it, _status)
 }
     }
@@ -49438,7 +49448,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
         it, _status)
 }
     }
@@ -49450,7 +49460,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
         it, _status)
 }
     }
@@ -49466,7 +49476,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeUserSignature.lower(`other`),_status)
 }
     }
@@ -49480,7 +49490,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
         FfiConverterString.lower(`base64`),_status)
 }
     )
@@ -49491,7 +49501,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -49501,7 +49511,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMultisig`(`signature`: MultisigAggregatedSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
         FfiConverterTypeMultisigAggregatedSignature.lower(`signature`),_status)
 }
     )
@@ -49511,7 +49521,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newPasskey`(`authenticator`: PasskeyAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey(
         FfiConverterTypePasskeyAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -49521,7 +49531,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newSimple`(`signature`: SimpleSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
         FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     )
@@ -49531,7 +49541,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newZklogin`(`authenticator`: ZkLoginAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin(
         FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -49708,7 +49718,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
         _status)
 }
     )
@@ -49764,7 +49774,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
                 }
             }
         }
@@ -49772,7 +49782,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
         }
     }
 
@@ -49781,7 +49791,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -49792,7 +49802,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
             return FfiConverterTypeUserSignatureVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
         it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
 }
     }
@@ -49804,7 +49814,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
             return FfiConverterOptionalTypeZkloginVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
         it, _status)
 }
     }
@@ -50017,7 +50027,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
     constructor(`epoch`: kotlin.ULong, `signature`: Bls12381Signature, `bitmapBytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(
         FfiConverterULong.lower(`epoch`),FfiConverterTypeBls12381Signature.lower(`signature`),FfiConverterByteArray.lower(`bitmapBytes`),_status)
 }
     )
@@ -50073,7 +50083,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(ptr, status)
                 }
             }
         }
@@ -50081,7 +50091,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
         }
     }
 
@@ -50090,7 +50100,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
         it, _status)
 }
     }
@@ -50102,7 +50112,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
         it, _status)
 }
     }
@@ -50114,7 +50124,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterTypeBls12381Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
         it, _status)
 }
     }
@@ -50338,7 +50348,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(ptr, status)
                 }
             }
         }
@@ -50346,7 +50356,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer!!, status)
         }
     }
 
@@ -50355,7 +50365,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
         it, FfiConverterTypeValidatorSignature.lower(`signature`),_status)
 }
     }
@@ -50366,7 +50376,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
             return FfiConverterTypeValidatorCommittee.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
         it, _status)
 }
     }
@@ -50379,7 +50389,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
             return FfiConverterTypeValidatorAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
         it, _status)
 }
     }
@@ -50395,7 +50405,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
     @Throws(SdkFfiException::class) fun `newCheckpointSummary`(`committee`: ValidatorCommittee, `summary`: CheckpointSummary): ValidatorCommitteeSignatureAggregator {
             return FfiConverterTypeValidatorCommitteeSignatureAggregator.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
         FfiConverterTypeValidatorCommittee.lower(`committee`),FfiConverterTypeCheckpointSummary.lower(`summary`),_status)
 }
     )
@@ -50568,7 +50578,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
     constructor(`committee`: ValidatorCommittee) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
         FfiConverterTypeValidatorCommittee.lower(`committee`),_status)
 }
     )
@@ -50624,7 +50634,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(ptr, status)
                 }
             }
         }
@@ -50632,7 +50642,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer!!, status)
         }
     }
 
@@ -50640,7 +50650,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
             return FfiConverterTypeValidatorCommittee.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
         it, _status)
 }
     }
@@ -50653,7 +50663,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeValidatorSignature.lower(`signature`),_status)
 }
     }
@@ -50665,7 +50675,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeValidatorAggregatedSignature.lower(`signature`),_status)
 }
     }
@@ -50677,7 +50687,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
         it, FfiConverterTypeCheckpointSummary.lower(`summary`),FfiConverterTypeValidatorAggregatedSignature.lower(`signature`),_status)
 }
     }
@@ -50875,7 +50885,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
     constructor(`validator`: Bls12381PublicKey, `duration`: java.time.Duration) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
         FfiConverterTypeBls12381PublicKey.lower(`validator`),FfiConverterDuration.lower(`duration`),_status)
 }
     )
@@ -50931,7 +50941,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
                 }
             }
         }
@@ -50939,7 +50949,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
         }
     }
 
@@ -50947,7 +50957,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
             return FfiConverterDuration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
         it, _status)
 }
     }
@@ -50959,7 +50969,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
             return FfiConverterTypeBls12381PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
         it, _status)
 }
     }
@@ -50975,7 +50985,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
         it, FfiConverterTypeValidatorExecutionTimeObservation.lower(`other`),_status)
 }
     }
@@ -50986,7 +50996,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -51184,7 +51194,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
     constructor(`epoch`: kotlin.ULong, `publicKey`: Bls12381PublicKey, `signature`: Bls12381Signature) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(
         FfiConverterULong.lower(`epoch`),FfiConverterTypeBls12381PublicKey.lower(`publicKey`),FfiConverterTypeBls12381Signature.lower(`signature`),_status)
 }
     )
@@ -51240,7 +51250,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorsignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorsignature(ptr, status)
                 }
             }
         }
@@ -51248,7 +51258,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer!!, status)
         }
     }
 
@@ -51256,7 +51266,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
         it, _status)
 }
     }
@@ -51268,7 +51278,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterTypeBls12381PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
         it, _status)
 }
     }
@@ -51280,7 +51290,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterTypeBls12381Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
         it, _status)
 }
     }
@@ -51296,7 +51306,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeValidatorSignature.lower(`other`),_status)
 }
     }
@@ -51489,7 +51499,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
     constructor(`objectId`: ObjectId, `version`: kotlin.ULong) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),_status)
 }
     )
@@ -51545,7 +51555,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_versionassignment(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_versionassignment(ptr, status)
                 }
             }
         }
@@ -51553,7 +51563,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_versionassignment(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_versionassignment(pointer!!, status)
         }
     }
 
@@ -51561,7 +51571,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(
         it, _status)
 }
     }
@@ -51573,7 +51583,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
         it, _status)
 }
     }
@@ -51589,7 +51599,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
         it, FfiConverterTypeVersionAssignment.lower(`other`),_status)
 }
     }
@@ -51804,7 +51814,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
     constructor(`inputs`: ZkLoginInputs, `maxEpoch`: kotlin.ULong, `signature`: SimpleSignature) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
         FfiConverterTypeZkLoginInputs.lower(`inputs`),FfiConverterULong.lower(`maxEpoch`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     )
@@ -51860,7 +51870,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
                 }
             }
         }
@@ -51868,7 +51878,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
         }
     }
 
@@ -51876,7 +51886,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterTypeZkLoginInputs.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
         it, _status)
 }
     }
@@ -51888,7 +51898,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
         it, _status)
 }
     }
@@ -51900,7 +51910,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
         it, _status)
 }
     }
@@ -51916,7 +51926,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginAuthenticator.lower(`other`),_status)
 }
     }
@@ -52127,7 +52137,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
     constructor(`proofPoints`: ZkLoginProof, `issBase64Details`: ZkLoginClaim, `headerBase64`: kotlin.String, `addressSeed`: Bn254FieldElement) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
         FfiConverterTypeZkLoginProof.lower(`proofPoints`),FfiConverterTypeZkLoginClaim.lower(`issBase64Details`),FfiConverterString.lower(`headerBase64`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
 }
     )
@@ -52183,7 +52193,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
                 }
             }
         }
@@ -52191,7 +52201,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
         }
     }
 
@@ -52199,7 +52209,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeBn254FieldElement.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
         it, _status)
 }
     }
@@ -52211,7 +52221,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
         it, _status)
 }
     }
@@ -52223,7 +52233,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
         it, _status)
 }
     }
@@ -52235,7 +52245,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginClaim.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
         it, _status)
 }
     }
@@ -52247,7 +52257,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeJwkId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
         it, _status)
 }
     }
@@ -52259,7 +52269,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginProof.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
         it, _status)
 }
     }
@@ -52271,7 +52281,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginPublicIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
         it, _status)
 }
     }
@@ -52287,7 +52297,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginInputs.lower(`other`),_status)
 }
     }
@@ -52482,7 +52492,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
     constructor(`a`: CircomG1, `b`: CircomG2, `c`: CircomG1) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
         FfiConverterTypeCircomG1.lower(`a`),FfiConverterTypeCircomG2.lower(`b`),FfiConverterTypeCircomG1.lower(`c`),_status)
 }
     )
@@ -52538,7 +52548,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
                 }
             }
         }
@@ -52546,7 +52556,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
         }
     }
 
@@ -52554,7 +52564,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
         it, _status)
 }
     }
@@ -52566,7 +52576,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG2.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
         it, _status)
 }
     }
@@ -52578,7 +52588,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
         it, _status)
 }
     }
@@ -52594,7 +52604,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginProof.lower(`other`),_status)
 }
     }
@@ -52901,7 +52911,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
     constructor(`iss`: kotlin.String, `addressSeed`: Bn254FieldElement) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
         FfiConverterString.lower(`iss`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
 }
     )
@@ -52957,7 +52967,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
                 }
             }
         }
@@ -52965,7 +52975,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
         }
     }
 
@@ -52973,7 +52983,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeBn254FieldElement.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
         it, _status)
 }
     }
@@ -52994,7 +53004,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterSequenceTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
         it, _status)
 }
     }
@@ -53014,7 +53024,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
         it, _status)
 }
     }
@@ -53035,7 +53045,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
         it, _status)
 }
     }
@@ -53047,7 +53057,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
         it, _status)
 }
     }
@@ -53063,7 +53073,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginPublicIdentifier.lower(`other`),_status)
 }
     }
@@ -53285,7 +53295,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
                 }
             }
         }
@@ -53293,7 +53303,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
         }
     }
 
@@ -53301,7 +53311,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
             return FfiConverterMapTypeJwkIdTypeJwk.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
         it, _status)
 }
     }
@@ -53314,7 +53324,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
 }
     }
@@ -53325,7 +53335,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
             return FfiConverterTypeZkloginVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
         it, FfiConverterMapTypeJwkIdTypeJwk.lower(`jwks`),_status)
 }
     }
@@ -53344,7 +53354,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
      */ fun `newDev`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
         _status)
 }
     )
@@ -53354,7 +53364,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
          fun `newMainnet`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
         _status)
 }
     )
@@ -65259,7 +65269,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `activeJwkFromBcs`(`bcs`: kotlin.ByteArray): ActiveJwk {
             return FfiConverterTypeActiveJwk.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65272,7 +65282,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `activeJwkToBcs`(`data`: ActiveJwk): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(
         FfiConverterTypeActiveJwk.lower(`data`),_status)
 }
     )
@@ -65285,7 +65295,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `addressFromBcs`(`bcs`: kotlin.ByteArray): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_address_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_address_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65298,7 +65308,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `addressToBcs`(`data`: Address): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_address_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_address_to_bcs(
         FfiConverterTypeAddress.lower(`data`),_status)
 }
     )
@@ -65311,7 +65321,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `argumentFromBcs`(`bcs`: kotlin.ByteArray): Argument {
             return FfiConverterTypeArgument.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65324,7 +65334,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `argumentToBcs`(`data`: Argument): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(
         FfiConverterTypeArgument.lower(`data`),_status)
 }
     )
@@ -65337,7 +65347,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `authenticatorStateExpireFromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateExpire {
             return FfiConverterTypeAuthenticatorStateExpire.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65350,7 +65360,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `authenticatorStateExpireToBcs`(`data`: AuthenticatorStateExpire): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(
         FfiConverterTypeAuthenticatorStateExpire.lower(`data`),_status)
 }
     )
@@ -65363,7 +65373,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1FromBcs`(`bcs`: kotlin.ByteArray): AuthenticatorStateUpdateV1 {
             return FfiConverterTypeAuthenticatorStateUpdateV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65376,7 +65386,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `authenticatorStateUpdateV1ToBcs`(`data`: AuthenticatorStateUpdateV1): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(
         FfiConverterTypeAuthenticatorStateUpdateV1.lower(`data`),_status)
 }
     )
@@ -65386,7 +65396,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `base64Decode`(`input`: kotlin.String): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_base64_decode(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_base64_decode(
         FfiConverterString.lower(`input`),_status)
 }
     )
@@ -65395,7 +65405,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
  fun `base64Encode`(`input`: kotlin.ByteArray): kotlin.String {
             return FfiConverterString.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_base64_encode(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_base64_encode(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -65408,7 +65418,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `bls12381PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Bls12381PublicKey {
             return FfiConverterTypeBls12381PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65421,7 +65431,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `bls12381PublicKeyToBcs`(`data`: Bls12381PublicKey): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs(
         FfiConverterTypeBls12381PublicKey.lower(`data`),_status)
 }
     )
@@ -65434,7 +65444,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `bls12381SignatureFromBcs`(`bcs`: kotlin.ByteArray): Bls12381Signature {
             return FfiConverterTypeBls12381Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65447,7 +65457,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `bls12381SignatureToBcs`(`data`: Bls12381Signature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(
         FfiConverterTypeBls12381Signature.lower(`data`),_status)
 }
     )
@@ -65460,7 +65470,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `bn254FieldElementFromBcs`(`bcs`: kotlin.ByteArray): Bn254FieldElement {
             return FfiConverterTypeBn254FieldElement.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65473,7 +65483,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `bn254FieldElementToBcs`(`data`: Bn254FieldElement): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(
         FfiConverterTypeBn254FieldElement.lower(`data`),_status)
 }
     )
@@ -65486,7 +65496,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `boolFromBcs`(`input`: kotlin.ByteArray): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -65499,7 +65509,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `boolToBcs`(`input`: kotlin.Boolean): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(
         FfiConverterBoolean.lower(`input`),_status)
 }
     )
@@ -65512,7 +65522,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `cancelledTransactionFromBcs`(`bcs`: kotlin.ByteArray): CancelledTransaction {
             return FfiConverterTypeCancelledTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65525,7 +65535,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `cancelledTransactionToBcs`(`data`: CancelledTransaction): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(
         FfiConverterTypeCancelledTransaction.lower(`data`),_status)
 }
     )
@@ -65538,7 +65548,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `changeEpochFromBcs`(`bcs`: kotlin.ByteArray): ChangeEpoch {
             return FfiConverterTypeChangeEpoch.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65551,7 +65561,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `changeEpochToBcs`(`data`: ChangeEpoch): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_to_bcs(
         FfiConverterTypeChangeEpoch.lower(`data`),_status)
 }
     )
@@ -65564,7 +65574,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `changeEpochV2FromBcs`(`bcs`: kotlin.ByteArray): ChangeEpochV2 {
             return FfiConverterTypeChangeEpochV2.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65577,7 +65587,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `changeEpochV2ToBcs`(`data`: ChangeEpochV2): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_bcs(
         FfiConverterTypeChangeEpochV2.lower(`data`),_status)
 }
     )
@@ -65590,7 +65600,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `changedObjectFromBcs`(`bcs`: kotlin.ByteArray): ChangedObject {
             return FfiConverterTypeChangedObject.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_changed_object_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_changed_object_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65603,7 +65613,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `changedObjectToBcs`(`data`: ChangedObject): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_changed_object_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_changed_object_to_bcs(
         FfiConverterTypeChangedObject.lower(`data`),_status)
 }
     )
@@ -65616,7 +65626,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointCommitmentFromBcs`(`bcs`: kotlin.ByteArray): CheckpointCommitment {
             return FfiConverterTypeCheckpointCommitment.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65629,7 +65639,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointCommitmentToBcs`(`data`: CheckpointCommitment): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_bcs(
         FfiConverterTypeCheckpointCommitment.lower(`data`),_status)
 }
     )
@@ -65642,7 +65652,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointContentsFromBcs`(`bcs`: kotlin.ByteArray): CheckpointContents {
             return FfiConverterTypeCheckpointContents.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65655,7 +65665,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointContentsToBcs`(`data`: CheckpointContents): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_bcs(
         FfiConverterTypeCheckpointContents.lower(`data`),_status)
 }
     )
@@ -65668,7 +65678,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointSummaryFromBcs`(`bcs`: kotlin.ByteArray): CheckpointSummary {
             return FfiConverterTypeCheckpointSummary.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65681,7 +65691,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointSummaryToBcs`(`data`: CheckpointSummary): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_bcs(
         FfiConverterTypeCheckpointSummary.lower(`data`),_status)
 }
     )
@@ -65694,7 +65704,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointTransactionInfoFromBcs`(`bcs`: kotlin.ByteArray): CheckpointTransactionInfo {
             return FfiConverterTypeCheckpointTransactionInfo.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65707,7 +65717,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `checkpointTransactionInfoToBcs`(`data`: CheckpointTransactionInfo): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(
         FfiConverterTypeCheckpointTransactionInfo.lower(`data`),_status)
 }
     )
@@ -65720,7 +65730,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `circomG1FromBcs`(`bcs`: kotlin.ByteArray): CircomG1 {
             return FfiConverterTypeCircomG1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65733,7 +65743,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `circomG1ToBcs`(`data`: CircomG1): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(
         FfiConverterTypeCircomG1.lower(`data`),_status)
 }
     )
@@ -65746,7 +65756,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `circomG2FromBcs`(`bcs`: kotlin.ByteArray): CircomG2 {
             return FfiConverterTypeCircomG2.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65759,7 +65769,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `circomG2ToBcs`(`data`: CircomG2): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(
         FfiConverterTypeCircomG2.lower(`data`),_status)
 }
     )
@@ -65772,7 +65782,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `commandArgumentErrorFromBcs`(`bcs`: kotlin.ByteArray): CommandArgumentError {
             return FfiConverterTypeCommandArgumentError.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65785,7 +65795,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `commandArgumentErrorToBcs`(`data`: CommandArgumentError): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_bcs(
         FfiConverterTypeCommandArgumentError.lower(`data`),_status)
 }
     )
@@ -65798,7 +65808,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `commandFromBcs`(`bcs`: kotlin.ByteArray): Command {
             return FfiConverterTypeCommand.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65811,7 +65821,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `commandToBcs`(`data`: Command): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_command_to_bcs(
         FfiConverterTypeCommand.lower(`data`),_status)
 }
     )
@@ -65824,7 +65834,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `consensusCommitPrologueV1FromBcs`(`bcs`: kotlin.ByteArray): ConsensusCommitPrologueV1 {
             return FfiConverterTypeConsensusCommitPrologueV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65837,7 +65847,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `consensusCommitPrologueV1ToBcs`(`data`: ConsensusCommitPrologueV1): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_bcs(
         FfiConverterTypeConsensusCommitPrologueV1.lower(`data`),_status)
 }
     )
@@ -65850,7 +65860,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `consensusDeterminedVersionAssignmentsFromBcs`(`bcs`: kotlin.ByteArray): ConsensusDeterminedVersionAssignments {
             return FfiConverterTypeConsensusDeterminedVersionAssignments.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65863,7 +65873,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `consensusDeterminedVersionAssignmentsToBcs`(`data`: ConsensusDeterminedVersionAssignments): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_to_bcs(
         FfiConverterTypeConsensusDeterminedVersionAssignments.lower(`data`),_status)
 }
     )
@@ -65876,7 +65886,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `digestFromBcs`(`bcs`: kotlin.ByteArray): Digest {
             return FfiConverterTypeDigest.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65889,7 +65899,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `digestToBcs`(`data`: Digest): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(
         FfiConverterTypeDigest.lower(`data`),_status)
 }
     )
@@ -65902,7 +65912,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `ed25519PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Ed25519PublicKey {
             return FfiConverterTypeEd25519PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65915,7 +65925,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `ed25519PublicKeyToBcs`(`data`: Ed25519PublicKey): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_bcs(
         FfiConverterTypeEd25519PublicKey.lower(`data`),_status)
 }
     )
@@ -65928,7 +65938,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `ed25519SignatureFromBcs`(`bcs`: kotlin.ByteArray): Ed25519Signature {
             return FfiConverterTypeEd25519Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65941,7 +65951,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `ed25519SignatureToBcs`(`data`: Ed25519Signature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_bcs(
         FfiConverterTypeEd25519Signature.lower(`data`),_status)
 }
     )
@@ -65954,7 +65964,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `endOfEpochDataFromBcs`(`bcs`: kotlin.ByteArray): EndOfEpochData {
             return FfiConverterTypeEndOfEpochData.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65967,7 +65977,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `endOfEpochDataToBcs`(`data`: EndOfEpochData): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_bcs(
         FfiConverterTypeEndOfEpochData.lower(`data`),_status)
 }
     )
@@ -65980,7 +65990,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `eventFromBcs`(`bcs`: kotlin.ByteArray): Event {
             return FfiConverterTypeEvent.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_event_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_event_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -65993,7 +66003,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `eventToBcs`(`data`: Event): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_event_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_event_to_bcs(
         FfiConverterTypeEvent.lower(`data`),_status)
 }
     )
@@ -66006,7 +66016,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionErrorFromBcs`(`bcs`: kotlin.ByteArray): ExecutionError {
             return FfiConverterTypeExecutionError.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_error_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_error_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66019,7 +66029,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionErrorToBcs`(`data`: ExecutionError): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_error_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_error_to_bcs(
         FfiConverterTypeExecutionError.lower(`data`),_status)
 }
     )
@@ -66032,7 +66042,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionStatusFromBcs`(`bcs`: kotlin.ByteArray): ExecutionStatus {
             return FfiConverterTypeExecutionStatus.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66045,7 +66055,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionStatusToBcs`(`data`: ExecutionStatus): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(
         FfiConverterTypeExecutionStatus.lower(`data`),_status)
 }
     )
@@ -66058,7 +66068,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionTimeObservationFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservation {
             return FfiConverterTypeExecutionTimeObservation.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66071,7 +66081,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionTimeObservationKeyFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservationKey {
             return FfiConverterTypeExecutionTimeObservationKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66084,7 +66094,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionTimeObservationKeyToBcs`(`data`: ExecutionTimeObservationKey): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(
         FfiConverterTypeExecutionTimeObservationKey.lower(`data`),_status)
 }
     )
@@ -66097,7 +66107,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionTimeObservationToBcs`(`data`: ExecutionTimeObservation): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(
         FfiConverterTypeExecutionTimeObservation.lower(`data`),_status)
 }
     )
@@ -66110,7 +66120,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionTimeObservationsFromBcs`(`bcs`: kotlin.ByteArray): ExecutionTimeObservations {
             return FfiConverterTypeExecutionTimeObservations.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66123,7 +66133,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `executionTimeObservationsToBcs`(`data`: ExecutionTimeObservations): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(
         FfiConverterTypeExecutionTimeObservations.lower(`data`),_status)
 }
     )
@@ -66136,7 +66146,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `gasCostSummaryFromBcs`(`bcs`: kotlin.ByteArray): GasCostSummary {
             return FfiConverterTypeGasCostSummary.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66149,7 +66159,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `gasCostSummaryToBcs`(`data`: GasCostSummary): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_bcs(
         FfiConverterTypeGasCostSummary.lower(`data`),_status)
 }
     )
@@ -66162,7 +66172,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `gasPaymentFromBcs`(`bcs`: kotlin.ByteArray): GasPayment {
             return FfiConverterTypeGasPayment.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66175,7 +66185,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `gasPaymentToBcs`(`data`: GasPayment): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(
         FfiConverterTypeGasPayment.lower(`data`),_status)
 }
     )
@@ -66188,7 +66198,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `genesisObjectFromBcs`(`bcs`: kotlin.ByteArray): GenesisObject {
             return FfiConverterTypeGenesisObject.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66201,7 +66211,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `genesisObjectToBcs`(`data`: GenesisObject): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(
         FfiConverterTypeGenesisObject.lower(`data`),_status)
 }
     )
@@ -66214,7 +66224,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `genesisTransactionFromBcs`(`bcs`: kotlin.ByteArray): GenesisTransaction {
             return FfiConverterTypeGenesisTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66227,7 +66237,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `genesisTransactionToBcs`(`data`: GenesisTransaction): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(
         FfiConverterTypeGenesisTransaction.lower(`data`),_status)
 }
     )
@@ -66237,7 +66247,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `hexDecode`(`input`: kotlin.String): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_hex_decode(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_hex_decode(
         FfiConverterString.lower(`input`),_status)
 }
     )
@@ -66246,7 +66256,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
  fun `hexEncode`(`input`: kotlin.ByteArray): kotlin.String {
             return FfiConverterString.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_hex_encode(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_hex_encode(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -66259,7 +66269,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i16FromBcs`(`input`: kotlin.ByteArray): kotlin.Short {
             return FfiConverterShort.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -66272,7 +66282,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i16ToBcs`(`input`: kotlin.Short): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(
         FfiConverterShort.lower(`input`),_status)
 }
     )
@@ -66285,7 +66295,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i32FromBcs`(`input`: kotlin.ByteArray): kotlin.Int {
             return FfiConverterInt.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -66298,7 +66308,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i32ToBcs`(`input`: kotlin.Int): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(
         FfiConverterInt.lower(`input`),_status)
 }
     )
@@ -66311,7 +66321,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i64FromBcs`(`input`: kotlin.ByteArray): kotlin.Long {
             return FfiConverterLong.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -66324,7 +66334,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i64ToBcs`(`input`: kotlin.Long): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(
         FfiConverterLong.lower(`input`),_status)
 }
     )
@@ -66337,7 +66347,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i8FromBcs`(`input`: kotlin.ByteArray): kotlin.Byte {
             return FfiConverterByte.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -66350,7 +66360,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `i8ToBcs`(`input`: kotlin.Byte): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(
         FfiConverterByte.lower(`input`),_status)
 }
     )
@@ -66363,7 +66373,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `idOperationFromBcs`(`bcs`: kotlin.ByteArray): IdOperation {
             return FfiConverterTypeIdOperation.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66376,7 +66386,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `idOperationToBcs`(`data`: IdOperation): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs(
         FfiConverterTypeIdOperation.lower(`data`),_status)
 }
     )
@@ -66389,7 +66399,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `identifierFromBcs`(`bcs`: kotlin.ByteArray): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66402,7 +66412,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `identifierToBcs`(`data`: Identifier): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs(
         FfiConverterTypeIdentifier.lower(`data`),_status)
 }
     )
@@ -66415,7 +66425,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `inputFromBcs`(`bcs`: kotlin.ByteArray): Input {
             return FfiConverterTypeInput.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66428,7 +66438,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `inputToBcs`(`data`: Input): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
         FfiConverterTypeInput.lower(`data`),_status)
 }
     )
@@ -66441,7 +66451,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `jwkFromBcs`(`bcs`: kotlin.ByteArray): Jwk {
             return FfiConverterTypeJwk.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66454,7 +66464,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `jwkIdFromBcs`(`bcs`: kotlin.ByteArray): JwkId {
             return FfiConverterTypeJwkId.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66467,7 +66477,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `jwkIdToBcs`(`data`: JwkId): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(
         FfiConverterTypeJwkId.lower(`data`),_status)
 }
     )
@@ -66480,7 +66490,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `jwkToBcs`(`data`: Jwk): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(
         FfiConverterTypeJwk.lower(`data`),_status)
 }
     )
@@ -66493,7 +66503,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `makeMoveVectorFromBcs`(`bcs`: kotlin.ByteArray): MakeMoveVector {
             return FfiConverterTypeMakeMoveVector.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66506,7 +66516,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `makeMoveVectorToBcs`(`data`: MakeMoveVector): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs(
         FfiConverterTypeMakeMoveVector.lower(`data`),_status)
 }
     )
@@ -66519,7 +66529,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `mergeCoinsFromBcs`(`bcs`: kotlin.ByteArray): MergeCoins {
             return FfiConverterTypeMergeCoins.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_merge_coins_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_merge_coins_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66532,7 +66542,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `mergeCoinsToBcs`(`data`: MergeCoins): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs(
         FfiConverterTypeMergeCoins.lower(`data`),_status)
 }
     )
@@ -66545,7 +66555,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `moveCallFromBcs`(`bcs`: kotlin.ByteArray): MoveCall {
             return FfiConverterTypeMoveCall.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_call_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_call_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66558,7 +66568,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `moveCallToBcs`(`data`: MoveCall): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs(
         FfiConverterTypeMoveCall.lower(`data`),_status)
 }
     )
@@ -66571,7 +66581,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `moveLocationFromBcs`(`bcs`: kotlin.ByteArray): MoveLocation {
             return FfiConverterTypeMoveLocation.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_location_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_location_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66584,7 +66594,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `moveLocationToBcs`(`data`: MoveLocation): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs(
         FfiConverterTypeMoveLocation.lower(`data`),_status)
 }
     )
@@ -66597,7 +66607,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `movePackageFromBcs`(`bcs`: kotlin.ByteArray): MovePackage {
             return FfiConverterTypeMovePackage.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_package_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_package_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66610,7 +66620,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `movePackageToBcs`(`data`: MovePackage): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_package_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_package_to_bcs(
         FfiConverterTypeMovePackage.lower(`data`),_status)
 }
     )
@@ -66623,7 +66633,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `moveStructFromBcs`(`bcs`: kotlin.ByteArray): MoveStruct {
             return FfiConverterTypeMoveStruct.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66636,7 +66646,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `moveStructToBcs`(`data`: MoveStruct): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(
         FfiConverterTypeMoveStruct.lower(`data`),_status)
 }
     )
@@ -66649,7 +66659,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigAggregatedSignatureFromBcs`(`bcs`: kotlin.ByteArray): MultisigAggregatedSignature {
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66662,7 +66672,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigAggregatedSignatureToBcs`(`data`: MultisigAggregatedSignature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_bcs(
         FfiConverterTypeMultisigAggregatedSignature.lower(`data`),_status)
 }
     )
@@ -66675,7 +66685,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigCommitteeFromBcs`(`bcs`: kotlin.ByteArray): MultisigCommittee {
             return FfiConverterTypeMultisigCommittee.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_committee_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_committee_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66688,7 +66698,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigCommitteeToBcs`(`data`: MultisigCommittee): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_bcs(
         FfiConverterTypeMultisigCommittee.lower(`data`),_status)
 }
     )
@@ -66701,7 +66711,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigMemberFromBcs`(`bcs`: kotlin.ByteArray): MultisigMember {
             return FfiConverterTypeMultisigMember.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66714,7 +66724,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyFromBcs`(`bcs`: kotlin.ByteArray): MultisigMemberPublicKey {
             return FfiConverterTypeMultisigMemberPublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66727,7 +66737,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigMemberPublicKeyToBcs`(`data`: MultisigMemberPublicKey): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(
         FfiConverterTypeMultisigMemberPublicKey.lower(`data`),_status)
 }
     )
@@ -66740,7 +66750,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigMemberSignatureFromBcs`(`bcs`: kotlin.ByteArray): MultisigMemberSignature {
             return FfiConverterTypeMultisigMemberSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66753,7 +66763,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigMemberSignatureToBcs`(`data`: MultisigMemberSignature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_to_bcs(
         FfiConverterTypeMultisigMemberSignature.lower(`data`),_status)
 }
     )
@@ -66766,7 +66776,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `multisigMemberToBcs`(`data`: MultisigMember): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_multisig_member_to_bcs(
         FfiConverterTypeMultisigMember.lower(`data`),_status)
 }
     )
@@ -66779,7 +66789,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectDataFromBcs`(`bcs`: kotlin.ByteArray): ObjectData {
             return FfiConverterTypeObjectData.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_data_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_data_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66792,7 +66802,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectDataToBcs`(`data`: ObjectData): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_data_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_data_to_bcs(
         FfiConverterTypeObjectData.lower(`data`),_status)
 }
     )
@@ -66805,7 +66815,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectFromBcs`(`bcs`: kotlin.ByteArray): Object {
             return FfiConverterTypeObject.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66818,7 +66828,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectIdFromBcs`(`bcs`: kotlin.ByteArray): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_id_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_id_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66831,7 +66841,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectIdToBcs`(`data`: ObjectId): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_id_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_id_to_bcs(
         FfiConverterTypeObjectId.lower(`data`),_status)
 }
     )
@@ -66844,7 +66854,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectInFromBcs`(`bcs`: kotlin.ByteArray): ObjectIn {
             return FfiConverterTypeObjectIn.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_in_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_in_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66857,7 +66867,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectInToBcs`(`data`: ObjectIn): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(
         FfiConverterTypeObjectIn.lower(`data`),_status)
 }
     )
@@ -66870,7 +66880,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectOutFromBcs`(`bcs`: kotlin.ByteArray): ObjectOut {
             return FfiConverterTypeObjectOut.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_out_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_out_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66883,7 +66893,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectOutToBcs`(`data`: ObjectOut): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_out_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_out_to_bcs(
         FfiConverterTypeObjectOut.lower(`data`),_status)
 }
     )
@@ -66896,7 +66906,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectReferenceFromBcs`(`bcs`: kotlin.ByteArray): ObjectReference {
             return FfiConverterTypeObjectReference.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66909,7 +66919,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectReferenceToBcs`(`data`: ObjectReference): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(
         FfiConverterTypeObjectReference.lower(`data`),_status)
 }
     )
@@ -66922,7 +66932,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `objectToBcs`(`data`: Object): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_object_to_bcs(
         FfiConverterTypeObject.lower(`data`),_status)
 }
     )
@@ -66935,7 +66945,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `ownerFromBcs`(`bcs`: kotlin.ByteArray): Owner {
             return FfiConverterTypeOwner.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66948,7 +66958,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `ownerToBcs`(`data`: Owner): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(
         FfiConverterTypeOwner.lower(`data`),_status)
 }
     )
@@ -66961,7 +66971,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `packageUpgradeErrorFromBcs`(`bcs`: kotlin.ByteArray): PackageUpgradeError {
             return FfiConverterTypePackageUpgradeError.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -66974,7 +66984,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `packageUpgradeErrorToBcs`(`data`: PackageUpgradeError): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_bcs(
         FfiConverterTypePackageUpgradeError.lower(`data`),_status)
 }
     )
@@ -66987,7 +66997,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `passkeyAuthenticatorFromBcs`(`bcs`: kotlin.ByteArray): PasskeyAuthenticator {
             return FfiConverterTypePasskeyAuthenticator.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67000,7 +67010,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `passkeyAuthenticatorToBcs`(`data`: PasskeyAuthenticator): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_bcs(
         FfiConverterTypePasskeyAuthenticator.lower(`data`),_status)
 }
     )
@@ -67013,7 +67023,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `programmableTransactionFromBcs`(`bcs`: kotlin.ByteArray): ProgrammableTransaction {
             return FfiConverterTypeProgrammableTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67026,7 +67036,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `programmableTransactionToBcs`(`data`: ProgrammableTransaction): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(
         FfiConverterTypeProgrammableTransaction.lower(`data`),_status)
 }
     )
@@ -67039,7 +67049,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `publishFromBcs`(`bcs`: kotlin.ByteArray): Publish {
             return FfiConverterTypePublish.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67052,7 +67062,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `publishToBcs`(`data`: Publish): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(
         FfiConverterTypePublish.lower(`data`),_status)
 }
     )
@@ -67065,7 +67075,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `randomnessStateUpdateFromBcs`(`bcs`: kotlin.ByteArray): RandomnessStateUpdate {
             return FfiConverterTypeRandomnessStateUpdate.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67078,7 +67088,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `randomnessStateUpdateToBcs`(`data`: RandomnessStateUpdate): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_bcs(
         FfiConverterTypeRandomnessStateUpdate.lower(`data`),_status)
 }
     )
@@ -67091,7 +67101,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256k1PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Secp256k1PublicKey {
             return FfiConverterTypeSecp256k1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67104,7 +67114,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256k1PublicKeyToBcs`(`data`: Secp256k1PublicKey): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_bcs(
         FfiConverterTypeSecp256k1PublicKey.lower(`data`),_status)
 }
     )
@@ -67117,7 +67127,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256k1SignatureFromBcs`(`bcs`: kotlin.ByteArray): Secp256k1Signature {
             return FfiConverterTypeSecp256k1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67130,7 +67140,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256k1SignatureToBcs`(`data`: Secp256k1Signature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_bcs(
         FfiConverterTypeSecp256k1Signature.lower(`data`),_status)
 }
     )
@@ -67143,7 +67153,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256r1PublicKeyFromBcs`(`bcs`: kotlin.ByteArray): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67156,7 +67166,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256r1PublicKeyToBcs`(`data`: Secp256r1PublicKey): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_bcs(
         FfiConverterTypeSecp256r1PublicKey.lower(`data`),_status)
 }
     )
@@ -67169,7 +67179,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256r1SignatureFromBcs`(`bcs`: kotlin.ByteArray): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67182,7 +67192,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `secp256r1SignatureToBcs`(`data`: Secp256r1Signature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_bcs(
         FfiConverterTypeSecp256r1Signature.lower(`data`),_status)
 }
     )
@@ -67195,7 +67205,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `signedTransactionFromBcs`(`bcs`: kotlin.ByteArray): SignedTransaction {
             return FfiConverterTypeSignedTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_signed_transaction_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_signed_transaction_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67208,7 +67218,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `signedTransactionToBcs`(`data`: SignedTransaction): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_bcs(
         FfiConverterTypeSignedTransaction.lower(`data`),_status)
 }
     )
@@ -67221,7 +67231,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `simpleSignatureFromBcs`(`bcs`: kotlin.ByteArray): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_simple_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_simple_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67234,7 +67244,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `simpleSignatureToBcs`(`data`: SimpleSignature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_simple_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_simple_signature_to_bcs(
         FfiConverterTypeSimpleSignature.lower(`data`),_status)
 }
     )
@@ -67247,7 +67257,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `splitCoinsFromBcs`(`bcs`: kotlin.ByteArray): SplitCoins {
             return FfiConverterTypeSplitCoins.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67260,7 +67270,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `splitCoinsToBcs`(`data`: SplitCoins): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(
         FfiConverterTypeSplitCoins.lower(`data`),_status)
 }
     )
@@ -67273,7 +67283,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `stringFromBcs`(`input`: kotlin.ByteArray): kotlin.String {
             return FfiConverterString.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -67286,7 +67296,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `stringToBcs`(`input`: kotlin.String): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_string_to_bcs(
         FfiConverterString.lower(`input`),_status)
 }
     )
@@ -67299,7 +67309,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `structTagFromBcs`(`bcs`: kotlin.ByteArray): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67312,7 +67322,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `structTagToBcs`(`data`: StructTag): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(
         FfiConverterTypeStructTag.lower(`data`),_status)
 }
     )
@@ -67325,7 +67335,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `systemPackageFromBcs`(`bcs`: kotlin.ByteArray): SystemPackage {
             return FfiConverterTypeSystemPackage.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_system_package_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_system_package_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67338,7 +67348,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `systemPackageToBcs`(`data`: SystemPackage): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_system_package_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_system_package_to_bcs(
         FfiConverterTypeSystemPackage.lower(`data`),_status)
 }
     )
@@ -67351,7 +67361,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionEffectsFromBcs`(`bcs`: kotlin.ByteArray): TransactionEffects {
             return FfiConverterTypeTransactionEffects.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67364,7 +67374,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionEffectsToBcs`(`data`: TransactionEffects): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_bcs(
         FfiConverterTypeTransactionEffects.lower(`data`),_status)
 }
     )
@@ -67377,7 +67387,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionEffectsV1FromBcs`(`bcs`: kotlin.ByteArray): TransactionEffectsV1 {
             return FfiConverterTypeTransactionEffectsV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67390,7 +67400,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionEffectsV1ToBcs`(`data`: TransactionEffectsV1): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_bcs(
         FfiConverterTypeTransactionEffectsV1.lower(`data`),_status)
 }
     )
@@ -67403,7 +67413,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionEventsFromBcs`(`bcs`: kotlin.ByteArray): TransactionEvents {
             return FfiConverterTypeTransactionEvents.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_events_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_events_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67416,7 +67426,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionEventsToBcs`(`data`: TransactionEvents): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_events_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_events_to_bcs(
         FfiConverterTypeTransactionEvents.lower(`data`),_status)
 }
     )
@@ -67429,7 +67439,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionExpirationFromBcs`(`bcs`: kotlin.ByteArray): TransactionExpiration {
             return FfiConverterTypeTransactionExpiration.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_expiration_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_expiration_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67442,7 +67452,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionExpirationToBcs`(`data`: TransactionExpiration): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_bcs(
         FfiConverterTypeTransactionExpiration.lower(`data`),_status)
 }
     )
@@ -67455,7 +67465,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionFromBcs`(`bcs`: kotlin.ByteArray): Transaction {
             return FfiConverterTypeTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67468,7 +67478,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionKindFromBcs`(`bcs`: kotlin.ByteArray): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67481,7 +67491,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionKindToBcs`(`data`: TransactionKind): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_kind_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_kind_to_bcs(
         FfiConverterTypeTransactionKind.lower(`data`),_status)
 }
     )
@@ -67494,7 +67504,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionToBcs`(`data`: Transaction): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(
         FfiConverterTypeTransaction.lower(`data`),_status)
 }
     )
@@ -67507,7 +67517,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionV1FromBcs`(`bcs`: kotlin.ByteArray): TransactionV1 {
             return FfiConverterTypeTransactionV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67520,7 +67530,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transactionV1ToBcs`(`data`: TransactionV1): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(
         FfiConverterTypeTransactionV1.lower(`data`),_status)
 }
     )
@@ -67533,7 +67543,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transferObjectsFromBcs`(`bcs`: kotlin.ByteArray): TransferObjects {
             return FfiConverterTypeTransferObjects.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transfer_objects_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transfer_objects_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67546,7 +67556,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `transferObjectsToBcs`(`data`: TransferObjects): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_bcs(
         FfiConverterTypeTransferObjects.lower(`data`),_status)
 }
     )
@@ -67559,7 +67569,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `typeArgumentErrorFromBcs`(`bcs`: kotlin.ByteArray): TypeArgumentError {
             return FfiConverterTypeTypeArgumentError.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_argument_error_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_argument_error_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67572,7 +67582,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `typeArgumentErrorToBcs`(`data`: TypeArgumentError): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_bcs(
         FfiConverterTypeTypeArgumentError.lower(`data`),_status)
 }
     )
@@ -67585,7 +67595,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `typeOriginFromBcs`(`bcs`: kotlin.ByteArray): TypeOrigin {
             return FfiConverterTypeTypeOrigin.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67598,7 +67608,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `typeOriginToBcs`(`data`: TypeOrigin): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(
         FfiConverterTypeTypeOrigin.lower(`data`),_status)
 }
     )
@@ -67611,7 +67621,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `typeTagFromBcs`(`bcs`: kotlin.ByteArray): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67624,7 +67634,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `typeTagToBcs`(`data`: TypeTag): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(
         FfiConverterTypeTypeTag.lower(`data`),_status)
 }
     )
@@ -67637,7 +67647,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u16FromBcs`(`input`: kotlin.ByteArray): kotlin.UShort {
             return FfiConverterUShort.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -67650,7 +67660,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u16ToBcs`(`input`: kotlin.UShort): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(
         FfiConverterUShort.lower(`input`),_status)
 }
     )
@@ -67663,7 +67673,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u32FromBcs`(`input`: kotlin.ByteArray): kotlin.UInt {
             return FfiConverterUInt.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -67676,7 +67686,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u32ToBcs`(`input`: kotlin.UInt): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(
         FfiConverterUInt.lower(`input`),_status)
 }
     )
@@ -67689,7 +67699,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u64FromBcs`(`input`: kotlin.ByteArray): kotlin.ULong {
             return FfiConverterULong.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -67702,7 +67712,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u64ToBcs`(`input`: kotlin.ULong): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(
         FfiConverterULong.lower(`input`),_status)
 }
     )
@@ -67715,7 +67725,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u8FromBcs`(`input`: kotlin.ByteArray): kotlin.UByte {
             return FfiConverterUByte.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(
         FfiConverterByteArray.lower(`input`),_status)
 }
     )
@@ -67728,7 +67738,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `u8ToBcs`(`input`: kotlin.UByte): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(
         FfiConverterUByte.lower(`input`),_status)
 }
     )
@@ -67741,7 +67751,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `unchangedSharedKindFromBcs`(`bcs`: kotlin.ByteArray): UnchangedSharedKind {
             return FfiConverterTypeUnchangedSharedKind.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67754,7 +67764,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `unchangedSharedKindToBcs`(`data`: UnchangedSharedKind): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_bcs(
         FfiConverterTypeUnchangedSharedKind.lower(`data`),_status)
 }
     )
@@ -67767,7 +67777,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `unchangedSharedObjectFromBcs`(`bcs`: kotlin.ByteArray): UnchangedSharedObject {
             return FfiConverterTypeUnchangedSharedObject.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67780,7 +67790,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `unchangedSharedObjectToBcs`(`data`: UnchangedSharedObject): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_bcs(
         FfiConverterTypeUnchangedSharedObject.lower(`data`),_status)
 }
     )
@@ -67793,7 +67803,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `upgradeFromBcs`(`bcs`: kotlin.ByteArray): Upgrade {
             return FfiConverterTypeUpgrade.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67806,7 +67816,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `upgradeInfoFromBcs`(`bcs`: kotlin.ByteArray): UpgradeInfo {
             return FfiConverterTypeUpgradeInfo.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67819,7 +67829,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `upgradeInfoToBcs`(`data`: UpgradeInfo): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(
         FfiConverterTypeUpgradeInfo.lower(`data`),_status)
 }
     )
@@ -67832,7 +67842,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `upgradeToBcs`(`data`: Upgrade): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(
         FfiConverterTypeUpgrade.lower(`data`),_status)
 }
     )
@@ -67845,7 +67855,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `userSignatureFromBcs`(`bcs`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_user_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_user_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67858,7 +67868,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `userSignatureToBcs`(`data`: UserSignature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_user_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_user_signature_to_bcs(
         FfiConverterTypeUserSignature.lower(`data`),_status)
 }
     )
@@ -67871,7 +67881,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorAggregatedSignatureFromBcs`(`bcs`: kotlin.ByteArray): ValidatorAggregatedSignature {
             return FfiConverterTypeValidatorAggregatedSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67884,7 +67894,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorAggregatedSignatureToBcs`(`data`: ValidatorAggregatedSignature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_bcs(
         FfiConverterTypeValidatorAggregatedSignature.lower(`data`),_status)
 }
     )
@@ -67897,7 +67907,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorCommitteeFromBcs`(`bcs`: kotlin.ByteArray): ValidatorCommittee {
             return FfiConverterTypeValidatorCommittee.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67910,7 +67920,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorCommitteeMemberFromBcs`(`bcs`: kotlin.ByteArray): ValidatorCommitteeMember {
             return FfiConverterTypeValidatorCommitteeMember.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67923,7 +67933,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorCommitteeMemberToBcs`(`data`: ValidatorCommitteeMember): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_member_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_member_to_bcs(
         FfiConverterTypeValidatorCommitteeMember.lower(`data`),_status)
 }
     )
@@ -67936,7 +67946,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorCommitteeToBcs`(`data`: ValidatorCommittee): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(
         FfiConverterTypeValidatorCommittee.lower(`data`),_status)
 }
     )
@@ -67949,7 +67959,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationFromBcs`(`bcs`: kotlin.ByteArray): ValidatorExecutionTimeObservation {
             return FfiConverterTypeValidatorExecutionTimeObservation.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67962,7 +67972,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorExecutionTimeObservationToBcs`(`data`: ValidatorExecutionTimeObservation): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(
         FfiConverterTypeValidatorExecutionTimeObservation.lower(`data`),_status)
 }
     )
@@ -67975,7 +67985,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorSignatureFromBcs`(`bcs`: kotlin.ByteArray): ValidatorSignature {
             return FfiConverterTypeValidatorSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -67988,7 +67998,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `validatorSignatureToBcs`(`data`: ValidatorSignature): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_signature_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_validator_signature_to_bcs(
         FfiConverterTypeValidatorSignature.lower(`data`),_status)
 }
     )
@@ -68001,7 +68011,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `versionAssignmentFromBcs`(`bcs`: kotlin.ByteArray): VersionAssignment {
             return FfiConverterTypeVersionAssignment.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -68014,7 +68024,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `versionAssignmentToBcs`(`data`: VersionAssignment): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(
         FfiConverterTypeVersionAssignment.lower(`data`),_status)
 }
     )
@@ -68027,7 +68037,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginAuthenticator {
             return FfiConverterTypeZkLoginAuthenticator.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -68040,7 +68050,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginAuthenticatorToBcs`(`data`: ZkLoginAuthenticator): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(
         FfiConverterTypeZkLoginAuthenticator.lower(`data`),_status)
 }
     )
@@ -68053,7 +68063,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginClaimFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginClaim {
             return FfiConverterTypeZkLoginClaim.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -68066,7 +68076,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginClaimToBcs`(`data`: ZkLoginClaim): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(
         FfiConverterTypeZkLoginClaim.lower(`data`),_status)
 }
     )
@@ -68079,7 +68089,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginProofFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginProof {
             return FfiConverterTypeZkLoginProof.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -68092,7 +68102,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginProofToBcs`(`data`: ZkLoginProof): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(
         FfiConverterTypeZkLoginProof.lower(`data`),_status)
 }
     )
@@ -68105,7 +68115,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierFromBcs`(`bcs`: kotlin.ByteArray): ZkLoginPublicIdentifier {
             return FfiConverterTypeZkLoginPublicIdentifier.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(
         FfiConverterByteArray.lower(`bcs`),_status)
 }
     )
@@ -68118,7 +68128,7 @@ public typealias FfiConverterTypeValue = FfiConverterString
     @Throws(SdkFfiException::class) fun `zkLoginPublicIdentifierToBcs`(`data`: ZkLoginPublicIdentifier): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(
         FfiConverterTypeZkLoginPublicIdentifier.lower(`data`),_status)
 }
     )
