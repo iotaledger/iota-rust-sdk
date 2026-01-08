@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{SharedMut, TransactionBuilder, res},
+    transaction_builder::{SharedMut, TransactionBuilder, assigned},
     types::{Address, Identifier, ObjectId, StructTag, TypeTag},
 };
 
@@ -36,45 +36,45 @@ async fn main() -> Result<()> {
             Identifier::new("Registry")?,
             vec![],
         )))])
-        .name("iota_names");
+        .assign("iota_names");
 
     // Step 2: Create the name object from the string
     builder
         .move_call(iota_names_package_address, "name", "new")
         .arguments([name])
-        .name("name");
+        .assign("name");
 
     // Step 3: Look up the name record in the registry
     builder
         .move_call(iota_names_package_address, "registry", "lookup")
-        .arguments((res("iota_names"), res("name")))
-        .name("name_record_opt");
+        .arguments((assigned("iota_names"), assigned("name")))
+        .assign("name_record_opt");
 
     // Step 4: Borrow the name record from the option
     builder
         .move_call(Address::STD, "option", "borrow")
-        .arguments([res("name_record_opt")])
+        .arguments([assigned("name_record_opt")])
         .type_tags([TypeTag::Struct(Box::new(StructTag::new(
             iota_names_package_address,
             Identifier::new("name_record")?,
             Identifier::new("NameRecord")?,
             vec![],
         )))])
-        .name("name_record");
+        .assign("name_record");
 
     // Step 5: Get the target address from the name record
     builder
         .move_call(iota_names_package_address, "name_record", "target_address")
-        .arguments([res("name_record")])
-        .name("target_address_opt");
+        .arguments([assigned("name_record")])
+        .assign("target_address_opt");
 
     // Step 6: Borrow the address from the option (this returns the resolved
     // address)
     builder
         .move_call(Address::STD, "option", "borrow")
-        .arguments([res("target_address_opt")])
+        .arguments([assigned("target_address_opt")])
         .generics::<Address>()
-        .name("target_address");
+        .assign("target_address");
 
     let res = builder.dry_run(true).await?;
 

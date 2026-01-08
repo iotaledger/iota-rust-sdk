@@ -331,16 +331,16 @@ impl PTBArgument for &Receiving<ObjectReference> {
     }
 }
 
-/// The result of a previous command by name.
+/// A result of a previous command to which a name was assigned.
 #[derive(Debug, Clone)]
-pub struct Res(String);
+pub struct Assigned(String);
 
-/// Get the result of a previous command by name.
-pub fn res(name: impl Into<String>) -> Res {
-    Res(name.into())
+/// Get the result of a previous command by its assigned name.
+pub fn assigned(name: impl Into<String>) -> Assigned {
+    Assigned(name.into())
 }
 
-impl PTBArgument for Res {
+impl PTBArgument for Assigned {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
         (&self).arg(ptb)
     }
@@ -350,12 +350,12 @@ impl PTBArgument for Res {
     }
 }
 
-impl PTBArgument for &Res {
+impl PTBArgument for &Assigned {
     fn arg(self, ptb: &mut TransactionBuildData) -> Argument {
-        if let Some(arg) = ptb.named_results.get(&self.0) {
+        if let Some(arg) = ptb.assigned_results.get(&self.0) {
             *arg
         } else {
-            panic!("no command result named `{}` exists", self.0)
+            panic!("no command result assigned to `{}` exists", self.0)
         }
     }
 

@@ -2337,6 +2337,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex() != 60030:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned() != 10192:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool() != 51030:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool_vec() != 65126:
@@ -2364,8 +2366,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving() != 50553:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex() != 48453:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res() != 47661:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared() != 59619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6025,6 +6025,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_address_vec_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_bool.argtypes = (
     ctypes.c_int8,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6094,11 +6099,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_shared.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -12894,6 +12894,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec.rest
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address_vec_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool.restype = ctypes.c_uint16
@@ -12936,9 +12939,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_shared.restype = ctypes.c_uint16
@@ -41075,6 +41075,15 @@ class PtbArgument():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def assigned(cls, name: "str"):
+        _UniffiConverterString.check_lower(name)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned,
+        _UniffiConverterString.lower(name))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def bool(cls, value: "bool"):
         _UniffiConverterBool.check_lower(value)
         
@@ -41195,15 +41204,6 @@ class PtbArgument():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_receiving_from_hex,
         _UniffiConverterString.lower(hex))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def res(cls, name: "str"):
-        _UniffiConverterString.check_lower(name)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res,
-        _UniffiConverterString.lower(name))
         return cls._make_instance_(pointer)
 
     @classmethod
