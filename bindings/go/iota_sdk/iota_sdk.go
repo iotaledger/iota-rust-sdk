@@ -4188,6 +4188,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address()
+	})
+	if checksum != 5173 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key()
+	})
+	if checksum != 26320 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ledgersigner_get_public_key: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction()
+	})
+	if checksum != 39180 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_ledgersigner_sign_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements()
 	})
 	if checksum != 20773 {
@@ -8247,6 +8274,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ledgersigner_new_with_default()
+	})
+	if checksum != 16447 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ledgersigner_new_with_default: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new()
 	})
 	if checksum != 20934 {
@@ -9998,6 +10034,15 @@ func uniffiCheckChecksums() {
 	if checksum != 13858 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ledger()
+	})
+	if checksum != 39213 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ledger: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -18865,6 +18910,212 @@ func (c FfiConverterInput) Write(writer io.Writer, value *Input) {
 type FfiDestroyerInput struct {}
 
 func (_ FfiDestroyerInput) Destroy(value *Input) {
+		value.Destroy()
+}
+
+
+
+type LedgerSignerInterface interface {
+	GetAddress() (*Address, error)
+	GetPublicKey() (*Ed25519PublicKey, error)
+	SignTransaction(transaction *Transaction) (*UserSignature, error)
+}
+type LedgerSigner struct {
+	ffiObject FfiObject
+}
+
+
+func LedgerSignerNewWithDefault(path string) (*LedgerSigner, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[LedgerSignerError](FfiConverterLedgerSignerError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ledgersigner_new_with_default(FfiConverterStringINSTANCE.Lower(path),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *LedgerSigner
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterLedgerSignerINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+
+
+func (_self *LedgerSigner) GetAddress() (*Address, error) {
+	_pointer := _self.ffiObject.incrementPointer("*LedgerSigner")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[LedgerSignerError](FfiConverterLedgerSignerError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_address(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *LedgerSigner) GetPublicKey() (*Ed25519PublicKey, error) {
+	_pointer := _self.ffiObject.incrementPointer("*LedgerSigner")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[LedgerSignerError](FfiConverterLedgerSignerError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_ledgersigner_get_public_key(
+		_pointer,_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Ed25519PublicKey
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterEd25519PublicKeyINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+func (_self *LedgerSigner) SignTransaction(transaction *Transaction) (*UserSignature, error) {
+	_pointer := _self.ffiObject.incrementPointer("*LedgerSigner")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[LedgerSignerError](
+        FfiConverterLedgerSignerErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *UserSignature {
+			return FfiConverterUserSignatureINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_ledgersigner_sign_transaction(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(transaction)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res, err 
+}
+func (object *LedgerSigner) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterLedgerSigner struct {}
+
+var FfiConverterLedgerSignerINSTANCE = FfiConverterLedgerSigner{}
+
+
+func (c FfiConverterLedgerSigner) Lift(pointer unsafe.Pointer) *LedgerSigner {
+	result := &LedgerSigner {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_ledgersigner(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_ledgersigner(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*LedgerSigner).Destroy)
+	return result
+}
+
+func (c FfiConverterLedgerSigner) Read(reader io.Reader) *LedgerSigner {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterLedgerSigner) Lower(value *LedgerSigner) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*LedgerSigner")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterLedgerSigner) Write(writer io.Writer, value *LedgerSigner) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerLedgerSigner struct {}
+
+func (_ FfiDestroyerLedgerSigner) Destroy(value *LedgerSigner) {
+		value.Destroy()
+}
+
+
+
+type LedgerSignerErrorInterface interface {
+}
+type LedgerSignerError struct {
+	ffiObject FfiObject
+}
+
+
+
+func (object *LedgerSignerError) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterLedgerSignerError struct {}
+
+var FfiConverterLedgerSignerErrorINSTANCE = FfiConverterLedgerSignerError{}
+
+
+
+func (_self LedgerSignerError) Error() string {
+	return "LedgerSignerError"
+}
+
+func (_self *LedgerSignerError) AsError() error {
+	if _self == nil {
+		return nil
+	} else {
+		return _self
+	}
+}
+func (c FfiConverterLedgerSignerError) Lift(pointer unsafe.Pointer) *LedgerSignerError {
+	result := &LedgerSignerError {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_ledgersignererror(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_ledgersignererror(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*LedgerSignerError).Destroy)
+	return result
+}
+
+func (c FfiConverterLedgerSignerError) Read(reader io.Reader) *LedgerSignerError {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterLedgerSignerError) Lower(value *LedgerSignerError) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*LedgerSignerError")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterLedgerSignerError) Write(writer io.Writer, value *LedgerSignerError) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerLedgerSignerError struct {}
+
+func (_ FfiDestroyerLedgerSignerError) Destroy(value *LedgerSignerError) {
 		value.Destroy()
 }
 
@@ -28110,6 +28361,12 @@ func TransactionSignerFromEd25519(key *Ed25519PrivateKey) *TransactionSigner {
 func TransactionSignerFromKeypair(key *SimpleKeypair) *TransactionSigner {
 	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(FfiConverterSimpleKeypairINSTANCE.Lower(key),_uniffiStatus)
+	}))
+}
+
+func TransactionSignerFromLedger(ledger *LedgerSigner) *TransactionSigner {
+	return FfiConverterTransactionSignerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ledger(FfiConverterLedgerSignerINSTANCE.Lower(ledger),_uniffiStatus)
 	}))
 }
 
