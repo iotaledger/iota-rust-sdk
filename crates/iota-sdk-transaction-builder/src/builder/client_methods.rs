@@ -18,7 +18,6 @@ use crate::WaitForTx;
 pub trait ClientMethods {
     /// The error type for this client.
     type Error: 'static + std::error::Error + Send + Sync;
-
     /// The result of a dry run.
     type DryRunResult;
 
