@@ -22462,22 +22462,22 @@ class TransactionArgument:
         An input to the programmable transaction block.
         """
 
-        ix: "int"
+        index: "int"
         """
         Index of the programmable transaction block input (0-indexed).
         """
 
 
-        def __init__(self,ix: "int"):
-            self.ix = ix
+        def __init__(self,index: "int"):
+            self.index = index
 
         def __str__(self):
-            return "TransactionArgument.INPUT(ix={})".format(self.ix)
+            return "TransactionArgument.INPUT(index={})".format(self.index)
 
         def __eq__(self, other):
             if not other.is_INPUT():
                 return False
-            if self.ix != other.ix:
+            if self.index != other.index:
                 return False
             return True
     
@@ -22492,7 +22492,7 @@ class TransactionArgument:
         result.
         """
 
-        ix: "typing.Optional[int]"
+        index: "typing.Optional[int]"
         """
         If the previous command returns multiple values, this is the index
         of the individual result among the multiple results from
@@ -22500,19 +22500,19 @@ class TransactionArgument:
         """
 
 
-        def __init__(self,cmd: "int", ix: "typing.Optional[int]"):
+        def __init__(self,cmd: "int", index: "typing.Optional[int]"):
             self.cmd = cmd
-            self.ix = ix
+            self.index = index
 
         def __str__(self):
-            return "TransactionArgument.RESULT(cmd={}, ix={})".format(self.cmd, self.ix)
+            return "TransactionArgument.RESULT(cmd={}, index={})".format(self.cmd, self.index)
 
         def __eq__(self, other):
             if not other.is_RESULT():
                 return False
             if self.cmd != other.cmd:
                 return False
-            if self.ix != other.ix:
+            if self.index != other.index:
                 return False
             return True
     
@@ -22567,11 +22567,11 @@ class _UniffiConverterTypeTransactionArgument(_UniffiConverterRustBuffer):
         if value.is_GAS_COIN():
             return
         if value.is_INPUT():
-            _UniffiConverterUInt32.check_lower(value.ix)
+            _UniffiConverterUInt32.check_lower(value.index)
             return
         if value.is_RESULT():
             _UniffiConverterUInt32.check_lower(value.cmd)
-            _UniffiConverterOptionalUInt32.check_lower(value.ix)
+            _UniffiConverterOptionalUInt32.check_lower(value.index)
             return
         raise ValueError(value)
 
@@ -22581,11 +22581,11 @@ class _UniffiConverterTypeTransactionArgument(_UniffiConverterRustBuffer):
             buf.write_i32(1)
         if value.is_INPUT():
             buf.write_i32(2)
-            _UniffiConverterUInt32.write(value.ix, buf)
+            _UniffiConverterUInt32.write(value.index, buf)
         if value.is_RESULT():
             buf.write_i32(3)
             _UniffiConverterUInt32.write(value.cmd, buf)
-            _UniffiConverterOptionalUInt32.write(value.ix, buf)
+            _UniffiConverterOptionalUInt32.write(value.index, buf)
 
 
 

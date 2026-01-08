@@ -60944,7 +60944,7 @@ sealed class TransactionArgument {
         /**
          * Index of the programmable transaction block input (0-indexed).
          */
-        val `ix`: kotlin.UInt) : TransactionArgument() {
+        val `index`: kotlin.UInt) : TransactionArgument() {
         companion object
     }
     
@@ -60962,7 +60962,7 @@ sealed class TransactionArgument {
          * of the individual result among the multiple results from
          * that command (also 0-indexed).
          */
-        val `ix`: kotlin.UInt?) : TransactionArgument() {
+        val `index`: kotlin.UInt?) : TransactionArgument() {
         companion object
     }
     
@@ -61000,7 +61000,7 @@ public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<Trans
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterUInt.allocationSize(value.`ix`)
+                + FfiConverterUInt.allocationSize(value.`index`)
             )
         }
         is TransactionArgument.Result -> {
@@ -61008,7 +61008,7 @@ public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<Trans
             (
                 4UL
                 + FfiConverterUInt.allocationSize(value.`cmd`)
-                + FfiConverterOptionalUInt.allocationSize(value.`ix`)
+                + FfiConverterOptionalUInt.allocationSize(value.`index`)
             )
         }
     }
@@ -61021,13 +61021,13 @@ public object FfiConverterTypeTransactionArgument : FfiConverterRustBuffer<Trans
             }
             is TransactionArgument.Input -> {
                 buf.putInt(2)
-                FfiConverterUInt.write(value.`ix`, buf)
+                FfiConverterUInt.write(value.`index`, buf)
                 Unit
             }
             is TransactionArgument.Result -> {
                 buf.putInt(3)
                 FfiConverterUInt.write(value.`cmd`, buf)
-                FfiConverterOptionalUInt.write(value.`ix`, buf)
+                FfiConverterOptionalUInt.write(value.`index`, buf)
                 Unit
             }
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }

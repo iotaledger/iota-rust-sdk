@@ -1008,11 +1008,11 @@ impl From<iota_sdk::graphql_client::TransactionArgument> for TransactionArgument
     fn from(value: iota_sdk::graphql_client::TransactionArgument) -> Self {
         match value {
             iota_sdk::graphql_client::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
-            iota_sdk::graphql_client::TransactionArgument::Input { index: ix } => {
-                TransactionArgument::Input { index: ix }
+            iota_sdk::graphql_client::TransactionArgument::Input { index } => {
+                TransactionArgument::Input { index }
             }
-            iota_sdk::graphql_client::TransactionArgument::Result { cmd, index: ix } => {
-                TransactionArgument::Result { cmd, index: ix }
+            iota_sdk::graphql_client::TransactionArgument::Result { cmd, index } => {
+                TransactionArgument::Result { cmd, index }
             }
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
@@ -1023,11 +1023,11 @@ impl From<TransactionArgument> for iota_sdk::graphql_client::TransactionArgument
     fn from(value: TransactionArgument) -> Self {
         match value {
             TransactionArgument::GasCoin => iota_sdk::graphql_client::TransactionArgument::GasCoin,
-            TransactionArgument::Input { index: ix } => {
-                iota_sdk::graphql_client::TransactionArgument::Input { index: ix }
+            TransactionArgument::Input { index } => {
+                iota_sdk::graphql_client::TransactionArgument::Input { index }
             }
-            TransactionArgument::Result { cmd, index: ix } => {
-                iota_sdk::graphql_client::TransactionArgument::Result { cmd, index: ix }
+            TransactionArgument::Result { cmd, index } => {
+                iota_sdk::graphql_client::TransactionArgument::Result { cmd, index }
             }
         }
     }
