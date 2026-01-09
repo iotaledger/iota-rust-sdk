@@ -3491,440 +3491,6 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5173,6 +4739,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function(
 ): Short
@@ -7521,6 +7089,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_max_page_size(`ptr`: Pointer,
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
 ): Long
@@ -12351,6 +11921,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 60468.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14587,17 +14160,9 @@ internal inline fun<T> uniffiTraitInterfaceCallAsync(
     // Uniffi does its best to support structured concurrency across the FFI.
     // If the Rust future is dropped, `uniffiForeignFutureFreeImpl` is called, which will cancel the Kotlin coroutine if it's still running.
     @OptIn(DelicateCoroutinesApi::class)
-    val job = GlobalScope.launch coroutineBlock@ {
-        // Note: it's important we call either `handleSuccess` or `handleError` exactly once.  Each
-        // call consumes an Arc reference, which means there should be no possibility of a double
-        // call.  The following code is structured so that will will never call both `handleSuccess`
-        // and `handleError`, even in the face of weird exceptions.
-        //
-        // In extreme circumstances we may not call either, for example if we fail to make the JNA
-        // call to `handleSuccess`.  This means we will leak the Arc reference, which is better than
-        // double-freeing it.
-        val callResult = try {
-            makeCall()
+    val job = GlobalScope.launch {
+        try {
+            handleSuccess(makeCall())
         } catch(e: kotlin.Exception) {
             handleError(
                 UniffiRustCallStatus.create(
@@ -14605,9 +14170,7 @@ internal inline fun<T> uniffiTraitInterfaceCallAsync(
                     FfiConverterString.lower(e.toString()),
                 )
             )
-            return@coroutineBlock
         }
-        handleSuccess(callResult)
     }
     val handle = uniffiForeignFutureHandleMap.insert(job)
     return UniffiForeignFuture(handle, uniffiForeignFutureFreeImpl)
@@ -14621,11 +14184,9 @@ internal inline fun<T, reified E: Throwable> uniffiTraitInterfaceCallAsyncWithEr
 ): UniffiForeignFuture {
     // See uniffiTraitInterfaceCallAsync for details on `DelicateCoroutinesApi`
     @OptIn(DelicateCoroutinesApi::class)
-    val job = GlobalScope.launch coroutineBlock@ {
-        // See the note in uniffiTraitInterfaceCallAsync for details on `handleSuccess` and
-        // `handleError`.
-        val callResult = try {
-            makeCall()
+    val job = GlobalScope.launch {
+        try {
+            handleSuccess(makeCall())
         } catch(e: kotlin.Exception) {
             if (e is E) {
                 handleError(
@@ -14642,9 +14203,7 @@ internal inline fun<T, reified E: Throwable> uniffiTraitInterfaceCallAsyncWithEr
                     )
                 )
             }
-            return@coroutineBlock
         }
-        handleSuccess(callResult)
     }
     val handle = uniffiForeignFutureHandleMap.insert(job)
     return UniffiForeignFuture(handle, uniffiForeignFutureFreeImpl)
@@ -28569,6 +28128,32 @@ public interface GraphQlClientInterface {
     suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): kotlin.ByteArray?
     
     /**
+     * Execute a Move View Function.
+     *
+     * A View Function is a function in a Move module with a return type that does not alter
+     * the state of the ledger. When using this interface, no transactions are submitted to
+     * the network for inclusion into the ledger.
+     *
+     * This method allows calling nearly any Move function with a return type and any arguments.
+     * The function's result values are provided and decoded using the appropriate Move type,
+     * then formatted in JSON.
+     *
+     * The use of this interface does not require signature checks (even for functions that take
+     * Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
+     * are dealt with at the RPC level rather than execution level.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
+     * e.g., `0x3::iota_system::get_total_iota_supply`
+     * * `type_args` - The type arguments of the Move function
+     * * `arguments` - The arguments to be passed into the Move function, in JSON format
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values) or an error.
+     */
+    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<Value>?): MoveViewResult
+    
+    /**
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
@@ -29534,6 +29119,51 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalByteArray.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute a Move View Function.
+     *
+     * A View Function is a function in a Move module with a return type that does not alter
+     * the state of the ledger. When using this interface, no transactions are submitted to
+     * the network for inclusion into the ledger.
+     *
+     * This method allows calling nearly any Move function with a return type and any arguments.
+     * The function's result values are provided and decoded using the appropriate Move type,
+     * then formatted in JSON.
+     *
+     * The use of this interface does not require signature checks (even for functions that take
+     * Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
+     * are dealt with at the RPC level rather than execution level.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
+     * e.g., `0x3::iota_system::get_total_iota_supply`
+     * * `type_args` - The type arguments of the Move function
+     * * `arguments` - The arguments to be passed into the Move function, in JSON format
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values) or an error.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<Value>?) : MoveViewResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
+                thisPtr,
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceTypeValue.lower(`arguments`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeMoveViewResult.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -61083,6 +60713,45 @@ public object FfiConverterTypeMoveStructTypeParameter: FfiConverterRustBuffer<Mo
 
 
 
+data class MoveViewResult (
+    /**
+     * Execution error from executing the Move view function.
+     */
+    var `error`: kotlin.String? = null, 
+    /**
+     * The return values of the Move view function, resolved and formatted as
+     * JSON.
+     */
+    var `results`: List<Value>? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveViewResult: FfiConverterRustBuffer<MoveViewResult> {
+    override fun read(buf: ByteBuffer): MoveViewResult {
+        return MoveViewResult(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalSequenceTypeValue.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveViewResult) = (
+            FfiConverterOptionalString.allocationSize(value.`error`) +
+            FfiConverterOptionalSequenceTypeValue.allocationSize(value.`results`)
+    )
+
+    override fun write(value: MoveViewResult, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`error`, buf)
+            FfiConverterOptionalSequenceTypeValue.write(value.`results`, buf)
+    }
+}
+
+
+
 /**
  * A page of items returned by the GraphQL server.
  */
@@ -68702,6 +68371,38 @@ public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffe
 /**
  * @suppress
  */
+public object FfiConverterOptionalSequenceTypeValue: FfiConverterRustBuffer<List<Value>?> {
+    override fun read(buf: ByteBuffer): List<Value>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeValue.read(buf)
+    }
+
+    override fun allocationSize(value: List<Value>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeValue.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<Value>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeValue.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalMapStringSequenceString: FfiConverterRustBuffer<Map<kotlin.String, List<kotlin.String>>?> {
     override fun read(buf: ByteBuffer): Map<kotlin.String, List<kotlin.String>>? {
         if (buf.get().toInt() == 0) {
@@ -70612,6 +70313,34 @@ public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMoveAbility.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeValue: FfiConverterRustBuffer<List<Value>> {
+    override fun read(buf: ByteBuffer): List<Value> {
+        val len = buf.getInt()
+        return List<Value>(len) {
+            FfiConverterTypeValue.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Value>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeValue.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Value>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeValue.write(it, buf)
         }
     }
 }

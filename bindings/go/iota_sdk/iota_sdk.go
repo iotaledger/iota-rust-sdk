@@ -5916,6 +5916,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call()
+	})
+	if checksum != 60468 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
 	})
 	if checksum != 16965 {
@@ -19689,6 +19698,29 @@ type GraphQlClientInterface interface {
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
 	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
+	// Execute a Move View Function.
+	//
+	// A View Function is a function in a Move module with a return type that does not alter
+	// the state of the ledger. When using this interface, no transactions are submitted to
+	// the network for inclusion into the ledger.
+	//
+	// This method allows calling nearly any Move function with a return type and any arguments.
+	// The function's result values are provided and decoded using the appropriate Move type,
+	// then formatted in JSON.
+	//
+	// The use of this interface does not require signature checks (even for functions that take
+	// Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
+	// are dealt with at the RPC level rather than execution level.
+	//
+	// # Arguments
+	// * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
+	// e.g., `0x3::iota_system::get_total_iota_supply`
+	// * `type_args` - The type arguments of the Move function
+	// * `arguments` - The arguments to be passed into the Move function, in JSON format
+	//
+	// # Returns
+	// A `MoveViewResult` containing either execution results (return values) or an error.
+	MoveViewCall(functionName string, typeArgs *[]string, arguments *[]Value) (MoveViewResult, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
 	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
@@ -20735,6 +20767,59 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
 		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Execute a Move View Function.
+//
+// A View Function is a function in a Move module with a return type that does not alter
+// the state of the ledger. When using this interface, no transactions are submitted to
+// the network for inclusion into the ledger.
+//
+// This method allows calling nearly any Move function with a return type and any arguments.
+// The function's result values are provided and decoded using the appropriate Move type,
+// then formatted in JSON.
+//
+// The use of this interface does not require signature checks (even for functions that take
+// Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
+// are dealt with at the RPC level rather than execution level.
+//
+// # Arguments
+// * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
+// e.g., `0x3::iota_system::get_total_iota_supply`
+// * `type_args` - The type arguments of the Move function
+// * `arguments` - The arguments to be passed into the Move function, in JSON format
+//
+// # Returns
+// A `MoveViewResult` containing either execution results (return values) or an error.
+func (_self *GraphQlClient) MoveViewCall(functionName string, typeArgs *[]string, arguments *[]Value) (MoveViewResult, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) MoveViewResult {
+			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
+		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArgs), FfiConverterOptionalSequenceTypeValueINSTANCE.Lower(arguments)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -38907,6 +38992,48 @@ type FfiDestroyerMoveStructTypeParameter struct {}
 func (_ FfiDestroyerMoveStructTypeParameter) Destroy(value MoveStructTypeParameter) {
 	value.Destroy()
 }
+type MoveViewResult struct {
+	// Execution error from executing the Move view function.
+	Error *string
+	// The return values of the Move view function, resolved and formatted as
+	// JSON.
+	Results *[]Value
+}
+
+func (r *MoveViewResult) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.Error);
+		FfiDestroyerOptionalSequenceTypeValue{}.Destroy(r.Results);
+}
+
+type FfiConverterMoveViewResult struct {}
+
+var FfiConverterMoveViewResultINSTANCE = FfiConverterMoveViewResult{}
+
+func (c FfiConverterMoveViewResult) Lift(rb RustBufferI) MoveViewResult {
+	return LiftFromRustBuffer[MoveViewResult](c, rb)
+}
+
+func (c FfiConverterMoveViewResult) Read(reader io.Reader) MoveViewResult {
+	return MoveViewResult {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceTypeValueINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveViewResult) Lower(value MoveViewResult) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveViewResult](c, value)
+}
+
+func (c FfiConverterMoveViewResult) Write(writer io.Writer, value MoveViewResult) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
+		FfiConverterOptionalSequenceTypeValueINSTANCE.Write(writer, value.Results);
+}
+
+type FfiDestroyerMoveViewResult struct {}
+
+func (_ FfiDestroyerMoveViewResult) Destroy(value MoveViewResult) {
+	value.Destroy()
+}
 // A page of items returned by the GraphQL server.
 type NameRegistrationPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -46013,6 +46140,43 @@ func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
 	}
 }
 
+type FfiConverterOptionalSequenceTypeValue struct{}
+
+var FfiConverterOptionalSequenceTypeValueINSTANCE = FfiConverterOptionalSequenceTypeValue{}
+
+func (c FfiConverterOptionalSequenceTypeValue) Lift(rb RustBufferI) *[]Value {
+	return LiftFromRustBuffer[*[]Value](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceTypeValue) Read(reader io.Reader) *[]Value {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceTypeValueINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceTypeValue) Lower(value *[]Value) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]Value](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceTypeValue) Write(writer io.Writer, value *[]Value) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceTypeValueINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceTypeValue struct {}
+
+func (_ FfiDestroyerOptionalSequenceTypeValue) Destroy(value *[]Value) {
+	if value != nil {
+		FfiDestroyerSequenceTypeValue{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalMapStringSequenceString struct{}
 
 var FfiConverterOptionalMapStringSequenceStringINSTANCE = FfiConverterOptionalMapStringSequenceString{}
@@ -48910,6 +49074,49 @@ type FfiDestroyerSequenceMoveAbility struct {}
 func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
 	for _, value := range sequence {
 		FfiDestroyerMoveAbility{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceTypeValue struct{}
+
+var FfiConverterSequenceTypeValueINSTANCE = FfiConverterSequenceTypeValue{}
+
+func (c FfiConverterSequenceTypeValue) Lift(rb RustBufferI) []Value {
+	return LiftFromRustBuffer[[]Value](c, rb)
+}
+
+func (c FfiConverterSequenceTypeValue) Read(reader io.Reader) []Value {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]Value, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterTypeValueINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceTypeValue) Lower(value []Value) C.RustBuffer {
+	return LowerIntoRustBuffer[[]Value](c, value)
+}
+
+func (c FfiConverterSequenceTypeValue) Write(writer io.Writer, value []Value) {
+	if len(value) > math.MaxInt32 {
+		panic("[]Value is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterTypeValueINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceTypeValue struct {}
+
+func (FfiDestroyerSequenceTypeValue) Destroy(sequence []Value) {
+	for _, value := range sequence {
+		FfiDestroyerTypeValue{}.Destroy(value)
 	}
 }
 

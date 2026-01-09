@@ -1695,6 +1695,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 60468:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355:
@@ -5550,6 +5552,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs.
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -15026,6 +15035,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_content
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.restype = ctypes.c_uint16
@@ -20503,6 +20515,57 @@ class _UniffiConverterTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterSequenceTypeMoveAbility.write(value.constraints, buf)
         _UniffiConverterBool.write(value.is_phantom, buf)
+
+
+class MoveViewResult:
+    error: "typing.Optional[str]"
+    """
+    Execution error from executing the Move view function.
+    """
+
+    results: "typing.Optional[typing.List[Value]]"
+    """
+    The return values of the Move view function, resolved and formatted as
+    JSON.
+    """
+
+    def __init__(self, *, error: "typing.Optional[str]" = _DEFAULT, results: "typing.Optional[typing.List[Value]]" = _DEFAULT):
+        if error is _DEFAULT:
+            self.error = None
+        else:
+            self.error = error
+        if results is _DEFAULT:
+            self.results = None
+        else:
+            self.results = results
+
+    def __str__(self):
+        return "MoveViewResult(error={}, results={})".format(self.error, self.results)
+
+    def __eq__(self, other):
+        if self.error != other.error:
+            return False
+        if self.results != other.results:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveViewResult(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveViewResult(
+            error=_UniffiConverterOptionalString.read(buf),
+            results=_UniffiConverterOptionalSequenceTypeValue.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.error)
+        _UniffiConverterOptionalSequenceTypeValue.check_lower(value.results)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.error, buf)
+        _UniffiConverterOptionalSequenceTypeValue.write(value.results, buf)
 
 
 class NameRegistrationPage:
@@ -29265,6 +29328,33 @@ class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer
 
 
 
+class _UniffiConverterOptionalSequenceTypeValue(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeValue.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeValue.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeValue.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalMapStringSequenceString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -30969,6 +31059,31 @@ class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeValue(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeValue.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeValue.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeValue.read(buf) for i in range(count)
         ]
 
 
@@ -38820,6 +38935,33 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[Value]]"):
+        """
+        Execute a Move View Function.
+
+        A View Function is a function in a Move module with a return type that does not alter
+        the state of the ledger. When using this interface, no transactions are submitted to
+        the network for inclusion into the ledger.
+
+        This method allows calling nearly any Move function with a return type and any arguments.
+        The function's result values are provided and decoded using the appropriate Move type,
+        then formatted in JSON.
+
+        The use of this interface does not require signature checks (even for functions that take
+        Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
+        are dealt with at the RPC level rather than execution level.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
+        e.g., `0x3::iota_system::get_total_iota_supply`
+        * `type_args` - The type arguments of the Move function
+        * `arguments` - The arguments to be passed into the Move function, in JSON format
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values) or an error.
+        """
+
+        raise NotImplementedError
     def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
         Return the normalized Move function data for the provided package,
@@ -39910,6 +40052,58 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterOptionalBytes.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[Value]]") -> "MoveViewResult":
+        """
+        Execute a Move View Function.
+
+        A View Function is a function in a Move module with a return type that does not alter
+        the state of the ledger. When using this interface, no transactions are submitted to
+        the network for inclusion into the ledger.
+
+        This method allows calling nearly any Move function with a return type and any arguments.
+        The function's result values are provided and decoded using the appropriate Move type,
+        then formatted in JSON.
+
+        The use of this interface does not require signature checks (even for functions that take
+        Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
+        are dealt with at the RPC level rather than execution level.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
+        e.g., `0x3::iota_system::get_total_iota_supply`
+        * `type_args` - The type arguments of the Move function
+        * `arguments` - The arguments to be passed into the Move function, in JSON format
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values) or an error.
+        """
+
+        _UniffiConverterString.check_lower(function_name)
+        
+        _UniffiConverterOptionalSequenceString.check_lower(type_args)
+        
+        _UniffiConverterOptionalSequenceTypeValue.check_lower(arguments)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(function_name),
+        _UniffiConverterOptionalSequenceString.lower(type_args),
+        _UniffiConverterOptionalSequenceTypeValue.lower(arguments)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMoveViewResult.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -56049,16 +56243,8 @@ async def _uniffi_rust_call_async(rust_future, ffi_poll, ffi_complete, ffi_free,
         ffi_free(rust_future)
 def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
     async def make_call_and_call_callback():
-        # Note: it's important we call either `handle_success` or `handle_error` exactly once.  Each
-        # call consumes an Arc reference, which means there should be no possibility of a double
-        # call.  The following code is structured so that will will never call both `handle_success`
-        # and `handle_error`, even in the face of weird exceptions.
-        #
-        # In extreme circumstances we may not call either, for example if we fail to make the ctypes
-        # call to `handle_success`.  This means we will leak the Arc reference, which is better than
-        # double-freeing it.
         try:
-            call_result = await make_call()
+            handle_success(await make_call())
         except Exception as e:
             print("UniFFI: Unhandled exception in trait interface call", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
@@ -56066,8 +56252,6 @@ def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
                 _UniffiRustCallStatus.CALL_UNEXPECTED_ERROR,
                 _UniffiConverterString.lower(repr(e)),
             )
-        else:
-            handle_success(call_result)
     eventloop = _uniffi_get_event_loop()
     task = asyncio.run_coroutine_threadsafe(make_call_and_call_callback(), eventloop)
     handle = _UNIFFI_FOREIGN_FUTURE_HANDLE_MAP.insert((eventloop, task))
@@ -56075,18 +56259,14 @@ def _uniffi_trait_interface_call_async(make_call, handle_success, handle_error):
 
 def _uniffi_trait_interface_call_async_with_error(make_call, handle_success, handle_error, error_type, lower_error):
     async def make_call_and_call_callback():
-        # See the note in _uniffi_trait_interface_call_async for details on `handle_success` and
-        # `handle_error`.
         try:
             try:
-                call_result = await make_call()
+                handle_success(await make_call())
             except error_type as e:
                 handle_error(
                     _UniffiRustCallStatus.CALL_ERROR,
                     lower_error(e),
                 )
-            else:
-                handle_success(call_result)
         except Exception as e:
             print("UniFFI: Unhandled exception in trait interface call", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
@@ -61021,6 +61201,7 @@ __all__ = [
     "MoveStructConnection",
     "MoveStructQuery",
     "MoveStructTypeParameter",
+    "MoveViewResult",
     "NameRegistrationPage",
     "ObjectFilter",
     "ObjectPage",
