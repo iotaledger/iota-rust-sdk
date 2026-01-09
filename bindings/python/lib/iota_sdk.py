@@ -1695,7 +1695,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 60468:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 21439:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -38935,7 +38935,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[Value]]"):
+    def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[str]]"):
         """
         Execute a Move View Function.
 
@@ -38955,7 +38955,7 @@ class GraphQlClientProtocol(typing.Protocol):
         * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
         e.g., `0x3::iota_system::get_total_iota_supply`
         * `type_args` - The type arguments of the Move function
-        * `arguments` - The arguments to be passed into the Move function, in JSON format
+        * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
 
         # Returns
         A `MoveViewResult` containing either execution results (return values) or an error.
@@ -40060,7 +40060,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[Value]]") -> "MoveViewResult":
+    async def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[str]]") -> "MoveViewResult":
         """
         Execute a Move View Function.
 
@@ -40080,7 +40080,7 @@ _UniffiConverterTypeSdkFfiError,
         * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
         e.g., `0x3::iota_system::get_total_iota_supply`
         * `type_args` - The type arguments of the Move function
-        * `arguments` - The arguments to be passed into the Move function, in JSON format
+        * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
 
         # Returns
         A `MoveViewResult` containing either execution results (return values) or an error.
@@ -40090,14 +40090,14 @@ _UniffiConverterTypeSdkFfiError,
         
         _UniffiConverterOptionalSequenceString.check_lower(type_args)
         
-        _UniffiConverterOptionalSequenceTypeValue.check_lower(arguments)
+        _UniffiConverterOptionalSequenceString.check_lower(arguments)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterString.lower(function_name),
         _UniffiConverterOptionalSequenceString.lower(type_args),
-        _UniffiConverterOptionalSequenceTypeValue.lower(arguments)
+        _UniffiConverterOptionalSequenceString.lower(arguments)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,

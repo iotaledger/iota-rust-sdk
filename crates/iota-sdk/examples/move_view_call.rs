@@ -26,5 +26,21 @@ async fn main() -> Result<()> {
         println!("No results");
     }
 
+    let result = client
+        .move_view_call(
+            "0x2::hash::blake2b256".to_string(),
+            None::<Vec<String>>,
+            Some(vec![serde_json::json!([0, 1, 2])]),
+        )
+        .await?;
+
+    if let Some(error) = result.error {
+        println!("Hash Error: {error}");
+    } else if let Some(results) = result.results {
+        println!("Hash Results: {results:?}");
+    } else {
+        println!("No hash results");
+    }
+
     Ok(())
 }

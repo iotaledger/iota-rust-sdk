@@ -13,9 +13,9 @@ import (
 func main() {
 	client := iota_sdk.GraphQlClientNewDevnet()
 
-	arguments := []iota_sdk.Value{
-		`"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"`,
-		`"auc.iota"`,
+	arguments := []string{
+		"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b",
+		"auc.iota",
 	}
 
 	result, err := client.MoveViewCall(
@@ -33,5 +33,26 @@ func main() {
 		fmt.Println("Results:", *result.Results)
 	} else {
 		fmt.Println("No results")
+	}
+
+	hashArgs := []string{
+		"[0,1,2]",
+	}
+
+	hashResult, err := client.MoveViewCall(
+		"0x2::hash::blake2b256",
+		nil,
+		&hashArgs,
+	)
+	if err.(*iota_sdk.SdkFfiError) != nil {
+		log.Fatalf("Failed to call hash function: %v", err)
+	}
+
+	if hashResult.Error != nil {
+		fmt.Println("Hash Error:", *hashResult.Error)
+	} else if hashResult.Results != nil {
+		fmt.Println("Hash Results:", *hashResult.Results)
+	} else {
+		fmt.Println("No hash results")
 	}
 }

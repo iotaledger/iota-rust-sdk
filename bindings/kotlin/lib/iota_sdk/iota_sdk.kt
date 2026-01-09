@@ -11921,7 +11921,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 60468.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 21439.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
@@ -28146,12 +28146,12 @@ public interface GraphQlClientInterface {
      * * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
      * e.g., `0x3::iota_system::get_total_iota_supply`
      * * `type_args` - The type arguments of the Move function
-     * * `arguments` - The arguments to be passed into the Move function, in JSON format
+     * * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
      *
      * # Returns
      * A `MoveViewResult` containing either execution results (return values) or an error.
      */
-    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<Value>?): MoveViewResult
+    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<kotlin.String>?): MoveViewResult
     
     /**
      * Return the normalized Move function data for the provided package,
@@ -29144,19 +29144,19 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
      * e.g., `0x3::iota_system::get_total_iota_supply`
      * * `type_args` - The type arguments of the Move function
-     * * `arguments` - The arguments to be passed into the Move function, in JSON format
+     * * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
      *
      * # Returns
      * A `MoveViewResult` containing either execution results (return values) or an error.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<Value>?) : MoveViewResult {
+    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<kotlin.String>?) : MoveViewResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 thisPtr,
-                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceTypeValue.lower(`arguments`),
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceString.lower(`arguments`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
