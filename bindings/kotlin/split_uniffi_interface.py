@@ -2,7 +2,7 @@
 """
 Post-process the generated Kotlin bindings to split a chunk of methods
 out of `UniffiLib` into `UniffiLibBatch2`, reducing interface size to
-avoid JNA proxy MethodTooLargeException. Run this after `make kotlin`.
+avoid JNA proxy MethodTooLargeException.
 """
 
 from __future__ import annotations
