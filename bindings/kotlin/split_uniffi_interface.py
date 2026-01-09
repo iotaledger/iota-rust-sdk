@@ -92,8 +92,7 @@ def main() -> None:
         if not m:
             raise SystemExit(f"Could not parse method name from line {start_idx+1}: {signature}")
         name = m.group(1)
-        # skip methods that can't be moved
-        print(f"name={name}")
+        # Skip this function because it's called on a function argument instead of the static variable like all others
         if name == "uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn":
             continue
         moved_names.append(name)
