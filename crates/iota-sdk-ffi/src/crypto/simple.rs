@@ -29,6 +29,7 @@ impl SimpleVerifier {
 }
 
 #[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct SimpleKeypair(pub iota_sdk::crypto::simple::SimpleKeypair);
 
 #[uniffi::export]
@@ -139,7 +140,8 @@ impl SimpleKeypair {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct SimpleVerifyingKey(iota_sdk::crypto::simple::SimpleVerifyingKey);
 
 #[uniffi::export]

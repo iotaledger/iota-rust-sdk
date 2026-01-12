@@ -926,8 +926,8 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
     }
 }
 
-#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
-#[uniffi::export(Display)]
+#[derive(Debug, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display)]
 pub struct MoveFunction(iota_sdk::graphql_client::query_types::MoveFunction);
 
 #[uniffi::export]

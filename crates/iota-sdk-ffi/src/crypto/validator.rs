@@ -11,7 +11,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct ValidatorCommitteeSignatureVerifier(
     pub iota_sdk::crypto::validator::ValidatorCommitteeSignatureVerifier,
 );
@@ -56,7 +57,8 @@ impl ValidatorCommitteeSignatureVerifier {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct ValidatorCommitteeSignatureAggregator(
     pub RwLock<iota_sdk::crypto::validator::ValidatorCommitteeSignatureAggregator>,
 );

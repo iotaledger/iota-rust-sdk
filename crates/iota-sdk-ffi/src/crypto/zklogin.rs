@@ -10,7 +10,8 @@ use iota_sdk::{
 
 use crate::{error::Result, types::crypto::zklogin::ZkLoginAuthenticator};
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct ZkloginVerifier(pub iota_sdk::crypto::zklogin::ZkloginVerifier);
 
 #[uniffi::export]
