@@ -5,7 +5,8 @@ use iota_sdk::crypto::Verifier;
 
 use crate::{error::Result, types::crypto::passkey::PasskeyAuthenticator};
 
-#[derive(uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct PasskeyVerifier(iota_sdk::crypto::passkey::PasskeyVerifier);
 
 #[uniffi::export]

@@ -21,7 +21,8 @@ pub mod transaction;
 pub mod type_tag;
 pub mod validator;
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct PersonalMessage(pub(crate) iota_sdk::types::PersonalMessage<'static>);
 
 #[uniffi::export]

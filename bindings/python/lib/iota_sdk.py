@@ -2862,6 +2862,33 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_argument.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2898,6 +2925,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_get_nested_result.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -2973,6 +3017,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_bls12381signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3002,6 +3063,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3029,6 +3107,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3064,6 +3147,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_unpadded.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_cancelledtransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3090,6 +3190,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_version_assignment
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_version_assignments.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_changeepoch.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3152,6 +3269,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_system_packages.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_changeepochv2.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3220,6 +3354,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_system_packages.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_changeepochv3.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3294,6 +3445,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_system_packages.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_system_packages.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_changeepochv4.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3563,6 +3731,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_circomg1_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_circomg1_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_circomg2.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3583,6 +3768,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_circomg2_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_circomg2_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_clienttransactionbuilder.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3768,6 +3970,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_id.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_command.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3813,6 +4020,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_command_new_upgrade.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_command_new_upgrade.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3863,6 +4087,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_sub_dag_index
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_sub_dag_index.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3888,6 +4129,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_i
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_is_cancelled_transactions.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_digest.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -3927,6 +4185,33 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4040,6 +4325,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519publickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4084,6 +4386,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_to_flagged_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4113,6 +4432,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4141,6 +4477,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4202,6 +4543,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_endofepochtransactionkind.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4241,6 +4599,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_chan
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_endofepochtransactionkind_new_change_epoch_v4.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservation.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4267,6 +4642,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservationkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4309,6 +4706,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_up
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservationkey_new_upgrade.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_executiontimeobservations.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4324,6 +4743,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_faucetclient.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4407,6 +4848,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_genesistransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4433,6 +4891,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_objects.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_graphqlclient.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4782,6 +5257,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_as_str.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_hash.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4819,6 +5316,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_makemovevector.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4845,6 +5359,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_type_tag.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_type_tag.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_mergecoins.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4871,6 +5402,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_coins_to_merge.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_coins_to_merge.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movearg.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5117,6 +5665,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_type_arguments.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_type_arguments.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movefunction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5157,6 +5722,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_visibility.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_visibility.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5206,6 +5776,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movepackagedata.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5257,6 +5849,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5289,6 +5886,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_signatures.
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_signatures.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigaggregator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5333,6 +5947,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigcommittee.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5374,6 +5993,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_threshold.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_threshold.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigmember.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5400,6 +6036,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_weight.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_weight.restype = ctypes.c_uint8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigmemberpublickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5475,6 +6128,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_scheme.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigmembersignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5545,6 +6215,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_is_zklogin.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5577,6 +6264,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_name.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5629,6 +6321,33 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_parent.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_parent.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_nameregistration.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5667,6 +6386,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_name_str.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_name_str.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_object.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5750,6 +6486,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_version.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_objectdata.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5790,6 +6543,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_objectid.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5862,6 +6637,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5906,11 +6703,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_is_struct.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_owner.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5990,11 +6804,33 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_is_shared.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_ptbargument.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6219,6 +7055,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_signature.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeypublickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6244,6 +7097,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_inner.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_passkeyverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6265,6 +7135,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_personalmessage.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6295,6 +7170,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6321,6 +7213,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_publish.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6347,6 +7256,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_modules.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_modules.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6460,6 +7386,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6504,6 +7447,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_to_flagged_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6533,6 +7493,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6561,6 +7538,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6622,6 +7604,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6735,6 +7734,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6779,6 +7795,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6808,6 +7841,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6836,6 +7886,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6897,6 +7952,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user.argty
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_simplekeypair.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7001,6 +8073,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_simplesignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7114,6 +8191,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_simpleverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7182,6 +8281,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_splitcoins.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7208,6 +8324,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_coin.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_coin.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_structtag.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7407,6 +8540,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_type_args.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_type_args.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7424,6 +8562,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_systempackage.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7456,6 +8599,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7521,6 +8681,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7675,6 +8852,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactioneffects.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7705,6 +8887,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionevents.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7770,6 +8969,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_sta
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsigner.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7897,6 +9113,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transferobjects.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7923,6 +9156,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_typetag.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8060,11 +9310,33 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_upgrade.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8103,6 +9375,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8130,6 +9419,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8.restype = ctypes.c_uint8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8282,6 +9576,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8314,6 +9625,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier.
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8346,6 +9662,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature.
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8378,6 +9699,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_f
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8419,6 +9745,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_ver
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8445,6 +9776,28 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_valid
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_validatorsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8477,6 +9830,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_versionassignment.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8503,6 +9873,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8535,6 +9922,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zklogininputs.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8588,6 +9992,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zkloginproof.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8620,6 +10041,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8661,6 +10099,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8697,6 +10152,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -27357,6 +28817,46 @@ class Address():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Address):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Address):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeAddress:
 
@@ -27530,6 +29030,28 @@ class Argument():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Argument):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeArgument.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Argument):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeArgument.lower(other)))
 
 
 
@@ -27778,6 +29300,28 @@ class Bls12381PublicKey():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Bls12381PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeBls12381PublicKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Bls12381PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeBls12381PublicKey.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -27902,6 +29446,28 @@ class Bls12381Signature():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Bls12381Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeBls12381Signature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Bls12381Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeBls12381Signature.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -27983,6 +29549,15 @@ class Bls12381VerifyingKey():
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypeBls12381Signature.lower(signature))
 
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
 
 
 
@@ -28124,6 +29699,28 @@ class Bn254FieldElement():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Bn254FieldElement):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeBn254FieldElement.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Bn254FieldElement):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeBn254FieldElement.lower(other)))
+
+
 
 class _UniffiConverterTypeBn254FieldElement:
 
@@ -28228,6 +29825,28 @@ class CancelledTransaction():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, CancelledTransaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCancelledTransaction.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, CancelledTransaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCancelledTransaction.lower(other)))
 
 
 
@@ -28498,6 +30117,28 @@ class ChangeEpoch():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ChangeEpoch):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeChangeEpoch.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ChangeEpoch):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeChangeEpoch.lower(other)))
 
 
 
@@ -28794,6 +30435,28 @@ class ChangeEpochV2():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ChangeEpochV2):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeChangeEpochV2.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ChangeEpochV2):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeChangeEpochV2.lower(other)))
+
+
 
 class _UniffiConverterTypeChangeEpochV2:
 
@@ -29070,6 +30733,28 @@ class ChangeEpochV3():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ChangeEpochV3):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeChangeEpochV3.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ChangeEpochV3):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeChangeEpochV3.lower(other)))
 
 
 
@@ -30233,6 +31918,28 @@ class CircomG1():
         return inst
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, CircomG1):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCircomG1.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, CircomG1):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCircomG1.lower(other)))
+
+
 
 class _UniffiConverterTypeCircomG1:
 
@@ -30334,6 +32041,28 @@ class CircomG2():
         inst = cls.__new__(cls)
         inst._pointer = pointer
         return inst
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, CircomG2):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCircomG2.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, CircomG2):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCircomG2.lower(other)))
 
 
 
@@ -31187,6 +32916,15 @@ class Coin():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_coin_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeCoin:
 
@@ -31395,6 +33133,28 @@ class Command():
         _UniffiConverterTypeUpgrade.lower(upgrade))
         return cls._make_instance_(pointer)
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Command):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCommand.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Command):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeCommand.lower(other)))
 
 
 
@@ -31611,6 +33371,28 @@ class ConsensusCommitPrologueV1():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ConsensusCommitPrologueV1):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeConsensusCommitPrologueV1.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ConsensusCommitPrologueV1):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeConsensusCommitPrologueV1.lower(other)))
+
+
 
 class _UniffiConverterTypeConsensusCommitPrologueV1:
 
@@ -31695,6 +33477,28 @@ class ConsensusDeterminedVersionAssignments():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ConsensusDeterminedVersionAssignments):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeConsensusDeterminedVersionAssignments.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ConsensusDeterminedVersionAssignments):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeConsensusDeterminedVersionAssignments.lower(other)))
 
 
 
@@ -31845,6 +33649,46 @@ class Digest():
     def to_bytes(self, ) -> "bytes":
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Digest):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeDigest.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Digest):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeDigest.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash,self._uniffi_clone_pointer(),)
         )
 
 
@@ -32197,6 +34041,28 @@ class Ed25519PrivateKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519PrivateKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519PrivateKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519PrivateKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519PrivateKey.lower(other)))
+
+
 
 class _UniffiConverterTypeEd25519PrivateKey:
 
@@ -32376,6 +34242,28 @@ class Ed25519PublicKey():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519PublicKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519PublicKey.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -32490,6 +34378,28 @@ class Ed25519Signature():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519Signature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519Signature.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -32573,6 +34483,15 @@ class Ed25519Verifier():
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypeUserSignature.lower(signature))
 
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
 
 
 
@@ -32758,6 +34677,28 @@ class Ed25519VerifyingKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519VerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519VerifyingKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Ed25519VerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEd25519VerifyingKey.lower(other)))
+
+
 
 class _UniffiConverterTypeEd25519VerifyingKey:
 
@@ -32921,6 +34862,28 @@ class EndOfEpochTransactionKind():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, EndOfEpochTransactionKind):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEndOfEpochTransactionKind.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, EndOfEpochTransactionKind):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeEndOfEpochTransactionKind.lower(other)))
+
+
 
 class _UniffiConverterTypeEndOfEpochTransactionKind:
 
@@ -32997,6 +34960,37 @@ class ExecutionTimeObservation():
     def observations(self, ) -> "typing.List[ValidatorExecutionTimeObservation]":
         return _UniffiConverterSequenceTypeValidatorExecutionTimeObservation.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_observations,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ExecutionTimeObservation):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeExecutionTimeObservation.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ExecutionTimeObservation):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeExecutionTimeObservation.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash,self._uniffi_clone_pointer(),)
         )
 
 
@@ -33153,6 +35147,37 @@ class ExecutionTimeObservationKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ExecutionTimeObservationKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeExecutionTimeObservationKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ExecutionTimeObservationKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeExecutionTimeObservationKey.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeExecutionTimeObservationKey:
 
@@ -33249,6 +35274,37 @@ class ExecutionTimeObservations():
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1,
         _UniffiConverterSequenceTypeExecutionTimeObservation.lower(execution_time_observations))
         return cls._make_instance_(pointer)
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ExecutionTimeObservations):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeExecutionTimeObservations.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ExecutionTimeObservations):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeExecutionTimeObservations.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -33607,6 +35663,28 @@ class GenesisObject():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, GenesisObject):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeGenesisObject.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, GenesisObject):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeGenesisObject.lower(other)))
+
+
 
 class _UniffiConverterTypeGenesisObject:
 
@@ -33711,6 +35789,28 @@ class GenesisTransaction():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, GenesisTransaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeGenesisTransaction.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, GenesisTransaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeGenesisTransaction.lower(other)))
 
 
 
@@ -35946,6 +38046,37 @@ class Identifier():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Identifier):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeIdentifier.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Identifier):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeIdentifier.lower(other)))
+
+
     def __hash__(self, ) -> "int":
         return _UniffiConverterUInt64.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_hash,self._uniffi_clone_pointer(),)
@@ -36100,6 +38231,28 @@ class Input():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Input):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeInput.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Input):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeInput.lower(other)))
+
+
 
 class _UniffiConverterTypeInput:
 
@@ -36228,6 +38381,28 @@ class MakeMoveVector():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MakeMoveVector):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMakeMoveVector.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MakeMoveVector):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMakeMoveVector.lower(other)))
+
+
 
 class _UniffiConverterTypeMakeMoveVector:
 
@@ -36352,6 +38527,28 @@ class MergeCoins():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MergeCoins):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMergeCoins.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MergeCoins):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMergeCoins.lower(other)))
 
 
 
@@ -37094,6 +39291,28 @@ class MoveCall():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MoveCall):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMoveCall.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MoveCall):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMoveCall.lower(other)))
+
+
 
 class _UniffiConverterTypeMoveCall:
 
@@ -37209,6 +39428,15 @@ class MoveFunction():
     def visibility(self, ) -> "typing.Optional[MoveVisibility]":
         return _UniffiConverterOptionalTypeMoveVisibility.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_visibility,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -37380,6 +39608,37 @@ class MovePackage():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MovePackage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMovePackage.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MovePackage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMovePackage.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeMovePackage:
 
@@ -37541,6 +39800,15 @@ class MovePackageData():
     def to_json(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -37727,6 +39995,28 @@ class MultisigAggregatedSignature():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultisigAggregatedSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigAggregatedSignature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MultisigAggregatedSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigAggregatedSignature.lower(other)))
+
+
 
 class _UniffiConverterTypeMultisigAggregatedSignature:
 
@@ -37850,6 +40140,15 @@ class MultisigAggregator():
         return _UniffiConverterTypeMultisigAggregator.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier,self._uniffi_clone_pointer(),
         _UniffiConverterTypeMultisigVerifier.lower(verifier))
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -38115,6 +40414,28 @@ class MultisigCommittee():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultisigCommittee):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigCommittee.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MultisigCommittee):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigCommittee.lower(other)))
+
+
 
 class _UniffiConverterTypeMultisigCommittee:
 
@@ -38255,6 +40576,28 @@ class MultisigMember():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultisigMember):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigMember.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MultisigMember):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigMember.lower(other)))
 
 
 
@@ -38517,6 +40860,28 @@ class MultisigMemberPublicKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultisigMemberPublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigMemberPublicKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MultisigMemberPublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigMemberPublicKey.lower(other)))
+
+
 
 class _UniffiConverterTypeMultisigMemberPublicKey:
 
@@ -38744,6 +41109,28 @@ class MultisigMemberSignature():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultisigMemberSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigMemberSignature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, MultisigMemberSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeMultisigMemberSignature.lower(other)))
+
+
 
 class _UniffiConverterTypeMultisigMemberSignature:
 
@@ -38833,6 +41220,15 @@ class MultisigVerifier():
     def zklogin_verifier(self, ) -> "typing.Optional[ZkloginVerifier]":
         return _UniffiConverterOptionalTypeZkloginVerifier.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -39046,6 +41442,46 @@ class Name():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Name):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeName.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Name):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeName.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeName:
 
@@ -39162,6 +41598,28 @@ class NameRegistration():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, NameRegistration):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeNameRegistration.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, NameRegistration):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeNameRegistration.lower(other)))
 
 
 
@@ -39511,6 +41969,28 @@ class Object():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Object):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObject.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Object):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObject.lower(other)))
+
+
 
 class _UniffiConverterTypeObject:
 
@@ -39692,6 +42172,37 @@ class ObjectData():
 
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_is_struct,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ObjectData):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObjectData.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ObjectData):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObjectData.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_hash,self._uniffi_clone_pointer(),)
         )
 
 
@@ -39958,6 +42469,37 @@ class ObjectId():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ObjectId):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObjectId.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ObjectId):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObjectId.lower(other)))
+
+
     def __hash__(self, ) -> "int":
         return _UniffiConverterUInt64.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_hash,self._uniffi_clone_pointer(),)
@@ -40089,6 +42631,15 @@ class ObjectType():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def __str__(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display,self._uniffi_clone_pointer(),)
@@ -40096,6 +42647,19 @@ class ObjectType():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ObjectType):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObjectType.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ObjectType):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeObjectType.lower(other)))
 
 
 
@@ -40330,9 +42894,40 @@ class Owner():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def __str__(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Owner):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeOwner.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Owner):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeOwner.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_hash,self._uniffi_clone_pointer(),)
         )
 
 
@@ -40567,6 +43162,28 @@ class PasskeyAuthenticator():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PasskeyAuthenticator):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePasskeyAuthenticator.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, PasskeyAuthenticator):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePasskeyAuthenticator.lower(other)))
+
+
 
 class _UniffiConverterTypePasskeyAuthenticator:
 
@@ -40694,6 +43311,28 @@ class PasskeyPublicKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PasskeyPublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePasskeyPublicKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, PasskeyPublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePasskeyPublicKey.lower(other)))
+
+
 
 class _UniffiConverterTypePasskeyPublicKey:
 
@@ -40759,6 +43398,15 @@ class PasskeyVerifier():
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypePasskeyAuthenticator.lower(authenticator))
 
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
 
 
 
@@ -40852,6 +43500,28 @@ class PersonalMessage():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PersonalMessage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePersonalMessage.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, PersonalMessage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePersonalMessage.lower(other)))
 
 
 
@@ -40982,6 +43652,28 @@ class ProgrammableTransaction():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ProgrammableTransaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeProgrammableTransaction.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ProgrammableTransaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeProgrammableTransaction.lower(other)))
 
 
 
@@ -41485,6 +44177,28 @@ class Publish():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Publish):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePublish.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Publish):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePublish.lower(other)))
+
+
 
 class _UniffiConverterTypePublish:
 
@@ -41831,6 +44545,28 @@ class Secp256k1PrivateKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1PrivateKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1PrivateKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1PrivateKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1PrivateKey.lower(other)))
+
+
 
 class _UniffiConverterTypeSecp256k1PrivateKey:
 
@@ -42012,6 +44748,28 @@ class Secp256k1PublicKey():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1PublicKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1PublicKey.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -42126,6 +44884,28 @@ class Secp256k1Signature():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1Signature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1Signature.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -42209,6 +44989,15 @@ class Secp256k1Verifier():
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypeUserSignature.lower(signature))
 
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
 
 
 
@@ -42392,6 +45181,28 @@ class Secp256k1VerifyingKey():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1VerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1VerifyingKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256k1VerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256k1VerifyingKey.lower(other)))
 
 
 
@@ -42776,6 +45587,28 @@ class Secp256r1PrivateKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1PrivateKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1PrivateKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1PrivateKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1PrivateKey.lower(other)))
+
+
 
 class _UniffiConverterTypeSecp256r1PrivateKey:
 
@@ -42957,6 +45790,28 @@ class Secp256r1PublicKey():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1PublicKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1PublicKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1PublicKey.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -43071,6 +45926,28 @@ class Secp256r1Signature():
 
 
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1Signature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1Signature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1Signature.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -43154,6 +46031,15 @@ class Secp256r1Verifier():
         _UniffiConverterBytes.lower(message),
         _UniffiConverterTypeUserSignature.lower(signature))
 
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
 
 
 
@@ -43337,6 +46223,28 @@ class Secp256r1VerifyingKey():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1VerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1VerifyingKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Secp256r1VerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSecp256r1VerifyingKey.lower(other)))
 
 
 
@@ -43653,6 +46561,15 @@ class SimpleKeypair():
     def verifying_key(self, ) -> "SimpleVerifyingKey":
         return _UniffiConverterTypeSimpleVerifyingKey.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -43987,6 +46904,37 @@ class SimpleSignature():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SimpleSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSimpleSignature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, SimpleSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSimpleSignature.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeSimpleSignature:
 
@@ -44215,6 +47163,28 @@ class SimpleVerifyingKey():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SimpleVerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSimpleVerifyingKey.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, SimpleVerifyingKey):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSimpleVerifyingKey.lower(other)))
+
+
 
 class _UniffiConverterTypeSimpleVerifyingKey:
 
@@ -44335,6 +47305,28 @@ class SplitCoins():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SplitCoins):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSplitCoins.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, SplitCoins):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSplitCoins.lower(other)))
 
 
 
@@ -44810,6 +47802,15 @@ class StructTag():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def __str__(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display,self._uniffi_clone_pointer(),)
@@ -44830,6 +47831,15 @@ class StructTag():
 
         return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
         _UniffiConverterTypeStructTag.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -44954,6 +47964,28 @@ class SystemPackage():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SystemPackage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSystemPackage.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, SystemPackage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeSystemPackage.lower(other)))
 
 
 
@@ -45182,6 +48214,28 @@ class Transaction():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Transaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransaction.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Transaction):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransaction.lower(other)))
 
 
 
@@ -45882,6 +48936,15 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeTransactionBuilder:
 
@@ -46003,6 +49066,28 @@ class TransactionEffects():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TransactionEffects):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransactionEffects.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, TransactionEffects):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransactionEffects.lower(other)))
 
 
 
@@ -46256,6 +49341,28 @@ class TransactionKind():
         _UniffiConverterTypeRandomnessStateUpdate.lower(tx))
         return cls._make_instance_(pointer)
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TransactionKind):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransactionKind.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, TransactionKind):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransactionKind.lower(other)))
 
 
 
@@ -46612,6 +49719,28 @@ class TransactionV1():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TransactionV1):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransactionV1.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, TransactionV1):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransactionV1.lower(other)))
+
+
 
 class _UniffiConverterTypeTransactionV1:
 
@@ -46732,6 +49861,28 @@ class TransferObjects():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TransferObjects):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransferObjects.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, TransferObjects):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTransferObjects.lower(other)))
 
 
 
@@ -47118,9 +50269,40 @@ class TypeTag():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def __str__(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TypeTag):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTypeTag.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, TypeTag):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeTypeTag.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash,self._uniffi_clone_pointer(),)
         )
 
 
@@ -47299,6 +50481,28 @@ class Upgrade():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Upgrade):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeUpgrade.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Upgrade):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeUpgrade.lower(other)))
+
+
 
 class _UniffiConverterTypeUpgrade:
 
@@ -47410,6 +50614,15 @@ class UpgradePolicy():
 
         return _UniffiConverterUInt8.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -47806,6 +51019,28 @@ class UserSignature():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, UserSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeUserSignature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, UserSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeUserSignature.lower(other)))
+
+
 
 class _UniffiConverterTypeUserSignature:
 
@@ -47903,6 +51138,15 @@ class UserSignatureVerifier():
     def zklogin_verifier(self, ) -> "typing.Optional[ZkloginVerifier]":
         return _UniffiConverterOptionalTypeZkloginVerifier.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -48045,6 +51289,15 @@ class ValidatorAggregatedSignature():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeValidatorAggregatedSignature:
 
@@ -48141,6 +51394,15 @@ class ValidatorCommitteeSignatureAggregator():
     def finish(self, ) -> "ValidatorAggregatedSignature":
         return _UniffiConverterTypeValidatorAggregatedSignature.lift(
             _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
@@ -48263,6 +51525,15 @@ class ValidatorCommitteeSignatureVerifier():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
 
 class _UniffiConverterTypeValidatorCommitteeSignatureVerifier:
 
@@ -48367,6 +51638,37 @@ class ValidatorExecutionTimeObservation():
     def validator(self, ) -> "Bls12381PublicKey":
         return _UniffiConverterTypeBls12381PublicKey.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ValidatorExecutionTimeObservation):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ValidatorExecutionTimeObservation):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeValidatorExecutionTimeObservation.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash,self._uniffi_clone_pointer(),)
         )
 
 
@@ -48497,6 +51799,28 @@ class ValidatorSignature():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ValidatorSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeValidatorSignature.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ValidatorSignature):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeValidatorSignature.lower(other)))
+
+
 
 class _UniffiConverterTypeValidatorSignature:
 
@@ -48601,6 +51925,28 @@ class VersionAssignment():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, VersionAssignment):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeVersionAssignment.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, VersionAssignment):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeVersionAssignment.lower(other)))
 
 
 
@@ -48741,6 +52087,28 @@ class ZkLoginAuthenticator():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginAuthenticator):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginAuthenticator.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginAuthenticator):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginAuthenticator.lower(other)))
 
 
 
@@ -48918,6 +52286,28 @@ class ZkLoginInputs():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginInputs):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginInputs.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginInputs):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginInputs.lower(other)))
+
+
 
 class _UniffiConverterTypeZkLoginInputs:
 
@@ -49036,6 +52426,28 @@ class ZkLoginProof():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginProof):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginProof.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginProof):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginProof.lower(other)))
 
 
 
@@ -49317,6 +52729,28 @@ class ZkLoginPublicIdentifier():
 
 
 
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginPublicIdentifier):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginPublicIdentifier.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ZkLoginPublicIdentifier):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeZkLoginPublicIdentifier.lower(other)))
+
+
 
 class _UniffiConverterTypeZkLoginPublicIdentifier:
 
@@ -49424,6 +52858,15 @@ class ZkloginVerifier():
         return _UniffiConverterTypeZkloginVerifier.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks,self._uniffi_clone_pointer(),
         _UniffiConverterMapTypeJwkIdTypeJwk.lower(jwks))
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug,self._uniffi_clone_pointer(),)
         )
 
 
