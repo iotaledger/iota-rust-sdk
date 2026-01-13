@@ -5,7 +5,7 @@ use crate::{Digest, ObjectId};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
-#[derive(strum::Display, Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, strum::Display)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
 pub enum UpgradePolicy {

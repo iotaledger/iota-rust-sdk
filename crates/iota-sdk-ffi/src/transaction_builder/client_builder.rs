@@ -11,7 +11,7 @@ use iota_sdk::graphql_client::WaitForTx;
 
 use crate::{
     error::Result,
-    graphql::GraphQLClient,
+    graphql::{DryRunResult, GraphQLClient},
     transaction_builder::{
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
@@ -21,7 +21,7 @@ use crate::{
         move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
-        transaction::{DryRunResult, Transaction, TransactionEffects},
+        transaction::{Transaction, TransactionEffects},
         type_tag::TypeTag,
     },
 };
@@ -138,7 +138,7 @@ impl ClientTransactionBuilder {
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .name(names);
+                .assign(names);
         });
         self
     }
@@ -205,7 +205,7 @@ impl ClientTransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, amounts).name(names);
+            builder.split_coins(coin, amounts).assign(names);
         });
         self
     }
@@ -244,7 +244,7 @@ impl ClientTransactionBuilder {
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
             });
-            builder.named_command(cmd, name);
+            builder.assigned_command(cmd, name);
         });
         self
     }
@@ -297,7 +297,7 @@ impl ClientTransactionBuilder {
         self.write(|builder| {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
-                .name(name);
+                .assign(name);
         });
         self
     }

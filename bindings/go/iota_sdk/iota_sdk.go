@@ -8913,6 +8913,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned()
+	})
+	if checksum != 10192 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_assigned: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_bool()
 	})
 	if checksum != 51030 {
@@ -9035,15 +9044,6 @@ func uniffiCheckChecksums() {
 	if checksum != 48453 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_receiving_from_hex: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res()
-	})
-	if checksum != 47661 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_res: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -11106,6 +11106,63 @@ func (_self *Address) ToShortString(withPrefix bool) string {
 	}
 	}))
 }
+
+func (_self *Address) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Address) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Address) Eq(other *Address) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_eq(
+		_pointer,FfiConverterAddressINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Address) Ne(other *Address) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_eq_ne(
+		_pointer,FfiConverterAddressINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Address) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Address) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -11248,6 +11305,39 @@ func (_self *Argument) GetNestedResult(ix uint16) **Argument {
 	}
 	}))
 }
+
+func (_self *Argument) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Argument")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Argument) Eq(other *Argument) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Argument")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_eq(
+		_pointer,FfiConverterArgumentINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Argument) Ne(other *Argument) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Argument")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_ne(
+		_pointer,FfiConverterArgumentINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Argument) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -11513,6 +11603,37 @@ func (_self *Bls12381PublicKey) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Bls12381PublicKey) Eq(other *Bls12381PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterBls12381PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Bls12381PublicKey) Ne(other *Bls12381PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterBls12381PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Bls12381PublicKey) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381publickey_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Bls12381PublicKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -11643,6 +11764,37 @@ func (_self *Bls12381Signature) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Bls12381Signature) Eq(other *Bls12381Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterBls12381SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Bls12381Signature) Ne(other *Bls12381Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterBls12381SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Bls12381Signature) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Bls12381Signature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -11736,6 +11888,19 @@ func (_self *Bls12381VerifyingKey) Verify(message []byte, signature *Bls12381Sig
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Bls12381VerifyingKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Bls12381VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *Bls12381VerifyingKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -11882,6 +12047,39 @@ func (_self *Bn254FieldElement) Unpadded() []byte {
 	}
 	}))
 }
+
+func (_self *Bn254FieldElement) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Bn254FieldElement) Eq(other *Bn254FieldElement) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_eq(
+		_pointer,FfiConverterBn254FieldElementINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Bn254FieldElement) Ne(other *Bn254FieldElement) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Bn254FieldElement")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_bn254fieldelement_uniffi_trait_eq_ne(
+		_pointer,FfiConverterBn254FieldElementINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Bn254FieldElement) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -11987,6 +12185,39 @@ func (_self *CancelledTransaction) VersionAssignments() []*VersionAssignment {
 	}
 	}))
 }
+
+func (_self *CancelledTransaction) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*CancelledTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *CancelledTransaction) Eq(other *CancelledTransaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*CancelledTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_eq(
+		_pointer,FfiConverterCancelledTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *CancelledTransaction) Ne(other *CancelledTransaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*CancelledTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_cancelledtransaction_uniffi_trait_eq_ne(
+		_pointer,FfiConverterCancelledTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *CancelledTransaction) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -12184,6 +12415,39 @@ func (_self *ChangeEpoch) SystemPackages() []*SystemPackage {
 	}
 	}))
 }
+
+func (_self *ChangeEpoch) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ChangeEpoch) Eq(other *ChangeEpoch) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_eq(
+		_pointer,FfiConverterChangeEpochINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ChangeEpoch) Ne(other *ChangeEpoch) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpoch")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepoch_uniffi_trait_eq_ne(
+		_pointer,FfiConverterChangeEpochINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ChangeEpoch) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -12395,6 +12659,39 @@ func (_self *ChangeEpochV2) SystemPackages() []*SystemPackage {
 	}
 	}))
 }
+
+func (_self *ChangeEpochV2) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ChangeEpochV2) Eq(other *ChangeEpochV2) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_eq(
+		_pointer,FfiConverterChangeEpochV2INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ChangeEpochV2) Ne(other *ChangeEpochV2) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv2_uniffi_trait_eq_ne(
+		_pointer,FfiConverterChangeEpochV2INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ChangeEpochV2) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -12588,6 +12885,39 @@ func (_self *ChangeEpochV3) SystemPackages() []*SystemPackage {
 	}
 	}))
 }
+
+func (_self *ChangeEpochV3) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV3")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ChangeEpochV3) Eq(other *ChangeEpochV3) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV3")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_eq(
+		_pointer,FfiConverterChangeEpochV3INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ChangeEpochV3) Ne(other *ChangeEpochV3) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ChangeEpochV3")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_changeepochv3_uniffi_trait_eq_ne(
+		_pointer,FfiConverterChangeEpochV3INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ChangeEpochV3) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -13551,6 +13881,39 @@ func NewCircomG1(el0 *Bn254FieldElement, el1 *Bn254FieldElement, el2 *Bn254Field
 
 
 
+
+func (_self *CircomG1) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*CircomG1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *CircomG1) Eq(other *CircomG1) bool {
+	_pointer := _self.ffiObject.incrementPointer("*CircomG1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_eq(
+		_pointer,FfiConverterCircomG1INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *CircomG1) Ne(other *CircomG1) bool {
+	_pointer := _self.ffiObject.incrementPointer("*CircomG1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_circomg1_uniffi_trait_eq_ne(
+		_pointer,FfiConverterCircomG1INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *CircomG1) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -13638,6 +14001,39 @@ func NewCircomG2(el00 *Bn254FieldElement, el01 *Bn254FieldElement, el10 *Bn254Fi
 	}))
 }
 
+
+
+
+func (_self *CircomG2) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*CircomG2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *CircomG2) Eq(other *CircomG2) bool {
+	_pointer := _self.ffiObject.incrementPointer("*CircomG2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_eq(
+		_pointer,FfiConverterCircomG2INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *CircomG2) Ne(other *CircomG2) bool {
+	_pointer := _self.ffiObject.incrementPointer("*CircomG2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_circomg2_uniffi_trait_eq_ne(
+		_pointer,FfiConverterCircomG2INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
 
 
 func (object *CircomG2) Destroy() {
@@ -14240,6 +14636,19 @@ func (_self *Coin) Id() *ObjectId {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Coin) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Coin")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_coin_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *Coin) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -14406,6 +14815,39 @@ func CommandNewUpgrade(upgrade *Upgrade) *Command {
 }
 
 
+
+func (_self *Command) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Command")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Command) Eq(other *Command) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Command")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_eq(
+		_pointer,FfiConverterCommandINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Command) Ne(other *Command) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Command")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_command_uniffi_trait_eq_ne(
+		_pointer,FfiConverterCommandINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Command) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -14567,6 +15009,39 @@ func (_self *ConsensusCommitPrologueV1) SubDagIndex() *uint64 {
 	}
 	}))
 }
+
+func (_self *ConsensusCommitPrologueV1) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ConsensusCommitPrologueV1) Eq(other *ConsensusCommitPrologueV1) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq(
+		_pointer,FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ConsensusCommitPrologueV1) Ne(other *ConsensusCommitPrologueV1) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne(
+		_pointer,FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ConsensusCommitPrologueV1) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -14655,6 +15130,39 @@ func (_self *ConsensusDeterminedVersionAssignments) IsCancelledTransactions() bo
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ConsensusDeterminedVersionAssignments) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ConsensusDeterminedVersionAssignments) Eq(other *ConsensusDeterminedVersionAssignments) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_eq(
+		_pointer,FfiConverterConsensusDeterminedVersionAssignmentsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ConsensusDeterminedVersionAssignments) Ne(other *ConsensusDeterminedVersionAssignments) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensusdeterminedversionassignments_uniffi_trait_eq_ne(
+		_pointer,FfiConverterConsensusDeterminedVersionAssignmentsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ConsensusDeterminedVersionAssignments) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -14809,6 +15317,63 @@ func (_self *Digest) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Digest) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Digest) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Digest) Eq(other *Digest) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_eq(
+		_pointer,FfiConverterDigestINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Digest) Ne(other *Digest) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_eq_ne(
+		_pointer,FfiConverterDigestINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Digest) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Digest) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15146,6 +15711,39 @@ func (_self *Ed25519PrivateKey) VerifyingKey() *Ed25519VerifyingKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Ed25519PrivateKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Ed25519PrivateKey) Eq(other *Ed25519PrivateKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterEd25519PrivateKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Ed25519PrivateKey) Ne(other *Ed25519PrivateKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterEd25519PrivateKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Ed25519PrivateKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15316,6 +15914,37 @@ func (_self *Ed25519PublicKey) ToFlaggedBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Ed25519PublicKey) Eq(other *Ed25519PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterEd25519PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Ed25519PublicKey) Ne(other *Ed25519PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterEd25519PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Ed25519PublicKey) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519publickey_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Ed25519PublicKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15436,6 +16065,37 @@ func (_self *Ed25519Signature) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Ed25519Signature) Eq(other *Ed25519Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterEd25519SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Ed25519Signature) Ne(other *Ed25519Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterEd25519SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Ed25519Signature) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Ed25519Signature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15525,6 +16185,19 @@ func (_self *Ed25519Verifier) VerifyUser(message []byte, signature *UserSignatur
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Ed25519Verifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519Verifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *Ed25519Verifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15708,6 +16381,39 @@ func (_self *Ed25519VerifyingKey) VerifyUser(message []byte, signature *UserSign
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Ed25519VerifyingKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Ed25519VerifyingKey) Eq(other *Ed25519VerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterEd25519VerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Ed25519VerifyingKey) Ne(other *Ed25519VerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Ed25519VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterEd25519VerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Ed25519VerifyingKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15854,6 +16560,39 @@ func EndOfEpochTransactionKindNewChangeEpochV4(tx *ChangeEpochV4) *EndOfEpochTra
 }
 
 
+
+func (_self *EndOfEpochTransactionKind) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*EndOfEpochTransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *EndOfEpochTransactionKind) Eq(other *EndOfEpochTransactionKind) bool {
+	_pointer := _self.ffiObject.incrementPointer("*EndOfEpochTransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_eq(
+		_pointer,FfiConverterEndOfEpochTransactionKindINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *EndOfEpochTransactionKind) Ne(other *EndOfEpochTransactionKind) bool {
+	_pointer := _self.ffiObject.incrementPointer("*EndOfEpochTransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_endofepochtransactionkind_uniffi_trait_eq_ne(
+		_pointer,FfiConverterEndOfEpochTransactionKindINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *EndOfEpochTransactionKind) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -15941,6 +16680,50 @@ func (_self *ExecutionTimeObservation) Observations() []*ValidatorExecutionTimeO
 	}
 	}))
 }
+
+func (_self *ExecutionTimeObservation) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservation) Eq(other *ExecutionTimeObservation) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_eq(
+		_pointer,FfiConverterExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ExecutionTimeObservation) Ne(other *ExecutionTimeObservation) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_eq_ne(
+		_pointer,FfiConverterExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservation) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservation_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *ExecutionTimeObservation) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -16077,6 +16860,50 @@ func ExecutionTimeObservationKeyNewUpgrade() *ExecutionTimeObservationKey {
 }
 
 
+
+func (_self *ExecutionTimeObservationKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservationKey) Eq(other *ExecutionTimeObservationKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ExecutionTimeObservationKey) Ne(other *ExecutionTimeObservationKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterExecutionTimeObservationKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservationKey) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservationkey_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *ExecutionTimeObservationKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -16167,6 +16994,50 @@ type ExecutionTimeObservations struct {
 func ExecutionTimeObservationsNewV1(executionTimeObservations []*ExecutionTimeObservation) *ExecutionTimeObservations {
 	return FfiConverterExecutionTimeObservationsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_executiontimeobservations_new_v1(FfiConverterSequenceExecutionTimeObservationINSTANCE.Lower(executionTimeObservations),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservations) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservations) Eq(other *ExecutionTimeObservations) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_eq(
+		_pointer,FfiConverterExecutionTimeObservationsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ExecutionTimeObservations) Ne(other *ExecutionTimeObservations) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_eq_ne(
+		_pointer,FfiConverterExecutionTimeObservationsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ExecutionTimeObservations) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ExecutionTimeObservations")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_executiontimeobservations_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -16525,6 +17396,39 @@ func (_self *GenesisObject) Version() uint64 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *GenesisObject) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *GenesisObject) Eq(other *GenesisObject) bool {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq(
+		_pointer,FfiConverterGenesisObjectINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *GenesisObject) Ne(other *GenesisObject) bool {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_ne(
+		_pointer,FfiConverterGenesisObjectINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *GenesisObject) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -16632,6 +17536,39 @@ func (_self *GenesisTransaction) Objects() []*GenesisObject {
 	}
 	}))
 }
+
+func (_self *GenesisTransaction) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *GenesisTransaction) Eq(other *GenesisTransaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_eq(
+		_pointer,FfiConverterGenesisTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *GenesisTransaction) Ne(other *GenesisTransaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*GenesisTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_genesistransaction_uniffi_trait_eq_ne(
+		_pointer,FfiConverterGenesisTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *GenesisTransaction) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -18800,6 +19737,52 @@ func (_self *Identifier) AsStr() string {
 	}))
 }
 
+func (_self *Identifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Identifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Identifier) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*Identifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Identifier) Eq(other *Identifier) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Identifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_eq(
+		_pointer,FfiConverterIdentifierINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Identifier) Ne(other *Identifier) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Identifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_identifier_uniffi_trait_eq_ne(
+		_pointer,FfiConverterIdentifierINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
 func (_self *Identifier) Hash() uint64 {
 	_pointer := _self.ffiObject.incrementPointer("*Identifier")
 	defer _self.ffiObject.decrementPointer()
@@ -18922,6 +19905,39 @@ func InputNewReceiving(objectRef ObjectReference) *Input {
 func InputNewShared(objectId *ObjectId, initialSharedVersion uint64, mutable bool) *Input {
 	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Input) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Input")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Input) Eq(other *Input) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Input")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq(
+		_pointer,FfiConverterInputINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Input) Ne(other *Input) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Input")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_ne(
+		_pointer,FfiConverterInputINSTANCE.Lower(other),_uniffiStatus)
 	}))
 }
 
@@ -19237,6 +20253,39 @@ func (_self *MakeMoveVector) TypeTag() **TypeTag {
 	}
 	}))
 }
+
+func (_self *MakeMoveVector) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MakeMoveVector")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MakeMoveVector) Eq(other *MakeMoveVector) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MakeMoveVector")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMakeMoveVectorINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MakeMoveVector) Ne(other *MakeMoveVector) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MakeMoveVector")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_makemovevector_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMakeMoveVectorINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MakeMoveVector) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -19350,6 +20399,39 @@ func (_self *MergeCoins) CoinsToMerge() []*Argument {
 	}
 	}))
 }
+
+func (_self *MergeCoins) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MergeCoins")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MergeCoins) Eq(other *MergeCoins) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MergeCoins")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMergeCoinsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MergeCoins) Ne(other *MergeCoins) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MergeCoins")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_mergecoins_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMergeCoinsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MergeCoins) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -19998,6 +21080,39 @@ func (_self *MoveCall) TypeArguments() []*TypeTag {
 	}
 	}))
 }
+
+func (_self *MoveCall) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MoveCall")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MoveCall) Eq(other *MoveCall) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MoveCall")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMoveCallINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MoveCall) Ne(other *MoveCall) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MoveCall")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_movecall_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMoveCallINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MoveCall) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -20128,6 +21243,19 @@ func (_self *MoveFunction) Visibility() *MoveVisibility {
 	}
 	}))
 }
+
+func (_self *MoveFunction) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MoveFunction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movefunction_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 
 func (_self *MoveFunction) String() string {
 	_pointer := _self.ffiObject.incrementPointer("*MoveFunction")
@@ -20294,6 +21422,50 @@ func (_self *MovePackage) Version() uint64 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *MovePackage) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MovePackage) Eq(other *MovePackage) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMovePackageINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MovePackage) Ne(other *MovePackage) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMovePackageINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *MovePackage) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *MovePackage) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -20451,6 +21623,19 @@ func (_self *MovePackageData) ToJson() string {
 	}
 	}))
 }
+
+func (_self *MovePackageData) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MovePackageData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *MovePackageData) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -20611,6 +21796,39 @@ func (_self *MultisigAggregatedSignature) Signatures() []*MultisigMemberSignatur
 	}
 	}))
 }
+
+func (_self *MultisigAggregatedSignature) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MultisigAggregatedSignature) Eq(other *MultisigAggregatedSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMultisigAggregatedSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigAggregatedSignature) Ne(other *MultisigAggregatedSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMultisigAggregatedSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MultisigAggregatedSignature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -20735,6 +21953,19 @@ func (_self *MultisigAggregator) WithVerifier(verifier *MultisigVerifier) *Multi
 		_pointer,FfiConverterMultisigVerifierINSTANCE.Lower(verifier),_uniffiStatus)
 	}))
 }
+
+func (_self *MultisigAggregator) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigAggregator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *MultisigAggregator) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -20959,6 +22190,39 @@ func (_self *MultisigCommittee) Threshold() uint16 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *MultisigCommittee) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MultisigCommittee) Eq(other *MultisigCommittee) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMultisigCommitteeINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigCommittee) Ne(other *MultisigCommittee) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigCommittee")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigcommittee_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMultisigCommitteeINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MultisigCommittee) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21083,6 +22347,39 @@ func (_self *MultisigMember) Weight() uint8 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *MultisigMember) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMember")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MultisigMember) Eq(other *MultisigMember) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMember")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMultisigMemberINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMember) Ne(other *MultisigMember) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMember")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmember_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMultisigMemberINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MultisigMember) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21339,6 +22636,39 @@ func (_self *MultisigMemberPublicKey) Scheme() SignatureScheme {
 	}
 	}))
 }
+
+func (_self *MultisigMemberPublicKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MultisigMemberPublicKey) Eq(other *MultisigMemberPublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMultisigMemberPublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberPublicKey) Ne(other *MultisigMemberPublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmemberpublickey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMultisigMemberPublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MultisigMemberPublicKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21561,6 +22891,39 @@ func (_self *MultisigMemberSignature) IsZklogin() bool {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *MultisigMemberSignature) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *MultisigMemberSignature) Eq(other *MultisigMemberSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterMultisigMemberSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *MultisigMemberSignature) Ne(other *MultisigMemberSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigMemberSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterMultisigMemberSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *MultisigMemberSignature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21660,6 +23023,19 @@ func (_self *MultisigVerifier) ZkloginVerifier() **ZkloginVerifier {
 	}
 	}))
 }
+
+func (_self *MultisigVerifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*MultisigVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *MultisigVerifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21828,6 +23204,63 @@ func (_self *Name) Parent() **Name {
 	}
 	}))
 }
+
+func (_self *Name) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Name) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Name) Eq(other *Name) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_eq(
+		_pointer,FfiConverterNameINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Name) Ne(other *Name) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_eq_ne(
+		_pointer,FfiConverterNameINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Name) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Name")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_name_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Name) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -21937,6 +23370,39 @@ func (_self *NameRegistration) NameStr() string {
 	}
 	}))
 }
+
+func (_self *NameRegistration) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *NameRegistration) Eq(other *NameRegistration) bool {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_eq(
+		_pointer,FfiConverterNameRegistrationINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *NameRegistration) Ne(other *NameRegistration) bool {
+	_pointer := _self.ffiObject.incrementPointer("*NameRegistration")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_nameregistration_uniffi_trait_eq_ne(
+		_pointer,FfiConverterNameRegistrationINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *NameRegistration) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -22194,6 +23660,39 @@ func (_self *Object) Version() uint64 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Object) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Object) Eq(other *Object) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq(
+		_pointer,FfiConverterObjectINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Object) Ne(other *Object) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Object")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_ne(
+		_pointer,FfiConverterObjectINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Object) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -22344,6 +23843,50 @@ func (_self *ObjectData) IsStruct() bool {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ObjectData) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ObjectData) Eq(other *ObjectData) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_eq(
+		_pointer,FfiConverterObjectDataINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ObjectData) Ne(other *ObjectData) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_eq_ne(
+		_pointer,FfiConverterObjectDataINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ObjectData) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectData")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectdata_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *ObjectData) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -22573,6 +24116,52 @@ func (_self *ObjectId) ToShortString(withPrefix bool) string {
 	}))
 }
 
+func (_self *ObjectId) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ObjectId) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ObjectId) Eq(other *ObjectId) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_eq(
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ObjectId) Ne(other *ObjectId) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_eq_ne(
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
 func (_self *ObjectId) Hash() uint64 {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
@@ -22700,6 +24289,19 @@ func (_self *ObjectType) IsStruct() bool {
 	}))
 }
 
+func (_self *ObjectType) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
 func (_self *ObjectType) String() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
 	defer _self.ffiObject.decrementPointer()
@@ -22708,6 +24310,26 @@ func (_self *ObjectType) String() string {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_display(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+
+
+func (_self *ObjectType) Eq(other *ObjectType) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_eq(
+		_pointer,FfiConverterObjectTypeINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ObjectType) Ne(other *ObjectType) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectType")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_objecttype_uniffi_trait_eq_ne(
+		_pointer,FfiConverterObjectTypeINSTANCE.Lower(other),_uniffiStatus)
 	}))
 }
 
@@ -22931,6 +24553,19 @@ func (_self *Owner) IsShared() bool {
 	}))
 }
 
+func (_self *Owner) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
 func (_self *Owner) String() string {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
@@ -22939,6 +24574,37 @@ func (_self *Owner) String() string {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_display(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+
+
+func (_self *Owner) Eq(other *Owner) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_eq(
+		_pointer,FfiConverterOwnerINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Owner) Ne(other *Owner) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_eq_ne(
+		_pointer,FfiConverterOwnerINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Owner) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_owner_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -23036,6 +24702,12 @@ func PtbArgumentAddressVecFromHex(addresses []string) (*PtbArgument, error) {
 		} else {
 			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+func PtbArgumentAssigned(name string) *PtbArgument {
+	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_assigned(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
+	}))
 }
 
 func PtbArgumentBool(value bool) *PtbArgument {
@@ -23144,12 +24816,6 @@ func PtbArgumentReceivingFromHex(hex string) (*PtbArgument, error) {
 		} else {
 			return FfiConverterPtbArgumentINSTANCE.Lift(_uniffiRV), nil
 		}
-}
-
-func PtbArgumentRes(name string) *PtbArgument {
-	return FfiConverterPtbArgumentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_ptbargument_res(FfiConverterStringINSTANCE.Lower(name),_uniffiStatus)
-	}))
 }
 
 func PtbArgumentShared(id *ObjectId) *PtbArgument {
@@ -23489,6 +25155,39 @@ func (_self *PasskeyAuthenticator) Signature() *SimpleSignature {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *PasskeyAuthenticator) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *PasskeyAuthenticator) Eq(other *PasskeyAuthenticator) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_eq(
+		_pointer,FfiConverterPasskeyAuthenticatorINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *PasskeyAuthenticator) Ne(other *PasskeyAuthenticator) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeyauthenticator_uniffi_trait_eq_ne(
+		_pointer,FfiConverterPasskeyAuthenticatorINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *PasskeyAuthenticator) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -23610,6 +25309,39 @@ func (_self *PasskeyPublicKey) Inner() *Secp256r1PublicKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *PasskeyPublicKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *PasskeyPublicKey) Eq(other *PasskeyPublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterPasskeyPublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *PasskeyPublicKey) Ne(other *PasskeyPublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyPublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterPasskeyPublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *PasskeyPublicKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -23687,6 +25419,19 @@ func (_self *PasskeyVerifier) Verify(message []byte, authenticator *PasskeyAuthe
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *PasskeyVerifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*PasskeyVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *PasskeyVerifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -23940,6 +25685,39 @@ func (_self *ProgrammableTransaction) Inputs() []*Input {
 	}
 	}))
 }
+
+func (_self *ProgrammableTransaction) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ProgrammableTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ProgrammableTransaction) Eq(other *ProgrammableTransaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ProgrammableTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(
+		_pointer,FfiConverterProgrammableTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ProgrammableTransaction) Ne(other *ProgrammableTransaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ProgrammableTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne(
+		_pointer,FfiConverterProgrammableTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ProgrammableTransaction) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24053,6 +25831,39 @@ func (_self *Publish) Modules() [][]byte {
 	}
 	}))
 }
+
+func (_self *Publish) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Publish")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Publish) Eq(other *Publish) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Publish")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_eq(
+		_pointer,FfiConverterPublishINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Publish) Ne(other *Publish) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Publish")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_ne(
+		_pointer,FfiConverterPublishINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Publish) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24390,6 +26201,39 @@ func (_self *Secp256k1PrivateKey) VerifyingKey() *Secp256k1VerifyingKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Secp256k1PrivateKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Secp256k1PrivateKey) Eq(other *Secp256k1PrivateKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256k1PrivateKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256k1PrivateKey) Ne(other *Secp256k1PrivateKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256k1PrivateKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256k1PrivateKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24562,6 +26406,37 @@ func (_self *Secp256k1PublicKey) ToFlaggedBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Secp256k1PublicKey) Eq(other *Secp256k1PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256k1PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256k1PublicKey) Ne(other *Secp256k1PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256k1PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Secp256k1PublicKey) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1publickey_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256k1PublicKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24682,6 +26557,37 @@ func (_self *Secp256k1Signature) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Secp256k1Signature) Eq(other *Secp256k1Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256k1SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256k1Signature) Ne(other *Secp256k1Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256k1SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Secp256k1Signature) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256k1Signature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24771,6 +26677,19 @@ func (_self *Secp256k1Verifier) VerifyUser(message []byte, signature *UserSignat
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Secp256k1Verifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1Verifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *Secp256k1Verifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -24954,6 +26873,39 @@ func (_self *Secp256k1VerifyingKey) VerifyUser(message []byte, signature *UserSi
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Secp256k1VerifyingKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Secp256k1VerifyingKey) Eq(other *Secp256k1VerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256k1VerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256k1VerifyingKey) Ne(other *Secp256k1VerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256k1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256k1VerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256k1VerifyingKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -25300,6 +27252,39 @@ func (_self *Secp256r1PrivateKey) VerifyingKey() *Secp256r1VerifyingKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Secp256r1PrivateKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Secp256r1PrivateKey) Eq(other *Secp256r1PrivateKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256r1PrivateKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256r1PrivateKey) Ne(other *Secp256r1PrivateKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PrivateKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256r1PrivateKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256r1PrivateKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -25472,6 +27457,37 @@ func (_self *Secp256r1PublicKey) ToFlaggedBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Secp256r1PublicKey) Eq(other *Secp256r1PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256r1PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256r1PublicKey) Ne(other *Secp256r1PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256r1PublicKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Secp256r1PublicKey) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256r1PublicKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -25592,6 +27608,37 @@ func (_self *Secp256r1Signature) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *Secp256r1Signature) Eq(other *Secp256r1Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256r1SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256r1Signature) Ne(other *Secp256r1Signature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256r1SignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Secp256r1Signature) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Signature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256r1Signature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -25681,6 +27728,19 @@ func (_self *Secp256r1Verifier) VerifyUser(message []byte, signature *UserSignat
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Secp256r1Verifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1Verifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *Secp256r1Verifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -25864,6 +27924,39 @@ func (_self *Secp256r1VerifyingKey) VerifyUser(message []byte, signature *UserSi
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *Secp256r1VerifyingKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Secp256r1VerifyingKey) Eq(other *Secp256r1VerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSecp256r1VerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Secp256r1VerifyingKey) Ne(other *Secp256r1VerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSecp256r1VerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Secp256r1VerifyingKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -26173,6 +28266,19 @@ func (_self *SimpleKeypair) VerifyingKey() *SimpleVerifyingKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *SimpleKeypair) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleKeypair")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *SimpleKeypair) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -26481,6 +28587,50 @@ func (_self *SimpleSignature) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *SimpleSignature) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *SimpleSignature) Eq(other *SimpleSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSimpleSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *SimpleSignature) Ne(other *SimpleSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSimpleSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *SimpleSignature) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *SimpleSignature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -26719,6 +28869,39 @@ func (_self *SimpleVerifyingKey) Verify(message []byte, signature *SimpleSignatu
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *SimpleVerifyingKey) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleVerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *SimpleVerifyingKey) Eq(other *SimpleVerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleVerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSimpleVerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *SimpleVerifyingKey) Ne(other *SimpleVerifyingKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SimpleVerifyingKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSimpleVerifyingKeyINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *SimpleVerifyingKey) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -26828,6 +29011,39 @@ func (_self *SplitCoins) Coin() *Argument {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *SplitCoins) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*SplitCoins")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *SplitCoins) Eq(other *SplitCoins) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SplitCoins")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSplitCoinsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *SplitCoins) Ne(other *SplitCoins) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SplitCoins")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSplitCoinsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *SplitCoins) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -27208,6 +29424,19 @@ func (_self *StructTag) TypeArgs() []*TypeTag {
 	}))
 }
 
+func (_self *StructTag) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
 func (_self *StructTag) String() string {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
@@ -27236,6 +29465,17 @@ func (_self *StructTag) Ne(other *StructTag) bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_ne(
 		_pointer,FfiConverterStructTagINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *StructTag) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -27361,6 +29601,39 @@ func (_self *SystemPackage) Version() uint64 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *SystemPackage) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *SystemPackage) Eq(other *SystemPackage) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(
+		_pointer,FfiConverterSystemPackageINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *SystemPackage) Ne(other *SystemPackage) bool {
+	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_ne(
+		_pointer,FfiConverterSystemPackageINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *SystemPackage) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -27568,6 +29841,39 @@ func (_self *Transaction) ToBase64() string {
 	}
 	}))
 }
+
+func (_self *Transaction) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Transaction) Eq(other *Transaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Transaction) Ne(other *Transaction) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Transaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_ne(
+		_pointer,FfiConverterTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Transaction) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -28014,6 +30320,19 @@ func (_self *TransactionBuilder) WithClient(client *GraphQlClient) *ClientTransa
 		_pointer,FfiConverterGraphQlClientINSTANCE.Lower(client),_uniffiStatus)
 	}))
 }
+
+func (_self *TransactionBuilder) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *TransactionBuilder) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -28132,6 +30451,39 @@ func (_self *TransactionEffects) IsV1() bool {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *TransactionEffects) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionEffects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *TransactionEffects) Eq(other *TransactionEffects) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionEffects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(
+		_pointer,FfiConverterTransactionEffectsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionEffects) Ne(other *TransactionEffects) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionEffects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_ne(
+		_pointer,FfiConverterTransactionEffectsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *TransactionEffects) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -28363,6 +30715,39 @@ func TransactionKindNewProgrammableTransaction(tx *ProgrammableTransaction) *Tra
 func TransactionKindNewRandomnessStateUpdate(tx RandomnessStateUpdate) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(FfiConverterRandomnessStateUpdateINSTANCE.Lower(tx),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *TransactionKind) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *TransactionKind) Eq(other *TransactionKind) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
+		_pointer,FfiConverterTransactionKindINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionKind) Ne(other *TransactionKind) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne(
+		_pointer,FfiConverterTransactionKindINSTANCE.Lower(other),_uniffiStatus)
 	}))
 }
 
@@ -28924,6 +31309,39 @@ func (_self *TransactionV1) ToBase64() string {
 	}
 	}))
 }
+
+func (_self *TransactionV1) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *TransactionV1) Eq(other *TransactionV1) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
+		_pointer,FfiConverterTransactionV1INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *TransactionV1) Ne(other *TransactionV1) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_ne(
+		_pointer,FfiConverterTransactionV1INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *TransactionV1) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -29033,6 +31451,39 @@ func (_self *TransferObjects) Objects() []*Argument {
 	}
 	}))
 }
+
+func (_self *TransferObjects) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*TransferObjects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *TransferObjects) Eq(other *TransferObjects) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransferObjects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
+		_pointer,FfiConverterTransferObjectsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *TransferObjects) Ne(other *TransferObjects) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TransferObjects")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_ne(
+		_pointer,FfiConverterTransferObjectsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *TransferObjects) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -29392,6 +31843,19 @@ func (_self *TypeTag) ToCanonicalString(withPrefix bool) string {
 	}))
 }
 
+func (_self *TypeTag) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
 func (_self *TypeTag) String() string {
 	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
 	defer _self.ffiObject.decrementPointer()
@@ -29400,6 +31864,37 @@ func (_self *TypeTag) String() string {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
 		_pointer,_uniffiStatus),
 	}
+	}))
+}
+
+
+
+func (_self *TypeTag) Eq(other *TypeTag) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
+		_pointer,FfiConverterTypeTagINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *TypeTag) Ne(other *TypeTag) bool {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_ne(
+		_pointer,FfiConverterTypeTagINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *TypeTag) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*TypeTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -29545,6 +32040,39 @@ func (_self *Upgrade) Ticket() *Argument {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *Upgrade) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Upgrade")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Upgrade) Eq(other *Upgrade) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Upgrade")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
+		_pointer,FfiConverterUpgradeINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Upgrade) Ne(other *Upgrade) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Upgrade")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_ne(
+		_pointer,FfiConverterUpgradeINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *Upgrade) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -29645,6 +32173,19 @@ func (_self *UpgradePolicy) AsU8() uint8 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *UpgradePolicy) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 
 func (_self *UpgradePolicy) String() string {
 	_pointer := _self.ffiObject.incrementPointer("*UpgradePolicy")
@@ -30028,6 +32569,39 @@ func (_self *UserSignature) ToBytes() []byte {
 	}
 	}))
 }
+
+func (_self *UserSignature) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *UserSignature) Eq(other *UserSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterUserSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *UserSignature) Ne(other *UserSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterUserSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *UserSignature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30129,6 +32703,19 @@ func (_self *UserSignatureVerifier) ZkloginVerifier() **ZkloginVerifier {
 	}
 	}))
 }
+
+func (_self *UserSignatureVerifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*UserSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *UserSignatureVerifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30272,6 +32859,19 @@ func (_self *ValidatorAggregatedSignature) Signature() *Bls12381Signature {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ValidatorAggregatedSignature) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *ValidatorAggregatedSignature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30384,6 +32984,19 @@ func (_self *ValidatorCommitteeSignatureAggregator) Finish() (*ValidatorAggregat
 			return FfiConverterValidatorAggregatedSignatureINSTANCE.Lift(_uniffiRV), nil
 		}
 }
+
+func (_self *ValidatorCommitteeSignatureAggregator) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureAggregator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *ValidatorCommitteeSignatureAggregator) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30503,6 +33116,19 @@ func (_self *ValidatorCommitteeSignatureVerifier) VerifyCheckpointSummary(summar
 	})
 		return _uniffiErr.AsError()
 }
+
+func (_self *ValidatorCommitteeSignatureVerifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *ValidatorCommitteeSignatureVerifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30612,6 +33238,50 @@ func (_self *ValidatorExecutionTimeObservation) Validator() *Bls12381PublicKey {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ValidatorExecutionTimeObservation) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ValidatorExecutionTimeObservation) Eq(other *ValidatorExecutionTimeObservation) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
+		_pointer,FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ValidatorExecutionTimeObservation) Ne(other *ValidatorExecutionTimeObservation) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_ne(
+		_pointer,FfiConverterValidatorExecutionTimeObservationINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ValidatorExecutionTimeObservation) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
 func (object *ValidatorExecutionTimeObservation) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30729,6 +33399,39 @@ func (_self *ValidatorSignature) Signature() *Bls12381Signature {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ValidatorSignature) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ValidatorSignature) Eq(other *ValidatorSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
+		_pointer,FfiConverterValidatorSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ValidatorSignature) Ne(other *ValidatorSignature) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ValidatorSignature")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne(
+		_pointer,FfiConverterValidatorSignatureINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ValidatorSignature) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30832,6 +33535,39 @@ func (_self *VersionAssignment) Version() uint64 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *VersionAssignment) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*VersionAssignment")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *VersionAssignment) Eq(other *VersionAssignment) bool {
+	_pointer := _self.ffiObject.incrementPointer("*VersionAssignment")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
+		_pointer,FfiConverterVersionAssignmentINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *VersionAssignment) Ne(other *VersionAssignment) bool {
+	_pointer := _self.ffiObject.incrementPointer("*VersionAssignment")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_ne(
+		_pointer,FfiConverterVersionAssignmentINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *VersionAssignment) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -30965,6 +33701,39 @@ func (_self *ZkLoginAuthenticator) Signature() *SimpleSignature {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ZkLoginAuthenticator) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ZkLoginAuthenticator) Eq(other *ZkLoginAuthenticator) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
+		_pointer,FfiConverterZkLoginAuthenticatorINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ZkLoginAuthenticator) Ne(other *ZkLoginAuthenticator) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginAuthenticator")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_ne(
+		_pointer,FfiConverterZkLoginAuthenticatorINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ZkLoginAuthenticator) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -31140,6 +33909,39 @@ func (_self *ZkLoginInputs) PublicIdentifier() *ZkLoginPublicIdentifier {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ZkLoginInputs) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ZkLoginInputs) Eq(other *ZkLoginInputs) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
+		_pointer,FfiConverterZkLoginInputsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ZkLoginInputs) Ne(other *ZkLoginInputs) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginInputs")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_ne(
+		_pointer,FfiConverterZkLoginInputsINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ZkLoginInputs) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -31253,6 +34055,39 @@ func (_self *ZkLoginProof) C() *CircomG1 {
 		_pointer,_uniffiStatus)
 	}))
 }
+
+func (_self *ZkLoginProof) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ZkLoginProof) Eq(other *ZkLoginProof) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
+		_pointer,FfiConverterZkLoginProofINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ZkLoginProof) Ne(other *ZkLoginProof) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginProof")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_ne(
+		_pointer,FfiConverterZkLoginProofINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ZkLoginProof) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -31518,6 +34353,39 @@ func (_self *ZkLoginPublicIdentifier) Iss() string {
 	}
 	}))
 }
+
+func (_self *ZkLoginPublicIdentifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ZkLoginPublicIdentifier) Eq(other *ZkLoginPublicIdentifier) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
+		_pointer,FfiConverterZkLoginPublicIdentifierINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ZkLoginPublicIdentifier) Ne(other *ZkLoginPublicIdentifier) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(
+		_pointer,FfiConverterZkLoginPublicIdentifierINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *ZkLoginPublicIdentifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -31626,6 +34494,19 @@ func (_self *ZkloginVerifier) WithJwks(jwks map[JwkId]Jwk) *ZkloginVerifier {
 		_pointer,FfiConverterMapJwkIdJwkINSTANCE.Lower(jwks),_uniffiStatus)
 	}))
 }
+
+func (_self *ZkloginVerifier) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ZkloginVerifier")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
 func (object *ZkloginVerifier) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -38034,21 +40915,21 @@ func (e TransactionArgumentGasCoin) Destroy() {
 }
 // An input to the programmable transaction block.
 type TransactionArgumentInput struct {
-	Ix uint32
+	Index uint32
 }
 
 func (e TransactionArgumentInput) Destroy() {
-		FfiDestroyerUint32{}.Destroy(e.Ix);
+		FfiDestroyerUint32{}.Destroy(e.Index);
 }
 // The result of another transaction command.
 type TransactionArgumentResult struct {
 	Cmd uint32
-	Ix *uint32
+	Index *uint32
 }
 
 func (e TransactionArgumentResult) Destroy() {
 		FfiDestroyerUint32{}.Destroy(e.Cmd);
-		FfiDestroyerOptionalUint32{}.Destroy(e.Ix);
+		FfiDestroyerOptionalUint32{}.Destroy(e.Index);
 }
 
 type FfiConverterTransactionArgument struct {}
@@ -38088,11 +40969,11 @@ func (FfiConverterTransactionArgument) Write(writer io.Writer, value Transaction
 			writeInt32(writer, 1)
 		case TransactionArgumentInput:
 			writeInt32(writer, 2)
-			FfiConverterUint32INSTANCE.Write(writer, variant_value.Ix)
+			FfiConverterUint32INSTANCE.Write(writer, variant_value.Index)
 		case TransactionArgumentResult:
 			writeInt32(writer, 3)
 			FfiConverterUint32INSTANCE.Write(writer, variant_value.Cmd)
-			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Ix)
+			FfiConverterOptionalUint32INSTANCE.Write(writer, variant_value.Index)
 		default:
 			_ = variant_value
 			panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTransactionArgument.Write", value))

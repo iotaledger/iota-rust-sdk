@@ -26,9 +26,9 @@ async def main():
     ).transfer_objects(
         sender,
         [
-            PtbArgument.res("coin1"),
-            PtbArgument.res("coin2"),
-            PtbArgument.res("coin3"),
+            PtbArgument.assigned("coin1"),
+            PtbArgument.assigned("coin2"),
+            PtbArgument.assigned("coin3"),
         ],
     )
 

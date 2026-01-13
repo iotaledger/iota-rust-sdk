@@ -21,8 +21,8 @@ use crate::{
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct Identifier(pub iota_sdk::types::Identifier);
 
 #[uniffi::export]
@@ -85,8 +85,8 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
-#[uniffi::export(Display, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
 
 #[uniffi::export]

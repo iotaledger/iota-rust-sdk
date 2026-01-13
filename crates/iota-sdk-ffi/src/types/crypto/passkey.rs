@@ -30,7 +30,8 @@ use crate::types::{address::Address, crypto::Secp256r1PublicKey, signature::Simp
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct PasskeyAuthenticator(pub iota_sdk::types::PasskeyAuthenticator);
 
 #[uniffi::export]
@@ -81,7 +82,8 @@ impl PasskeyAuthenticator {
 /// ```text
 /// passkey-public-key = passkey-flag secp256r1-public-key
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct PasskeyPublicKey(iota_sdk::types::PasskeyPublicKey);
 
 #[uniffi::export]

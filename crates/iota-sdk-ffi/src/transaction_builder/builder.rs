@@ -27,7 +27,8 @@ use crate::{
 
 /// A builder for creating transactions. Use `finish` to finalize the
 /// transaction data.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct TransactionBuilder(RwLock<iota_sdk::transaction_builder::TransactionBuilder<()>>);
 
 impl TransactionBuilder {
@@ -148,7 +149,7 @@ impl TransactionBuilder {
                 .move_call(**package, &module.as_str(), &function.as_str())
                 .arguments(arguments)
                 .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .name(names);
+                .assign(names);
         });
         self
     }
@@ -215,7 +216,7 @@ impl TransactionBuilder {
         names: Vec<String>,
     ) -> Arc<Self> {
         self.write(|builder| {
-            builder.split_coins(coin, amounts).name(names);
+            builder.split_coins(coin, amounts).assign(names);
         });
         self
     }
@@ -254,7 +255,7 @@ impl TransactionBuilder {
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
             });
-            builder.named_command(cmd, name);
+            builder.assigned_command(cmd, name);
         });
         self
     }
@@ -307,7 +308,7 @@ impl TransactionBuilder {
         self.write(|builder| {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
-                .name(name);
+                .assign(name);
         });
         self
     }

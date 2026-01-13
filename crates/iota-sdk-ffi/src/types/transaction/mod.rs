@@ -37,7 +37,8 @@ pub mod v1;
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(Clone, uniffi::Object, derive_more::From)]
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Transaction(pub iota_sdk::types::Transaction);
 
 #[uniffi::export]
@@ -109,7 +110,8 @@ impl Transaction {
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct TransactionV1(pub iota_sdk::types::TransactionV1);
 
 #[uniffi::export]
@@ -217,7 +219,8 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///                     =/ %x07 consensus-commit-prologue-v2
 ///                     =/ %x08 consensus-commit-prologue-v3
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 
 #[uniffi::export]
@@ -273,7 +276,8 @@ impl TransactionKind {
 /// ```text
 /// ptb = (vector input) (vector command)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ProgrammableTransaction(pub iota_sdk::types::ProgrammableTransaction);
 
 #[uniffi::export]
@@ -324,7 +328,8 @@ impl ProgrammableTransaction {
 /// input-shared                = %x02 object-id u64 bool
 /// input-receiving             = %x04 object-ref
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Input(pub iota_sdk::types::Input);
 
 #[uniffi::export]
@@ -381,7 +386,8 @@ impl Input {
 /// command-make-move-vector    = %x05 make-move-vector
 /// command-upgrade             = %x06 upgrade
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Command(pub iota_sdk::types::Command);
 
 #[uniffi::export]
@@ -453,7 +459,8 @@ impl Command {
 /// ```text
 /// transfer-objects = (vector argument) argument
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct TransferObjects(pub iota_sdk::types::TransferObjects);
 
 #[uniffi::export]
@@ -492,7 +499,8 @@ impl TransferObjects {
 /// ```text
 /// split-coins = argument (vector argument)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct SplitCoins(pub iota_sdk::types::SplitCoins);
 
 #[uniffi::export]
@@ -531,7 +539,8 @@ impl SplitCoins {
 /// ```text
 /// merge-coins = argument (vector argument)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MergeCoins(pub iota_sdk::types::MergeCoins);
 
 #[uniffi::export]
@@ -573,7 +582,8 @@ impl MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Publish(pub iota_sdk::types::Publish);
 
 #[uniffi::export]
@@ -612,7 +622,8 @@ impl Publish {
 /// ```text
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MakeMoveVector(pub iota_sdk::types::MakeMoveVector);
 
 #[uniffi::export]
@@ -657,7 +668,8 @@ impl MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Upgrade(pub iota_sdk::types::Upgrade);
 
 #[uniffi::export]
@@ -714,7 +726,8 @@ impl Upgrade {
 /// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
 ///                                consensus-determined-version-assignments
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ConsensusCommitPrologueV1(pub iota_sdk::types::ConsensusCommitPrologueV1);
 
 #[uniffi::export]
@@ -777,7 +790,8 @@ impl ConsensusCommitPrologueV1 {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ConsensusDeterminedVersionAssignments(
     pub iota_sdk::types::ConsensusDeterminedVersionAssignments,
 );
@@ -822,7 +836,8 @@ impl ConsensusDeterminedVersionAssignments {
 /// ```text
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct CancelledTransaction(pub iota_sdk::types::CancelledTransaction);
 
 #[uniffi::export]
@@ -862,7 +877,8 @@ impl CancelledTransaction {
 /// ```text
 /// version-assignment = object-id u64
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct VersionAssignment(iota_sdk::types::VersionAssignment);
 
 #[uniffi::export]
@@ -893,7 +909,8 @@ impl VersionAssignment {
 /// ```text
 /// genesis-transaction = (vector genesis-object)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct GenesisTransaction(iota_sdk::types::GenesisTransaction);
 
 #[uniffi::export]
@@ -937,7 +954,8 @@ impl GenesisTransaction {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ChangeEpoch(pub iota_sdk::types::ChangeEpoch);
 
 #[uniffi::export]
@@ -1028,7 +1046,8 @@ impl ChangeEpoch {
 ///                  (vector bytes)     ; modules
 ///                  (vector object-id) ; dependencies
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct SystemPackage(pub iota_sdk::types::SystemPackage);
 
 #[uniffi::export]
@@ -1078,7 +1097,8 @@ impl SystemPackage {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ChangeEpochV2(pub iota_sdk::types::ChangeEpochV2);
 
 #[uniffi::export]
@@ -1165,7 +1185,8 @@ impl ChangeEpochV2 {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ChangeEpochV3(pub iota_sdk::types::ChangeEpochV3);
 
 #[uniffi::export]
@@ -1443,7 +1464,8 @@ pub struct ActiveJwk {
 ///                                          (vec execution-time-observation)
 ///                                         )
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq, Hash)]
 pub struct ExecutionTimeObservations(pub iota_sdk::types::ExecutionTimeObservations);
 
 #[uniffi::export]
@@ -1459,7 +1481,8 @@ impl ExecutionTimeObservations {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq, Hash)]
 pub struct ExecutionTimeObservation(pub iota_sdk::types::ExecutionTimeObservation);
 
 #[uniffi::export]
@@ -1501,7 +1524,8 @@ impl ExecutionTimeObservation {
 /// duration =  u64 ; seconds
 ///             u32 ; subsecond nanoseconds
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq, Hash)]
 pub struct ValidatorExecutionTimeObservation(iota_sdk::types::ValidatorExecutionTimeObservation);
 
 #[uniffi::export]
@@ -1540,7 +1564,8 @@ impl ValidatorExecutionTimeObservation {
 ///
 /// move-entry-point = object-id string string (vec type-tag)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq, Hash)]
 pub struct ExecutionTimeObservationKey(iota_sdk::types::ExecutionTimeObservationKey);
 
 #[uniffi::export]
@@ -1642,7 +1667,8 @@ pub struct RandomnessStateUpdate {
 /// eoe-bridge-committee-init       = %x06 u64
 /// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct EndOfEpochTransactionKind(pub iota_sdk::types::EndOfEpochTransactionKind);
 
 #[uniffi::export]
@@ -1744,7 +1770,8 @@ impl From<GasPayment> for iota_sdk::types::GasPayment {
 /// transaction-effects =  %x00 effects-v1
 ///                     =/ %x01 effects-v2
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct TransactionEffects(pub iota_sdk::types::TransactionEffects);
 
 #[uniffi::export]
@@ -1766,185 +1793,6 @@ impl TransactionEffects {
 
     pub fn digest(&self) -> Digest {
         self.0.digest().into()
-    }
-}
-
-/// A transaction argument used in programmable transactions.
-#[derive(uniffi::Enum)]
-pub enum TransactionArgument {
-    /// Reference to the gas coin.
-    GasCoin,
-    /// An input to the programmable transaction block.
-    Input {
-        /// Index of the programmable transaction block input (0-indexed).
-        ix: u32,
-    },
-    /// The result of another transaction command.
-    Result {
-        /// The index of the previous command (0-indexed) that returned this
-        /// result.
-        cmd: u32,
-        /// If the previous command returns multiple values, this is the index
-        /// of the individual result among the multiple results from
-        /// that command (also 0-indexed).
-        ix: Option<u32>,
-    },
-}
-
-impl From<iota_sdk::types::TransactionArgument> for TransactionArgument {
-    fn from(value: iota_sdk::types::TransactionArgument) -> Self {
-        match value {
-            iota_sdk::types::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
-            iota_sdk::types::TransactionArgument::Input { ix } => TransactionArgument::Input { ix },
-            iota_sdk::types::TransactionArgument::Result { cmd, ix } => {
-                TransactionArgument::Result { cmd, ix }
-            }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
-        }
-    }
-}
-
-impl From<TransactionArgument> for iota_sdk::types::TransactionArgument {
-    fn from(value: TransactionArgument) -> Self {
-        match value {
-            TransactionArgument::GasCoin => iota_sdk::types::TransactionArgument::GasCoin,
-            TransactionArgument::Input { ix } => iota_sdk::types::TransactionArgument::Input { ix },
-            TransactionArgument::Result { cmd, ix } => {
-                iota_sdk::types::TransactionArgument::Result { cmd, ix }
-            }
-        }
-    }
-}
-
-/// A return value from a command in the dry run.
-#[derive(uniffi::Record)]
-pub struct DryRunReturn {
-    /// The Move type of the return value.
-    pub type_tag: Arc<TypeTag>,
-    /// The BCS representation of the return value.
-    pub bcs: Vec<u8>,
-}
-
-impl From<iota_sdk::types::DryRunReturn> for DryRunReturn {
-    fn from(value: iota_sdk::types::DryRunReturn) -> Self {
-        DryRunReturn {
-            type_tag: Arc::new(value.type_tag.into()),
-            bcs: value.bcs,
-        }
-    }
-}
-
-impl From<DryRunReturn> for iota_sdk::types::DryRunReturn {
-    fn from(value: DryRunReturn) -> Self {
-        iota_sdk::types::DryRunReturn {
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
-/// A mutation to an argument that was mutably borrowed by a command.
-#[derive(uniffi::Record)]
-pub struct DryRunMutation {
-    /// The transaction argument that was mutated.
-    pub input: TransactionArgument,
-    /// The Move type of the mutated value.
-    pub type_tag: Arc<TypeTag>,
-    /// The BCS representation of the mutated value.
-    pub bcs: Vec<u8>,
-}
-
-impl From<iota_sdk::types::DryRunMutation> for DryRunMutation {
-    fn from(value: iota_sdk::types::DryRunMutation) -> Self {
-        DryRunMutation {
-            input: value.input.into(),
-            type_tag: Arc::new(value.type_tag.into()),
-            bcs: value.bcs,
-        }
-    }
-}
-
-impl From<DryRunMutation> for iota_sdk::types::DryRunMutation {
-    fn from(value: DryRunMutation) -> Self {
-        iota_sdk::types::DryRunMutation {
-            input: value.input.into(),
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
-/// Effects of a single command in the dry run, including mutated references
-/// and return values.
-#[derive(uniffi::Record)]
-pub struct DryRunEffect {
-    /// Changes made to arguments that were mutably borrowed by this command.
-    pub mutated_references: Vec<DryRunMutation>,
-    /// Return results of this command.
-    pub return_values: Vec<DryRunReturn>,
-}
-
-impl From<iota_sdk::types::DryRunEffect> for DryRunEffect {
-    fn from(value: iota_sdk::types::DryRunEffect) -> Self {
-        DryRunEffect {
-            mutated_references: value
-                .mutated_references
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            return_values: value.return_values.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
-impl From<DryRunEffect> for iota_sdk::types::DryRunEffect {
-    fn from(value: DryRunEffect) -> Self {
-        iota_sdk::types::DryRunEffect {
-            mutated_references: value
-                .mutated_references
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            return_values: value.return_values.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
-/// The result of a simulation (dry run), which includes the effects of the
-/// transaction, any errors that may have occurred, and intermediate results for
-/// each command.
-#[derive(uniffi::Record)]
-pub struct DryRunResult {
-    /// The error that occurred during dry run execution, if any.
-    pub error: Option<String>,
-    /// The intermediate results for each command of the dry run execution,
-    /// including contents of mutated references and return values.
-    pub results: Vec<DryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
-    /// The effects of the transaction execution.
-    pub effects: Option<Arc<TransactionEffects>>,
-}
-
-impl From<iota_sdk::types::DryRunResult> for DryRunResult {
-    fn from(value: iota_sdk::types::DryRunResult) -> Self {
-        DryRunResult {
-            error: value.error,
-            results: value.results.into_iter().map(Into::into).collect(),
-            transaction: value.transaction.map(Into::into),
-            effects: value.effects.map(Into::into).map(Arc::new),
-        }
-    }
-}
-
-impl From<DryRunResult> for iota_sdk::types::DryRunResult {
-    fn from(value: DryRunResult) -> Self {
-        iota_sdk::types::DryRunResult {
-            error: value.error,
-            results: value.results.into_iter().map(Into::into).collect(),
-            transaction: value.transaction.map(Into::into),
-            effects: value.effects.map(|v| v.0.clone()),
-        }
     }
 }
 
@@ -1985,7 +1833,8 @@ pub enum TransactionExpiration {
 /// argument-result         = %x02 u16
 /// argument-nested-result  = %x03 u16 u16
 /// ```
-#[derive(derive_more::Deref, derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::Deref, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Argument(iota_sdk::types::Argument);
 
 #[uniffi::export]
@@ -2046,7 +1895,8 @@ impl Argument {
 ///             (vector type-tag)   ; type arguments, if any
 ///             (vector argument)   ; input arguments
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MoveCall(iota_sdk::types::MoveCall);
 
 #[uniffi::export]

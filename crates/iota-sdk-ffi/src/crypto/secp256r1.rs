@@ -16,7 +16,8 @@ use crate::{
     },
 };
 
-#[derive(Debug, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Secp256r1PrivateKey(pub iota_sdk::crypto::secp256r1::Secp256r1PrivateKey);
 
 #[uniffi::export]
@@ -162,7 +163,8 @@ impl Secp256r1PrivateKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Secp256r1VerifyingKey(pub iota_sdk::crypto::secp256r1::Secp256r1VerifyingKey);
 
 #[uniffi::export]
@@ -219,7 +221,8 @@ impl Secp256r1VerifyingKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Secp256r1Verifier(pub iota_sdk::crypto::secp256r1::Secp256r1Verifier);
 
 #[uniffi::export]

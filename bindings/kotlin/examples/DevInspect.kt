@@ -56,7 +56,7 @@ fun main() = runBlocking {
             iotaNamesPackageAddress,
             Identifier("registry"),
             Identifier("lookup"),
-            listOf(PtbArgument.res("iota_names"), PtbArgument.res("name")),
+            listOf(PtbArgument.assigned("iota_names"), PtbArgument.assigned("name")),
             emptyList(),
             listOf("name_record_opt"),
         )
@@ -66,7 +66,7 @@ fun main() = runBlocking {
             stdAddress,
             Identifier("option"),
             Identifier("borrow"),
-            listOf(PtbArgument.res("name_record_opt")),
+            listOf(PtbArgument.assigned("name_record_opt")),
             listOf(
                 TypeTag.newStruct(
                     StructTag(
@@ -84,7 +84,7 @@ fun main() = runBlocking {
             iotaNamesPackageAddress,
             Identifier("name_record"),
             Identifier("target_address"),
-            listOf(PtbArgument.res("name_record")),
+            listOf(PtbArgument.assigned("name_record")),
             emptyList(),
             listOf("target_address_opt"),
         )
@@ -94,7 +94,7 @@ fun main() = runBlocking {
             stdAddress,
             Identifier("option"),
             Identifier("borrow"),
-            listOf(PtbArgument.res("target_address_opt")),
+            listOf(PtbArgument.assigned("target_address_opt")),
             listOf(TypeTag.newAddress()),
             listOf("target_address"),
         )
