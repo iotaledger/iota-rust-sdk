@@ -246,7 +246,7 @@ kotlin-release-example: ## Run the Kotlin release example
 .PHONY: python-release-example
 python-release-example: ## Run the Python release example
 	@printf "\nRunning Python release example\n"
-	@cd bindings/python/examples/release && uv venv && uv pip install --pre -r requirements.txt && uv run python example.py || exit $$?;
+	@cd bindings/python/examples/release && python -m venv .venv && . .venv/bin/activate && pip install --pre --upgrade -r requirements.txt && python example.py || exit $$?;
 
 .PHONY: release-examples
 release-examples: ## Run all release examples
