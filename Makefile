@@ -151,17 +151,17 @@ go-example:
 
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
-	@for example in $$(find bindings/go/examples/* -type d -exec basename {} \;); do \
+	@for example in $$(find bindings/go/examples/* -type d -not -name release -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
 
 .PHONY: go-examples-format-check
 go-examples-format-check: ## Check format of all Go bindings examples
-	@test -z "$$(gofmt -l bindings/go/examples)"
+	@test -z "$$(find bindings/go/examples -name "*.go" -not -path "*/release/*" -exec gofmt -l {} \;)"
 
 .PHONY: go-examples-format
 go-examples-format: ## Format all Go bindings examples
-	@gofmt -w bindings/go/examples
+	@find bindings/go/examples -name "*.go" -not -path "*/release/*" -exec gofmt -w {} \;
 
 .PHONY: kotlin-example
 kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
@@ -176,20 +176,20 @@ kotlin-example:
 
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
-	@for example in $$(find bindings/kotlin/examples -name "*.kt" -exec basename {} .kt \;); do \
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
 .PHONY: kotlin-examples-format-check
 kotlin-examples-format-check: ## Check format of all Kotlin bindings examples
 	cd bindings/kotlin; \
-	./gradlew KtfmtCheck || exit $$?; \
+	find examples -name "*.kt" -not -path "*/release/*" -exec ./gradlew KtfmtCheck --files {} \; || exit $$?; \
 	cd -
 
 .PHONY: kotlin-examples-format
 kotlin-examples-format: ## Format all Kotlin bindings examples
 	cd bindings/kotlin; \
-	./gradlew KtfmtFormat; \
+	find examples -name "*.kt" -not -path "*/release/*" -exec ./gradlew KtfmtFormat --files {} \; ; \
 	cd -
 
 .PHONY: python-example
@@ -202,17 +202,17 @@ python-example:
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
-	@for example in $$(find bindings/python/examples -name "*.py" -exec basename {} .py \;); do \
+	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -exec basename {} .py \;); do \
 		$(MAKE) python-example "$$example" || exit $$?; \
 	done
 
 .PHONY: python-examples-format-check
 python-examples-format-check: ## Check format of all Python bindings examples
-	@yapf --style google -d bindings/python/examples/* --recursive
+	@yapf --style google -d $$(find bindings/python/examples -name "*.py" -not -path "*/release/*") --recursive
 
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
-	@yapf --style google -i bindings/python/examples/* --recursive
+	@yapf --style google -i $$(find bindings/python/examples -name "*.py" -not -path "*/release/*") --recursive
 
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
@@ -224,11 +224,33 @@ example:
 
 .PHONY: examples
 examples: ## Run all Rust examples
-	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -exec basename {} .rs \;); do \
+	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -not -path "*/release/*" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
-.PHONY: help
-help: ## Show this help
-	@printf "Available targets:\n"
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+.PHONY: rust-release-example
+rust-release-example: ## Run the Rust release example
+	@printf "\nRunning Rust release example\n"
+	@cd crates/iota-sdk/examples/release && cargo run || exit $$?
+
+.PHONY: go-release-example
+go-release-example: ## Run the Go release example
+	@printf "\nRunning Go release example\n"
+	@cd bindings/go/examples/release && go get github.com/iotaledger/iota-sdk-go && go run main.go || exit $$?
+
+.PHONY: kotlin-release-example
+kotlin-release-example: ## Run the Kotlin release example
+	@printf "\nRunning Kotlin release example\n"
+	@cd bindings/kotlin/examples/release && gradle run || exit $$?
+
+.PHONY: python-release-example
+python-release-example: ## Run the Python release example
+	@printf "\nRunning Python release example\n"
+	@cd bindings/python/examples/release && uv venv && uv pip install --pre -r requirements.txt && uv run python example.py || exit $$?;
+
+.PHONY: release-examples
+release-examples: ## Run all release examples
+	@$(MAKE) rust-release-example
+	@$(MAKE) go-release-example
+	@$(MAKE) kotlin-release-example
+	@$(MAKE) python-release-example

@@ -69,6 +69,9 @@ jobs:
       - name: Run examples
         run: make examples
 
+      - name: Run release example
+        run: make rust-release-example
+
   doctests:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest

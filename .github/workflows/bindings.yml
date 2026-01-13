@@ -46,6 +46,8 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make go-examples
+      - name: Run the release example
+        run: make go-release-example
 
   kotlin:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
@@ -67,6 +69,8 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make kotlin-examples
+      - name: Run the release example
+        run: make kotlin-release-example
 
   python:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
@@ -86,3 +90,5 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make python-examples
+      - name: Run the release example
+        run: make python-release-example
