@@ -1,10 +1,13 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
 	"fmt"
 	"log"
 
-	"github.com/iotaledger/iota-sdk-go"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
