@@ -2303,6 +2303,83 @@ void* uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(RustBuffer object_r
 void* uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(void* object_id, uint64_t initial_shared_version, int8_t mutable, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_INTENT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_INTENT
+void* uniffi_iota_sdk_ffi_fn_clone_intent(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_INTENT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_INTENT
+void uniffi_iota_sdk_ffi_fn_free_intent(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_CONSENSUS_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_CONSENSUS_APP
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(RustBuffer scope, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_IOTA_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_IOTA_APP
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(RustBuffer scope, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_IOTA_TRANSACTION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_IOTA_TRANSACTION
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_new(RustBuffer scope, RustBuffer version, RustBuffer app_id, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_PERSONAL_MESSAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_PERSONAL_MESSAGE
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_APP_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_APP_ID
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_app_id(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_SCOPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_SCOPE
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_scope(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_TO_BYTES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_to_bytes(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_VERSION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_VERSION
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_version(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_DEBUG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_DEBUG
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_HASH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_HASH
+uint64_t uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
 void* uniffi_iota_sdk_ffi_fn_clone_makemovevector(void* ptr, RustCallStatus *out_status
@@ -3749,6 +3826,21 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(void* pt
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_SIGNING_DIGEST_HEX
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_SIGNING_DIGEST_HEX
 RustBuffer uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_UNIFFI_TRAIT_DEBUG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_UNIFFI_TRAIT_DEBUG
+RustBuffer uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_PERSONALMESSAGE_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_PROGRAMMABLETRANSACTION
@@ -6571,6 +6663,22 @@ void* uniffi_iota_sdk_ffi_fn_func_input_from_bcs(RustBuffer bcs, RustCallStatus 
 RustBuffer uniffi_iota_sdk_ffi_fn_func_input_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_BYTES
+void* uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(RustBuffer bytes, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_HEX_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_HEX_STRING
+void* uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(RustBuffer hex, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_PREFIX_LENGTH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_PREFIX_LENGTH
+uint64_t uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(RustBuffer bcs, RustCallStatus *out_status
@@ -8056,6 +8164,24 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_HEX_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_HEX_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_PREFIX_LENGTH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_PREFIX_LENGTH
+uint16_t uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length(void
     
 );
 #endif
@@ -10048,6 +10174,30 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_IDENTIFIER_AS_STR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_IDENTIFIER_AS_STR
 uint16_t uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_APP_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_APP_ID
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_app_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_SCOPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_SCOPE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_scope(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_TO_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_VERSION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_VERSION
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_version(void
     
 );
 #endif
@@ -12754,6 +12904,36 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_CONSENSUS_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_CONSENSUS_APP
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_IOTA_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_IOTA_APP
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_IOTA_TRANSACTION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_IOTA_TRANSACTION
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_PERSONAL_MESSAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_PERSONAL_MESSAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message(void
     
 );
 #endif

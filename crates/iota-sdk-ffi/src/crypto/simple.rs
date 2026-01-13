@@ -11,7 +11,10 @@ use crate::{
         ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
     },
     error::Result,
-    types::{crypto::multisig::MultisigMemberPublicKey, signature::SimpleSignature},
+    types::{
+        crypto::{intent::PersonalMessage, multisig::MultisigMemberPublicKey},
+        signature::SimpleSignature,
+    },
 };
 #[derive(derive_more::From, uniffi::Object)]
 pub struct SimpleVerifier(iota_sdk::crypto::simple::SimpleVerifier);
@@ -133,7 +136,7 @@ impl SimpleKeypair {
     /// Sign a personal message and return a UserSignature.
     pub fn sign_personal_message(
         &self,
-        message: &crate::types::PersonalMessage,
+        message: &PersonalMessage,
     ) -> Result<crate::types::signature::UserSignature> {
         Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }

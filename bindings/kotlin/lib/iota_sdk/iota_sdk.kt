@@ -3199,6 +3199,39 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3399,6 +3432,12 @@ fun uniffi_iota_sdk_ffi_checksum_func_identifier_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
 ): Short
@@ -4063,6 +4102,14 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_intent_app_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_intent_scope(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_intent_version(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements(
 ): Short
@@ -4965,6 +5012,16 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_pure(
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new(
 ): Short
@@ -6240,6 +6297,36 @@ fun uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(`objectRef`: RustBuff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_clone_intent(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_intent(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_new(`scope`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_intent_app_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_intent_scope(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_intent_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_intent_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_makemovevector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_makemovevector(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -6816,6 +6903,12 @@ fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest(`ptr`: Pointer,
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_programmabletransaction(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7926,6 +8019,12 @@ fun uniffi_iota_sdk_ffi_fn_func_input_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_input_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -8589,6 +8688,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs() != 51152.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes() != 15378.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string() != 43440.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length() != 18453.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752.toShort()) {
@@ -9585,6 +9693,18 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_intent_app_id() != 27733.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_intent_scope() != 19072.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes() != 31961.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_intent_version() != 64349.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773.toShort()) {
@@ -10938,6 +11058,21 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app() != 7427.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app() != 7420.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction() != 33288.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message() != 3284.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934.toShort()) {
@@ -27625,6 +27760,395 @@ public object FfiConverterTypeInput: FfiConverter<Input, Pointer> {
 //
 
 
+public interface IntentInterface {
+    
+    /**
+     * Get the app id of the signing intent.
+     */
+    fun `appId`(): IntentAppId
+    
+    /**
+     * Get the scope of the signing intent.
+     */
+    fun `scope`(): IntentScope
+    
+    /**
+     * Convert the signing intent to bytes.
+     */
+    fun `toBytes`(): kotlin.ByteArray
+    
+    /**
+     * Get the version of the signing intent.
+     */
+    fun `version`(): IntentVersion
+    
+    companion object
+}
+
+open class Intent: Disposable, AutoCloseable, IntentInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    /**
+     * Create a new signing intent.
+     */
+    constructor(`scope`: IntentScope, `version`: IntentVersion, `appId`: IntentAppId) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_new(
+        FfiConverterTypeIntentScope.lower(`scope`),FfiConverterTypeIntentVersion.lower(`version`),FfiConverterTypeIntentAppId.lower(`appId`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_intent(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_intent(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Get the app id of the signing intent.
+     */override fun `appId`(): IntentAppId {
+            return FfiConverterTypeIntentAppId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_intent_app_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Get the scope of the signing intent.
+     */override fun `scope`(): IntentScope {
+            return FfiConverterTypeIntentScope.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_intent_scope(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Convert the signing intent to bytes.
+     */override fun `toBytes`(): kotlin.ByteArray {
+            return FfiConverterByteArray.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_intent_to_bytes(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Get the version of the signing intent.
+     */override fun `version`(): IntentVersion {
+            return FfiConverterTypeIntentVersion.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_intent_version(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Intent) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq(
+        it, FfiConverterTypeIntent.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
+
+    
+    companion object {
+        
+    /**
+     * Create a new Consensus app signing intent.
+     */ fun `consensusApp`(`scope`: IntentScope): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(
+        FfiConverterTypeIntentScope.lower(`scope`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new IOTA app signing intent.
+     */ fun `iotaApp`(`scope`: IntentScope): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(
+        FfiConverterTypeIntentScope.lower(`scope`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new IOTA transaction signing intent.
+     */ fun `iotaTransaction`(): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new IOTA personal message signing intent.
+     */ fun `personalMessage`(): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIntent: FfiConverter<Intent, Pointer> {
+
+    override fun lower(value: Intent): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): Intent {
+        return Intent(value)
+    }
+
+    override fun read(buf: ByteBuffer): Intent {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: Intent) = 8UL
+
+    override fun write(value: Intent, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 /**
  * Command to build a move vector out of a set of individual elements
  *
@@ -37623,6 +38147,20 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
     }
     
 
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PersonalMessage) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(
+        it, FfiConverterTypePersonalMessage.lower(`other`),_status)
+}
+    }
+    )
+    }
     
 
     
@@ -60165,6 +60703,36 @@ public object FfiConverterTypeFeature: FfiConverterRustBuffer<Feature> {
 
 
 
+
+enum class HashingIntentScope {
+    
+    CHILD_OBJECT_ID,
+    REGULAR_OBJECT_ID;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeHashingIntentScope: FfiConverterRustBuffer<HashingIntentScope> {
+    override fun read(buf: ByteBuffer) = try {
+        HashingIntentScope.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: HashingIntentScope) = 4UL
+
+    override fun write(value: HashingIntentScope, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
 /**
  * Defines what happened to an ObjectId during execution
  *
@@ -60205,6 +60773,232 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
     override fun allocationSize(value: IdOperation) = 4UL
 
     override fun write(value: IdOperation, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+/**
+ * App IDs.
+ */
+
+enum class IntentAppId {
+    
+    IOTA,
+    CONSENSUS;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIntentAppId: FfiConverterRustBuffer<IntentAppId> {
+    override fun read(buf: ByteBuffer) = try {
+        IntentAppId.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: IntentAppId) = 4UL
+
+    override fun write(value: IntentAppId, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+
+
+/**
+ * Intent errors.
+ */
+sealed class IntentException(message: String): kotlin.Exception(message) {
+        
+    /**
+     * Invalid bytes for Intent
+     */
+        class Bytes(message: String) : IntentException(message)
+        
+    /**
+     * Invalid hex String for Intent
+     */
+        class String(message: String) : IntentException(message)
+        
+    /**
+     * Invalid Scope for Intent
+     */
+        class Scope(message: String) : IntentException(message)
+        
+    /**
+     * Invalid Version for Intent
+     */
+        class Version(message: String) : IntentException(message)
+        
+    /**
+     * Invalid AppId for Intent
+     */
+        class AppId(message: String) : IntentException(message)
+        
+
+    companion object ErrorHandler : UniffiRustCallStatusErrorHandler<IntentException> {
+        override fun lift(error_buf: RustBuffer.ByValue): IntentException = FfiConverterTypeIntentError.lift(error_buf)
+    }
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIntentError : FfiConverterRustBuffer<IntentException> {
+    override fun read(buf: ByteBuffer): IntentException {
+        
+            return when(buf.getInt()) {
+            1 -> IntentException.Bytes(FfiConverterString.read(buf))
+            2 -> IntentException.String(FfiConverterString.read(buf))
+            3 -> IntentException.Scope(FfiConverterString.read(buf))
+            4 -> IntentException.Version(FfiConverterString.read(buf))
+            5 -> IntentException.AppId(FfiConverterString.read(buf))
+            else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
+        }
+        
+    }
+
+    override fun allocationSize(value: IntentException): ULong {
+        return 4UL
+    }
+
+    override fun write(value: IntentException, buf: ByteBuffer) {
+        when(value) {
+            is IntentException.Bytes -> {
+                buf.putInt(1)
+                Unit
+            }
+            is IntentException.String -> {
+                buf.putInt(2)
+                Unit
+            }
+            is IntentException.Scope -> {
+                buf.putInt(3)
+                Unit
+            }
+            is IntentException.Version -> {
+                buf.putInt(4)
+                Unit
+            }
+            is IntentException.AppId -> {
+                buf.putInt(5)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+
+}
+
+
+
+/**
+ * Intent scopes.
+ */
+
+enum class IntentScope {
+    
+    /**
+     * Used for a user signature on a transaction data.
+     */
+    TRANSACTION_DATA,
+    /**
+     * Used for an authority signature on transaction effects.
+     */
+    TRANSACTION_EFFECTS,
+    /**
+     * Used for an authority signature on a checkpoint summary.
+     */
+    CHECKPOINT_SUMMARY,
+    /**
+     * Used for a user signature on a personal message.
+     */
+    PERSONAL_MESSAGE,
+    /**
+     * Used for an authority signature on a user signed transaction.
+     */
+    SENDER_SIGNED_TRANSACTION,
+    /**
+     * Used as a signature representing an authority's proof of possession of
+     * its authority key.
+     */
+    PROOF_OF_POSSESSION,
+    /**
+     * Deprecated. Should not be reused. Introduced for bridge purposes but was
+     * never included in messages.
+     */
+    BRIDGE_EVENT_DEPRECATED,
+    /**
+     * Used for consensus authority signature on block's digest.
+     */
+    CONSENSUS_BLOCK,
+    /**
+     * Used for reporting peer addresses in discovery
+     */
+    DISCOVERY_PEERS,
+    /**
+     * Used for authority capabilities from non-committee authorities.
+     */
+    AUTHORITY_CAPABILITIES;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIntentScope: FfiConverterRustBuffer<IntentScope> {
+    override fun read(buf: ByteBuffer) = try {
+        IntentScope.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: IntentScope) = 4UL
+
+    override fun write(value: IntentScope, buf: ByteBuffer) {
+        buf.putInt(value.ordinal + 1)
+    }
+}
+
+
+
+
+
+/**
+ * Intent versions.
+ */
+
+enum class IntentVersion {
+    
+    V0;
+    companion object
+}
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeIntentVersion: FfiConverterRustBuffer<IntentVersion> {
+    override fun read(buf: ByteBuffer) = try {
+        IntentVersion.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
+
+    override fun allocationSize(value: IntentVersion) = 4UL
+
+    override fun write(value: IntentVersion, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
     }
 }
@@ -67024,6 +67818,45 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
         FfiConverterTypeInput.lower(`data`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a signing intent from bytes.
+         */
+    @Throws(IntentException::class) fun `intentFromBytes`(`bytes`: kotlin.ByteArray): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCallWithError(IntentException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(
+        FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Create a signing intent from a hex string.
+         */
+    @Throws(IntentException::class) fun `intentFromHexString`(`hex`: kotlin.String): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCallWithError(IntentException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        /**
+         * Returns the intent prefix length, i.e. the number of bytes prepended to the
+         * data before being signed.
+         */ fun `intentPrefixLength`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(
+        _status)
 }
     )
     }

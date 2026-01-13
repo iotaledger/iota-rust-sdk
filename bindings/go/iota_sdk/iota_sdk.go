@@ -1200,6 +1200,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes()
+	})
+	if checksum != 15378 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string()
+	})
+	if checksum != 43440 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length()
+	})
+	if checksum != 18453 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs()
 	})
 	if checksum != 14752 {
@@ -4184,6 +4211,42 @@ func uniffiCheckChecksums() {
 	if checksum != 63815 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_identifier_as_str: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_intent_app_id()
+	})
+	if checksum != 27733 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_intent_app_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_intent_scope()
+	})
+	if checksum != 19072 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_intent_scope: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes()
+	})
+	if checksum != 31961 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_intent_version()
+	})
+	if checksum != 64349 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_intent_version: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8243,6 +8306,51 @@ func uniffiCheckChecksums() {
 	if checksum != 61970 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app()
+	})
+	if checksum != 7427 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app()
+	})
+	if checksum != 7420 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction()
+	})
+	if checksum != 33288 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_new()
+	})
+	if checksum != 25063 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message()
+	})
+	if checksum != 3284 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -18870,6 +18978,200 @@ func (_ FfiDestroyerInput) Destroy(value *Input) {
 
 
 
+type IntentInterface interface {
+	// Get the app id of the signing intent.
+	AppId() IntentAppId
+	// Get the scope of the signing intent.
+	Scope() IntentScope
+	// Convert the signing intent to bytes.
+	ToBytes() []byte
+	// Get the version of the signing intent.
+	Version() IntentVersion
+}
+type Intent struct {
+	ffiObject FfiObject
+}
+// Create a new signing intent.
+func NewIntent(scope IntentScope, version IntentVersion, appId IntentAppId) *Intent {
+	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_new(FfiConverterIntentScopeINSTANCE.Lower(scope), FfiConverterIntentVersionINSTANCE.Lower(version), FfiConverterIntentAppIdINSTANCE.Lower(appId),_uniffiStatus)
+	}))
+}
+
+
+// Create a new Consensus app signing intent.
+func IntentConsensusApp(scope IntentScope) *Intent {
+	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(FfiConverterIntentScopeINSTANCE.Lower(scope),_uniffiStatus)
+	}))
+}
+
+// Create a new IOTA app signing intent.
+func IntentIotaApp(scope IntentScope) *Intent {
+	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(FfiConverterIntentScopeINSTANCE.Lower(scope),_uniffiStatus)
+	}))
+}
+
+// Create a new IOTA transaction signing intent.
+func IntentIotaTransaction() *Intent {
+	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(_uniffiStatus)
+	}))
+}
+
+// Create a new IOTA personal message signing intent.
+func IntentPersonalMessage() *Intent {
+	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(_uniffiStatus)
+	}))
+}
+
+
+
+// Get the app id of the signing intent.
+func (_self *Intent) AppId() IntentAppId {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterIntentAppIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_intent_app_id(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Get the scope of the signing intent.
+func (_self *Intent) Scope() IntentScope {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterIntentScopeINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_intent_scope(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Convert the signing intent to bytes.
+func (_self *Intent) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_intent_to_bytes(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Get the version of the signing intent.
+func (_self *Intent) Version() IntentVersion {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterIntentVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_intent_version(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *Intent) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *Intent) Eq(other *Intent) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq(
+		_pointer,FfiConverterIntentINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *Intent) Ne(other *Intent) bool {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne(
+		_pointer,FfiConverterIntentINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *Intent) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Intent")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+
+func (object *Intent) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterIntent struct {}
+
+var FfiConverterIntentINSTANCE = FfiConverterIntent{}
+
+
+func (c FfiConverterIntent) Lift(pointer unsafe.Pointer) *Intent {
+	result := &Intent {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_intent(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_intent(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*Intent).Destroy)
+	return result
+}
+
+func (c FfiConverterIntent) Read(reader io.Reader) *Intent {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterIntent) Lower(value *Intent) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*Intent")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterIntent) Write(writer io.Writer, value *Intent) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerIntent struct {}
+
+func (_ FfiDestroyerIntent) Destroy(value *Intent) {
+		value.Destroy()
+}
+
+
+
 // Command to build a move vector out of a set of individual elements
 //
 // # BCS
@@ -23486,6 +23788,39 @@ func (_self *PersonalMessage) SigningDigestHex() string {
 	}
 	}))
 }
+
+func (_self *PersonalMessage) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *PersonalMessage) Eq(other *PersonalMessage) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq(
+		_pointer,FfiConverterPersonalMessageINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *PersonalMessage) Ne(other *PersonalMessage) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne(
+		_pointer,FfiConverterPersonalMessageINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
 func (object *PersonalMessage) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -36646,6 +36981,39 @@ func (_ FfiDestroyerFeature) Destroy(value Feature) {
 }
 
 
+type HashingIntentScope uint
+
+const (
+	HashingIntentScopeChildObjectId HashingIntentScope = 1
+	HashingIntentScopeRegularObjectId HashingIntentScope = 2
+)
+
+type FfiConverterHashingIntentScope struct {}
+
+var FfiConverterHashingIntentScopeINSTANCE = FfiConverterHashingIntentScope{}
+
+func (c FfiConverterHashingIntentScope) Lift(rb RustBufferI) HashingIntentScope {
+	return LiftFromRustBuffer[HashingIntentScope](c, rb)
+}
+
+func (c FfiConverterHashingIntentScope) Lower(value HashingIntentScope) C.RustBuffer {
+	return LowerIntoRustBuffer[HashingIntentScope](c, value)
+}
+func (FfiConverterHashingIntentScope) Read(reader io.Reader) HashingIntentScope {
+	id := readInt32(reader)
+	return HashingIntentScope(id)
+}
+
+func (FfiConverterHashingIntentScope) Write(writer io.Writer, value HashingIntentScope) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerHashingIntentScope struct {}
+
+func (_ FfiDestroyerHashingIntentScope) Destroy(value HashingIntentScope) {
+}
+
+
 // Defines what happened to an ObjectId during execution
 //
 // # BCS
@@ -36692,6 +37060,336 @@ func (FfiConverterIdOperation) Write(writer io.Writer, value IdOperation) {
 type FfiDestroyerIdOperation struct {}
 
 func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
+}
+
+
+// App IDs.
+type IntentAppId uint
+
+const (
+	IntentAppIdIota IntentAppId = 1
+	IntentAppIdConsensus IntentAppId = 2
+)
+
+type FfiConverterIntentAppId struct {}
+
+var FfiConverterIntentAppIdINSTANCE = FfiConverterIntentAppId{}
+
+func (c FfiConverterIntentAppId) Lift(rb RustBufferI) IntentAppId {
+	return LiftFromRustBuffer[IntentAppId](c, rb)
+}
+
+func (c FfiConverterIntentAppId) Lower(value IntentAppId) C.RustBuffer {
+	return LowerIntoRustBuffer[IntentAppId](c, value)
+}
+func (FfiConverterIntentAppId) Read(reader io.Reader) IntentAppId {
+	id := readInt32(reader)
+	return IntentAppId(id)
+}
+
+func (FfiConverterIntentAppId) Write(writer io.Writer, value IntentAppId) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerIntentAppId struct {}
+
+func (_ FfiDestroyerIntentAppId) Destroy(value IntentAppId) {
+}
+// Intent errors.
+type IntentError struct {
+	err error
+}
+
+// Convience method to turn *IntentError into error
+// Avoiding treating nil pointer as non nil error interface
+func (err *IntentError) AsError() error {
+	if err == nil {
+		return nil
+	} else {
+		return err
+	}
+}
+
+func (err IntentError) Error() string {
+	return fmt.Sprintf("IntentError: %s", err.err.Error())
+}
+
+func (err IntentError) Unwrap() error {
+	return err.err
+}
+
+// Err* are used for checking error type with `errors.Is`
+var ErrIntentErrorBytes = fmt.Errorf("IntentErrorBytes")
+var ErrIntentErrorString = fmt.Errorf("IntentErrorString")
+var ErrIntentErrorScope = fmt.Errorf("IntentErrorScope")
+var ErrIntentErrorVersion = fmt.Errorf("IntentErrorVersion")
+var ErrIntentErrorAppId = fmt.Errorf("IntentErrorAppId")
+
+// Variant structs
+// Invalid bytes for Intent
+type IntentErrorBytes struct {
+	message string
+}
+// Invalid bytes for Intent
+func NewIntentErrorBytes(
+) *IntentError {
+	return &IntentError { err: &IntentErrorBytes {} }
+}
+
+func (e IntentErrorBytes) destroy() {
+}
+
+
+func (err IntentErrorBytes) Error() string {
+	return fmt.Sprintf("Bytes: %s", err.message)
+}
+
+func (self IntentErrorBytes) Is(target error) bool {
+	return target == ErrIntentErrorBytes
+}
+// Invalid hex String for Intent
+type IntentErrorString struct {
+	message string
+}
+// Invalid hex String for Intent
+func NewIntentErrorString(
+) *IntentError {
+	return &IntentError { err: &IntentErrorString {} }
+}
+
+func (e IntentErrorString) destroy() {
+}
+
+
+func (err IntentErrorString) Error() string {
+	return fmt.Sprintf("String: %s", err.message)
+}
+
+func (self IntentErrorString) Is(target error) bool {
+	return target == ErrIntentErrorString
+}
+// Invalid Scope for Intent
+type IntentErrorScope struct {
+	message string
+}
+// Invalid Scope for Intent
+func NewIntentErrorScope(
+) *IntentError {
+	return &IntentError { err: &IntentErrorScope {} }
+}
+
+func (e IntentErrorScope) destroy() {
+}
+
+
+func (err IntentErrorScope) Error() string {
+	return fmt.Sprintf("Scope: %s", err.message)
+}
+
+func (self IntentErrorScope) Is(target error) bool {
+	return target == ErrIntentErrorScope
+}
+// Invalid Version for Intent
+type IntentErrorVersion struct {
+	message string
+}
+// Invalid Version for Intent
+func NewIntentErrorVersion(
+) *IntentError {
+	return &IntentError { err: &IntentErrorVersion {} }
+}
+
+func (e IntentErrorVersion) destroy() {
+}
+
+
+func (err IntentErrorVersion) Error() string {
+	return fmt.Sprintf("Version: %s", err.message)
+}
+
+func (self IntentErrorVersion) Is(target error) bool {
+	return target == ErrIntentErrorVersion
+}
+// Invalid AppId for Intent
+type IntentErrorAppId struct {
+	message string
+}
+// Invalid AppId for Intent
+func NewIntentErrorAppId(
+) *IntentError {
+	return &IntentError { err: &IntentErrorAppId {} }
+}
+
+func (e IntentErrorAppId) destroy() {
+}
+
+
+func (err IntentErrorAppId) Error() string {
+	return fmt.Sprintf("AppId: %s", err.message)
+}
+
+func (self IntentErrorAppId) Is(target error) bool {
+	return target == ErrIntentErrorAppId
+}
+
+type FfiConverterIntentError struct{}
+
+var FfiConverterIntentErrorINSTANCE = FfiConverterIntentError{}
+
+func (c FfiConverterIntentError) Lift(eb RustBufferI) *IntentError {
+	return LiftFromRustBuffer[*IntentError](c, eb)
+}
+
+func (c FfiConverterIntentError) Lower(value *IntentError) C.RustBuffer {
+	return LowerIntoRustBuffer[*IntentError](c, value)
+}
+
+func (c FfiConverterIntentError) Read(reader io.Reader) *IntentError {
+	errorID := readUint32(reader)
+
+	message := FfiConverterStringINSTANCE.Read(reader)
+	switch errorID {
+	case 1:
+		return &IntentError{ &IntentErrorBytes{message}}
+	case 2:
+		return &IntentError{ &IntentErrorString{message}}
+	case 3:
+		return &IntentError{ &IntentErrorScope{message}}
+	case 4:
+		return &IntentError{ &IntentErrorVersion{message}}
+	case 5:
+		return &IntentError{ &IntentErrorAppId{message}}
+	default:
+		panic(fmt.Sprintf("Unknown error code %d in FfiConverterIntentError.Read()", errorID))
+	}
+
+	
+}
+
+func (c FfiConverterIntentError) Write(writer io.Writer, value *IntentError) {
+	switch variantValue := value.err.(type) {
+		case *IntentErrorBytes:
+			writeInt32(writer, 1)
+		case *IntentErrorString:
+			writeInt32(writer, 2)
+		case *IntentErrorScope:
+			writeInt32(writer, 3)
+		case *IntentErrorVersion:
+			writeInt32(writer, 4)
+		case *IntentErrorAppId:
+			writeInt32(writer, 5)
+		default:
+			_ = variantValue
+			panic(fmt.Sprintf("invalid error value `%v` in FfiConverterIntentError.Write", value))
+	}
+}
+
+type FfiDestroyerIntentError struct {}
+
+func (_ FfiDestroyerIntentError) Destroy(value *IntentError) {
+	switch variantValue := value.err.(type) {
+		case IntentErrorBytes:
+			variantValue.destroy()
+		case IntentErrorString:
+			variantValue.destroy()
+		case IntentErrorScope:
+			variantValue.destroy()
+		case IntentErrorVersion:
+			variantValue.destroy()
+		case IntentErrorAppId:
+			variantValue.destroy()
+		default:
+			_ = variantValue
+			panic(fmt.Sprintf("invalid error value `%v` in FfiDestroyerIntentError.Destroy", value))
+	}
+}
+
+
+
+// Intent scopes.
+type IntentScope uint
+
+const (
+	// Used for a user signature on a transaction data.
+	IntentScopeTransactionData IntentScope = 1
+	// Used for an authority signature on transaction effects.
+	IntentScopeTransactionEffects IntentScope = 2
+	// Used for an authority signature on a checkpoint summary.
+	IntentScopeCheckpointSummary IntentScope = 3
+	// Used for a user signature on a personal message.
+	IntentScopePersonalMessage IntentScope = 4
+	// Used for an authority signature on a user signed transaction.
+	IntentScopeSenderSignedTransaction IntentScope = 5
+	// Used as a signature representing an authority's proof of possession of
+	// its authority key.
+	IntentScopeProofOfPossession IntentScope = 6
+	// Deprecated. Should not be reused. Introduced for bridge purposes but was
+	// never included in messages.
+	IntentScopeBridgeEventDeprecated IntentScope = 7
+	// Used for consensus authority signature on block's digest.
+	IntentScopeConsensusBlock IntentScope = 8
+	// Used for reporting peer addresses in discovery
+	IntentScopeDiscoveryPeers IntentScope = 9
+	// Used for authority capabilities from non-committee authorities.
+	IntentScopeAuthorityCapabilities IntentScope = 10
+)
+
+type FfiConverterIntentScope struct {}
+
+var FfiConverterIntentScopeINSTANCE = FfiConverterIntentScope{}
+
+func (c FfiConverterIntentScope) Lift(rb RustBufferI) IntentScope {
+	return LiftFromRustBuffer[IntentScope](c, rb)
+}
+
+func (c FfiConverterIntentScope) Lower(value IntentScope) C.RustBuffer {
+	return LowerIntoRustBuffer[IntentScope](c, value)
+}
+func (FfiConverterIntentScope) Read(reader io.Reader) IntentScope {
+	id := readInt32(reader)
+	return IntentScope(id)
+}
+
+func (FfiConverterIntentScope) Write(writer io.Writer, value IntentScope) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerIntentScope struct {}
+
+func (_ FfiDestroyerIntentScope) Destroy(value IntentScope) {
+}
+
+
+// Intent versions.
+type IntentVersion uint
+
+const (
+	IntentVersionV0 IntentVersion = 1
+)
+
+type FfiConverterIntentVersion struct {}
+
+var FfiConverterIntentVersionINSTANCE = FfiConverterIntentVersion{}
+
+func (c FfiConverterIntentVersion) Lift(rb RustBufferI) IntentVersion {
+	return LiftFromRustBuffer[IntentVersion](c, rb)
+}
+
+func (c FfiConverterIntentVersion) Lower(value IntentVersion) C.RustBuffer {
+	return LowerIntoRustBuffer[IntentVersion](c, value)
+}
+func (FfiConverterIntentVersion) Read(reader io.Reader) IntentVersion {
+	id := readInt32(reader)
+	return IntentVersion(id)
+}
+
+func (FfiConverterIntentVersion) Write(writer io.Writer, value IntentVersion) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerIntentVersion struct {}
+
+func (_ FfiDestroyerIntentVersion) Destroy(value IntentVersion) {
 }
 
 
@@ -44842,6 +45540,40 @@ func InputToBcs(data *Input) ([]byte, error) {
 		} else {
 			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
 		}
+}
+
+// Create a signing intent from bytes.
+func IntentFromBytes(bytes []byte) (*Intent, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Intent
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterIntentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create a signing intent from a hex string.
+func IntentFromHexString(hex string) (*Intent, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Intent
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterIntentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Returns the intent prefix length, i.e. the number of bytes prepended to the
+// data before being signed.
+func IntentPrefixLength() uint64 {
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(_uniffiStatus)
+	}))
 }
 
 // Create this type from BCS encoded bytes.

@@ -647,6 +647,12 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs() != 51152:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes() != 15378:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string() != 43440:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length() != 18453:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs() != 22836:
@@ -1310,6 +1316,14 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 25664:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_intent_app_id() != 27733:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_intent_scope() != 19072:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes() != 31961:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_intent_version() != 64349:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements() != 20773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2212,6 +2226,16 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app() != 7427:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app() != 7420:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction() != 33288:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message() != 3284:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4819,6 +4843,83 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_intent.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_intent.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_app_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_app_id.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_scope.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_scope.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_to_bytes.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_to_bytes.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_version.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_makemovevector.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6295,6 +6396,23 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_programmabletransaction.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9162,6 +9280,20 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_to_bcs.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10359,6 +10491,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_input_from_bcs.restype = ctypes.c_u
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs.restype = ctypes.c_uint16
@@ -11355,6 +11496,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx.restype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_app_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_app_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_scope.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_scope.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_version.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_intent_version.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_makemovevector_elements.restype = ctypes.c_uint16
@@ -12708,6 +12861,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.restype = ctypes.c_uint16
@@ -13662,6 +13830,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -21463,6 +21633,44 @@ class _UniffiConverterTypeFeature(_UniffiConverterRustBuffer):
 
 
 
+class HashingIntentScope(enum.Enum):
+    CHILD_OBJECT_ID = 240
+    
+    REGULAR_OBJECT_ID = 241
+    
+
+
+class _UniffiConverterTypeHashingIntentScope(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return HashingIntentScope.CHILD_OBJECT_ID
+        if variant == 2:
+            return HashingIntentScope.REGULAR_OBJECT_ID
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == HashingIntentScope.CHILD_OBJECT_ID:
+            return
+        if value == HashingIntentScope.REGULAR_OBJECT_ID:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == HashingIntentScope.CHILD_OBJECT_ID:
+            buf.write_i32(1)
+        if value == HashingIntentScope.REGULAR_OBJECT_ID:
+            buf.write_i32(2)
+
+
+
+
+
+
+
 class IdOperation(enum.Enum):
     """
     Defines what happened to an ObjectId during execution
@@ -21520,6 +21728,353 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
             buf.write_i32(2)
         if value == IdOperation.DELETED:
             buf.write_i32(3)
+
+
+
+
+
+
+
+class IntentAppId(enum.Enum):
+    """
+    App IDs.
+    """
+
+    IOTA = 0
+    
+    CONSENSUS = 1
+    
+
+
+class _UniffiConverterTypeIntentAppId(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return IntentAppId.IOTA
+        if variant == 2:
+            return IntentAppId.CONSENSUS
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == IntentAppId.IOTA:
+            return
+        if value == IntentAppId.CONSENSUS:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == IntentAppId.IOTA:
+            buf.write_i32(1)
+        if value == IntentAppId.CONSENSUS:
+            buf.write_i32(2)
+
+
+
+
+# IntentError
+# We want to define each variant as a nested class that's also a subclass,
+# which is tricky in Python.  To accomplish this we're going to create each
+# class separately, then manually add the child classes to the base class's
+# __dict__.  All of this happens in dummy class to avoid polluting the module
+# namespace.
+class IntentError(Exception):
+    """
+    Intent errors.
+    """
+
+    pass
+
+_UniffiTempIntentError = IntentError
+
+class IntentError:  # type: ignore
+    """
+    Intent errors.
+    """
+
+    class Bytes(_UniffiTempIntentError):
+        """
+        Invalid bytes for Intent
+        """
+
+
+        def __repr__(self):
+            return "IntentError.Bytes({})".format(repr(str(self)))
+    _UniffiTempIntentError.Bytes = Bytes # type: ignore
+    class String(_UniffiTempIntentError):
+        """
+        Invalid hex String for Intent
+        """
+
+
+        def __repr__(self):
+            return "IntentError.String({})".format(repr(str(self)))
+    _UniffiTempIntentError.String = String # type: ignore
+    class Scope(_UniffiTempIntentError):
+        """
+        Invalid Scope for Intent
+        """
+
+
+        def __repr__(self):
+            return "IntentError.Scope({})".format(repr(str(self)))
+    _UniffiTempIntentError.Scope = Scope # type: ignore
+    class Version(_UniffiTempIntentError):
+        """
+        Invalid Version for Intent
+        """
+
+
+        def __repr__(self):
+            return "IntentError.Version({})".format(repr(str(self)))
+    _UniffiTempIntentError.Version = Version # type: ignore
+    class AppId(_UniffiTempIntentError):
+        """
+        Invalid AppId for Intent
+        """
+
+
+        def __repr__(self):
+            return "IntentError.AppId({})".format(repr(str(self)))
+    _UniffiTempIntentError.AppId = AppId # type: ignore
+
+IntentError = _UniffiTempIntentError # type: ignore
+del _UniffiTempIntentError
+
+
+class _UniffiConverterTypeIntentError(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return IntentError.Bytes(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 2:
+            return IntentError.String(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 3:
+            return IntentError.Scope(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 4:
+            return IntentError.Version(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 5:
+            return IntentError.AppId(
+                _UniffiConverterString.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if isinstance(value, IntentError.Bytes):
+            return
+        if isinstance(value, IntentError.String):
+            return
+        if isinstance(value, IntentError.Scope):
+            return
+        if isinstance(value, IntentError.Version):
+            return
+        if isinstance(value, IntentError.AppId):
+            return
+
+    @staticmethod
+    def write(value, buf):
+        if isinstance(value, IntentError.Bytes):
+            buf.write_i32(1)
+        if isinstance(value, IntentError.String):
+            buf.write_i32(2)
+        if isinstance(value, IntentError.Scope):
+            buf.write_i32(3)
+        if isinstance(value, IntentError.Version):
+            buf.write_i32(4)
+        if isinstance(value, IntentError.AppId):
+            buf.write_i32(5)
+
+
+
+
+
+class IntentScope(enum.Enum):
+    """
+    Intent scopes.
+    """
+
+    TRANSACTION_DATA = 0
+    """
+    Used for a user signature on a transaction data.
+    """
+
+    
+    TRANSACTION_EFFECTS = 1
+    """
+    Used for an authority signature on transaction effects.
+    """
+
+    
+    CHECKPOINT_SUMMARY = 2
+    """
+    Used for an authority signature on a checkpoint summary.
+    """
+
+    
+    PERSONAL_MESSAGE = 3
+    """
+    Used for a user signature on a personal message.
+    """
+
+    
+    SENDER_SIGNED_TRANSACTION = 4
+    """
+    Used for an authority signature on a user signed transaction.
+    """
+
+    
+    PROOF_OF_POSSESSION = 5
+    """
+    Used as a signature representing an authority's proof of possession of
+    its authority key.
+    """
+
+    
+    BRIDGE_EVENT_DEPRECATED = 6
+    """
+    Deprecated. Should not be reused. Introduced for bridge purposes but was
+    never included in messages.
+    """
+
+    
+    CONSENSUS_BLOCK = 7
+    """
+    Used for consensus authority signature on block's digest.
+    """
+
+    
+    DISCOVERY_PEERS = 8
+    """
+    Used for reporting peer addresses in discovery
+    """
+
+    
+    AUTHORITY_CAPABILITIES = 9
+    """
+    Used for authority capabilities from non-committee authorities.
+    """
+
+    
+
+
+class _UniffiConverterTypeIntentScope(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return IntentScope.TRANSACTION_DATA
+        if variant == 2:
+            return IntentScope.TRANSACTION_EFFECTS
+        if variant == 3:
+            return IntentScope.CHECKPOINT_SUMMARY
+        if variant == 4:
+            return IntentScope.PERSONAL_MESSAGE
+        if variant == 5:
+            return IntentScope.SENDER_SIGNED_TRANSACTION
+        if variant == 6:
+            return IntentScope.PROOF_OF_POSSESSION
+        if variant == 7:
+            return IntentScope.BRIDGE_EVENT_DEPRECATED
+        if variant == 8:
+            return IntentScope.CONSENSUS_BLOCK
+        if variant == 9:
+            return IntentScope.DISCOVERY_PEERS
+        if variant == 10:
+            return IntentScope.AUTHORITY_CAPABILITIES
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == IntentScope.TRANSACTION_DATA:
+            return
+        if value == IntentScope.TRANSACTION_EFFECTS:
+            return
+        if value == IntentScope.CHECKPOINT_SUMMARY:
+            return
+        if value == IntentScope.PERSONAL_MESSAGE:
+            return
+        if value == IntentScope.SENDER_SIGNED_TRANSACTION:
+            return
+        if value == IntentScope.PROOF_OF_POSSESSION:
+            return
+        if value == IntentScope.BRIDGE_EVENT_DEPRECATED:
+            return
+        if value == IntentScope.CONSENSUS_BLOCK:
+            return
+        if value == IntentScope.DISCOVERY_PEERS:
+            return
+        if value == IntentScope.AUTHORITY_CAPABILITIES:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == IntentScope.TRANSACTION_DATA:
+            buf.write_i32(1)
+        if value == IntentScope.TRANSACTION_EFFECTS:
+            buf.write_i32(2)
+        if value == IntentScope.CHECKPOINT_SUMMARY:
+            buf.write_i32(3)
+        if value == IntentScope.PERSONAL_MESSAGE:
+            buf.write_i32(4)
+        if value == IntentScope.SENDER_SIGNED_TRANSACTION:
+            buf.write_i32(5)
+        if value == IntentScope.PROOF_OF_POSSESSION:
+            buf.write_i32(6)
+        if value == IntentScope.BRIDGE_EVENT_DEPRECATED:
+            buf.write_i32(7)
+        if value == IntentScope.CONSENSUS_BLOCK:
+            buf.write_i32(8)
+        if value == IntentScope.DISCOVERY_PEERS:
+            buf.write_i32(9)
+        if value == IntentScope.AUTHORITY_CAPABILITIES:
+            buf.write_i32(10)
+
+
+
+
+
+
+
+class IntentVersion(enum.Enum):
+    """
+    Intent versions.
+    """
+
+    V0 = 0
+    
+
+
+class _UniffiConverterTypeIntentVersion(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return IntentVersion.V0
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value == IntentVersion.V0:
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value == IntentVersion.V0:
+            buf.write_i32(1)
 
 
 
@@ -36128,6 +36683,226 @@ class _UniffiConverterTypeInput:
     @classmethod
     def write(cls, value: InputProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class IntentProtocol(typing.Protocol):
+    def app_id(self, ):
+        """
+        Get the app id of the signing intent.
+        """
+
+        raise NotImplementedError
+    def scope(self, ):
+        """
+        Get the scope of the signing intent.
+        """
+
+        raise NotImplementedError
+    def to_bytes(self, ):
+        """
+        Convert the signing intent to bytes.
+        """
+
+        raise NotImplementedError
+    def version(self, ):
+        """
+        Get the version of the signing intent.
+        """
+
+        raise NotImplementedError
+# Intent is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Intent():
+    _pointer: ctypes.c_void_p
+    def __init__(self, scope: "IntentScope",version: "IntentVersion",app_id: "IntentAppId"):
+        """
+        Create a new signing intent.
+        """
+
+        _UniffiConverterTypeIntentScope.check_lower(scope)
+        
+        _UniffiConverterTypeIntentVersion.check_lower(version)
+        
+        _UniffiConverterTypeIntentAppId.check_lower(app_id)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new,
+        _UniffiConverterTypeIntentScope.lower(scope),
+        _UniffiConverterTypeIntentVersion.lower(version),
+        _UniffiConverterTypeIntentAppId.lower(app_id))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_intent, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def consensus_app(cls, scope: "IntentScope"):
+        """
+        Create a new Consensus app signing intent.
+        """
+
+        _UniffiConverterTypeIntentScope.check_lower(scope)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app,
+        _UniffiConverterTypeIntentScope.lower(scope))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def iota_app(cls, scope: "IntentScope"):
+        """
+        Create a new IOTA app signing intent.
+        """
+
+        _UniffiConverterTypeIntentScope.check_lower(scope)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app,
+        _UniffiConverterTypeIntentScope.lower(scope))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def iota_transaction(cls, ):
+        """
+        Create a new IOTA transaction signing intent.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def personal_message(cls, ):
+        """
+        Create a new IOTA personal message signing intent.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message,)
+        return cls._make_instance_(pointer)
+
+
+
+    def app_id(self, ) -> "IntentAppId":
+        """
+        Get the app id of the signing intent.
+        """
+
+        return _UniffiConverterTypeIntentAppId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_app_id,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def scope(self, ) -> "IntentScope":
+        """
+        Get the scope of the signing intent.
+        """
+
+        return _UniffiConverterTypeIntentScope.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_scope,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_bytes(self, ) -> "bytes":
+        """
+        Convert the signing intent to bytes.
+        """
+
+        return _UniffiConverterBytes.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_to_bytes,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def version(self, ) -> "IntentVersion":
+        """
+        Get the version of the signing intent.
+        """
+
+        return _UniffiConverterTypeIntentVersion.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_version,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Intent):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeIntent.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, Intent):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeIntent.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeIntent:
+
+    @staticmethod
+    def lift(value: int):
+        return Intent._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Intent):
+        if not isinstance(value, Intent):
+            raise TypeError("Expected Intent instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: IntentProtocol):
+        if not isinstance(value, Intent):
+            raise TypeError("Expected Intent instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: IntentProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class MakeMoveVectorProtocol(typing.Protocol):
     """
     Command to build a move vector out of a set of individual elements
@@ -40852,6 +41627,28 @@ class PersonalMessage():
 
 
 
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PersonalMessage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePersonalMessage.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, PersonalMessage):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypePersonalMessage.lower(other)))
 
 
 
@@ -50596,6 +51393,37 @@ def input_to_bcs(data: "Input") -> "bytes":
         _UniffiConverterTypeInput.lower(data)))
 
 
+def intent_from_bytes(bytes: "bytes") -> "Intent":
+    """
+    Create a signing intent from bytes.
+    """
+
+    _UniffiConverterBytes.check_lower(bytes)
+    
+    return _UniffiConverterTypeIntent.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeIntentError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes,
+        _UniffiConverterBytes.lower(bytes)))
+
+
+def intent_from_hex_string(hex: "str") -> "Intent":
+    """
+    Create a signing intent from a hex string.
+    """
+
+    _UniffiConverterString.check_lower(hex)
+    
+    return _UniffiConverterTypeIntent.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeIntentError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string,
+        _UniffiConverterString.lower(hex)))
+
+
+def intent_prefix_length() -> "int":
+    """
+    Returns the intent prefix length, i.e. the number of bytes prepended to the
+    data before being signed.
+    """
+
+    return _UniffiConverterUInt64.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length,))
+
+
 def jwk_from_bcs(bcs: "bytes") -> "Jwk":
     """
     Create this type from BCS encoded bytes.
@@ -52034,7 +52862,12 @@ __all__ = [
     "ExecutionError",
     "ExecutionStatus",
     "Feature",
+    "HashingIntentScope",
     "IdOperation",
+    "IntentAppId",
+    "IntentError",
+    "IntentScope",
+    "IntentVersion",
     "MnemonicLength",
     "MoveAbility",
     "MoveVisibility",
@@ -52223,6 +53056,9 @@ __all__ = [
     "identifier_to_bcs",
     "input_from_bcs",
     "input_to_bcs",
+    "intent_from_bytes",
+    "intent_from_hex_string",
+    "intent_prefix_length",
     "jwk_from_bcs",
     "jwk_id_from_bcs",
     "jwk_id_to_bcs",
@@ -52392,6 +53228,7 @@ __all__ = [
     "GraphQlClient",
     "Identifier",
     "Input",
+    "Intent",
     "MakeMoveVector",
     "MergeCoins",
     "MoveArg",
