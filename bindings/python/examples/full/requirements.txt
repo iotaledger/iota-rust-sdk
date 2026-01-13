@@ -1,2 +1,1 @@
---index-url https://test.pypi.org/simple/
-iota-sdk==3.0.0a1.dev7
+iota-sdk

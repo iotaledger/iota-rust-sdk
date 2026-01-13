@@ -4,7 +4,7 @@ To set up the environment:
 
 ```bash
 uv venv
-uv pip install -r requirements.txt
+uv pip install --pre --upgrade -r requirements.txt
 ```
 
 Then run:

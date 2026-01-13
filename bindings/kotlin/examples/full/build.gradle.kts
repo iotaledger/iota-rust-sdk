@@ -10,7 +10,7 @@ version = "1.0-SNAPSHOT"
 repositories { mavenCentral() }
 
 dependencies {
-    implementation("org.iota:iota-sdk:0.0.1-alpha.2")
+    implementation("org.iota:iota-sdk:latest.release")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }
 
