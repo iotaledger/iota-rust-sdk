@@ -224,7 +224,7 @@ pub struct RandomnessStateUpdate {
     /// The initial version of the randomness object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub randomness_obj_initial_shared_version: u64,
+    pub randomness_obj_initial_shared_version: Version,
 }
 
 /// Transaction type
@@ -296,7 +296,7 @@ impl TransactionKind {
             Self::Genesis(_) => HashSet::new(),
             Self::ConsensusCommitPrologueV1(_) => HashSet::from([InputObject::Shared {
                 object_id: ObjectId::CLOCK,
-                initial_shared_version: 1,
+                initial_shared_version: Version(1),
                 mutable: true,
             }]),
             Self::AuthenticatorStateUpdateV1(update) => HashSet::from([InputObject::Shared {
@@ -319,7 +319,7 @@ impl TransactionKind {
                         | EndOfEpochTransactionKind::ChangeEpochV4(_) => {
                             set.insert(InputObject::Shared {
                                 object_id: ObjectId::SYSTEM,
-                                initial_shared_version: 1,
+                                initial_shared_version: Version(1),
                                 mutable: true,
                             });
                         }
@@ -562,7 +562,7 @@ pub struct AuthenticatorStateExpire {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: Version,
 }
 
 /// Update the set of valid JWKs
@@ -595,7 +595,7 @@ pub struct AuthenticatorStateUpdateV1 {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: Version,
 }
 
 /// A new Jwk
@@ -1132,7 +1132,7 @@ pub enum Input {
     Shared {
         object_id: ObjectId,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        initial_shared_version: u64,
+        initial_shared_version: Version,
         /// Controls whether the caller asks for a mutable reference to the
         /// shared object.
         mutable: bool,
@@ -1145,22 +1145,22 @@ pub enum Input {
 impl Input {
     pub const IOTA_SYSTEM_MUT: Self = Self::Shared {
         object_id: ObjectId::SYSTEM,
-        initial_shared_version: 1,
+        initial_shared_version: Version(1),
         mutable: true,
     };
     pub const CLOCK_IMM: Self = Self::Shared {
         object_id: ObjectId::CLOCK,
-        initial_shared_version: 1,
+        initial_shared_version: Version(1),
         mutable: false,
     };
     pub const CLOCK_MUT: Self = Self::Shared {
         object_id: ObjectId::CLOCK,
-        initial_shared_version: 1,
+        initial_shared_version: Version(1),
         mutable: true,
     };
     pub const AUTHENTICATOR_MUT: Self = Self::Shared {
         object_id: ObjectId::AUTHENTICATOR_STATE,
-        initial_shared_version: 1,
+        initial_shared_version: Version(1),
         mutable: true,
     };
 

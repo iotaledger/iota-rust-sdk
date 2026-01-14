@@ -5,158 +5,7 @@
 use std::collections::BTreeMap;
 
 use super::{Address, Digest, Identifier, ObjectId, StructTag};
-
-pub type Version = u64;
-
-/// A trait which defines consts and methods for the [`Version`] type, which is
-/// a redefinition of u64.
-pub trait VersionExt: Sized {
-    /// An inclusive lower limit on a valid sequence number.
-    ///
-    /// A valid sequence number means an object, which this sequence number
-    /// is assigned to, does not appear in a cancelled transaction.
-    const MIN_VALID_INCL: Version;
-
-    /// An exclusive upper limit on a valid sequence number: sequence numbers
-    /// strictly smaller than this limit are valid sequence numbers.
-    ///
-    /// A valid sequence number means an object, which this sequence number
-    /// is assigned to, does not appear in a cancelled transaction.
-    /// Sequence numbers larger than this value are "special" and
-    /// assigned to objects that appear in cancelled transactions.
-    const MAX_VALID_EXCL: Version;
-
-    /// Special sequence number that is assigned to objects which are accessed
-    /// immutably in a cancelled transaction.
-    const CANCELLED_READ: Version;
-
-    /// Special sequence number that was assigned to congested objects which
-    /// cause transaction cancellations. Note that this special sequence
-    /// number was only used prior to the introduction of a gas price feedback
-    /// mechanism, but it is kept for backward compatibility.
-    const CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK: Version;
-    const RANDOMNESS_UNAVAILABLE: Version;
-
-    // NOTE: if you want to add new Version constants used for cancellation
-    // reasons different than those used for cancellations due to shared object
-    // congestion, please make sure their offset is less than
-    // CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK
-
-    /// In the gas price feedback mechanism, sequence numbers >=
-    /// `Version::MAX_VALID_EXCL` +
-    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-    /// objects that cause transactions cancellations due to congestion.
-    ///
-    /// Sequence numbers larger than `Version::MAX_VALID_EXCL` but
-    /// smaller than `Version::MAX_VALID_EXCL` +
-    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-    /// intended for other transaction cancellation reasons.
-    ///
-    /// There unlikely will be more than 1000 non-congestion cancellation
-    /// reasons, but this offset can be increased if needed, as long as
-    /// (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
-    /// overflow `u64::MAX`.
-    const CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK: Version;
-
-    /// Minimum congested sequence number used in the gas price feedback
-    /// mechanism. A congested sequence number is assigned to objects that
-    /// cause transaction cancellations.
-    const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Version;
-
-    /// Returns a special sequence number used for congested shared objects:
-    /// `Version::MIN_CONGESTED + suggested_gas_price`,
-    /// where `suggested_gas_price` is embedded into a congested sequence
-    /// number to facilitate a gas price feedback mechanism for transactions
-    /// cancelled due to shared object congestion.
-    fn new_congested_with_suggested_gas_price(suggested_gas_price: u64) -> Self;
-
-    /// Check if this sequence number is congested, i.e., the corresponding
-    /// object is the reason for transaction cancellation.
-    fn is_congested(&self) -> bool;
-
-    /// Returns the `suggested_gas_price` embedded in this congested shared
-    /// object sequence number. The `suggested_gas_price` here is used for a
-    /// gas price feedback mechanism for transactions cancelled due to
-    /// shared object congestion.
-    fn get_congested_version_suggested_gas_price(&self) -> u64;
-
-    /// Returns a new version that is greater than all versions
-    /// in `inputs`, assuming this operation will not overflow.
-    fn lamport_increment(inputs: impl IntoIterator<Item = Version>) -> Version;
-
-    /// Checks if this version is cancelled, i.e., the corresponding
-    /// object appears in a cancelled transaction.
-    fn is_cancelled(&self) -> bool;
-
-    /// Checks if this version is valid, i.e., the corresponding
-    /// object does not appear in a cancelled transaction.
-    fn is_valid(&self) -> bool;
-}
-
-impl VersionExt for Version {
-    const MIN_VALID_INCL: Version = Version::MIN;
-
-    const MAX_VALID_EXCL: Version = 0x7fff_ffff_ffff_ffff;
-
-    const CANCELLED_READ: Version = Version::MAX_VALID_EXCL + 1;
-
-    const CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK: Version = Version::MAX_VALID_EXCL + 2;
-
-    const RANDOMNESS_UNAVAILABLE: Version = Version::MAX_VALID_EXCL + 3;
-
-    const CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK: Version = 1_000;
-
-    const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Version =
-        Version::MAX_VALID_EXCL + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK;
-
-    fn new_congested_with_suggested_gas_price(suggested_gas_price: u64) -> Self {
-        let (version, overflows) =
-            Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK.overflowing_add(suggested_gas_price);
-        debug_assert!(
-            !overflows,
-            "the calculated version for a congested shared objects overflows"
-        );
-
-        version
-    }
-
-    fn is_congested(&self) -> bool {
-        *self == Self::CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK
-            || *self >= Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK
-    }
-
-    fn get_congested_version_suggested_gas_price(&self) -> u64 {
-        assert!(
-            *self >= Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK,
-            "this is not a version used for congested shared objects in the gas price feedback \
-                mechanism"
-        );
-
-        self - Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK
-    }
-
-    fn lamport_increment(inputs: impl IntoIterator<Item = Version>) -> Version {
-        let max_input = inputs.into_iter().fold(Version::default(), core::cmp::max);
-
-        assert!(
-            max_input.is_valid(),
-            "cannot increment a version: \
-                maximum valid version has already been reached"
-        );
-
-        max_input + 1
-    }
-
-    fn is_cancelled(&self) -> bool {
-        *self == Version::CANCELLED_READ
-            || *self == Version::RANDOMNESS_UNAVAILABLE
-            || self.is_congested()
-    }
-
-    fn is_valid(&self) -> bool {
-        *self < Version::MAX_VALID_EXCL
-    }
-}
+use crate::Version;
 
 /// Reference to an object
 ///
@@ -1177,7 +1026,7 @@ mod serialization {
                         Identifier::new("foo").unwrap(),
                         Vec::new(),
                     ),
-                    version: 12,
+                    version: Version(12),
                     contents: ObjectId::ZERO.into(),
                 }),
                 // owner: Owner::Address(Address::ZERO),
@@ -1195,7 +1044,7 @@ mod serialization {
                 "{}",
                 serde_json::to_string_pretty(&ObjectReference {
                     object_id: ObjectId::ZERO,
-                    version: 1,
+                    version: Version(1),
                     digest: Digest::ZERO,
                 })
                 .unwrap()

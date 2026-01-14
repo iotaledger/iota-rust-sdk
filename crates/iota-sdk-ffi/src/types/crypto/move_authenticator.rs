@@ -45,7 +45,7 @@ impl MoveAuthenticator {
             call_args.into_iter().map(|v| v.0.clone()).collect(),
             type_args.into_iter().map(|v| v.0.clone()).collect(),
             **object_to_authenticate,
-            initial_shared_version,
+            iota_sdk::types::Version(initial_shared_version),
         ))
     }
 

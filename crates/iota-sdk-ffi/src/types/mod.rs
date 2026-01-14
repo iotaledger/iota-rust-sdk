@@ -20,6 +20,7 @@ pub mod struct_tag;
 pub mod transaction;
 pub mod type_tag;
 pub mod validator;
+pub mod version;
 
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
