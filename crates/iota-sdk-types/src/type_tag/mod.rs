@@ -374,6 +374,16 @@ impl IdentifierRef {
         unsafe { std::mem::transmute::<&'static str, &'static Self>(s) }
     }
 
+    pub fn new<'a>(s: &'a str) -> Result<&'a Self, TypeParseError> {
+        if !Identifier::is_valid(s) {
+            return Err(TypeParseError {
+                source: s.to_owned(),
+            });
+        }
+
+        unsafe { Ok(std::mem::transmute::<&'a str, &'a Self>(s)) }
+    }
+
     /// Returns true if this string is a valid identifier.
     pub const fn is_valid(s: &str) -> bool {
         Identifier::is_valid(s)
