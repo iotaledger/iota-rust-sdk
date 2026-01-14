@@ -71,7 +71,7 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const STD_LIB: Self = Self::from_u16(1);
+    pub const STD: Self = Self::from_u16(1);
     pub const FRAMEWORK: Self = Self::from_u16(2);
     pub const SYSTEM: Self = Self::from_u16(3);
     pub const GENESIS_BRIDGE: Self = Self::from_u16(0xb);
@@ -91,7 +91,7 @@ impl Address {
 
     pub fn is_system_package(&self) -> bool {
         [
-            Self::STD_LIB,
+            Self::STD,
             Self::FRAMEWORK,
             Self::SYSTEM,
             Self::GENESIS_BRIDGE,
@@ -300,7 +300,7 @@ impl schemars::JsonSchema for Address {
         "Address".to_owned()
     }
 
-    fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
         use schemars::schema::{InstanceType, Metadata, SchemaObject, StringValidation};
 
         let hex_length = Address::LENGTH * 2;

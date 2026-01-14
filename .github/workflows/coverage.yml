@@ -46,7 +46,7 @@ jobs:
       CARGO_NET_RETRY: 10
       RUSTUP_MAX_RETRIES: 10
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           ref: ${{ github.event.inputs.branch-or-commit || github.ref }}
 
@@ -93,7 +93,7 @@ jobs:
           make package_test_example_v1.json package_test_example_v2.json
 
           echo "Generating coverage data (.profraw files)."
-          cargo llvm-cov --ignore-run-fail --no-report nextest
+          cargo llvm-cov --ignore-run-fail --no-report nextest --workspace --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build
 
           echo "Merging .profraw files."
           find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \
@@ -110,8 +110,7 @@ jobs:
           echo "Creating report (lcov.info)."
           LLVM_PROFILE_FILE="nextest.profdata" cargo llvm-cov report \
             --lcov \
-            --output-path lcov.info \
-            --ignore-filename-regex "crates/iota-sdk-ffi/*"
+            --output-path lcov.info
 
           echo "Removing absolute path prefix: ${{ github.workspace }} from report."
           sed --in-place "s#${{ github.workspace }}#.#g" lcov.info

@@ -15,7 +15,7 @@ fun main() = runBlocking {
             Address.fromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
         val iotaNamesObjectId =
             ObjectId.fromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
-        val stdlibAddress = Address.stdLib()
+        val stdAddress = Address.std()
 
         val name = "name.iota"
         println("Looking up name: $name")
@@ -56,17 +56,17 @@ fun main() = runBlocking {
             iotaNamesPackageAddress,
             Identifier("registry"),
             Identifier("lookup"),
-            listOf(PtbArgument.res("iota_names"), PtbArgument.res("name")),
+            listOf(PtbArgument.assigned("iota_names"), PtbArgument.assigned("name")),
             emptyList(),
             listOf("name_record_opt"),
         )
 
         // 4. Borrow name record from option
         builder.moveCall(
-            stdlibAddress,
+            stdAddress,
             Identifier("option"),
             Identifier("borrow"),
-            listOf(PtbArgument.res("name_record_opt")),
+            listOf(PtbArgument.assigned("name_record_opt")),
             listOf(
                 TypeTag.newStruct(
                     StructTag(
@@ -84,17 +84,17 @@ fun main() = runBlocking {
             iotaNamesPackageAddress,
             Identifier("name_record"),
             Identifier("target_address"),
-            listOf(PtbArgument.res("name_record")),
+            listOf(PtbArgument.assigned("name_record")),
             emptyList(),
             listOf("target_address_opt"),
         )
 
         // 6. Borrow address from option
         builder.moveCall(
-            stdlibAddress,
+            stdAddress,
             Identifier("option"),
             Identifier("borrow"),
-            listOf(PtbArgument.res("target_address_opt")),
+            listOf(PtbArgument.assigned("target_address_opt")),
             listOf(TypeTag.newAddress()),
             listOf("target_address"),
         )

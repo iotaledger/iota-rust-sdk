@@ -60,7 +60,7 @@ fun main() = runBlocking {
         // Publish the package and receive the upgrade cap in return
         builderPublish.publish(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
-        builderPublish.transferObjects(sender, listOf(PtbArgument.res("upgrade_cap")))
+        builderPublish.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
         val txPublish = builderPublish.finish()
 
         // Perform a dry-run first to check if everything is correct
@@ -131,7 +131,7 @@ fun main() = runBlocking {
         builderUpgrade.upgrade(
             packageId = packageId,
             packageData = packageData,
-            upgradeTicket = PtbArgument.res("upgrade_ticket"),
+            upgradeTicket = PtbArgument.assigned("upgrade_ticket"),
             name = "upgrade_receipt",
         )
 
@@ -140,7 +140,7 @@ fun main() = runBlocking {
             `package` = Address.framework(),
             module = Identifier("package"),
             function = Identifier("commit_upgrade"),
-            arguments = listOf(upgradeCapArg, PtbArgument.res("upgrade_receipt")),
+            arguments = listOf(upgradeCapArg, PtbArgument.assigned("upgrade_receipt")),
         )
 
         // Finalize the PTB

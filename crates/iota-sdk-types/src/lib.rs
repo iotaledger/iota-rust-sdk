@@ -136,19 +136,19 @@ pub use checkpoint::{
 };
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Bn254FieldElement, CircomG1, CircomG2, Ed25519PublicKey,
-    Ed25519Signature, HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentMessage,
-    IntentScope, IntentVersion, InvalidSignatureScheme, InvalidZkLoginAuthenticatorError, Jwk,
-    JwkId, MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt,
-    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SimpleSignature, UserSignature, ZkLoginAuthenticator, ZkLoginClaim,
-    ZkLoginInputs, ZkLoginProof, ZkLoginPublicIdentifier,
+    Ed25519Signature, HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError,
+    IntentMessage, IntentScope, IntentVersion, InvalidSignatureScheme,
+    InvalidZkLoginAuthenticatorError, Jwk, JwkId, MoveAuthenticator, MultisigAggregatedSignature,
+    MultisigCommittee, MultisigMember, MultisigMemberPublicKey, MultisigMemberSignature,
+    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt, Secp256k1PublicKey,
+    Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature,
+    UserSignature, ZkLoginAuthenticator, ZkLoginClaim, ZkLoginInputs, ZkLoginProof,
+    ZkLoginPublicIdentifier,
 };
 pub use digest::{Digest, DigestParseError, SigningDigest};
 pub use effects::{
-    ChangedObject, DryRunEffect, DryRunMutation, DryRunResult, DryRunReturn, IdOperation, ObjectIn,
-    ObjectOut, TransactionArgument, TransactionEffects, TransactionEffectsV1, UnchangedSharedKind,
-    UnchangedSharedObject,
+    ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
+    UnchangedSharedKind, UnchangedSharedObject,
 };
 pub use events::{BalanceChange, Event, TransactionEvents};
 pub use execution_status::{
@@ -168,7 +168,7 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     ActiveJwk, Argument, AuthenticatorStateExpire, AuthenticatorStateUpdateV1,
-    CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, Command,
+    CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4, Command,
     ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
     ExecutionTimeObservation, ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment,
     GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
@@ -441,7 +441,7 @@ mod _schemars {
             "u64".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Radix-10 encoded 64-bit unsigned integer".to_owned()),
@@ -466,7 +466,7 @@ mod _schemars {
             "i128".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
@@ -491,7 +491,7 @@ mod _schemars {
             "u256".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Radix-10 encoded 256-bit unsigned integer".to_owned()),
@@ -516,7 +516,7 @@ mod _schemars {
             "Base64".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Base64 encoded data".to_owned()),
@@ -541,7 +541,7 @@ mod _schemars {
             "Base58".to_owned()
         }
 
-        fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
             SchemaObject {
                 metadata: Some(Box::new(Metadata {
                     description: Some("Base58 encoded data".to_owned()),

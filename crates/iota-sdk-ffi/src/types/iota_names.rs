@@ -8,7 +8,8 @@ use iota_sdk::types::iota_names::{IotaNamesNft, NameFormat};
 use crate::{error::Result, types::object::ObjectId};
 
 /// An object to manage a second-level name (SLN).
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, Eq, PartialEq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct NameRegistration(iota_sdk::types::iota_names::NameRegistration);
 
 #[uniffi::export]
@@ -36,12 +37,12 @@ impl NameRegistration {
     }
 
     pub fn expiration_timestamp_ms(&self) -> u64 {
-        iota_sdk::types::iota_names::NameRegistration::MODULE;
         self.0.expiration_timestamp_ms()
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, Eq, Hash, PartialEq, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct Name(iota_sdk::types::iota_names::Name);
 
 #[uniffi::export]

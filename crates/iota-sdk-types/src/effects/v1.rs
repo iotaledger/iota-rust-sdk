@@ -287,6 +287,7 @@ pub struct UnchangedSharedObject {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
@@ -350,6 +351,7 @@ impl UnchangedSharedKind {
     schemars(tag = "state", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
@@ -424,6 +426,7 @@ impl ObjectIn {
     schemars(tag = "state", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
@@ -513,6 +516,7 @@ impl ObjectOut {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum IdOperation {
     None,
     Created,

@@ -57,12 +57,12 @@ pub trait IotaNamesNft {
     const TYPE_NAME: &IdentifierRef;
 
     fn type_(package_id: Address) -> StructTag {
-        StructTag {
-            address: package_id,
-            module: Self::MODULE.into(),
-            name: Self::TYPE_NAME.into(),
-            type_params: Vec::new(),
-        }
+        StructTag::new(
+            package_id,
+            Self::MODULE.into(),
+            Self::TYPE_NAME.into(),
+            Vec::new(),
+        )
     }
 
     fn name(&self) -> &Name;

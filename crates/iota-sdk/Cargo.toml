@@ -2,11 +2,14 @@
 name = "iota-sdk"
 version = "3.0.0-alpha.1"
 authors = ["IOTA Foundation <info@iota.org>"]
-edition = "2021"
+edition = "2024"
 license = "Apache-2.0"
 readme = "../../README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "The official SDK for IOTA"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
 
 [features]
 default = [
@@ -61,6 +64,9 @@ iota-crypto = { workspace = true, features = ["ed25519"], optional = true }
 iota-graphql-client = { workspace = true, optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
 iota-types = { workspace = true, features = ["rand"], optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.3", features = ["wasm_js"] }
 
 [dev-dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }

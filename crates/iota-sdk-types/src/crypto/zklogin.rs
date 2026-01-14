@@ -840,7 +840,7 @@ mod serialization {
             };
 
             let mut buf = Vec::new();
-            buf.push(SignatureScheme::ZkLogin as u8);
+            buf.push(SignatureScheme::ZkLoginAuthenticator as u8);
 
             bcs::serialize_into(&mut buf, &authenticator_ref).expect("serialization cannot fail");
             buf
@@ -855,7 +855,7 @@ mod serialization {
                     SignatureFromBytesError::new("missing signature scheme flag")
                 })?)
                 .map_err(SignatureFromBytesError::new)?;
-            if flag != SignatureScheme::ZkLogin {
+            if flag != SignatureScheme::ZkLoginAuthenticator {
                 return Err(SignatureFromBytesError::new("invalid zklogin flag"));
             }
             let bcs_bytes = &bytes[1..];

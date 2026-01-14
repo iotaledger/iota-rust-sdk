@@ -2,7 +2,7 @@
 name = "iota-sdk-crypto"
 version = "0.0.1-alpha.1"
 authors = ["IOTA Foundation <info@iota.org>"]
-edition = "2021"
+edition = "2024"
 license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
@@ -112,13 +112,12 @@ iota-types = { workspace = true, features = ["proptest"] }
 proptest = { workspace = true, features = ["std"] }
 test-strategy.workspace = true
 
-[target.wasm32-unknown-unknown.dev-dependencies]
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test = "0.3"
 # `getrandom` renamed the WebAssembly support feature from "js" to "wasm_js"
 # Since both versions are in our dependency tree, we need to overwrite them with the proper feature
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
-test-strategy = "=0.4.1"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }

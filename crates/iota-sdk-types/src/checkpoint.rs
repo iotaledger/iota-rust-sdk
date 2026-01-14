@@ -34,6 +34,7 @@ pub type ProtocolVersion = u64;
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum CheckpointCommitment {
     /// An Elliptic Curve Multiset Hash attesting to the set of Objects that
     /// compose the live state of the IOTA blockchain.

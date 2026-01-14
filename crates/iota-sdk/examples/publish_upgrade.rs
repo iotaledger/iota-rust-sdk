@@ -24,10 +24,12 @@
 use std::env::var;
 
 use eyre::{Result, bail};
-use iota_crypto::{IotaSigner, ed25519::Ed25519PrivateKey};
-use iota_graphql_client::{Client, WaitForTx, faucet::FaucetClient};
-use iota_transaction_builder::{TransactionBuilder, res};
-use iota_types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy};
+use iota_sdk::{
+    crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
+    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
+    transaction_builder::{TransactionBuilder, assigned},
+    types::{Address, MovePackageData, ObjectId, ObjectOut, StructTag, UpgradePolicy},
+};
 use rand::rngs::OsRng;
 
 #[tokio::main]
@@ -63,9 +65,9 @@ async fn main() -> Result<()> {
     builder
         // Publish the package and receive the upgrade cap
         .publish(package_data.clone())
-        .name("upgrade_cap")
+        .assign("upgrade_cap")
         // Transfer the upgrade cap to the sender address
-        .transfer_objects(sender, [res("upgrade_cap")]);
+        .transfer_objects(sender, [assigned("upgrade_cap")]);
 
     let tx = builder.finish().await?;
 
@@ -133,13 +135,13 @@ async fn main() -> Result<()> {
             UpgradePolicy::Compatible as u8,
             package_data.digest,
         ))
-        .name("upgrade_ticket")
+        .assign("upgrade_ticket")
         // Upgrade the package to receive an upgrade receipt
-        .upgrade(package_id, package_data, res("upgrade_ticket"))
-        .name("upgrade_receipt")
+        .upgrade(package_id, package_data, assigned("upgrade_ticket"))
+        .assign("upgrade_receipt")
         // Commit the upgrade using the receipt
         .move_call(Address::FRAMEWORK, "package", "commit_upgrade")
-        .arguments((upgrade_cap_id, res("upgrade_receipt")));
+        .arguments((upgrade_cap_id, assigned("upgrade_receipt")));
 
     let tx = builder.finish().await?;
 

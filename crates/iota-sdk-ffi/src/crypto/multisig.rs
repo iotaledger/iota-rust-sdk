@@ -1,12 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    borrow::Cow,
-    sync::{Arc, RwLock},
-};
+use std::{borrow::Cow, sync::Arc};
 
-use iota_sdk::crypto::{SignatureError, Verifier};
+use iota_sdk::crypto::Verifier;
 
 use crate::{
     crypto::zklogin::ZkloginVerifier,
@@ -18,7 +15,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct MultisigVerifier(pub iota_sdk::crypto::multisig::MultisigVerifier);
 
 #[uniffi::export]
@@ -48,7 +46,8 @@ impl MultisigVerifier {
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct UserSignatureVerifier(pub iota_sdk::crypto::multisig::UserSignatureVerifier);
 
 #[uniffi::export]
@@ -77,7 +76,8 @@ impl UserSignatureVerifier {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct MultisigAggregator(pub iota_sdk::crypto::multisig::MultisigAggregator);
 
 #[uniffi::export]
@@ -119,7 +119,7 @@ impl MultisigAggregator {
     }
 
     pub fn finish(&self) -> Result<MultisigAggregatedSignature> {
-        let mut aggregator = self.0.clone();
+        let aggregator = self.0.clone();
         Ok(aggregator.finish()?.into())
     }
 }

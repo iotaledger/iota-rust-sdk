@@ -1,21 +1,18 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::sync::Arc;
 
 use base64ct::Encoding;
-use iota_sdk::{
-    graphql_client::{
-        pagination::{Direction, PaginationFilter},
-        query_types::{
-            Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
-            MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection,
-            MoveStructQuery, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
-            ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig,
-            TransactionBlockKindInput, ValidatorCredentials,
-        },
+use iota_sdk::graphql_client::{
+    pagination::{Direction, PaginationFilter},
+    query_types::{
+        Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
+        MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
+        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ProtocolConfigAttr,
+        ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig, TransactionBlockKindInput,
+        ValidatorCredentials,
     },
-    types::{Digest, Identifier, StructTag},
 };
 
 use crate::types::{
@@ -735,6 +732,7 @@ pub struct ValidatorCredentials {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum TransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
@@ -928,8 +926,8 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
     }
 }
 
-#[derive(derive_more::From, derive_more::Display, uniffi::Object)]
-#[uniffi::export(Display)]
+#[derive(Debug, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display)]
 pub struct MoveFunction(iota_sdk::graphql_client::query_types::MoveFunction);
 
 #[uniffi::export]
@@ -960,6 +958,7 @@ impl MoveFunction {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum MoveVisibility {
     Public,
     Private,
@@ -967,6 +966,7 @@ pub enum MoveVisibility {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum MoveAbility {
     Copy,
     Drop,
@@ -1238,6 +1238,7 @@ pub struct ServiceConfig {
 }
 
 #[uniffi::remote(Enum)]
+#[non_exhaustive]
 pub enum Feature {
     Analytics,
     Coins,

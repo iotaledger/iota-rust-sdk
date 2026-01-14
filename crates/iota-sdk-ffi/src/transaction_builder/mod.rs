@@ -3,4 +3,6 @@
 
 mod builder;
 mod client_builder;
+pub mod move_authenticator;
 pub mod ptb_arg;
+pub mod signer;

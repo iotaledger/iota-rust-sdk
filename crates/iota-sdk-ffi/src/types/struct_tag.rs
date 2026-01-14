@@ -21,8 +21,8 @@ use crate::{
 ///
 /// UNDERSCORE = %x95
 /// ```
-#[derive(PartialEq, Eq, Hash, derive_more::From, uniffi::Object)]
-#[uniffi::export(Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct Identifier(pub iota_sdk::types::Identifier);
 
 #[uniffi::export]
@@ -85,8 +85,8 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
 ///              identifier         ; name of the type
 ///              (vector type-tag)  ; type parameters
 /// ```
-#[derive(derive_more::From, derive_more::Display, uniffi::Object, PartialEq, Eq)]
-#[uniffi::export(Display, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
 
 #[uniffi::export]
@@ -98,15 +98,15 @@ impl StructTag {
         name: &Identifier,
         type_params: Vec<Arc<TypeTag>>,
     ) -> Self {
-        Self(iota_sdk::types::StructTag {
-            address: address.0,
-            module: module.0.clone(),
-            name: name.0.clone(),
-            type_params: type_params
+        Self(iota_sdk::types::StructTag::new(
+            address.0,
+            module.0.clone(),
+            name.0.clone(),
+            type_params
                 .iter()
                 .map(|type_tag| type_tag.0.clone())
                 .collect(),
-        })
+        ))
     }
 
     #[uniffi::constructor]
