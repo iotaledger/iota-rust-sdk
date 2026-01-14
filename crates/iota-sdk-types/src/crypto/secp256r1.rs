@@ -49,6 +49,12 @@ impl Secp256r1PublicKey {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Secp256r1PublicKey.
     pub const fn into_inner(self) -> [u8; Self::LENGTH] {
         self.0
@@ -165,6 +171,12 @@ impl Secp256r1Signature {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
         Self::new(buf)
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
     }
 
     /// Return the underlying byte array of an Secp256r1Signature.

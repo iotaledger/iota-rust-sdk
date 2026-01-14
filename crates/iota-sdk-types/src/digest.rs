@@ -75,6 +75,12 @@ impl Digest {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Returns a slice to the inner array representation of this digest.
     pub const fn inner(&self) -> &[u8; Self::LENGTH] {
         &self.0

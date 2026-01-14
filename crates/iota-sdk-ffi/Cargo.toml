@@ -22,7 +22,6 @@ derive_more = { workspace = true, features = ["from", "deref", "display"] }
 hex.workspace = true
 paste.workspace = true
 primitive-types.workspace = true
-rand.workspace = true
 roaring.workspace = true
 serde.workspace = true
 serde_json.workspace = true

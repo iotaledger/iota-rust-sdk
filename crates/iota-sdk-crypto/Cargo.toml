@@ -24,10 +24,10 @@ rustdoc-args = [
 
 [features]
 default = []
-ed25519 = ["dep:ed25519-dalek", "dep:rand_core"]
-secp256r1 = ["dep:p256", "dep:rand_core"]
+ed25519 = ["dep:ed25519-dalek"]
+secp256r1 = ["dep:p256"]
 passkey = ["secp256r1", "dep:sha2"]
-secp256k1 = ["dep:k256", "dep:rand_core", "signature/std"]
+secp256k1 = ["dep:k256", "signature/std"]
 bech32 = ["dep:bech32", "signature/std"]
 zklogin = [
   "dep:ark-bn254",
@@ -51,8 +51,9 @@ pem = [
   "p256?/pem",
   "k256?/pem",
 ]
-bls12381 = ["dep:blst", "dep:rand_core", "dep:roaring", "signature/std"]
+bls12381 = ["dep:blst", "dep:roaring", "signature/std"]
 mnemonic = ["dep:bip32", "dep:bip39", "dep:slip10_ed25519"]
+rand = ["dep:rand_core"]
 
 [dependencies]
 iota-types = { workspace = true, features = ["hash", "serde"] }

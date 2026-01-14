@@ -74,6 +74,8 @@ impl Bls12381PrivateKey {
         self.verifying_key().public_key()
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn generate<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
@@ -82,6 +84,12 @@ impl Bls12381PrivateKey {
         rng.fill_bytes(&mut buf);
         let secret_key = SecretKey::key_gen(&buf, &[]).unwrap();
         Self(secret_key)
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
     }
 
     pub fn sign_checkpoint_summary(&self, summary: &CheckpointSummary) -> ValidatorSignature {

@@ -45,9 +45,8 @@ impl Digest {
     }
 
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        let mut rng = rand::thread_rng();
-        Self(iota_sdk::types::Digest::generate(&mut rng))
+    pub fn random() -> Self {
+        Self(iota_sdk::types::Digest::random())
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {

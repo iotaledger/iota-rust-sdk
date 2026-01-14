@@ -58,6 +58,8 @@ impl Secp256r1PrivateKey {
         Secp256r1PublicKey::new(self.0.verifying_key().as_ref().to_bytes().into())
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn generate<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
@@ -65,6 +67,12 @@ impl Secp256r1PrivateKey {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
         Self::new(buf)
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
     }
 
     #[cfg(feature = "pem")]

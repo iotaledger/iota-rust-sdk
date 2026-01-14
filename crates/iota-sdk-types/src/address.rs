@@ -111,6 +111,12 @@ impl Address {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of a Address.
     pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
