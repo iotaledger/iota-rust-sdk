@@ -313,21 +313,10 @@ impl TransactionKind {
                 let mut set = HashSet::new();
                 for txn in txns {
                     match txn {
-                        EndOfEpochTransactionKind::ChangeEpoch(_) => {
-                            set.insert(InputObject::Shared {
-                                object_id: ObjectId::SYSTEM,
-                                initial_shared_version: 1,
-                                mutable: true,
-                            });
-                        }
-                        EndOfEpochTransactionKind::ChangeEpochV2(_) => {
-                            set.insert(InputObject::Shared {
-                                object_id: ObjectId::SYSTEM,
-                                initial_shared_version: 1,
-                                mutable: true,
-                            });
-                        }
-                        EndOfEpochTransactionKind::ChangeEpochV3(_) => {
+                        EndOfEpochTransactionKind::ChangeEpoch(_)
+                        | EndOfEpochTransactionKind::ChangeEpochV2(_)
+                        | EndOfEpochTransactionKind::ChangeEpochV3(_)
+                        | EndOfEpochTransactionKind::ChangeEpochV4(_) => {
                             set.insert(InputObject::Shared {
                                 object_id: ObjectId::SYSTEM,
                                 initial_shared_version: 1,
@@ -968,7 +957,7 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1079,8 +1068,9 @@ impl ProgrammableTransaction {
                             match ty {
                                 TypeTag::Vector(type_tag) => stack.push(type_tag),
                                 TypeTag::Struct(struct_tag) => {
-                                    packages.push(InputObject::Package(struct_tag.address.into()));
-                                    stack.extend(struct_tag.type_params.iter());
+                                    packages
+                                        .push(InputObject::Package(struct_tag.address().into()));
+                                    stack.extend(struct_tag.type_params().iter());
                                 }
                                 _ => (),
                             }
