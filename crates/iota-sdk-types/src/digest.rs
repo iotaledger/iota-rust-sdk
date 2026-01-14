@@ -115,7 +115,7 @@ impl Digest {
     }
 
     /// Returns the next digest in byte-increasing order.
-    pub fn next_lexicographical(&self) -> Self {
+    pub const fn next_lexicographical(&self) -> Self {
         Self(crate::next_lexicographical_array(&self.0))
     }
 

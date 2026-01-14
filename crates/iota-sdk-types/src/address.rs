@@ -188,7 +188,7 @@ impl Address {
     }
 
     /// Returns the next address in byte-increasing order.
-    pub fn next_lexicographical(&self) -> Self {
+    pub const fn next_lexicographical(&self) -> Self {
         Self::new(crate::next_lexicographical_array(self.bytes()))
     }
 }
