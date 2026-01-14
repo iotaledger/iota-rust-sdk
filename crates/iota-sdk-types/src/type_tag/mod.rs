@@ -444,6 +444,12 @@ macro_rules! add_struct_tag_ctor {
                     type_params: vec![],
                 }
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
+            }
         }
     };
     ($address:ident, $module:literal, $name:literal, "with-module") => {
@@ -455,6 +461,12 @@ macro_rules! add_struct_tag_ctor {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![],
                 }
+            }
+
+            pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
@@ -471,6 +483,12 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                     type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
                 }
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
+            }
         }
     };
     ($address:ident, $module:literal, $name:literal, "with-module") => {
@@ -482,6 +500,12 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
                 }
+            }
+
+            pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
@@ -498,6 +522,12 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                     type_params: vec![type_tag.into()],
                 }
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
+            }
         }
     };
     ($address:ident, $module:literal, $name:literal, "with-module") => {
@@ -509,6 +539,12 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![type_tag.into()],
                 }
+            }
+
+            pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
