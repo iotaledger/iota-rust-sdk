@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_graphql_client::{
-    WaitForTx,
+    DryRunResult, WaitForTx,
     pagination::{Direction, PaginationFilter},
     query_types::{ObjectFilter, TransactionMetadata},
 };
 use iota_types::{
-    Address, Digest, DryRunResult, Object, ObjectId, SignedTransaction, Transaction,
-    TransactionEffects, TypeTag, UserSignature,
+    Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
+    UserSignature,
 };
 
 /// A trait which defines methods needed from the client for the Transaction
@@ -16,6 +16,8 @@ use iota_types::{
 pub trait ClientMethods {
     /// The error type for this client.
     type Error: 'static + std::error::Error + Send + Sync;
+    /// The result of a dry run.
+    type DryRunResult;
 
     /// Fetch an object
     fn object(
@@ -64,7 +66,7 @@ pub trait ClientMethods {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> impl std::future::Future<Output = Result<DryRunResult, Self::Error>>;
+    ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>>;
 
     /// Execute a transaction
     fn execute_tx(
@@ -84,6 +86,7 @@ pub trait ClientMethods {
 
 impl<T: ClientMethods> ClientMethods for &T {
     type Error = T::Error;
+    type DryRunResult = T::DryRunResult;
 
     fn object(
         &self,
@@ -137,7 +140,7 @@ impl<T: ClientMethods> ClientMethods for &T {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> impl std::future::Future<Output = Result<DryRunResult, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>> {
         (*self).dry_run_tx(tx, skip_checks)
     }
 
@@ -161,6 +164,7 @@ impl<T: ClientMethods> ClientMethods for &T {
 
 impl ClientMethods for iota_graphql_client::Client {
     type Error = iota_graphql_client::error::Error;
+    type DryRunResult = DryRunResult;
 
     async fn object(
         &self,
@@ -227,8 +231,10 @@ impl ClientMethods for iota_graphql_client::Client {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> Result<DryRunResult, Self::Error> {
-        let Transaction::V1(tx) = &tx;
+    ) -> Result<Self::DryRunResult, Self::Error> {
+        let Transaction::V1(tx) = &tx else {
+            unimplemented!("a new enum variant was added and needs to be handled")
+        };
         let gas_objects = tx
             .gas_payment
             .objects
@@ -269,6 +275,7 @@ impl ClientMethods for iota_graphql_client::Client {
 
 impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     type Error = T::Error;
+    type DryRunResult = T::DryRunResult;
 
     fn object(
         &self,
@@ -323,7 +330,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         &self,
         tx: &Transaction,
         skip_checks: bool,
-    ) -> impl std::future::Future<Output = Result<DryRunResult, Self::Error>> {
+    ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>> {
         self.as_ref().dry_run_tx(tx, skip_checks)
     }
 

@@ -43,7 +43,7 @@ func main() {
 
 	iotaNamesObjectId := objIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
 
-	stdlibAddress := iota_sdk.AddressStdLib()
+	stdAddress := iota_sdk.AddressStd()
 
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)
@@ -92,17 +92,17 @@ func main() {
 		iotaNamesPackageAddress,
 		registryModule,
 		lookupFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("iota_names"), iota_sdk.PtbArgumentRes("name")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("iota_names"), iota_sdk.PtbArgumentAssigned("name")},
 		nil,
 		[]string{"name_record_opt"},
 	)
 
 	// 4. Borrow name record from option
 	builder.MoveCall(
-		stdlibAddress,
+		stdAddress,
 		optionModule,
 		borrowFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("name_record_opt")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("name_record_opt")},
 		[]*iota_sdk.TypeTag{iota_sdk.TypeTagNewStruct(nameRecordType)},
 		[]string{"name_record"},
 	)
@@ -112,17 +112,17 @@ func main() {
 		iotaNamesPackageAddress,
 		nameRecordModule,
 		targetAddressFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("name_record")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("name_record")},
 		nil,
 		[]string{"target_address_opt"},
 	)
 
 	// 6. Borrow address from option
 	builder.MoveCall(
-		stdlibAddress,
+		stdAddress,
 		optionModule,
 		borrowFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("target_address_opt")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("target_address_opt")},
 		[]*iota_sdk.TypeTag{iota_sdk.TypeTagNewAddress()},
 		[]string{"target_address"},
 	)

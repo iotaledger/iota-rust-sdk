@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{TransactionBuilder, res, unresolved::Argument},
+    transaction_builder::{TransactionBuilder, assigned, unresolved::Argument},
     types::Address,
 };
 
@@ -19,23 +19,23 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
     builder
-        .move_call(Address::STD_LIB, "u64", "max")
+        .move_call(Address::STD, "u64", "max")
         .arguments((0u64, 1000u64))
         // Assign a name to the result of this command
-        .name("res0");
+        .assign("res0");
     builder
-        .move_call(Address::STD_LIB, "u64", "max")
+        .move_call(Address::STD, "u64", "max")
         .arguments((1000u64, 2000u64))
-        .name("res1");
+        .assign("res1");
 
     builder
-        // Use the named results of previous commands to use as arguments
-        .split_coins(Argument::Gas, [res("res0"), res("res1")])
+        // Use the assigned results of previous commands to use as arguments
+        .split_coins(Argument::Gas, [assigned("res0"), assigned("res1")])
         // For nested results, a tuple or vec can be used to name them
-        .name(vec!["coin0", "coin1"]);
+        .assign(vec!["coin0", "coin1"]);
 
-    // Use named results as arguments
-    builder.transfer_objects(sender_address, [res("coin0"), res("coin1")]);
+    // Use assigned results as arguments
+    builder.transfer_objects(sender_address, [assigned("coin0"), assigned("coin1")]);
 
     let tx = builder.finish().await?;
 

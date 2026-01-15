@@ -56,7 +56,7 @@ func main() {
 
 	for idx, r := range recipients {
 		recipient := addrFromHex(r.address)
-		builder.TransferObjects(recipient, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes(labels[idx])})
+		builder.TransferObjects(recipient, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned(labels[idx])})
 	}
 
 	txn, err := builder.Finish()

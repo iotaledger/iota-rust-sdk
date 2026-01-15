@@ -49,6 +49,7 @@ impl Verifier<SimpleSignature> for SimpleVerifier {
             SimpleSignature::Secp256r1 { .. } => Err(SignatureError::from_source(
                 "support for secp256r1 is not enabled",
             )),
+            _ => Err(SignatureError::from_source("unknown signature scheme")),
         }
     }
 }

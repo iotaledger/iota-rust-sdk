@@ -41,7 +41,7 @@ use super::Address;
 /// type-tag-vector = %x06 type-tag
 /// type-tag-struct = %x07 struct-tag
 /// ```
-#[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TypeTag {
     U8,
@@ -501,14 +501,28 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct StructTag {
-    pub address: Address,
-    pub module: Identifier,
-    pub name: Identifier,
+    address: Address,
+    module: Identifier,
+    name: Identifier,
     #[cfg_attr(feature = "proptest", strategy(proptest::strategy::Just(Vec::new())))]
-    pub type_params: Vec<TypeTag>,
+    type_params: Vec<TypeTag>,
 }
 
 impl StructTag {
+    pub fn new(
+        address: Address,
+        module: Identifier,
+        name: Identifier,
+        type_params: Vec<TypeTag>,
+    ) -> Self {
+        Self {
+            address,
+            module,
+            name,
+            type_params,
+        }
+    }
+
     pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -573,8 +587,8 @@ impl StructTag {
     add_struct_tag_ctor!(SYSTEM, "staking_pool", "StakedIota");
     add_struct_tag_ctor!(SYSTEM, "timelocked_staking", "TimelockedStakedIota");
     add_struct_tag_ctor!(SYSTEM, "iota_system_state_inner", "SystemEpochInfoEvent");
-    add_struct_tag_ctor!(STD_LIB, "ascii", "String", "with-module");
-    add_struct_tag_ctor!(STD_LIB, "string", "String");
+    add_struct_tag_ctor!(STD, "ascii", "String", "with-module");
+    add_struct_tag_ctor!(STD, "string", "String");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "CoinMetadata");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin", "TreasuryCap");
     add_struct_tag_ctor_from_struct_tag!(FRAMEWORK, "coin_manager", "CoinManager");

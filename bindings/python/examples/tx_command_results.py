@@ -14,7 +14,7 @@ async def main():
 
     builder = TransactionBuilder(sender).with_client(client)
 
-    package_addr = Address.std_lib()
+    package_addr = Address.std()
     module_name = Identifier("u64")
     function_name = Identifier("max")
 
@@ -38,17 +38,17 @@ async def main():
 
     builder.split_coins(
         PtbArgument.gas(),
-        # Use the named results of previous commands as arguments
-        [PtbArgument.res("res0"),
-         PtbArgument.res("res1")],
-        # For nested results, a tuple or vec can be used to name them
+        # Use the assigned results of previous commands as arguments
+        [PtbArgument.assigned("res0"),
+         PtbArgument.assigned("res1")],
+        # For nested results, a tuple or vec can be used to assign them
         ["coin0", "coin1"],
     )
 
-    # Use named results as arguments
+    # Use assigned results as arguments
     builder.transfer_objects(
-        sender, [PtbArgument.res("coin0"),
-                 PtbArgument.res("coin1")])
+        sender, [PtbArgument.assigned("coin0"),
+                 PtbArgument.assigned("coin1")])
 
     txn = await builder.finish()
 

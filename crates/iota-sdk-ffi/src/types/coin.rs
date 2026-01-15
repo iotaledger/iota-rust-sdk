@@ -9,7 +9,8 @@ use crate::{
     },
 };
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Coin(pub iota_sdk::types::framework::Coin);
 
 #[uniffi::export]

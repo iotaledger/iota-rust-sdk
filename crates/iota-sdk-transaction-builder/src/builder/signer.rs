@@ -6,8 +6,11 @@
 
 use std::future::Future;
 
-use iota_crypto::{IotaSigner, SignatureError};
-use iota_types::{Transaction, UserSignature};
+use iota_crypto::{
+    IotaSigner, SignatureError, ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey,
+    secp256r1::Secp256r1PrivateKey, simple::SimpleKeypair,
+};
+use iota_types::{MoveAuthenticator, Transaction, UserSignature};
 
 /// Defines a type which can sign a transaction asynchronously.
 ///
@@ -25,10 +28,31 @@ pub trait TransactionSigner {
     ) -> impl Future<Output = Result<UserSignature, Self::Error>>;
 }
 
-impl<T: IotaSigner> TransactionSigner for T {
+macro_rules! impl_basic_signer {
+    ($($signer:ident),*) => {
+        $(
+        impl TransactionSigner for $signer {
+            type Error = SignatureError;
+
+            async fn sign(&self, transaction: &Transaction) -> Result<UserSignature, Self::Error> {
+                self.sign_transaction(transaction)
+            }
+        }
+        )*
+    };
+}
+
+impl_basic_signer!(
+    Ed25519PrivateKey,
+    Secp256k1PrivateKey,
+    Secp256r1PrivateKey,
+    SimpleKeypair
+);
+
+impl TransactionSigner for MoveAuthenticator {
     type Error = SignatureError;
 
-    async fn sign(&self, transaction: &Transaction) -> Result<UserSignature, Self::Error> {
-        self.sign_transaction(transaction)
+    async fn sign(&self, _transaction: &Transaction) -> Result<UserSignature, Self::Error> {
+        Ok(UserSignature::MoveAuthenticator(self.clone()))
     }
 }

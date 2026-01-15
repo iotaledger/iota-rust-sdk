@@ -11,9 +11,9 @@ use std::{
 
 use iota_graphql_client::Client;
 use iota_types::{
-    Address, DryRunResult, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference,
-    Owner, ProgrammableTransaction, StructTag, Transaction, TransactionEffects,
-    TransactionExpiration, TransactionV1, TypeTag,
+    Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
+    ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
+    TransactionV1, TypeTag,
 };
 use reqwest::Url;
 use serde::Serialize;
@@ -21,8 +21,8 @@ use serde::Serialize;
 use crate::{
     ClientMethods, PTBArgument, SharedMut, WaitForTx,
     builder::{
+        assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
-        named_results::{NamedResult, NamedResults},
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
     },
@@ -34,9 +34,10 @@ use crate::{
     },
 };
 
+mod assigned_results;
 pub(crate) mod client_methods;
 pub(crate) mod gas_station;
-mod named_results;
+pub mod move_authenticator;
 /// Argument types for PTBs
 pub mod ptb_arguments;
 pub mod signer;
@@ -75,7 +76,7 @@ pub struct TransactionBuildData {
     /// expiration.
     expiration: TransactionExpiration,
     /// The map of user-defined names that map to a particular command's result.
-    named_results: HashMap<String, Argument>,
+    assigned_results: HashMap<String, Argument>,
     /// The data used for gas station sponsorship.
     gas_station_data: Option<GasStationData>,
 }
@@ -174,14 +175,14 @@ impl TransactionBuildData {
     }
 
     /// Manually set a command with an optional name
-    pub fn named_command(&mut self, cmd: Command, name: impl NamedResults) {
+    pub fn assigned_command(&mut self, cmd: Command, name: impl AssignedResults) {
         self.command(cmd);
-        name.push_named_results(self);
+        name.push_assigned_results(self);
     }
 
-    /// Get the value for the given string in the named results map
-    pub fn get_named_result(&self, name: &str) -> Option<Argument> {
-        self.named_results.get(name).copied()
+    /// Get the value for the given string in the assigned results map
+    pub fn get_assigned_result(&self, name: &str) -> Option<Argument> {
+        self.assigned_results.get(name).copied()
     }
 }
 
@@ -197,7 +198,7 @@ impl TransactionBuilder {
                 sender,
                 sponsor: Default::default(),
                 expiration: Default::default(),
-                named_results: Default::default(),
+                assigned_results: Default::default(),
                 gas_station_data: Default::default(),
             },
             client: (),
@@ -303,13 +304,13 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Manually set a command with an optional name
-    pub fn named_command(&mut self, cmd: Command, name: impl NamedResults) {
-        self.data.named_command(cmd, name);
+    pub fn assigned_command(&mut self, cmd: Command, name: impl AssignedResults) {
+        self.data.assigned_command(cmd, name);
     }
 
-    /// Get the value for the given string in the named results map
-    pub fn get_named_result(&self, name: &str) -> Option<Argument> {
-        self.data.get_named_result(name)
+    /// Get the value for the given string in the assigned results map
+    pub fn get_assigned_result(&self, name: &str) -> Option<Argument> {
+        self.data.get_assigned_result(name)
     }
 
     /// Begin building a move call.
@@ -337,7 +338,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -356,7 +357,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// #         )?,
     /// #         [1000u64],
     /// #     )
-    /// #     .name(("coin"));
+    /// #     .assign(("coin"));
     ///
     /// builder.transfer_objects(
     ///     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?,
@@ -374,7 +375,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///             version: 435090179,
     ///         },
     ///         // The result of a previous command can also be used
-    ///         res("coin"),
+    ///         assigned("coin"),
     ///     ),
     /// );
     ///
@@ -577,7 +578,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```rust
     /// use iota_graphql_client::Client;
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -591,8 +592,11 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder
     ///     .split_coins(coin, [1000u64, 2000, 3000])
-    ///     .name(("coin1", "coin2", "coin3"))
-    ///     .transfer_objects(sender, (res("coin1"), res("coin2"), res("coin3")));
+    ///     .assign(("coin1", "coin2", "coin3"))
+    ///     .transfer_objects(
+    ///         sender,
+    ///         (assigned("coin1"), assigned("coin2"), assigned("coin3")),
+    ///     );
     /// let txn = builder.finish().await?;
     /// #    Ok(())
     /// # }
@@ -723,7 +727,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -740,10 +744,10 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// builder
     ///     .make_move_vec([address1, address2])
-    ///     .name("addresses")
+    ///     .assign("addresses")
     ///     .move_call(Address::FRAMEWORK, "vec_map", "from_keys_values")
     ///     .generics::<(Address, u64)>()
-    ///     .arguments((res("addresses"), [10000000u64, 20000000u64]));
+    ///     .arguments((assigned("addresses"), [10000000u64, 20000000u64]));
     ///
     /// let txn: Transaction = builder.finish().await?;
     /// # Ok(())
@@ -772,7 +776,7 @@ impl<L> TransactionBuilder<(), L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// let sender =
@@ -913,7 +917,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// ```
     /// use std::str::FromStr;
     ///
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, res, unresolved};
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
     /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
@@ -1027,6 +1031,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                                 initial_shared_version: *v,
                                 mutable: false,
                             },
+                            _ => unimplemented!(
+                                "a new enum variant was added and needs to be handled"
+                            ),
                         };
                         let idx = inputs.len();
                         inputs.push(input);
@@ -1113,7 +1120,9 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .await
                 .map_err(Error::client)?
                 .ok_or(Error::MissingGasBudget)?;
-            let Transaction::V1(txn) = &mut txn;
+            let Transaction::V1(txn) = &mut txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
             txn.gas_payment.budget = budget
         }
 
@@ -1126,10 +1135,12 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 
     /// Dry run the transaction.
-    pub async fn dry_run(mut self, skip_checks: bool) -> Result<DryRunResult, Error> {
+    pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
         {
-            let Transaction::V1(txn) = &txn;
+            let Transaction::V1(txn) = &txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
             if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
                 return Err(Error::DryRun(
                     "gas coins were provided without a gas budget".to_owned(),
@@ -1239,11 +1250,11 @@ impl<C> TransactionBuilder<C, MoveCall> {
 impl TransactionBuilder<(), Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
-    pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder {
+    pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
-            .name(name)
+            .assign(name)
             .reset()
     }
 }
@@ -1251,28 +1262,28 @@ impl TransactionBuilder<(), Publish> {
 impl<C: ClientMethods> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
-    pub fn package_id(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<C> {
+    pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
         let cap = self.arg();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
-            .name(name)
+            .assign(name)
             .reset()
     }
 }
 
 impl<C> TransactionBuilder<C, Publish> {
     /// Finish the publish call and return the UpgradeCap.
-    pub fn upgrade_cap(&mut self, name: impl NamedResult) -> &mut TransactionBuilder<C> {
-        name.push_named_results(&mut self.data);
+    pub fn upgrade_cap(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
+        name.push_assigned_results(&mut self.data);
 
         self.reset()
     }
 }
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Set the name for the last command.
-    pub fn name(&mut self, name: impl NamedResults) -> &mut Self {
-        name.push_named_results(&mut self.data);
+    /// Assign a name to the last command's result.
+    pub fn assign(&mut self, name: impl AssignedResults) -> &mut Self {
+        name.push_assigned_results(&mut self.data);
         self
     }
 

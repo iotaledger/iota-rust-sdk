@@ -17,7 +17,7 @@ async fn main() -> Result<()> {
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
     let tx = builder
-        .move_call(Address::STD_LIB, "u8", "max")
+        .move_call(Address::STD, "u8", "max")
         .arguments((0u8, 1u8))
         .sponsor(sponsor_address)
         .to_owned()

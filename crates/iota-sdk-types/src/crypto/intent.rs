@@ -5,10 +5,22 @@
 #[cfg(feature = "serde")]
 use std::str::FromStr;
 
-#[cfg(feature = "serde")]
-use eyre::eyre;
-
 pub const INTENT_PREFIX_LENGTH: usize = 3;
+
+#[derive(thiserror::Error, Debug)]
+#[non_exhaustive]
+pub enum IntentError {
+    #[error("invalid bytes for Intent")]
+    Bytes,
+    #[error("invalid hex String for Intent")]
+    String,
+    #[error("invalid Scope for Intent")]
+    Scope,
+    #[error("invalid Version for Intent")]
+    Version,
+    #[error("invalid AppId for Intent")]
+    AppId,
+}
 
 /// A Signing Intent
 ///
@@ -95,9 +107,9 @@ impl Intent {
     }
 
     #[cfg(feature = "serde")]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, eyre::Report> {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, IntentError> {
         if bytes.len() != INTENT_PREFIX_LENGTH {
-            return Err(eyre!("Invalid Intent"));
+            return Err(IntentError::Bytes);
         }
         Ok(Self {
             scope: bytes[0].try_into()?,
@@ -109,11 +121,11 @@ impl Intent {
 
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
-    type Err = eyre::Report;
+    type Err = IntentError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let bytes: Vec<u8> =
-            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| eyre!("Invalid Intent"))?;
+            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| IntentError::String)?;
         Self::from_bytes(bytes.as_slice())
     }
 }
@@ -170,10 +182,10 @@ impl IntentScope {
 
 #[cfg(feature = "serde")]
 impl TryFrom<u8> for IntentScope {
-    type Error = eyre::Report;
+    type Error = IntentError;
 
     fn try_from(value: u8) -> Result<Self, Self::Error> {
-        bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentScope"))
+        bcs::from_bytes(&[value]).map_err(|_| IntentError::Scope)
     }
 }
 
@@ -207,10 +219,10 @@ impl IntentVersion {
 
 #[cfg(feature = "serde")]
 impl TryFrom<u8> for IntentVersion {
-    type Error = eyre::Report;
+    type Error = IntentError;
 
     fn try_from(value: u8) -> Result<Self, Self::Error> {
-        bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentVersion"))
+        bcs::from_bytes(&[value]).map_err(|_| IntentError::Version)
     }
 }
 
@@ -247,10 +259,10 @@ impl IntentAppId {
 
 #[cfg(feature = "serde")]
 impl TryFrom<u8> for IntentAppId {
-    type Error = eyre::Report;
+    type Error = IntentError;
 
     fn try_from(value: u8) -> Result<Self, Self::Error> {
-        bcs::from_bytes(&[value]).map_err(|_| eyre!("Invalid IntentAppId"))
+        bcs::from_bytes(&[value]).map_err(|_| IntentError::AppId)
     }
 }
 

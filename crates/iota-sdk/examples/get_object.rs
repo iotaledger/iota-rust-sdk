@@ -3,7 +3,7 @@
 
 use std::str::FromStr;
 
-use eyre::{OptionExt, Result};
+use eyre::{OptionExt, Result, bail};
 use iota_sdk::{graphql_client::Client, types::ObjectId};
 
 #[tokio::main]
@@ -31,6 +31,7 @@ async fn main() -> Result<()> {
             iota_types::Owner::Object(object_id) => format!("Object({object_id})"),
             iota_types::Owner::Shared(version) => format!("Shared({version})"),
             iota_types::Owner::Immutable => "Immutable".to_owned(),
+            _ => bail!("unknown owner type"),
         }
     );
     println!("Storage rebate: {}", obj.storage_rebate());

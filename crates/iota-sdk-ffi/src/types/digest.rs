@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
 use crate::error::Result;
 
 /// A 32-byte Blake2b256 hash output.
@@ -19,7 +17,19 @@ use crate::error::Result;
 /// IOTA's binary representation of a `Digest` is prefixed with its length
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(
+    Debug,
+    Hash,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    derive_more::Display,
+    derive_more::From,
+    derive_more::Deref,
+    uniffi::Object,
+)]
+#[uniffi::export(Debug, Display, Hash, Eq)]
 pub struct Digest(pub iota_sdk::types::Digest);
 
 #[uniffi::export]
