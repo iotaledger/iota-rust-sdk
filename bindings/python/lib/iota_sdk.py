@@ -2227,15 +2227,15 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app() != 7427:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app() != 7420:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction() != 33288:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message() != 3284:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app() != 33296:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app() != 43238:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction() != 43817:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message() != 5450:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5367,20 +5367,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new.argtypes = (
     _UniffiRustBuffer,
     _UniffiRustBuffer,
@@ -5388,10 +5374,24 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app.argtypes = (
+    _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_intent_app_id.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14304,21 +14304,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new.restype = ctypes.c_uint16
@@ -23180,7 +23180,21 @@ class _UniffiConverterTypeIdOperation(_UniffiConverterRustBuffer):
 
 class IntentAppId(enum.Enum):
     """
-    App IDs.
+    Byte signifying the application id of an Intent
+
+    This enum specifies the application ID. Two intents in two different
+    applications (i.e., IOTA, Ethereum etc) should never collide, so
+    that even when a signing key is reused, nobody can take a signature
+    designated for app_1 and present it as a valid signature for an (any) intent
+    in app_2.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    intent-app-id = u8
+    ```
     """
 
     IOTA = 0
@@ -23345,7 +23359,19 @@ class _UniffiConverterTypeIntentError(_UniffiConverterRustBuffer):
 
 class IntentScope(enum.Enum):
     """
-    Intent scopes.
+    Byte signifying the scope of an Intent
+
+    This enum specifies the intent scope. Two intents for different scopes
+    should never collide, so no signature provided for one intent scope can be
+    used for another, even when the serialized data itself may be the same.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    intent-scope = u8
+    ```
     """
 
     TRANSACTION_DATA = 0
@@ -23493,7 +23519,19 @@ class _UniffiConverterTypeIntentScope(_UniffiConverterRustBuffer):
 
 class IntentVersion(enum.Enum):
     """
-    Intent versions.
+    Byte signifying the version of an Intent
+
+    The version here is to distinguish between signing different versions of the
+    struct or enum. Serialized output between two different versions of the same
+    struct/enum might accidentally (or maliciously on purpose) match.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    intent-version = u8
+    ```
     """
 
     V0 = 0
@@ -38820,6 +38858,28 @@ class _UniffiConverterTypeInput:
     def write(cls, value: InputProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class IntentProtocol(typing.Protocol):
+    """
+    A Signing Intent
+
+    An intent is a compact struct that serves as the domain separator for a
+    message that a signature commits to. It consists of three parts:
+    1. IntentScope (what the type of the message is)
+    2. IntentVersion
+    3. IntentAppId (what application the signature refers to).
+
+    The serialization of an Intent is a 3-byte array where each field is
+    represented by a byte and it is prepended onto a message before it is signed
+    in IOTA.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    intent = intent-scope intent-version intent-app-id
+    ```
+    """
+
     def app_id(self, ):
         """
         Get the app id of the signing intent.
@@ -38846,6 +38906,28 @@ class IntentProtocol(typing.Protocol):
         raise NotImplementedError
 # Intent is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Intent():
+    """
+    A Signing Intent
+
+    An intent is a compact struct that serves as the domain separator for a
+    message that a signature commits to. It consists of three parts:
+    1. IntentScope (what the type of the message is)
+    2. IntentVersion
+    3. IntentAppId (what application the signature refers to).
+
+    The serialization of an Intent is a 3-byte array where each field is
+    represented by a byte and it is prepended onto a message before it is signed
+    in IOTA.
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    intent = intent-scope intent-version intent-app-id
+    ```
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, scope: "IntentScope",version: "IntentVersion",app_id: "IntentAppId"):
         """
@@ -38881,7 +38963,7 @@ class Intent():
         inst._pointer = pointer
         return inst
     @classmethod
-    def consensus_app(cls, scope: "IntentScope"):
+    def new_consensus_app(cls, scope: "IntentScope"):
         """
         Create a new Consensus app signing intent.
         """
@@ -38889,12 +38971,12 @@ class Intent():
         _UniffiConverterTypeIntentScope.check_lower(scope)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app,
         _UniffiConverterTypeIntentScope.lower(scope))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def iota_app(cls, scope: "IntentScope"):
+    def new_iota_app(cls, scope: "IntentScope"):
         """
         Create a new IOTA app signing intent.
         """
@@ -38902,28 +38984,28 @@ class Intent():
         _UniffiConverterTypeIntentScope.check_lower(scope)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app,
         _UniffiConverterTypeIntentScope.lower(scope))
         return cls._make_instance_(pointer)
 
     @classmethod
-    def iota_transaction(cls, ):
+    def new_iota_transaction(cls, ):
         """
         Create a new IOTA transaction signing intent.
         """
 
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction,)
         return cls._make_instance_(pointer)
 
     @classmethod
-    def personal_message(cls, ):
+    def new_personal_message(cls, ):
         """
         Create a new IOTA personal message signing intent.
         """
 
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message,)
         return cls._make_instance_(pointer)
 
 

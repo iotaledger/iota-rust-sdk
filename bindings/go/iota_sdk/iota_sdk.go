@@ -8310,33 +8310,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app()
-	})
-	if checksum != 7427 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app()
-	})
-	if checksum != 7420 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction()
-	})
-	if checksum != 33288 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_new()
 	})
 	if checksum != 25063 {
@@ -8346,11 +8319,38 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app()
 	})
-	if checksum != 3284 {
+	if checksum != 33296 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app()
+	})
+	if checksum != 43238 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction()
+	})
+	if checksum != 43817 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message()
+	})
+	if checksum != 5450 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19994,6 +19994,25 @@ func (_ FfiDestroyerInput) Destroy(value *Input) {
 
 
 
+// A Signing Intent
+//
+// An intent is a compact struct that serves as the domain separator for a
+// message that a signature commits to. It consists of three parts:
+// 1. IntentScope (what the type of the message is)
+// 2. IntentVersion
+// 3. IntentAppId (what application the signature refers to).
+//
+// The serialization of an Intent is a 3-byte array where each field is
+// represented by a byte and it is prepended onto a message before it is signed
+// in IOTA.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// intent = intent-scope intent-version intent-app-id
+// ```
 type IntentInterface interface {
 	// Get the app id of the signing intent.
 	AppId() IntentAppId
@@ -20004,6 +20023,25 @@ type IntentInterface interface {
 	// Get the version of the signing intent.
 	Version() IntentVersion
 }
+// A Signing Intent
+//
+// An intent is a compact struct that serves as the domain separator for a
+// message that a signature commits to. It consists of three parts:
+// 1. IntentScope (what the type of the message is)
+// 2. IntentVersion
+// 3. IntentAppId (what application the signature refers to).
+//
+// The serialization of an Intent is a 3-byte array where each field is
+// represented by a byte and it is prepended onto a message before it is signed
+// in IOTA.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// intent = intent-scope intent-version intent-app-id
+// ```
 type Intent struct {
 	ffiObject FfiObject
 }
@@ -20016,30 +20054,30 @@ func NewIntent(scope IntentScope, version IntentVersion, appId IntentAppId) *Int
 
 
 // Create a new Consensus app signing intent.
-func IntentConsensusApp(scope IntentScope) *Intent {
+func IntentNewConsensusApp(scope IntentScope) *Intent {
 	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(FfiConverterIntentScopeINSTANCE.Lower(scope),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app(FfiConverterIntentScopeINSTANCE.Lower(scope),_uniffiStatus)
 	}))
 }
 
 // Create a new IOTA app signing intent.
-func IntentIotaApp(scope IntentScope) *Intent {
+func IntentNewIotaApp(scope IntentScope) *Intent {
 	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(FfiConverterIntentScopeINSTANCE.Lower(scope),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app(FfiConverterIntentScopeINSTANCE.Lower(scope),_uniffiStatus)
 	}))
 }
 
 // Create a new IOTA transaction signing intent.
-func IntentIotaTransaction() *Intent {
+func IntentNewIotaTransaction() *Intent {
 	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(_uniffiStatus)
 	}))
 }
 
 // Create a new IOTA personal message signing intent.
-func IntentPersonalMessage() *Intent {
+func IntentNewPersonalMessage() *Intent {
 	return FfiConverterIntentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(_uniffiStatus)
 	}))
 }
 
@@ -39944,7 +39982,21 @@ func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
 
 
-// App IDs.
+// Byte signifying the application id of an Intent
+//
+// This enum specifies the application ID. Two intents in two different
+// applications (i.e., IOTA, Ethereum etc) should never collide, so
+// that even when a signing key is reused, nobody can take a signature
+// designated for app_1 and present it as a valid signature for an (any) intent
+// in app_2.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// intent-app-id = u8
+// ```
 type IntentAppId uint
 
 const (
@@ -40187,7 +40239,19 @@ func (_ FfiDestroyerIntentError) Destroy(value *IntentError) {
 
 
 
-// Intent scopes.
+// Byte signifying the scope of an Intent
+//
+// This enum specifies the intent scope. Two intents for different scopes
+// should never collide, so no signature provided for one intent scope can be
+// used for another, even when the serialized data itself may be the same.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// intent-scope = u8
+// ```
 type IntentScope uint
 
 const (
@@ -40241,7 +40305,19 @@ func (_ FfiDestroyerIntentScope) Destroy(value IntentScope) {
 }
 
 
-// Intent versions.
+// Byte signifying the version of an Intent
+//
+// The version here is to distinguish between signing different versions of the
+// struct or enum. Serialized output between two different versions of the same
+// struct/enum might accidentally (or maliciously on purpose) match.
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// intent-version = u8
+// ```
 type IntentVersion uint
 
 const (

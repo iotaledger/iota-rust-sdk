@@ -5272,15 +5272,15 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message(
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new(
 ): Short
@@ -6744,15 +6744,15 @@ fun uniffi_iota_sdk_ffi_fn_clone_intent(`ptr`: Pointer,uniffi_out_err: UniffiRus
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_intent(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_intent_new(`scope`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_intent_app_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -11849,19 +11849,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_consensus_app() != 7427.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_app() != 7420.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_iota_transaction() != 33288.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_personal_message() != 3284.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app() != 33296.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app() != 43238.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction() != 43817.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message() != 5450.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_makemovevector_new() != 20934.toShort()) {
@@ -29050,6 +29050,27 @@ public object FfiConverterTypeInput: FfiConverter<Input, Pointer> {
 //
 
 
+/**
+ * A Signing Intent
+ *
+ * An intent is a compact struct that serves as the domain separator for a
+ * message that a signature commits to. It consists of three parts:
+ * 1. IntentScope (what the type of the message is)
+ * 2. IntentVersion
+ * 3. IntentAppId (what application the signature refers to).
+ *
+ * The serialization of an Intent is a 3-byte array where each field is
+ * represented by a byte and it is prepended onto a message before it is signed
+ * in IOTA.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * intent = intent-scope intent-version intent-app-id
+ * ```
+ */
 public interface IntentInterface {
     
     /**
@@ -29075,6 +29096,27 @@ public interface IntentInterface {
     companion object
 }
 
+/**
+ * A Signing Intent
+ *
+ * An intent is a compact struct that serves as the domain separator for a
+ * message that a signature commits to. It consists of three parts:
+ * 1. IntentScope (what the type of the message is)
+ * 2. IntentVersion
+ * 3. IntentAppId (what application the signature refers to).
+ *
+ * The serialization of an Intent is a 3-byte array where each field is
+ * represented by a byte and it is prepended onto a message before it is signed
+ * in IOTA.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * intent = intent-scope intent-version intent-app-id
+ * ```
+ */
 open class Intent: Disposable, AutoCloseable, IntentInterface
 {
 
@@ -29258,10 +29300,10 @@ open class Intent: Disposable, AutoCloseable, IntentInterface
         
     /**
      * Create a new Consensus app signing intent.
-     */ fun `consensusApp`(`scope`: IntentScope): Intent {
+     */ fun `newConsensusApp`(`scope`: IntentScope): Intent {
             return FfiConverterTypeIntent.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_consensus_app(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app(
         FfiConverterTypeIntentScope.lower(`scope`),_status)
 }
     )
@@ -29271,10 +29313,10 @@ open class Intent: Disposable, AutoCloseable, IntentInterface
         
     /**
      * Create a new IOTA app signing intent.
-     */ fun `iotaApp`(`scope`: IntentScope): Intent {
+     */ fun `newIotaApp`(`scope`: IntentScope): Intent {
             return FfiConverterTypeIntent.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_app(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app(
         FfiConverterTypeIntentScope.lower(`scope`),_status)
 }
     )
@@ -29284,10 +29326,10 @@ open class Intent: Disposable, AutoCloseable, IntentInterface
         
     /**
      * Create a new IOTA transaction signing intent.
-     */ fun `iotaTransaction`(): Intent {
+     */ fun `newIotaTransaction`(): Intent {
             return FfiConverterTypeIntent.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_iota_transaction(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(
         _status)
 }
     )
@@ -29297,10 +29339,10 @@ open class Intent: Disposable, AutoCloseable, IntentInterface
         
     /**
      * Create a new IOTA personal message signing intent.
-     */ fun `personalMessage`(): Intent {
+     */ fun `newPersonalMessage`(): Intent {
             return FfiConverterTypeIntent.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_personal_message(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(
         _status)
 }
     )
@@ -62872,7 +62914,21 @@ public object FfiConverterTypeIdOperation: FfiConverterRustBuffer<IdOperation> {
 
 
 /**
- * App IDs.
+ * Byte signifying the application id of an Intent
+ *
+ * This enum specifies the application ID. Two intents in two different
+ * applications (i.e., IOTA, Ethereum etc) should never collide, so
+ * that even when a signing key is reused, nobody can take a signature
+ * designated for app_1 and present it as a valid signature for an (any) intent
+ * in app_2.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * intent-app-id = u8
+ * ```
  */
 
 enum class IntentAppId {
@@ -62993,7 +63049,19 @@ public object FfiConverterTypeIntentError : FfiConverterRustBuffer<IntentExcepti
 
 
 /**
- * Intent scopes.
+ * Byte signifying the scope of an Intent
+ *
+ * This enum specifies the intent scope. Two intents for different scopes
+ * should never collide, so no signature provided for one intent scope can be
+ * used for another, even when the serialized data itself may be the same.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * intent-scope = u8
+ * ```
  */
 
 enum class IntentScope {
@@ -63066,7 +63134,19 @@ public object FfiConverterTypeIntentScope: FfiConverterRustBuffer<IntentScope> {
 
 
 /**
- * Intent versions.
+ * Byte signifying the version of an Intent
+ *
+ * The version here is to distinguish between signing different versions of the
+ * struct or enum. Serialized output between two different versions of the same
+ * struct/enum might accidentally (or maliciously on purpose) match.
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * intent-version = u8
+ * ```
  */
 
 enum class IntentVersion {
