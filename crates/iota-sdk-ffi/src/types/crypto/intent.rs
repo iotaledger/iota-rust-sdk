@@ -186,11 +186,7 @@ impl Intent {
 
     /// Convert the signing intent to bytes.
     pub fn to_bytes(&self) -> Vec<u8> {
-        vec![
-            self.0.scope as u8,
-            self.0.version as u8,
-            self.0.app_id as u8,
-        ]
+        self.0.to_bytes().to_vec()
     }
 }
 
