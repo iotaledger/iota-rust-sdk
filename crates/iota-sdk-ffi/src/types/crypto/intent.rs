@@ -209,6 +209,10 @@ pub fn intent_prefix_length() -> u64 {
     iota_sdk::types::crypto::INTENT_PREFIX_LENGTH as u64
 }
 
+/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
+/// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
+/// derived as the hash of `flag || pubkey`. See
+/// `iota_types::crypto::SignatureScheme::flag()`.
 #[uniffi::remote(Enum)]
 #[uniffi::export(Eq, Debug, Hash)]
 #[non_exhaustive]
@@ -217,6 +221,7 @@ pub enum HashingIntentScope {
     RegularObjectId = 0xf1,
 }
 
+/// A personal message that wraps around a byte array.
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct PersonalMessage(pub(crate) iota_sdk::types::PersonalMessage<'static>);
