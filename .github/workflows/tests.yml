@@ -66,8 +66,11 @@ jobs:
 
       - uses: ./.github/actions/start-local-network
 
-      - name: Run examples
+      - name: Run the examples
         run: make examples
+
+      - name: Run the release example
+        run: make rust-release-example
 
   doctests:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
