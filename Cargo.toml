@@ -10,6 +10,9 @@ members = [
   "crates/iota-sdk-types",
 ]
 
+[workspace.lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(doc_cfg)'] }
+
 [workspace.dependencies]
 base64ct = "1.6.0"
 bcs = "0.1.6"
