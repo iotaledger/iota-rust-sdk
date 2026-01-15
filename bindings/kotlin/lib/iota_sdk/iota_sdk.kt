@@ -62917,9 +62917,9 @@ sealed class IntentException(message: String): kotlin.Exception(message) {
         class Bytes(message: String) : IntentException(message)
         
     /**
-     * Invalid hex String for Intent
+     * Invalid hex string for Intent
      */
-        class String(message: String) : IntentException(message)
+        class Hex(message: String) : IntentException(message)
         
     /**
      * Invalid Scope for Intent
@@ -62950,7 +62950,7 @@ public object FfiConverterTypeIntentError : FfiConverterRustBuffer<IntentExcepti
         
             return when(buf.getInt()) {
             1 -> IntentException.Bytes(FfiConverterString.read(buf))
-            2 -> IntentException.String(FfiConverterString.read(buf))
+            2 -> IntentException.Hex(FfiConverterString.read(buf))
             3 -> IntentException.Scope(FfiConverterString.read(buf))
             4 -> IntentException.Version(FfiConverterString.read(buf))
             5 -> IntentException.AppId(FfiConverterString.read(buf))
@@ -62969,7 +62969,7 @@ public object FfiConverterTypeIntentError : FfiConverterRustBuffer<IntentExcepti
                 buf.putInt(1)
                 Unit
             }
-            is IntentException.String -> {
+            is IntentException.Hex -> {
                 buf.putInt(2)
                 Unit
             }

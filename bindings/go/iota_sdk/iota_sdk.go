@@ -40001,7 +40001,7 @@ func (err IntentError) Unwrap() error {
 
 // Err* are used for checking error type with `errors.Is`
 var ErrIntentErrorBytes = fmt.Errorf("IntentErrorBytes")
-var ErrIntentErrorString = fmt.Errorf("IntentErrorString")
+var ErrIntentErrorHex = fmt.Errorf("IntentErrorHex")
 var ErrIntentErrorScope = fmt.Errorf("IntentErrorScope")
 var ErrIntentErrorVersion = fmt.Errorf("IntentErrorVersion")
 var ErrIntentErrorAppId = fmt.Errorf("IntentErrorAppId")
@@ -40028,26 +40028,26 @@ func (err IntentErrorBytes) Error() string {
 func (self IntentErrorBytes) Is(target error) bool {
 	return target == ErrIntentErrorBytes
 }
-// Invalid hex String for Intent
-type IntentErrorString struct {
+// Invalid hex string for Intent
+type IntentErrorHex struct {
 	message string
 }
-// Invalid hex String for Intent
-func NewIntentErrorString(
+// Invalid hex string for Intent
+func NewIntentErrorHex(
 ) *IntentError {
-	return &IntentError { err: &IntentErrorString {} }
+	return &IntentError { err: &IntentErrorHex {} }
 }
 
-func (e IntentErrorString) destroy() {
+func (e IntentErrorHex) destroy() {
 }
 
 
-func (err IntentErrorString) Error() string {
-	return fmt.Sprintf("String: %s", err.message)
+func (err IntentErrorHex) Error() string {
+	return fmt.Sprintf("Hex: %s", err.message)
 }
 
-func (self IntentErrorString) Is(target error) bool {
-	return target == ErrIntentErrorString
+func (self IntentErrorHex) Is(target error) bool {
+	return target == ErrIntentErrorHex
 }
 // Invalid Scope for Intent
 type IntentErrorScope struct {
@@ -40133,7 +40133,7 @@ func (c FfiConverterIntentError) Read(reader io.Reader) *IntentError {
 	case 1:
 		return &IntentError{ &IntentErrorBytes{message}}
 	case 2:
-		return &IntentError{ &IntentErrorString{message}}
+		return &IntentError{ &IntentErrorHex{message}}
 	case 3:
 		return &IntentError{ &IntentErrorScope{message}}
 	case 4:
@@ -40151,7 +40151,7 @@ func (c FfiConverterIntentError) Write(writer io.Writer, value *IntentError) {
 	switch variantValue := value.err.(type) {
 		case *IntentErrorBytes:
 			writeInt32(writer, 1)
-		case *IntentErrorString:
+		case *IntentErrorHex:
 			writeInt32(writer, 2)
 		case *IntentErrorScope:
 			writeInt32(writer, 3)
@@ -40171,7 +40171,7 @@ func (_ FfiDestroyerIntentError) Destroy(value *IntentError) {
 	switch variantValue := value.err.(type) {
 		case IntentErrorBytes:
 			variantValue.destroy()
-		case IntentErrorString:
+		case IntentErrorHex:
 			variantValue.destroy()
 		case IntentErrorScope:
 			variantValue.destroy()

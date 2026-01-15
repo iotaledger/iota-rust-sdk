@@ -12,8 +12,8 @@ use iota_sdk::types::{HashingIntentScope, IntentAppId, IntentError, IntentScope,
 pub enum IntentError {
     /// Invalid bytes for Intent
     Bytes,
-    /// Invalid hex String for Intent
-    String,
+    /// Invalid hex string for Intent
+    Hex,
     /// Invalid Scope for Intent
     Scope,
     /// Invalid Version for Intent

@@ -23246,15 +23246,15 @@ class IntentError:  # type: ignore
         def __repr__(self):
             return "IntentError.Bytes({})".format(repr(str(self)))
     _UniffiTempIntentError.Bytes = Bytes # type: ignore
-    class String(_UniffiTempIntentError):
+    class Hex(_UniffiTempIntentError):
         """
-        Invalid hex String for Intent
+        Invalid hex string for Intent
         """
 
 
         def __repr__(self):
-            return "IntentError.String({})".format(repr(str(self)))
-    _UniffiTempIntentError.String = String # type: ignore
+            return "IntentError.Hex({})".format(repr(str(self)))
+    _UniffiTempIntentError.Hex = Hex # type: ignore
     class Scope(_UniffiTempIntentError):
         """
         Invalid Scope for Intent
@@ -23296,7 +23296,7 @@ class _UniffiConverterTypeIntentError(_UniffiConverterRustBuffer):
                 _UniffiConverterString.read(buf),
             )
         if variant == 2:
-            return IntentError.String(
+            return IntentError.Hex(
                 _UniffiConverterString.read(buf),
             )
         if variant == 3:
@@ -23317,7 +23317,7 @@ class _UniffiConverterTypeIntentError(_UniffiConverterRustBuffer):
     def check_lower(value):
         if isinstance(value, IntentError.Bytes):
             return
-        if isinstance(value, IntentError.String):
+        if isinstance(value, IntentError.Hex):
             return
         if isinstance(value, IntentError.Scope):
             return
@@ -23330,7 +23330,7 @@ class _UniffiConverterTypeIntentError(_UniffiConverterRustBuffer):
     def write(value, buf):
         if isinstance(value, IntentError.Bytes):
             buf.write_i32(1)
-        if isinstance(value, IntentError.String):
+        if isinstance(value, IntentError.Hex):
             buf.write_i32(2)
         if isinstance(value, IntentError.Scope):
             buf.write_i32(3)
