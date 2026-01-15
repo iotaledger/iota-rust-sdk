@@ -23080,8 +23080,7 @@ class HashingIntentScope(enum.Enum):
     """
     A 1-byte domain separator for hashing Object ID in IOTA. It starts from
     0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
-    derived as the hash of `flag || pubkey`. See
-    `iota_types::crypto::SignatureScheme::flag()`.
+    derived as the hash of `flag || pubkey`.
     """
 
     CHILD_OBJECT_ID = 240
