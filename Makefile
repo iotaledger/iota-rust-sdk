@@ -246,7 +246,7 @@ kotlin-release-example: ## Run the Kotlin release example
 .PHONY: python-release-example
 python-release-example: ## Run the Python release example
 	@printf "\nRunning Python release example\n"
-	@cd bindings/python/examples/release && python -m venv .venv && . .venv/bin/activate && pip install --pre --upgrade -r requirements.txt && python example.py || exit $$?;
+	@cd bindings/python/examples/release && python3 -m venv .venv && . .venv/bin/activate && pip install --pre --upgrade -r requirements.txt && python example.py || exit $$?;
 
 .PHONY: release-examples
 release-examples: ## Run all release examples
@@ -254,3 +254,8 @@ release-examples: ## Run all release examples
 	@$(MAKE) go-release-example
 	@$(MAKE) kotlin-release-example
 	@$(MAKE) python-release-example
+
+.PHONY: help
+help: ## Show this help
+	@printf "Available targets:\n"
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
