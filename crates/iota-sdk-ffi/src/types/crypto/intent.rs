@@ -169,6 +169,18 @@ impl Intent {
         )
     }
 
+    /// Create a signing intent from bytes.
+    #[uniffi::constructor]
+    pub fn from_bytes(bytes: &[u8]) -> Result<Intent, IntentError> {
+        Ok(Intent(iota_sdk::types::crypto::Intent::from_bytes(bytes)?))
+    }
+
+    /// Create a signing intent from a hex string.
+    #[uniffi::constructor]
+    pub fn from_hex_string(hex: &str) -> Result<Intent, IntentError> {
+        Ok(Intent(iota_sdk::types::crypto::Intent::from_str(hex)?))
+    }
+
     /// Get the scope of the signing intent.
     pub fn scope(&self) -> IntentScope {
         self.0.scope
@@ -195,18 +207,6 @@ impl Intent {
 #[uniffi::export]
 pub fn intent_prefix_length() -> u64 {
     iota_sdk::types::crypto::INTENT_PREFIX_LENGTH as u64
-}
-
-/// Create a signing intent from bytes.
-#[uniffi::export]
-pub fn intent_from_bytes(bytes: &[u8]) -> Result<Intent, IntentError> {
-    Ok(Intent(iota_sdk::types::crypto::Intent::from_bytes(bytes)?))
-}
-
-/// Create a signing intent from a hex string.
-#[uniffi::export]
-pub fn intent_from_hex_string(hex: &str) -> Result<Intent, IntentError> {
-    Ok(Intent(iota_sdk::types::crypto::Intent::from_str(hex)?))
 }
 
 #[uniffi::remote(Enum)]

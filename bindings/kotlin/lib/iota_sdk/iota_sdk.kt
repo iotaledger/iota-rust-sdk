@@ -3692,10 +3692,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
@@ -5272,6 +5268,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app(
@@ -6744,6 +6744,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_intent(`ptr`: Pointer,uniffi_out_err: UniffiRus
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_intent(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_intent_new(`scope`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app(`scope`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -8170,10 +8174,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(`key`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(`auth`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -8187,6 +8187,10 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(`signerFn`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(`ptr`: Pointer,`txn`: Pointer,
@@ -8809,10 +8813,6 @@ fun uniffi_iota_sdk_ffi_fn_func_input_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_input_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9477,12 +9477,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs() != 51152.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes() != 15378.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string() != 43440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length() != 18453.toShort()) {
@@ -11847,6 +11841,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string() != 31742.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063.toShort()) {
@@ -29297,6 +29297,34 @@ open class Intent: Disposable, AutoCloseable, IntentInterface
 
     
     companion object {
+        
+    /**
+     * Create a signing intent from bytes.
+     */
+    @Throws(IntentException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCallWithError(IntentException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(
+        FfiConverterByteArray.lower(`bytes`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a signing intent from a hex string.
+     */
+    @Throws(IntentException::class) fun `fromHexString`(`hex`: kotlin.String): Intent {
+            return FfiConverterTypeIntent.lift(
+    uniffiRustCallWithError(IntentException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
         
     /**
      * Create a new Consensus app signing intent.
@@ -49651,7 +49679,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256k1`(`key`: Secp256k1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
         FfiConverterTypeSecp256k1PrivateKey.lower(`key`),_status)
 }
     )
@@ -49661,7 +49689,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256r1`(`key`: Secp256r1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
         FfiConverterTypeSecp256r1PrivateKey.lower(`key`),_status)
 }
     )
@@ -69988,32 +70016,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
         FfiConverterTypeInput.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create a signing intent from bytes.
-         */
-    @Throws(IntentException::class) fun `intentFromBytes`(`bytes`: kotlin.ByteArray): Intent {
-            return FfiConverterTypeIntent.lift(
-    uniffiRustCallWithError(IntentException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(
-        FfiConverterByteArray.lower(`bytes`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Create a signing intent from a hex string.
-         */
-    @Throws(IntentException::class) fun `intentFromHexString`(`hex`: kotlin.String): Intent {
-            return FfiConverterTypeIntent.lift(
-    uniffiRustCallWithError(IntentException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(
-        FfiConverterString.lower(`hex`),_status)
 }
     )
     }

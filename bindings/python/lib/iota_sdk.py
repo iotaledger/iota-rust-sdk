@@ -647,10 +647,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs() != 51152:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes() != 15378:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string() != 43440:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length() != 18453:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752:
@@ -2226,6 +2222,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string() != 31742:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5367,6 +5367,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_intent.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_new.argtypes = (
     _UniffiRustBuffer,
     _UniffiRustBuffer,
@@ -10723,16 +10733,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_to_bcs.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_input_to_bcs.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string.argtypes = (
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -11934,12 +11934,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_input_from_bcs.restype = ctypes.c_u
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length.restype = ctypes.c_uint16
@@ -14304,6 +14298,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new.restype = ctypes.c_uint16
@@ -38963,6 +38963,32 @@ class Intent():
         inst._pointer = pointer
         return inst
     @classmethod
+    def from_bytes(cls, bytes: "bytes"):
+        """
+        Create a signing intent from bytes.
+        """
+
+        _UniffiConverterBytes.check_lower(bytes)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeIntentError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes,
+        _UniffiConverterBytes.lower(bytes))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_hex_string(cls, hex: "str"):
+        """
+        Create a signing intent from a hex string.
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeIntentError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def new_consensus_app(cls, scope: "IntentScope"):
         """
         Create a new Consensus app signing intent.
@@ -54879,28 +54905,6 @@ def input_to_bcs(data: "Input") -> "bytes":
         _UniffiConverterTypeInput.lower(data)))
 
 
-def intent_from_bytes(bytes: "bytes") -> "Intent":
-    """
-    Create a signing intent from bytes.
-    """
-
-    _UniffiConverterBytes.check_lower(bytes)
-    
-    return _UniffiConverterTypeIntent.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeIntentError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes,
-        _UniffiConverterBytes.lower(bytes)))
-
-
-def intent_from_hex_string(hex: "str") -> "Intent":
-    """
-    Create a signing intent from a hex string.
-    """
-
-    _UniffiConverterString.check_lower(hex)
-    
-    return _UniffiConverterTypeIntent.lift(_uniffi_rust_call_with_error(_UniffiConverterTypeIntentError,_UniffiLib.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string,
-        _UniffiConverterString.lower(hex)))
-
-
 def intent_prefix_length() -> "int":
     """
     Returns the intent prefix length, i.e. the number of bytes prepended to the
@@ -56542,8 +56546,6 @@ __all__ = [
     "identifier_to_bcs",
     "input_from_bcs",
     "input_to_bcs",
-    "intent_from_bytes",
-    "intent_from_hex_string",
     "intent_prefix_length",
     "jwk_from_bcs",
     "jwk_id_from_bcs",

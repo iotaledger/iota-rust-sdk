@@ -2773,6 +2773,16 @@ void* uniffi_iota_sdk_ffi_fn_clone_intent(void* ptr, RustCallStatus *out_status
 void uniffi_iota_sdk_ffi_fn_free_intent(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_BYTES
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(RustBuffer bytes, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_HEX_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_HEX_STRING
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(RustBuffer hex, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW
 void* uniffi_iota_sdk_ffi_fn_constructor_intent_new(RustBuffer scope, RustBuffer version, RustBuffer app_id, RustCallStatus *out_status
@@ -7958,16 +7968,6 @@ void* uniffi_iota_sdk_ffi_fn_func_input_from_bcs(RustBuffer bcs, RustCallStatus 
 RustBuffer uniffi_iota_sdk_ffi_fn_func_input_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_BYTES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_BYTES
-void* uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(RustBuffer bytes, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_HEX_STRING
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_FROM_HEX_STRING
-void* uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(RustBuffer hex, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_PREFIX_LENGTH
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INTENT_PREFIX_LENGTH
 uint64_t uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(RustCallStatus *out_status
@@ -9459,18 +9459,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_BYTES
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_BYTES
-uint16_t uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_HEX_STRING
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INTENT_FROM_HEX_STRING
-uint16_t uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string(void
     
 );
 #endif
@@ -14199,6 +14187,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_HEX_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_HEX_STRING
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string(void
     
 );
 #endif

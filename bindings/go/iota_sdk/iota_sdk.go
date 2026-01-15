@@ -1200,24 +1200,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes()
-	})
-	if checksum != 15378 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_intent_from_bytes: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string()
-	})
-	if checksum != 43440 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_intent_from_hex_string: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length()
 	})
 	if checksum != 18453 {
@@ -8306,6 +8288,24 @@ func uniffiCheckChecksums() {
 	if checksum != 61970 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes()
+	})
+	if checksum != 49795 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string()
+	})
+	if checksum != 31742 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -20052,6 +20052,32 @@ func NewIntent(scope IntentScope, version IntentVersion, appId IntentAppId) *Int
 	}))
 }
 
+
+// Create a signing intent from bytes.
+func IntentFromBytes(bytes []byte) (*Intent, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Intent
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterIntentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Create a signing intent from a hex string.
+func IntentFromHexString(hex string) (*Intent, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Intent
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterIntentINSTANCE.Lift(_uniffiRV), nil
+		}
+}
 
 // Create a new Consensus app signing intent.
 func IntentNewConsensusApp(scope IntentScope) *Intent {
@@ -48496,32 +48522,6 @@ func InputToBcs(data *Input) ([]byte, error) {
 			return _uniffiDefaultValue, _uniffiErr
 		} else {
 			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create a signing intent from bytes.
-func IntentFromBytes(bytes []byte) (*Intent, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_intent_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Intent
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterIntentINSTANCE.Lift(_uniffiRV), nil
-		}
-}
-
-// Create a signing intent from a hex string.
-func IntentFromHexString(hex string) (*Intent, error) {
-	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_func_intent_from_hex_string(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
-	})
-		if _uniffiErr != nil {
-			var _uniffiDefaultValue *Intent
-			return _uniffiDefaultValue, _uniffiErr
-		} else {
-			return FfiConverterIntentINSTANCE.Lift(_uniffiRV), nil
 		}
 }
 
