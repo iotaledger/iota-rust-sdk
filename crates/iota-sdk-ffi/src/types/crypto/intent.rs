@@ -139,19 +139,19 @@ impl Intent {
 
     /// Create a new IOTA app signing intent.
     #[uniffi::constructor]
-    pub fn iota_app(scope: IntentScope) -> Self {
+    pub fn new_iota_app(scope: IntentScope) -> Self {
         Self::new(scope, IntentVersion::V0, IntentAppId::Iota)
     }
 
     /// Create a new Consensus app signing intent.
     #[uniffi::constructor]
-    pub fn consensus_app(scope: IntentScope) -> Self {
+    pub fn new_consensus_app(scope: IntentScope) -> Self {
         Self::new(scope, IntentVersion::V0, IntentAppId::Consensus)
     }
 
     /// Create a new IOTA transaction signing intent.
     #[uniffi::constructor]
-    pub fn iota_transaction() -> Self {
+    pub fn new_iota_transaction() -> Self {
         Self::new(
             IntentScope::TransactionData,
             IntentVersion::V0,
@@ -161,7 +161,7 @@ impl Intent {
 
     /// Create a new IOTA personal message signing intent.
     #[uniffi::constructor]
-    pub fn personal_message() -> Self {
+    pub fn new_personal_message() -> Self {
         Self::new(
             IntentScope::PersonalMessage,
             IntentVersion::V0,
