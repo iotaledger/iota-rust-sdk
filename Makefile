@@ -128,7 +128,7 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	python bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
+	@python bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python

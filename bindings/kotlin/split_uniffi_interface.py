@@ -109,8 +109,9 @@ def main() -> None:
     for name in moved_names:
         pattern = re.compile(rf"\bUniffiLib\.INSTANCE\.{re.escape(name)}\b")
         text, n = pattern.subn(f"UniffiLibBatch2.INSTANCE.{name}", text)
-        if n == 0:
-            print(f"no call sites found for {name}")
+        # This is too verbose for regular use, kept for debugging when increasing the batch size
+        # if n == 0:
+        #     print(f"no call sites found for {name}")
 
     # Build the new interface block
     moved_signatures: list[str] = []
