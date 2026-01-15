@@ -1577,11 +1577,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() != 19101:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() != 347:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() != 17910:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 39344:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 909:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 63754:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 27805:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() != 49868:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2429,7 +2429,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() != 23457:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() != 3617:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() != 17579:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new() != 38638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -23077,6 +23077,13 @@ class _UniffiConverterTypeFeature(_UniffiConverterRustBuffer):
 
 
 class HashingIntentScope(enum.Enum):
+    """
+    A 1-byte domain separator for hashing Object ID in IOTA. It starts from
+    0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
+    derived as the hash of `flag || pubkey`. See
+    `iota_types::crypto::SignatureScheme::flag()`.
+    """
+
     CHILD_OBJECT_ID = 240
     
     REGULAR_OBJECT_ID = 241
@@ -44307,16 +44314,40 @@ class _UniffiConverterTypePasskeyVerifier:
     def write(cls, value: PasskeyVerifierProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class PersonalMessageProtocol(typing.Protocol):
+    """
+    A personal message that wraps around a byte array.
+    """
+
     def message_bytes(self, ):
+        """
+        Get the message as bytes.
+        """
+
         raise NotImplementedError
     def signing_digest(self, ):
+        """
+        Get the signing digest as bytes.
+        """
+
         raise NotImplementedError
     def signing_digest_hex(self, ):
+        """
+        Get the signing digest as hex string.
+        """
+
         raise NotImplementedError
 # PersonalMessage is a Rust-only trait - it's a wrapper around a Rust implementation.
 class PersonalMessage():
+    """
+    A personal message that wraps around a byte array.
+    """
+
     _pointer: ctypes.c_void_p
     def __init__(self, message_bytes: "bytes"):
+        """
+        Create a new personal message from bytes.
+        """
+
         _UniffiConverterBytes.check_lower(message_bytes)
         
         self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_personalmessage_new,
@@ -44342,6 +44373,10 @@ class PersonalMessage():
 
 
     def message_bytes(self, ) -> "bytes":
+        """
+        Get the message as bytes.
+        """
+
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_message_bytes,self._uniffi_clone_pointer(),)
         )
@@ -44351,6 +44386,10 @@ class PersonalMessage():
 
 
     def signing_digest(self, ) -> "bytes":
+        """
+        Get the signing digest as bytes.
+        """
+
         return _UniffiConverterBytes.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest,self._uniffi_clone_pointer(),)
         )
@@ -44360,6 +44399,10 @@ class PersonalMessage():
 
 
     def signing_digest_hex(self, ) -> "str":
+        """
+        Get the signing digest as hex string.
+        """
+
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_personalmessage_signing_digest_hex,self._uniffi_clone_pointer(),)
         )

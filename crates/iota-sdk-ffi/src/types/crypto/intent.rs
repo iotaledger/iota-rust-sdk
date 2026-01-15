@@ -228,6 +228,7 @@ pub struct PersonalMessage(pub(crate) iota_sdk::types::PersonalMessage<'static>)
 
 #[uniffi::export]
 impl PersonalMessage {
+    /// Create a new personal message from bytes.
     #[uniffi::constructor]
     pub fn new(message_bytes: &[u8]) -> Self {
         Self(iota_sdk::types::PersonalMessage(std::borrow::Cow::Owned(
@@ -235,14 +236,17 @@ impl PersonalMessage {
         )))
     }
 
+    /// Get the message as bytes.
     pub fn message_bytes(&self) -> Vec<u8> {
         self.0.0.clone().into_owned()
     }
 
+    /// Get the signing digest as bytes.
     pub fn signing_digest(&self) -> Vec<u8> {
         self.0.signing_digest().to_vec()
     }
 
+    /// Get the signing digest as hex string.
     pub fn signing_digest_hex(&self) -> String {
         self.0.signing_digest_hex()
     }

@@ -10874,13 +10874,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() != 19101.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() != 347.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() != 17910.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 39344.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() != 909.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 63754.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() != 27805.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_commands() != 49868.toShort()) {
@@ -12152,7 +12152,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() != 23457.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() != 3617.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() != 17579.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new() != 38638.toShort()) {
@@ -39685,17 +39685,32 @@ public object FfiConverterTypePasskeyVerifier: FfiConverter<PasskeyVerifier, Poi
 //
 
 
+/**
+ * A personal message that wraps around a byte array.
+ */
 public interface PersonalMessageInterface {
     
+    /**
+     * Get the message as bytes.
+     */
     fun `messageBytes`(): kotlin.ByteArray
     
+    /**
+     * Get the signing digest as bytes.
+     */
     fun `signingDigest`(): kotlin.ByteArray
     
+    /**
+     * Get the signing digest as hex string.
+     */
     fun `signingDigestHex`(): kotlin.String
     
     companion object
 }
 
+/**
+ * A personal message that wraps around a byte array.
+ */
 open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
 {
 
@@ -39714,6 +39729,9 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
+    /**
+     * Create a new personal message from bytes.
+     */
     constructor(`messageBytes`: kotlin.ByteArray) :
         this(
     uniffiRustCall() { _status ->
@@ -39785,7 +39803,10 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
         }
     }
 
-    override fun `messageBytes`(): kotlin.ByteArray {
+    
+    /**
+     * Get the message as bytes.
+     */override fun `messageBytes`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -39797,7 +39818,10 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
     }
     
 
-    override fun `signingDigest`(): kotlin.ByteArray {
+    
+    /**
+     * Get the signing digest as bytes.
+     */override fun `signingDigest`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -39809,7 +39833,10 @@ open class PersonalMessage: Disposable, AutoCloseable, PersonalMessageInterface
     }
     
 
-    override fun `signingDigestHex`(): kotlin.String {
+    
+    /**
+     * Get the signing digest as hex string.
+     */override fun `signingDigestHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -62863,6 +62890,12 @@ public object FfiConverterTypeFeature: FfiConverterRustBuffer<Feature> {
 
 
 
+/**
+ * A 1-byte domain separator for hashing Object ID in IOTA. It starts from
+ * 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
+ * derived as the hash of `flag || pubkey`. See
+ * `iota_types::crypto::SignatureScheme::flag()`.
+ */
 
 enum class HashingIntentScope {
     

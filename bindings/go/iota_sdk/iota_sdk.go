@@ -5387,7 +5387,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes()
 	})
-	if checksum != 347 {
+	if checksum != 17910 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes: UniFFI API checksum mismatch")
 	}
@@ -5396,7 +5396,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest()
 	})
-	if checksum != 39344 {
+	if checksum != 909 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest: UniFFI API checksum mismatch")
 	}
@@ -5405,7 +5405,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex()
 	})
-	if checksum != 63754 {
+	if checksum != 27805 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex: UniFFI API checksum mismatch")
 	}
@@ -9221,7 +9221,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new()
 	})
-	if checksum != 3617 {
+	if checksum != 17579 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new: UniFFI API checksum mismatch")
 	}
@@ -25548,14 +25548,20 @@ func (_ FfiDestroyerPasskeyVerifier) Destroy(value *PasskeyVerifier) {
 
 
 
+// A personal message that wraps around a byte array.
 type PersonalMessageInterface interface {
+	// Get the message as bytes.
 	MessageBytes() []byte
+	// Get the signing digest as bytes.
 	SigningDigest() []byte
+	// Get the signing digest as hex string.
 	SigningDigestHex() string
 }
+// A personal message that wraps around a byte array.
 type PersonalMessage struct {
 	ffiObject FfiObject
 }
+// Create a new personal message from bytes.
 func NewPersonalMessage(messageBytes []byte) *PersonalMessage {
 	return FfiConverterPersonalMessageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_personalmessage_new(FfiConverterBytesINSTANCE.Lower(messageBytes),_uniffiStatus)
@@ -25565,6 +25571,7 @@ func NewPersonalMessage(messageBytes []byte) *PersonalMessage {
 
 
 
+// Get the message as bytes.
 func (_self *PersonalMessage) MessageBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
 	defer _self.ffiObject.decrementPointer()
@@ -25576,6 +25583,7 @@ func (_self *PersonalMessage) MessageBytes() []byte {
 	}))
 }
 
+// Get the signing digest as bytes.
 func (_self *PersonalMessage) SigningDigest() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
 	defer _self.ffiObject.decrementPointer()
@@ -25587,6 +25595,7 @@ func (_self *PersonalMessage) SigningDigest() []byte {
 	}))
 }
 
+// Get the signing digest as hex string.
 func (_self *PersonalMessage) SigningDigestHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*PersonalMessage")
 	defer _self.ffiObject.decrementPointer()
@@ -39926,6 +39935,10 @@ func (_ FfiDestroyerFeature) Destroy(value Feature) {
 }
 
 
+// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
+// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
+// derived as the hash of `flag || pubkey`. See
+// `iota_types::crypto::SignatureScheme::flag()`.
 type HashingIntentScope uint
 
 const (
