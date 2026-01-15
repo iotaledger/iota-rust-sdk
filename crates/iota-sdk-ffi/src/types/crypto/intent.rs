@@ -22,7 +22,19 @@ pub enum IntentError {
     AppId,
 }
 
-/// Intent scopes.
+/// Byte signifying the scope of an Intent
+///
+/// This enum specifies the intent scope. Two intents for different scopes
+/// should never collide, so no signature provided for one intent scope can be
+/// used for another, even when the serialized data itself may be the same.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// intent-scope = u8
+/// ```
 #[uniffi::remote(Enum)]
 #[uniffi::export(Debug, Eq, Hash)]
 #[non_exhaustive]
@@ -51,7 +63,19 @@ pub enum IntentScope {
     AuthorityCapabilities = 9,
 }
 
-/// Intent versions.
+/// Byte signifying the version of an Intent
+///
+/// The version here is to distinguish between signing different versions of the
+/// struct or enum. Serialized output between two different versions of the same
+/// struct/enum might accidentally (or maliciously on purpose) match.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// intent-version = u8
+/// ```
 #[uniffi::remote(Enum)]
 #[uniffi::export(Debug, Eq, Hash)]
 #[non_exhaustive]
@@ -59,7 +83,21 @@ pub enum IntentVersion {
     V0 = 0,
 }
 
-/// App IDs.
+/// Byte signifying the application id of an Intent
+///
+/// This enum specifies the application ID. Two intents in two different
+/// applications (i.e., IOTA, Ethereum etc) should never collide, so
+/// that even when a signing key is reused, nobody can take a signature
+/// designated for app_1 and present it as a valid signature for an (any) intent
+/// in app_2.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// intent-app-id = u8
+/// ```
 #[uniffi::remote(Enum)]
 #[uniffi::export(Debug, Eq, Hash)]
 #[non_exhaustive]
@@ -68,6 +106,25 @@ pub enum IntentAppId {
     Consensus = 1,
 }
 
+/// A Signing Intent
+///
+/// An intent is a compact struct that serves as the domain separator for a
+/// message that a signature commits to. It consists of three parts:
+///     1. IntentScope (what the type of the message is)
+///     2. IntentVersion
+///     3. IntentAppId (what application the signature refers to).
+///
+/// The serialization of an Intent is a 3-byte array where each field is
+/// represented by a byte and it is prepended onto a message before it is signed
+/// in IOTA.
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// intent = intent-scope intent-version intent-app-id
+/// ```
 #[derive(Debug, PartialEq, Eq, Hash, uniffi::Object, derive_more::From)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct Intent(pub iota_sdk::types::Intent);
