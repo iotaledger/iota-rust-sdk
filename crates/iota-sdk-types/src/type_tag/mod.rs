@@ -575,14 +575,14 @@ pub struct StructTag {
 impl StructTag {
     pub fn new(
         address: Address,
-        module: Identifier,
-        name: Identifier,
+        module: impl Into<Identifier>,
+        name: impl Into<Identifier>,
         type_params: Vec<TypeTag>,
     ) -> Self {
         Self {
             address,
-            module,
-            name,
+            module: module.into(),
+            name: name.into(),
             type_params,
         }
     }

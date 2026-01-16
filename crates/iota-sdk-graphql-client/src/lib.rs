@@ -604,8 +604,8 @@ impl Client {
                     .unwrap_or_else(|| {
                         StructTag::new(
                             Address::FRAMEWORK,
-                            IdentifierRef::const_new("coin").into(),
-                            IdentifierRef::const_new("Coin").into(),
+                            IdentifierRef::const_new("coin"),
+                            IdentifierRef::const_new("Coin"),
                             Default::default(),
                         )
                     })
