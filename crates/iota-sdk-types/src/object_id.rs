@@ -98,6 +98,21 @@ impl ObjectId {
     pub const fn next_lexicographical(&self) -> Self {
         Self::new(crate::next_lexicographical_array(self.bytes()))
     }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn generate<R>(rng: R) -> Self
+    where
+        R: rand_core::RngCore + rand_core::CryptoRng,
+    {
+        Self::from_address(Address::generate(rng))
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
 }
 
 impl AsRef<[u8]> for ObjectId {
