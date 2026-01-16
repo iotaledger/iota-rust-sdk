@@ -81,7 +81,7 @@ impl Address {
         Self(bytes)
     }
 
-    pub(crate) const fn from_u16(suffix: u16) -> Self {
+    pub const fn from_u16(suffix: u16) -> Self {
         let mut address = Self::ZERO;
         let [hi, lo] = suffix.to_be_bytes();
         address.0[Address::LENGTH - 2] = hi;
