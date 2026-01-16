@@ -1200,15 +1200,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length()
-	})
-	if checksum != 18453 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs()
 	})
 	if checksum != 14752 {
@@ -8301,11 +8292,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex()
 	})
-	if checksum != 31742 {
+	if checksum != 14259 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -20067,9 +20058,9 @@ func IntentFromBytes(bytes []byte) (*Intent, error) {
 }
 
 // Create a signing intent from a hex string.
-func IntentFromHexString(hex string) (*Intent, error) {
+func IntentFromHex(hex string) (*Intent, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[IntentError](FfiConverterIntentError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Intent
@@ -48535,14 +48526,6 @@ func InputToBcs(data *Input) ([]byte, error) {
 		} else {
 			return FfiConverterBytesINSTANCE.Lift(_uniffiRV), nil
 		}
-}
-
-// Returns the intent prefix length, i.e. the number of bytes prepended to the
-// data before being signed.
-func IntentPrefixLength() uint64 {
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(_uniffiStatus)
-	}))
 }
 
 // Create this type from BCS encoded bytes.

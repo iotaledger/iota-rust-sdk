@@ -3489,8 +3489,6 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -3691,8 +3689,6 @@ fun uniffi_iota_sdk_ffi_checksum_func_identifier_to_bcs(
 fun uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(
 ): Short
@@ -5270,7 +5266,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string(
+fun uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_intent_new(
 ): Short
@@ -6746,7 +6742,7 @@ fun uniffi_iota_sdk_ffi_fn_free_intent(`ptr`: Pointer,uniffi_out_err: UniffiRust
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_intent_new(`scope`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`appId`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8172,8 +8168,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(`key`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(`auth`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -8187,6 +8181,8 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(`auth`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(`key`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8813,8 +8809,6 @@ fun uniffi_iota_sdk_ffi_fn_func_input_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_func_input_to_bcs(`data`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(uniffi_out_err: UniffiRustCallStatus, 
-): Long
 fun uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(`bcs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9477,9 +9471,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_input_to_bcs() != 51152.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_func_intent_prefix_length() != 18453.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs() != 14752.toShort()) {
@@ -11846,7 +11837,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex_string() != 31742.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex() != 14259.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_new() != 25063.toShort()) {
@@ -29315,10 +29306,10 @@ open class Intent: Disposable, AutoCloseable, IntentInterface
     /**
      * Create a signing intent from a hex string.
      */
-    @Throws(IntentException::class) fun `fromHexString`(`hex`: kotlin.String): Intent {
+    @Throws(IntentException::class) fun `fromHex`(`hex`: kotlin.String): Intent {
             return FfiConverterTypeIntent.lift(
     uniffiRustCallWithError(IntentException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex_string(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
@@ -49696,7 +49687,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromMoveAuthenticator`(`auth`: MoveAuthenticator): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`auth`),_status)
 }
     )
@@ -70048,19 +70039,6 @@ public typealias FfiConverterTypeValue = FfiConverterString
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_input_to_bcs(
         FfiConverterTypeInput.lower(`data`),_status)
-}
-    )
-    }
-    
-
-        /**
-         * Returns the intent prefix length, i.e. the number of bytes prepended to the
-         * data before being signed.
-         */ fun `intentPrefixLength`(): kotlin.ULong {
-            return FfiConverterULong.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_func_intent_prefix_length(
-        _status)
 }
     )
     }

@@ -177,7 +177,7 @@ impl Intent {
 
     /// Create a signing intent from a hex string.
     #[uniffi::constructor]
-    pub fn from_hex_string(hex: &str) -> Result<Intent, IntentError> {
+    pub fn from_hex(hex: &str) -> Result<Intent, IntentError> {
         Ok(Intent(iota_sdk::types::crypto::Intent::from_str(hex)?))
     }
 
@@ -200,13 +200,6 @@ impl Intent {
     pub fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes().to_vec()
     }
-}
-
-/// Returns the intent prefix length, i.e. the number of bytes prepended to the
-/// data before being signed.
-#[uniffi::export]
-pub fn intent_prefix_length() -> u64 {
-    iota_sdk::types::crypto::INTENT_PREFIX_LENGTH as u64
 }
 
 /// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
