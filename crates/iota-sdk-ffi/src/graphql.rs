@@ -1011,7 +1011,7 @@ impl GraphQLClient {
             args.into_iter()
                 .map(|arg| {
                     // Try to parse as JSON first, fall back to string
-                    serde_json::from_str(&arg).unwrap_or_else(|_| serde_json::Value::String(arg))
+                    serde_json::from_str(&arg).unwrap_or(serde_json::Value::String(arg))
                 })
                 .collect::<Vec<_>>()
         });
@@ -1331,6 +1331,21 @@ impl iota_sdk::transaction_builder::ClientMethods for GraphQLClient {
             &*self.0.read().await,
             digest,
             wait_for,
+        )
+        .await
+    }
+
+    async fn move_view_call(
+        &self,
+        function_name: String,
+        type_args: Option<Vec<String>>,
+        arguments: Option<Vec<serde_json::Value>>,
+    ) -> Result<iota_sdk::graphql_client::query_types::MoveViewResult, Self::Error> {
+        iota_sdk::transaction_builder::ClientMethods::move_view_call(
+            &*self.0.read().await,
+            function_name,
+            type_args,
+            arguments,
         )
         .await
     }

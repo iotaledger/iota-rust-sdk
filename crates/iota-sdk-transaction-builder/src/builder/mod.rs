@@ -1215,6 +1215,114 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     }
 }
 
+impl<C: ClientMethods> TransactionBuilder<C> {
+    /// Execute a move view call. This converts a single move call command in
+    /// the transaction to a view call. The transaction must have exactly
+    /// one move call command.
+    pub async fn move_view_call(
+        &self,
+    ) -> Result<iota_graphql_client::query_types::MoveViewResult, Error> {
+        if self.data.commands.len() != 1 {
+            return Err(Error::Input(
+                "Move view calls must have exactly one command".to_string(),
+            ));
+        }
+
+        let command = &self.data.commands[0];
+        if let crate::unresolved::Command::MoveCall(MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        }) = command
+        {
+            let function_name = format!("{package}::{module}::{function}");
+            let type_args = if type_arguments.is_empty() {
+                None
+            } else {
+                Some(type_arguments.iter().map(|tag| tag.to_string()).collect())
+            };
+            let arguments = self.convert_arguments_to_json(arguments)?;
+
+            // Clone the client to avoid lifetime issues
+            let client = &self.client;
+            client
+                .move_view_call(function_name, type_args, Some(arguments))
+                .await
+                .map_err(Error::client)
+        } else {
+            Err(Error::Input("The command must be a move call".to_string()))
+        }
+    }
+
+    fn convert_arguments_to_json(
+        &self,
+        arguments: &[crate::unresolved::Argument],
+    ) -> Result<Vec<serde_json::Value>, Error> {
+        arguments
+            .iter()
+            .map(|arg| match arg {
+                crate::unresolved::Argument::Input(id) => {
+                    if let Some(input) = self.data.inputs.get(id) {
+                        match &input.kind {
+                            crate::unresolved::InputKind::Input(inp) => match inp {
+                                iota_types::Input::Pure { value } => {
+                                    if let Ok(v) = serde_json::from_slice(value) {
+                                        Ok(v)
+                                    } else if let Ok(s) = std::str::from_utf8(value) {
+                                        serde_json::from_str(s).map_err(|_| {
+                                            Error::Input("Pure argument is not valid JSON".to_string())
+                                        })
+                                    } else {
+                                        // Try BCS string decoding
+                                        if !value.is_empty() {
+                                            let len = value[0] as usize;
+                                            if len + 1 == value.len() {
+                                                if let Ok(decoded) = std::str::from_utf8(&value[1..]) {
+                                                    Ok(serde_json::Value::String(decoded.to_string()))
+                                                } else {
+                                                    Err(Error::Input("Pure argument is not valid JSON or BCS string".to_string()))
+                                                }
+                                            } else {
+                                                Err(Error::Input("Pure argument is not valid JSON or BCS string".to_string()))
+                                            }
+                                        } else {
+                                            Err(Error::Input("Pure argument is not valid JSON or BCS string".to_string()))
+                                        }
+                                    }
+                                }
+                                iota_types::Input::ImmutableOrOwned(obj_ref) => {
+                                    Ok(serde_json::Value::String(obj_ref.object_id.to_string()))
+                                }
+                                iota_types::Input::Shared { object_id, .. } => {
+                                    Ok(serde_json::Value::String(object_id.to_string()))
+                                }
+                                iota_types::Input::Receiving(obj_ref) => {
+                                    Ok(serde_json::Value::String(obj_ref.object_id.to_string()))
+                                }
+                                _ => Err(Error::Input(
+                                    "Unsupported input type for move view calls".to_string(),
+                                )),
+                            },
+                            crate::unresolved::InputKind::ImmutableOrOwned(object_id)
+                            | crate::unresolved::InputKind::Shared { object_id, .. }
+                            | crate::unresolved::InputKind::Receiving(object_id) => {
+                                Ok(serde_json::Value::String(object_id.to_string()))
+                            }
+                        }
+                    } else {
+                        Err(Error::Input("Invalid input id".to_string()))
+                    }
+                }
+                _ => Err(Error::Input(
+                    "Only input arguments are supported for move view calls".to_string(),
+                )),
+            })
+            .collect()
+    }
+}
+
 impl<C> TransactionBuilder<C, MoveCall> {
     /// Set the call params. Optional.
     pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {

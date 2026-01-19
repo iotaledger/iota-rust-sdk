@@ -1190,14 +1190,18 @@ pub struct MoveViewResult {
     /// The return values of the Move view function, resolved and formatted as
     /// JSON.
     #[uniffi(default = None)]
-    pub results: Option<Vec<serde_json::Value>>,
+    pub results: Option<Vec<String>>,
 }
 
 impl From<iota_sdk::graphql_client::query_types::MoveViewResult> for MoveViewResult {
     fn from(value: iota_sdk::graphql_client::query_types::MoveViewResult) -> Self {
         Self {
             error: value.error,
-            results: value.results,
+            results: value.results.map(|v| {
+                v.into_iter()
+                    .map(|json| serde_json::to_string(&json).unwrap_or_default())
+                    .collect()
+            }),
         }
     }
 }

@@ -3491,6 +3491,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4565,6 +4567,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec(
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish(
 ): Short
@@ -6634,6 +6638,8 @@ fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(`ptr`: Po
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(`ptr`: Pointer,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish(`ptr`: Pointer,`packageData`: Pointer,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -11660,6 +11666,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call() != 14120.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish() != 25909.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11921,7 +11930,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 21439.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52330.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
@@ -21353,6 +21362,15 @@ public interface ClientTransactionBuilderInterface {
     fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
     
     /**
+     * Execute a move view call for the current transaction.
+     *
+     * This method converts the current transaction builder state into a view
+     * call that can be executed without submitting a transaction to the
+     * network. The transaction must contain exactly one move call command.
+     */
+    suspend fun `moveViewCall`(): MoveViewResult
+    
+    /**
      * Publish a list of modules with the given dependencies. The result
      * assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
      * Move type. Note that the upgrade capability needs to be handled
@@ -21751,6 +21769,34 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
     )
     }
     
+
+    
+    /**
+     * Execute a move view call for the current transaction.
+     *
+     * This method converts the current transaction builder state into a view
+     * call that can be executed without submitting a transaction to the
+     * network. The transaction must contain exactly one move call command.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveViewCall`() : MoveViewResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(
+                thisPtr,
+                
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeMoveViewResult.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
 
     
     /**
@@ -28130,26 +28176,31 @@ public interface GraphQlClientInterface {
     /**
      * Execute a Move View Function.
      *
-     * A View Function is a function in a Move module with a return type that does not alter
-     * the state of the ledger. When using this interface, no transactions are submitted to
-     * the network for inclusion into the ledger.
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
      *
-     * This method allows calling nearly any Move function with a return type and any arguments.
-     * The function's result values are provided and decoded using the appropriate Move type,
-     * then formatted in JSON.
+     * This method allows calling nearly any Move function with a return type
+     * and any arguments. The function's result values are provided and
+     * decoded using the appropriate Move type, then formatted in JSON.
      *
-     * The use of this interface does not require signature checks (even for functions that take
-     * Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
-     * are dealt with at the RPC level rather than execution level.
+     * The use of this interface does not require signature checks (even for
+     * functions that take Owned Objects as input) or gas coins, as it does
+     * not alter ledger state. Spam attacks are dealt with at the RPC level
+     * rather than execution level.
      *
      * # Arguments
-     * * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
-     * e.g., `0x3::iota_system::get_total_iota_supply`
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x3::iota_system::get_total_iota_supply`
      * * `type_args` - The type arguments of the Move function
-     * * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
+     * * `arguments` - The arguments to be passed into the Move function as
+     * strings (will be parsed as JSON)
      *
      * # Returns
-     * A `MoveViewResult` containing either execution results (return values) or an error.
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
      */
     suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<kotlin.String>?): MoveViewResult
     
@@ -29128,26 +29179,31 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     /**
      * Execute a Move View Function.
      *
-     * A View Function is a function in a Move module with a return type that does not alter
-     * the state of the ledger. When using this interface, no transactions are submitted to
-     * the network for inclusion into the ledger.
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
      *
-     * This method allows calling nearly any Move function with a return type and any arguments.
-     * The function's result values are provided and decoded using the appropriate Move type,
-     * then formatted in JSON.
+     * This method allows calling nearly any Move function with a return type
+     * and any arguments. The function's result values are provided and
+     * decoded using the appropriate Move type, then formatted in JSON.
      *
-     * The use of this interface does not require signature checks (even for functions that take
-     * Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
-     * are dealt with at the RPC level rather than execution level.
+     * The use of this interface does not require signature checks (even for
+     * functions that take Owned Objects as input) or gas coins, as it does
+     * not alter ledger state. Spam attacks are dealt with at the RPC level
+     * rather than execution level.
      *
      * # Arguments
-     * * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
-     * e.g., `0x3::iota_system::get_total_iota_supply`
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x3::iota_system::get_total_iota_supply`
      * * `type_args` - The type arguments of the Move function
-     * * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
+     * * `arguments` - The arguments to be passed into the Move function as
+     * strings (will be parsed as JSON)
      *
      * # Returns
-     * A `MoveViewResult` containing either execution results (return values) or an error.
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -60722,7 +60778,7 @@ data class MoveViewResult (
      * The return values of the Move view function, resolved and formatted as
      * JSON.
      */
-    var `results`: List<Value>? = null
+    var `results`: List<kotlin.String>? = null
 ) {
     
     companion object
@@ -60735,18 +60791,18 @@ public object FfiConverterTypeMoveViewResult: FfiConverterRustBuffer<MoveViewRes
     override fun read(buf: ByteBuffer): MoveViewResult {
         return MoveViewResult(
             FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalSequenceTypeValue.read(buf),
+            FfiConverterOptionalSequenceString.read(buf),
         )
     }
 
     override fun allocationSize(value: MoveViewResult) = (
             FfiConverterOptionalString.allocationSize(value.`error`) +
-            FfiConverterOptionalSequenceTypeValue.allocationSize(value.`results`)
+            FfiConverterOptionalSequenceString.allocationSize(value.`results`)
     )
 
     override fun write(value: MoveViewResult, buf: ByteBuffer) {
             FfiConverterOptionalString.write(value.`error`, buf)
-            FfiConverterOptionalSequenceTypeValue.write(value.`results`, buf)
+            FfiConverterOptionalSequenceString.write(value.`results`, buf)
     }
 }
 
@@ -68371,38 +68427,6 @@ public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffe
 /**
  * @suppress
  */
-public object FfiConverterOptionalSequenceTypeValue: FfiConverterRustBuffer<List<Value>?> {
-    override fun read(buf: ByteBuffer): List<Value>? {
-        if (buf.get().toInt() == 0) {
-            return null
-        }
-        return FfiConverterSequenceTypeValue.read(buf)
-    }
-
-    override fun allocationSize(value: List<Value>?): ULong {
-        if (value == null) {
-            return 1UL
-        } else {
-            return 1UL + FfiConverterSequenceTypeValue.allocationSize(value)
-        }
-    }
-
-    override fun write(value: List<Value>?, buf: ByteBuffer) {
-        if (value == null) {
-            buf.put(0)
-        } else {
-            buf.put(1)
-            FfiConverterSequenceTypeValue.write(value, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
 public object FfiConverterOptionalMapStringSequenceString: FfiConverterRustBuffer<Map<kotlin.String, List<kotlin.String>>?> {
     override fun read(buf: ByteBuffer): Map<kotlin.String, List<kotlin.String>>? {
         if (buf.get().toInt() == 0) {
@@ -70313,34 +70337,6 @@ public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMoveAbility.write(it, buf)
-        }
-    }
-}
-
-
-
-
-/**
- * @suppress
- */
-public object FfiConverterSequenceTypeValue: FfiConverterRustBuffer<List<Value>> {
-    override fun read(buf: ByteBuffer): List<Value> {
-        val len = buf.getInt()
-        return List<Value>(len) {
-            FfiConverterTypeValue.read(buf)
-        }
-    }
-
-    override fun allocationSize(value: List<Value>): ULong {
-        val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeValue.allocationSize(it) }.sum()
-        return sizeForLength + sizeForItems
-    }
-
-    override fun write(value: List<Value>, buf: ByteBuffer) {
-        buf.putInt(value.size)
-        value.iterator().forEach {
-            FfiConverterTypeValue.write(it, buf)
         }
     }
 }

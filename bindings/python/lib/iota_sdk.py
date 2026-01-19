@@ -1521,6 +1521,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call() != 14120:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish() != 25909:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins() != 65187:
@@ -1695,7 +1697,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 21439:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52330:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4335,6 +4337,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call.argtypes = (
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -14774,6 +14780,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_co
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish.restype = ctypes.c_uint16
@@ -20523,13 +20532,13 @@ class MoveViewResult:
     Execution error from executing the Move view function.
     """
 
-    results: "typing.Optional[typing.List[Value]]"
+    results: "typing.Optional[typing.List[str]]"
     """
     The return values of the Move view function, resolved and formatted as
     JSON.
     """
 
-    def __init__(self, *, error: "typing.Optional[str]" = _DEFAULT, results: "typing.Optional[typing.List[Value]]" = _DEFAULT):
+    def __init__(self, *, error: "typing.Optional[str]" = _DEFAULT, results: "typing.Optional[typing.List[str]]" = _DEFAULT):
         if error is _DEFAULT:
             self.error = None
         else:
@@ -20554,18 +20563,18 @@ class _UniffiConverterTypeMoveViewResult(_UniffiConverterRustBuffer):
     def read(buf):
         return MoveViewResult(
             error=_UniffiConverterOptionalString.read(buf),
-            results=_UniffiConverterOptionalSequenceTypeValue.read(buf),
+            results=_UniffiConverterOptionalSequenceString.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterOptionalString.check_lower(value.error)
-        _UniffiConverterOptionalSequenceTypeValue.check_lower(value.results)
+        _UniffiConverterOptionalSequenceString.check_lower(value.results)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterOptionalString.write(value.error, buf)
-        _UniffiConverterOptionalSequenceTypeValue.write(value.results, buf)
+        _UniffiConverterOptionalSequenceString.write(value.results, buf)
 
 
 class NameRegistrationPage:
@@ -29328,33 +29337,6 @@ class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer
 
 
 
-class _UniffiConverterOptionalSequenceTypeValue(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        if value is not None:
-            _UniffiConverterSequenceTypeValue.check_lower(value)
-
-    @classmethod
-    def write(cls, value, buf):
-        if value is None:
-            buf.write_u8(0)
-            return
-
-        buf.write_u8(1)
-        _UniffiConverterSequenceTypeValue.write(value, buf)
-
-    @classmethod
-    def read(cls, buf):
-        flag = buf.read_u8()
-        if flag == 0:
-            return None
-        elif flag == 1:
-            return _UniffiConverterSequenceTypeValue.read(buf)
-        else:
-            raise InternalError("Unexpected flag byte for optional type")
-
-
-
 class _UniffiConverterOptionalMapStringSequenceString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -31059,31 +31041,6 @@ class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
-        ]
-
-
-
-class _UniffiConverterSequenceTypeValue(_UniffiConverterRustBuffer):
-    @classmethod
-    def check_lower(cls, value):
-        for item in value:
-            _UniffiConverterTypeValue.check_lower(item)
-
-    @classmethod
-    def write(cls, value, buf):
-        items = len(value)
-        buf.write_i32(items)
-        for item in value:
-            _UniffiConverterTypeValue.write(item, buf)
-
-    @classmethod
-    def read(cls, buf):
-        count = buf.read_i32()
-        if count < 0:
-            raise InternalError("Unexpected negative sequence length")
-
-        return [
-            _UniffiConverterTypeValue.read(buf) for i in range(count)
         ]
 
 
@@ -35045,6 +35002,16 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def move_view_call(self, ):
+        """
+        Execute a move view call for the current transaction.
+
+        This method converts the current transaction builder state into a view
+        call that can be executed without submitting a transaction to the
+        network. The transaction must contain exactly one move call command.
+        """
+
+        raise NotImplementedError
     def publish(self, package_data: "MovePackageData",upgrade_cap_name: "str"):
         """
         Publish a list of modules with the given dependencies. The result
@@ -35456,6 +35423,32 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterSequenceString.lower(names))
         )
 
+
+
+
+    async def move_view_call(self, ) -> "MoveViewResult":
+        """
+        Execute a move view call for the current transaction.
+
+        This method converts the current transaction builder state into a view
+        call that can be executed without submitting a transaction to the
+        network. The transaction must contain exactly one move call command.
+        """
+
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(
+                self._uniffi_clone_pointer(), 
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMoveViewResult.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
 
 
 
@@ -38939,26 +38932,31 @@ class GraphQlClientProtocol(typing.Protocol):
         """
         Execute a Move View Function.
 
-        A View Function is a function in a Move module with a return type that does not alter
-        the state of the ledger. When using this interface, no transactions are submitted to
-        the network for inclusion into the ledger.
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
 
-        This method allows calling nearly any Move function with a return type and any arguments.
-        The function's result values are provided and decoded using the appropriate Move type,
-        then formatted in JSON.
+        This method allows calling nearly any Move function with a return type
+        and any arguments. The function's result values are provided and
+        decoded using the appropriate Move type, then formatted in JSON.
 
-        The use of this interface does not require signature checks (even for functions that take
-        Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
-        are dealt with at the RPC level rather than execution level.
+        The use of this interface does not require signature checks (even for
+        functions that take Owned Objects as input) or gas coins, as it does
+        not alter ledger state. Spam attacks are dealt with at the RPC level
+        rather than execution level.
 
         # Arguments
-        * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
-        e.g., `0x3::iota_system::get_total_iota_supply`
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x3::iota_system::get_total_iota_supply`
         * `type_args` - The type arguments of the Move function
-        * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
+        * `arguments` - The arguments to be passed into the Move function as
+        strings (will be parsed as JSON)
 
         # Returns
-        A `MoveViewResult` containing either execution results (return values) or an error.
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
         """
 
         raise NotImplementedError
@@ -40064,26 +40062,31 @@ _UniffiConverterTypeSdkFfiError,
         """
         Execute a Move View Function.
 
-        A View Function is a function in a Move module with a return type that does not alter
-        the state of the ledger. When using this interface, no transactions are submitted to
-        the network for inclusion into the ledger.
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
 
-        This method allows calling nearly any Move function with a return type and any arguments.
-        The function's result values are provided and decoded using the appropriate Move type,
-        then formatted in JSON.
+        This method allows calling nearly any Move function with a return type
+        and any arguments. The function's result values are provided and
+        decoded using the appropriate Move type, then formatted in JSON.
 
-        The use of this interface does not require signature checks (even for functions that take
-        Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks
-        are dealt with at the RPC level rather than execution level.
+        The use of this interface does not require signature checks (even for
+        functions that take Owned Objects as input) or gas coins, as it does
+        not alter ledger state. Spam attacks are dealt with at the RPC level
+        rather than execution level.
 
         # Arguments
-        * `function_name` - The Move function fully qualified name as `<package_id>::<module_name>::<function_name>`,
-        e.g., `0x3::iota_system::get_total_iota_supply`
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x3::iota_system::get_total_iota_supply`
         * `type_args` - The type arguments of the Move function
-        * `arguments` - The arguments to be passed into the Move function as strings (will be parsed as JSON)
+        * `arguments` - The arguments to be passed into the Move function as
+        strings (will be parsed as JSON)
 
         # Returns
-        A `MoveViewResult` containing either execution results (return values) or an error.
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
         """
 
         _UniffiConverterString.check_lower(function_name)
