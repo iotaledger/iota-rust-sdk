@@ -4,6 +4,14 @@
 
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
+#[derive(thiserror::Error, Debug)]
+pub enum VersionError {
+    #[error("Version overflowed u64")]
+    Overflow,
+    #[error("Version underflowed u64")]
+    Underflow,
+}
+
 #[derive(
     Copy,
     Clone,
@@ -95,12 +103,18 @@ impl Version {
         self.0
     }
 
-    pub fn increment(self) -> Option<Self> {
-        self.0.checked_add(1).map(Self)
+    pub fn increment(self) -> Result<Self, VersionError> {
+        self.0
+            .checked_add(1)
+            .map(Self)
+            .ok_or(VersionError::Overflow)
     }
 
-    pub fn decrement(self) -> Option<Self> {
-        self.0.checked_sub(1).map(Self)
+    pub fn decrement(self) -> Result<Self, VersionError> {
+        self.0
+            .checked_sub(1)
+            .map(Self)
+            .ok_or(VersionError::Underflow)
     }
 
     /// Returns a special sequence number used for congested shared objects:
