@@ -15,17 +15,14 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
 
         val arguments =
-                listOf(
-                        "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b",
-                        "auc.iota"
-                )
+            listOf("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b", "auc.iota")
 
         val result =
-                client.moveViewCall(
-                        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-                        null,
-                        arguments
-                )
+            client.moveViewCall(
+                "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+                null,
+                arguments,
+            )
 
         if (result.error != null) {
             println("Error: ${result.error}")
@@ -53,19 +50,17 @@ fun main() = runBlocking {
         val txBuilder = TransactionBuilder(sender).withClient(client)
 
         txBuilder.moveCall(
-                Address.fromHex(
-                        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50"
+            Address.fromHex("0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50"),
+            Identifier("auction"),
+            Identifier("get_auction_metadata"),
+            listOf(
+                PtbArgument.objectIdFromHex(
+                    "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"
                 ),
-                Identifier("auction"),
-                Identifier("get_auction_metadata"),
-                listOf(
-                        PtbArgument.objectIdFromHex(
-                                "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"
-                        ),
-                        PtbArgument.moveArg(MoveArg.string("\"auc.iota\""))
-                ),
-                emptyList<TypeTag>(),
-                emptyList<String>()
+                PtbArgument.moveArg(MoveArg.string("\"auc.iota\"")),
+            ),
+            emptyList<TypeTag>(),
+            emptyList<String>(),
         )
 
         val txResult = txBuilder.moveViewCall()

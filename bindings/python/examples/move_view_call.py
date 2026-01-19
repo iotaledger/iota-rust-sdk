@@ -16,9 +16,7 @@ async def main():
 
     result = await client.move_view_call(
         "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-        None,
-        arguments
-    )
+        None, arguments)
 
     if result.error is not None:
         print("Error:", result.error)
@@ -31,11 +29,8 @@ async def main():
         "[0,1,2]",
     ]
 
-    result = await client.move_view_call(
-        "0x2::hash::blake2b256",
-        None,
-        arguments
-    )
+    result = await client.move_view_call("0x2::hash::blake2b256", None,
+                                         arguments)
 
     if result.error is not None:
         print("Error:", result.error)
@@ -49,11 +44,15 @@ async def main():
     tx_builder = TransactionBuilder(Address.zero()).with_client(client)
 
     tx_builder.move_call(
-        Address.from_hex("0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50"),
+        Address.from_hex(
+            "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50"
+        ),
         Identifier("auction"),
         Identifier("get_auction_metadata"),
         [
-            PtbArgument.object_id_from_hex("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"),
+            PtbArgument.object_id_from_hex(
+                "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"
+            ),
             PtbArgument.string("\"auc.iota\""),
         ],
     )
