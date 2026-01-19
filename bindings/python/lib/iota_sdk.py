@@ -1987,11 +1987,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 58451:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 11828:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 54746:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid() != 4593:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2709,23 +2709,23 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 1503:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback() != 53184:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback() != 40686:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 21907:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 49647:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback() != 56855:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback() != 18156:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 40910:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new() != 60756:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 49929:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable() != 14185:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -52979,7 +52979,7 @@ class VersionProtocol(typing.Protocol):
     def get_congested_version_suggested_gas_price(self, ):
         """
         Returns the `suggested_gas_price` embedded in this congested shared
-        object sequence number. The `suggested_gas_price` here is used for a
+        object version. The `suggested_gas_price` here is used for a
         gas price feedback mechanism for transactions cancelled due to
         shared object congestion.
         """
@@ -52994,7 +52994,7 @@ class VersionProtocol(typing.Protocol):
         raise NotImplementedError
     def is_congested(self, ):
         """
-        Check if this sequence number is congested, i.e., the corresponding
+        Check if this version is congested, i.e., the corresponding
         object is the reason for transaction cancellation.
         """
 
@@ -53053,7 +53053,7 @@ class Version():
     @classmethod
     def cancelled_read(cls, ):
         """
-        Special sequence number that is assigned to objects which are accessed
+        Special version that is assigned to objects which are accessed
         immutably in a cancelled transaction.
         """
 
@@ -53064,12 +53064,12 @@ class Version():
     @classmethod
     def congested_base_offset_for_gas_price_feedback(cls, ):
         """
-        In the gas price feedback mechanism, sequence numbers >=
+        In the gas price feedback mechanism, versions >=
         `Version::MAX_VALID_EXCL` +
         `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
         objects that cause transactions cancellations due to congestion.
 
-        Sequence numbers larger than `Version::MAX_VALID_EXCL` but
+        Versions larger than `Version::MAX_VALID_EXCL` but
         smaller than `Version::MAX_VALID_EXCL` +
         `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
         intended for other transaction cancellation reasons.
@@ -53087,9 +53087,9 @@ class Version():
     @classmethod
     def congested_prior_to_gas_price_feedback(cls, ):
         """
-        Special sequence number that was assigned to congested objects which
-        cause transaction cancellations. Note that this special sequence
-        number was only used prior to the introduction of a gas price feedback
+        Special version that was assigned to congested objects which
+        cause transaction cancellations. Note that this special version
+        was only used prior to the introduction of a gas price feedback
         mechanism, but it is kept for backward compatibility.
         """
 
@@ -53114,12 +53114,12 @@ class Version():
     @classmethod
     def max_valid_excl(cls, ):
         """
-        An exclusive upper limit on a valid sequence number: sequence numbers
-        strictly smaller than this limit are valid sequence numbers.
+        An exclusive upper limit on a valid version: versions
+        strictly smaller than this limit are valid versions.
 
-        A valid sequence number means an object, which this sequence number
+        A valid version means an object, which this version
         is assigned to, does not appear in a cancelled transaction.
-        Sequence numbers larger than this value are "special" and
+        Versions larger than this value are "special" and
         assigned to objects that appear in cancelled transactions.
         """
 
@@ -53130,8 +53130,8 @@ class Version():
     @classmethod
     def min_congested_for_gas_price_feedback(cls, ):
         """
-        Minimum congested sequence number used in the gas price feedback
-        mechanism. A congested sequence number is assigned to objects that
+        Minimum congested version used in the gas price feedback
+        mechanism. A congested version is assigned to objects that
         cause transaction cancellations.
         """
 
@@ -53142,9 +53142,9 @@ class Version():
     @classmethod
     def min_valid_incl(cls, ):
         """
-        An inclusive lower limit on a valid sequence number.
+        An inclusive lower limit on a valid version.
 
-        A valid sequence number means an object, which this sequence number
+        A valid version means an object, which this version
         is assigned to, does not appear in a cancelled transaction.
         """
 
@@ -53155,10 +53155,10 @@ class Version():
     @classmethod
     def new_congested_with_suggested_gas_price(cls, suggested_gas_price: "int"):
         """
-        Returns a special sequence number used for congested shared objects:
+        Returns a special version used for congested shared objects:
         `Version::MIN_CONGESTED + suggested_gas_price`,
-        where `suggested_gas_price` is embedded into a congested sequence
-        number to facilitate a gas price feedback mechanism for transactions
+        where `suggested_gas_price` is embedded into a congested version
+        to facilitate a gas price feedback mechanism for transactions
         cancelled due to shared object congestion.
         """
 
@@ -53180,7 +53180,7 @@ class Version():
     def get_congested_version_suggested_gas_price(self, ) -> "int":
         """
         Returns the `suggested_gas_price` embedded in this congested shared
-        object sequence number. The `suggested_gas_price` here is used for a
+        object version. The `suggested_gas_price` here is used for a
         gas price feedback mechanism for transactions cancelled due to
         shared object congestion.
         """
@@ -53209,7 +53209,7 @@ class Version():
 
     def is_congested(self, ) -> "bool":
         """
-        Check if this sequence number is congested, i.e., the corresponding
+        Check if this version is congested, i.e., the corresponding
         object is the reason for transaction cancellation.
         """
 

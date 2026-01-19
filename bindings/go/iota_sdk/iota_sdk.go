@@ -7232,7 +7232,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price()
 	})
-	if checksum != 58451 {
+	if checksum != 50172 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price: UniFFI API checksum mismatch")
 	}
@@ -7250,7 +7250,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_congested()
 	})
-	if checksum != 11828 {
+	if checksum != 54746 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_congested: UniFFI API checksum mismatch")
 	}
@@ -10481,7 +10481,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read()
 	})
-	if checksum != 1503 {
+	if checksum != 19561 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read: UniFFI API checksum mismatch")
 	}
@@ -10490,7 +10490,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback()
 	})
-	if checksum != 53184 {
+	if checksum != 40686 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback: UniFFI API checksum mismatch")
 	}
@@ -10499,7 +10499,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback()
 	})
-	if checksum != 21907 {
+	if checksum != 34609 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback: UniFFI API checksum mismatch")
 	}
@@ -10517,7 +10517,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl()
 	})
-	if checksum != 49647 {
+	if checksum != 16135 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl: UniFFI API checksum mismatch")
 	}
@@ -10526,7 +10526,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback()
 	})
-	if checksum != 56855 {
+	if checksum != 18156 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback: UniFFI API checksum mismatch")
 	}
@@ -10535,7 +10535,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl()
 	})
-	if checksum != 40910 {
+	if checksum != 30140 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl: UniFFI API checksum mismatch")
 	}
@@ -10553,7 +10553,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price()
 	})
-	if checksum != 49929 {
+	if checksum != 14 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price: UniFFI API checksum mismatch")
 	}
@@ -33703,14 +33703,14 @@ func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 
 type VersionInterface interface {
 	// Returns the `suggested_gas_price` embedded in this congested shared
-	// object sequence number. The `suggested_gas_price` here is used for a
+	// object version. The `suggested_gas_price` here is used for a
 	// gas price feedback mechanism for transactions cancelled due to
 	// shared object congestion.
 	GetCongestedVersionSuggestedGasPrice() (uint64, error)
 	// Checks if this version is cancelled, i.e., the corresponding
 	// object appears in a cancelled transaction.
 	IsCancelled() bool
-	// Check if this sequence number is congested, i.e., the corresponding
+	// Check if this version is congested, i.e., the corresponding
 	// object is the reason for transaction cancellation.
 	IsCongested() bool
 	// Checks if this version is valid, i.e., the corresponding
@@ -33733,7 +33733,7 @@ func NewVersion(value uint64) *Version {
 }
 
 
-// Special sequence number that is assigned to objects which are accessed
+// Special version that is assigned to objects which are accessed
 // immutably in a cancelled transaction.
 func VersionCancelledRead() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -33741,12 +33741,12 @@ func VersionCancelledRead() *Version {
 	}))
 }
 
-// In the gas price feedback mechanism, sequence numbers >=
+// In the gas price feedback mechanism, versions >=
 // `Version::MAX_VALID_EXCL` +
 // `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
 // objects that cause transactions cancellations due to congestion.
 //
-// Sequence numbers larger than `Version::MAX_VALID_EXCL` but
+// Versions larger than `Version::MAX_VALID_EXCL` but
 // smaller than `Version::MAX_VALID_EXCL` +
 // `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
 // intended for other transaction cancellation reasons.
@@ -33761,9 +33761,9 @@ func VersionCongestedBaseOffsetForGasPriceFeedback() *Version {
 	}))
 }
 
-// Special sequence number that was assigned to congested objects which
-// cause transaction cancellations. Note that this special sequence
-// number was only used prior to the introduction of a gas price feedback
+// Special version that was assigned to congested objects which
+// cause transaction cancellations. Note that this special version
+// was only used prior to the introduction of a gas price feedback
 // mechanism, but it is kept for backward compatibility.
 func VersionCongestedPriorToGasPriceFeedback() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -33785,12 +33785,12 @@ func VersionLamportIncrement(inputs []*Version) (*Version, error) {
 		}
 }
 
-// An exclusive upper limit on a valid sequence number: sequence numbers
-// strictly smaller than this limit are valid sequence numbers.
+// An exclusive upper limit on a valid version: versions
+// strictly smaller than this limit are valid versions.
 //
-// A valid sequence number means an object, which this sequence number
+// A valid version means an object, which this version
 // is assigned to, does not appear in a cancelled transaction.
-// Sequence numbers larger than this value are "special" and
+// Versions larger than this value are "special" and
 // assigned to objects that appear in cancelled transactions.
 func VersionMaxValidExcl() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -33798,8 +33798,8 @@ func VersionMaxValidExcl() *Version {
 	}))
 }
 
-// Minimum congested sequence number used in the gas price feedback
-// mechanism. A congested sequence number is assigned to objects that
+// Minimum congested version used in the gas price feedback
+// mechanism. A congested version is assigned to objects that
 // cause transaction cancellations.
 func VersionMinCongestedForGasPriceFeedback() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -33807,9 +33807,9 @@ func VersionMinCongestedForGasPriceFeedback() *Version {
 	}))
 }
 
-// An inclusive lower limit on a valid sequence number.
+// An inclusive lower limit on a valid version.
 //
-// A valid sequence number means an object, which this sequence number
+// A valid version means an object, which this version
 // is assigned to, does not appear in a cancelled transaction.
 func VersionMinValidIncl() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -33817,10 +33817,10 @@ func VersionMinValidIncl() *Version {
 	}))
 }
 
-// Returns a special sequence number used for congested shared objects:
+// Returns a special version used for congested shared objects:
 // `Version::MIN_CONGESTED + suggested_gas_price`,
-// where `suggested_gas_price` is embedded into a congested sequence
-// number to facilitate a gas price feedback mechanism for transactions
+// where `suggested_gas_price` is embedded into a congested version
+// to facilitate a gas price feedback mechanism for transactions
 // cancelled due to shared object congestion.
 func VersionNewCongestedWithSuggestedGasPrice(suggestedGasPrice uint64) (*Version, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
@@ -33843,7 +33843,7 @@ func VersionRandomnessUnavailable() *Version {
 
 
 // Returns the `suggested_gas_price` embedded in this congested shared
-// object sequence number. The `suggested_gas_price` here is used for a
+// object version. The `suggested_gas_price` here is used for a
 // gas price feedback mechanism for transactions cancelled due to
 // shared object congestion.
 func (_self *Version) GetCongestedVersionSuggestedGasPrice() (uint64, error) {
@@ -33872,7 +33872,7 @@ func (_self *Version) IsCancelled() bool {
 	}))
 }
 
-// Check if this sequence number is congested, i.e., the corresponding
+// Check if this version is congested, i.e., the corresponding
 // object is the reason for transaction cancellation.
 func (_self *Version) IsCongested() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Version")
