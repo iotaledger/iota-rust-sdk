@@ -103,18 +103,32 @@ impl Version {
         self.0
     }
 
-    pub fn increment(self) -> Result<Self, VersionError> {
+    /// Returns the next version, or an error if overflow occurs.
+    pub fn next(self) -> Result<Self, VersionError> {
         self.0
             .checked_add(1)
             .map(Self)
             .ok_or(VersionError::Overflow)
     }
 
-    pub fn decrement(self) -> Result<Self, VersionError> {
+    /// Increments this version by one, or returns an error if overflow occurs.
+    pub fn increment(&mut self) -> Result<(), VersionError> {
+        *self = self.next()?;
+        Ok(())
+    }
+
+    /// Returns the previous version, or an error if underflow occurs.
+    pub fn previous(self) -> Result<Self, VersionError> {
         self.0
             .checked_sub(1)
             .map(Self)
             .ok_or(VersionError::Underflow)
+    }
+
+    /// Decrements this version by one, or returns an error if underflow occurs.
+    pub fn decrement(&mut self) -> Result<(), VersionError> {
+        *self = self.previous()?;
+        Ok(())
     }
 
     /// Returns a special sequence number used for congested shared objects:
