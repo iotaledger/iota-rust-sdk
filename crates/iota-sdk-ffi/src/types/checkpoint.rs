@@ -341,5 +341,12 @@ crate::export_iota_types_objects_bcs_conversion!(
     CheckpointTransactionInfo,
     CheckpointCommitment
 );
+crate::export_iota_types_objects_json_conversion!(
+    CheckpointSummary,
+    CheckpointContents,
+    CheckpointTransactionInfo,
+    CheckpointCommitment
+);
 
 crate::export_iota_types_bcs_conversion!(EndOfEpochData);
+crate::export_iota_types_json_conversion!(EndOfEpochData);

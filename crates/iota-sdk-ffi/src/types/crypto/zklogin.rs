@@ -446,5 +446,14 @@ crate::export_iota_types_objects_bcs_conversion!(
     CircomG2,
     Bn254FieldElement
 );
+crate::export_iota_types_objects_json_conversion!(
+    ZkLoginAuthenticator,
+    ZkLoginPublicIdentifier,
+    ZkLoginProof,
+    CircomG1,
+    CircomG2,
+    Bn254FieldElement
+);
 
 crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);
+crate::export_iota_types_json_conversion!(ZkLoginClaim, JwkId, Jwk);

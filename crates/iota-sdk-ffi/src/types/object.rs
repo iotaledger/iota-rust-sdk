@@ -693,7 +693,17 @@ impl GenesisObject {
 }
 
 crate::export_iota_types_bcs_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+crate::export_iota_types_json_conversion!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+
 crate::export_iota_types_objects_bcs_conversion!(
+    ObjectId,
+    Object,
+    ObjectData,
+    MovePackage,
+    Owner,
+    GenesisObject
+);
+crate::export_iota_types_objects_json_conversion!(
     ObjectId,
     Object,
     ObjectData,
