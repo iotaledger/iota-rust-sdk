@@ -6,10 +6,10 @@ use std::ops::{Add, AddAssign, Sub, SubAssign};
 
 #[derive(thiserror::Error, Debug)]
 pub enum VersionError {
-    #[error("Version overflowed u64")]
-    Overflow,
-    #[error("Version underflowed u64")]
-    Underflow,
+    #[error("cannot increment Version: maximum valid Version has already been reached")]
+    InvalidIncrement,
+    #[error("cannot decrement Version: minimum valid Version has already been reached")]
+    InvalidDecrement,
 }
 
 #[derive(
@@ -104,11 +104,12 @@ impl Version {
     }
 
     /// Returns the next version, or an error if overflow occurs.
-    pub fn next(self) -> Result<Self, VersionError> {
-        self.0
-            .checked_add(1)
-            .map(Self)
-            .ok_or(VersionError::Overflow)
+    pub fn next(mut self) -> Result<Self, VersionError> {
+        if !self.is_valid() {
+            return Err(VersionError::InvalidIncrement);
+        }
+        self.0 += 1;
+        Ok(self)
     }
 
     /// Increments this version by one, or returns an error if overflow occurs.
@@ -118,11 +119,12 @@ impl Version {
     }
 
     /// Returns the previous version, or an error if underflow occurs.
-    pub fn previous(self) -> Result<Self, VersionError> {
-        self.0
-            .checked_sub(1)
-            .map(Self)
-            .ok_or(VersionError::Underflow)
+    pub fn previous(mut self) -> Result<Self, VersionError> {
+        if self == Self::MIN_VALID_INCL {
+            return Err(VersionError::InvalidDecrement);
+        }
+        self.0 -= 1;
+        Ok(self)
     }
 
     /// Decrements this version by one, or returns an error if underflow occurs.
