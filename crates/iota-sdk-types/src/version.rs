@@ -48,28 +48,28 @@ pub enum VersionError {
 pub struct Version(pub u64);
 
 impl Version {
-    /// An inclusive lower limit on a valid sequence number.
+    /// An inclusive lower limit on a valid version.
     ///
-    /// A valid sequence number means an object, which this sequence number
+    /// A valid version means an object, which this version
     /// is assigned to, does not appear in a cancelled transaction.
     pub const MIN_VALID_INCL: Self = Self(u64::MIN);
 
-    /// An exclusive upper limit on a valid sequence number: sequence numbers
-    /// strictly smaller than this limit are valid sequence numbers.
+    /// An exclusive upper limit on a valid version: versions
+    /// strictly smaller than this limit are valid versions.
     ///
-    /// A valid sequence number means an object, which this sequence number
+    /// A valid version means an object, which this version
     /// is assigned to, does not appear in a cancelled transaction.
-    /// Sequence numbers larger than this value are "special" and
+    /// Versions larger than this value are "special" and
     /// assigned to objects that appear in cancelled transactions.
     pub const MAX_VALID_EXCL: Self = Self(0x7fff_ffff_ffff_ffff);
 
-    /// Special sequence number that is assigned to objects which are accessed
+    /// Special version that is assigned to objects which are accessed
     /// immutably in a cancelled transaction.
     pub const CANCELLED_READ: Self = Self(Self::MAX_VALID_EXCL.0 + 1);
 
-    /// Special sequence number that was assigned to congested objects which
-    /// cause transaction cancellations. Note that this special sequence
-    /// number was only used prior to the introduction of a gas price feedback
+    /// Special version that was assigned to congested objects which
+    /// cause transaction cancellations. Note that this special version
+    /// was only used prior to the introduction of a gas price feedback
     /// mechanism, but it is kept for backward compatibility.
     pub const CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK: Self = Self(Self::MAX_VALID_EXCL.0 + 2);
 
@@ -80,12 +80,12 @@ impl Version {
     // congestion, please make sure their offset is less than
     // CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK
 
-    /// In the gas price feedback mechanism, sequence numbers >=
+    /// In the gas price feedback mechanism, versions >=
     /// `Version::MAX_VALID_EXCL` +
     /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
     /// objects that cause transactions cancellations due to congestion.
     ///
-    /// Sequence numbers larger than `Version::MAX_VALID_EXCL` but
+    /// Versions larger than `Version::MAX_VALID_EXCL` but
     /// smaller than `Version::MAX_VALID_EXCL` +
     /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
     /// intended for other transaction cancellation reasons.
@@ -96,8 +96,8 @@ impl Version {
     /// overflow `u64::MAX`.
     pub const CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK: Self = Self(1_000);
 
-    /// Minimum congested sequence number used in the gas price feedback
-    /// mechanism. A congested sequence number is assigned to objects that
+    /// Minimum congested version used in the gas price feedback
+    /// mechanism. A congested version is assigned to objects that
     /// cause transaction cancellations.
     pub const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
@@ -137,10 +137,10 @@ impl Version {
         Ok(())
     }
 
-    /// Returns a special sequence number used for congested shared objects:
+    /// Returns a special version used for congested shared objects:
     /// `Version::MIN_CONGESTED + suggested_gas_price`,
-    /// where `suggested_gas_price` is embedded into a congested sequence
-    /// number to facilitate a gas price feedback mechanism for transactions
+    /// where `suggested_gas_price` is embedded into a congested version
+    /// to facilitate a gas price feedback mechanism for transactions
     /// cancelled due to shared object congestion.
     pub fn new_congested_with_suggested_gas_price(
         suggested_gas_price: u64,
@@ -155,7 +155,7 @@ impl Version {
         Ok(Self(version))
     }
 
-    /// Check if this sequence number is congested, i.e., the corresponding
+    /// Check if this version is congested, i.e., the corresponding
     /// object is the reason for transaction cancellation.
     pub fn is_congested(&self) -> bool {
         *self == Self::CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK
@@ -163,7 +163,7 @@ impl Version {
     }
 
     /// Returns the `suggested_gas_price` embedded in this congested shared
-    /// object sequence number. The `suggested_gas_price` here is used for a
+    /// object version. The `suggested_gas_price` here is used for a
     /// gas price feedback mechanism for transactions cancelled due to
     /// shared object congestion.
     pub fn get_congested_version_suggested_gas_price(&self) -> Result<u64, VersionError> {
