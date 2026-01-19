@@ -95,6 +95,14 @@ impl Version {
         self.0
     }
 
+    pub fn increment(self) -> Option<Self> {
+        self.0.checked_add(1).map(Self)
+    }
+
+    pub fn decrement(self) -> Option<Self> {
+        self.0.checked_sub(1).map(Self)
+    }
+
     /// Returns a special sequence number used for congested shared objects:
     /// `Version::MIN_CONGESTED + suggested_gas_price`,
     /// where `suggested_gas_price` is embedded into a congested sequence
