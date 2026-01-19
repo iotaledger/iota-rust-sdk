@@ -5,8 +5,7 @@
 use std::collections::BTreeMap;
 
 use super::{Address, Digest, Identifier, ObjectId, StructTag};
-
-pub type Version = u64;
+use crate::Version;
 
 /// Reference to an object
 ///
@@ -1016,7 +1015,7 @@ mod serialization {
                         Identifier::new("foo").unwrap(),
                         Vec::new(),
                     ),
-                    version: 12,
+                    version: Version(12),
                     contents: ObjectId::ZERO.into(),
                 }),
                 // owner: Owner::Address(Address::ZERO),
@@ -1034,7 +1033,7 @@ mod serialization {
                 "{}",
                 serde_json::to_string_pretty(&ObjectReference {
                     object_id: ObjectId::ZERO,
-                    version: 1,
+                    version: Version(1),
                     digest: Digest::ZERO,
                 })
                 .unwrap()

@@ -169,7 +169,7 @@ pub struct RandomnessStateUpdate {
     /// The initial version of the randomness object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub randomness_obj_initial_shared_version: u64,
+    pub randomness_obj_initial_shared_version: Version,
 }
 
 /// Transaction type
@@ -411,7 +411,7 @@ pub struct AuthenticatorStateExpire {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: Version,
 }
 
 /// Update the set of valid JWKs
@@ -444,7 +444,7 @@ pub struct AuthenticatorStateUpdateV1 {
     /// The initial version of the authenticator object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub authenticator_obj_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: Version,
 }
 
 /// A new Jwk
@@ -909,7 +909,7 @@ pub enum Input {
     Shared {
         object_id: ObjectId,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        initial_shared_version: u64,
+        initial_shared_version: Version,
         /// Controls whether the caller asks for a mutable reference to the
         /// shared object.
         mutable: bool,
