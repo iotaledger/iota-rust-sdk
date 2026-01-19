@@ -58,3 +58,9 @@ pub struct GasCostSummary {
 
 crate::export_iota_types_bcs_conversion!(GasCostSummary);
 crate::export_iota_types_json_conversion!(GasCostSummary);
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(GasCostSummary);
+    crate::test_json_roundtrip!(GasCostSummary);
+}

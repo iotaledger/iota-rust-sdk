@@ -457,3 +457,31 @@ crate::export_iota_types_objects_json_conversion!(
 
 crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);
 crate::export_iota_types_json_conversion!(ZkLoginClaim, JwkId, Jwk);
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(
+        ZkLoginAuthenticator,
+        ZkLoginPublicIdentifier,
+        ZkLoginInputs,
+        ZkLoginProof,
+        ZkLoginClaim,
+        CircomG1,
+        CircomG2,
+        Bn254FieldElement,
+        JwkId,
+        Jwk,
+    );
+    crate::test_json_roundtrip!(
+        ZkLoginAuthenticator,
+        ZkLoginPublicIdentifier,
+        ZkLoginInputs,
+        ZkLoginProof,
+        ZkLoginClaim,
+        CircomG1,
+        CircomG2,
+        Bn254FieldElement,
+        JwkId,
+        Jwk,
+    );
+}

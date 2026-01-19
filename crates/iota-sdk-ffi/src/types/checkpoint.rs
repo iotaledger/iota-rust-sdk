@@ -350,3 +350,21 @@ crate::export_iota_types_objects_json_conversion!(
 
 crate::export_iota_types_bcs_conversion!(EndOfEpochData);
 crate::export_iota_types_json_conversion!(EndOfEpochData);
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(
+        CheckpointSummary,
+        CheckpointContents,
+        CheckpointTransactionInfo,
+        CheckpointCommitment,
+        EndOfEpochData,
+    );
+    crate::test_json_roundtrip!(
+        CheckpointSummary,
+        CheckpointContents,
+        CheckpointTransactionInfo,
+        CheckpointCommitment,
+        EndOfEpochData,
+    );
+}

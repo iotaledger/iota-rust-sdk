@@ -357,3 +357,9 @@ impl SimpleSignature {
 
 crate::export_iota_types_objects_bcs_conversion!(UserSignature, SimpleSignature);
 crate::export_iota_types_objects_json_conversion!(UserSignature, SimpleSignature);
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(UserSignature, SimpleSignature);
+    crate::test_json_roundtrip!(UserSignature, SimpleSignature);
+}

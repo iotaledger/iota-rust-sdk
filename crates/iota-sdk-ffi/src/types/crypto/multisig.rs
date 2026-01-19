@@ -431,3 +431,21 @@ crate::export_iota_types_objects_json_conversion!(
     MultisigCommittee,
     MultisigMember
 );
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(
+        MultisigMemberSignature,
+        MultisigMemberPublicKey,
+        MultisigAggregatedSignature,
+        MultisigCommittee,
+        MultisigMember,
+    );
+    crate::test_json_roundtrip!(
+        MultisigMemberSignature,
+        MultisigMemberPublicKey,
+        MultisigAggregatedSignature,
+        MultisigCommittee,
+        MultisigMember,
+    );
+}

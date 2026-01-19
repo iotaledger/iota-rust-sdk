@@ -711,3 +711,9 @@ crate::export_iota_types_objects_json_conversion!(
     Owner,
     GenesisObject
 );
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(ObjectId, ObjectReference, TypeOrigin, UpgradeInfo, Owner,);
+    crate::test_json_roundtrip!(ObjectId, ObjectReference, TypeOrigin, UpgradeInfo, Owner,);
+}

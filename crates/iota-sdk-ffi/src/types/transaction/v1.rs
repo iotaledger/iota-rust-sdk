@@ -439,3 +439,25 @@ crate::export_iota_types_json_conversion!(
     ObjectOut,
     IdOperation
 );
+
+#[cfg(test)]
+mod tests {
+    crate::test_bcs_roundtrip!(
+        TransactionEffectsV1,
+        ChangedObject,
+        UnchangedSharedObject,
+        UnchangedSharedKind,
+        ObjectIn,
+        ObjectOut,
+        IdOperation,
+    );
+    crate::test_json_roundtrip!(
+        TransactionEffectsV1,
+        ChangedObject,
+        UnchangedSharedObject,
+        UnchangedSharedKind,
+        ObjectIn,
+        ObjectOut,
+        IdOperation,
+    );
+}
