@@ -160,3 +160,45 @@ macro_rules! test_bcs_roundtrip {
         )+}
     };
 }
+
+/// Macro to generate proptest-based BCS roundtrip tests for primitive types.
+/// Used in test modules only.
+#[macro_export]
+macro_rules! test_primitive_bcs_roundtrip {
+    ($($name:ty),+ $(,)?) => {
+        paste::paste! {$(
+            #[test_strategy::proptest]
+            fn [< test_ $name:snake _bcs_roundtrip >](original: $name) {
+                let bytes = bcs::to_bytes(&original).expect("failed to serialize to BCS");
+                let parsed: $name = bcs::from_bytes(&bytes).expect("failed to deserialize from BCS");
+                assert_eq!(
+                    original,
+                    parsed,
+                    "BCS roundtrip failed for {}",
+                    stringify!($name)
+                );
+            }
+        )+}
+    };
+}
+
+/// Macro to generate proptest-based JSON roundtrip tests for primitive types.
+/// Used in test modules only.
+#[macro_export]
+macro_rules! test_primitive_json_roundtrip {
+    ($($name:ty),+ $(,)?) => {
+        paste::paste! {$(
+            #[test_strategy::proptest]
+            fn [< test_ $name:snake _json_roundtrip >](original: $name) {
+                let json = serde_json::to_string(&original).expect("failed to serialize to JSON");
+                let parsed: $name = serde_json::from_str(&json).expect("failed to deserialize from JSON");
+                assert_eq!(
+                    original,
+                    parsed,
+                    "JSON roundtrip failed for {}",
+                    stringify!($name)
+                );
+            }
+        )+}
+    };
+}
