@@ -2305,7 +2305,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 19047:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 57308:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() != 1961:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5718,7 +5718,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared.argty
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.c_void_p,
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared.restype = ctypes.c_void_p
@@ -40017,7 +40017,7 @@ class MoveAuthenticator():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
+    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "Version"):
         """
         Create a new move authenticator from a shared object.
         """
@@ -40028,14 +40028,14 @@ class MoveAuthenticator():
         
         _UniffiConverterTypeObjectId.check_lower(object_to_authenticate)
         
-        _UniffiConverterUInt64.check_lower(initial_shared_version)
+        _UniffiConverterTypeVersion.check_lower(initial_shared_version)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared,
         _UniffiConverterSequenceTypeInput.lower(call_args),
         _UniffiConverterSequenceTypeTypeTag.lower(type_args),
         _UniffiConverterTypeObjectId.lower(object_to_authenticate),
-        _UniffiConverterUInt64.lower(initial_shared_version))
+        _UniffiConverterTypeVersion.lower(initial_shared_version))
         return cls._make_instance_(pointer)
 
 

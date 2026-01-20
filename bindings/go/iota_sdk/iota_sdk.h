@@ -3082,7 +3082,7 @@ void* uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(RustBuf
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MOVEAUTHENTICATOR_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_MOVEAUTHENTICATOR_NEW_SHARED
-void* uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(RustBuffer call_args, RustBuffer type_args, void* object_to_authenticate, uint64_t initial_shared_version, RustCallStatus *out_status
+void* uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(RustBuffer call_args, RustBuffer type_args, void* object_to_authenticate, void* initial_shared_version, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_MOVEAUTHENTICATOR_ADDRESS
