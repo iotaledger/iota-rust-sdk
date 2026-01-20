@@ -1987,6 +1987,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823:
@@ -1998,8 +2000,6 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_version_next() != 46748:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_version_value() != 56537:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2713,13 +2713,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new() != 60756:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -10004,6 +10004,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_pri
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10017,11 +10022,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new.argtypes = (
-    ctypes.c_uint64,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price.argtypes = (
     ctypes.c_uint64,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10031,6 +10031,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable.arg
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_as_u64.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_as_u64.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10061,11 +10066,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_previous.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_previous.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_value.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_value.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_versionassignment.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14048,6 +14048,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price.restype = ctypes.c_uint16
@@ -14066,9 +14069,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_next.restype = ctypes.c_u
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_previous.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_previous.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_value.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_value.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.restype = ctypes.c_uint16
@@ -15137,6 +15137,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment.restype = ctypes.c_uint16
@@ -15146,9 +15149,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_new.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price.restype = ctypes.c_uint16
@@ -52958,6 +52958,12 @@ class _UniffiConverterTypeValidatorSignature:
     def write(cls, value: ValidatorSignatureProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class VersionProtocol(typing.Protocol):
+    def as_u64(self, ):
+        """
+        Get the underlying u64 value of this version
+        """
+
+        raise NotImplementedError
     def get_congested_version_suggested_gas_price(self, ):
         """
         Returns the `suggested_gas_price` embedded in this congested shared
@@ -53000,20 +53006,12 @@ class VersionProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def value(self, ):
-        """
-        Get the underlying u64 value of this version
-        """
-
-        raise NotImplementedError
 # Version is a Rust-only trait - it's a wrapper around a Rust implementation.
 class Version():
     _pointer: ctypes.c_void_p
-    def __init__(self, value: "int"):
-        _UniffiConverterUInt64.check_lower(value)
-        
-        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new,
-        _UniffiConverterUInt64.lower(value))
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -53054,6 +53052,19 @@ class Version():
 
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_u64(cls, value: "int"):
+        """
+        Create a new Version from a u64 value
+        """
+
+        _UniffiConverterUInt64.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64,
+        _UniffiConverterUInt64.lower(value))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -53121,6 +53132,19 @@ class Version():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable,)
         return cls._make_instance_(pointer)
+
+
+
+    def as_u64(self, ) -> "int":
+        """
+        Get the underlying u64 value of this version
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_as_u64,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -53202,19 +53226,6 @@ class Version():
 
         return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_previous,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def value(self, ) -> "int":
-        """
-        Get the underlying u64 value of this version
-        """
-
-        return _UniffiConverterUInt64.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_value,self._uniffi_clone_pointer(),)
         )
 
 

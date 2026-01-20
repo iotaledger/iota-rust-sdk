@@ -401,7 +401,7 @@ mod tests {
         );
         let coin_obj_id = "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4";
         let coin_digest = "7opR9rFUYivSTqoJHvFb9p6p54THyHTatMG6id4JKZR9";
-        let coin_version = Version(2);
+        let coin_version = Version::from_u64(2);
         let coin = ObjectReference::new(
             coin_obj_id.parse().unwrap(),
             coin_version,
@@ -418,7 +418,7 @@ mod tests {
             "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
                 .parse()
                 .unwrap(),
-            Version(2),
+            Version::from_u64(2),
             "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
                 .parse()
                 .unwrap(),

@@ -400,7 +400,7 @@ impl GasStationData {
                     .into_iter()
                     .map(|obj_ref| ObjectReference {
                         object_id: obj_ref.object_id,
-                        version: Version(obj_ref.version),
+                        version: Version::from_u64(obj_ref.version),
                         digest: obj_ref.digest,
                     })
                     .collect();

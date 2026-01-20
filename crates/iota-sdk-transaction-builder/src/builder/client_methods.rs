@@ -242,7 +242,7 @@ impl ClientMethods for iota_graphql_client::Client {
             .map(|r| iota_graphql_client::query_types::ObjectRef {
                 address: r.object_id,
                 digest: r.digest.to_base58(),
-                version: r.version.value(),
+                version: r.version.as_u64(),
             })
             .collect::<Vec<_>>();
         self.dry_run_tx_kind(

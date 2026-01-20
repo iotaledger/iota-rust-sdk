@@ -1003,7 +1003,7 @@ mod serialization {
                         Identifier::new("foo").unwrap(),
                         Vec::new(),
                     ),
-                    version: Version(12),
+                    version: Version::from_u64(12),
                     contents: ObjectId::ZERO.into(),
                 }),
                 // owner: Owner::Address(Address::ZERO),
@@ -1021,7 +1021,7 @@ mod serialization {
                 "{}",
                 serde_json::to_string_pretty(&ObjectReference {
                     object_id: ObjectId::ZERO,
-                    version: Version(1),
+                    version: Version::from_u64(1),
                     digest: Digest::ZERO,
                 })
                 .unwrap()

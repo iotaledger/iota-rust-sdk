@@ -7230,6 +7230,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_as_u64()
+	})
+	if checksum != 37415 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_as_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price()
 	})
 	if checksum != 50172 {
@@ -7280,15 +7289,6 @@ func uniffiCheckChecksums() {
 	if checksum != 59091 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_previous: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_version_value()
-	})
-	if checksum != 56537 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_value: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10497,6 +10497,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64()
+	})
+	if checksum != 29677 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment()
 	})
 	if checksum != 45842 {
@@ -10520,15 +10529,6 @@ func uniffiCheckChecksums() {
 	if checksum != 30140 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_new()
-	})
-	if checksum != 60756 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_new: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -33684,6 +33684,8 @@ func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 
 
 type VersionInterface interface {
+	// Get the underlying u64 value of this version
+	AsU64() uint64
 	// Returns the `suggested_gas_price` embedded in this congested shared
 	// object version. The `suggested_gas_price` here is used for a
 	// gas price feedback mechanism for transactions cancelled due to
@@ -33702,16 +33704,9 @@ type VersionInterface interface {
 	Next() (*Version, error)
 	// Returns the previous version, or an error if underflow occurs.
 	Previous() (*Version, error)
-	// Get the underlying u64 value of this version
-	Value() uint64
 }
 type Version struct {
 	ffiObject FfiObject
-}
-func NewVersion(value uint64) *Version {
-	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_version_new(FfiConverterUint64INSTANCE.Lower(value),_uniffiStatus)
-	}))
 }
 
 
@@ -33730,6 +33725,13 @@ func VersionCancelledRead() *Version {
 func VersionCongestedPriorToGasPriceFeedback() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(_uniffiStatus)
+	}))
+}
+
+// Create a new Version from a u64 value
+func VersionFromU64(value uint64) *Version {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(FfiConverterUint64INSTANCE.Lower(value),_uniffiStatus)
 	}))
 }
 
@@ -33794,6 +33796,16 @@ func VersionRandomnessUnavailable() *Version {
 }
 
 
+
+// Get the underlying u64 value of this version
+func (_self *Version) AsU64() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*Version")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 // Returns the `suggested_gas_price` embedded in this congested shared
 // object version. The `suggested_gas_price` here is used for a
@@ -33877,16 +33889,6 @@ func (_self *Version) Previous() (*Version, error) {
 		} else {
 			return FfiConverterVersionINSTANCE.Lift(_uniffiRV), nil
 		}
-}
-
-// Get the underlying u64 value of this version
-func (_self *Version) Value() uint64 {
-	_pointer := _self.ffiObject.incrementPointer("*Version")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_version_value(
-		_pointer,_uniffiStatus)
-	}))
 }
 func (object *Version) Destroy() {
 	runtime.SetFinalizer(object, nil)

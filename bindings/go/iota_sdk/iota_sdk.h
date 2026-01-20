@@ -7233,6 +7233,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_fe
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_FROM_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_FROM_U64
+void* uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(uint64_t value, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_LAMPORT_INCREMENT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_LAMPORT_INCREMENT
 void* uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(RustBuffer inputs, RustCallStatus *out_status
@@ -7250,11 +7255,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(RustCallStatus *
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_NEW
-void* uniffi_iota_sdk_ffi_fn_constructor_version_new(uint64_t value, RustCallStatus *out_status
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_NEW_CONGESTED_WITH_SUGGESTED_GAS_PRICE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_NEW_CONGESTED_WITH_SUGGESTED_GAS_PRICE
 void* uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(uint64_t suggested_gas_price, RustCallStatus *out_status
@@ -7264,6 +7264,11 @@ void* uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_ga
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_VERSION_RANDOMNESS_UNAVAILABLE
 void* uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(RustCallStatus *out_status
     
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_AS_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_AS_U64
+uint64_t uniffi_iota_sdk_ffi_fn_method_version_as_u64(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_GET_CONGESTED_VERSION_SUGGESTED_GAS_PRICE
@@ -7294,11 +7299,6 @@ void* uniffi_iota_sdk_ffi_fn_method_version_next(void* ptr, RustCallStatus *out_
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_PREVIOUS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_PREVIOUS
 void* uniffi_iota_sdk_ffi_fn_method_version_previous(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_VALUE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_VERSION_VALUE
-uint64_t uniffi_iota_sdk_ffi_fn_method_version_value(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_VERSIONASSIGNMENT
@@ -13566,6 +13566,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_AS_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_AS_U64
+uint16_t uniffi_iota_sdk_ffi_checksum_method_version_as_u64(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_GET_CONGESTED_VERSION_SUGGESTED_GAS_PRICE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_GET_CONGESTED_VERSION_SUGGESTED_GAS_PRICE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price(void
@@ -13599,12 +13605,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_version_next(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_PREVIOUS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_PREVIOUS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_version_previous(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_VALUE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_VERSION_VALUE
-uint16_t uniffi_iota_sdk_ffi_checksum_method_version_value(void
     
 );
 #endif
@@ -15744,6 +15744,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_FROM_U64
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_FROM_U64
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_LAMPORT_INCREMENT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_LAMPORT_INCREMENT
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment(void
@@ -15759,12 +15765,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_MIN_VALID_INCL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_MIN_VALID_INCL
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_NEW
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_VERSION_NEW
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_version_new(void
     
 );
 #endif

@@ -52,7 +52,7 @@ pub enum VersionError {
 pub struct Version(
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub u64,
+    u64,
 );
 
 impl Version {
@@ -110,8 +110,13 @@ impl Version {
     const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
 
+    /// Create a new Version from a u64 value
+    pub const fn from_u64(value: u64) -> Self {
+        Self(value)
+    }
+
     /// Get the underlying u64 value of this version
-    pub const fn value(&self) -> u64 {
+    pub const fn as_u64(&self) -> u64 {
         self.0
     }
 

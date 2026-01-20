@@ -5062,6 +5062,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_as_u64(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled(
@@ -5073,8 +5075,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_version_is_valid(
 fun uniffi_iota_sdk_ffi_checksum_method_version_next(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_version_previous(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_version_value(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id(
 ): Short
@@ -5788,13 +5788,13 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_version_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price(
 ): Short
@@ -8575,18 +8575,20 @@ fun uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(`inputs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_version_new(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(`suggestedGasPrice`: Long,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_version_as_u64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8599,8 +8601,6 @@ fun uniffi_iota_sdk_ffi_fn_method_version_next(`ptr`: Pointer,uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_version_previous(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_version_value(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
 fun uniffi_iota_sdk_ffi_fn_clone_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -11577,6 +11577,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -11593,9 +11596,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_value() != 56537.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440.toShort()) {
@@ -12666,6 +12666,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12673,9 +12676,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new() != 60756.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14.toShort()) {
@@ -54740,6 +54740,11 @@ public object FfiConverterTypeValidatorSignature: FfiConverter<ValidatorSignatur
 public interface VersionInterface {
     
     /**
+     * Get the underlying u64 value of this version
+     */
+    fun `asU64`(): kotlin.ULong
+    
+    /**
      * Returns the `suggested_gas_price` embedded in this congested shared
      * object version. The `suggested_gas_price` here is used for a
      * gas price feedback mechanism for transactions cancelled due to
@@ -54775,11 +54780,6 @@ public interface VersionInterface {
      */
     fun `previous`(): Version
     
-    /**
-     * Get the underlying u64 value of this version
-     */
-    fun `value`(): kotlin.ULong
-    
     companion object
 }
 
@@ -54801,13 +54801,6 @@ open class Version: Disposable, AutoCloseable, VersionInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`value`: kotlin.ULong) :
-        this(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new(
-        FfiConverterULong.lower(`value`),_status)
-}
-    )
 
     protected val pointer: Pointer?
     protected val cleanable: UniffiCleaner.Cleanable
@@ -54871,6 +54864,21 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Get the underlying u64 value of this version
+     */override fun `asU64`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     
     /**
@@ -54972,21 +54980,6 @@ open class Version: Disposable, AutoCloseable, VersionInterface
     
 
     
-    /**
-     * Get the underlying u64 value of this version
-     */override fun `value`(): kotlin.ULong {
-            return FfiConverterULong.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_value(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    
 
     
     companion object {
@@ -55015,6 +55008,19 @@ open class Version: Disposable, AutoCloseable, VersionInterface
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
         _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new Version from a u64 value
+     */ fun `fromU64`(`value`: kotlin.ULong): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+        FfiConverterULong.lower(`value`),_status)
 }
     )
     }

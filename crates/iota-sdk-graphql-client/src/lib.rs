@@ -816,7 +816,7 @@ impl Client {
     ) -> Result<Option<Object>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into().map(|v| v.0),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -898,7 +898,7 @@ impl Client {
             version: None,
         });
 
-        let response = self.run_query(&operation).await.unwrap();
+        let response = self.run_query(&operation).await?;
 
         Ok(response
             .object
@@ -921,7 +921,7 @@ impl Client {
     ) -> Result<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into().map(|v| v.0),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -956,7 +956,7 @@ impl Client {
     ) -> Result<Option<MovePackage>> {
         let operation = PackageQuery::build(PackageArgs {
             address,
-            version: version.into().map(|v| v.0),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -994,8 +994,8 @@ impl Client {
             first,
             last,
             filter: Some(MovePackageVersionFilter {
-                after_version: after_version.into().map(|v| v.0),
-                before_version: before_version.into().map(|v| v.0),
+                after_version: after_version.into().map(|v| v.as_u64()),
+                before_version: before_version.into().map(|v| v.as_u64()),
             }),
         });
 
@@ -1371,7 +1371,7 @@ impl Client {
             address: package,
             module,
             function,
-            version: version.into().map(|v| v.0),
+            version: version.into().map(|v| v.as_u64()),
         });
         let response = self.run_query(&operation).await?;
 
@@ -1393,7 +1393,7 @@ impl Client {
     ) -> Result<Option<serde_json::Value>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into().map(|v| v.0),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -1426,7 +1426,7 @@ impl Client {
         let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
             package,
             module,
-            version: version.into().map(|v| v.0),
+            version: version.into().map(|v| v.as_u64()),
             after_enums: enums.after.as_deref(),
             after_functions: functions.after.as_deref(),
             after_structs: structs.after.as_deref(),

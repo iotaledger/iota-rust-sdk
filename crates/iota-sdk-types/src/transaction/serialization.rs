@@ -1107,7 +1107,7 @@ mod tests {
             (
                 Input::ImmutableOrOwned(ObjectReference::new(
                     ObjectId::ZERO,
-                    Version(1),
+                    Version::from_u64(1),
                     Digest::ZERO,
                 )),
                 serde_json::json!({
@@ -1120,7 +1120,7 @@ mod tests {
             (
                 Input::Shared {
                     object_id: ObjectId::ZERO,
-                    initial_shared_version: Version(1),
+                    initial_shared_version: Version::from_u64(1),
                     mutable: true,
                 },
                 serde_json::json!({
@@ -1133,7 +1133,7 @@ mod tests {
             (
                 Input::Receiving(ObjectReference::new(
                     ObjectId::ZERO,
-                    Version(1),
+                    Version::from_u64(1),
                     Digest::ZERO,
                 )),
                 serde_json::json!({

@@ -10,14 +10,15 @@ pub struct Version(iota_sdk::types::Version);
 
 #[uniffi::export]
 impl Version {
+    /// Create a new Version from a u64 value
     #[uniffi::constructor]
-    pub const fn new(value: u64) -> Self {
-        Self(iota_sdk::types::Version(value))
+    pub const fn from_u64(value: u64) -> Self {
+        Self(iota_sdk::types::Version::from_u64(value))
     }
 
     /// Get the underlying u64 value of this version
-    pub const fn value(&self) -> u64 {
-        self.0.0
+    pub const fn as_u64(&self) -> u64 {
+        self.0.as_u64()
     }
 
     /// Returns a special version used for congested shared objects:
