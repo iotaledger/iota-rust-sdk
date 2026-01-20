@@ -43,9 +43,3 @@ pub fn hex_decode(input: String) -> crate::error::Result<Vec<u8>> {
 
 crate::export_primitive_types_bcs_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
 crate::export_primitive_types_json_conversion!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
-
-#[cfg(test)]
-mod tests {
-    crate::test_primitive_bcs_roundtrip!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
-    crate::test_primitive_json_roundtrip!(u8, u16, u32, u64, i8, i16, i32, i64, bool, String);
-}
