@@ -234,3 +234,13 @@ crate::export_iota_types_objects_bcs_conversion!(
     Secp256k1Signature,
     Secp256r1Signature,
 );
+crate::export_iota_types_objects_json_conversion!(
+    Ed25519PublicKey,
+    Bls12381PublicKey,
+    Secp256k1PublicKey,
+    Secp256r1PublicKey,
+    Ed25519Signature,
+    Bls12381Signature,
+    Secp256k1Signature,
+    Secp256r1Signature,
+);

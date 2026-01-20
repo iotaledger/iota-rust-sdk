@@ -430,3 +430,12 @@ crate::export_iota_types_bcs_conversion!(
     ObjectOut,
     IdOperation
 );
+crate::export_iota_types_json_conversion!(
+    TransactionEffectsV1,
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut,
+    IdOperation
+);
