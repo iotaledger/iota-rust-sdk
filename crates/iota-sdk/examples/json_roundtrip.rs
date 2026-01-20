@@ -18,7 +18,7 @@ fn main() -> Result<()> {
     let json = serde_json::to_string_pretty(&transaction)?;
     println!("Transaction as JSON:\n{json}");
 
-    // Convert the JSON back to a Transaction
+    // Convert the JSON back to a transaction
     let parsed_transaction: Transaction = serde_json::from_str(&json)?;
     println!("\nParsed transaction back from JSON: {parsed_transaction:?}");
 

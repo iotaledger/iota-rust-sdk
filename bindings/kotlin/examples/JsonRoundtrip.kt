@@ -19,7 +19,7 @@ fun main() {
         val json = transactionToJson(transaction)
         println("Transaction as JSON:\n$json")
 
-        // Convert the JSON back to a Transaction
+        // Convert the JSON back to a transaction
         val transactionFromJson = transactionFromJson(json)
         println("Parsed transaction back from JSON: $transactionFromJson")
     } catch (e: Exception) {

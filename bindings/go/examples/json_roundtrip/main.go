@@ -29,7 +29,7 @@ func main() {
 	}
 	log.Printf("Transaction as JSON:\n%s", json)
 
-	// Convert the JSON back to a Transaction
+	// Convert the JSON back to a transaction
 	transactionFromJson, err := iota_sdk.TransactionFromJson(json)
 	if err != nil {
 		log.Fatalf("Failed to parse transaction from JSON: %v", err)

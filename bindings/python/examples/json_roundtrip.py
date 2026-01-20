@@ -18,7 +18,7 @@ def main():
     json = transaction_to_json(transaction)
     print(f"Transaction as JSON:\n{json}")
 
-    # Convert the JSON back to a Transaction
+    # Convert the JSON back to a transaction
     parsed_transaction = transaction_from_json(json)
     print(f"Parsed transaction back from JSON: {parsed_transaction}")
 
