@@ -66,14 +66,14 @@
 //!         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
 //!     )?,
 //!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-//!     version: Version(435090179),
+//!     version: Version::from_u64(435090179),
 //! };
 //! let gas_coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
 //!         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
 //!     )?,
 //!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
-//!     version: Version(473053810),
+//!     version: Version::from_u64(473053810),
 //! };
 //!
 //! builder
