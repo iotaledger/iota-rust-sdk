@@ -193,7 +193,7 @@ struct GasObjectRef {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
-    pub version: Version,
+    pub version: u64,
     /// The digest of this object.
     pub digest: Digest,
 }
@@ -379,7 +379,7 @@ impl GasStationData {
                     .into_iter()
                     .map(|obj_ref| ObjectReference {
                         object_id: obj_ref.object_id,
-                        version: obj_ref.version as _,
+                        version: Version(obj_ref.version),
                         digest: obj_ref.digest,
                     })
                     .collect();
