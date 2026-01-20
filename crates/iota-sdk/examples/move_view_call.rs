@@ -1,11 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    graphql_client::{Client, error::Result},
-    transaction_builder::TransactionBuilder,
-};
-use iota_types::{Address, ObjectId};
+use iota_sdk::graphql_client::{Client, error::Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
