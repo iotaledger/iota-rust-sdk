@@ -102,12 +102,12 @@ impl Version {
     /// reasons, but this offset can be increased if needed, as long as
     /// (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
     /// overflow `u64::MAX`.
-    pub const CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK: Self = Self(1_000);
+    const CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK: Self = Self(1_000);
 
     /// Minimum congested version used in the gas price feedback
     /// mechanism. A congested version is assigned to objects that
     /// cause transaction cancellations.
-    pub const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
+    const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
 
     /// Get the underlying u64 value of this version

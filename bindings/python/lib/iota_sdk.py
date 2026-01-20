@@ -2711,15 +2711,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback() != 40686:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback() != 18156:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -10004,10 +10000,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_base_offset_for_gas_price_feedback.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_base_offset_for_gas_price_feedback.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -10021,10 +10013,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_congested_for_gas_price_feedback.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_congested_for_gas_price_feedback.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -15146,9 +15134,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback.restype = ctypes.c_uint16
@@ -15158,9 +15143,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl.restype = ctypes.c_uint16
@@ -53062,29 +53044,6 @@ class Version():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def congested_base_offset_for_gas_price_feedback(cls, ):
-        """
-        In the gas price feedback mechanism, versions >=
-        `Version::MAX_VALID_EXCL` +
-        `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-        objects that cause transactions cancellations due to congestion.
-
-        Versions larger than `Version::MAX_VALID_EXCL` but
-        smaller than `Version::MAX_VALID_EXCL` +
-        `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-        intended for other transaction cancellation reasons.
-
-        There unlikely will be more than 1000 non-congestion cancellation
-        reasons, but this offset can be increased if needed, as long as
-        (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
-        overflow `u64::MAX`.
-        """
-
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_base_offset_for_gas_price_feedback,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
     def congested_prior_to_gas_price_feedback(cls, ):
         """
         Special version that was assigned to congested objects which
@@ -53125,18 +53084,6 @@ class Version():
 
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def min_congested_for_gas_price_feedback(cls, ):
-        """
-        Minimum congested version used in the gas price feedback
-        mechanism. A congested version is assigned to objects that
-        cause transaction cancellations.
-        """
-
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_congested_for_gas_price_feedback,)
         return cls._make_instance_(pointer)
 
     @classmethod

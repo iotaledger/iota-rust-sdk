@@ -109,33 +109,6 @@ impl Version {
         Self(iota_sdk::types::Version::RANDOMNESS_UNAVAILABLE)
     }
 
-    /// In the gas price feedback mechanism, versions >=
-    /// `Version::MAX_VALID_EXCL` +
-    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-    /// objects that cause transactions cancellations due to congestion.
-    ///
-    /// Versions larger than `Version::MAX_VALID_EXCL` but
-    /// smaller than `Version::MAX_VALID_EXCL` +
-    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-    /// intended for other transaction cancellation reasons.
-    ///
-    /// There unlikely will be more than 1000 non-congestion cancellation
-    /// reasons, but this offset can be increased if needed, as long as
-    /// (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
-    /// overflow `u64::MAX`.
-    #[uniffi::constructor]
-    pub fn congested_base_offset_for_gas_price_feedback() -> Self {
-        Self(iota_sdk::types::Version::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK)
-    }
-
-    /// Minimum congested version used in the gas price feedback
-    /// mechanism. A congested version is assigned to objects that
-    /// cause transaction cancellations.
-    #[uniffi::constructor]
-    pub fn min_congested_for_gas_price_feedback() -> Self {
-        Self(iota_sdk::types::Version::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK)
-    }
-
     /// Returns the next version, or an error if overflow occurs.
     pub fn next(&self) -> Result<Self> {
         Ok(Self(self.0.next()?))

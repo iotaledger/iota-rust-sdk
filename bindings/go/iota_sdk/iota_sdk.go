@@ -10488,15 +10488,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback()
-	})
-	if checksum != 40686 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback()
 	})
 	if checksum != 34609 {
@@ -10520,15 +10511,6 @@ func uniffiCheckChecksums() {
 	if checksum != 16135 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback()
-	})
-	if checksum != 18156 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -33741,26 +33723,6 @@ func VersionCancelledRead() *Version {
 	}))
 }
 
-// In the gas price feedback mechanism, versions >=
-// `Version::MAX_VALID_EXCL` +
-// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-// objects that cause transactions cancellations due to congestion.
-//
-// Versions larger than `Version::MAX_VALID_EXCL` but
-// smaller than `Version::MAX_VALID_EXCL` +
-// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-// intended for other transaction cancellation reasons.
-//
-// There unlikely will be more than 1000 non-congestion cancellation
-// reasons, but this offset can be increased if needed, as long as
-// (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
-// overflow `u64::MAX`.
-func VersionCongestedBaseOffsetForGasPriceFeedback() *Version {
-	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_version_congested_base_offset_for_gas_price_feedback(_uniffiStatus)
-	}))
-}
-
 // Special version that was assigned to congested objects which
 // cause transaction cancellations. Note that this special version
 // was only used prior to the introduction of a gas price feedback
@@ -33795,15 +33757,6 @@ func VersionLamportIncrement(inputs []*Version) (*Version, error) {
 func VersionMaxValidExcl() *Version {
 	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(_uniffiStatus)
-	}))
-}
-
-// Minimum congested version used in the gas price feedback
-// mechanism. A congested version is assigned to objects that
-// cause transaction cancellations.
-func VersionMinCongestedForGasPriceFeedback() *Version {
-	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_version_min_congested_for_gas_price_feedback(_uniffiStatus)
 	}))
 }
 

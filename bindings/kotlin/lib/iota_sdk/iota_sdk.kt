@@ -3521,10 +3521,6 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
-
-
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5790,15 +5786,11 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback(
-): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl(
 ): Short
@@ -8272,10 +8264,6 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 
 }
 
@@ -8287,6 +8275,10 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8581,15 +8573,11 @@ fun uniffi_iota_sdk_ffi_fn_free_version(`ptr`: Pointer,uniffi_out_err: UniffiRus
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_version_congested_base_offset_for_gas_price_feedback(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(`inputs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_version_min_congested_for_gas_price_feedback(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -12675,9 +12663,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_base_offset_for_gas_price_feedback() != 40686.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12685,9 +12670,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_congested_for_gas_price_feedback() != 18156.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140.toShort()) {
@@ -50522,7 +50504,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
         it, _status)
 }
     }
@@ -50537,7 +50519,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
         it, _status)
 }
     }
@@ -55024,32 +55006,6 @@ open class Version: Disposable, AutoCloseable, VersionInterface
 
         
     /**
-     * In the gas price feedback mechanism, versions >=
-     * `Version::MAX_VALID_EXCL` +
-     * `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-     * objects that cause transactions cancellations due to congestion.
-     *
-     * Versions larger than `Version::MAX_VALID_EXCL` but
-     * smaller than `Version::MAX_VALID_EXCL` +
-     * `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-     * intended for other transaction cancellation reasons.
-     *
-     * There unlikely will be more than 1000 non-congestion cancellation
-     * reasons, but this offset can be increased if needed, as long as
-     * (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
-     * overflow `u64::MAX`.
-     */ fun `congestedBaseOffsetForGasPriceFeedback`(): Version {
-            return FfiConverterTypeVersion.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_base_offset_for_gas_price_feedback(
-        _status)
-}
-    )
-    }
-    
-
-        
-    /**
      * Special version that was assigned to congested objects which
      * cause transaction cancellations. Note that this special version
      * was only used prior to the introduction of a gas price feedback
@@ -55092,21 +55048,6 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
-        _status)
-}
-    )
-    }
-    
-
-        
-    /**
-     * Minimum congested version used in the gas price feedback
-     * mechanism. A congested version is assigned to objects that
-     * cause transaction cancellations.
-     */ fun `minCongestedForGasPriceFeedback`(): Version {
-            return FfiConverterTypeVersion.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_congested_for_gas_price_feedback(
         _status)
 }
     )
