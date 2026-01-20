@@ -3491,8 +3491,6 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
-
-
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4567,8 +4565,6 @@ fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_make_move_vec(
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish(
 ): Short
@@ -6638,8 +6634,6 @@ fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(`ptr`: Po
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(`ptr`: Pointer,`package`: Pointer,`module`: Pointer,`function`: Pointer,`arguments`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(`ptr`: Pointer,
-): Long
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish(`ptr`: Pointer,`packageData`: Pointer,`upgradeCapName`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(`ptr`: Pointer,`coins`: RustBuffer.ByValue,`recipient`: Pointer,`amount`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -11664,9 +11658,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call() != 14120.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish() != 25909.toShort()) {
@@ -21362,15 +21353,6 @@ public interface ClientTransactionBuilderInterface {
     fun `moveCall`(`package`: Address, `module`: Identifier, `function`: Identifier, `arguments`: List<PtbArgument> = listOf(), `typeArgs`: List<TypeTag> = listOf(), `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
     
     /**
-     * Execute a move view call for the current transaction.
-     *
-     * This method converts the current transaction builder state into a view
-     * call that can be executed without submitting a transaction to the
-     * network. The transaction must contain exactly one move call command.
-     */
-    suspend fun `moveViewCall`(): MoveViewResult
-    
-    /**
      * Publish a list of modules with the given dependencies. The result
      * assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
      * Move type. Note that the upgrade capability needs to be handled
@@ -21769,34 +21751,6 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
     )
     }
     
-
-    
-    /**
-     * Execute a move view call for the current transaction.
-     *
-     * This method converts the current transaction builder state into a view
-     * call that can be executed without submitting a transaction to the
-     * network. The transaction must contain exactly one move call command.
-     */
-    @Throws(SdkFfiException::class)
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveViewCall`() : MoveViewResult {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(
-                thisPtr,
-                
-            )
-        },
-        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
-        // lift function
-        { FfiConverterTypeMoveViewResult.lift(it) },
-        // Error FFI converter
-        SdkFfiException.ErrorHandler,
-    )
-    }
 
     
     /**

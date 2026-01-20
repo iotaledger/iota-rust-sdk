@@ -46,36 +46,5 @@ async fn main() -> Result<()> {
         println!("No hash results");
     }
 
-    // Using TransactionBuilder for move view call
-    println!("Using TransactionBuilder for move view call:");
-    let mut tx = TransactionBuilder::new(Address::ZERO).with_client(client);
-
-    tx.move_call(
-        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50"
-            .parse::<iota_types::ObjectId>()
-            .unwrap(),
-        "auction",
-        "get_auction_metadata",
-    )
-    .arguments((
-        ObjectId::from_hex("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")?,
-        b"\"auc.iota\"".to_vec(),
-    ));
-
-    let result = tx.move_view_call().await;
-
-    match result {
-        Ok(result) => {
-            if let Some(error) = result.error {
-                println!("Tx Builder Error: {error}");
-            } else if let Some(results) = result.results {
-                println!("Tx Builder Results: {results:?}");
-            } else {
-                println!("No tx builder results");
-            }
-        }
-        Err(e) => println!("Tx Builder Error: {e}"),
-    }
-
     Ok(())
 }

@@ -18,7 +18,6 @@ use crate::{
     },
     types::{
         address::Address,
-        graphql::MoveViewResult,
         move_package::MovePackageData,
         object::ObjectId,
         struct_tag::Identifier,
@@ -320,16 +319,6 @@ impl ClientTransactionBuilder {
             builder.unstake(staked_iota);
         });
         self
-    }
-
-    /// Execute a move view call for the current transaction.
-    ///
-    /// This method converts the current transaction builder state into a view
-    /// call that can be executed without submitting a transaction to the
-    /// network. The transaction must contain exactly one move call command.
-    pub async fn move_view_call(&self) -> Result<MoveViewResult> {
-        let builder = self.0.read().expect("error reading from builder").clone();
-        Ok(builder.move_view_call().await?.into())
     }
 
     /// Convert this builder into a transaction.

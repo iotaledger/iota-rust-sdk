@@ -1,13 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Address
 import iota_sdk.GraphQlClient
-import iota_sdk.Identifier
-import iota_sdk.MoveArg
-import iota_sdk.PtbArgument
-import iota_sdk.TransactionBuilder
-import iota_sdk.TypeTag
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -42,35 +36,6 @@ fun main() = runBlocking {
             println("Hash Results: ${hashResult.results}")
         } else {
             println("No hash results")
-        }
-
-        // Using TransactionBuilder for move view call
-        println("Using TransactionBuilder for move view call:")
-        val sender = Address.zero()
-        val txBuilder = TransactionBuilder(sender).withClient(client)
-
-        txBuilder.moveCall(
-            Address.fromHex("0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50"),
-            Identifier("auction"),
-            Identifier("get_auction_metadata"),
-            listOf(
-                PtbArgument.objectIdFromHex(
-                    "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"
-                ),
-                PtbArgument.moveArg(MoveArg.string("\"auc.iota\"")),
-            ),
-            emptyList<TypeTag>(),
-            emptyList<String>(),
-        )
-
-        val txResult = txBuilder.moveViewCall()
-
-        if (txResult.error != null) {
-            println("Tx Builder Error: ${txResult.error}")
-        } else if (txResult.results != null) {
-            println("Tx Builder Results: ${txResult.results}")
-        } else {
-            println("No tx builder results")
         }
     } catch (e: Exception) {
         e.printStackTrace()

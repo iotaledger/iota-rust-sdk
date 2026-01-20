@@ -5133,15 +5133,6 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call()
-	})
-	if checksum != 14120 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish()
 	})
 	if checksum != 25909 {
@@ -16092,12 +16083,6 @@ type ClientTransactionBuilderInterface interface {
 	MergeCoins(primaryCoin *PtbArgument, consumedCoins []*PtbArgument) *ClientTransactionBuilder
 	// Call a Move function with the given arguments.
 	MoveCall(varPackage *Address, module *Identifier, function *Identifier, arguments []*PtbArgument, typeArgs []*TypeTag, names []string) *ClientTransactionBuilder
-	// Execute a move view call for the current transaction.
-	//
-	// This method converts the current transaction builder state into a view
-	// call that can be executed without submitting a transaction to the
-	// network. The transaction must contain exactly one move call command.
-	MoveViewCall() (MoveViewResult, error)
 	// Publish a list of modules with the given dependencies. The result
 	// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
 	// Move type. Note that the upgrade capability needs to be handled
@@ -16376,42 +16361,6 @@ func (_self *ClientTransactionBuilder) MoveCall(varPackage *Address, module *Ide
 		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(
 		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterIdentifierINSTANCE.Lower(module), FfiConverterIdentifierINSTANCE.Lower(function), FfiConverterSequencePtbArgumentINSTANCE.Lower(arguments), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterSequenceStringINSTANCE.Lower(names),_uniffiStatus)
 	}))
-}
-
-// Execute a move view call for the current transaction.
-//
-// This method converts the current transaction builder state into a view
-// call that can be executed without submitting a transaction to the
-// network. The transaction must contain exactly one move call command.
-func (_self *ClientTransactionBuilder) MoveViewCall() (MoveViewResult, error) {
-	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
-	defer _self.ffiObject.decrementPointer()
-	 res, err :=uniffiRustCallAsync[SdkFfiError](
-        FfiConverterSdkFfiErrorINSTANCE,
-		// completeFn
-		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
-			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
-			return GoRustBuffer {
-		inner: res,
-	}
-		},
-		// liftFn
-		func(ffi RustBufferI) MoveViewResult {
-			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
-		},
-		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(
-		_pointer,),
-		// pollFn
-		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
-		},
-		// freeFn
-		func (handle C.uint64_t) {
-			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
-		},
-	)
-
-	return res, err 
 }
 
 // Publish a list of modules with the given dependencies. The result

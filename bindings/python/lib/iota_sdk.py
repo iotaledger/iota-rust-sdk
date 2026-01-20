@@ -1521,8 +1521,6 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call() != 13617:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call() != 14120:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish() != 25909:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins() != 65187:
@@ -4337,10 +4335,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call.argtypes = (
-    ctypes.c_void_p,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -14780,9 +14774,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_co
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_publish.restype = ctypes.c_uint16
@@ -35002,16 +34993,6 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_view_call(self, ):
-        """
-        Execute a move view call for the current transaction.
-
-        This method converts the current transaction builder state into a view
-        call that can be executed without submitting a transaction to the
-        network. The transaction must contain exactly one move call command.
-        """
-
-        raise NotImplementedError
     def publish(self, package_data: "MovePackageData",upgrade_cap_name: "str"):
         """
         Publish a list of modules with the given dependencies. The result
@@ -35423,32 +35404,6 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterSequenceString.lower(names))
         )
 
-
-
-
-    async def move_view_call(self, ) -> "MoveViewResult":
-        """
-        Execute a move view call for the current transaction.
-
-        This method converts the current transaction builder state into a view
-        call that can be executed without submitting a transaction to the
-        network. The transaction must contain exactly one move call command.
-        """
-
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(
-                self._uniffi_clone_pointer(), 
-            ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
-            # lift function
-            _UniffiConverterTypeMoveViewResult.lift,
-            
-    # Error FFI converter
-_UniffiConverterTypeSdkFfiError,
-
-        )
 
 
 

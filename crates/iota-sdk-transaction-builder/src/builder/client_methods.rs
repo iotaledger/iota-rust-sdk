@@ -82,16 +82,6 @@ pub trait ClientMethods {
         digest: Digest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>>;
-
-    /// Execute a move view call
-    fn move_view_call(
-        &self,
-        function_name: String,
-        type_args: Option<Vec<String>>,
-        arguments: Option<Vec<serde_json::Value>>,
-    ) -> impl std::future::Future<
-        Output = Result<iota_graphql_client::query_types::MoveViewResult, Self::Error>,
-    >;
 }
 
 impl<T: ClientMethods> ClientMethods for &T {
@@ -169,17 +159,6 @@ impl<T: ClientMethods> ClientMethods for &T {
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         (*self).wait_for_tx(digest, wait_for)
-    }
-
-    fn move_view_call(
-        &self,
-        function_name: String,
-        type_args: Option<Vec<String>>,
-        arguments: Option<Vec<serde_json::Value>>,
-    ) -> impl std::future::Future<
-        Output = Result<iota_graphql_client::query_types::MoveViewResult, Self::Error>,
-    > {
-        (*self).move_view_call(function_name, type_args, arguments)
     }
 }
 
@@ -292,16 +271,6 @@ impl ClientMethods for iota_graphql_client::Client {
     async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
         self.wait_for_tx(digest, wait_for, None).await
     }
-
-    async fn move_view_call(
-        &self,
-        function_name: String,
-        type_args: Option<Vec<String>>,
-        arguments: Option<Vec<serde_json::Value>>,
-    ) -> Result<iota_graphql_client::query_types::MoveViewResult, Self::Error> {
-        self.move_view_call(function_name, type_args, arguments)
-            .await
-    }
 }
 
 impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
@@ -380,17 +349,5 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         self.as_ref().wait_for_tx(digest, wait_for)
-    }
-
-    fn move_view_call(
-        &self,
-        function_name: String,
-        type_args: Option<Vec<String>>,
-        arguments: Option<Vec<serde_json::Value>>,
-    ) -> impl std::future::Future<
-        Output = Result<iota_graphql_client::query_types::MoveViewResult, Self::Error>,
-    > {
-        self.as_ref()
-            .move_view_call(function_name, type_args, arguments)
     }
 }

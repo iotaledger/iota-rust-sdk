@@ -1334,19 +1334,4 @@ impl iota_sdk::transaction_builder::ClientMethods for GraphQLClient {
         )
         .await
     }
-
-    async fn move_view_call(
-        &self,
-        function_name: String,
-        type_args: Option<Vec<String>>,
-        arguments: Option<Vec<serde_json::Value>>,
-    ) -> Result<iota_sdk::graphql_client::query_types::MoveViewResult, Self::Error> {
-        iota_sdk::transaction_builder::ClientMethods::move_view_call(
-            &*self.0.read().await,
-            function_name,
-            type_args,
-            arguments,
-        )
-        .await
-    }
 }

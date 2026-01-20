@@ -1389,11 +1389,6 @@ void* uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_merge_coins(void* p
 void* uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_call(void* ptr, void* package, void* module, void* function, RustBuffer arguments, RustBuffer type_args, RustBuffer names, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_MOVE_VIEW_CALL
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_MOVE_VIEW_CALL
-uint64_t uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_move_view_call(void* ptr
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_PUBLISH
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_PUBLISH
 void* uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_publish(void* ptr, void* package_data, RustBuffer upgrade_cap_name, RustCallStatus *out_status
@@ -13175,12 +13170,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_merge_coin
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_MOVE_CALL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_MOVE_CALL
 uint16_t uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_call(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_MOVE_VIEW_CALL
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_MOVE_VIEW_CALL
-uint16_t uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_move_view_call(void
     
 );
 #endif
