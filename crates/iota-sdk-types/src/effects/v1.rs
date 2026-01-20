@@ -51,7 +51,6 @@ pub struct TransactionEffectsV1 {
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
     pub dependencies: Vec<Digest>,
     /// The version number of all the written Move objects by this transaction.
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub lamport_version: Version,
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
@@ -162,27 +161,14 @@ pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
     /// verify untrusted read.
-    ReadOnlyRoot {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-        digest: Digest,
-    },
+    ReadOnlyRoot { version: Version, digest: Digest },
     /// Deleted shared objects that appear mutably/owned in the input.
-    MutateDeleted {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-    },
+    MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
-    ReadDeleted {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-    },
+    ReadDeleted { version: Version },
     /// Shared objects in cancelled transaction. The sequence number embed
     /// cancellation reason.
-    Cancelled {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-    },
+    Cancelled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.
     PerEpochConfig,
@@ -226,7 +212,6 @@ pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
     Data {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         digest: Digest,
         owner: Owner,
@@ -304,11 +289,7 @@ pub enum ObjectOut {
     ObjectWrite { digest: Digest, owner: Owner },
     /// Packages writes need to be tracked separately with version because
     /// we don't use lamport version for package publish and upgrades.
-    PackageWrite {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-        digest: Digest,
-    },
+    PackageWrite { version: Version, digest: Digest },
 }
 
 impl ObjectOut {
@@ -433,7 +414,6 @@ mod serialization {
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
         dependencies: Vec<Digest>,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
         lamport_version: Version,
         changed_objects: Vec<ChangedObject>,
         unchanged_shared_objects: Vec<UnchangedSharedObject>,
@@ -588,23 +568,10 @@ mod serialization {
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableUnchangedSharedKind {
-        ReadOnlyRoot {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
-        MutateDeleted {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        ReadDeleted {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
-        Cancelled {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-        },
+        ReadOnlyRoot { version: Version, digest: Digest },
+        MutateDeleted { version: Version },
+        ReadDeleted { version: Version },
+        Cancelled { version: Version },
         PerEpochConfig,
     }
 
@@ -710,7 +677,6 @@ mod serialization {
     enum ReadableObjectIn {
         Missing,
         Data {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
             digest: Digest,
             owner: Owner,
@@ -803,29 +769,15 @@ mod serialization {
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectOut {
         Missing,
-        ObjectWrite {
-            digest: Digest,
-            owner: Owner,
-        },
-        PackageWrite {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
+        ObjectWrite { digest: Digest, owner: Owner },
+        PackageWrite { version: Version, digest: Digest },
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryObjectOut {
         Missing,
-        ObjectWrite {
-            digest: Digest,
-            owner: Owner,
-        },
-        PackageWrite {
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            version: Version,
-            digest: Digest,
-        },
+        ObjectWrite { digest: Digest, owner: Owner },
+        PackageWrite { version: Version, digest: Digest },
     }
 
     impl Serialize for ObjectOut {

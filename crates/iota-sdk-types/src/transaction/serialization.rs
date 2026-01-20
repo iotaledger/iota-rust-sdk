@@ -411,7 +411,6 @@ mod input_argument {
         ImmutableOrOwned(ObjectReference),
         Shared {
             object_id: ObjectId,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
             initial_shared_version: Version,
             mutable: bool,
         },

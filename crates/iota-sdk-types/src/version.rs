@@ -41,11 +41,19 @@ pub enum VersionError {
     derive_more::Rem,
     derive_more::RemAssign,
 )]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(transparent)
+)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(transparent)]
-pub struct Version(pub u64);
+pub struct Version(
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub u64,
+);
 
 impl Version {
     /// An inclusive lower limit on a valid version.
