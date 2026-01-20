@@ -18,7 +18,7 @@ use crate::Version;
 /// ```text
 /// object-ref = object-id u64 digest
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, Ord, PartialOrd, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
