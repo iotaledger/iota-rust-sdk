@@ -10491,19 +10491,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
@@ -10512,13 +10512,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891.toShort()) {
@@ -26754,7 +26754,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Value?
+    suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: Version? = null): Value?
     
     /**
      * Return the BCS of an object that is a Move object.
@@ -26763,18 +26763,18 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): kotlin.ByteArray?
+    suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: Version? = null): kotlin.ByteArray?
     
     /**
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
+    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: Version? = null): MoveFunction?
     
     /**
      * Return the normalized Move module data for the provided module.
      */
-    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
+    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: Version? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -26783,7 +26783,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Object?
+    suspend fun `object`(`objectId`: ObjectId, `version`: Version? = null): Object?
     
     /**
      * Return the object's bcs content `Vec<u8>` based on the provided
@@ -26812,7 +26812,7 @@ public interface GraphQlClientInterface {
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-    suspend fun `package`(`address`: Address, `version`: kotlin.ULong? = null): MovePackage?
+    suspend fun `package`(`address`: Address, `version`: Version? = null): MovePackage?
     
     /**
      * Fetch the latest version of the package at address.
@@ -26826,7 +26826,7 @@ public interface GraphQlClientInterface {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-    suspend fun `packageVersions`(`address`: Address, `afterVersion`: kotlin.ULong? = null, `beforeVersion`: kotlin.ULong? = null, `paginationFilter`: PaginationFilter? = null): MovePackagePage
+    suspend fun `packageVersions`(`address`: Address, `afterVersion`: Version? = null, `beforeVersion`: Version? = null, `paginationFilter`: PaginationFilter? = null): MovePackagePage
     
     /**
      * The Move packages that exist in the network, optionally filtered to be
@@ -27690,12 +27690,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: kotlin.ULong?) : Value? {
+    override suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: Version?) : Value? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -27718,12 +27718,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong?) : kotlin.ByteArray? {
+    override suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: Version?) : kotlin.ByteArray? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -27743,12 +27743,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
+    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: Version?) : MoveFunction? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -27767,12 +27767,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
+    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: Version?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalTypeVersion.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -27795,12 +27795,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong?) : Object? {
+    override suspend fun `object`(`objectId`: ObjectId, `version`: Version?) : Object? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -27881,12 +27881,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `package`(`address`: Address, `version`: kotlin.ULong?) : MovePackage? {
+    override suspend fun `package`(`address`: Address, `version`: Version?) : MovePackage? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -27933,12 +27933,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `packageVersions`(`address`: Address, `afterVersion`: kotlin.ULong?, `beforeVersion`: kotlin.ULong?, `paginationFilter`: PaginationFilter?) : MovePackagePage {
+    override suspend fun `packageVersions`(`address`: Address, `afterVersion`: Version?, `beforeVersion`: Version?, `paginationFilter`: PaginationFilter?) : MovePackagePage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`afterVersion`),FfiConverterOptionalULong.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeVersion.lower(`afterVersion`),FfiConverterOptionalTypeVersion.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },

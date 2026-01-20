@@ -1255,25 +1255,25 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -36847,7 +36847,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the contents' JSON of an object that is a Move object.
 
@@ -36857,7 +36857,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the BCS of an object that is a Move object.
 
@@ -36867,20 +36867,20 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the normalized Move function data for the provided package,
         module, and function.
         """
 
         raise NotImplementedError
-    def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
+    def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Return the normalized Move module data for the provided module.
         """
 
         raise NotImplementedError
-    def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return an object based on the provided `Address`.
 
@@ -36906,7 +36906,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def package(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def package(self, address: "Address",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         The package corresponding to the given address (at the optionally given
         version). When no version is given, the package is loaded directly
@@ -36930,7 +36930,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
+    def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Fetch all versions of package at address (packages that share this
         package's original ID), optionally bounding the versions exclusively
@@ -37897,7 +37897,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Value]":
+    async def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[Value]":
         """
         Return the contents' JSON of an object that is a Move object.
 
@@ -37910,13 +37910,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37931,7 +37931,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[bytes]":
+    async def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[bytes]":
         """
         Return the BCS of an object that is a Move object.
 
@@ -37944,13 +37944,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37965,7 +37965,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
+    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
         """
         Return the normalized Move function data for the provided package,
         module, and function.
@@ -37979,7 +37979,7 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
@@ -37987,7 +37987,7 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeAddress.lower(package),
         _UniffiConverterString.lower(module),
         _UniffiConverterString.lower(function),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -38002,7 +38002,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
+    async def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
         """
         Return the normalized Move module data for the provided module.
         """
@@ -38013,7 +38013,7 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         if pagination_filter_enums is _DEFAULT:
             pagination_filter_enums = None
@@ -38036,7 +38036,7 @@ _UniffiConverterTypeSdkFfiError,
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(package),
         _UniffiConverterString.lower(module),
-        _UniffiConverterOptionalUInt64.lower(version),
+        _UniffiConverterOptionalTypeVersion.lower(version),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_enums),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_friends),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_functions),
@@ -38055,7 +38055,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Object]":
+    async def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[Object]":
         """
         Return an object based on the provided `Address`.
 
@@ -38068,13 +38068,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -38150,7 +38150,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def package(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MovePackage]":
+    async def package(self, address: "Address",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[MovePackage]":
         """
         The package corresponding to the given address (at the optionally given
         version). When no version is given, the package is loaded directly
@@ -38169,13 +38169,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -38217,7 +38217,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "MovePackagePage":
+    async def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "MovePackagePage":
         """
         Fetch all versions of package at address (packages that share this
         package's original ID), optionally bounding the versions exclusively
@@ -38228,11 +38228,11 @@ _UniffiConverterTypeSdkFfiError,
         
         if after_version is _DEFAULT:
             after_version = None
-        _UniffiConverterOptionalUInt64.check_lower(after_version)
+        _UniffiConverterOptionalTypeVersion.check_lower(after_version)
         
         if before_version is _DEFAULT:
             before_version = None
-        _UniffiConverterOptionalUInt64.check_lower(before_version)
+        _UniffiConverterOptionalTypeVersion.check_lower(before_version)
         
         if pagination_filter is _DEFAULT:
             pagination_filter = None
@@ -38242,8 +38242,8 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterOptionalUInt64.lower(after_version),
-        _UniffiConverterOptionalUInt64.lower(before_version),
+        _UniffiConverterOptionalTypeVersion.lower(after_version),
+        _UniffiConverterOptionalTypeVersion.lower(before_version),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,

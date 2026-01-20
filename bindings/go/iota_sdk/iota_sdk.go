@@ -3938,7 +3938,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents()
 	})
-	if checksum != 40412 {
+	if checksum != 42627 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents: UniFFI API checksum mismatch")
 	}
@@ -3947,7 +3947,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs()
 	})
-	if checksum != 49694 {
+	if checksum != 16500 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs: UniFFI API checksum mismatch")
 	}
@@ -3956,7 +3956,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
 	})
-	if checksum != 16965 {
+	if checksum != 13444 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function: UniFFI API checksum mismatch")
 	}
@@ -3965,7 +3965,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module()
 	})
-	if checksum != 51355 {
+	if checksum != 1782 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module: UniFFI API checksum mismatch")
 	}
@@ -3974,7 +3974,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object()
 	})
-	if checksum != 27424 {
+	if checksum != 56456 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object: UniFFI API checksum mismatch")
 	}
@@ -4001,7 +4001,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package()
 	})
-	if checksum != 7913 {
+	if checksum != 2773 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package: UniFFI API checksum mismatch")
 	}
@@ -4019,7 +4019,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions()
 	})
-	if checksum != 34213 {
+	if checksum != 15150 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions: UniFFI API checksum mismatch")
 	}
@@ -17873,24 +17873,24 @@ type GraphQlClientInterface interface {
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	MoveObjectContents(objectId *ObjectId, version *uint64) (*Value, error)
+	MoveObjectContents(objectId *ObjectId, version **Version) (*Value, error)
 	// Return the BCS of an object that is a Move object.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
+	MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
-	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
+	NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error)
 	// Return the normalized Move module data for the provided module.
-	NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
+	NormalizedMoveModule(varPackage *Address, module string, version **Version, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
 	// Return an object based on the provided `Address`.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	Object(objectId *ObjectId, version *uint64) (**Object, error)
+	Object(objectId *ObjectId, version **Version) (**Object, error)
 	// Return the object's bcs content `Vec<u8>` based on the provided
 	// `Address`.
 	ObjectBcs(objectId *ObjectId) (*[]byte, error)
@@ -17910,7 +17910,7 @@ type GraphQlClientInterface interface {
 	//
 	// Note that this interpretation of version is different from a historical
 	// object read (the interpretation of version for the object query).
-	Package(address *Address, version *uint64) (**MovePackage, error)
+	Package(address *Address, version **Version) (**MovePackage, error)
 	// Fetch the latest version of the package at address.
 	// This corresponds to the package with the highest version that shares its
 	// original ID with the package at address.
@@ -17918,7 +17918,7 @@ type GraphQlClientInterface interface {
 	// Fetch all versions of package at address (packages that share this
 	// package's original ID), optionally bounding the versions exclusively
 	// from below with afterVersion, or from above with beforeVersion.
-	PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error)
+	PackageVersions(address *Address, afterVersion **Version, beforeVersion **Version, paginationFilter *PaginationFilter) (MovePackagePage, error)
 	// The Move packages that exist in the network, optionally filtered to be
 	// strictly before beforeCheckpoint and/or strictly after
 	// afterCheckpoint.
@@ -18872,7 +18872,7 @@ func (_self *GraphQlClient) MaxPageSize() (int32, error) {
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint64) (*Value, error) {
+func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version **Version) (*Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -18889,7 +18889,7 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 			return FfiConverterOptionalTypeValueINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -18908,7 +18908,7 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error) {
+func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -18925,7 +18925,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 			return FfiConverterOptionalBytesINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -18941,7 +18941,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 
 // Return the normalized Move function data for the provided package,
 // module, and function.
-func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error) {
+func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -18958,7 +18958,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 			return FfiConverterOptionalMoveFunctionINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -18973,7 +18973,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 }
 
 // Return the normalized Move module data for the provided module.
-func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error) {
+func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module string, version **Version, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -18990,7 +18990,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 			return FfiConverterOptionalMoveModuleINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterOptionalUint64INSTANCE.Lower(version), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterEnums), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFriends), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFunctions), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterStructs)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterOptionalVersionINSTANCE.Lower(version), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterEnums), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFriends), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFunctions), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterStructs)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19009,7 +19009,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Object, error) {
+func (_self *GraphQlClient) Object(objectId *ObjectId, version **Version) (**Object, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19026,7 +19026,7 @@ func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Objec
 			return FfiConverterOptionalObjectINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19119,7 +19119,7 @@ func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *Pagi
 //
 // Note that this interpretation of version is different from a historical
 // object read (the interpretation of version for the object query).
-func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePackage, error) {
+func (_self *GraphQlClient) Package(address *Address, version **Version) (**MovePackage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19136,7 +19136,7 @@ func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePa
 			return FfiConverterOptionalMovePackageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19187,7 +19187,7 @@ func (_self *GraphQlClient) PackageLatest(address *Address) (**MovePackage, erro
 // Fetch all versions of package at address (packages that share this
 // package's original ID), optionally bounding the versions exclusively
 // from below with afterVersion, or from above with beforeVersion.
-func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error) {
+func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion **Version, beforeVersion **Version, paginationFilter *PaginationFilter) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19204,7 +19204,7 @@ func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(afterVersion), FfiConverterOptionalUint64INSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalVersionINSTANCE.Lower(afterVersion), FfiConverterOptionalVersionINSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
