@@ -193,9 +193,30 @@ struct GasObjectRef {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
+    #[serde(deserialize_with = "deserialize_readable_u64")]
     pub version: u64,
     /// The digest of this object.
     pub digest: Digest,
+}
+
+fn deserialize_readable_u64<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<u64, D::Error> {
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum NumOrString {
+        Num(i64),
+        String(String),
+    }
+
+    match NumOrString::deserialize(deserializer)? {
+        NumOrString::Num(num) => num
+            .try_into()
+            .map_err(|e: std::num::TryFromIntError| serde::de::Error::custom(e.to_string())),
+        NumOrString::String(s) => s
+            .parse()
+            .map_err(|e: std::num::ParseIntError| serde::de::Error::custom(e.to_string())),
+    }
 }
 
 #[derive(Debug, Serialize)]
