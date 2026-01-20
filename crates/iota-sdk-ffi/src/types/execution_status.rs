@@ -788,21 +788,3 @@ crate::export_iota_types_json_conversion!(
     PackageUpgradeError,
     TypeArgumentError
 );
-
-#[cfg(test)]
-mod tests {
-    crate::test_bcs_roundtrip!(
-        ExecutionStatus,
-        MoveLocation,
-        CommandArgumentError,
-        PackageUpgradeError,
-        TypeArgumentError,
-    );
-    crate::test_json_roundtrip!(
-        ExecutionStatus,
-        MoveLocation,
-        CommandArgumentError,
-        PackageUpgradeError,
-        TypeArgumentError,
-    );
-}

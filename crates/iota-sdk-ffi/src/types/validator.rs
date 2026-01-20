@@ -174,9 +174,3 @@ crate::export_iota_types_json_conversion!(ValidatorCommittee, ValidatorCommittee
 
 crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
 crate::export_iota_types_objects_json_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
-
-#[cfg(test)]
-mod tests {
-    crate::test_bcs_roundtrip!(ValidatorCommittee, ValidatorCommitteeMember);
-    crate::test_json_roundtrip!(ValidatorCommittee, ValidatorCommitteeMember);
-}

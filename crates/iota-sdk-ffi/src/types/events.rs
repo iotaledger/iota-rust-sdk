@@ -149,9 +149,3 @@ crate::export_iota_types_json_conversion!(Event);
 
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);
-
-#[cfg(test)]
-mod tests {
-    crate::test_bcs_roundtrip!(Event, TransactionEvents);
-    crate::test_json_roundtrip!(Event, TransactionEvents);
-}

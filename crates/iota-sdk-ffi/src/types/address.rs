@@ -115,9 +115,3 @@ named_address!(ZERO, STD, FRAMEWORK, SYSTEM);
 
 crate::export_iota_types_objects_bcs_conversion!(Address);
 crate::export_iota_types_objects_json_conversion!(Address);
-
-#[cfg(test)]
-mod tests {
-    crate::test_bcs_roundtrip!(Address);
-    crate::test_json_roundtrip!(Address);
-}

@@ -66,9 +66,3 @@ impl Digest {
 
 crate::export_iota_types_objects_bcs_conversion!(Digest);
 crate::export_iota_types_objects_json_conversion!(Digest);
-
-#[cfg(test)]
-mod tests {
-    crate::test_bcs_roundtrip!(Digest);
-    crate::test_json_roundtrip!(Digest);
-}

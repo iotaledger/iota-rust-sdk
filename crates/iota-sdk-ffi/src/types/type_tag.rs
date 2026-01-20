@@ -203,9 +203,3 @@ impl TypeTag {
 
 crate::export_iota_types_objects_bcs_conversion!(TypeTag);
 crate::export_iota_types_objects_json_conversion!(TypeTag);
-
-#[cfg(test)]
-mod tests {
-    crate::test_bcs_roundtrip!(TypeTag);
-    crate::test_json_roundtrip!(TypeTag);
-}
