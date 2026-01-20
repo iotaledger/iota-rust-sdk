@@ -1959,6 +1959,15 @@ impl MoveCall {
     }
 }
 
+crate::export_iota_types_bcs_conversion!(
+    SignedTransaction,
+    AuthenticatorStateExpire,
+    AuthenticatorStateUpdateV1,
+    ActiveJwk,
+    RandomnessStateUpdate,
+    GasPayment,
+    TransactionExpiration,
+);
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionV1,
@@ -1988,6 +1997,15 @@ crate::export_iota_types_objects_bcs_conversion!(
     Argument,
     MoveCall,
 );
+crate::export_iota_types_json_conversion!(
+    SignedTransaction,
+    AuthenticatorStateExpire,
+    AuthenticatorStateUpdateV1,
+    ActiveJwk,
+    RandomnessStateUpdate,
+    GasPayment,
+    TransactionExpiration,
+);
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
     TransactionV1,
@@ -2016,23 +2034,4 @@ crate::export_iota_types_objects_json_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
-);
-
-crate::export_iota_types_bcs_conversion!(
-    SignedTransaction,
-    AuthenticatorStateExpire,
-    AuthenticatorStateUpdateV1,
-    ActiveJwk,
-    RandomnessStateUpdate,
-    GasPayment,
-    TransactionExpiration,
-);
-crate::export_iota_types_json_conversion!(
-    SignedTransaction,
-    AuthenticatorStateExpire,
-    AuthenticatorStateUpdateV1,
-    ActiveJwk,
-    RandomnessStateUpdate,
-    GasPayment,
-    TransactionExpiration,
 );
