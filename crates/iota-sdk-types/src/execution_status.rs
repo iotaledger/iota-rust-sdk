@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::fmt::{Display, Formatter};
+
 use iota_macros::EnumVariantOrder;
 use thiserror::Error;
 
@@ -435,7 +437,7 @@ impl ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -451,6 +453,29 @@ pub struct MoveLocation {
     pub instruction: u16,
     /// The name of the function if available
     pub function_name: Option<Identifier>,
+}
+
+impl Display for MoveLocation {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            package,
+            module,
+            function,
+            instruction,
+            function_name,
+        } = self;
+        if let Some(fname) = function_name {
+            write!(
+                f,
+                "{package}::{module}::{fname} (function index {function}) at offset {instruction}"
+            )
+        } else {
+            write!(
+                f,
+                "{package}::{module} in function definition {function} at offset {instruction}"
+            )
+        }
+    }
 }
 
 /// An error with an argument to a command
