@@ -50,6 +50,7 @@ paste.workspace = true
 roaring.workspace = true
 strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
+iota-macros.workspace = true
 winnow = "0.7"
 
 # Serialization and Deserialization support
@@ -58,7 +59,9 @@ itertools = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }
-serde_with = { version = "3.9", default-features = false, features = ["alloc"], optional = true }
+serde_with = { version = "3.9", default-features = false, features = [
+  "alloc",
+], optional = true }
 
 # JsonSchema definitions for types, useful for generating an OpenAPI Specification.
 schemars = { version = "0.8.21", optional = true }
@@ -70,7 +73,9 @@ rand_core = { workspace = true, optional = true }
 blake2 = { version = "0.10.6", optional = true }
 
 # proptest support
-proptest = { workspace = true, default-features = false, features = ["std"], optional = true }
+proptest = { workspace = true, default-features = false, features = [
+  "std",
+], optional = true }
 test-strategy = { workspace = true, optional = true }
 
 [dev-dependencies]

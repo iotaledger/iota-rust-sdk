@@ -2,6 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_macros::EnumVariantOrder;
 use thiserror::Error;
 
 use super::{Address, Digest, Identifier, ObjectId};
@@ -240,7 +241,7 @@ impl ExecutionStatus {
 /// coin-type-global-pause                              = %x23 string
 /// execution-cancelled-due-to-randomness-unavailable   = %x24
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, EnumVariantOrder)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -485,7 +486,7 @@ pub struct MoveLocation {
 /// invalid-object-by-mut-ref                   = %x0a
 /// shared-object-operation-not-allowed         = %x0b
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, Error)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
