@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
-    ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
+    AdditionalConsensusStateDigest, Address, CheckpointTimestamp, Digest, EpochId, Event,
+    GenesisObject, Identifier, Jwk, JwkId, ObjectId, ObjectReference, ProtocolVersion, TypeTag,
+    UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -209,12 +210,15 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// V2 consensus commit update with additional state digest
+    ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
 }
 
 impl TransactionKind {
     crate::def_is_as_into_opt! {
         ProgrammableTransaction,
         ConsensusCommitPrologueV1,
+        ConsensusCommitPrologueV2,
         AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
     }
@@ -576,6 +580,51 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_commit_digest: Digest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+}
+
+/// V2 Consensus Commit Prologue with additional state digest
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+///                                consensus-determined-version-assignments
+///                                digest
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct ConsensusCommitPrologueV2 {
+    /// Epoch of the commit prologue transaction
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub epoch: u64,
+    /// Consensus round of the commit
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub round: u64,
+    /// The sub DAG index of the consensus commit. This field will be populated
+    /// if there are multiple consensus commits per round.
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::_serde::OptionReadableDisplay")
+    )]
+    #[cfg_attr(feature = "schemars", schemars(with = "Option<crate::_schemars::U64>"))]
+    pub sub_dag_index: Option<u64>,
+    /// Unix timestamp from consensus commit.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub commit_timestamp_ms: CheckpointTimestamp,
+    /// Digest of consensus output
+    pub consensus_commit_digest: Digest,
+    /// Stores consensus handler determined shared object version assignments.
+    pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+    /// Digest of any additional state computed by the consensus handler.
+    /// Used to detect forking bugs as early as possible.
+    pub additional_state_digest: AdditionalConsensusStateDigest,
 }
 
 /// System transaction used to change the epoch

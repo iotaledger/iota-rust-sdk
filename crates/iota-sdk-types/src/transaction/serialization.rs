@@ -11,8 +11,9 @@ use crate::{ObjectId, ObjectReference};
 mod transaction_kind {
     use super::*;
     use crate::transaction::{
-        AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, EndOfEpochTransactionKind,
-        GenesisTransaction, ProgrammableTransaction, RandomnessStateUpdate, TransactionKind,
+        AuthenticatorStateUpdateV1, ConsensusCommitPrologueV1, ConsensusCommitPrologueV2,
+        EndOfEpochTransactionKind, GenesisTransaction, ProgrammableTransaction,
+        RandomnessStateUpdate, TransactionKind,
     };
 
     #[derive(serde::Serialize)]
@@ -21,6 +22,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
+        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
@@ -36,6 +38,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
+        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
         EndOfEpoch {
             commands: Vec<EndOfEpochTransactionKind>,
@@ -61,6 +64,7 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
+        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
@@ -70,6 +74,7 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
+        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
@@ -88,6 +93,9 @@ mod transaction_kind {
                     Self::Genesis(k) => ReadableTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologueV1(k) => {
                         ReadableTransactionKindRef::ConsensusCommitPrologueV1(k)
+                    }
+                    Self::ConsensusCommitPrologueV2(k) => {
+                        ReadableTransactionKindRef::ConsensusCommitPrologueV2(k)
                     }
                     Self::AuthenticatorStateUpdateV1(k) => {
                         ReadableTransactionKindRef::AuthenticatorStateUpdateV1(k)
@@ -108,6 +116,9 @@ mod transaction_kind {
                     Self::Genesis(k) => BinaryTransactionKindRef::Genesis(k),
                     Self::ConsensusCommitPrologueV1(k) => {
                         BinaryTransactionKindRef::ConsensusCommitPrologueV1(k)
+                    }
+                    Self::ConsensusCommitPrologueV2(k) => {
+                        BinaryTransactionKindRef::ConsensusCommitPrologueV2(k)
                     }
                     Self::AuthenticatorStateUpdateV1(k) => {
                         BinaryTransactionKindRef::AuthenticatorStateUpdateV1(k)
@@ -136,6 +147,9 @@ mod transaction_kind {
                     ReadableTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
                     }
+                    ReadableTransactionKind::ConsensusCommitPrologueV2(k) => {
+                        Self::ConsensusCommitPrologueV2(k)
+                    }
                     ReadableTransactionKind::AuthenticatorStateUpdateV1(k) => {
                         Self::AuthenticatorStateUpdateV1(k)
                     }
@@ -152,6 +166,9 @@ mod transaction_kind {
                     BinaryTransactionKind::Genesis(k) => Self::Genesis(k),
                     BinaryTransactionKind::ConsensusCommitPrologueV1(k) => {
                         Self::ConsensusCommitPrologueV1(k)
+                    }
+                    BinaryTransactionKind::ConsensusCommitPrologueV2(k) => {
+                        Self::ConsensusCommitPrologueV2(k)
                     }
                     BinaryTransactionKind::AuthenticatorStateUpdateV1(k) => {
                         Self::AuthenticatorStateUpdateV1(k)
