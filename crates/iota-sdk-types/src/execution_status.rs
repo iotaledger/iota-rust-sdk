@@ -4,6 +4,8 @@
 
 use super::{Address, Digest, Identifier, ObjectId};
 
+pub type CommandIndex = usize;
+
 /// The status of an executed Transaction
 ///
 /// # BCS
@@ -32,31 +34,125 @@ pub enum ExecutionStatus {
         error: ExecutionError,
         /// The command, if any, during which the error occurred.
         #[cfg_attr(feature = "proptest", map(|x: Option<u16>| x.map(Into::into)))]
-        command: Option<u64>,
+        command: Option<CommandIndex>,
     },
 }
 
 impl ExecutionStatus {
+    pub fn new_failure(error: ExecutionError, command: Option<CommandIndex>) -> ExecutionStatus {
+        ExecutionStatus::Failure { error, command }
+    }
+
     crate::def_is!(Success, Failure);
 
-    /// The error encountered during execution.
-    pub fn error(&self) -> Option<&ExecutionError> {
-        if let Self::Failure { error, .. } = self {
-            Some(error)
+    // /// The error encountered during execution.
+    // pub fn error(&self) -> Option<&ExecutionError> {
+    //     if let Self::Failure { error, .. } = self {
+    //         Some(error)
+    //     } else {
+    //         None
+    //     }
+    // }
+
+    // /// The command, if any, during which the error occurred.
+    // pub fn error_command(&self) -> Option<CommandIndex> {
+    //     if let Self::Failure { command, .. } = self {
+    //         *command
+    //     } else {
+    //         None
+    //     }
+    // }
+
+    pub fn unwrap(&self) {
+        match self {
+            ExecutionStatus::Success => {}
+            ExecutionStatus::Failure { .. } => {
+                panic!("Unable to unwrap() on {self:?}");
+            }
+        }
+    }
+
+    pub fn unwrap_err(self) -> (ExecutionError, Option<CommandIndex>) {
+        match self {
+            ExecutionStatus::Success => {
+                panic!("Unable to unwrap() on {self:?}");
+            }
+            ExecutionStatus::Failure { error, command } => (error, command),
+        }
+    }
+
+    /// Returns congested objects if the transaction was cancelled due to
+    /// shared object congestion, else returns `None`.
+    pub fn get_congested_objects(&self) -> Option<&[ObjectId]> {
+        match self {
+            ExecutionStatus::Failure {
+                error:
+                    ExecutionError::ExecutionCancelledDueToSharedObjectCongestion { congested_objects }
+                    | ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects,
+                        ..
+                    },
+                ..
+            } => Some(congested_objects),
+            _ => None,
+        }
+    }
+
+    /// Returns a suggested gas price if the transaction was cancelled due to
+    /// shared object congestion (subject to the gas price feedback mechanism
+    /// is enabled), otherwise returns `None`.
+    pub fn get_feedback_suggested_gas_price(&self) -> Option<u64> {
+        if let ExecutionStatus::Failure {
+            error:
+                ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                    suggested_gas_price,
+                    ..
+                },
+            ..
+        } = self
+        {
+            Some(*suggested_gas_price)
         } else {
             None
         }
     }
 
-    /// The command, if any, during which the error occurred.
-    pub fn error_command(&self) -> Option<u64> {
-        if let Self::Failure { command, .. } = self {
-            *command
-        } else {
-            None
-        }
+    /// Check is the transaction was cancelled due to shared object congestion.
+    pub fn is_cancelled_due_to_congestion(&self) -> bool {
+        matches!(
+            self,
+            ExecutionStatus::Failure {
+                error: ExecutionError::ExecutionCancelledDueToSharedObjectCongestion { .. }
+                    | ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 { .. },
+                ..
+            }
+        )
+    }
+
+    /// Check is the transaction was cancelled due to randomness unavailable.
+    pub fn is_cancelled_due_to_randomness(&self) -> bool {
+        matches!(
+            self,
+            ExecutionStatus::Failure {
+                error: ExecutionError::ExecutionCancelledDueToRandomnessUnavailable,
+                ..
+            }
+        )
     }
 }
+
+// #[derive(Eq, PartialEq, Clone, Debug)]
+// #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+// pub struct CongestedObjects(pub Vec<ObjectId>);
+
+// impl std::fmt::Display for CongestedObjects {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(),
+// std::fmt::Error> {         for obj in &self.0 {
+//             write!(f, "{obj}, ")?;
+//         }
+//         Ok(())
+//     }
+// }
 
 /// An error that can occur during the execution of a transaction
 ///
@@ -580,7 +676,7 @@ mod serialization {
         Success,
         Failure {
             error: ExecutionError,
-            command: Option<u64>,
+            command: Option<CommandIndex>,
         },
     }
 
