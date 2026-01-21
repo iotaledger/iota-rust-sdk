@@ -266,7 +266,7 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
-    PackageTooBig {
+    MovePackageTooBig {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -385,7 +385,7 @@ impl ExecutionError {
         InvariantViolation,
         FeatureNotYetSupported,
         MoveObjectTooBig,
-        PackageTooBig,
+        MovePackageTooBig,
         CircularObjectOwnership,
         InsufficientCoinBalance,
         CoinBalanceOverflow,
@@ -806,7 +806,7 @@ mod serialization {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             max_object_size: u64,
         },
-        PackageTooBig {
+        MovePackageTooBig {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             object_size: u64,
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -898,7 +898,7 @@ mod serialization {
             object_size: u64,
             max_object_size: u64,
         },
-        PackageTooBig {
+        MovePackageTooBig {
             object_size: u64,
             max_object_size: u64,
         },
@@ -991,10 +991,10 @@ mod serialization {
                         object_size,
                         max_object_size,
                     },
-                    Self::PackageTooBig {
+                    Self::MovePackageTooBig {
                         object_size,
                         max_object_size,
-                    } => ReadableExecutionError::PackageTooBig {
+                    } => ReadableExecutionError::MovePackageTooBig {
                         object_size,
                         max_object_size,
                     },
@@ -1112,10 +1112,10 @@ mod serialization {
                         object_size,
                         max_object_size,
                     },
-                    Self::PackageTooBig {
+                    Self::MovePackageTooBig {
                         object_size,
                         max_object_size,
-                    } => BinaryExecutionError::PackageTooBig {
+                    } => BinaryExecutionError::MovePackageTooBig {
                         object_size,
                         max_object_size,
                     },
@@ -1238,10 +1238,10 @@ mod serialization {
                         object_size,
                         max_object_size,
                     },
-                    ReadableExecutionError::PackageTooBig {
+                    ReadableExecutionError::MovePackageTooBig {
                         object_size,
                         max_object_size,
-                    } => Self::PackageTooBig {
+                    } => Self::MovePackageTooBig {
                         object_size,
                         max_object_size,
                     },
@@ -1356,10 +1356,10 @@ mod serialization {
                         object_size,
                         max_object_size,
                     },
-                    BinaryExecutionError::PackageTooBig {
+                    BinaryExecutionError::MovePackageTooBig {
                         object_size,
                         max_object_size,
-                    } => Self::PackageTooBig {
+                    } => Self::MovePackageTooBig {
                         object_size,
                         max_object_size,
                     },

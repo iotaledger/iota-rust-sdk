@@ -162,7 +162,7 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
-    PackageTooBig {
+    MovePackageTooBigBig {
         object_size: u64,
         max_object_size: u64,
     },
@@ -284,10 +284,10 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 object_size,
                 max_object_size,
             },
-            iota_sdk::types::ExecutionError::PackageTooBig {
+            iota_sdk::types::ExecutionError::MovePackageTooBig {
                 object_size,
                 max_object_size,
-            } => Self::PackageTooBig {
+            } => Self::MovePackageTooBigBig {
                 object_size,
                 max_object_size,
             },
@@ -425,10 +425,10 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 object_size,
                 max_object_size,
             },
-            ExecutionError::PackageTooBig {
+            ExecutionError::MovePackageTooBigBig {
                 object_size,
                 max_object_size,
-            } => Self::PackageTooBig {
+            } => Self::MovePackageTooBig {
                 object_size,
                 max_object_size,
             },
