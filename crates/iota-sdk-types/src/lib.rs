@@ -153,7 +153,7 @@ pub use effects::{
 pub use events::{BalanceChange, Event, TransactionEvents};
 pub use execution_status::{
     CommandArgumentError, CommandIndex, ExecutionError, ExecutionStatus, MoveLocation,
-    PackageUpgradeError, TypeArgumentError,
+    MoveLocationOpt, PackageUpgradeError, TypeArgumentError,
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
