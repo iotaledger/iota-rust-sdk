@@ -241,7 +241,7 @@ impl ExecutionStatus {
 /// coin-type-global-pause                              = %x23 string
 /// execution-cancelled-due-to-randomness-unavailable   = %x24
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug, EnumVariantOrder)]
+#[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
