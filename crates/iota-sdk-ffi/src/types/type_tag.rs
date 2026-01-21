@@ -202,3 +202,4 @@ impl TypeTag {
 }
 
 crate::export_iota_types_objects_bcs_conversion!(TypeTag);
+crate::export_iota_types_objects_json_conversion!(TypeTag);

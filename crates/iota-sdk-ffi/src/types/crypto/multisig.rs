@@ -424,3 +424,10 @@ crate::export_iota_types_objects_bcs_conversion!(
     MultisigCommittee,
     MultisigMember
 );
+crate::export_iota_types_objects_json_conversion!(
+    MultisigMemberSignature,
+    MultisigMemberPublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);
