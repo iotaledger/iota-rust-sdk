@@ -71,3 +71,13 @@ pub struct BalanceChange {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
     pub amount: i128,
 }
+
+impl std::fmt::Display for BalanceChange {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            " ┌──\n │ Address: {} \n │ CoinType: {} \n │ Amount: {}\n └──",
+            self.address, self.coin_type, self.amount
+        )
+    }
+}
