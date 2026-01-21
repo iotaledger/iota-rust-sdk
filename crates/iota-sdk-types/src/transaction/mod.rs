@@ -188,14 +188,12 @@ pub struct RandomnessStateUpdate {
 ///
 /// ```text
 /// transaction-kind    =  %x00 ptb
-///                     =/ %x01 change-epoch
-///                     =/ %x02 genesis-transaction
-///                     =/ %x03 consensus-commit-prologue
-///                     =/ %x04 authenticator-state-update
-///                     =/ %x05 (vector end-of-epoch-transaction-kind)
-///                     =/ %x06 randomness-state-update
-///                     =/ %x07 consensus-commit-prologue-v2
-///                     =/ %x08 consensus-commit-prologue-v3
+///                     =/ %x01 genesis-transaction
+///                     =/ %x02 consensus-commit-prologue-v1
+///                     =/ %x03 authenticator-state-update-v1
+///                     =/ %x04 (vector end-of-epoch-transaction-kind)
+///                     =/ %x05 randomness-state-update
+///                     =/ %x06 consensus-commit-prologue-v2
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -217,6 +215,8 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// V2 consensus commit update with additional state digest
+    ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
 }
 
 impl TransactionKind {
@@ -225,6 +225,7 @@ impl TransactionKind {
         ConsensusCommitPrologueV1,
         AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
+        ConsensusCommitPrologueV2,
     }
 
     crate::def_is_as_into_opt! {
@@ -612,6 +613,50 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_commit_digest: Digest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+}
+
+/// V2 Consensus Commit Prologue with additional state digest
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+///                                consensus-determined-version-assignments
+///                                digest
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct ConsensusCommitPrologueV2 {
+    /// Epoch of the commit prologue transaction
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub epoch: u64,
+    /// Consensus round of the commit
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub round: u64,
+    /// The sub DAG index of the consensus commit. This field will be populated
+    /// if there are multiple consensus commits per round.
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "crate::_serde::OptionReadableDisplay")
+    )]
+    #[cfg_attr(feature = "schemars", schemars(with = "Option<crate::_schemars::U64>"))]
+    pub sub_dag_index: Option<u64>,
+    /// Unix timestamp from consensus commit.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub commit_timestamp_ms: CheckpointTimestamp,
+    /// Digest of consensus output
+    pub consensus_commit_digest: Digest,
+    /// Stores consensus handler determined shared object version assignments.
+    pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+    /// Digest of any additional state computed by the consensus handler.
+    pub additional_state_digest: Digest,
 }
 
 /// System transaction used to change the epoch
