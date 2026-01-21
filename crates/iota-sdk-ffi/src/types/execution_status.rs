@@ -619,7 +619,7 @@ pub enum CommandArgumentError {
     /// The argument cannot be deserialized into a value of the specified type
     InvalidBCSBytes,
     /// The argument cannot be instantiated from raw bytes
-    InvalidUsageOfPureArgument,
+    InvalidUsageOfPureArg,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
     InvalidArgumentToPrivateEntryFunction,
@@ -683,8 +683,8 @@ pub enum PackageUpgradeError {
     DigestDoesNotMatch { digest: Arc<Digest> },
     /// Upgrade policy is not valid
     UnknownUpgradePolicy { policy: u8 },
-    /// PackageId does not matach PackageId in upgrade ticket
-    PackageIdDoesNotMatch {
+    /// PackageId does not match PackageId in upgrade ticket
+    PackageIDDoesNotMatch {
         package_id: Arc<ObjectId>,
         ticket_id: Arc<ObjectId>,
     },
@@ -710,10 +710,10 @@ impl From<iota_sdk::types::PackageUpgradeError> for PackageUpgradeError {
             iota_sdk::types::PackageUpgradeError::UnknownUpgradePolicy { policy } => {
                 Self::UnknownUpgradePolicy { policy }
             }
-            iota_sdk::types::PackageUpgradeError::PackageIdDoesNotMatch {
+            iota_sdk::types::PackageUpgradeError::PackageIDDoesNotMatch {
                 package_id,
                 ticket_id,
-            } => Self::PackageIdDoesNotMatch {
+            } => Self::PackageIDDoesNotMatch {
                 package_id: Arc::new(package_id.into()),
                 ticket_id: Arc::new(ticket_id.into()),
             },
@@ -740,10 +740,10 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
             PackageUpgradeError::UnknownUpgradePolicy { policy } => {
                 Self::UnknownUpgradePolicy { policy }
             }
-            PackageUpgradeError::PackageIdDoesNotMatch {
+            PackageUpgradeError::PackageIDDoesNotMatch {
                 package_id,
                 ticket_id,
-            } => Self::PackageIdDoesNotMatch {
+            } => Self::PackageIDDoesNotMatch {
                 package_id: **package_id,
                 ticket_id: **ticket_id,
             },

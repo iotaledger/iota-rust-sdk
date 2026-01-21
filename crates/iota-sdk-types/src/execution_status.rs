@@ -503,7 +503,7 @@ pub enum CommandArgumentError {
     InvalidBCSBytes,
     /// The argument cannot be instantiated from raw bytes
     #[error("The argument cannot be instantiated from raw bytes")]
-    InvalidUsageOfPureArgument,
+    InvalidUsageOfPureArg,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
     #[error(
@@ -571,7 +571,7 @@ impl CommandArgumentError {
     crate::def_is!(
         TypeMismatch,
         InvalidBCSBytes,
-        InvalidUsageOfPureArgument,
+        InvalidUsageOfPureArg,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds,
         SecondaryIndexOutOfBounds,
@@ -629,9 +629,9 @@ pub enum PackageUpgradeError {
     /// Upgrade policy is not valid
     #[error("Upgrade policy {policy} is not a valid upgrade policy")]
     UnknownUpgradePolicy { policy: u8 },
-    /// PackageId does not matach PackageId in upgrade ticket
+    /// PackageId does not match PackageId in upgrade ticket
     #[error("Package ID {package_id} does not match package ID in upgrade ticket {ticket_id}")]
-    PackageIdDoesNotMatch {
+    PackageIDDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
     },
@@ -644,7 +644,7 @@ impl PackageUpgradeError {
         IncompatibleUpgrade,
         DigestDoesNotMatch,
         UnknownUpgradePolicy,
-        PackageIdDoesNotMatch,
+        PackageIDDoesNotMatch,
     );
 }
 
@@ -1466,7 +1466,7 @@ mod serialization {
     enum ReadableCommandArgumentError {
         TypeMismatch,
         InvalidBCSBytes,
-        InvalidUsageOfPureArgument,
+        InvalidUsageOfPureArg,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds { index: u16 },
         SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
@@ -1483,7 +1483,7 @@ mod serialization {
     enum BinaryCommandArgumentError {
         TypeMismatch,
         InvalidBCSBytes,
-        InvalidUsageOfPureArgument,
+        InvalidUsageOfPureArg,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds { index: u16 },
         SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
@@ -1505,8 +1505,8 @@ mod serialization {
                 let readable = match self.clone() {
                     Self::TypeMismatch => ReadableCommandArgumentError::TypeMismatch,
                     Self::InvalidBCSBytes => ReadableCommandArgumentError::InvalidBCSBytes,
-                    Self::InvalidUsageOfPureArgument => {
-                        ReadableCommandArgumentError::InvalidUsageOfPureArgument
+                    Self::InvalidUsageOfPureArg => {
+                        ReadableCommandArgumentError::InvalidUsageOfPureArg
                     }
                     Self::InvalidArgumentToPrivateEntryFunction => {
                         ReadableCommandArgumentError::InvalidArgumentToPrivateEntryFunction
@@ -1543,8 +1543,8 @@ mod serialization {
                 let binary = match self.clone() {
                     Self::TypeMismatch => BinaryCommandArgumentError::TypeMismatch,
                     Self::InvalidBCSBytes => BinaryCommandArgumentError::InvalidBCSBytes,
-                    Self::InvalidUsageOfPureArgument => {
-                        BinaryCommandArgumentError::InvalidUsageOfPureArgument
+                    Self::InvalidUsageOfPureArg => {
+                        BinaryCommandArgumentError::InvalidUsageOfPureArg
                     }
                     Self::InvalidArgumentToPrivateEntryFunction => {
                         BinaryCommandArgumentError::InvalidArgumentToPrivateEntryFunction
@@ -1584,8 +1584,8 @@ mod serialization {
                     match readable {
                         ReadableCommandArgumentError::TypeMismatch => Self::TypeMismatch,
                         ReadableCommandArgumentError::InvalidBCSBytes => Self::InvalidBCSBytes,
-                        ReadableCommandArgumentError::InvalidUsageOfPureArgument => {
-                            Self::InvalidUsageOfPureArgument
+                        ReadableCommandArgumentError::InvalidUsageOfPureArg => {
+                            Self::InvalidUsageOfPureArg
                         }
                         ReadableCommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
                             Self::InvalidArgumentToPrivateEntryFunction
@@ -1622,8 +1622,8 @@ mod serialization {
                 BinaryCommandArgumentError::deserialize(deserializer).map(|binary| match binary {
                     BinaryCommandArgumentError::TypeMismatch => Self::TypeMismatch,
                     BinaryCommandArgumentError::InvalidBCSBytes => Self::InvalidBCSBytes,
-                    BinaryCommandArgumentError::InvalidUsageOfPureArgument => {
-                        Self::InvalidUsageOfPureArgument
+                    BinaryCommandArgumentError::InvalidUsageOfPureArg => {
+                        Self::InvalidUsageOfPureArg
                     }
                     BinaryCommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
                         Self::InvalidArgumentToPrivateEntryFunction
@@ -1668,7 +1668,7 @@ mod serialization {
         UnknownUpgradePolicy {
             policy: u8,
         },
-        PackageIdDoesNotMatch {
+        PackageIDDoesNotMatch {
             package_id: ObjectId,
             ticket_id: ObjectId,
         },
@@ -1689,7 +1689,7 @@ mod serialization {
         UnknownUpgradePolicy {
             policy: u8,
         },
-        PackageIdDoesNotMatch {
+        PackageIDDoesNotMatch {
             package_id: ObjectId,
             ticket_id: ObjectId,
         },
@@ -1715,10 +1715,10 @@ mod serialization {
                     Self::UnknownUpgradePolicy { policy } => {
                         ReadablePackageUpgradeError::UnknownUpgradePolicy { policy }
                     }
-                    Self::PackageIdDoesNotMatch {
+                    Self::PackageIDDoesNotMatch {
                         package_id,
                         ticket_id,
-                    } => ReadablePackageUpgradeError::PackageIdDoesNotMatch {
+                    } => ReadablePackageUpgradeError::PackageIDDoesNotMatch {
                         package_id,
                         ticket_id,
                     },
@@ -1739,10 +1739,10 @@ mod serialization {
                     Self::UnknownUpgradePolicy { policy } => {
                         BinaryPackageUpgradeError::UnknownUpgradePolicy { policy }
                     }
-                    Self::PackageIdDoesNotMatch {
+                    Self::PackageIDDoesNotMatch {
                         package_id,
                         ticket_id,
-                    } => BinaryPackageUpgradeError::PackageIdDoesNotMatch {
+                    } => BinaryPackageUpgradeError::PackageIDDoesNotMatch {
                         package_id,
                         ticket_id,
                     },
@@ -1775,10 +1775,10 @@ mod serialization {
                         ReadablePackageUpgradeError::UnknownUpgradePolicy { policy } => {
                             Self::UnknownUpgradePolicy { policy }
                         }
-                        ReadablePackageUpgradeError::PackageIdDoesNotMatch {
+                        ReadablePackageUpgradeError::PackageIDDoesNotMatch {
                             package_id,
                             ticket_id,
-                        } => Self::PackageIdDoesNotMatch {
+                        } => Self::PackageIDDoesNotMatch {
                             package_id,
                             ticket_id,
                         },
@@ -1799,10 +1799,10 @@ mod serialization {
                     BinaryPackageUpgradeError::UnknownUpgradePolicy { policy } => {
                         Self::UnknownUpgradePolicy { policy }
                     }
-                    BinaryPackageUpgradeError::PackageIdDoesNotMatch {
+                    BinaryPackageUpgradeError::PackageIDDoesNotMatch {
                         package_id,
                         ticket_id,
-                    } => Self::PackageIdDoesNotMatch {
+                    } => Self::PackageIDDoesNotMatch {
                         package_id,
                         ticket_id,
                     },
