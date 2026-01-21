@@ -41,22 +41,10 @@ pub enum VersionError {
     derive_more::Rem,
     derive_more::RemAssign,
 )]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(transparent)
-)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(transparent)]
-pub struct Version(
-    #[cfg_attr(
-        feature = "serde",
-        serde(with = "crate::_serde::ReadableDisplayOrDefault")
-    )]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    u64,
-);
+pub struct Version(#[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))] u64);
 
 impl Version {
     /// An inclusive lower limit on a valid version.
@@ -269,6 +257,47 @@ impl PartialOrd<u64> for Version {
 impl PartialOrd<Version> for u64 {
     fn partial_cmp(&self, other: &Version) -> Option<std::cmp::Ordering> {
         self.partial_cmp(&other.0)
+    }
+}
+
+#[cfg(feature = "serde")]
+mod serialization {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Visitor};
+
+    use super::*;
+
+    impl Serialize for Version {
+        fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+            crate::_serde::ReadableDisplay::serialize(&self.0, serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Version {
+        fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+            struct U64Visitor;
+
+            impl<'de> Visitor<'de> for U64Visitor {
+                type Value = u64;
+
+                fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                    formatter.write_str("a u64 as a string or number")
+                }
+
+                fn visit_u64<E: serde::de::Error>(self, v: u64) -> Result<Self::Value, E> {
+                    Ok(v)
+                }
+
+                fn visit_str<E: serde::de::Error>(self, v: &str) -> Result<Self::Value, E> {
+                    v.parse().map_err(serde::de::Error::custom)
+                }
+            }
+
+            if deserializer.is_human_readable() {
+                deserializer.deserialize_any(U64Visitor).map(Self)
+            } else {
+                u64::deserialize(deserializer).map(Self)
+            }
+        }
     }
 }
 
