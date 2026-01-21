@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use thiserror::Error;
+
 use super::{Address, Digest, Identifier, ObjectId};
 
 pub type CommandIndex = usize;
@@ -417,6 +419,10 @@ impl ExecutionError {
         ExecutionCancelledDueToRandomnessUnavailable,
         InvalidLinkage,
     );
+
+    pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
+        Self::CommandArgumentError { argument, kind }
+    }
 }
 
 /// Location in move bytecode where an error occurred
@@ -479,7 +485,7 @@ pub struct MoveLocation {
 /// invalid-object-by-mut-ref                   = %x0a
 /// shared-object-operation-not-allowed         = %x0b
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -489,38 +495,74 @@ pub struct MoveLocation {
 #[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
+    #[error("The type of the value does not match the expected type")]
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
+    #[error("The argument cannot be deserialized into a value of the specified type")]
     InvalidBcsBytes,
     /// The argument cannot be instantiated from raw bytes
+    #[error("The argument cannot be instantiated from raw bytes")]
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
+    #[error(
+        "Invalid argument to private entry function. \
+        These functions cannot take arguments from other Move functions"
+    )]
     InvalidArgumentToPrivateEntryFunction,
     /// Out of bounds access to input or results
+    #[error("Out of bounds access to input or result vector {index}")]
     IndexOutOfBounds { index: u16 },
     /// Out of bounds access to subresult
+    #[error(
+        "Out of bounds secondary access to result vector \
+        {result} at secondary index {subresult}"
+    )]
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
     /// Invalid usage of result.
     /// Expected a single result but found either no return value or multiple.
+    #[error(
+        "Invalid usage of result {result}, \
+        expected a single result but found either no return values or multiple."
+    )]
     InvalidResultArity { result: u16 },
     /// Invalid usage of Gas coin.
     /// The Gas coin can only be used by-value with a TransferObjects command.
+    #[error(
+        "Invalid taking of the Gas coin. \
+        It can only be used by-value with TransferObjects"
+    )]
     InvalidGasCoinUsage,
     /// Invalid usage of move value.
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
+    #[error(
+        "Invalid usage of value. \
+        Mutably borrowed values require unique usage. \
+        Immutably borrowed values cannot be taken or borrowed mutably. \
+        Taken values cannot be used again."
+    )]
     InvalidValueUsage,
     /// Immutable objects cannot be passed by-value.
+    #[error("Immutable objects cannot be passed by-value.")]
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
+    #[error("Immutable objects cannot be passed by mutable reference, &mut.")]
     InvalidObjectByMutRef,
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
+    #[error(
+        "Shared object operations such a wrapping, freezing, or converting to owned are not \
+        allowed."
+    )]
     SharedObjectOperationNotAllowed,
     /// Invalid argument arity. Expected a single argument but found a result
     /// that expanded to multiple arguments.
+    #[error(
+        "Invalid argument arity. Expected a single argument but found a result that expanded to \
+        multiple arguments."
+    )]
     InvalidArgumentArity,
 }
 

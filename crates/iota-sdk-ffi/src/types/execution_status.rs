@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{CommandArgumentError, Identifier, TypeArgumentError};
+use iota_sdk::types::{CommandArgumentError, CommandIndex, Identifier, TypeArgumentError};
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -42,7 +42,7 @@ impl From<iota_sdk::types::ExecutionStatus> for ExecutionStatus {
             iota_sdk::types::ExecutionStatus::Success => Self::Success,
             iota_sdk::types::ExecutionStatus::Failure { error, command } => Self::Failure {
                 error: error.into(),
-                command,
+                command: command.map(|c| c as u64),
             },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
@@ -55,7 +55,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
             ExecutionStatus::Success => Self::Success,
             ExecutionStatus::Failure { error, command } => Self::Failure {
                 error: error.into(),
-                command,
+                command: command.map(|c| c as CommandIndex),
             },
         }
     }
