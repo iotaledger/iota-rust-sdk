@@ -146,3 +146,5 @@ impl TransactionEvents {
 
 crate::export_iota_types_bcs_conversion!(Event);
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
+crate::export_iota_types_json_conversion!(Event);
+crate::export_iota_types_objects_json_conversion!(TransactionEvents);

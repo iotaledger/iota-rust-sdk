@@ -780,3 +780,11 @@ crate::export_iota_types_bcs_conversion!(
     PackageUpgradeError,
     TypeArgumentError
 );
+crate::export_iota_types_json_conversion!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    CommandArgumentError,
+    PackageUpgradeError,
+    TypeArgumentError
+);
