@@ -296,7 +296,7 @@ pub enum ExecutionError {
     /// Bytecode verification error.
     VmVerificationOrDeserializationError,
     /// MoveVm invariant violation
-    VmInvariantViolation,
+    VMInvariantViolation,
     /// Function not found
     FunctionNotFound,
     /// Arity mismatch for Move function.
@@ -394,7 +394,7 @@ impl ExecutionError {
         MovePrimitiveRuntimeError,
         MoveAbort,
         VmVerificationOrDeserializationError,
-        VmInvariantViolation,
+        VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
         TypeArityMismatch,
@@ -828,7 +828,7 @@ mod serialization {
             code: u64,
         },
         VmVerificationOrDeserializationError,
-        VmInvariantViolation,
+        VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
         TypeArityMismatch,
@@ -917,7 +917,7 @@ mod serialization {
             code: u64,
         },
         VmVerificationOrDeserializationError,
-        VmInvariantViolation,
+        VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
         TypeArityMismatch,
@@ -1020,7 +1020,7 @@ mod serialization {
                     Self::VmVerificationOrDeserializationError => {
                         ReadableExecutionError::VmVerificationOrDeserializationError
                     }
-                    Self::VmInvariantViolation => ReadableExecutionError::VmInvariantViolation,
+                    Self::VMInvariantViolation => ReadableExecutionError::VMInvariantViolation,
                     Self::FunctionNotFound => ReadableExecutionError::FunctionNotFound,
                     Self::ArityMismatch => ReadableExecutionError::ArityMismatch,
                     Self::TypeArityMismatch => ReadableExecutionError::TypeArityMismatch,
@@ -1139,7 +1139,7 @@ mod serialization {
                     Self::VmVerificationOrDeserializationError => {
                         BinaryExecutionError::VmVerificationOrDeserializationError
                     }
-                    Self::VmInvariantViolation => BinaryExecutionError::VmInvariantViolation,
+                    Self::VMInvariantViolation => BinaryExecutionError::VMInvariantViolation,
                     Self::FunctionNotFound => BinaryExecutionError::FunctionNotFound,
                     Self::ArityMismatch => BinaryExecutionError::ArityMismatch,
                     Self::TypeArityMismatch => BinaryExecutionError::TypeArityMismatch,
@@ -1267,7 +1267,7 @@ mod serialization {
                     ReadableExecutionError::VmVerificationOrDeserializationError => {
                         Self::VmVerificationOrDeserializationError
                     }
-                    ReadableExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+                    ReadableExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
                     ReadableExecutionError::FunctionNotFound => Self::FunctionNotFound,
                     ReadableExecutionError::ArityMismatch => Self::ArityMismatch,
                     ReadableExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
@@ -1383,7 +1383,7 @@ mod serialization {
                     BinaryExecutionError::VmVerificationOrDeserializationError => {
                         Self::VmVerificationOrDeserializationError
                     }
-                    BinaryExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+                    BinaryExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
                     BinaryExecutionError::FunctionNotFound => Self::FunctionNotFound,
                     BinaryExecutionError::ArityMismatch => Self::ArityMismatch,
                     BinaryExecutionError::TypeArityMismatch => Self::TypeArityMismatch,

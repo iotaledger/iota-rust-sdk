@@ -189,7 +189,7 @@ pub enum ExecutionError {
     /// Bytecode verification error.
     VmVerificationOrDeserialization,
     /// MoveVm invariant violation
-    VmInvariantViolation,
+    VMInvariantViolation,
     // Programmable Transaction Errors
     /// Function not found
     FunctionNotFound,
@@ -318,7 +318,7 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             iota_sdk::types::ExecutionError::VmVerificationOrDeserializationError => {
                 Self::VmVerificationOrDeserialization
             }
-            iota_sdk::types::ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+            iota_sdk::types::ExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
             iota_sdk::types::ExecutionError::FunctionNotFound => Self::FunctionNotFound,
             iota_sdk::types::ExecutionError::ArityMismatch => Self::ArityMismatch,
             iota_sdk::types::ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
@@ -449,7 +449,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::VmVerificationOrDeserialization => {
                 Self::VmVerificationOrDeserializationError
             }
-            ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+            ExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
             ExecutionError::FunctionNotFound => Self::FunctionNotFound,
             ExecutionError::ArityMismatch => Self::ArityMismatch,
             ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
