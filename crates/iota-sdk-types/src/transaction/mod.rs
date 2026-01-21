@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    AdditionalConsensusStateDigest, Address, CheckpointTimestamp, Digest, EpochId, Event,
-    GenesisObject, Identifier, Jwk, JwkId, ObjectId, ObjectReference, ProtocolVersion, TypeTag,
-    UserSignature, Version,
+    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
+    ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
 
 #[cfg(feature = "serde")]
@@ -624,7 +623,7 @@ pub struct ConsensusCommitPrologueV2 {
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
     /// Digest of any additional state computed by the consensus handler.
     /// Used to detect forking bugs as early as possible.
-    pub additional_state_digest: AdditionalConsensusStateDigest,
+    pub additional_state_digest: Digest,
 }
 
 /// System transaction used to change the epoch
