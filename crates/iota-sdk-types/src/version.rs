@@ -4,7 +4,7 @@
 
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Clone, PartialEq, Eq)]
 pub enum VersionError {
     #[error("cannot increment Version: maximum valid Version has already been reached")]
     InvalidIncrement,
