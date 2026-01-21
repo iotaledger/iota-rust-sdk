@@ -157,7 +157,7 @@ pub enum ExecutionError {
     /// Attempted to used feature that is not supported yet
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
-    ObjectTooBig {
+    MoveObjectTooBig {
         object_size: u64,
         max_object_size: u64,
     },
@@ -277,10 +277,10 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             iota_sdk::types::ExecutionError::InvalidGasObject => Self::InvalidGasObject,
             iota_sdk::types::ExecutionError::InvariantViolation => Self::InvariantViolation,
             iota_sdk::types::ExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-            iota_sdk::types::ExecutionError::ObjectTooBig {
+            iota_sdk::types::ExecutionError::MoveObjectTooBig {
                 object_size,
                 max_object_size,
-            } => Self::ObjectTooBig {
+            } => Self::MoveObjectTooBig {
                 object_size,
                 max_object_size,
             },
@@ -418,10 +418,10 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::InvalidGasObject => Self::InvalidGasObject,
             ExecutionError::InvariantViolation => Self::InvariantViolation,
             ExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-            ExecutionError::ObjectTooBig {
+            ExecutionError::MoveObjectTooBig {
                 object_size,
                 max_object_size,
-            } => Self::ObjectTooBig {
+            } => Self::MoveObjectTooBig {
                 object_size,
                 max_object_size,
             },

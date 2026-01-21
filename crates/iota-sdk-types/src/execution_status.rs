@@ -384,7 +384,7 @@ impl ExecutionError {
         InvalidGasObject,
         InvariantViolation,
         FeatureNotYetSupported,
-        ObjectTooBig,
+        MoveObjectTooBig,
         PackageTooBig,
         CircularObjectOwnership,
         InsufficientCoinBalance,
@@ -800,7 +800,7 @@ mod serialization {
         InvalidGasObject,
         InvariantViolation,
         FeatureNotYetSupported,
-        ObjectTooBig {
+        MoveObjectTooBig {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             object_size: u64,
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -894,7 +894,7 @@ mod serialization {
         InvalidGasObject,
         InvariantViolation,
         FeatureNotYetSupported,
-        ObjectTooBig {
+        MoveObjectTooBig {
             object_size: u64,
             max_object_size: u64,
         },
@@ -984,10 +984,10 @@ mod serialization {
                     Self::InvalidGasObject => ReadableExecutionError::InvalidGasObject,
                     Self::InvariantViolation => ReadableExecutionError::InvariantViolation,
                     Self::FeatureNotYetSupported => ReadableExecutionError::FeatureNotYetSupported,
-                    Self::ObjectTooBig {
+                    Self::MoveObjectTooBig {
                         object_size,
                         max_object_size,
-                    } => ReadableExecutionError::ObjectTooBig {
+                    } => ReadableExecutionError::MoveObjectTooBig {
                         object_size,
                         max_object_size,
                     },
@@ -1105,10 +1105,10 @@ mod serialization {
                     Self::InvalidGasObject => BinaryExecutionError::InvalidGasObject,
                     Self::InvariantViolation => BinaryExecutionError::InvariantViolation,
                     Self::FeatureNotYetSupported => BinaryExecutionError::FeatureNotYetSupported,
-                    Self::ObjectTooBig {
+                    Self::MoveObjectTooBig {
                         object_size,
                         max_object_size,
-                    } => BinaryExecutionError::ObjectTooBig {
+                    } => BinaryExecutionError::MoveObjectTooBig {
                         object_size,
                         max_object_size,
                     },
@@ -1231,10 +1231,10 @@ mod serialization {
                     ReadableExecutionError::InvalidGasObject => Self::InvalidGasObject,
                     ReadableExecutionError::InvariantViolation => Self::InvariantViolation,
                     ReadableExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-                    ReadableExecutionError::ObjectTooBig {
+                    ReadableExecutionError::MoveObjectTooBig {
                         object_size,
                         max_object_size,
-                    } => Self::ObjectTooBig {
+                    } => Self::MoveObjectTooBig {
                         object_size,
                         max_object_size,
                     },
@@ -1349,10 +1349,10 @@ mod serialization {
                     BinaryExecutionError::InvalidGasObject => Self::InvalidGasObject,
                     BinaryExecutionError::InvariantViolation => Self::InvariantViolation,
                     BinaryExecutionError::FeatureNotYetSupported => Self::FeatureNotYetSupported,
-                    BinaryExecutionError::ObjectTooBig {
+                    BinaryExecutionError::MoveObjectTooBig {
                         object_size,
                         max_object_size,
-                    } => Self::ObjectTooBig {
+                    } => Self::MoveObjectTooBig {
                         object_size,
                         max_object_size,
                     },
