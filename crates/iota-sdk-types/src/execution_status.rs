@@ -684,7 +684,7 @@ impl PackageUpgradeError {
 /// type-not-found = %x00
 /// constraint-not-satisfied = %x01
 /// ```
-#[derive(Eq, PartialEq, Clone, Copy, Debug)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -699,8 +699,10 @@ impl PackageUpgradeError {
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
+    #[error("A type was not found in the module specified.")]
     TypeNotFound,
     /// A type provided did not match the specified constraint
+    #[error("A type provided did not match the specified constraints.")]
     ConstraintNotSatisfied,
 }
 
