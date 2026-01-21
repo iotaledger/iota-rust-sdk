@@ -259,7 +259,7 @@ pub enum ExecutionError {
     /// Attempted to used feature that is not supported yet
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
-    ObjectTooBig {
+    MoveObjectTooBig {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -605,7 +605,7 @@ impl CommandArgumentError {
 /// unknown-upgrade-policy      = %x04 u8
 /// package-id-does-not-match   = %x05 object-id object-id
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -615,16 +615,22 @@ impl CommandArgumentError {
 #[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
+    #[error("Unable to fetch package at {package_id}")]
     UnableToFetchPackage { package_id: ObjectId },
     /// Object is not a package
+    #[error("Object {object_id} is not a package")]
     NotAPackage { object_id: ObjectId },
     /// Package upgrade is incompatible with previous version
+    #[error("New package is incompatible with previous version")]
     IncompatibleUpgrade,
     /// Digest in upgrade ticket and computed digest differ
+    #[error("Digest in upgrade ticket and computed digest disagree")]
     DigestDoesNotMatch { digest: Digest },
     /// Upgrade policy is not valid
+    #[error("Upgrade policy {policy} is not a valid upgrade policy")]
     UnknownUpgradePolicy { policy: u8 },
     /// PackageId does not matach PackageId in upgrade ticket
+    #[error("Package ID {package_id} does not match package ID in upgrade ticket {ticket_id}")]
     PackageIdDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
