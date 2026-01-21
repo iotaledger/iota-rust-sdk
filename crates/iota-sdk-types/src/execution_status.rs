@@ -478,6 +478,19 @@ impl Display for MoveLocation {
     }
 }
 
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct MoveLocationOpt(pub Option<MoveLocation>);
+
+impl Display for MoveLocationOpt {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match &self.0 {
+            None => write!(f, "UNKNOWN"),
+            Some(l) => write!(f, "{l}"),
+        }
+    }
+}
+
 /// An error with an argument to a command
 ///
 /// # BCS
