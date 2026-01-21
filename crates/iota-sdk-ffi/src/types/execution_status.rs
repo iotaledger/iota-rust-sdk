@@ -187,7 +187,7 @@ pub enum ExecutionError {
     /// Move runtime abort
     MoveAbort { location: MoveLocation, code: u64 },
     /// Bytecode verification error.
-    VmVerificationOrDeserialization,
+    VMVerificationOrDeserialization,
     /// MoveVm invariant violation
     VMInvariantViolation,
     // Programmable Transaction Errors
@@ -315,8 +315,8 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 location: location.into(),
                 code,
             },
-            iota_sdk::types::ExecutionError::VmVerificationOrDeserializationError => {
-                Self::VmVerificationOrDeserialization
+            iota_sdk::types::ExecutionError::VMVerificationOrDeserializationError => {
+                Self::VMVerificationOrDeserialization
             }
             iota_sdk::types::ExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
             iota_sdk::types::ExecutionError::FunctionNotFound => Self::FunctionNotFound,
@@ -446,8 +446,8 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 location: location.into(),
                 code,
             },
-            ExecutionError::VmVerificationOrDeserialization => {
-                Self::VmVerificationOrDeserializationError
+            ExecutionError::VMVerificationOrDeserialization => {
+                Self::VMVerificationOrDeserializationError
             }
             ExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
             ExecutionError::FunctionNotFound => Self::FunctionNotFound,
@@ -617,7 +617,7 @@ pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
-    InvalidBcsBytes,
+    InvalidBCSBytes,
     /// The argument cannot be instantiated from raw bytes
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.

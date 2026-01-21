@@ -294,7 +294,7 @@ pub enum ExecutionError {
         code: u64,
     },
     /// Bytecode verification error.
-    VmVerificationOrDeserializationError,
+    VMVerificationOrDeserializationError,
     /// MoveVm invariant violation
     VMInvariantViolation,
     /// Function not found
@@ -393,7 +393,7 @@ impl ExecutionError {
         IotaMoveVerificationError,
         MovePrimitiveRuntimeError,
         MoveAbort,
-        VmVerificationOrDeserializationError,
+        VMVerificationOrDeserializationError,
         VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
@@ -500,7 +500,7 @@ pub enum CommandArgumentError {
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
     #[error("The argument cannot be deserialized into a value of the specified type")]
-    InvalidBcsBytes,
+    InvalidBCSBytes,
     /// The argument cannot be instantiated from raw bytes
     #[error("The argument cannot be instantiated from raw bytes")]
     InvalidUsageOfPureArgument,
@@ -570,7 +570,7 @@ pub enum CommandArgumentError {
 impl CommandArgumentError {
     crate::def_is!(
         TypeMismatch,
-        InvalidBcsBytes,
+        InvalidBCSBytes,
         InvalidUsageOfPureArgument,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds,
@@ -827,7 +827,7 @@ mod serialization {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             code: u64,
         },
-        VmVerificationOrDeserializationError,
+        VMVerificationOrDeserializationError,
         VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
@@ -916,7 +916,7 @@ mod serialization {
             location: MoveLocation,
             code: u64,
         },
-        VmVerificationOrDeserializationError,
+        VMVerificationOrDeserializationError,
         VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
@@ -1017,8 +1017,8 @@ mod serialization {
                     Self::MoveAbort { location, code } => {
                         ReadableExecutionError::MoveAbort { location, code }
                     }
-                    Self::VmVerificationOrDeserializationError => {
-                        ReadableExecutionError::VmVerificationOrDeserializationError
+                    Self::VMVerificationOrDeserializationError => {
+                        ReadableExecutionError::VMVerificationOrDeserializationError
                     }
                     Self::VMInvariantViolation => ReadableExecutionError::VMInvariantViolation,
                     Self::FunctionNotFound => ReadableExecutionError::FunctionNotFound,
@@ -1136,8 +1136,8 @@ mod serialization {
                     Self::MoveAbort { location, code } => {
                         BinaryExecutionError::MoveAbort { location, code }
                     }
-                    Self::VmVerificationOrDeserializationError => {
-                        BinaryExecutionError::VmVerificationOrDeserializationError
+                    Self::VMVerificationOrDeserializationError => {
+                        BinaryExecutionError::VMVerificationOrDeserializationError
                     }
                     Self::VMInvariantViolation => BinaryExecutionError::VMInvariantViolation,
                     Self::FunctionNotFound => BinaryExecutionError::FunctionNotFound,
@@ -1264,8 +1264,8 @@ mod serialization {
                     ReadableExecutionError::MoveAbort { location, code } => {
                         Self::MoveAbort { location, code }
                     }
-                    ReadableExecutionError::VmVerificationOrDeserializationError => {
-                        Self::VmVerificationOrDeserializationError
+                    ReadableExecutionError::VMVerificationOrDeserializationError => {
+                        Self::VMVerificationOrDeserializationError
                     }
                     ReadableExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
                     ReadableExecutionError::FunctionNotFound => Self::FunctionNotFound,
@@ -1380,8 +1380,8 @@ mod serialization {
                     BinaryExecutionError::MoveAbort { location, code } => {
                         Self::MoveAbort { location, code }
                     }
-                    BinaryExecutionError::VmVerificationOrDeserializationError => {
-                        Self::VmVerificationOrDeserializationError
+                    BinaryExecutionError::VMVerificationOrDeserializationError => {
+                        Self::VMVerificationOrDeserializationError
                     }
                     BinaryExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
                     BinaryExecutionError::FunctionNotFound => Self::FunctionNotFound,
@@ -1465,7 +1465,7 @@ mod serialization {
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableCommandArgumentError {
         TypeMismatch,
-        InvalidBcsBytes,
+        InvalidBCSBytes,
         InvalidUsageOfPureArgument,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds { index: u16 },
@@ -1482,7 +1482,7 @@ mod serialization {
     #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryCommandArgumentError {
         TypeMismatch,
-        InvalidBcsBytes,
+        InvalidBCSBytes,
         InvalidUsageOfPureArgument,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds { index: u16 },
@@ -1504,7 +1504,7 @@ mod serialization {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
                     Self::TypeMismatch => ReadableCommandArgumentError::TypeMismatch,
-                    Self::InvalidBcsBytes => ReadableCommandArgumentError::InvalidBcsBytes,
+                    Self::InvalidBCSBytes => ReadableCommandArgumentError::InvalidBCSBytes,
                     Self::InvalidUsageOfPureArgument => {
                         ReadableCommandArgumentError::InvalidUsageOfPureArgument
                     }
@@ -1542,7 +1542,7 @@ mod serialization {
             } else {
                 let binary = match self.clone() {
                     Self::TypeMismatch => BinaryCommandArgumentError::TypeMismatch,
-                    Self::InvalidBcsBytes => BinaryCommandArgumentError::InvalidBcsBytes,
+                    Self::InvalidBCSBytes => BinaryCommandArgumentError::InvalidBCSBytes,
                     Self::InvalidUsageOfPureArgument => {
                         BinaryCommandArgumentError::InvalidUsageOfPureArgument
                     }
@@ -1583,7 +1583,7 @@ mod serialization {
                 ReadableCommandArgumentError::deserialize(deserializer).map(|readable| {
                     match readable {
                         ReadableCommandArgumentError::TypeMismatch => Self::TypeMismatch,
-                        ReadableCommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+                        ReadableCommandArgumentError::InvalidBCSBytes => Self::InvalidBCSBytes,
                         ReadableCommandArgumentError::InvalidUsageOfPureArgument => {
                             Self::InvalidUsageOfPureArgument
                         }
@@ -1621,7 +1621,7 @@ mod serialization {
             } else {
                 BinaryCommandArgumentError::deserialize(deserializer).map(|binary| match binary {
                     BinaryCommandArgumentError::TypeMismatch => Self::TypeMismatch,
-                    BinaryCommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+                    BinaryCommandArgumentError::InvalidBCSBytes => Self::InvalidBCSBytes,
                     BinaryCommandArgumentError::InvalidUsageOfPureArgument => {
                         Self::InvalidUsageOfPureArgument
                     }
