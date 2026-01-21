@@ -244,3 +244,27 @@ impl TryFrom<i64> for Version {
         value.try_into().map(Self)
     }
 }
+
+impl PartialEq<u64> for Version {
+    fn eq(&self, other: &u64) -> bool {
+        self.0.eq(other)
+    }
+}
+
+impl PartialEq<Version> for u64 {
+    fn eq(&self, other: &Version) -> bool {
+        self.eq(&other.0)
+    }
+}
+
+impl PartialOrd<u64> for Version {
+    fn partial_cmp(&self, other: &u64) -> Option<std::cmp::Ordering> {
+        self.0.partial_cmp(other)
+    }
+}
+
+impl PartialOrd<Version> for u64 {
+    fn partial_cmp(&self, other: &Version) -> Option<std::cmp::Ordering> {
+        self.partial_cmp(&other.0)
+    }
+}
