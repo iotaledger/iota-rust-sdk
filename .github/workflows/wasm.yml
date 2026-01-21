@@ -36,6 +36,6 @@ jobs:
         run: sudo apt-get install -y clang
 
       - name: Run tests in wasm
-        run: RUSTFLAGS='-Dwarnings --cfg getrandom_backend="wasm_js"' make wasm
+        run: RUSTFLAGS='-Dwarnings' make wasm
 
       - run: make is-dirty

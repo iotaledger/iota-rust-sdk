@@ -2031,6 +2031,15 @@ impl MoveCall {
     }
 }
 
+crate::export_iota_types_bcs_conversion!(
+    SignedTransaction,
+    AuthenticatorStateExpire,
+    AuthenticatorStateUpdateV1,
+    ActiveJwk,
+    RandomnessStateUpdate,
+    GasPayment,
+    TransactionExpiration,
+);
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionV1,
@@ -2060,7 +2069,7 @@ crate::export_iota_types_objects_bcs_conversion!(
     Argument,
     MoveCall,
 );
-crate::export_iota_types_bcs_conversion!(
+crate::export_iota_types_json_conversion!(
     SignedTransaction,
     AuthenticatorStateExpire,
     AuthenticatorStateUpdateV1,
@@ -2068,4 +2077,33 @@ crate::export_iota_types_bcs_conversion!(
     RandomnessStateUpdate,
     GasPayment,
     TransactionExpiration,
+);
+crate::export_iota_types_objects_json_conversion!(
+    Transaction,
+    TransactionV1,
+    TransactionKind,
+    ProgrammableTransaction,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CancelledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ExecutionTimeObservation,
+    ExecutionTimeObservations,
+    ValidatorExecutionTimeObservation,
+    ExecutionTimeObservationKey,
+    TransactionEffects,
+    Argument,
+    MoveCall,
 );

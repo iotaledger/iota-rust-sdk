@@ -2763,6 +2763,93 @@ int8_t uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_eq(void* ptr, void* o
 int8_t uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_INTENT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_INTENT
+void* uniffi_iota_sdk_ffi_fn_clone_intent(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_INTENT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FREE_INTENT
+void uniffi_iota_sdk_ffi_fn_free_intent(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_BYTES
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_from_bytes(RustBuffer bytes, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_FROM_HEX
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_from_hex(RustBuffer hex, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_new(RustBuffer scope, RustBuffer version, RustBuffer app_id, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_CONSENSUS_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_CONSENSUS_APP
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_new_consensus_app(RustBuffer scope, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_IOTA_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_IOTA_APP
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_app(RustBuffer scope, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_IOTA_TRANSACTION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_IOTA_TRANSACTION
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_new_iota_transaction(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_PERSONAL_MESSAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_INTENT_NEW_PERSONAL_MESSAGE
+void* uniffi_iota_sdk_ffi_fn_constructor_intent_new_personal_message(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_APP_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_APP_ID
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_app_id(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_SCOPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_SCOPE
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_scope(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_TO_BYTES
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_to_bytes(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_VERSION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_VERSION
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_version(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_DEBUG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_DEBUG
+RustBuffer uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_debug(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_EQ
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_EQ
+int8_t uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_eq(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_NE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_EQ_NE
+int8_t uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_eq_ne(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_HASH
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_INTENT_UNIFFI_TRAIT_HASH
+uint64_t uniffi_iota_sdk_ffi_fn_method_intent_uniffi_trait_hash(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CLONE_MAKEMOVEVECTOR
 void* uniffi_iota_sdk_ffi_fn_clone_makemovevector(void* ptr, RustCallStatus *out_status
@@ -7421,9 +7508,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(void
 RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ACTIVE_JWK_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ACTIVE_JWK_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ACTIVE_JWK_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ACTIVE_JWK_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ACTIVE_JWK_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ACTIVE_JWK_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_FROM_BCS
@@ -7431,9 +7528,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_active_jwk_to_bcs(RustBuffer data, RustCa
 void* uniffi_iota_sdk_ffi_fn_func_address_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_address_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_address_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ADDRESS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_address_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_FROM_BCS
@@ -7441,9 +7548,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_address_to_bcs(void* data, RustCallStatus
 void* uniffi_iota_sdk_ffi_fn_func_argument_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_argument_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ARGUMENT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_argument_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_FROM_BCS
@@ -7451,9 +7568,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_argument_to_bcs(void* data, RustCallStatu
 RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_FROM_BCS
@@ -7461,9 +7588,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_expire_to_bcs(RustBuf
 RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_authenticator_state_update_v1_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BASE64_DECODE
@@ -7481,9 +7618,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_base64_encode(RustBuffer input, RustCallS
 void* uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_PUBLIC_KEY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_FROM_BCS
@@ -7491,9 +7638,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_public_key_to_bcs(void* data, Ru
 void* uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_bls12381_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BLS12381_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_FROM_BCS
@@ -7501,9 +7658,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_bls12381_signature_to_bcs(void* data, Rus
 void* uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_bn254_field_element_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BN254_FIELD_ELEMENT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_BCS
@@ -7511,9 +7678,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_bn254_field_element_to_bcs(void* data, Ru
 int8_t uniffi_iota_sdk_ffi_fn_func_bool_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_FROM_JSON
+int8_t uniffi_iota_sdk_ffi_fn_func_bool_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(int8_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_BOOL_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_bool_to_json(int8_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_FROM_BCS
@@ -7521,9 +7698,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_bool_to_bcs(int8_t input, RustCallStatus 
 void* uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CANCELLED_TRANSACTION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_FROM_BCS
@@ -7531,9 +7718,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_cancelled_transaction_to_bcs(void* data, 
 void* uniffi_iota_sdk_ffi_fn_func_change_epoch_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_change_epoch_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_change_epoch_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_change_epoch_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_FROM_BCS
@@ -7541,9 +7738,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_change_epoch_to_bcs(void* data, RustCallS
 void* uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGE_EPOCH_V2_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_FROM_BCS
@@ -7551,9 +7758,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_change_epoch_v2_to_bcs(void* data, RustCa
 RustBuffer uniffi_iota_sdk_ffi_fn_func_changed_object_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_changed_object_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_changed_object_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHANGED_OBJECT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_changed_object_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_FROM_BCS
@@ -7561,9 +7778,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_changed_object_to_bcs(RustBuffer data, Ru
 void* uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_COMMITMENT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_FROM_BCS
@@ -7571,9 +7798,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_commitment_to_bcs(void* data, 
 void* uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_CONTENTS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_FROM_BCS
@@ -7581,9 +7818,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_contents_to_bcs(void* data, Ru
 void* uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_SUMMARY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_FROM_BCS
@@ -7591,9 +7838,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_summary_to_bcs(void* data, Rus
 void* uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_FROM_BCS
@@ -7601,9 +7858,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_checkpoint_transaction_info_to_bcs(void* 
 void* uniffi_iota_sdk_ffi_fn_func_circom_g1_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_circom_g1_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G1_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g1_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_FROM_BCS
@@ -7611,9 +7878,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g1_to_bcs(void* data, RustCallStat
 void* uniffi_iota_sdk_ffi_fn_func_circom_g2_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_circom_g2_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CIRCOM_G2_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g2_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_FROM_BCS
@@ -7621,9 +7898,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_circom_g2_to_bcs(void* data, RustCallStat
 RustBuffer uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_command_argument_error_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_ARGUMENT_ERROR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_FROM_BCS
@@ -7631,9 +7918,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_command_argument_error_to_bcs(RustBuffer 
 void* uniffi_iota_sdk_ffi_fn_func_command_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_command_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_command_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_COMMAND_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_command_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_FROM_BCS
@@ -7641,9 +7938,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_command_to_bcs(void* data, RustCallStatus
 void* uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_FROM_BCS
@@ -7651,9 +7958,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_consensus_commit_prologue_v1_to_bcs(void*
 void* uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_FROM_BCS
@@ -7661,9 +7978,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_consensus_determined_version_assignments_
 void* uniffi_iota_sdk_ffi_fn_func_digest_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_digest_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_DIGEST_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_digest_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_FROM_BCS
@@ -7671,9 +7998,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_digest_to_bcs(void* data, RustCallStatus 
 void* uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_PUBLIC_KEY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_FROM_BCS
@@ -7681,9 +8018,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_ed25519_public_key_to_bcs(void* data, Rus
 void* uniffi_iota_sdk_ffi_fn_func_ed25519_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_ed25519_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ED25519_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_FROM_BCS
@@ -7691,9 +8038,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_ed25519_signature_to_bcs(void* data, Rust
 RustBuffer uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_END_OF_EPOCH_DATA_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_FROM_BCS
@@ -7701,9 +8058,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_end_of_epoch_data_to_bcs(RustBuffer data,
 RustBuffer uniffi_iota_sdk_ffi_fn_func_event_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_event_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_event_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EVENT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_event_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_FROM_BCS
@@ -7711,9 +8078,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_event_to_bcs(RustBuffer data, RustCallSta
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_error_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_error_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_error_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_ERROR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_error_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_FROM_BCS
@@ -7721,9 +8098,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_error_to_bcs(RustBuffer data, R
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_status_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_status_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_STATUS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_status_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_FROM_BCS
@@ -7731,9 +8118,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_status_to_bcs(RustBuffer data, 
 void* uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_execution_time_observation_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_TO_BCS
@@ -7741,9 +8138,19 @@ void* uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_from_bcs(RustBu
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_KEY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observation_key_to_json(void* data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_FROM_BCS
@@ -7751,9 +8158,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observation_to_bcs(void* d
 void* uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_execution_time_observations_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_FROM_BCS
@@ -7761,9 +8178,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_execution_time_observations_to_bcs(void* 
 RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_COST_SUMMARY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_FROM_BCS
@@ -7771,9 +8198,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_cost_summary_to_bcs(RustBuffer data, 
 RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_payment_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_payment_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_payment_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GAS_PAYMENT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_gas_payment_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENERATE_MNEMONIC
@@ -7786,9 +8223,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(RustBuffer word_count, 
 void* uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_genesis_object_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_OBJECT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_genesis_object_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_FROM_BCS
@@ -7796,9 +8243,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_genesis_object_to_bcs(void* data, RustCal
 void* uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_genesis_transaction_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_GENESIS_TRANSACTION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_genesis_transaction_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_HEX_DECODE
@@ -7816,9 +8273,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_hex_encode(RustBuffer input, RustCallStat
 int16_t uniffi_iota_sdk_ffi_fn_func_i16_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_FROM_JSON
+int16_t uniffi_iota_sdk_ffi_fn_func_i16_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(int16_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I16_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_i16_to_json(int16_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_FROM_BCS
@@ -7826,9 +8293,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_i16_to_bcs(int16_t input, RustCallStatus 
 int32_t uniffi_iota_sdk_ffi_fn_func_i32_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_FROM_JSON
+int32_t uniffi_iota_sdk_ffi_fn_func_i32_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(int32_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I32_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_i32_to_json(int32_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_FROM_BCS
@@ -7836,9 +8313,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_i32_to_bcs(int32_t input, RustCallStatus 
 int64_t uniffi_iota_sdk_ffi_fn_func_i64_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_FROM_JSON
+int64_t uniffi_iota_sdk_ffi_fn_func_i64_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(int64_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I64_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_i64_to_json(int64_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_FROM_BCS
@@ -7846,9 +8333,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_i64_to_bcs(int64_t input, RustCallStatus 
 int8_t uniffi_iota_sdk_ffi_fn_func_i8_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_FROM_JSON
+int8_t uniffi_iota_sdk_ffi_fn_func_i8_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(int8_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_I8_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_i8_to_json(int8_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_FROM_BCS
@@ -7856,9 +8353,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_i8_to_bcs(int8_t input, RustCallStatus *o
 RustBuffer uniffi_iota_sdk_ffi_fn_func_id_operation_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_id_operation_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ID_OPERATION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_id_operation_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_FROM_BCS
@@ -7866,9 +8373,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_id_operation_to_bcs(RustBuffer data, Rust
 void* uniffi_iota_sdk_ffi_fn_func_identifier_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_identifier_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_IDENTIFIER_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_identifier_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_FROM_BCS
@@ -7876,9 +8393,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_identifier_to_bcs(void* data, RustCallSta
 void* uniffi_iota_sdk_ffi_fn_func_input_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_input_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_input_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_INPUT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_input_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_FROM_BCS
@@ -7886,9 +8413,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_input_to_bcs(void* data, RustCallStatus *
 RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_TO_BCS
@@ -7896,9 +8433,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_from_bcs(RustBuffer bcs, RustCallS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_ID_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_id_to_json(RustBuffer data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_JWK_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_FROM_BCS
@@ -7906,9 +8453,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_jwk_to_bcs(RustBuffer data, RustCallStatu
 void* uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_make_move_vector_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MAKE_MOVE_VECTOR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_FROM_BCS
@@ -7916,9 +8473,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_make_move_vector_to_bcs(void* data, RustC
 void* uniffi_iota_sdk_ffi_fn_func_merge_coins_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_merge_coins_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MERGE_COINS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_merge_coins_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_FROM_BCS
@@ -7926,9 +8493,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_merge_coins_to_bcs(void* data, RustCallSt
 void* uniffi_iota_sdk_ffi_fn_func_move_call_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_move_call_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_CALL_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_move_call_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_FROM_BCS
@@ -7936,9 +8513,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_move_call_to_bcs(void* data, RustCallStat
 RustBuffer uniffi_iota_sdk_ffi_fn_func_move_location_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_move_location_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_LOCATION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_move_location_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_FROM_BCS
@@ -7946,9 +8533,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_move_location_to_bcs(RustBuffer data, Rus
 void* uniffi_iota_sdk_ffi_fn_func_move_package_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_move_package_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_move_package_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_PACKAGE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_move_package_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_FROM_BCS
@@ -7956,9 +8553,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_move_package_to_bcs(void* data, RustCallS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MOVE_STRUCT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_FROM_BCS
@@ -7966,9 +8573,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(RustBuffer data, RustC
 void* uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_FROM_BCS
@@ -7976,9 +8593,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_to_bcs(void
 void* uniffi_iota_sdk_ffi_fn_func_multisig_committee_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_multisig_committee_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_COMMITTEE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_FROM_BCS
@@ -7986,9 +8613,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_committee_to_bcs(void* data, Rus
 void* uniffi_iota_sdk_ffi_fn_func_multisig_member_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_multisig_member_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_TO_BCS
@@ -7996,9 +8633,19 @@ void* uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_from_bcs(RustBuffer
 RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_public_key_to_json(void* data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_TO_BCS
@@ -8006,9 +8653,19 @@ void* uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_from_bcs(RustBuffer 
 RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_signature_to_json(void* data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_MULTISIG_MEMBER_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_FROM_BCS
@@ -8016,9 +8673,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_multisig_member_to_bcs(void* data, RustCa
 void* uniffi_iota_sdk_ffi_fn_func_object_data_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_object_data_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_data_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_DATA_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_data_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_FROM_BCS
@@ -8026,9 +8693,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_object_data_to_bcs(void* data, RustCallSt
 void* uniffi_iota_sdk_ffi_fn_func_object_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_object_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_object_id_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_object_id_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_TO_BCS
@@ -8036,9 +8713,19 @@ void* uniffi_iota_sdk_ffi_fn_func_object_id_from_bcs(RustBuffer bcs, RustCallSta
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_id_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_ID_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_id_to_json(void* data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_in_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_in_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_TO_BCS
@@ -8046,9 +8733,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_object_in_from_bcs(RustBuffer bcs, RustCa
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_in_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_IN_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_in_to_json(RustBuffer data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_out_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_out_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_TO_BCS
@@ -8056,9 +8753,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_object_out_from_bcs(RustBuffer bcs, RustC
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_out_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_OUT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_out_to_json(RustBuffer data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_TO_BCS
@@ -8066,9 +8773,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(RustBuffer bcs,
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_REFERENCE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_to_json(RustBuffer data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_object_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OBJECT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_object_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_FROM_BCS
@@ -8076,9 +8793,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_object_to_bcs(void* data, RustCallStatus 
 void* uniffi_iota_sdk_ffi_fn_func_owner_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_owner_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_OWNER_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_owner_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_FROM_BCS
@@ -8086,9 +8813,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_owner_to_bcs(void* data, RustCallStatus *
 RustBuffer uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PACKAGE_UPGRADE_ERROR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_FROM_BCS
@@ -8096,9 +8833,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_package_upgrade_error_to_bcs(RustBuffer d
 void* uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PASSKEY_AUTHENTICATOR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_FROM_BCS
@@ -8106,9 +8853,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_passkey_authenticator_to_bcs(void* data, 
 void* uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_programmable_transaction_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PROGRAMMABLE_TRANSACTION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_FROM_BCS
@@ -8116,9 +8873,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_programmable_transaction_to_bcs(void* dat
 void* uniffi_iota_sdk_ffi_fn_func_publish_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_publish_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_PUBLISH_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_publish_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_FROM_BCS
@@ -8126,9 +8893,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_publish_to_bcs(void* data, RustCallStatus
 RustBuffer uniffi_iota_sdk_ffi_fn_func_randomness_state_update_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_randomness_state_update_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_RANDOMNESS_STATE_UPDATE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_FROM_BCS
@@ -8136,9 +8913,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_bcs(RustBuffer
 void* uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_PUBLIC_KEY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_FROM_BCS
@@ -8146,9 +8933,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256k1_public_key_to_bcs(void* data, R
 void* uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256K1_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_FROM_BCS
@@ -8156,9 +8953,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256k1_signature_to_bcs(void* data, Ru
 void* uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_PUBLIC_KEY_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_FROM_BCS
@@ -8166,9 +8973,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256r1_public_key_to_bcs(void* data, R
 void* uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SECP256R1_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_FROM_BCS
@@ -8176,9 +8993,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_secp256r1_signature_to_bcs(void* data, Ru
 RustBuffer uniffi_iota_sdk_ffi_fn_func_signed_transaction_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_signed_transaction_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIGNED_TRANSACTION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_FROM_BCS
@@ -8186,9 +9013,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_signed_transaction_to_bcs(RustBuffer data
 void* uniffi_iota_sdk_ffi_fn_func_simple_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_simple_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_simple_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SIMPLE_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_simple_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_FROM_BCS
@@ -8196,9 +9033,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_simple_signature_to_bcs(void* data, RustC
 void* uniffi_iota_sdk_ffi_fn_func_split_coins_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_split_coins_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SPLIT_COINS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_split_coins_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_BCS
@@ -8206,9 +9053,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_split_coins_to_bcs(void* data, RustCallSt
 RustBuffer uniffi_iota_sdk_ffi_fn_func_string_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_string_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_string_to_bcs(RustBuffer input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRING_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_string_to_json(RustBuffer input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_FROM_BCS
@@ -8216,9 +9073,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_string_to_bcs(RustBuffer input, RustCallS
 void* uniffi_iota_sdk_ffi_fn_func_struct_tag_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_struct_tag_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_STRUCT_TAG_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_struct_tag_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_FROM_BCS
@@ -8226,9 +9093,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_struct_tag_to_bcs(void* data, RustCallSta
 void* uniffi_iota_sdk_ffi_fn_func_system_package_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_system_package_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_system_package_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_SYSTEM_PACKAGE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_system_package_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_FROM_BCS
@@ -8236,9 +9113,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_system_package_to_bcs(void* data, RustCal
 void* uniffi_iota_sdk_ffi_fn_func_transaction_effects_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_transaction_effects_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_FROM_BCS
@@ -8246,9 +9133,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_to_bcs(void* data, Ru
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EFFECTS_V1_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_FROM_BCS
@@ -8256,9 +9153,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_effects_v1_to_bcs(RustBuffer 
 void* uniffi_iota_sdk_ffi_fn_func_transaction_events_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_transaction_events_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_events_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EVENTS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_events_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_FROM_BCS
@@ -8266,9 +9173,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_events_to_bcs(void* data, Rus
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_expiration_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_expiration_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_EXPIRATION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_FROM_BCS
@@ -8276,9 +9193,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_expiration_to_bcs(RustBuffer 
 void* uniffi_iota_sdk_ffi_fn_func_transaction_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_transaction_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_FROM_BCS
 void* uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_TO_BCS
@@ -8286,9 +9213,19 @@ void* uniffi_iota_sdk_ffi_fn_func_transaction_kind_from_bcs(RustBuffer bcs, Rust
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_kind_to_bcs(void* data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_KIND_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_kind_to_json(void* data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_FROM_BCS
@@ -8296,9 +9233,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_to_bcs(void* data, RustCallSt
 void* uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_transaction_v1_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSACTION_V1_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_FROM_BCS
@@ -8306,9 +9253,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transaction_v1_to_bcs(void* data, RustCal
 void* uniffi_iota_sdk_ffi_fn_func_transfer_objects_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_transfer_objects_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TRANSFER_OBJECTS_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_FROM_BCS
@@ -8316,9 +9273,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_transfer_objects_to_bcs(void* data, RustC
 RustBuffer uniffi_iota_sdk_ffi_fn_func_type_argument_error_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_type_argument_error_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ARGUMENT_ERROR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_FROM_BCS
@@ -8326,9 +9293,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_type_argument_error_to_bcs(RustBuffer dat
 RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_ORIGIN_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_FROM_BCS
@@ -8336,9 +9313,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(RustBuffer data, RustC
 void* uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_type_tag_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_TYPE_TAG_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_type_tag_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_BCS
@@ -8346,9 +9333,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_type_tag_to_bcs(void* data, RustCallStatu
 uint16_t uniffi_iota_sdk_ffi_fn_func_u16_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_fn_func_u16_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(uint16_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U16_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u16_to_json(uint16_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_BCS
@@ -8356,9 +9353,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_u16_to_bcs(uint16_t input, RustCallStatus
 uint32_t uniffi_iota_sdk_ffi_fn_func_u32_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_FROM_JSON
+uint32_t uniffi_iota_sdk_ffi_fn_func_u32_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(uint32_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U32_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u32_to_json(uint32_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_BCS
@@ -8366,9 +9373,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_u32_to_bcs(uint32_t input, RustCallStatus
 uint64_t uniffi_iota_sdk_ffi_fn_func_u64_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_FROM_JSON
+uint64_t uniffi_iota_sdk_ffi_fn_func_u64_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(uint64_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U64_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u64_to_json(uint64_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_BCS
@@ -8376,9 +9393,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_u64_to_bcs(uint64_t input, RustCallStatus
 uint8_t uniffi_iota_sdk_ffi_fn_func_u8_from_bcs(RustBuffer input, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_FROM_JSON
+uint8_t uniffi_iota_sdk_ffi_fn_func_u8_from_json(RustBuffer input, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(uint8_t input, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_U8_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_u8_to_json(uint8_t input, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_FROM_BCS
@@ -8386,9 +9413,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_u8_to_bcs(uint8_t input, RustCallStatus *
 RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_KIND_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_FROM_BCS
@@ -8396,9 +9433,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_kind_to_bcs(RustBuffer d
 RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UNCHANGED_SHARED_OBJECT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_FROM_BCS
@@ -8406,9 +9453,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_unchanged_shared_object_to_bcs(RustBuffer
 void* uniffi_iota_sdk_ffi_fn_func_upgrade_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_upgrade_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_TO_BCS
@@ -8416,9 +9473,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(RustBuffer bcs, Rus
 RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_INFO_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_json(RustBuffer data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_UPGRADE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_FROM_BCS
@@ -8426,9 +9493,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_to_bcs(void* data, RustCallStatus
 void* uniffi_iota_sdk_ffi_fn_func_user_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_user_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_user_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_USER_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_user_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_FROM_BCS
@@ -8436,9 +9513,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_user_signature_to_bcs(void* data, RustCal
 void* uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_FROM_BCS
@@ -8446,9 +9533,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_aggregated_signature_to_bcs(voi
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_bcs(RustBuffer bcs, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_json(RustBuffer json, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_TO_BCS
@@ -8456,9 +9553,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_member_from_bcs(RustB
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_member_to_bcs(RustBuffer data, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_MEMBER_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_member_to_json(RustBuffer data, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_COMMITTEE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_FROM_BCS
@@ -8466,9 +9573,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_committee_to_bcs(RustBuffer dat
 void* uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_FROM_BCS
@@ -8476,9 +9593,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_execution_time_observation_to_b
 void* uniffi_iota_sdk_ffi_fn_func_validator_signature_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_validator_signature_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_signature_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VALIDATOR_SIGNATURE_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_signature_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_FROM_BCS
@@ -8486,9 +9613,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_validator_signature_to_bcs(void* data, Ru
 void* uniffi_iota_sdk_ffi_fn_func_version_assignment_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_version_assignment_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_VERSION_ASSIGNMENT_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_version_assignment_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_FROM_BCS
@@ -8496,9 +9633,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_version_assignment_to_bcs(void* data, Rus
 void* uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_FROM_BCS
@@ -8506,9 +9653,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_authenticator_to_bcs(void* data,
 RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_FROM_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(RustBuffer data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_CLAIM_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_json(RustBuffer data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_FROM_BCS
@@ -8516,9 +9673,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_claim_to_bcs(RustBuffer data, Ru
 void* uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_zk_login_proof_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PROOF_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_FROM_BCS
@@ -8526,9 +9693,19 @@ RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_proof_to_bcs(void* data, RustCal
 void* uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_bcs(RustBuffer bcs, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_FROM_JSON
+void* uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_from_json(RustBuffer json, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_bcs(void* data, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_JSON
+RustBuffer uniffi_iota_sdk_ffi_fn_func_zk_login_public_identifier_to_json(void* data, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_FFI_IOTA_SDK_FFI_RUSTBUFFER_ALLOC
@@ -8817,9 +9994,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ACTIVE_JWK_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ACTIVE_JWK_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_active_jwk_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ACTIVE_JWK_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ACTIVE_JWK_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ACTIVE_JWK_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ACTIVE_JWK_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_active_jwk_to_json(void
     
 );
 #endif
@@ -8829,9 +10018,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_address_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ADDRESS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ADDRESS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_address_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ADDRESS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ADDRESS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_address_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ADDRESS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ADDRESS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_address_to_json(void
     
 );
 #endif
@@ -8841,9 +10042,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_argument_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ARGUMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ARGUMENT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_argument_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ARGUMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ARGUMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_argument_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ARGUMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ARGUMENT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_argument_to_json(void
     
 );
 #endif
@@ -8853,9 +10066,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_bcs(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_EXPIRE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_EXPIRE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_EXPIRE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_expire_to_json(void
     
 );
 #endif
@@ -8865,9 +10090,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_bc
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_AUTHENTICATOR_STATE_UPDATE_V1_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_authenticator_state_update_v1_to_json(void
     
 );
 #endif
@@ -8889,9 +10126,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_PUBLIC_KEY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_public_key_to_json(void
     
 );
 #endif
@@ -8901,9 +10150,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BLS12381_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bls12381_signature_to_json(void
     
 );
 #endif
@@ -8913,9 +10174,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BN254_FIELD_ELEMENT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bn254_field_element_to_json(void
     
 );
 #endif
@@ -8925,9 +10198,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_BOOL_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_bool_to_json(void
     
 );
 #endif
@@ -8937,9 +10222,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CANCELLED_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CANCELLED_TRANSACTION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CANCELLED_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CANCELLED_TRANSACTION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CANCELLED_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CANCELLED_TRANSACTION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_cancelled_transaction_to_json(void
     
 );
 #endif
@@ -8949,9 +10246,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_to_json(void
     
 );
 #endif
@@ -8961,9 +10270,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_V2_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_V2_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_V2_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_V2_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_V2_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGE_EPOCH_V2_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_change_epoch_v2_to_json(void
     
 );
 #endif
@@ -8973,9 +10294,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_changed_object_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGED_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGED_OBJECT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_changed_object_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGED_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGED_OBJECT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_changed_object_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGED_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHANGED_OBJECT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_changed_object_to_json(void
     
 );
 #endif
@@ -8985,9 +10318,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_COMMITMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_COMMITMENT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_COMMITMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_COMMITMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_COMMITMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_COMMITMENT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_commitment_to_json(void
     
 );
 #endif
@@ -8997,9 +10342,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_CONTENTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_CONTENTS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_CONTENTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_CONTENTS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_CONTENTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_CONTENTS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_contents_to_json(void
     
 );
 #endif
@@ -9009,9 +10366,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_SUMMARY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_SUMMARY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_SUMMARY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_SUMMARY_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_SUMMARY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_SUMMARY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_summary_to_json(void
     
 );
 #endif
@@ -9021,9 +10390,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_bcs(
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_TRANSACTION_INFO_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_TRANSACTION_INFO_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CHECKPOINT_TRANSACTION_INFO_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_checkpoint_transaction_info_to_json(void
     
 );
 #endif
@@ -9033,9 +10414,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G1_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g1_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G1_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G1_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g1_to_json(void
     
 );
 #endif
@@ -9045,9 +10438,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G2_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G2_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g2_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G2_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G2_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G2_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CIRCOM_G2_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_circom_g2_to_json(void
     
 );
 #endif
@@ -9057,9 +10462,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_ARGUMENT_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_ARGUMENT_ERROR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_command_argument_error_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_ARGUMENT_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_ARGUMENT_ERROR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_ARGUMENT_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_ARGUMENT_ERROR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_command_argument_error_to_json(void
     
 );
 #endif
@@ -9069,9 +10486,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_command_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_command_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_command_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_COMMAND_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_command_to_json(void
     
 );
 #endif
@@ -9081,9 +10510,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_bcs
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_COMMIT_PROLOGUE_V1_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_commit_prologue_v1_to_json(void
     
 );
 #endif
@@ -9093,9 +10534,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignme
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_CONSENSUS_DETERMINED_VERSION_ASSIGNMENTS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_consensus_determined_version_assignments_to_json(void
     
 );
 #endif
@@ -9105,9 +10558,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_digest_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_DIGEST_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_DIGEST_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_digest_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_DIGEST_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_DIGEST_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_digest_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_DIGEST_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_DIGEST_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_digest_to_json(void
     
 );
 #endif
@@ -9117,9 +10582,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_PUBLIC_KEY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_PUBLIC_KEY_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_PUBLIC_KEY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_public_key_to_json(void
     
 );
 #endif
@@ -9129,9 +10606,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ED25519_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_ed25519_signature_to_json(void
     
 );
 #endif
@@ -9141,9 +10630,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_END_OF_EPOCH_DATA_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_END_OF_EPOCH_DATA_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_END_OF_EPOCH_DATA_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_END_OF_EPOCH_DATA_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_END_OF_EPOCH_DATA_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_END_OF_EPOCH_DATA_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_end_of_epoch_data_to_json(void
     
 );
 #endif
@@ -9153,9 +10654,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_event_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EVENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EVENT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_event_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EVENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EVENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_event_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EVENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EVENT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_event_to_json(void
     
 );
 #endif
@@ -9165,9 +10678,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_error_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_ERROR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_error_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_ERROR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_error_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_ERROR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_error_to_json(void
     
 );
 #endif
@@ -9177,9 +10702,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_status_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_STATUS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_STATUS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_status_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_STATUS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_STATUS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_status_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_STATUS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_STATUS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_status_to_json(void
     
 );
 #endif
@@ -9189,9 +10726,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_bcs(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_KEY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_from_json(void
     
 );
 #endif
@@ -9201,9 +10750,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_bcs
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_KEY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_key_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observation_to_json(void
     
 );
 #endif
@@ -9213,9 +10774,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_bcs(
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATIONS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATIONS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_EXECUTION_TIME_OBSERVATIONS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_execution_time_observations_to_json(void
     
 );
 #endif
@@ -9225,9 +10798,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_COST_SUMMARY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_COST_SUMMARY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_COST_SUMMARY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_COST_SUMMARY_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_COST_SUMMARY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_COST_SUMMARY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_cost_summary_to_json(void
     
 );
 #endif
@@ -9237,9 +10822,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GAS_PAYMENT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_json(void
     
 );
 #endif
@@ -9255,9 +10852,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_OBJECT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_OBJECT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_OBJECT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_json(void
     
 );
 #endif
@@ -9267,9 +10876,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_GENESIS_TRANSACTION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_genesis_transaction_to_json(void
     
 );
 #endif
@@ -9291,9 +10912,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_i16_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i16_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_i16_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I16_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i16_to_json(void
     
 );
 #endif
@@ -9303,9 +10936,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_i32_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I32_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I32_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i32_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I32_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I32_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_i32_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I32_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I32_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i32_to_json(void
     
 );
 #endif
@@ -9315,9 +10960,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_i64_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I64_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I64_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i64_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I64_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I64_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_i64_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I64_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I64_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i64_to_json(void
     
 );
 #endif
@@ -9327,9 +10984,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_i8_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I8_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I8_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i8_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I8_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I8_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_i8_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I8_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_I8_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_i8_to_json(void
     
 );
 #endif
@@ -9339,9 +11008,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_id_operation_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_id_operation_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_id_operation_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ID_OPERATION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_id_operation_to_json(void
     
 );
 #endif
@@ -9351,9 +11032,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_identifier_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_IDENTIFIER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_IDENTIFIER_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_identifier_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_IDENTIFIER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_IDENTIFIER_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_identifier_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_IDENTIFIER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_IDENTIFIER_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_identifier_to_json(void
     
 );
 #endif
@@ -9363,9 +11056,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_input_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_input_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_input_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_INPUT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_input_to_json(void
     
 );
 #endif
@@ -9375,9 +11080,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_ID_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_ID_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_ID_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_ID_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_id_from_json(void
     
 );
 #endif
@@ -9387,9 +11104,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_ID_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_ID_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_id_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_JWK_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_jwk_to_json(void
     
 );
 #endif
@@ -9399,9 +11128,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MAKE_MOVE_VECTOR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MAKE_MOVE_VECTOR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_make_move_vector_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MAKE_MOVE_VECTOR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MAKE_MOVE_VECTOR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_make_move_vector_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MAKE_MOVE_VECTOR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MAKE_MOVE_VECTOR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_make_move_vector_to_json(void
     
 );
 #endif
@@ -9411,9 +11152,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_merge_coins_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MERGE_COINS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MERGE_COINS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_merge_coins_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MERGE_COINS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MERGE_COINS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_merge_coins_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MERGE_COINS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MERGE_COINS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_merge_coins_to_json(void
     
 );
 #endif
@@ -9423,9 +11176,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_move_call_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_CALL_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_CALL_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_call_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_CALL_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_CALL_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_move_call_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_CALL_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_CALL_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_call_to_json(void
     
 );
 #endif
@@ -9435,9 +11200,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_move_location_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_LOCATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_LOCATION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_location_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_LOCATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_LOCATION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_move_location_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_LOCATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_LOCATION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_location_to_json(void
     
 );
 #endif
@@ -9447,9 +11224,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_move_package_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_PACKAGE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_PACKAGE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_package_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_PACKAGE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_PACKAGE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_move_package_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_PACKAGE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_PACKAGE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_package_to_json(void
     
 );
 #endif
@@ -9459,9 +11248,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_move_struct_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_STRUCT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_STRUCT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_struct_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_STRUCT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_STRUCT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_move_struct_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_STRUCT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MOVE_STRUCT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_move_struct_to_json(void
     
 );
 #endif
@@ -9471,9 +11272,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bc
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_AGGREGATED_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_AGGREGATED_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_AGGREGATED_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_to_json(void
     
 );
 #endif
@@ -9483,9 +11296,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_committee_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_COMMITTEE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_COMMITTEE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_committee_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_COMMITTEE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_COMMITTEE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_committee_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_COMMITTEE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_COMMITTEE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_committee_to_json(void
     
 );
 #endif
@@ -9495,9 +11320,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_from_json(void
     
 );
 #endif
@@ -9507,9 +11344,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_bcs(voi
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_PUBLIC_KEY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_public_key_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_from_json(void
     
 );
 #endif
@@ -9519,9 +11368,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_signature_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_MULTISIG_MEMBER_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_multisig_member_to_json(void
     
 );
 #endif
@@ -9531,9 +11392,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_object_data_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_DATA_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_DATA_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_data_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_DATA_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_DATA_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_object_data_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_DATA_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_DATA_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_data_to_json(void
     
 );
 #endif
@@ -9543,9 +11416,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_object_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_ID_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_ID_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_object_id_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_ID_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_ID_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_id_from_json(void
     
 );
 #endif
@@ -9555,9 +11440,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_object_id_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_ID_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_ID_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_id_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_IN_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_IN_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_object_in_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_IN_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_IN_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_in_from_json(void
     
 );
 #endif
@@ -9567,9 +11464,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_object_in_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_IN_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_IN_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_in_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_OUT_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_OUT_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_object_out_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_OUT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_OUT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_out_from_json(void
     
 );
 #endif
@@ -9579,9 +11488,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_object_out_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_OUT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_OUT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_out_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_REFERENCE_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_REFERENCE_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_object_reference_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_REFERENCE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_REFERENCE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_reference_from_json(void
     
 );
 #endif
@@ -9591,9 +11512,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_object_reference_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_REFERENCE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_REFERENCE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_reference_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_object_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OBJECT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_object_to_json(void
     
 );
 #endif
@@ -9603,9 +11536,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_owner_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OWNER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OWNER_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_owner_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OWNER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OWNER_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_owner_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OWNER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_OWNER_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_owner_to_json(void
     
 );
 #endif
@@ -9615,9 +11560,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PACKAGE_UPGRADE_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PACKAGE_UPGRADE_ERROR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PACKAGE_UPGRADE_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PACKAGE_UPGRADE_ERROR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PACKAGE_UPGRADE_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PACKAGE_UPGRADE_ERROR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_package_upgrade_error_to_json(void
     
 );
 #endif
@@ -9627,9 +11584,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PASSKEY_AUTHENTICATOR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PASSKEY_AUTHENTICATOR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PASSKEY_AUTHENTICATOR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PASSKEY_AUTHENTICATOR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PASSKEY_AUTHENTICATOR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PASSKEY_AUTHENTICATOR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_passkey_authenticator_to_json(void
     
 );
 #endif
@@ -9639,9 +11608,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_bcs(voi
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PROGRAMMABLE_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PROGRAMMABLE_TRANSACTION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PROGRAMMABLE_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PROGRAMMABLE_TRANSACTION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PROGRAMMABLE_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PROGRAMMABLE_TRANSACTION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_programmable_transaction_to_json(void
     
 );
 #endif
@@ -9651,9 +11632,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_publish_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PUBLISH_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PUBLISH_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_publish_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PUBLISH_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PUBLISH_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_publish_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PUBLISH_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_PUBLISH_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_publish_to_json(void
     
 );
 #endif
@@ -9663,9 +11656,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_RANDOMNESS_STATE_UPDATE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_RANDOMNESS_STATE_UPDATE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_RANDOMNESS_STATE_UPDATE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_RANDOMNESS_STATE_UPDATE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_RANDOMNESS_STATE_UPDATE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_RANDOMNESS_STATE_UPDATE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json(void
     
 );
 #endif
@@ -9675,9 +11680,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_PUBLIC_KEY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_PUBLIC_KEY_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_PUBLIC_KEY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_public_key_to_json(void
     
 );
 #endif
@@ -9687,9 +11704,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256K1_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256k1_signature_to_json(void
     
 );
 #endif
@@ -9699,9 +11728,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_PUBLIC_KEY_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_PUBLIC_KEY_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_PUBLIC_KEY_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_PUBLIC_KEY_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_PUBLIC_KEY_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_PUBLIC_KEY_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_public_key_to_json(void
     
 );
 #endif
@@ -9711,9 +11752,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SECP256R1_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_secp256r1_signature_to_json(void
     
 );
 #endif
@@ -9723,9 +11776,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_signed_transaction_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIGNED_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIGNED_TRANSACTION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_signed_transaction_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIGNED_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIGNED_TRANSACTION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_signed_transaction_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIGNED_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIGNED_TRANSACTION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_signed_transaction_to_json(void
     
 );
 #endif
@@ -9735,9 +11800,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_simple_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIMPLE_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIMPLE_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_simple_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIMPLE_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIMPLE_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_simple_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIMPLE_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SIMPLE_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_simple_signature_to_json(void
     
 );
 #endif
@@ -9747,9 +11824,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_split_coins_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SPLIT_COINS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SPLIT_COINS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_split_coins_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SPLIT_COINS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SPLIT_COINS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_split_coins_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SPLIT_COINS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SPLIT_COINS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_split_coins_to_json(void
     
 );
 #endif
@@ -9759,9 +11848,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_string_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_string_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_string_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRING_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_string_to_json(void
     
 );
 #endif
@@ -9771,9 +11872,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_struct_tag_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_struct_tag_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_STRUCT_TAG_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_struct_tag_to_json(void
     
 );
 #endif
@@ -9783,9 +11896,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_system_package_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SYSTEM_PACKAGE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SYSTEM_PACKAGE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_system_package_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SYSTEM_PACKAGE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SYSTEM_PACKAGE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_system_package_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SYSTEM_PACKAGE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_SYSTEM_PACKAGE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_system_package_to_json(void
     
 );
 #endif
@@ -9795,9 +11920,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_to_json(void
     
 );
 #endif
@@ -9807,9 +11944,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_V1_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_V1_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EFFECTS_V1_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_effects_v1_to_json(void
     
 );
 #endif
@@ -9819,9 +11968,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_events_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EVENTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EVENTS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_events_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EVENTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EVENTS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_events_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EVENTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EVENTS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_events_to_json(void
     
 );
 #endif
@@ -9831,9 +11992,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EXPIRATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EXPIRATION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EXPIRATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EXPIRATION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EXPIRATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_EXPIRATION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_expiration_to_json(void
     
 );
 #endif
@@ -9843,9 +12016,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_KIND_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_KIND_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_kind_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_KIND_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_KIND_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_kind_from_json(void
     
 );
 #endif
@@ -9855,9 +12040,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_kind_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_KIND_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_KIND_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_kind_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_to_json(void
     
 );
 #endif
@@ -9867,9 +12064,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_v1_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_V1_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_V1_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_v1_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_V1_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_V1_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_v1_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_V1_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSACTION_V1_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transaction_v1_to_json(void
     
 );
 #endif
@@ -9879,9 +12088,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_transfer_objects_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSFER_OBJECTS_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSFER_OBJECTS_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transfer_objects_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSFER_OBJECTS_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSFER_OBJECTS_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_transfer_objects_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSFER_OBJECTS_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TRANSFER_OBJECTS_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_transfer_objects_to_json(void
     
 );
 #endif
@@ -9891,9 +12112,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_type_argument_error_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ARGUMENT_ERROR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ARGUMENT_ERROR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_type_argument_error_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ARGUMENT_ERROR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ARGUMENT_ERROR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_type_argument_error_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ARGUMENT_ERROR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ARGUMENT_ERROR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_type_argument_error_to_json(void
     
 );
 #endif
@@ -9903,9 +12136,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_type_origin_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ORIGIN_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ORIGIN_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_type_origin_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ORIGIN_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ORIGIN_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ORIGIN_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_ORIGIN_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_type_origin_to_json(void
     
 );
 #endif
@@ -9915,9 +12160,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_type_tag_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_type_tag_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_TYPE_TAG_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_type_tag_to_json(void
     
 );
 #endif
@@ -9927,9 +12184,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U16_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u16_to_json(void
     
 );
 #endif
@@ -9939,9 +12208,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U32_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u32_to_json(void
     
 );
 #endif
@@ -9951,9 +12232,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U64_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u64_to_json(void
     
 );
 #endif
@@ -9963,9 +12256,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_U8_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_u8_to_json(void
     
 );
 #endif
@@ -9975,9 +12280,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_KIND_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_KIND_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_KIND_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_KIND_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_KIND_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_KIND_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_kind_to_json(void
     
 );
 #endif
@@ -9987,9 +12304,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_OBJECT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_OBJECT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_OBJECT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_OBJECT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_OBJECT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UNCHANGED_SHARED_OBJECT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_unchanged_shared_object_to_json(void
     
 );
 #endif
@@ -9999,9 +12328,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_INFO_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_INFO_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_INFO_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_INFO_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_json(void
     
 );
 #endif
@@ -10011,9 +12352,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_INFO_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_INFO_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_UPGRADE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_upgrade_to_json(void
     
 );
 #endif
@@ -10023,9 +12376,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_user_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_USER_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_USER_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_user_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_USER_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_USER_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_user_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_USER_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_USER_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_user_signature_to_json(void
     
 );
 #endif
@@ -10035,9 +12400,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_b
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_AGGREGATED_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_aggregated_signature_to_json(void
     
 );
 #endif
@@ -10047,9 +12424,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_MEMBER_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_from_json(void
     
 );
 #endif
@@ -10059,9 +12448,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_bcs(voi
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_MEMBER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_MEMBER_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_member_to_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_COMMITTEE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_committee_to_json(void
     
 );
 #endif
@@ -10071,9 +12472,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_EXECUTION_TIME_OBSERVATION_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_execution_time_observation_to_json(void
     
 );
 #endif
@@ -10083,9 +12496,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_SIGNATURE_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_SIGNATURE_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_signature_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_SIGNATURE_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_SIGNATURE_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_signature_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_SIGNATURE_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VALIDATOR_SIGNATURE_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_validator_signature_to_json(void
     
 );
 #endif
@@ -10095,9 +12520,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_version_assignment_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VERSION_ASSIGNMENT_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VERSION_ASSIGNMENT_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_version_assignment_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VERSION_ASSIGNMENT_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VERSION_ASSIGNMENT_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VERSION_ASSIGNMENT_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_VERSION_ASSIGNMENT_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_version_assignment_to_json(void
     
 );
 #endif
@@ -10107,9 +12544,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_AUTHENTICATOR_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_AUTHENTICATOR_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_AUTHENTICATOR_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_authenticator_to_json(void
     
 );
 #endif
@@ -10119,9 +12568,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_CLAIM_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_CLAIM_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_CLAIM_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_CLAIM_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_CLAIM_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_CLAIM_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_claim_to_json(void
     
 );
 #endif
@@ -10131,9 +12592,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_bcs(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PROOF_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PROOF_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PROOF_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PROOF_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PROOF_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PROOF_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_proof_to_json(void
     
 );
 #endif
@@ -10143,9 +12616,21 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_bcs(v
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_FROM_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_FROM_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_from_json(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_BCS
 uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_JSON
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_FUNC_ZK_LOGIN_PUBLIC_IDENTIFIER_TO_JSON
+uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json(void
     
 );
 #endif
@@ -11358,6 +13843,30 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_IDENTIFIER_AS_STR
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_IDENTIFIER_AS_STR
 uint16_t uniffi_iota_sdk_ffi_checksum_method_identifier_as_str(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_APP_ID
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_APP_ID
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_app_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_SCOPE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_SCOPE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_scope(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_TO_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_to_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_VERSION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_INTENT_VERSION
+uint16_t uniffi_iota_sdk_ffi_checksum_method_intent_version(void
     
 );
 #endif
@@ -14064,6 +16573,48 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INPUT_NEW_SHARED
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_BYTES
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_HEX
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_FROM_HEX
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_from_hex(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_CONSENSUS_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_CONSENSUS_APP
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_new_consensus_app(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_IOTA_APP
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_IOTA_APP
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_app(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_IOTA_TRANSACTION
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_IOTA_TRANSACTION
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_new_iota_transaction(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_PERSONAL_MESSAGE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_INTENT_NEW_PERSONAL_MESSAGE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_intent_new_personal_message(void
     
 );
 #endif

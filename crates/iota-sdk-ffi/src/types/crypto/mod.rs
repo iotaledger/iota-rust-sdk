@@ -1,6 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod intent;
 pub mod move_authenticator;
 pub mod multisig;
 pub mod passkey;
@@ -223,6 +224,16 @@ impl_crypto_object!(
 );
 
 crate::export_iota_types_objects_bcs_conversion!(
+    Ed25519PublicKey,
+    Bls12381PublicKey,
+    Secp256k1PublicKey,
+    Secp256r1PublicKey,
+    Ed25519Signature,
+    Bls12381Signature,
+    Secp256k1Signature,
+    Secp256r1Signature,
+);
+crate::export_iota_types_objects_json_conversion!(
     Ed25519PublicKey,
     Bls12381PublicKey,
     Secp256k1PublicKey,

@@ -12,8 +12,8 @@ pub const INTENT_PREFIX_LENGTH: usize = 3;
 pub enum IntentError {
     #[error("invalid bytes for Intent")]
     Bytes,
-    #[error("invalid hex String for Intent")]
-    String,
+    #[error("invalid hex string for Intent")]
+    Hex,
     #[error("invalid Scope for Intent")]
     Scope,
     #[error("invalid Version for Intent")]
@@ -125,7 +125,7 @@ impl FromStr for Intent {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let bytes: Vec<u8> =
-            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| IntentError::String)?;
+            hex::decode(s.strip_prefix("0x").unwrap_or(s)).map_err(|_| IntentError::Hex)?;
         Self::from_bytes(bytes.as_slice())
     }
 }

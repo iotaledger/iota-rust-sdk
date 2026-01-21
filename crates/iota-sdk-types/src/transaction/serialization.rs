@@ -941,7 +941,7 @@ mod transaction_expiration {
     #[serde(rename = "TransactionExpiration")]
     #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
-        /// Validators wont sign a transaction unless the expiration Epoch
+        /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
         Epoch(
             #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))] EpochId,
@@ -952,7 +952,7 @@ mod transaction_expiration {
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,
-        /// Validators wont sign a transaction unless the expiration Epoch
+        /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
         Epoch(EpochId),
     }
@@ -1041,7 +1041,7 @@ mod transaction_expiration {
                 })),
                 ..Default::default()
             };
-            object.metadata().description = Some("Validators wont sign a transaction unless the expiration Epoch is greater than or equal to the current epoch".to_owned());
+            object.metadata().description = Some("Validators won't sign a transaction unless the expiration Epoch is greater than or equal to the current epoch".to_owned());
             let schema = Schema::Object(object);
             Schema::Object(SchemaObject {
                 subschemas: Some(Box::new(SubschemaValidation {

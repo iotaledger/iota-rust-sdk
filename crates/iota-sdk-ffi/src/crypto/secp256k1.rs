@@ -9,7 +9,7 @@ use iota_sdk::{
 use crate::{
     error::{Result, SdkFfiError},
     types::{
-        crypto::{Secp256k1PublicKey, Secp256k1Signature},
+        crypto::{Secp256k1PublicKey, Secp256k1Signature, intent::PersonalMessage},
         signature::{SimpleSignature, UserSignature},
     },
 };
@@ -146,10 +146,7 @@ impl Secp256k1PrivateKey {
     }
 
     /// Sign a personal message and return a UserSignature.
-    pub fn sign_personal_message(
-        &self,
-        message: &crate::types::PersonalMessage,
-    ) -> Result<UserSignature> {
+    pub fn sign_personal_message(&self, message: &PersonalMessage) -> Result<UserSignature> {
         Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 }

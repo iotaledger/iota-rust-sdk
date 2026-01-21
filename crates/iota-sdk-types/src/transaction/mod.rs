@@ -148,7 +148,7 @@ pub enum TransactionExpiration {
     /// The transaction has no expiration
     #[default]
     None,
-    /// Validators wont sign a transaction unless the expiration Epoch
+    /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
     Epoch(EpochId),
 }

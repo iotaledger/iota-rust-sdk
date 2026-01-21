@@ -110,6 +110,11 @@ impl GasCostSummary {
 impl std::fmt::Display for GasCostSummary {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "computation_cost: {}, ", self.computation_cost)?;
+        write!(
+            f,
+            "computation_cost_burned: {}, ",
+            self.computation_cost_burned
+        )?;
         write!(f, "storage_cost: {}, ", self.storage_cost)?;
         write!(f, "storage_rebate: {}, ", self.storage_rebate)?;
         write!(

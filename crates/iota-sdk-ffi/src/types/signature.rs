@@ -356,3 +356,4 @@ impl SimpleSignature {
 }
 
 crate::export_iota_types_objects_bcs_conversion!(UserSignature, SimpleSignature);
+crate::export_iota_types_objects_json_conversion!(UserSignature, SimpleSignature);

@@ -13,7 +13,7 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 ///
 /// This enumeration defines the set of simple or basic signature schemes
 /// supported by IOTA. Most signature schemes supported by IOTA end up
-/// comprising of a at least one simple signature scheme.
+/// comprising of at least one simple signature scheme.
 ///
 /// # BCS
 ///
