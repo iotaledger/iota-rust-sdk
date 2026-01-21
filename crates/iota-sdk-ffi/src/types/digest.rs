@@ -65,3 +65,4 @@ impl Digest {
 }
 
 crate::export_iota_types_objects_bcs_conversion!(Digest);
+crate::export_iota_types_objects_json_conversion!(Digest);
