@@ -180,14 +180,12 @@ pub struct RandomnessStateUpdate {
 ///
 /// ```text
 /// transaction-kind    =  %x00 ptb
-///                     =/ %x01 change-epoch
-///                     =/ %x02 genesis-transaction
-///                     =/ %x03 consensus-commit-prologue
-///                     =/ %x04 authenticator-state-update
-///                     =/ %x05 (vector end-of-epoch-transaction-kind)
-///                     =/ %x06 randomness-state-update
-///                     =/ %x07 consensus-commit-prologue-v2
-///                     =/ %x08 consensus-commit-prologue-v3
+///                     =/ %x01 genesis-transaction
+///                     =/ %x02 consensus-commit-prologue-v1
+///                     =/ %x03 authenticator-state-update-v1
+///                     =/ %x04 (vector end-of-epoch-transaction-kind)
+///                     =/ %x05 randomness-state-update
+///                     =/ %x06 consensus-commit-prologue-v2
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
