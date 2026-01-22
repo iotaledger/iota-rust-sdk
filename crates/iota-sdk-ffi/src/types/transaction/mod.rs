@@ -260,6 +260,13 @@ impl TransactionKind {
             tx.clone(),
         ))
     }
+
+    #[uniffi::constructor]
+    pub fn new_consensus_commit_prologue_v2(tx: &ConsensusCommitPrologueV2) -> Self {
+        Self(iota_sdk::types::TransactionKind::ConsensusCommitPrologueV2(
+            tx.0.clone(),
+        ))
+    }
 }
 
 /// A user transaction
@@ -785,6 +792,88 @@ impl ConsensusCommitPrologueV1 {
             .consensus_determined_version_assignments
             .clone()
             .into()
+    }
+}
+
+/// V2 Consensus Commit Prologue with additional state digest
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+///                                consensus-determined-version-assignments
+///                                digest
+/// ```
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct ConsensusCommitPrologueV2(pub iota_sdk::types::ConsensusCommitPrologueV2);
+
+#[uniffi::export]
+impl ConsensusCommitPrologueV2 {
+    #[uniffi::constructor]
+    pub fn new(
+        epoch: u64,
+        round: u64,
+        sub_dag_index: Option<u64>,
+        commit_timestamp_ms: CheckpointTimestamp,
+        consensus_commit_digest: &Digest,
+        consensus_determined_version_assignments: &ConsensusDeterminedVersionAssignments,
+        additional_state_digest: &Digest,
+    ) -> Self {
+        Self(iota_sdk::types::ConsensusCommitPrologueV2 {
+            epoch,
+            round,
+            sub_dag_index,
+            commit_timestamp_ms,
+            consensus_commit_digest: consensus_commit_digest.0,
+            consensus_determined_version_assignments: consensus_determined_version_assignments
+                .0
+                .clone(),
+            additional_state_digest: additional_state_digest.0,
+        })
+    }
+
+    /// Epoch of the commit prologue transaction
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
+    /// Consensus round of the commit
+    pub fn round(&self) -> u64 {
+        self.0.round
+    }
+
+    /// The sub DAG index of the consensus commit. This field will be populated
+    /// if there are multiple consensus commits per round.
+    pub fn sub_dag_index(&self) -> Option<u64> {
+        self.0.sub_dag_index
+    }
+
+    /// Unix timestamp from consensus
+    pub fn commit_timestamp_ms(&self) -> CheckpointTimestamp {
+        self.0.commit_timestamp_ms
+    }
+
+    /// Digest of consensus output
+    pub fn consensus_commit_digest(&self) -> Digest {
+        self.0.consensus_commit_digest.into()
+    }
+
+    /// Stores consensus handler determined shared object version assignments.
+    pub fn consensus_determined_version_assignments(
+        &self,
+    ) -> ConsensusDeterminedVersionAssignments {
+        self.0
+            .consensus_determined_version_assignments
+            .clone()
+            .into()
+    }
+
+    /// Digest of any additional state computed by the consensus handler
+    pub fn additional_state_digest(&self) -> Digest {
+        self.0.additional_state_digest.into()
     }
 }
 

@@ -3925,6 +3925,29 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5036,6 +5059,20 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_state_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
@@ -6032,6 +6069,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_command_new_upgrade(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58(
@@ -6527,6 +6566,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new(
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch(
 ): Short
@@ -7145,6 +7186,32 @@ fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_debug(`
 fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev2(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev2_new(`epoch`: Long,`round`: Long,`subDagIndex`: RustBuffer.ByValue,`commitTimestampMs`: Long,`consensusCommitDigest`: Pointer,`consensusDeterminedVersionAssignments`: Pointer,`additionalStateDigest`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_additional_state_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_commit_timestamp_ms(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_commit_digest(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_determined_version_assignments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_epoch(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_round(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_sub_dag_index(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9017,6 +9084,8 @@ fun uniffi_iota_sdk_ffi_fn_free_transactionkind(`ptr`: Pointer,uniffi_out_err: U
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v2(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -12144,6 +12213,27 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() != 56426.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_state_digest() != 58918.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms() != 6757.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest() != 35351.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments() != 53091.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch() != 60890.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round() != 24733.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index() != 19178.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13638,6 +13728,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new() != 50376.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new() != 56368.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions() != 929.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14380,6 +14473,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2() != 40966.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 44556.toShort()) {
@@ -23456,6 +23552,417 @@ public object FfiConverterTypeConsensusCommitPrologueV1: FfiConverter<ConsensusC
     override fun allocationSize(value: ConsensusCommitPrologueV1) = 8UL
 
     override fun write(value: ConsensusCommitPrologueV1, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * V2 Consensus Commit Prologue with additional state digest
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+ * consensus-determined-version-assignments
+ * digest
+ * ```
+ */
+public interface ConsensusCommitPrologueV2Interface {
+    
+    /**
+     * Digest of any additional state computed by the consensus handler
+     */
+    fun `additionalStateDigest`(): Digest
+    
+    /**
+     * Unix timestamp from consensus
+     */
+    fun `commitTimestampMs`(): kotlin.ULong
+    
+    /**
+     * Digest of consensus output
+     */
+    fun `consensusCommitDigest`(): Digest
+    
+    /**
+     * Stores consensus handler determined shared object version assignments.
+     */
+    fun `consensusDeterminedVersionAssignments`(): ConsensusDeterminedVersionAssignments
+    
+    /**
+     * Epoch of the commit prologue transaction
+     */
+    fun `epoch`(): kotlin.ULong
+    
+    /**
+     * Consensus round of the commit
+     */
+    fun `round`(): kotlin.ULong
+    
+    /**
+     * The sub DAG index of the consensus commit. This field will be populated
+     * if there are multiple consensus commits per round.
+     */
+    fun `subDagIndex`(): kotlin.ULong?
+    
+    companion object
+}
+
+/**
+ * V2 Consensus Commit Prologue with additional state digest
+ *
+ * # BCS
+ *
+ * The BCS serialized form for this type is defined by the following ABNF:
+ *
+ * ```text
+ * consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+ * consensus-determined-version-assignments
+ * digest
+ * ```
+ */
+open class ConsensusCommitPrologueV2: Disposable, AutoCloseable, ConsensusCommitPrologueV2Interface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+    constructor(`epoch`: kotlin.ULong, `round`: kotlin.ULong, `subDagIndex`: kotlin.ULong?, `commitTimestampMs`: kotlin.ULong, `consensusCommitDigest`: Digest, `consensusDeterminedVersionAssignments`: ConsensusDeterminedVersionAssignments, `additionalStateDigest`: Digest) :
+        this(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev2_new(
+        FfiConverterULong.lower(`epoch`),FfiConverterULong.lower(`round`),FfiConverterOptionalULong.lower(`subDagIndex`),FfiConverterULong.lower(`commitTimestampMs`),FfiConverterTypeDigest.lower(`consensusCommitDigest`),FfiConverterTypeConsensusDeterminedVersionAssignments.lower(`consensusDeterminedVersionAssignments`),FfiConverterTypeDigest.lower(`additionalStateDigest`),_status)
+}
+    )
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev2(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev2(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Digest of any additional state computed by the consensus handler
+     */override fun `additionalStateDigest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_additional_state_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Unix timestamp from consensus
+     */override fun `commitTimestampMs`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_commit_timestamp_ms(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Digest of consensus output
+     */override fun `consensusCommitDigest`(): Digest {
+            return FfiConverterTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_commit_digest(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Stores consensus handler determined shared object version assignments.
+     */override fun `consensusDeterminedVersionAssignments`(): ConsensusDeterminedVersionAssignments {
+            return FfiConverterTypeConsensusDeterminedVersionAssignments.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_determined_version_assignments(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Epoch of the commit prologue transaction
+     */override fun `epoch`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_epoch(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Consensus round of the commit
+     */override fun `round`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_round(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * The sub DAG index of the consensus commit. This field will be populated
+     * if there are multiple consensus commits per round.
+     */override fun `subDagIndex`(): kotlin.ULong? {
+            return FfiConverterOptionalULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_sub_dag_index(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ConsensusCommitPrologueV2) return false
+        return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_eq(
+        it, FfiConverterTypeConsensusCommitPrologueV2.lower(`other`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    
+    companion object
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeConsensusCommitPrologueV2: FfiConverter<ConsensusCommitPrologueV2, Pointer> {
+
+    override fun lower(value: ConsensusCommitPrologueV2): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): ConsensusCommitPrologueV2 {
+        return ConsensusCommitPrologueV2(value)
+    }
+
+    override fun read(buf: ByteBuffer): ConsensusCommitPrologueV2 {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: ConsensusCommitPrologueV2) = 8UL
+
+    override fun write(value: ConsensusCommitPrologueV2, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -51169,14 +51676,12 @@ public object FfiConverterTypeTransactionEvents: FfiConverter<TransactionEvents,
  *
  * ```text
  * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * =/ %x01 genesis-transaction
+ * =/ %x02 consensus-commit-prologue-v1
+ * =/ %x03 authenticator-state-update-v1
+ * =/ %x04 (vector end-of-epoch-transaction-kind)
+ * =/ %x05 randomness-state-update
+ * =/ %x06 consensus-commit-prologue-v2
  * ```
  */
 public interface TransactionKindInterface {
@@ -51193,14 +51698,12 @@ public interface TransactionKindInterface {
  *
  * ```text
  * transaction-kind    =  %x00 ptb
- * =/ %x01 change-epoch
- * =/ %x02 genesis-transaction
- * =/ %x03 consensus-commit-prologue
- * =/ %x04 authenticator-state-update
- * =/ %x05 (vector end-of-epoch-transaction-kind)
- * =/ %x06 randomness-state-update
- * =/ %x07 consensus-commit-prologue-v2
- * =/ %x08 consensus-commit-prologue-v3
+ * =/ %x01 genesis-transaction
+ * =/ %x02 consensus-commit-prologue-v1
+ * =/ %x03 authenticator-state-update-v1
+ * =/ %x04 (vector end-of-epoch-transaction-kind)
+ * =/ %x05 randomness-state-update
+ * =/ %x06 consensus-commit-prologue-v2
  * ```
  */
 open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
@@ -51318,6 +51821,16 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
         FfiConverterTypeConsensusCommitPrologueV1.lower(`tx`),_status)
+}
+    )
+    }
+    
+
+         fun `newConsensusCommitPrologueV2`(`tx`: ConsensusCommitPrologueV2): TransactionKind {
+            return FfiConverterTypeTransactionKind.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v2(
+        FfiConverterTypeConsensusCommitPrologueV2.lower(`tx`),_status)
 }
     )
     }
