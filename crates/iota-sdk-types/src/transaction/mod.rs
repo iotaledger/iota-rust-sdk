@@ -217,9 +217,9 @@ impl TransactionKind {
     crate::def_is_as_into_opt! {
         ProgrammableTransaction,
         ConsensusCommitPrologueV1,
-        ConsensusCommitPrologueV2,
         AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
+        ConsensusCommitPrologueV2,
     }
 
     crate::def_is_as_into_opt! {

@@ -22,12 +22,12 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
         EndOfEpoch {
             commands: &'a Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
+        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
     }
 
     #[derive(serde::Deserialize)]
@@ -38,12 +38,12 @@ mod transaction_kind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
         EndOfEpoch {
             commands: Vec<EndOfEpochTransactionKind>,
         },
         RandomnessStateUpdate(RandomnessStateUpdate),
+        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
     }
 
     #[cfg(feature = "schemars")]
@@ -64,20 +64,20 @@ mod transaction_kind {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
         ConsensusCommitPrologueV1(&'a ConsensusCommitPrologueV1),
-        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(&'a AuthenticatorStateUpdateV1),
         EndOfEpoch(&'a Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
+        ConsensusCommitPrologueV2(&'a ConsensusCommitPrologueV2),
     }
     #[derive(serde::Deserialize)]
     enum BinaryTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
-        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
         AuthenticatorStateUpdateV1(AuthenticatorStateUpdateV1),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
         RandomnessStateUpdate(RandomnessStateUpdate),
+        ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
     }
 
     impl Serialize for TransactionKind {
