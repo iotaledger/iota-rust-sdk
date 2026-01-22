@@ -622,7 +622,6 @@ pub struct ConsensusCommitPrologueV2 {
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
     /// Digest of any additional state computed by the consensus handler.
-    /// Used to detect forking bugs as early as possible.
     pub additional_state_digest: Digest,
 }
 
