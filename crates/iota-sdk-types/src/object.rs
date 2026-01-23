@@ -26,6 +26,8 @@ pub struct ObjectReference {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -103,6 +105,8 @@ pub enum Owner {
     /// Object is shared, can be used by any address, and is mutable.
     Shared(
         /// The version at which the object became shared
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
         Version,
     ),
     /// Object is immutable, and hence ownership doesn't matter.
@@ -185,6 +189,7 @@ pub struct MovePackage {
     ///
     /// In all cases, packages are referred to by move calls using just their
     /// ID, and they are always loaded at their latest version.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
     /// Set of modules defined by this package
     #[cfg_attr(
@@ -248,6 +253,8 @@ pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub upgraded_version: Version,
 }
 
@@ -283,6 +290,7 @@ pub struct MoveStruct {
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(
@@ -659,6 +667,8 @@ mod serialization {
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableObject {
         object_id: ObjectId,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
         version: Version,
         owner: Owner,
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
@@ -860,6 +870,8 @@ mod serialization {
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct ReadableGenesisObject {
         object_id: ObjectId,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
+        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
         version: Version,
         owner: Owner,
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]

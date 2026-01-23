@@ -167,6 +167,8 @@ pub struct RandomnessStateUpdate {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub randomness_obj_initial_shared_version: Version,
 }
 
@@ -407,6 +409,8 @@ pub struct AuthenticatorStateExpire {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub min_epoch: u64,
     /// The initial version of the authenticator object that it was shared at.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub authenticator_obj_initial_shared_version: Version,
 }
 
@@ -438,6 +442,8 @@ pub struct AuthenticatorStateUpdateV1 {
     /// newly active jwks
     pub new_active_jwks: Vec<ActiveJwk>,
     /// The initial version of the authenticator object that it was shared at.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub authenticator_obj_initial_shared_version: Version,
 }
 
@@ -526,6 +532,8 @@ pub struct CancelledTransaction {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub version: Version,
 }
 
@@ -803,6 +811,8 @@ pub struct ChangeEpochV4 {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SystemPackage {
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
     pub version: Version,
     #[cfg_attr(
         feature = "serde",
@@ -898,6 +908,8 @@ pub enum Input {
     /// A move object whose owner is "Shared"
     Shared {
         object_id: ObjectId,
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
         initial_shared_version: Version,
         /// Controls whether the caller asks for a mutable reference to the
         /// shared object.

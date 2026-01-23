@@ -414,6 +414,7 @@ mod serialization {
         gas_object_index: Option<u32>,
         events_digest: Option<Digest>,
         dependencies: Vec<Digest>,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
         lamport_version: Version,
         changed_objects: Vec<ChangedObject>,
         unchanged_shared_objects: Vec<UnchangedSharedObject>,
@@ -568,10 +569,23 @@ mod serialization {
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableUnchangedSharedKind {
-        ReadOnlyRoot { version: Version, digest: Digest },
-        MutateDeleted { version: Version },
-        ReadDeleted { version: Version },
-        Cancelled { version: Version },
+        ReadOnlyRoot {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: Digest,
+        },
+        MutateDeleted {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+        },
+        ReadDeleted {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+        },
+        Cancelled {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+        },
         PerEpochConfig,
     }
 
@@ -677,6 +691,7 @@ mod serialization {
     enum ReadableObjectIn {
         Missing,
         Data {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
             version: Version,
             digest: Digest,
             owner: Owner,
@@ -769,15 +784,29 @@ mod serialization {
     #[serde(tag = "state", rename_all = "snake_case")]
     enum ReadableObjectOut {
         Missing,
-        ObjectWrite { digest: Digest, owner: Owner },
-        PackageWrite { version: Version, digest: Digest },
+        ObjectWrite {
+            digest: Digest,
+            owner: Owner,
+        },
+        PackageWrite {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: Digest,
+        },
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryObjectOut {
         Missing,
-        ObjectWrite { digest: Digest, owner: Owner },
-        PackageWrite { version: Version, digest: Digest },
+        ObjectWrite {
+            digest: Digest,
+            owner: Owner,
+        },
+        PackageWrite {
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            version: Version,
+            digest: Digest,
+        },
     }
 
     impl Serialize for ObjectOut {
