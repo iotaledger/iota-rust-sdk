@@ -27,7 +27,7 @@ pub struct ObjectReference {
     pub object_id: ObjectId,
     /// The version of this object.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -106,7 +106,7 @@ pub enum Owner {
     Shared(
         /// The version at which the object became shared
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         Version,
     ),
     /// Object is immutable, and hence ownership doesn't matter.
@@ -254,7 +254,7 @@ pub struct UpgradeInfo {
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub upgraded_version: Version,
 }
 
@@ -668,7 +668,7 @@ mod serialization {
     struct ReadableObject {
         object_id: ObjectId,
         #[serde(with = "crate::_serde::ReadableDisplay")]
-        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         owner: Owner,
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]
@@ -871,7 +871,7 @@ mod serialization {
     struct ReadableGenesisObject {
         object_id: ObjectId,
         #[serde(with = "crate::_serde::ReadableDisplay")]
-        #[cfg_attr(feature = "schemars", schemars(with = "Version"))]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         owner: Owner,
         #[serde(with = "::serde_with::As::<ReadableObjectType>")]

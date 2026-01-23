@@ -49,7 +49,7 @@ pub enum VersionError {
     serde(transparent)
 )]
 #[repr(transparent)]
-pub struct Version(#[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))] u64);
+pub struct Version(u64);
 
 impl Version {
     /// An inclusive lower limit on a valid version.
