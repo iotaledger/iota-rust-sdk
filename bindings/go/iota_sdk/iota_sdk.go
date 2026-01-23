@@ -5076,7 +5076,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version()
 	})
-	if checksum != 36305 {
+	if checksum != 26576 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_genesisobject_version: UniFFI API checksum mismatch")
 	}
@@ -5328,7 +5328,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents()
 	})
-	if checksum != 40412 {
+	if checksum != 42627 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents: UniFFI API checksum mismatch")
 	}
@@ -5337,7 +5337,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs()
 	})
-	if checksum != 49694 {
+	if checksum != 16500 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs: UniFFI API checksum mismatch")
 	}
@@ -5364,7 +5364,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
 	})
-	if checksum != 16965 {
+	if checksum != 13444 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function: UniFFI API checksum mismatch")
 	}
@@ -5373,7 +5373,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module()
 	})
-	if checksum != 51355 {
+	if checksum != 1782 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module: UniFFI API checksum mismatch")
 	}
@@ -5382,7 +5382,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object()
 	})
-	if checksum != 27424 {
+	if checksum != 56456 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object: UniFFI API checksum mismatch")
 	}
@@ -5409,7 +5409,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package()
 	})
-	if checksum != 7913 {
+	if checksum != 2773 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package: UniFFI API checksum mismatch")
 	}
@@ -5427,7 +5427,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions()
 	})
-	if checksum != 34213 {
+	if checksum != 15150 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions: UniFFI API checksum mismatch")
 	}
@@ -5859,7 +5859,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_movepackage_version()
 	})
-	if checksum != 22970 {
+	if checksum != 7483 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_movepackage_version: UniFFI API checksum mismatch")
 	}
@@ -6480,7 +6480,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_object_version()
 	})
-	if checksum != 18433 {
+	if checksum != 59848 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_object_version: UniFFI API checksum mismatch")
 	}
@@ -6651,7 +6651,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared()
 	})
-	if checksum != 56096 {
+	if checksum != 17030 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared: UniFFI API checksum mismatch")
 	}
@@ -6660,7 +6660,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt()
 	})
-	if checksum != 4209 {
+	if checksum != 58784 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt: UniFFI API checksum mismatch")
 	}
@@ -7695,7 +7695,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_systempackage_version()
 	})
-	if checksum != 39738 {
+	if checksum != 53823 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_systempackage_version: UniFFI API checksum mismatch")
 	}
@@ -8575,6 +8575,69 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_as_u64()
+	})
+	if checksum != 37415 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_as_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price()
+	})
+	if checksum != 50172 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled()
+	})
+	if checksum != 7823 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_congested()
+	})
+	if checksum != 54746 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_congested: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_is_valid()
+	})
+	if checksum != 4593 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_is_valid: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_next()
+	})
+	if checksum != 46748 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_next: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_version_previous()
+	})
+	if checksum != 59091 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_version_previous: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id()
 	})
 	if checksum != 50440 {
@@ -8586,7 +8649,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version()
 	})
-	if checksum != 51219 {
+	if checksum != 9820 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_versionassignment_version: UniFFI API checksum mismatch")
 	}
@@ -9288,7 +9351,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared()
 	})
-	if checksum != 61970 {
+	if checksum != 48143 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared: UniFFI API checksum mismatch")
 	}
@@ -9648,7 +9711,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new()
 	})
-	if checksum != 17506 {
+	if checksum != 31500 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new: UniFFI API checksum mismatch")
 	}
@@ -10008,7 +10071,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared()
 	})
-	if checksum != 36753 {
+	if checksum != 22241 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared: UniFFI API checksum mismatch")
 	}
@@ -11124,7 +11187,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new()
 	})
-	if checksum != 25070 {
+	if checksum != 23944 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new: UniFFI API checksum mismatch")
 	}
@@ -11536,9 +11599,81 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read()
+	})
+	if checksum != 19561 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback()
+	})
+	if checksum != 34609 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64()
+	})
+	if checksum != 29677 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment()
+	})
+	if checksum != 45842 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl()
+	})
+	if checksum != 16135 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl()
+	})
+	if checksum != 30140 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price()
+	})
+	if checksum != 14 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable()
+	})
+	if checksum != 14185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new()
 	})
-	if checksum != 14186 {
+	if checksum != 50135 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new: UniFFI API checksum mismatch")
 	}
@@ -17613,7 +17748,7 @@ type GenesisObjectInterface interface {
 	ObjectId() *ObjectId
 	ObjectType() *ObjectType
 	Owner() *Owner
-	Version() uint64
+	Version() *Version
 }
 // An object part of the initial chain state
 //
@@ -17675,10 +17810,10 @@ func (_self *GenesisObject) Owner() *Owner {
 	}))
 }
 
-func (_self *GenesisObject) Version() uint64 {
+func (_self *GenesisObject) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*GenesisObject")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_genesisobject_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -18018,7 +18153,7 @@ type GraphQlClientInterface interface {
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	MoveObjectContents(objectId *ObjectId, version *uint64) (*Value, error)
+	MoveObjectContents(objectId *ObjectId, version **Version) (*Value, error)
 	// Return the BCS of an object that is a Move object.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
@@ -18076,15 +18211,15 @@ type GraphQlClientInterface interface {
 	MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
-	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
+	NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error)
 	// Return the normalized Move module data for the provided module.
-	NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
+	NormalizedMoveModule(varPackage *Address, module string, version **Version, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error)
 	// Return an object based on the provided `Address`.
 	//
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-	Object(objectId *ObjectId, version *uint64) (**Object, error)
+	Object(objectId *ObjectId, version **Version) (**Object, error)
 	// Return the object's bcs content `Vec<u8>` based on the provided
 	// `Address`.
 	ObjectBcs(objectId *ObjectId) (*[]byte, error)
@@ -18104,7 +18239,7 @@ type GraphQlClientInterface interface {
 	//
 	// Note that this interpretation of version is different from a historical
 	// object read (the interpretation of version for the object query).
-	Package(address *Address, version *uint64) (**MovePackage, error)
+	Package(address *Address, version **Version) (**MovePackage, error)
 	// Fetch the latest version of the package at address.
 	// This corresponds to the package with the highest version that shares its
 	// original ID with the package at address.
@@ -18112,7 +18247,7 @@ type GraphQlClientInterface interface {
 	// Fetch all versions of package at address (packages that share this
 	// package's original ID), optionally bounding the versions exclusively
 	// from below with afterVersion, or from above with beforeVersion.
-	PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error)
+	PackageVersions(address *Address, afterVersion **Version, beforeVersion **Version, paginationFilter *PaginationFilter) (MovePackagePage, error)
 	// The Move packages that exist in the network, optionally filtered to be
 	// strictly before beforeCheckpoint and/or strictly after
 	// afterCheckpoint.
@@ -19166,7 +19301,7 @@ func (_self *GraphQlClient) MaxPageSize() (int32, error) {
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint64) (*Value, error) {
+func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version **Version) (*Value, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19183,7 +19318,7 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 			return FfiConverterOptionalTypeValueINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19206,7 +19341,7 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error) {
+func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19223,7 +19358,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 			return FfiConverterOptionalBytesINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19360,7 +19495,7 @@ func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArguments 
 
 // Return the normalized Move function data for the provided package,
 // module, and function.
-func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error) {
+func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19377,7 +19512,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 			return FfiConverterOptionalMoveFunctionINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterStringINSTANCE.Lower(function), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19396,7 +19531,7 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 }
 
 // Return the normalized Move module data for the provided module.
-func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module string, version *uint64, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error) {
+func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module string, version **Version, paginationFilterEnums *PaginationFilter, paginationFilterFriends *PaginationFilter, paginationFilterFunctions *PaginationFilter, paginationFilterStructs *PaginationFilter) (*MoveModule, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19413,7 +19548,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 			return FfiConverterOptionalMoveModuleINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterOptionalUint64INSTANCE.Lower(version), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterEnums), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFriends), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFunctions), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterStructs)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(varPackage), FfiConverterStringINSTANCE.Lower(module), FfiConverterOptionalVersionINSTANCE.Lower(version), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterEnums), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFriends), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterFunctions), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilterStructs)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19436,7 +19571,7 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 // If the object does not exist (e.g., due to pruning), this will return
 // `Ok(None)`. Similarly, if this is not an object but an address, it
 // will return `Ok(None)`.
-func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Object, error) {
+func (_self *GraphQlClient) Object(objectId *ObjectId, version **Version) (**Object, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19453,7 +19588,7 @@ func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Objec
 			return FfiConverterOptionalObjectINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
-		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19558,7 +19693,7 @@ func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *Pagi
 //
 // Note that this interpretation of version is different from a historical
 // object read (the interpretation of version for the object query).
-func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePackage, error) {
+func (_self *GraphQlClient) Package(address *Address, version **Version) (**MovePackage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19575,7 +19710,7 @@ func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePa
 			return FfiConverterOptionalMovePackageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalVersionINSTANCE.Lower(version)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -19634,7 +19769,7 @@ func (_self *GraphQlClient) PackageLatest(address *Address) (**MovePackage, erro
 // Fetch all versions of package at address (packages that share this
 // package's original ID), optionally bounding the versions exclusively
 // from below with afterVersion, or from above with beforeVersion.
-func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint64, beforeVersion *uint64, paginationFilter *PaginationFilter) (MovePackagePage, error) {
+func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion **Version, beforeVersion **Version, paginationFilter *PaginationFilter) (MovePackagePage, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -19651,7 +19786,7 @@ func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint
 			return FfiConverterMovePackagePageINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
-		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalUint64INSTANCE.Lower(afterVersion), FfiConverterOptionalUint64INSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterOptionalVersionINSTANCE.Lower(afterVersion), FfiConverterOptionalVersionINSTANCE.Lower(beforeVersion), FfiConverterOptionalPaginationFilterINSTANCE.Lower(paginationFilter)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -20571,9 +20706,9 @@ func InputNewReceiving(objectRef ObjectReference) *Input {
 }
 
 // A move object whose owner is "Shared"
-func InputNewShared(objectId *ObjectId, initialSharedVersion uint64, mutable bool) *Input {
+func InputNewShared(objectId *ObjectId, initialSharedVersion *Version, mutable bool) *Input {
 	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterVersionINSTANCE.Lower(initialSharedVersion), FfiConverterBoolINSTANCE.Lower(mutable),_uniffiStatus)
 	}))
 }
 
@@ -22164,7 +22299,7 @@ type MovePackageInterface interface {
 	LinkageTable() map[*ObjectId]UpgradeInfo
 	Modules() map[*Identifier][]byte
 	TypeOriginTable() []TypeOrigin
-	Version() uint64
+	Version() *Version
 }
 // A move package
 //
@@ -22182,9 +22317,9 @@ type MovePackageInterface interface {
 type MovePackage struct {
 	ffiObject FfiObject
 }
-func NewMovePackage(id *ObjectId, version uint64, modules map[*Identifier][]byte, typeOriginTable []TypeOrigin, linkageTable map[*ObjectId]UpgradeInfo) (*MovePackage, error) {
+func NewMovePackage(id *ObjectId, version *Version, modules map[*Identifier][]byte, typeOriginTable []TypeOrigin, linkageTable map[*ObjectId]UpgradeInfo) (*MovePackage, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(FfiConverterObjectIdINSTANCE.Lower(id), FfiConverterUint64INSTANCE.Lower(version), FfiConverterMapIdentifierBytesINSTANCE.Lower(modules), FfiConverterSequenceTypeOriginINSTANCE.Lower(typeOriginTable), FfiConverterMapObjectIdUpgradeInfoINSTANCE.Lower(linkageTable),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(FfiConverterObjectIdINSTANCE.Lower(id), FfiConverterVersionINSTANCE.Lower(version), FfiConverterMapIdentifierBytesINSTANCE.Lower(modules), FfiConverterSequenceTypeOriginINSTANCE.Lower(typeOriginTable), FfiConverterMapObjectIdUpgradeInfoINSTANCE.Lower(linkageTable),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *MovePackage
@@ -22239,10 +22374,10 @@ func (_self *MovePackage) TypeOriginTable() []TypeOrigin {
 	}))
 }
 
-func (_self *MovePackage) Version() uint64 {
+func (_self *MovePackage) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*MovePackage")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_movepackage_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -24460,7 +24595,7 @@ type ObjectInterface interface {
 	// deletes this object.
 	StorageRebate() uint64
 	// Return this object's version
-	Version() uint64
+	Version() *Version
 }
 // An object on the IOTA blockchain
 //
@@ -24617,10 +24752,10 @@ func (_self *Object) StorageRebate() uint64 {
 }
 
 // Return this object's version
-func (_self *Object) Version() uint64 {
+func (_self *Object) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*Object")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_object_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -25374,8 +25509,8 @@ type OwnerInterface interface {
 	AsAddressOpt() **Address
 	AsObject() *ObjectId
 	AsObjectOpt() **ObjectId
-	AsShared() uint64
-	AsSharedOpt() *uint64
+	AsShared() *Version
+	AsSharedOpt() **Version
 	IsAddress() bool
 	IsImmutable() bool
 	IsObject() bool
@@ -25418,9 +25553,9 @@ func OwnerNewObject(id *ObjectId) *Owner {
 	}))
 }
 
-func OwnerNewShared(version uint64) *Owner {
+func OwnerNewShared(version *Version) *Owner {
 	return FfiConverterOwnerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterUint64INSTANCE.Lower(version),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(FfiConverterVersionINSTANCE.Lower(version),_uniffiStatus)
 	}))
 }
 
@@ -25466,19 +25601,19 @@ func (_self *Owner) AsObjectOpt() **ObjectId {
 	}))
 }
 
-func (_self *Owner) AsShared() uint64 {
+func (_self *Owner) AsShared() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
 		_pointer,_uniffiStatus)
 	}))
 }
 
-func (_self *Owner) AsSharedOpt() *uint64 {
+func (_self *Owner) AsSharedOpt() **Version {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterOptionalUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+	return FfiConverterOptionalVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
 		_pointer,_uniffiStatus),
@@ -30548,7 +30683,7 @@ func (_ FfiDestroyerStructTag) Destroy(value *StructTag) {
 type SystemPackageInterface interface {
 	Dependencies() []*ObjectId
 	Modules() [][]byte
-	Version() uint64
+	Version() *Version
 }
 // System package
 //
@@ -30564,9 +30699,9 @@ type SystemPackageInterface interface {
 type SystemPackage struct {
 	ffiObject FfiObject
 }
-func NewSystemPackage(version uint64, modules [][]byte, dependencies []*ObjectId) *SystemPackage {
+func NewSystemPackage(version *Version, modules [][]byte, dependencies []*ObjectId) *SystemPackage {
 	return FfiConverterSystemPackageINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterUint64INSTANCE.Lower(version), FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(FfiConverterVersionINSTANCE.Lower(version), FfiConverterSequenceBytesINSTANCE.Lower(modules), FfiConverterSequenceObjectIdINSTANCE.Lower(dependencies),_uniffiStatus)
 	}))
 }
 
@@ -30595,10 +30730,10 @@ func (_self *SystemPackage) Modules() [][]byte {
 	}))
 }
 
-func (_self *SystemPackage) Version() uint64 {
+func (_self *SystemPackage) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*SystemPackage")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -34314,7 +34449,7 @@ func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 // ```
 type VersionAssignmentInterface interface {
 	ObjectId() *ObjectId
-	Version() uint64
+	Version() *Version
 }
 // Object version assignment from consensus
 //
@@ -34328,9 +34463,9 @@ type VersionAssignmentInterface interface {
 type VersionAssignment struct {
 	ffiObject FfiObject
 }
-func NewVersionAssignment(objectId *ObjectId, version uint64) *VersionAssignment {
+func NewVersionAssignment(objectId *ObjectId, version *Version) *VersionAssignment {
 	return FfiConverterVersionAssignmentINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterUint64INSTANCE.Lower(version),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterVersionINSTANCE.Lower(version),_uniffiStatus)
 	}))
 }
 
@@ -34346,10 +34481,10 @@ func (_self *VersionAssignment) ObjectId() *ObjectId {
 	}))
 }
 
-func (_self *VersionAssignment) Version() uint64 {
+func (_self *VersionAssignment) Version() *Version {
 	_pointer := _self.ffiObject.incrementPointer("*VersionAssignment")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+	return FfiConverterVersionINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
 		_pointer,_uniffiStatus)
 	}))
@@ -36500,14 +36635,14 @@ type MoveStruct struct {
 	// Number that increases each time a tx takes this object as a mutable
 	// input This is a lamport timestamp, not a sequentially increasing
 	// version
-	Version uint64
+	Version *Version
 	// BCS bytes of a Move struct value
 	Contents []byte
 }
 
 func (r *MoveStruct) Destroy() {
 		FfiDestroyerStructTag{}.Destroy(r.StructType);
-		FfiDestroyerUint64{}.Destroy(r.Version);
+		FfiDestroyerVersion{}.Destroy(r.Version);
 		FfiDestroyerBytes{}.Destroy(r.Contents);
 }
 
@@ -36522,7 +36657,7 @@ func (c FfiConverterMoveStruct) Lift(rb RustBufferI) MoveStruct {
 func (c FfiConverterMoveStruct) Read(reader io.Reader) MoveStruct {
 	return MoveStruct {
 			FfiConverterStructTagINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 			FfiConverterBytesINSTANCE.Read(reader),
 	}
 }
@@ -36537,7 +36672,7 @@ func (c FfiConverterMoveStruct) LowerExternal(value MoveStruct) ExternalCRustBuf
 
 func (c FfiConverterMoveStruct) Write(writer io.Writer, value MoveStruct) {
 		FfiConverterStructTagINSTANCE.Write(writer, value.StructType);
-		FfiConverterUint64INSTANCE.Write(writer, value.Version);
+		FfiConverterVersionINSTANCE.Write(writer, value.Version);
 		FfiConverterBytesINSTANCE.Write(writer, value.Contents);
 }
 
@@ -36945,13 +37080,13 @@ func (_ FfiDestroyerObjectRef) Destroy(value ObjectRef) {
 // ```
 type ObjectReference struct {
 	ObjectId *ObjectId
-	Version uint64
+	Version *Version
 	Digest *Digest
 }
 
 func (r *ObjectReference) Destroy() {
 		FfiDestroyerObjectId{}.Destroy(r.ObjectId);
-		FfiDestroyerUint64{}.Destroy(r.Version);
+		FfiDestroyerVersion{}.Destroy(r.Version);
 		FfiDestroyerDigest{}.Destroy(r.Digest);
 }
 
@@ -36966,7 +37101,7 @@ func (c FfiConverterObjectReference) Lift(rb RustBufferI) ObjectReference {
 func (c FfiConverterObjectReference) Read(reader io.Reader) ObjectReference {
 	return ObjectReference {
 			FfiConverterObjectIdINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 			FfiConverterDigestINSTANCE.Read(reader),
 	}
 }
@@ -36981,7 +37116,7 @@ func (c FfiConverterObjectReference) LowerExternal(value ObjectReference) Extern
 
 func (c FfiConverterObjectReference) Write(writer io.Writer, value ObjectReference) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.ObjectId);
-		FfiConverterUint64INSTANCE.Write(writer, value.Version);
+		FfiConverterVersionINSTANCE.Write(writer, value.Version);
 		FfiConverterDigestINSTANCE.Write(writer, value.Digest);
 }
 
@@ -37357,14 +37492,14 @@ type RandomnessStateUpdate struct {
 	// Updated random bytes
 	RandomBytes []byte
 	// The initial version of the randomness object that it was shared at
-	RandomnessObjInitialSharedVersion uint64
+	RandomnessObjInitialSharedVersion *Version
 }
 
 func (r *RandomnessStateUpdate) Destroy() {
 		FfiDestroyerUint64{}.Destroy(r.Epoch);
 		FfiDestroyerUint64{}.Destroy(r.RandomnessRound);
 		FfiDestroyerBytes{}.Destroy(r.RandomBytes);
-		FfiDestroyerUint64{}.Destroy(r.RandomnessObjInitialSharedVersion);
+		FfiDestroyerVersion{}.Destroy(r.RandomnessObjInitialSharedVersion);
 }
 
 type FfiConverterRandomnessStateUpdate struct {}
@@ -37380,7 +37515,7 @@ func (c FfiConverterRandomnessStateUpdate) Read(reader io.Reader) RandomnessStat
 			FfiConverterUint64INSTANCE.Read(reader),
 			FfiConverterUint64INSTANCE.Read(reader),
 			FfiConverterBytesINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 	}
 }
 
@@ -37396,7 +37531,7 @@ func (c FfiConverterRandomnessStateUpdate) Write(writer io.Writer, value Randomn
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
 		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessRound);
 		FfiConverterBytesINSTANCE.Write(writer, value.RandomBytes);
-		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessObjInitialSharedVersion);
+		FfiConverterVersionINSTANCE.Write(writer, value.RandomnessObjInitialSharedVersion);
 }
 
 type FfiDestroyerRandomnessStateUpdate struct {}
@@ -37798,7 +37933,7 @@ type TransactionEffectsV1 struct {
 	// The set of transaction digests this transaction depends on.
 	Dependencies []*Digest
 	// The version number of all the written Move objects by this transaction.
-	LamportVersion uint64
+	LamportVersion *Version
 	// Objects whose state are changed in the object store.
 	ChangedObjects []ChangedObject
 	// Shared objects that are not mutated in this transaction. Unlike owned
@@ -37822,7 +37957,7 @@ func (r *TransactionEffectsV1) Destroy() {
 		FfiDestroyerOptionalUint32{}.Destroy(r.GasObjectIndex);
 		FfiDestroyerOptionalDigest{}.Destroy(r.EventsDigest);
 		FfiDestroyerSequenceDigest{}.Destroy(r.Dependencies);
-		FfiDestroyerUint64{}.Destroy(r.LamportVersion);
+		FfiDestroyerVersion{}.Destroy(r.LamportVersion);
 		FfiDestroyerSequenceChangedObject{}.Destroy(r.ChangedObjects);
 		FfiDestroyerSequenceUnchangedSharedObject{}.Destroy(r.UnchangedSharedObjects);
 		FfiDestroyerOptionalDigest{}.Destroy(r.AuxiliaryDataDigest);
@@ -37845,7 +37980,7 @@ func (c FfiConverterTransactionEffectsV1) Read(reader io.Reader) TransactionEffe
 			FfiConverterOptionalUint32INSTANCE.Read(reader),
 			FfiConverterOptionalDigestINSTANCE.Read(reader),
 			FfiConverterSequenceDigestINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 			FfiConverterSequenceChangedObjectINSTANCE.Read(reader),
 			FfiConverterSequenceUnchangedSharedObjectINSTANCE.Read(reader),
 			FfiConverterOptionalDigestINSTANCE.Read(reader),
@@ -37868,7 +38003,7 @@ func (c FfiConverterTransactionEffectsV1) Write(writer io.Writer, value Transact
 		FfiConverterOptionalUint32INSTANCE.Write(writer, value.GasObjectIndex);
 		FfiConverterOptionalDigestINSTANCE.Write(writer, value.EventsDigest);
 		FfiConverterSequenceDigestINSTANCE.Write(writer, value.Dependencies);
-		FfiConverterUint64INSTANCE.Write(writer, value.LamportVersion);
+		FfiConverterVersionINSTANCE.Write(writer, value.LamportVersion);
 		FfiConverterSequenceChangedObjectINSTANCE.Write(writer, value.ChangedObjects);
 		FfiConverterSequenceUnchangedSharedObjectINSTANCE.Write(writer, value.UnchangedSharedObjects);
 		FfiConverterOptionalDigestINSTANCE.Write(writer, value.AuxiliaryDataDigest);
@@ -38180,12 +38315,12 @@ type UpgradeInfo struct {
 	// Id of the upgraded packages
 	UpgradedId *ObjectId
 	// Version of the upgraded package
-	UpgradedVersion uint64
+	UpgradedVersion *Version
 }
 
 func (r *UpgradeInfo) Destroy() {
 		FfiDestroyerObjectId{}.Destroy(r.UpgradedId);
-		FfiDestroyerUint64{}.Destroy(r.UpgradedVersion);
+		FfiDestroyerVersion{}.Destroy(r.UpgradedVersion);
 }
 
 type FfiConverterUpgradeInfo struct {}
@@ -38199,7 +38334,7 @@ func (c FfiConverterUpgradeInfo) Lift(rb RustBufferI) UpgradeInfo {
 func (c FfiConverterUpgradeInfo) Read(reader io.Reader) UpgradeInfo {
 	return UpgradeInfo {
 			FfiConverterObjectIdINSTANCE.Read(reader),
-			FfiConverterUint64INSTANCE.Read(reader),
+			FfiConverterVersionINSTANCE.Read(reader),
 	}
 }
 
@@ -38213,7 +38348,7 @@ func (c FfiConverterUpgradeInfo) LowerExternal(value UpgradeInfo) ExternalCRustB
 
 func (c FfiConverterUpgradeInfo) Write(writer io.Writer, value UpgradeInfo) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.UpgradedId);
-		FfiConverterUint64INSTANCE.Write(writer, value.UpgradedVersion);
+		FfiConverterVersionINSTANCE.Write(writer, value.UpgradedVersion);
 }
 
 type FfiDestroyerUpgradeInfo struct {}
@@ -40536,13 +40671,13 @@ func (e ObjectInMissing) Destroy() {
 }
 // The old version, digest and owner.
 type ObjectInData struct {
-	Version uint64
+	Version *Version
 	Digest *Digest
 	Owner *Owner
 }
 
 func (e ObjectInData) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 		FfiDestroyerDigest{}.Destroy(e.Digest);
 		FfiDestroyerOwner{}.Destroy(e.Owner);
 }
@@ -40570,7 +40705,7 @@ func (FfiConverterObjectIn) Read(reader io.Reader) ObjectIn {
 			};
 		case 2:
 			return ObjectInData{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 				FfiConverterDigestINSTANCE.Read(reader),
 				FfiConverterOwnerINSTANCE.Read(reader),
 			};
@@ -40585,7 +40720,7 @@ func (FfiConverterObjectIn) Write(writer io.Writer, value ObjectIn) {
 			writeInt32(writer, 1)
 		case ObjectInData:
 			writeInt32(writer, 2)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 			FfiConverterOwnerINSTANCE.Write(writer, variant_value.Owner)
 		default:
@@ -40640,12 +40775,12 @@ func (e ObjectOutObjectWrite) Destroy() {
 // Packages writes need to be tracked separately with version because
 // we don't use lamport version for package publish and upgrades.
 type ObjectOutPackageWrite struct {
-	Version uint64
+	Version *Version
 	Digest *Digest
 }
 
 func (e ObjectOutPackageWrite) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 		FfiDestroyerDigest{}.Destroy(e.Digest);
 }
 
@@ -40677,7 +40812,7 @@ func (FfiConverterObjectOut) Read(reader io.Reader) ObjectOut {
 			};
 		case 3:
 			return ObjectOutPackageWrite{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 				FfiConverterDigestINSTANCE.Read(reader),
 			};
 		default:
@@ -40695,7 +40830,7 @@ func (FfiConverterObjectOut) Write(writer io.Writer, value ObjectOut) {
 			FfiConverterOwnerINSTANCE.Write(writer, variant_value.Owner)
 		case ObjectOutPackageWrite:
 			writeInt32(writer, 3)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 		default:
 			_ = variant_value
@@ -41314,38 +41449,38 @@ type UnchangedSharedKind interface {
 // ObjectDigest for protocol correctness, but it will make it easier to
 // verify untrusted read.
 type UnchangedSharedKindReadOnlyRoot struct {
-	Version uint64
+	Version *Version
 	Digest *Digest
 }
 
 func (e UnchangedSharedKindReadOnlyRoot) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 		FfiDestroyerDigest{}.Destroy(e.Digest);
 }
 // Deleted shared objects that appear mutably/owned in the input.
 type UnchangedSharedKindMutateDeleted struct {
-	Version uint64
+	Version *Version
 }
 
 func (e UnchangedSharedKindMutateDeleted) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 }
 // Deleted shared objects that appear as read-only in the input.
 type UnchangedSharedKindReadDeleted struct {
-	Version uint64
+	Version *Version
 }
 
 func (e UnchangedSharedKindReadDeleted) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 }
 // Shared objects in cancelled transaction. The sequence number embed
 // cancellation reason.
 type UnchangedSharedKindCancelled struct {
-	Version uint64
+	Version *Version
 }
 
 func (e UnchangedSharedKindCancelled) Destroy() {
-		FfiDestroyerUint64{}.Destroy(e.Version);
+		FfiDestroyerVersion{}.Destroy(e.Version);
 }
 // Read of a per-epoch config object that should remain the same during an
 // epoch.
@@ -41375,20 +41510,20 @@ func (FfiConverterUnchangedSharedKind) Read(reader io.Reader) UnchangedSharedKin
 	switch (id) {
 		case 1:
 			return UnchangedSharedKindReadOnlyRoot{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 				FfiConverterDigestINSTANCE.Read(reader),
 			};
 		case 2:
 			return UnchangedSharedKindMutateDeleted{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 			};
 		case 3:
 			return UnchangedSharedKindReadDeleted{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 			};
 		case 4:
 			return UnchangedSharedKindCancelled{
-				FfiConverterUint64INSTANCE.Read(reader),
+				FfiConverterVersionINSTANCE.Read(reader),
 			};
 		case 5:
 			return UnchangedSharedKindPerEpochConfig{
@@ -41402,17 +41537,17 @@ func (FfiConverterUnchangedSharedKind) Write(writer io.Writer, value UnchangedSh
 	switch variant_value := value.(type) {
 		case UnchangedSharedKindReadOnlyRoot:
 			writeInt32(writer, 1)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 			FfiConverterDigestINSTANCE.Write(writer, variant_value.Digest)
 		case UnchangedSharedKindMutateDeleted:
 			writeInt32(writer, 2)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 		case UnchangedSharedKindReadDeleted:
 			writeInt32(writer, 3)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 		case UnchangedSharedKindCancelled:
 			writeInt32(writer, 4)
-			FfiConverterUint64INSTANCE.Write(writer, variant_value.Version)
+			FfiConverterVersionINSTANCE.Write(writer, variant_value.Version)
 		case UnchangedSharedKindPerEpochConfig:
 			writeInt32(writer, 5)
 		default:
@@ -46303,6 +46438,49 @@ func (FfiDestroyerSequenceUserSignature) Destroy(sequence []*UserSignature) {
 	}
 }
 
+
+type FfiConverterSequenceVersion struct{}
+
+var FfiConverterSequenceVersionINSTANCE = FfiConverterSequenceVersion{}
+
+func (c FfiConverterSequenceVersion) Lift(rb RustBufferI) []*Version {
+	return LiftFromRustBuffer[[]*Version](c, rb)
+}
+
+func (c FfiConverterSequenceVersion) Read(reader io.Reader) []*Version {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*Version, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterVersionINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceVersion) Lower(value []*Version) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*Version](c, value)
+}
+
+func (c FfiConverterSequenceVersion) Write(writer io.Writer, value []*Version) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*Version is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterVersionINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceVersion struct {}
+
+func (FfiDestroyerSequenceVersion) Destroy(sequence []*Version) {
+	for _, value := range sequence {
+		FfiDestroyerVersion{}.Destroy(value)
+	}
+}
 
 type FfiConverterSequenceVersionAssignment struct{}
 

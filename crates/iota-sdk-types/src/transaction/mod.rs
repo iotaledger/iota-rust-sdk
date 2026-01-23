@@ -164,7 +164,7 @@ pub struct RandomnessStateUpdate {
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub randomness_obj_initial_shared_version: u64,
+    pub randomness_obj_initial_shared_version: Version,
 }
 
 /// Transaction type
@@ -653,8 +653,7 @@ pub enum Input {
     /// A move object whose owner is "Shared"
     Shared {
         object_id: ObjectId,
-
-        initial_shared_version: u64,
+        initial_shared_version: Version,
         /// Controls whether the caller asks for a mutable reference to the
         /// shared object.
         mutable: bool,

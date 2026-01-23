@@ -8,6 +8,7 @@ use crate::types::{
     object::{ObjectId, ObjectReference},
     transaction::Input,
     type_tag::TypeTag,
+    version::Version,
 };
 
 /// MoveAuthenticator is a signature variant that enables a method of
@@ -64,13 +65,13 @@ impl MoveAuthenticatorV1 {
         call_args: Vec<Arc<Input>>,
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: &ObjectId,
-        initial_shared_version: u64,
+        initial_shared_version: &Version,
     ) -> Self {
         Self(iota_sdk::types::MoveAuthenticatorV1::new_shared(
             call_args.into_iter().map(|v| v.0.clone()).collect(),
             type_args.into_iter().map(|v| v.0.clone()).collect(),
             **object_to_authenticate,
-            initial_shared_version,
+            **initial_shared_version,
         ))
     }
 

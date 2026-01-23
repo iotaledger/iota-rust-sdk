@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Address, Input, ObjectId, ObjectReference, TypeTag};
+use crate::{Address, Input, ObjectId, ObjectReference, TypeTag, Version};
 
 /// MoveAuthenticator is a signature variant that enables a method of
 /// authentication through Move code. This type represents the data received
@@ -51,7 +51,7 @@ impl MoveAuthenticatorV1 {
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
         object_to_authenticate: ObjectId,
-        initial_shared_version: u64,
+        initial_shared_version: Version,
     ) -> Self {
         Self {
             call_args,
