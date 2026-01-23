@@ -106,7 +106,7 @@ impl From<ObjectReference> for ObjectRef {
     fn from(value: ObjectReference) -> Self {
         ObjectRef {
             address: *value.object_id(),
-            version: value.version(),
+            version: value.version().as_u64(),
             digest: value.digest().to_string(),
         }
     }

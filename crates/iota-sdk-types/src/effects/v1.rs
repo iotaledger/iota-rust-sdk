@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId,
-    execution_status::ExecutionStatus,
-    object::{Owner, Version},
+    Digest, EpochId, GasCostSummary, ObjectId, Version, execution_status::ExecutionStatus,
+    object::Owner,
 };
 
 /// Version 1 of TransactionEffects
