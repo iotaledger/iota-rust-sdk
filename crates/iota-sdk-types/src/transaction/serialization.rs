@@ -399,7 +399,7 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
-    use crate::transaction::Input;
+    use crate::{Version, transaction::Input};
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "type", rename_all = "snake_case")]
@@ -413,7 +413,7 @@ mod input_argument {
         Shared {
             object_id: ObjectId,
             #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-            initial_shared_version: u64,
+            initial_shared_version: Version,
             mutable: bool,
         },
         Receiving(ObjectReference),
@@ -430,7 +430,7 @@ mod input_argument {
         ImmutableOrOwned(ObjectReference),
         Shared {
             object_id: ObjectId,
-            initial_shared_version: u64,
+            initial_shared_version: Version,
             mutable: bool,
         },
         Receiving(ObjectReference),
@@ -1068,7 +1068,7 @@ mod tests {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use crate::{
-        Digest, ObjectId, ObjectReference,
+        Digest, ObjectId, ObjectReference, Version,
         transaction::{Argument, Input, Transaction},
     };
 
@@ -1107,7 +1107,11 @@ mod tests {
                 }),
             ),
             (
-                Input::ImmutableOrOwned(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
+                Input::ImmutableOrOwned(ObjectReference::new(
+                    ObjectId::ZERO,
+                    Version::from_u64(1),
+                    Digest::ZERO,
+                )),
                 serde_json::json!({
                   "type": "immutable_or_owned",
                   "objectId": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -1118,7 +1122,7 @@ mod tests {
             (
                 Input::Shared {
                     object_id: ObjectId::ZERO,
-                    initial_shared_version: 1,
+                    initial_shared_version: Version::from_u64(1),
                     mutable: true,
                 },
                 serde_json::json!({
@@ -1129,7 +1133,11 @@ mod tests {
                 }),
             ),
             (
-                Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
+                Input::Receiving(ObjectReference::new(
+                    ObjectId::ZERO,
+                    Version::from_u64(1),
+                    Digest::ZERO,
+                )),
                 serde_json::json!({
                   "type": "receiving",
                   "objectId": "0x0000000000000000000000000000000000000000000000000000000000000000",
