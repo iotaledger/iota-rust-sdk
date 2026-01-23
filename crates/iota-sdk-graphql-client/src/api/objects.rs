@@ -7,7 +7,7 @@
 use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;
-use iota_types::{Object, ObjectId};
+use iota_types::{Object, ObjectId, Version};
 
 use crate::{
     Client,
@@ -39,11 +39,11 @@ impl Client {
     pub async fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -139,11 +139,11 @@ impl Client {
     pub async fn move_object_contents(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<serde_json::Value>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -163,11 +163,11 @@ impl Client {
     pub async fn move_object_contents_bcs(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;

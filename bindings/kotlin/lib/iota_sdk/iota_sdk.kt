@@ -3965,6 +3965,38 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5952,6 +5984,20 @@ fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_as_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_is_congested(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_is_valid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_next(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_version_previous(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_versionassignment_version(
@@ -6687,6 +6733,22 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new(
 ): Short
@@ -7513,7 +7575,7 @@ fun uniffi_iota_sdk_ffi_fn_method_genesisobject_object_type(`ptr`: Pointer,uniff
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_owner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7686,7 +7748,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_input_new_pure(`value`: RustBuffer.ByValu
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving(`objectRef`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Long,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(`objectId`: Pointer,`initialSharedVersion`: Pointer,`mutable`: Byte,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_input_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7820,7 +7882,7 @@ fun uniffi_iota_sdk_ffi_fn_free_moveauthenticator(`ptr`: Pointer,uniffi_out_err:
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7884,7 +7946,7 @@ fun uniffi_iota_sdk_ffi_fn_clone_movepackage(`ptr`: Pointer,uniffi_out_err: Unif
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movepackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(`id`: Pointer,`version`: Long,`modules`: RustBuffer.ByValue,`typeOriginTable`: RustBuffer.ByValue,`linkageTable`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(`id`: Pointer,`version`: Pointer,`modules`: RustBuffer.ByValue,`typeOriginTable`: RustBuffer.ByValue,`linkageTable`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7895,7 +7957,7 @@ fun uniffi_iota_sdk_ffi_fn_method_movepackage_modules(`ptr`: Pointer,uniffi_out_
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_type_origin_table(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8197,7 +8259,7 @@ fun uniffi_iota_sdk_ffi_fn_method_object_previous_transaction(`ptr`: Pointer,uni
 fun uniffi_iota_sdk_ffi_fn_method_object_storage_rebate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_object_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8300,7 +8362,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_immutable(uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_object(`id`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(`version`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8311,7 +8373,7 @@ fun uniffi_iota_sdk_ffi_fn_method_owner_as_object(`ptr`: Pointer,uniffi_out_err:
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_object_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_owner_is_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9006,14 +9068,14 @@ fun uniffi_iota_sdk_ffi_fn_clone_systempackage(`ptr`: Pointer,uniffi_out_err: Un
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_systempackage(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(`version`: Long,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(`version`: Pointer,`modules`: RustBuffer.ByValue,`dependencies`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_modules(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9486,16 +9548,50 @@ fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(`ptr`: P
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_clone_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(`inputs`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(`suggestedGasPrice`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_version_as_u64(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_version_is_congested(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_version_is_valid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_version_next(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_version_previous(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_versionassignment(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(`objectId`: Pointer,`version`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(`objectId`: Pointer,`version`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_version(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12387,7 +12483,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner() != 50201.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 36305.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 26576.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events() != 64664.toShort()) {
@@ -12471,10 +12567,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742.toShort()) {
@@ -12483,13 +12579,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653.toShort()) {
@@ -12498,13 +12594,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891.toShort()) {
@@ -12645,7 +12741,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() != 7308.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 7483.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113.toShort()) {
@@ -12858,7 +12954,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate() != 24969.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334.toShort()) {
@@ -12915,10 +13011,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982.toShort()) {
@@ -13263,7 +13359,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 53823.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004.toShort()) {
@@ -13578,10 +13674,31 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 54746.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid() != 4593.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_next() != 46748.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginauthenticator_inputs() != 1512.toShort()) {
@@ -13926,7 +14043,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 48143.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795.toShort()) {
@@ -14034,7 +14151,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 19047.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 57308.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() != 1961.toShort()) {
@@ -14043,7 +14160,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 31500.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() != 61420.toShort()) {
@@ -14163,7 +14280,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 22241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619.toShort()) {
@@ -14535,7 +14652,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255.toShort()) {
@@ -14682,7 +14799,31 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable() != 14185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 50135.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_zkloginauthenticator_new() != 32812.toShort()) {
@@ -28011,7 +28152,7 @@ public interface GenesisObjectInterface {
     
     fun `owner`(): Owner
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -28167,8 +28308,8 @@ open class GenesisObject: Disposable, AutoCloseable, GenesisObjectInterface
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_genesisobject_version(
@@ -28809,7 +28950,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Value?
+    suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: Version? = null): Value?
     
     /**
      * Return the BCS of an object that is a Move object.
@@ -28818,7 +28959,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): kotlin.ByteArray?
+    suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: Version? = null): kotlin.ByteArray?
     
     /**
      * Execute a Move View Function.
@@ -28879,12 +29020,12 @@ public interface GraphQlClientInterface {
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
+    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: Version? = null): MoveFunction?
     
     /**
      * Return the normalized Move module data for the provided module.
      */
-    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
+    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: Version? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -28893,7 +29034,7 @@ public interface GraphQlClientInterface {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): Object?
+    suspend fun `object`(`objectId`: ObjectId, `version`: Version? = null): Object?
     
     /**
      * Return the object's bcs content `Vec<u8>` based on the provided
@@ -28922,7 +29063,7 @@ public interface GraphQlClientInterface {
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-    suspend fun `package`(`address`: Address, `version`: kotlin.ULong? = null): MovePackage?
+    suspend fun `package`(`address`: Address, `version`: Version? = null): MovePackage?
     
     /**
      * Fetch the latest version of the package at address.
@@ -28936,7 +29077,7 @@ public interface GraphQlClientInterface {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-    suspend fun `packageVersions`(`address`: Address, `afterVersion`: kotlin.ULong? = null, `beforeVersion`: kotlin.ULong? = null, `paginationFilter`: PaginationFilter? = null): MovePackagePage
+    suspend fun `packageVersions`(`address`: Address, `afterVersion`: Version? = null, `beforeVersion`: Version? = null, `paginationFilter`: PaginationFilter? = null): MovePackagePage
     
     /**
      * The Move packages that exist in the network, optionally filtered to be
@@ -29800,12 +29941,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: kotlin.ULong?) : Value? {
+    override suspend fun `moveObjectContents`(`objectId`: ObjectId, `version`: Version?) : Value? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29828,12 +29969,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong?) : kotlin.ByteArray? {
+    override suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: Version?) : kotlin.ByteArray? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29946,12 +30087,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
+    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: Version?) : MoveFunction? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29970,12 +30111,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
+    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: Version?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalTypeVersion.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29998,12 +30139,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `object`(`objectId`: ObjectId, `version`: kotlin.ULong?) : Object? {
+    override suspend fun `object`(`objectId`: ObjectId, `version`: Version?) : Object? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                 thisPtr,
-                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeObjectId.lower(`objectId`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -30084,12 +30225,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `package`(`address`: Address, `version`: kotlin.ULong?) : MovePackage? {
+    override suspend fun `package`(`address`: Address, `version`: Version?) : MovePackage? {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`version`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeVersion.lower(`version`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -30136,12 +30277,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `packageVersions`(`address`: Address, `afterVersion`: kotlin.ULong?, `beforeVersion`: kotlin.ULong?, `paginationFilter`: PaginationFilter?) : MovePackagePage {
+    override suspend fun `packageVersions`(`address`: Address, `afterVersion`: Version?, `beforeVersion`: Version?, `paginationFilter`: PaginationFilter?) : MovePackagePage {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 thisPtr,
-                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalULong.lower(`afterVersion`),FfiConverterOptionalULong.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
+                FfiConverterTypeAddress.lower(`address`),FfiConverterOptionalTypeVersion.lower(`afterVersion`),FfiConverterOptionalTypeVersion.lower(`beforeVersion`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilter`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -31259,11 +31400,11 @@ open class Input: Disposable, AutoCloseable, InputInterface
         
     /**
      * A move object whose owner is "Shared"
-     */ fun `newShared`(`objectId`: ObjectId, `initialSharedVersion`: kotlin.ULong, `mutable`: kotlin.Boolean): Input {
+     */ fun `newShared`(`objectId`: ObjectId, `initialSharedVersion`: Version, `mutable`: kotlin.Boolean): Input {
             return FfiConverterTypeInput.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`initialSharedVersion`),FfiConverterBoolean.lower(`mutable`),_status)
+        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterTypeVersion.lower(`initialSharedVersion`),FfiConverterBoolean.lower(`mutable`),_status)
 }
     )
     }
@@ -33136,11 +33277,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
         
     /**
      * Create a new move authenticator from a shared object.
-     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
+     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: Version): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(
-        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterTypeVersion.lower(`initialSharedVersion`),_status)
 }
     )
     }
@@ -34265,7 +34406,7 @@ public interface MovePackageInterface {
     
     fun `typeOriginTable`(): List<TypeOrigin>
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -34303,11 +34444,11 @@ open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`id`: ObjectId, `version`: kotlin.ULong, `modules`: Map<Identifier, kotlin.ByteArray>, `typeOriginTable`: List<TypeOrigin>, `linkageTable`: Map<ObjectId, UpgradeInfo>) :
+    constructor(`id`: ObjectId, `version`: Version, `modules`: Map<Identifier, kotlin.ByteArray>, `typeOriginTable`: List<TypeOrigin>, `linkageTable`: Map<ObjectId, UpgradeInfo>) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(
-        FfiConverterTypeObjectId.lower(`id`),FfiConverterULong.lower(`version`),FfiConverterMapTypeIdentifierByteArray.lower(`modules`),FfiConverterSequenceTypeTypeOrigin.lower(`typeOriginTable`),FfiConverterMapTypeObjectIdTypeUpgradeInfo.lower(`linkageTable`),_status)
+        FfiConverterTypeObjectId.lower(`id`),FfiConverterTypeVersion.lower(`version`),FfiConverterMapTypeIdentifierByteArray.lower(`modules`),FfiConverterSequenceTypeTypeOrigin.lower(`typeOriginTable`),FfiConverterMapTypeObjectIdTypeUpgradeInfo.lower(`linkageTable`),_status)
 }
     )
 
@@ -34422,8 +34563,8 @@ open class MovePackage: Disposable, AutoCloseable, MovePackageInterface
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_movepackage_version(
@@ -38737,7 +38878,7 @@ public interface ObjectInterface {
     /**
      * Return this object's version
      */
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -39030,8 +39171,8 @@ open class Object: Disposable, AutoCloseable, ObjectInterface
     
     /**
      * Return this object's version
-     */override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+     */override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_object_version(
@@ -40402,9 +40543,9 @@ public interface OwnerInterface {
     
     fun `asObjectOpt`(): ObjectId?
     
-    fun `asShared`(): kotlin.ULong
+    fun `asShared`(): Version
     
-    fun `asSharedOpt`(): kotlin.ULong?
+    fun `asSharedOpt`(): Version?
     
     fun `isAddress`(): kotlin.Boolean
     
@@ -40563,8 +40704,8 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asShared`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `asShared`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared(
@@ -40575,8 +40716,8 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-    override fun `asSharedOpt`(): kotlin.ULong? {
-            return FfiConverterOptionalULong.lift(
+    override fun `asSharedOpt`(): Version? {
+            return FfiConverterOptionalTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(
@@ -40704,11 +40845,11 @@ open class Owner: Disposable, AutoCloseable, OwnerInterface
     }
     
 
-         fun `newShared`(`version`: kotlin.ULong): Owner {
+         fun `newShared`(`version`: Version): Owner {
             return FfiConverterTypeOwner.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
-        FfiConverterULong.lower(`version`),_status)
+        FfiConverterTypeVersion.lower(`version`),_status)
 }
     )
     }
@@ -49866,7 +50007,7 @@ public interface SystemPackageInterface {
     
     fun `modules`(): List<kotlin.ByteArray>
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -49902,11 +50043,11 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`version`: kotlin.ULong, `modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
+    constructor(`version`: Version, `modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
         this(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
-        FfiConverterULong.lower(`version`),FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
+        FfiConverterTypeVersion.lower(`version`),FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
 }
     )
 
@@ -49997,8 +50138,8 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
@@ -57352,6 +57493,505 @@ public object FfiConverterTypeValidatorSignature: FfiConverter<ValidatorSignatur
 //
 
 
+public interface VersionInterface {
+    
+    /**
+     * Get the underlying u64 value of this version
+     */
+    fun `asU64`(): kotlin.ULong
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+    fun `getCongestedVersionSuggestedGasPrice`(): kotlin.ULong
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */
+    fun `isCancelled`(): kotlin.Boolean
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */
+    fun `isCongested`(): kotlin.Boolean
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */
+    fun `isValid`(): kotlin.Boolean
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+    fun `next`(): Version
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+    fun `previous`(): Version
+    
+    companion object
+}
+
+open class Version: Disposable, AutoCloseable, VersionInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_version(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
+        }
+    }
+
+    
+    /**
+     * Get the underlying u64 value of this version
+     */override fun `asU64`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+    @Throws(SdkFfiException::class)override fun `getCongestedVersionSuggestedGasPrice`(): kotlin.ULong {
+            return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */override fun `isCancelled`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */override fun `isCongested`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */override fun `isValid`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+    @Throws(SdkFfiException::class)override fun `next`(): Version {
+            return FfiConverterTypeVersion.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_next(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+    @Throws(SdkFfiException::class)override fun `previous`(): Version {
+            return FfiConverterTypeVersion.lift(
+    callWithPointer {
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_previous(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+        
+    /**
+     * Special version that is assigned to objects which are accessed
+     * immutably in a cancelled transaction.
+     */ fun `cancelledRead`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Special version that was assigned to congested objects which
+     * cause transaction cancellations. Note that this special version
+     * was only used prior to the introduction of a gas price feedback
+     * mechanism, but it is kept for backward compatibility.
+     */ fun `congestedPriorToGasPriceFeedback`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new Version from a u64 value
+     */ fun `fromU64`(`value`: kotlin.ULong): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+        FfiConverterULong.lower(`value`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Returns a new version that is greater than all versions
+     * in `inputs`, assuming this operation will not overflow.
+     */
+    @Throws(SdkFfiException::class) fun `lamportIncrement`(`inputs`: List<Version>): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
+        FfiConverterSequenceTypeVersion.lower(`inputs`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * An exclusive upper limit on a valid version: versions
+     * strictly smaller than this limit are valid versions.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     * Versions larger than this value are "special" and
+     * assigned to objects that appear in cancelled transactions.
+     */ fun `maxValidExcl`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * An inclusive lower limit on a valid version.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     */ fun `minValidIncl`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(
+        _status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Returns a special version used for congested shared objects:
+     * `Version::MIN_CONGESTED + suggested_gas_price`,
+     * where `suggested_gas_price` is embedded into a congested version
+     * to facilitate a gas price feedback mechanism for transactions
+     * cancelled due to shared object congestion.
+     */
+    @Throws(SdkFfiException::class) fun `newCongestedWithSuggestedGasPrice`(`suggestedGasPrice`: kotlin.ULong): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
+        FfiConverterULong.lower(`suggestedGasPrice`),_status)
+}
+    )
+    }
+    
+
+         fun `randomnessUnavailable`(): Version {
+            return FfiConverterTypeVersion.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeVersion: FfiConverter<Version, Pointer> {
+
+    override fun lower(value: Version): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): Version {
+        return Version(value)
+    }
+
+    override fun read(buf: ByteBuffer): Version {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: Version) = 8UL
+
+    override fun write(value: Version, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
 /**
  * Object version assignment from consensus
  *
@@ -57367,7 +58007,7 @@ public interface VersionAssignmentInterface {
     
     fun `objectId`(): ObjectId
     
-    fun `version`(): kotlin.ULong
+    fun `version`(): Version
     
     companion object
 }
@@ -57401,11 +58041,11 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         this.pointer = null
         this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
     }
-    constructor(`objectId`: ObjectId, `version`: kotlin.ULong) :
+    constructor(`objectId`: ObjectId, `version`: Version) :
         this(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
-        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),_status)
+        FfiConverterTypeObjectId.lower(`objectId`),FfiConverterTypeVersion.lower(`version`),_status)
 }
     )
 
@@ -57484,8 +58124,8 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
     }
     
 
-    override fun `version`(): kotlin.ULong {
-            return FfiConverterULong.lift(
+    override fun `version`(): Version {
+            return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
@@ -59386,8 +60026,17 @@ data class AuthenticatorStateExpire (
     /**
      * The initial version of the authenticator object that it was shared at.
      */
-    var `authenticatorObjInitialSharedVersion`: kotlin.ULong
-) {
+    var `authenticatorObjInitialSharedVersion`: Version
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`minEpoch`,
+        this.`authenticatorObjInitialSharedVersion`
+    )
+    }
     
     companion object
 }
@@ -59399,18 +60048,18 @@ public object FfiConverterTypeAuthenticatorStateExpire: FfiConverterRustBuffer<A
     override fun read(buf: ByteBuffer): AuthenticatorStateExpire {
         return AuthenticatorStateExpire(
             FfiConverterULong.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
         )
     }
 
     override fun allocationSize(value: AuthenticatorStateExpire) = (
             FfiConverterULong.allocationSize(value.`minEpoch`) +
-            FfiConverterULong.allocationSize(value.`authenticatorObjInitialSharedVersion`)
+            FfiConverterTypeVersion.allocationSize(value.`authenticatorObjInitialSharedVersion`)
     )
 
     override fun write(value: AuthenticatorStateExpire, buf: ByteBuffer) {
             FfiConverterULong.write(value.`minEpoch`, buf)
-            FfiConverterULong.write(value.`authenticatorObjInitialSharedVersion`, buf)
+            FfiConverterTypeVersion.write(value.`authenticatorObjInitialSharedVersion`, buf)
     }
 }
 
@@ -59443,8 +60092,19 @@ data class AuthenticatorStateUpdateV1 (
      * newly active jwks
      */
     var `newActiveJwks`: List<ActiveJwk>, 
-    var `authenticatorObjInitialSharedVersion`: kotlin.ULong
-) {
+    var `authenticatorObjInitialSharedVersion`: Version
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`epoch`,
+        this.`round`,
+        this.`newActiveJwks`,
+        this.`authenticatorObjInitialSharedVersion`
+    )
+    }
     
     companion object
 }
@@ -59458,7 +60118,7 @@ public object FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer
             FfiConverterULong.read(buf),
             FfiConverterULong.read(buf),
             FfiConverterSequenceTypeActiveJwk.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
         )
     }
 
@@ -59466,14 +60126,14 @@ public object FfiConverterTypeAuthenticatorStateUpdateV1: FfiConverterRustBuffer
             FfiConverterULong.allocationSize(value.`epoch`) +
             FfiConverterULong.allocationSize(value.`round`) +
             FfiConverterSequenceTypeActiveJwk.allocationSize(value.`newActiveJwks`) +
-            FfiConverterULong.allocationSize(value.`authenticatorObjInitialSharedVersion`)
+            FfiConverterTypeVersion.allocationSize(value.`authenticatorObjInitialSharedVersion`)
     )
 
     override fun write(value: AuthenticatorStateUpdateV1, buf: ByteBuffer) {
             FfiConverterULong.write(value.`epoch`, buf)
             FfiConverterULong.write(value.`round`, buf)
             FfiConverterSequenceTypeActiveJwk.write(value.`newActiveJwks`, buf)
-            FfiConverterULong.write(value.`authenticatorObjInitialSharedVersion`, buf)
+            FfiConverterTypeVersion.write(value.`authenticatorObjInitialSharedVersion`, buf)
     }
 }
 
@@ -61726,7 +62386,7 @@ data class MoveStruct (
      * input This is a lamport timestamp, not a sequentially increasing
      * version
      */
-    var `version`: kotlin.ULong, 
+    var `version`: Version, 
     /**
      * BCS bytes of a Move struct value
      */
@@ -61753,20 +62413,20 @@ public object FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
     override fun read(buf: ByteBuffer): MoveStruct {
         return MoveStruct(
             FfiConverterTypeStructTag.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
             FfiConverterByteArray.read(buf),
         )
     }
 
     override fun allocationSize(value: MoveStruct) = (
             FfiConverterTypeStructTag.allocationSize(value.`structType`) +
-            FfiConverterULong.allocationSize(value.`version`) +
+            FfiConverterTypeVersion.allocationSize(value.`version`) +
             FfiConverterByteArray.allocationSize(value.`contents`)
     )
 
     override fun write(value: MoveStruct, buf: ByteBuffer) {
             FfiConverterTypeStructTag.write(value.`structType`, buf)
-            FfiConverterULong.write(value.`version`, buf)
+            FfiConverterTypeVersion.write(value.`version`, buf)
             FfiConverterByteArray.write(value.`contents`, buf)
     }
 }
@@ -62133,7 +62793,7 @@ public object FfiConverterTypeObjectRef: FfiConverterRustBuffer<ObjectRef> {
  */
 data class ObjectReference (
     var `objectId`: ObjectId, 
-    var `version`: kotlin.ULong, 
+    var `version`: Version, 
     var `digest`: Digest
 ) : Disposable {
     
@@ -62157,20 +62817,20 @@ public object FfiConverterTypeObjectReference: FfiConverterRustBuffer<ObjectRefe
     override fun read(buf: ByteBuffer): ObjectReference {
         return ObjectReference(
             FfiConverterTypeObjectId.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
             FfiConverterTypeDigest.read(buf),
         )
     }
 
     override fun allocationSize(value: ObjectReference) = (
             FfiConverterTypeObjectId.allocationSize(value.`objectId`) +
-            FfiConverterULong.allocationSize(value.`version`) +
+            FfiConverterTypeVersion.allocationSize(value.`version`) +
             FfiConverterTypeDigest.allocationSize(value.`digest`)
     )
 
     override fun write(value: ObjectReference, buf: ByteBuffer) {
             FfiConverterTypeObjectId.write(value.`objectId`, buf)
-            FfiConverterULong.write(value.`version`, buf)
+            FfiConverterTypeVersion.write(value.`version`, buf)
             FfiConverterTypeDigest.write(value.`digest`, buf)
     }
 }
@@ -62499,8 +63159,19 @@ data class RandomnessStateUpdate (
     /**
      * The initial version of the randomness object that it was shared at
      */
-    var `randomnessObjInitialSharedVersion`: kotlin.ULong
-) {
+    var `randomnessObjInitialSharedVersion`: Version
+) : Disposable {
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        
+    Disposable.destroy(
+        this.`epoch`,
+        this.`randomnessRound`,
+        this.`randomBytes`,
+        this.`randomnessObjInitialSharedVersion`
+    )
+    }
     
     companion object
 }
@@ -62514,7 +63185,7 @@ public object FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<Rand
             FfiConverterULong.read(buf),
             FfiConverterULong.read(buf),
             FfiConverterByteArray.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
         )
     }
 
@@ -62522,14 +63193,14 @@ public object FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<Rand
             FfiConverterULong.allocationSize(value.`epoch`) +
             FfiConverterULong.allocationSize(value.`randomnessRound`) +
             FfiConverterByteArray.allocationSize(value.`randomBytes`) +
-            FfiConverterULong.allocationSize(value.`randomnessObjInitialSharedVersion`)
+            FfiConverterTypeVersion.allocationSize(value.`randomnessObjInitialSharedVersion`)
     )
 
     override fun write(value: RandomnessStateUpdate, buf: ByteBuffer) {
             FfiConverterULong.write(value.`epoch`, buf)
             FfiConverterULong.write(value.`randomnessRound`, buf)
             FfiConverterByteArray.write(value.`randomBytes`, buf)
-            FfiConverterULong.write(value.`randomnessObjInitialSharedVersion`, buf)
+            FfiConverterTypeVersion.write(value.`randomnessObjInitialSharedVersion`, buf)
     }
 }
 
@@ -62963,7 +63634,7 @@ data class TransactionEffectsV1 (
     /**
      * The version number of all the written Move objects by this transaction.
      */
-    var `lamportVersion`: kotlin.ULong, 
+    var `lamportVersion`: Version, 
     /**
      * Objects whose state are changed in the object store.
      */
@@ -63019,7 +63690,7 @@ public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<Trans
             FfiConverterOptionalUInt.read(buf),
             FfiConverterOptionalTypeDigest.read(buf),
             FfiConverterSequenceTypeDigest.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
             FfiConverterSequenceTypeChangedObject.read(buf),
             FfiConverterSequenceTypeUnchangedSharedObject.read(buf),
             FfiConverterOptionalTypeDigest.read(buf),
@@ -63034,7 +63705,7 @@ public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<Trans
             FfiConverterOptionalUInt.allocationSize(value.`gasObjectIndex`) +
             FfiConverterOptionalTypeDigest.allocationSize(value.`eventsDigest`) +
             FfiConverterSequenceTypeDigest.allocationSize(value.`dependencies`) +
-            FfiConverterULong.allocationSize(value.`lamportVersion`) +
+            FfiConverterTypeVersion.allocationSize(value.`lamportVersion`) +
             FfiConverterSequenceTypeChangedObject.allocationSize(value.`changedObjects`) +
             FfiConverterSequenceTypeUnchangedSharedObject.allocationSize(value.`unchangedSharedObjects`) +
             FfiConverterOptionalTypeDigest.allocationSize(value.`auxiliaryDataDigest`)
@@ -63048,7 +63719,7 @@ public object FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer<Trans
             FfiConverterOptionalUInt.write(value.`gasObjectIndex`, buf)
             FfiConverterOptionalTypeDigest.write(value.`eventsDigest`, buf)
             FfiConverterSequenceTypeDigest.write(value.`dependencies`, buf)
-            FfiConverterULong.write(value.`lamportVersion`, buf)
+            FfiConverterTypeVersion.write(value.`lamportVersion`, buf)
             FfiConverterSequenceTypeChangedObject.write(value.`changedObjects`, buf)
             FfiConverterSequenceTypeUnchangedSharedObject.write(value.`unchangedSharedObjects`, buf)
             FfiConverterOptionalTypeDigest.write(value.`auxiliaryDataDigest`, buf)
@@ -63366,7 +64037,7 @@ data class UpgradeInfo (
     /**
      * Version of the upgraded package
      */
-    var `upgradedVersion`: kotlin.ULong
+    var `upgradedVersion`: Version
 ) : Disposable {
     
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
@@ -63388,18 +64059,18 @@ public object FfiConverterTypeUpgradeInfo: FfiConverterRustBuffer<UpgradeInfo> {
     override fun read(buf: ByteBuffer): UpgradeInfo {
         return UpgradeInfo(
             FfiConverterTypeObjectId.read(buf),
-            FfiConverterULong.read(buf),
+            FfiConverterTypeVersion.read(buf),
         )
     }
 
     override fun allocationSize(value: UpgradeInfo) = (
             FfiConverterTypeObjectId.allocationSize(value.`upgradedId`) +
-            FfiConverterULong.allocationSize(value.`upgradedVersion`)
+            FfiConverterTypeVersion.allocationSize(value.`upgradedVersion`)
     )
 
     override fun write(value: UpgradeInfo, buf: ByteBuffer) {
             FfiConverterTypeObjectId.write(value.`upgradedId`, buf)
-            FfiConverterULong.write(value.`upgradedVersion`, buf)
+            FfiConverterTypeVersion.write(value.`upgradedVersion`, buf)
     }
 }
 
@@ -66183,7 +66854,7 @@ sealed class ObjectIn: Disposable  {
      * The old version, digest and owner.
      */
     data class Data(
-        val `version`: kotlin.ULong, 
+        val `version`: Version, 
         val `digest`: Digest, 
         val `owner`: Owner) : ObjectIn() {
         companion object
@@ -66219,7 +66890,7 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
         return when(buf.getInt()) {
             1 -> ObjectIn.Missing
             2 -> ObjectIn.Data(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 FfiConverterTypeDigest.read(buf),
                 FfiConverterTypeOwner.read(buf),
                 )
@@ -66238,7 +66909,7 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
                 + FfiConverterTypeDigest.allocationSize(value.`digest`)
                 + FfiConverterTypeOwner.allocationSize(value.`owner`)
             )
@@ -66253,7 +66924,7 @@ public object FfiConverterTypeObjectIn : FfiConverterRustBuffer<ObjectIn>{
             }
             is ObjectIn.Data -> {
                 buf.putInt(2)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 FfiConverterTypeDigest.write(value.`digest`, buf)
                 FfiConverterTypeOwner.write(value.`owner`, buf)
                 Unit
@@ -66306,7 +66977,7 @@ sealed class ObjectOut: Disposable  {
      * we don't use lamport version for package publish and upgrades.
      */
     data class PackageWrite(
-        val `version`: kotlin.ULong, 
+        val `version`: Version, 
         val `digest`: Digest) : ObjectOut() {
         companion object
     }
@@ -66352,7 +67023,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
                 FfiConverterTypeOwner.read(buf),
                 )
             3 -> ObjectOut.PackageWrite(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 FfiConverterTypeDigest.read(buf),
                 )
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
@@ -66378,7 +67049,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
                 + FfiConverterTypeDigest.allocationSize(value.`digest`)
             )
         }
@@ -66398,7 +67069,7 @@ public object FfiConverterTypeObjectOut : FfiConverterRustBuffer<ObjectOut>{
             }
             is ObjectOut.PackageWrite -> {
                 buf.putInt(3)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 FfiConverterTypeDigest.write(value.`digest`, buf)
                 Unit
             }
@@ -67050,7 +67721,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * verify untrusted read.
      */
     data class ReadOnlyRoot(
-        val `version`: kotlin.ULong, 
+        val `version`: Version, 
         val `digest`: Digest) : UnchangedSharedKind() {
         companion object
     }
@@ -67059,7 +67730,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * Deleted shared objects that appear mutably/owned in the input.
      */
     data class MutateDeleted(
-        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        val `version`: Version) : UnchangedSharedKind() {
         companion object
     }
     
@@ -67067,7 +67738,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * Deleted shared objects that appear as read-only in the input.
      */
     data class ReadDeleted(
-        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        val `version`: Version) : UnchangedSharedKind() {
         companion object
     }
     
@@ -67076,7 +67747,7 @@ sealed class UnchangedSharedKind: Disposable  {
      * cancellation reason.
      */
     data class Cancelled(
-        val `version`: kotlin.ULong) : UnchangedSharedKind() {
+        val `version`: Version) : UnchangedSharedKind() {
         companion object
     }
     
@@ -67136,17 +67807,17 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
     override fun read(buf: ByteBuffer): UnchangedSharedKind {
         return when(buf.getInt()) {
             1 -> UnchangedSharedKind.ReadOnlyRoot(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 FfiConverterTypeDigest.read(buf),
                 )
             2 -> UnchangedSharedKind.MutateDeleted(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 )
             3 -> UnchangedSharedKind.ReadDeleted(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 )
             4 -> UnchangedSharedKind.Cancelled(
-                FfiConverterULong.read(buf),
+                FfiConverterTypeVersion.read(buf),
                 )
             5 -> UnchangedSharedKind.PerEpochConfig
             else -> throw RuntimeException("invalid enum value, something is very wrong!!")
@@ -67158,7 +67829,7 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
                 + FfiConverterTypeDigest.allocationSize(value.`digest`)
             )
         }
@@ -67166,21 +67837,21 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
             )
         }
         is UnchangedSharedKind.ReadDeleted -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
             )
         }
         is UnchangedSharedKind.Cancelled -> {
             // Add the size for the Int that specifies the variant plus the size needed for all fields
             (
                 4UL
-                + FfiConverterULong.allocationSize(value.`version`)
+                + FfiConverterTypeVersion.allocationSize(value.`version`)
             )
         }
         is UnchangedSharedKind.PerEpochConfig -> {
@@ -67195,23 +67866,23 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
         when(value) {
             is UnchangedSharedKind.ReadOnlyRoot -> {
                 buf.putInt(1)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 FfiConverterTypeDigest.write(value.`digest`, buf)
                 Unit
             }
             is UnchangedSharedKind.MutateDeleted -> {
                 buf.putInt(2)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 Unit
             }
             is UnchangedSharedKind.ReadDeleted -> {
                 buf.putInt(3)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 Unit
             }
             is UnchangedSharedKind.Cancelled -> {
                 buf.putInt(4)
-                FfiConverterULong.write(value.`version`, buf)
+                FfiConverterTypeVersion.write(value.`version`, buf)
                 Unit
             }
             is UnchangedSharedKind.PerEpochConfig -> {
@@ -68267,6 +68938,38 @@ public object FfiConverterOptionalTypeTypeTag: FfiConverterRustBuffer<TypeTag?> 
         } else {
             buf.put(1)
             FfiConverterTypeTypeTag.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalTypeVersion: FfiConverterRustBuffer<Version?> {
+    override fun read(buf: ByteBuffer): Version? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeVersion.read(buf)
+    }
+
+    override fun allocationSize(value: Version?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeVersion.allocationSize(value)
+        }
+    }
+
+    override fun write(value: Version?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeVersion.write(value, buf)
         }
     }
 }
@@ -70783,6 +71486,34 @@ public object FfiConverterSequenceTypeValidatorExecutionTimeObservation: FfiConv
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeValidatorExecutionTimeObservation.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeVersion: FfiConverterRustBuffer<List<Version>> {
+    override fun read(buf: ByteBuffer): List<Version> {
+        val len = buf.getInt()
+        return List<Version>(len) {
+            FfiConverterTypeVersion.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Version>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeVersion.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Version>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeVersion.write(it, buf)
         }
     }
 }

@@ -8,7 +8,7 @@ use iota_graphql_client::{
 };
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
-    UserSignature,
+    UserSignature, Version,
 };
 
 /// A trait which defines methods needed from the client for the Transaction
@@ -23,7 +23,7 @@ pub trait ClientMethods {
     fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>>;
 
     /// Fetch objects
@@ -91,7 +91,7 @@ impl<T: ClientMethods> ClientMethods for &T {
     fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>> {
         (*self).object(object_id, version)
     }
@@ -169,7 +169,7 @@ impl ClientMethods for iota_graphql_client::Client {
     async fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
         self.object(object_id, version).await
     }
@@ -242,7 +242,7 @@ impl ClientMethods for iota_graphql_client::Client {
             .map(|r| iota_graphql_client::query_types::ObjectRef {
                 address: r.object_id,
                 digest: r.digest.to_base58(),
-                version: r.version,
+                version: r.version.as_u64(),
             })
             .collect::<Vec<_>>();
         self.dry_run_tx_kind(
@@ -280,7 +280,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>> {
         self.as_ref().object(object_id, version)
     }

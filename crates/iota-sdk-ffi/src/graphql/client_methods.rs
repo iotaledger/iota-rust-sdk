@@ -4,7 +4,7 @@
 use iota_sdk::{
     graphql_client::{Client, DryRunResult, WaitForTx},
     transaction_builder::ClientMethods,
-    types::{Address, Digest, Object, ObjectId, Transaction, TransactionEffects, TypeTag},
+    types::{Address, Digest, Object, ObjectId, Transaction, TransactionEffects, TypeTag, Version},
 };
 
 use crate::graphql::client::GraphQLClient;
@@ -16,7 +16,7 @@ impl ClientMethods for GraphQLClient {
     async fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
         ClientMethods::object(&*self.0.read().await, object_id, version).await
     }

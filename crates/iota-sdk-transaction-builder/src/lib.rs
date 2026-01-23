@@ -52,7 +52,7 @@
 //! ```
 //! # use std::str::FromStr;
 //! use iota_sdk_transaction_builder::TransactionBuilder;
-//! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+//! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
 //!
 //! let sender =
 //!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
@@ -66,14 +66,14 @@
 //!         "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
 //!     )?,
 //!     digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
-//!     version: 545110774,
+//!     version: Version::from_u64(545110774),
 //! };
 //! let gas_coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
 //!         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
 //!     )?,
 //!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
-//!     version: 473053810,
+//!     version: Version::from_u64(473053810),
 //! };
 //!
 //! builder
@@ -307,7 +307,7 @@ mod tests {
     };
     use iota_types::{
         Address, Digest, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectReference,
-        ObjectType, TransactionEffects, UpgradePolicy,
+        ObjectType, TransactionEffects, UpgradePolicy, Version,
     };
 
     use crate::{TransactionBuilder, assigned, error::Error};
@@ -401,7 +401,7 @@ mod tests {
         );
         let coin_obj_id = "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4";
         let coin_digest = "7opR9rFUYivSTqoJHvFb9p6p54THyHTatMG6id4JKZR9";
-        let coin_version = 2;
+        let coin_version = Version::from_u64(2);
         let coin = ObjectReference::new(
             coin_obj_id.parse().unwrap(),
             coin_version,
@@ -418,7 +418,7 @@ mod tests {
             "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
                 .parse()
                 .unwrap(),
-            2,
+            Version::from_u64(2),
             "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
                 .parse()
                 .unwrap(),
