@@ -20,7 +20,7 @@ use futures::Stream;
 use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
     Object, ObjectId, SenderSignedTransaction, SignedTransaction, StructTag, Transaction,
-    TransactionEffects, TransactionKind, TypeTag, UserSignature,
+    TransactionEffects, TransactionKind, TypeTag, UserSignature, Version,
     framework::Coin,
     iota_names::{NameFormat, NameRegistration, name::Name},
 };
@@ -812,11 +812,11 @@ impl Client {
     pub async fn object(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -898,7 +898,7 @@ impl Client {
             version: None,
         });
 
-        let response = self.run_query(&operation).await.unwrap();
+        let response = self.run_query(&operation).await?;
 
         Ok(response
             .object
@@ -917,11 +917,11 @@ impl Client {
     pub async fn move_object_contents_bcs(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -952,11 +952,11 @@ impl Client {
     pub async fn package(
         &self,
         address: Address,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<MovePackage>> {
         let operation = PackageQuery::build(PackageArgs {
             address,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -978,8 +978,8 @@ impl Client {
         &self,
         address: Address,
         pagination_filter: PaginationFilter,
-        after_version: impl Into<Option<u64>>,
-        before_version: impl Into<Option<u64>>,
+        after_version: impl Into<Option<Version>>,
+        before_version: impl Into<Option<Version>>,
     ) -> Result<Page<MovePackage>> {
         let PaginationFilterResponse {
             after,
@@ -994,8 +994,8 @@ impl Client {
             first,
             last,
             filter: Some(MovePackageVersionFilter {
-                after_version: after_version.into(),
-                before_version: before_version.into(),
+                after_version: after_version.into().map(|v| v.as_u64()),
+                before_version: before_version.into().map(|v| v.as_u64()),
             }),
         });
 
@@ -1365,13 +1365,13 @@ impl Client {
         package: Address,
         module: &str,
         function: &str,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<MoveFunction>> {
         let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
             address: package,
             module,
             function,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
         let response = self.run_query(&operation).await?;
 
@@ -1389,11 +1389,11 @@ impl Client {
     pub async fn move_object_contents(
         &self,
         object_id: ObjectId,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
     ) -> Result<Option<serde_json::Value>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -1413,7 +1413,7 @@ impl Client {
         &self,
         package: Address,
         module: &str,
-        version: impl Into<Option<u64>>,
+        version: impl Into<Option<Version>>,
         pagination_filter_enums: PaginationFilter,
         pagination_filter_friends: PaginationFilter,
         pagination_filter_functions: PaginationFilter,
@@ -1426,7 +1426,7 @@ impl Client {
         let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
             package,
             module,
-            version: version.into(),
+            version: version.into().map(|v| v.as_u64()),
             after_enums: enums.after.as_deref(),
             after_functions: functions.after.as_deref(),
             after_structs: structs.after.as_deref(),
@@ -1754,7 +1754,7 @@ mod tests {
 
         // test specific version
         let pc = client
-            .protocol_config(Some(50))
+            .protocol_config(50)
             .await
             .map_err(|e| {
                 format!(

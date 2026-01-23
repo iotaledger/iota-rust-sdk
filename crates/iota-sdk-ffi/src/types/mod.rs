@@ -18,3 +18,4 @@ pub mod struct_tag;
 pub mod transaction;
 pub mod type_tag;
 pub mod validator;
+pub mod version;
