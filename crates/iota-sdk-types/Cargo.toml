@@ -45,6 +45,7 @@ proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 base64ct = { workspace = true, features = ["alloc"] }
 bnum.workspace = true
 bs58 = "0.5.1"
+derive_more = { version = "2.1.1", features = ["full"] }
 hex.workspace = true
 paste.workspace = true
 roaring.workspace = true

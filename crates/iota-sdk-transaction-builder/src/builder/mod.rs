@@ -348,7 +348,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -381,7 +381,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///                 "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
     ///             )?,
     ///             digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-    ///             version: 435090179,
+    ///             version: Version::from_u64(435090179),
     ///         },
     ///         // The result of a previous command can also be used
     ///         assigned("coin"),
@@ -786,7 +786,7 @@ impl<L> TransactionBuilder<(), L> {
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
-    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
+    /// use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
     ///
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
@@ -798,14 +798,14 @@ impl<L> TransactionBuilder<(), L> {
     ///         "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab",
     ///     )?,
     ///     digest: Digest::from_str("CPpQZqyHZcG2Pb9gZyikbc8dEuyipXHR6ihnfe9iYiMt")?,
-    ///     version: 473053811,
+    ///     version: Version::from_u64(473053811),
     /// };
     /// let gas_coin2 = ObjectReference {
     ///     object_id: ObjectId::from_str(
     ///         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
     ///     )?,
     ///     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
-    ///     version: 473053810,
+    ///     version: Version::from_u64(473053810),
     /// };
     ///
     /// builder
