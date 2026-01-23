@@ -3,10 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{
-    ActiveJwk, AuthenticatorStateExpire, AuthenticatorStateUpdateV1, Jwk, JwkId,
-    RandomnessStateUpdate, TransactionExpiration,
-};
+use iota_sdk::types::{ActiveJwk, Jwk, JwkId, TransactionExpiration};
 
 use crate::{
     error::Result,
@@ -16,11 +13,12 @@ use crate::{
         crypto::Bls12381PublicKey,
         digest::Digest,
         events::Event,
-        object::{GenesisObject, ObjectId, ObjectReference, Version},
+        object::{GenesisObject, ObjectId, ObjectReference},
         signature::UserSignature,
         struct_tag::Identifier,
         transaction::v1::TransactionEffectsV1,
         type_tag::TypeTag,
+        version::Version,
     },
 };
 
@@ -245,8 +243,8 @@ impl TransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn new_authenticator_state_update_v1(tx: &AuthenticatorStateUpdateV1) -> Self {
-        Self(iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1(tx.clone()))
+    pub fn new_authenticator_state_update_v1(tx: AuthenticatorStateUpdateV1) -> Self {
+        Self(iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1(tx.into()))
     }
 
     #[uniffi::constructor]
@@ -257,9 +255,9 @@ impl TransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn new_randomness_state_update(tx: &RandomnessStateUpdate) -> Self {
+    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
         Self(iota_sdk::types::TransactionKind::RandomnessStateUpdate(
-            tx.clone(),
+            tx.into(),
         ))
     }
 }
@@ -349,10 +347,14 @@ impl Input {
 
     /// A move object whose owner is "Shared"
     #[uniffi::constructor]
-    pub fn new_shared(object_id: &ObjectId, initial_shared_version: u64, mutable: bool) -> Self {
+    pub fn new_shared(
+        object_id: &ObjectId,
+        initial_shared_version: &Version,
+        mutable: bool,
+    ) -> Self {
         Self(iota_sdk::types::Input::Shared {
             object_id: object_id.0,
-            initial_shared_version,
+            initial_shared_version: **initial_shared_version,
             mutable,
         })
     }
@@ -884,10 +886,10 @@ pub struct VersionAssignment(iota_sdk::types::VersionAssignment);
 #[uniffi::export]
 impl VersionAssignment {
     #[uniffi::constructor]
-    pub fn new(object_id: &ObjectId, version: u64) -> Self {
+    pub fn new(object_id: &ObjectId, version: &Version) -> Self {
         Self(iota_sdk::types::VersionAssignment {
             object_id: object_id.0,
-            version,
+            version: **version,
         })
     }
 
@@ -896,7 +898,7 @@ impl VersionAssignment {
     }
 
     pub fn version(&self) -> Version {
-        self.0.version
+        self.0.version.into()
     }
 }
 
@@ -1053,16 +1055,16 @@ pub struct SystemPackage(pub iota_sdk::types::SystemPackage);
 #[uniffi::export]
 impl SystemPackage {
     #[uniffi::constructor]
-    pub fn new(version: Version, modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
+    pub fn new(version: &Version, modules: Vec<Vec<u8>>, dependencies: Vec<Arc<ObjectId>>) -> Self {
         Self(iota_sdk::types::SystemPackage {
-            version,
+            version: **version,
             modules,
             dependencies: dependencies.into_iter().map(|dep| dep.0).collect(),
         })
     }
 
     pub fn version(&self) -> Version {
-        self.0.version
+        self.0.version.into()
     }
 
     pub fn modules(&self) -> Vec<Vec<u8>> {
@@ -1400,12 +1402,33 @@ impl ChangeEpochV4 {
 /// ```text
 /// authenticator-state-expire = u64 u64
 /// ```
-#[uniffi::remote(Record)]
+#[derive(uniffi::Record)]
 pub struct AuthenticatorStateExpire {
     /// Expire JWKs that have a lower epoch than this
     pub min_epoch: u64,
     /// The initial version of the authenticator object that it was shared at.
-    pub authenticator_obj_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: Arc<Version>,
+}
+
+impl From<AuthenticatorStateExpire> for iota_sdk::types::AuthenticatorStateExpire {
+    fn from(value: AuthenticatorStateExpire) -> Self {
+        Self {
+            min_epoch: value.min_epoch,
+            authenticator_obj_initial_shared_version: **value
+                .authenticator_obj_initial_shared_version,
+        }
+    }
+}
+
+impl From<iota_sdk::types::AuthenticatorStateExpire> for AuthenticatorStateExpire {
+    fn from(value: iota_sdk::types::AuthenticatorStateExpire) -> Self {
+        Self {
+            min_epoch: value.min_epoch,
+            authenticator_obj_initial_shared_version: Arc::new(
+                value.authenticator_obj_initial_shared_version.into(),
+            ),
+        }
+    }
 }
 
 /// Update the set of valid JWKs
@@ -1420,7 +1443,7 @@ pub struct AuthenticatorStateExpire {
 ///                              (vector active-jwk)
 ///                              u64 ; initial version of the authenticator object
 /// ```
-#[uniffi::remote(Record)]
+#[derive(uniffi::Record)]
 pub struct AuthenticatorStateUpdateV1 {
     /// Epoch of the authenticator state update transaction
     pub epoch: u64,
@@ -1428,7 +1451,32 @@ pub struct AuthenticatorStateUpdateV1 {
     pub round: u64,
     /// newly active jwks
     pub new_active_jwks: Vec<ActiveJwk>,
-    pub authenticator_obj_initial_shared_version: u64,
+    pub authenticator_obj_initial_shared_version: Arc<Version>,
+}
+
+impl From<AuthenticatorStateUpdateV1> for iota_sdk::types::AuthenticatorStateUpdateV1 {
+    fn from(value: AuthenticatorStateUpdateV1) -> Self {
+        Self {
+            epoch: value.epoch,
+            round: value.round,
+            new_active_jwks: value.new_active_jwks,
+            authenticator_obj_initial_shared_version: **value
+                .authenticator_obj_initial_shared_version,
+        }
+    }
+}
+
+impl From<iota_sdk::types::AuthenticatorStateUpdateV1> for AuthenticatorStateUpdateV1 {
+    fn from(value: iota_sdk::types::AuthenticatorStateUpdateV1) -> Self {
+        Self {
+            epoch: value.epoch,
+            round: value.round,
+            new_active_jwks: value.new_active_jwks,
+            authenticator_obj_initial_shared_version: Arc::new(
+                value.authenticator_obj_initial_shared_version.into(),
+            ),
+        }
+    }
 }
 
 /// A new Jwk
@@ -1630,7 +1678,7 @@ impl ExecutionTimeObservationKey {
 /// ```text
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
-#[uniffi::remote(Record)]
+#[derive(uniffi::Record)]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     pub epoch: u64,
@@ -1639,7 +1687,31 @@ pub struct RandomnessStateUpdate {
     /// Updated random bytes
     pub random_bytes: Vec<u8>,
     /// The initial version of the randomness object that it was shared at
-    pub randomness_obj_initial_shared_version: u64,
+    pub randomness_obj_initial_shared_version: Arc<Version>,
+}
+
+impl From<RandomnessStateUpdate> for iota_sdk::types::RandomnessStateUpdate {
+    fn from(value: RandomnessStateUpdate) -> Self {
+        Self {
+            epoch: value.epoch,
+            randomness_round: value.randomness_round,
+            random_bytes: value.random_bytes,
+            randomness_obj_initial_shared_version: **value.randomness_obj_initial_shared_version,
+        }
+    }
+}
+
+impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
+    fn from(value: iota_sdk::types::RandomnessStateUpdate) -> Self {
+        Self {
+            epoch: value.epoch,
+            randomness_round: value.randomness_round,
+            random_bytes: value.random_bytes,
+            randomness_obj_initial_shared_version: Arc::new(
+                value.randomness_obj_initial_shared_version.into(),
+            ),
+        }
+    }
 }
 
 /// Operation run at the end of an epoch
@@ -1707,8 +1779,8 @@ impl EndOfEpochTransactionKind {
     }
 
     #[uniffi::constructor]
-    pub fn new_authenticator_state_expire(tx: &AuthenticatorStateExpire) -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.clone()))
+    pub fn new_authenticator_state_expire(tx: AuthenticatorStateExpire) -> Self {
+        Self(iota_sdk::types::EndOfEpochTransactionKind::AuthenticatorStateExpire(tx.into()))
     }
 }
 
