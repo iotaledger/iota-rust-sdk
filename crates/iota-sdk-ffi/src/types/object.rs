@@ -3,8 +3,6 @@
 
 use std::{collections::HashMap, sync::Arc};
 
-pub type Version = iota_sdk::types::Version;
-
 use crate::{
     error::Result,
     types::{
@@ -12,6 +10,7 @@ use crate::{
         digest::Digest,
         struct_tag::{Identifier, StructTag},
         type_tag::TypeTag,
+        version::Version,
     },
 };
 
@@ -131,7 +130,7 @@ named_object_id!(ZERO, SYSTEM, CLOCK);
 #[derive(uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
-    version: u64,
+    version: Arc<Version>,
     digest: Arc<Digest>,
 }
 
@@ -139,7 +138,7 @@ impl From<iota_sdk::types::ObjectReference> for ObjectReference {
     fn from(value: iota_sdk::types::ObjectReference) -> Self {
         Self {
             object_id: Arc::new((*value.object_id()).into()),
-            version: value.version(),
+            version: Arc::new(value.version().into()),
             digest: Arc::new((*value.digest()).into()),
         }
     }
@@ -147,7 +146,7 @@ impl From<iota_sdk::types::ObjectReference> for ObjectReference {
 
 impl From<ObjectReference> for iota_sdk::types::ObjectReference {
     fn from(value: ObjectReference) -> Self {
-        Self::new(**value.object_id, value.version, **value.digest)
+        Self::new(**value.object_id, **value.version, **value.digest)
     }
 }
 
@@ -193,7 +192,7 @@ impl Object {
 
     /// Return this object's version
     pub fn version(&self) -> Version {
-        self.0.version()
+        self.0.version().into()
     }
 
     /// Return this object's type
@@ -361,14 +360,14 @@ pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: Arc<ObjectId>,
     /// Version of the upgraded package
-    pub upgraded_version: Version,
+    pub upgraded_version: Arc<Version>,
 }
 
 impl From<iota_sdk::types::UpgradeInfo> for UpgradeInfo {
     fn from(value: iota_sdk::types::UpgradeInfo) -> Self {
         Self {
             upgraded_id: Arc::new(value.upgraded_id.into()),
-            upgraded_version: value.upgraded_version,
+            upgraded_version: Arc::new(value.upgraded_version.into()),
         }
     }
 }
@@ -377,7 +376,7 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
     fn from(value: UpgradeInfo) -> Self {
         Self {
             upgraded_id: **value.upgraded_id,
-            upgraded_version: value.upgraded_version,
+            upgraded_version: **value.upgraded_version,
         }
     }
 }
@@ -404,14 +403,14 @@ impl MovePackage {
     #[uniffi::constructor]
     pub fn new(
         id: &ObjectId,
-        version: Version,
+        version: &Version,
         modules: HashMap<Arc<Identifier>, Vec<u8>>,
         type_origin_table: Vec<TypeOrigin>,
         linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
     ) -> Result<Self> {
         Ok(Self(iota_sdk::types::MovePackage {
             id: **id,
-            version,
+            version: **version,
             modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
             type_origin_table: type_origin_table
                 .into_iter()
@@ -429,7 +428,7 @@ impl MovePackage {
     }
 
     pub fn version(&self) -> Version {
-        self.0.version
+        self.0.version.into()
     }
 
     pub fn modules(&self) -> HashMap<Arc<Identifier>, Vec<u8>> {
@@ -482,7 +481,7 @@ pub struct MoveStruct {
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
-    pub version: Version,
+    pub version: Arc<Version>,
     /// BCS bytes of a Move struct value
     pub contents: Vec<u8>,
 }
@@ -491,7 +490,7 @@ impl From<iota_sdk::types::MoveStruct> for MoveStruct {
     fn from(value: iota_sdk::types::MoveStruct) -> Self {
         Self {
             struct_type: Arc::new(value.type_.into()),
-            version: value.version,
+            version: Arc::new(value.version.into()),
             contents: value.contents,
         }
     }
@@ -501,7 +500,7 @@ impl From<MoveStruct> for iota_sdk::types::MoveStruct {
     fn from(value: MoveStruct) -> Self {
         Self {
             type_: value.struct_type.0.clone(),
-            version: value.version,
+            version: **value.version,
             contents: value.contents,
         }
     }
@@ -549,8 +548,8 @@ impl Owner {
     }
 
     #[uniffi::constructor]
-    pub fn new_shared(version: Version) -> Self {
-        Self(iota_sdk::types::Owner::Shared(version))
+    pub fn new_shared(version: &Version) -> Self {
+        Self(iota_sdk::types::Owner::Shared(**version))
     }
 
     #[uniffi::constructor]
@@ -599,11 +598,15 @@ impl Owner {
     }
 
     pub fn as_shared(&self) -> Version {
-        *self.0.as_shared()
+        (*self.0.as_shared()).into()
     }
 
-    pub fn as_shared_opt(&self) -> Option<Version> {
-        self.0.as_shared_opt().copied()
+    pub fn as_shared_opt(&self) -> Option<Arc<Version>> {
+        self.0
+            .as_shared_opt()
+            .copied()
+            .map(Into::into)
+            .map(Arc::new)
     }
 }
 
@@ -675,7 +678,7 @@ impl GenesisObject {
     }
 
     pub fn version(&self) -> Version {
-        self.0.version()
+        self.0.version().into()
     }
 
     pub fn object_type(&self) -> ObjectType {

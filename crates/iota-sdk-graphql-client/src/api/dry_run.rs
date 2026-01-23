@@ -32,7 +32,7 @@ impl Client {
             .iter()
             .map(|r| ObjectRef {
                 address: *r.object_id(),
-                version: r.version(),
+                version: r.version().as_u64(),
                 digest: r.digest().to_base58(),
             })
             .collect::<Vec<_>>();

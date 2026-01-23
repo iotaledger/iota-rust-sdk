@@ -127,6 +127,7 @@ pub mod transaction;
 pub mod type_tag;
 pub mod u256;
 pub mod validator;
+pub mod version;
 
 pub use address::{Address, AddressParseError};
 pub use checkpoint::{
@@ -158,7 +159,7 @@ pub use gas::GasCostSummary;
 pub use move_package::{MovePackageData, UpgradePolicy};
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
-    TypeOrigin, UpgradeInfo, Version,
+    TypeOrigin, UpgradeInfo,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
@@ -176,6 +177,7 @@ pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
+pub use version::Version;
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;

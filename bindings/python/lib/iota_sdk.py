@@ -1503,7 +1503,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner() != 50201:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 36305:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 26576:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events() != 64664:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1559,9 +1559,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1569,19 +1569,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1677,7 +1677,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() != 7308:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 7483:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1815,7 +1815,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate() != 24969:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1853,9 +1853,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2085,7 +2085,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 53823:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2281,9 +2281,23 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 54746:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid() != 4593:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_next() != 46748:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2439,7 +2453,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 48143:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2519,7 +2533,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 31500:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() != 61420:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2599,7 +2613,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 22241:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2847,7 +2861,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2939,7 +2953,23 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable() != 14185:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 50135:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
 
 # A ctypes library to expose the extern-C FFI definitions.
@@ -4832,7 +4862,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -5310,7 +5340,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_receiving.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     ctypes.c_int8,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -5850,7 +5880,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_movepackage.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_movepackage.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
@@ -5881,7 +5911,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6659,7 +6689,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_version.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_version.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6924,7 +6954,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_object.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared.argtypes = (
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared.restype = ctypes.c_void_p
@@ -6952,7 +6982,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8752,7 +8782,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_systempackage.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_systempackage.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new.argtypes = (
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     _UniffiRustBuffer,
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -8772,7 +8802,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9943,6 +9973,86 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne.a
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_version.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_version.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_version.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_as_u64.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_as_u64.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_congested.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_congested.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_valid.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_valid.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_next.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_next.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_previous.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_previous.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_versionassignment.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9955,7 +10065,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_versionassignment.argtypes = (
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_versionassignment.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_uint64,
+    ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new.restype = ctypes.c_void_p
@@ -9968,7 +10078,7 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14869,6 +14979,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_public_key.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_as_u64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_is_congested.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_is_valid.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_next.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_next.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_previous.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_version_previous.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id.restype = ctypes.c_uint16
@@ -15856,6 +15987,30 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignaturev
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new.restype = ctypes.c_uint16
@@ -18624,7 +18779,7 @@ class MoveStruct:
     The type of this object
     """
 
-    version: "int"
+    version: "Version"
     """
     Number that increases each time a tx takes this object as a mutable
     input This is a lamport timestamp, not a sequentially increasing
@@ -18636,7 +18791,7 @@ class MoveStruct:
     BCS bytes of a Move struct value
     """
 
-    def __init__(self, *, struct_type: "StructTag", version: "int", contents: "bytes"):
+    def __init__(self, *, struct_type: "StructTag", version: "Version", contents: "bytes"):
         self.struct_type = struct_type
         self.version = version
         self.contents = contents
@@ -18658,20 +18813,20 @@ class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
     def read(buf):
         return MoveStruct(
             struct_type=_UniffiConverterTypeStructTag.read(buf),
-            version=_UniffiConverterUInt64.read(buf),
+            version=_UniffiConverterTypeVersion.read(buf),
             contents=_UniffiConverterBytes.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterTypeStructTag.check_lower(value.struct_type)
-        _UniffiConverterUInt64.check_lower(value.version)
+        _UniffiConverterTypeVersion.check_lower(value.version)
         _UniffiConverterBytes.check_lower(value.contents)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeStructTag.write(value.struct_type, buf)
-        _UniffiConverterUInt64.write(value.version, buf)
+        _UniffiConverterTypeVersion.write(value.version, buf)
         _UniffiConverterBytes.write(value.contents, buf)
 
 
@@ -19075,9 +19230,9 @@ class ObjectReference:
     """
 
     object_id: "ObjectId"
-    version: "int"
+    version: "Version"
     digest: "Digest"
-    def __init__(self, *, object_id: "ObjectId", version: "int", digest: "Digest"):
+    def __init__(self, *, object_id: "ObjectId", version: "Version", digest: "Digest"):
         self.object_id = object_id
         self.version = version
         self.digest = digest
@@ -19099,20 +19254,20 @@ class _UniffiConverterTypeObjectReference(_UniffiConverterRustBuffer):
     def read(buf):
         return ObjectReference(
             object_id=_UniffiConverterTypeObjectId.read(buf),
-            version=_UniffiConverterUInt64.read(buf),
+            version=_UniffiConverterTypeVersion.read(buf),
             digest=_UniffiConverterTypeDigest.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterTypeObjectId.check_lower(value.object_id)
-        _UniffiConverterUInt64.check_lower(value.version)
+        _UniffiConverterTypeVersion.check_lower(value.version)
         _UniffiConverterTypeDigest.check_lower(value.digest)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeObjectId.write(value.object_id, buf)
-        _UniffiConverterUInt64.write(value.version, buf)
+        _UniffiConverterTypeVersion.write(value.version, buf)
         _UniffiConverterTypeDigest.write(value.digest, buf)
 
 
@@ -19506,12 +19661,12 @@ class RandomnessStateUpdate:
     Updated random bytes
     """
 
-    randomness_obj_initial_shared_version: "int"
+    randomness_obj_initial_shared_version: "Version"
     """
     The initial version of the randomness object that it was shared at
     """
 
-    def __init__(self, *, epoch: "int", randomness_round: "int", random_bytes: "bytes", randomness_obj_initial_shared_version: "int"):
+    def __init__(self, *, epoch: "int", randomness_round: "int", random_bytes: "bytes", randomness_obj_initial_shared_version: "Version"):
         self.epoch = epoch
         self.randomness_round = randomness_round
         self.random_bytes = random_bytes
@@ -19538,7 +19693,7 @@ class _UniffiConverterTypeRandomnessStateUpdate(_UniffiConverterRustBuffer):
             epoch=_UniffiConverterUInt64.read(buf),
             randomness_round=_UniffiConverterUInt64.read(buf),
             random_bytes=_UniffiConverterBytes.read(buf),
-            randomness_obj_initial_shared_version=_UniffiConverterUInt64.read(buf),
+            randomness_obj_initial_shared_version=_UniffiConverterTypeVersion.read(buf),
         )
 
     @staticmethod
@@ -19546,14 +19701,14 @@ class _UniffiConverterTypeRandomnessStateUpdate(_UniffiConverterRustBuffer):
         _UniffiConverterUInt64.check_lower(value.epoch)
         _UniffiConverterUInt64.check_lower(value.randomness_round)
         _UniffiConverterBytes.check_lower(value.random_bytes)
-        _UniffiConverterUInt64.check_lower(value.randomness_obj_initial_shared_version)
+        _UniffiConverterTypeVersion.check_lower(value.randomness_obj_initial_shared_version)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterUInt64.write(value.epoch, buf)
         _UniffiConverterUInt64.write(value.randomness_round, buf)
         _UniffiConverterBytes.write(value.random_bytes, buf)
-        _UniffiConverterUInt64.write(value.randomness_obj_initial_shared_version, buf)
+        _UniffiConverterTypeVersion.write(value.randomness_obj_initial_shared_version, buf)
 
 
 class ServiceConfig:
@@ -20023,7 +20178,7 @@ class TransactionEffectsV1:
     The set of transaction digests this transaction depends on.
     """
 
-    lamport_version: "int"
+    lamport_version: "Version"
     """
     The version number of all the written Move objects by this transaction.
     """
@@ -20050,7 +20205,7 @@ class TransactionEffectsV1:
     It also provides more flexibility on the format and type of the data.
     """
 
-    def __init__(self, *, status: "ExecutionStatus", epoch: "int", gas_used: "GasCostSummary", transaction_digest: "Digest", gas_object_index: "typing.Optional[int]" = _DEFAULT, events_digest: "typing.Optional[Digest]" = _DEFAULT, dependencies: "typing.List[Digest]", lamport_version: "int", changed_objects: "typing.List[ChangedObject]", unchanged_shared_objects: "typing.List[UnchangedSharedObject]", auxiliary_data_digest: "typing.Optional[Digest]" = _DEFAULT):
+    def __init__(self, *, status: "ExecutionStatus", epoch: "int", gas_used: "GasCostSummary", transaction_digest: "Digest", gas_object_index: "typing.Optional[int]" = _DEFAULT, events_digest: "typing.Optional[Digest]" = _DEFAULT, dependencies: "typing.List[Digest]", lamport_version: "Version", changed_objects: "typing.List[ChangedObject]", unchanged_shared_objects: "typing.List[UnchangedSharedObject]", auxiliary_data_digest: "typing.Optional[Digest]" = _DEFAULT):
         self.status = status
         self.epoch = epoch
         self.gas_used = gas_used
@@ -20111,7 +20266,7 @@ class _UniffiConverterTypeTransactionEffectsV1(_UniffiConverterRustBuffer):
             gas_object_index=_UniffiConverterOptionalUInt32.read(buf),
             events_digest=_UniffiConverterOptionalTypeDigest.read(buf),
             dependencies=_UniffiConverterSequenceTypeDigest.read(buf),
-            lamport_version=_UniffiConverterUInt64.read(buf),
+            lamport_version=_UniffiConverterTypeVersion.read(buf),
             changed_objects=_UniffiConverterSequenceTypeChangedObject.read(buf),
             unchanged_shared_objects=_UniffiConverterSequenceTypeUnchangedSharedObject.read(buf),
             auxiliary_data_digest=_UniffiConverterOptionalTypeDigest.read(buf),
@@ -20126,7 +20281,7 @@ class _UniffiConverterTypeTransactionEffectsV1(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalUInt32.check_lower(value.gas_object_index)
         _UniffiConverterOptionalTypeDigest.check_lower(value.events_digest)
         _UniffiConverterSequenceTypeDigest.check_lower(value.dependencies)
-        _UniffiConverterUInt64.check_lower(value.lamport_version)
+        _UniffiConverterTypeVersion.check_lower(value.lamport_version)
         _UniffiConverterSequenceTypeChangedObject.check_lower(value.changed_objects)
         _UniffiConverterSequenceTypeUnchangedSharedObject.check_lower(value.unchanged_shared_objects)
         _UniffiConverterOptionalTypeDigest.check_lower(value.auxiliary_data_digest)
@@ -20140,7 +20295,7 @@ class _UniffiConverterTypeTransactionEffectsV1(_UniffiConverterRustBuffer):
         _UniffiConverterOptionalUInt32.write(value.gas_object_index, buf)
         _UniffiConverterOptionalTypeDigest.write(value.events_digest, buf)
         _UniffiConverterSequenceTypeDigest.write(value.dependencies, buf)
-        _UniffiConverterUInt64.write(value.lamport_version, buf)
+        _UniffiConverterTypeVersion.write(value.lamport_version, buf)
         _UniffiConverterSequenceTypeChangedObject.write(value.changed_objects, buf)
         _UniffiConverterSequenceTypeUnchangedSharedObject.write(value.unchanged_shared_objects, buf)
         _UniffiConverterOptionalTypeDigest.write(value.auxiliary_data_digest, buf)
@@ -20504,12 +20659,12 @@ class UpgradeInfo:
     Id of the upgraded packages
     """
 
-    upgraded_version: "int"
+    upgraded_version: "Version"
     """
     Version of the upgraded package
     """
 
-    def __init__(self, *, upgraded_id: "ObjectId", upgraded_version: "int"):
+    def __init__(self, *, upgraded_id: "ObjectId", upgraded_version: "Version"):
         self.upgraded_id = upgraded_id
         self.upgraded_version = upgraded_version
 
@@ -20528,18 +20683,18 @@ class _UniffiConverterTypeUpgradeInfo(_UniffiConverterRustBuffer):
     def read(buf):
         return UpgradeInfo(
             upgraded_id=_UniffiConverterTypeObjectId.read(buf),
-            upgraded_version=_UniffiConverterUInt64.read(buf),
+            upgraded_version=_UniffiConverterTypeVersion.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterTypeObjectId.check_lower(value.upgraded_id)
-        _UniffiConverterUInt64.check_lower(value.upgraded_version)
+        _UniffiConverterTypeVersion.check_lower(value.upgraded_version)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeObjectId.write(value.upgraded_id, buf)
-        _UniffiConverterUInt64.write(value.upgraded_version, buf)
+        _UniffiConverterTypeVersion.write(value.upgraded_version, buf)
 
 
 class Validator:
@@ -24280,11 +24435,11 @@ class ObjectIn:
         The old version, digest and owner.
         """
 
-        version: "int"
+        version: "Version"
         digest: "Digest"
         owner: "Owner"
 
-        def __init__(self,version: "int", digest: "Digest", owner: "Owner"):
+        def __init__(self,version: "Version", digest: "Digest", owner: "Owner"):
             self.version = version
             self.digest = digest
             self.owner = owner
@@ -24335,7 +24490,7 @@ class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
             )
         if variant == 2:
             return ObjectIn.DATA(
-                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeVersion.read(buf),
                 _UniffiConverterTypeDigest.read(buf),
                 _UniffiConverterTypeOwner.read(buf),
             )
@@ -24346,7 +24501,7 @@ class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
         if value.is_MISSING():
             return
         if value.is_DATA():
-            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeVersion.check_lower(value.version)
             _UniffiConverterTypeDigest.check_lower(value.digest)
             _UniffiConverterTypeOwner.check_lower(value.owner)
             return
@@ -24358,7 +24513,7 @@ class _UniffiConverterTypeObjectIn(_UniffiConverterRustBuffer):
             buf.write_i32(1)
         if value.is_DATA():
             buf.write_i32(2)
-            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeVersion.write(value.version, buf)
             _UniffiConverterTypeDigest.write(value.digest, buf)
             _UniffiConverterTypeOwner.write(value.owner, buf)
 
@@ -24439,10 +24594,10 @@ class ObjectOut:
         we don't use lamport version for package publish and upgrades.
         """
 
-        version: "int"
+        version: "Version"
         digest: "Digest"
 
-        def __init__(self,version: "int", digest: "Digest"):
+        def __init__(self,version: "Version", digest: "Digest"):
             self.version = version
             self.digest = digest
 
@@ -24500,7 +24655,7 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
             )
         if variant == 3:
             return ObjectOut.PACKAGE_WRITE(
-                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeVersion.read(buf),
                 _UniffiConverterTypeDigest.read(buf),
             )
         raise InternalError("Raw enum value doesn't match any cases")
@@ -24514,7 +24669,7 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
             _UniffiConverterTypeOwner.check_lower(value.owner)
             return
         if value.is_PACKAGE_WRITE():
-            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeVersion.check_lower(value.version)
             _UniffiConverterTypeDigest.check_lower(value.digest)
             return
         raise ValueError(value)
@@ -24529,7 +24684,7 @@ class _UniffiConverterTypeObjectOut(_UniffiConverterRustBuffer):
             _UniffiConverterTypeOwner.write(value.owner, buf)
         if value.is_PACKAGE_WRITE():
             buf.write_i32(3)
-            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeVersion.write(value.version, buf)
             _UniffiConverterTypeDigest.write(value.digest, buf)
 
 
@@ -25402,10 +25557,10 @@ class UnchangedSharedKind:
         verify untrusted read.
         """
 
-        version: "int"
+        version: "Version"
         digest: "Digest"
 
-        def __init__(self,version: "int", digest: "Digest"):
+        def __init__(self,version: "Version", digest: "Digest"):
             self.version = version
             self.digest = digest
 
@@ -25426,9 +25581,9 @@ class UnchangedSharedKind:
         Deleted shared objects that appear mutably/owned in the input.
         """
 
-        version: "int"
+        version: "Version"
 
-        def __init__(self,version: "int"):
+        def __init__(self,version: "Version"):
             self.version = version
 
         def __str__(self):
@@ -25446,9 +25601,9 @@ class UnchangedSharedKind:
         Deleted shared objects that appear as read-only in the input.
         """
 
-        version: "int"
+        version: "Version"
 
-        def __init__(self,version: "int"):
+        def __init__(self,version: "Version"):
             self.version = version
 
         def __str__(self):
@@ -25467,9 +25622,9 @@ class UnchangedSharedKind:
         cancellation reason.
         """
 
-        version: "int"
+        version: "Version"
 
-        def __init__(self,version: "int"):
+        def __init__(self,version: "Version"):
             self.version = version
 
         def __str__(self):
@@ -25544,20 +25699,20 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
         variant = buf.read_i32()
         if variant == 1:
             return UnchangedSharedKind.READ_ONLY_ROOT(
-                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeVersion.read(buf),
                 _UniffiConverterTypeDigest.read(buf),
             )
         if variant == 2:
             return UnchangedSharedKind.MUTATE_DELETED(
-                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeVersion.read(buf),
             )
         if variant == 3:
             return UnchangedSharedKind.READ_DELETED(
-                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeVersion.read(buf),
             )
         if variant == 4:
             return UnchangedSharedKind.CANCELLED(
-                _UniffiConverterUInt64.read(buf),
+                _UniffiConverterTypeVersion.read(buf),
             )
         if variant == 5:
             return UnchangedSharedKind.PER_EPOCH_CONFIG(
@@ -25567,17 +25722,17 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
     @staticmethod
     def check_lower(value):
         if value.is_READ_ONLY_ROOT():
-            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeVersion.check_lower(value.version)
             _UniffiConverterTypeDigest.check_lower(value.digest)
             return
         if value.is_MUTATE_DELETED():
-            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeVersion.check_lower(value.version)
             return
         if value.is_READ_DELETED():
-            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeVersion.check_lower(value.version)
             return
         if value.is_CANCELLED():
-            _UniffiConverterUInt64.check_lower(value.version)
+            _UniffiConverterTypeVersion.check_lower(value.version)
             return
         if value.is_PER_EPOCH_CONFIG():
             return
@@ -25587,17 +25742,17 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
     def write(value, buf):
         if value.is_READ_ONLY_ROOT():
             buf.write_i32(1)
-            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeVersion.write(value.version, buf)
             _UniffiConverterTypeDigest.write(value.digest, buf)
         if value.is_MUTATE_DELETED():
             buf.write_i32(2)
-            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeVersion.write(value.version, buf)
         if value.is_READ_DELETED():
             buf.write_i32(3)
-            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeVersion.write(value.version, buf)
         if value.is_CANCELLED():
             buf.write_i32(4)
-            _UniffiConverterUInt64.write(value.version, buf)
+            _UniffiConverterTypeVersion.write(value.version, buf)
         if value.is_PER_EPOCH_CONFIG():
             buf.write_i32(5)
 
@@ -35939,8 +36094,8 @@ class GenesisObject():
 
 
 
-    def version(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
+    def version(self, ) -> "Version":
+        return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_genesisobject_version,self._uniffi_clone_pointer(),)
         )
 
@@ -36332,7 +36487,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the contents' JSON of an object that is a Move object.
 
@@ -36342,7 +36497,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return the BCS of an object that is a Move object.
 
@@ -36416,13 +36571,13 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
+    def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Return the normalized Move module data for the provided module.
         """
 
         raise NotImplementedError
-    def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         Return an object based on the provided `Address`.
 
@@ -36448,7 +36603,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def package(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+    def package(self, address: "Address",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
         """
         The package corresponding to the given address (at the optionally given
         version). When no version is given, the package is loaded directly
@@ -36472,7 +36627,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
+    def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
         """
         Fetch all versions of package at address (packages that share this
         package's original ID), optionally bounding the versions exclusively
@@ -37439,7 +37594,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Value]":
+    async def move_object_contents(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[Value]":
         """
         Return the contents' JSON of an object that is a Move object.
 
@@ -37452,13 +37607,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37473,7 +37628,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[bytes]":
+    async def move_object_contents_bcs(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[bytes]":
         """
         Return the BCS of an object that is a Move object.
 
@@ -37486,13 +37641,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37636,7 +37791,7 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
@@ -37644,7 +37799,7 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeAddress.lower(package),
         _UniffiConverterString.lower(module),
         _UniffiConverterString.lower(function),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37659,7 +37814,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
+    async def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
         """
         Return the normalized Move module data for the provided module.
         """
@@ -37670,7 +37825,7 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         if pagination_filter_enums is _DEFAULT:
             pagination_filter_enums = None
@@ -37693,7 +37848,7 @@ _UniffiConverterTypeSdkFfiError,
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(package),
         _UniffiConverterString.lower(module),
-        _UniffiConverterOptionalUInt64.lower(version),
+        _UniffiConverterOptionalTypeVersion.lower(version),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_enums),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_friends),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_functions),
@@ -37712,7 +37867,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[Object]":
+    async def object(self, object_id: "ObjectId",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[Object]":
         """
         Return an object based on the provided `Address`.
 
@@ -37725,13 +37880,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37807,7 +37962,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def package(self, address: "Address",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MovePackage]":
+    async def package(self, address: "Address",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[MovePackage]":
         """
         The package corresponding to the given address (at the optionally given
         version). When no version is given, the package is loaded directly
@@ -37826,13 +37981,13 @@ _UniffiConverterTypeSdkFfiError,
         
         if version is _DEFAULT:
             version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
+        _UniffiConverterOptionalTypeVersion.check_lower(version)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterOptionalUInt64.lower(version)
+        _UniffiConverterOptionalTypeVersion.lower(version)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -37874,7 +38029,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "MovePackagePage":
+    async def package_versions(self, address: "Address",after_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,before_version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT,pagination_filter: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "MovePackagePage":
         """
         Fetch all versions of package at address (packages that share this
         package's original ID), optionally bounding the versions exclusively
@@ -37885,11 +38040,11 @@ _UniffiConverterTypeSdkFfiError,
         
         if after_version is _DEFAULT:
             after_version = None
-        _UniffiConverterOptionalUInt64.check_lower(after_version)
+        _UniffiConverterOptionalTypeVersion.check_lower(after_version)
         
         if before_version is _DEFAULT:
             before_version = None
-        _UniffiConverterOptionalUInt64.check_lower(before_version)
+        _UniffiConverterOptionalTypeVersion.check_lower(before_version)
         
         if pagination_filter is _DEFAULT:
             pagination_filter = None
@@ -37899,8 +38054,8 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address),
-        _UniffiConverterOptionalUInt64.lower(after_version),
-        _UniffiConverterOptionalUInt64.lower(before_version),
+        _UniffiConverterOptionalTypeVersion.lower(after_version),
+        _UniffiConverterOptionalTypeVersion.lower(before_version),
         _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -38672,21 +38827,21 @@ class Input():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_shared(cls, object_id: "ObjectId",initial_shared_version: "int",mutable: "bool"):
+    def new_shared(cls, object_id: "ObjectId",initial_shared_version: "Version",mutable: "bool"):
         """
         A move object whose owner is "Shared"
         """
 
         _UniffiConverterTypeObjectId.check_lower(object_id)
         
-        _UniffiConverterUInt64.check_lower(initial_shared_version)
+        _UniffiConverterTypeVersion.check_lower(initial_shared_version)
         
         _UniffiConverterBool.check_lower(mutable)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_input_new_shared,
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterUInt64.lower(initial_shared_version),
+        _UniffiConverterTypeVersion.lower(initial_shared_version),
         _UniffiConverterBool.lower(mutable))
         return cls._make_instance_(pointer)
 
@@ -40360,10 +40515,10 @@ class MovePackage():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, id: "ObjectId",version: "int",modules: "dict[Identifier, bytes]",type_origin_table: "typing.List[TypeOrigin]",linkage_table: "dict[ObjectId, UpgradeInfo]"):
+    def __init__(self, id: "ObjectId",version: "Version",modules: "dict[Identifier, bytes]",type_origin_table: "typing.List[TypeOrigin]",linkage_table: "dict[ObjectId, UpgradeInfo]"):
         _UniffiConverterTypeObjectId.check_lower(id)
         
-        _UniffiConverterUInt64.check_lower(version)
+        _UniffiConverterTypeVersion.check_lower(version)
         
         _UniffiConverterMapTypeIdentifierBytes.check_lower(modules)
         
@@ -40373,7 +40528,7 @@ class MovePackage():
         
         self._pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movepackage_new,
         _UniffiConverterTypeObjectId.lower(id),
-        _UniffiConverterUInt64.lower(version),
+        _UniffiConverterTypeVersion.lower(version),
         _UniffiConverterMapTypeIdentifierBytes.lower(modules),
         _UniffiConverterSequenceTypeTypeOrigin.lower(type_origin_table),
         _UniffiConverterMapTypeObjectIdTypeUpgradeInfo.lower(linkage_table))
@@ -40433,8 +40588,8 @@ class MovePackage():
 
 
 
-    def version(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
+    def version(self, ) -> "Version":
+        return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackage_version,self._uniffi_clone_pointer(),)
         )
 
@@ -42956,12 +43111,12 @@ class Object():
 
 
 
-    def version(self, ) -> "int":
+    def version(self, ) -> "Version":
         """
         Return this object's version
         """
 
-        return _UniffiConverterUInt64.lift(
+        return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_object_version,self._uniffi_clone_pointer(),)
         )
 
@@ -43794,12 +43949,12 @@ class Owner():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_shared(cls, version: "int"):
-        _UniffiConverterUInt64.check_lower(version)
+    def new_shared(cls, version: "Version"):
+        _UniffiConverterTypeVersion.check_lower(version)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared,
-        _UniffiConverterUInt64.lower(version))
+        _UniffiConverterTypeVersion.lower(version))
         return cls._make_instance_(pointer)
 
 
@@ -43840,8 +43995,8 @@ class Owner():
 
 
 
-    def as_shared(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
+    def as_shared(self, ) -> "Version":
+        return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared,self._uniffi_clone_pointer(),)
         )
 
@@ -43849,8 +44004,8 @@ class Owner():
 
 
 
-    def as_shared_opt(self, ) -> "typing.Optional[int]":
-        return _UniffiConverterOptionalUInt64.lift(
+    def as_shared_opt(self, ) -> "typing.Optional[Version]":
+        return _UniffiConverterOptionalTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt,self._uniffi_clone_pointer(),)
         )
 
@@ -48944,15 +49099,15 @@ class SystemPackage():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, version: "int",modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]"):
-        _UniffiConverterUInt64.check_lower(version)
+    def __init__(self, version: "Version",modules: "typing.List[bytes]",dependencies: "typing.List[ObjectId]"):
+        _UniffiConverterTypeVersion.check_lower(version)
         
         _UniffiConverterSequenceBytes.check_lower(modules)
         
         _UniffiConverterSequenceTypeObjectId.check_lower(dependencies)
         
         self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new,
-        _UniffiConverterUInt64.lower(version),
+        _UniffiConverterTypeVersion.lower(version),
         _UniffiConverterSequenceBytes.lower(modules),
         _UniffiConverterSequenceTypeObjectId.lower(dependencies))
 
@@ -48993,8 +49148,8 @@ class SystemPackage():
 
 
 
-    def version(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
+    def version(self, ) -> "Version":
+        return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_systempackage_version,self._uniffi_clone_pointer(),)
         )
 
@@ -52681,6 +52836,309 @@ class _UniffiConverterTypeValidatorSignature:
     @classmethod
     def write(cls, value: ValidatorSignatureProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class VersionProtocol(typing.Protocol):
+    def as_u64(self, ):
+        """
+        Get the underlying u64 value of this version
+        """
+
+        raise NotImplementedError
+    def get_congested_version_suggested_gas_price(self, ):
+        """
+        Returns the `suggested_gas_price` embedded in this congested shared
+        object version. The `suggested_gas_price` here is used for a
+        gas price feedback mechanism for transactions cancelled due to
+        shared object congestion.
+        """
+
+        raise NotImplementedError
+    def is_cancelled(self, ):
+        """
+        Checks if this version is cancelled, i.e., the corresponding
+        object appears in a cancelled transaction.
+        """
+
+        raise NotImplementedError
+    def is_congested(self, ):
+        """
+        Check if this version is congested, i.e., the corresponding
+        object is the reason for transaction cancellation.
+        """
+
+        raise NotImplementedError
+    def is_valid(self, ):
+        """
+        Checks if this version is valid, i.e., the corresponding
+        object does not appear in a cancelled transaction.
+        """
+
+        raise NotImplementedError
+    def next(self, ):
+        """
+        Returns the next version, or an error if overflow occurs.
+        """
+
+        raise NotImplementedError
+    def previous(self, ):
+        """
+        Returns the previous version, or an error if underflow occurs.
+        """
+
+        raise NotImplementedError
+# Version is a Rust-only trait - it's a wrapper around a Rust implementation.
+class Version():
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_version, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_version, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def cancelled_read(cls, ):
+        """
+        Special version that is assigned to objects which are accessed
+        immutably in a cancelled transaction.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def congested_prior_to_gas_price_feedback(cls, ):
+        """
+        Special version that was assigned to congested objects which
+        cause transaction cancellations. Note that this special version
+        was only used prior to the introduction of a gas price feedback
+        mechanism, but it is kept for backward compatibility.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_u64(cls, value: "int"):
+        """
+        Create a new Version from a u64 value
+        """
+
+        _UniffiConverterUInt64.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64,
+        _UniffiConverterUInt64.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def lamport_increment(cls, inputs: "typing.List[Version]"):
+        """
+        Returns a new version that is greater than all versions
+        in `inputs`, assuming this operation will not overflow.
+        """
+
+        _UniffiConverterSequenceTypeVersion.check_lower(inputs)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment,
+        _UniffiConverterSequenceTypeVersion.lower(inputs))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def max_valid_excl(cls, ):
+        """
+        An exclusive upper limit on a valid version: versions
+        strictly smaller than this limit are valid versions.
+
+        A valid version means an object, which this version
+        is assigned to, does not appear in a cancelled transaction.
+        Versions larger than this value are "special" and
+        assigned to objects that appear in cancelled transactions.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def min_valid_incl(cls, ):
+        """
+        An inclusive lower limit on a valid version.
+
+        A valid version means an object, which this version
+        is assigned to, does not appear in a cancelled transaction.
+        """
+
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_congested_with_suggested_gas_price(cls, suggested_gas_price: "int"):
+        """
+        Returns a special version used for congested shared objects:
+        `Version::MIN_CONGESTED + suggested_gas_price`,
+        where `suggested_gas_price` is embedded into a congested version
+        to facilitate a gas price feedback mechanism for transactions
+        cancelled due to shared object congestion.
+        """
+
+        _UniffiConverterUInt64.check_lower(suggested_gas_price)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price,
+        _UniffiConverterUInt64.lower(suggested_gas_price))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def randomness_unavailable(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable,)
+        return cls._make_instance_(pointer)
+
+
+
+    def as_u64(self, ) -> "int":
+        """
+        Get the underlying u64 value of this version
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_as_u64,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def get_congested_version_suggested_gas_price(self, ) -> "int":
+        """
+        Returns the `suggested_gas_price` embedded in this congested shared
+        object version. The `suggested_gas_price` here is used for a
+        gas price feedback mechanism for transactions cancelled due to
+        shared object congestion.
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_cancelled(self, ) -> "bool":
+        """
+        Checks if this version is cancelled, i.e., the corresponding
+        object appears in a cancelled transaction.
+        """
+
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_congested(self, ) -> "bool":
+        """
+        Check if this version is congested, i.e., the corresponding
+        object is the reason for transaction cancellation.
+        """
+
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_congested,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_valid(self, ) -> "bool":
+        """
+        Checks if this version is valid, i.e., the corresponding
+        object does not appear in a cancelled transaction.
+        """
+
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_is_valid,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def next(self, ) -> "Version":
+        """
+        Returns the next version, or an error if overflow occurs.
+        """
+
+        return _UniffiConverterTypeVersion.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_next,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def previous(self, ) -> "Version":
+        """
+        Returns the previous version, or an error if underflow occurs.
+        """
+
+        return _UniffiConverterTypeVersion.lift(
+            _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_method_version_previous,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeVersion:
+
+    @staticmethod
+    def lift(value: int):
+        return Version._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: Version):
+        if not isinstance(value, Version):
+            raise TypeError("Expected Version instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: VersionProtocol):
+        if not isinstance(value, Version):
+            raise TypeError("Expected Version instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: VersionProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class VersionAssignmentProtocol(typing.Protocol):
     """
     Object version assignment from consensus
@@ -52713,14 +53171,14 @@ class VersionAssignment():
     """
 
     _pointer: ctypes.c_void_p
-    def __init__(self, object_id: "ObjectId",version: "int"):
+    def __init__(self, object_id: "ObjectId",version: "Version"):
         _UniffiConverterTypeObjectId.check_lower(object_id)
         
-        _UniffiConverterUInt64.check_lower(version)
+        _UniffiConverterTypeVersion.check_lower(version)
         
         self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new,
         _UniffiConverterTypeObjectId.lower(object_id),
-        _UniffiConverterUInt64.lower(version))
+        _UniffiConverterTypeVersion.lower(version))
 
     def __del__(self):
         # In case of partial initialization of instances.
@@ -52750,8 +53208,8 @@ class VersionAssignment():
 
 
 
-    def version(self, ) -> "int":
-        return _UniffiConverterUInt64.lift(
+    def version(self, ) -> "Version":
+        return _UniffiConverterTypeVersion.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_versionassignment_version,self._uniffi_clone_pointer(),)
         )
 
@@ -57653,6 +58111,7 @@ __all__ = [
     "ValidatorCommitteeSignatureAggregator",
     "ValidatorCommitteeSignatureVerifier",
     "ValidatorSignature",
+    "Version",
     "VersionAssignment",
 ]
 
