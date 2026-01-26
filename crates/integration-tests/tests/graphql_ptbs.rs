@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 use eyre::Context;
 use iota_crypto::ed25519::Ed25519PrivateKey;
 use iota_graphql_client::{
