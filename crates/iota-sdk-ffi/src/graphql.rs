@@ -993,7 +993,7 @@ impl GraphQLClient {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x3::iota_system::get_total_iota_supply`
+    ///   `0x2::hash::blake2b256`
     /// * `type_args` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function as
     ///   strings (will be parsed as JSON)
@@ -1020,7 +1020,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .move_view_call(function_name, type_args, arguments)
+            .move_view_call_json(function_name, type_args, arguments)
             .await?
             .into())
     }

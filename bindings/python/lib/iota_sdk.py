@@ -1695,7 +1695,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52330:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 4861:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -38904,7 +38904,7 @@ class GraphQlClientProtocol(typing.Protocol):
         # Arguments
         * `function_name` - The Move function fully qualified name as
         `<package_id>::<module_name>::<function_name>`, e.g.,
-        `0x3::iota_system::get_total_iota_supply`
+        `0x2::hash::blake2b256`
         * `type_args` - The type arguments of the Move function
         * `arguments` - The arguments to be passed into the Move function as
         strings (will be parsed as JSON)
@@ -40034,7 +40034,7 @@ _UniffiConverterTypeSdkFfiError,
         # Arguments
         * `function_name` - The Move function fully qualified name as
         `<package_id>::<module_name>::<function_name>`, e.g.,
-        `0x3::iota_system::get_total_iota_supply`
+        `0x2::hash::blake2b256`
         * `type_args` - The type arguments of the Move function
         * `arguments` - The arguments to be passed into the Move function as
         strings (will be parsed as JSON)

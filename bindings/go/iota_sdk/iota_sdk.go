@@ -5918,7 +5918,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call()
 	})
-	if checksum != 52330 {
+	if checksum != 4861 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call: UniFFI API checksum mismatch")
 	}
@@ -19717,7 +19717,7 @@ type GraphQlClientInterface interface {
 	// # Arguments
 	// * `function_name` - The Move function fully qualified name as
 	// `<package_id>::<module_name>::<function_name>`, e.g.,
-	// `0x3::iota_system::get_total_iota_supply`
+	// `0x2::hash::blake2b256`
 	// * `type_args` - The type arguments of the Move function
 	// * `arguments` - The arguments to be passed into the Move function as
 	// strings (will be parsed as JSON)
@@ -20804,7 +20804,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 // # Arguments
 // * `function_name` - The Move function fully qualified name as
 // `<package_id>::<module_name>::<function_name>`, e.g.,
-// `0x3::iota_system::get_total_iota_supply`
+// `0x2::hash::blake2b256`
 // * `type_args` - The type arguments of the Move function
 // * `arguments` - The arguments to be passed into the Move function as
 // strings (will be parsed as JSON)

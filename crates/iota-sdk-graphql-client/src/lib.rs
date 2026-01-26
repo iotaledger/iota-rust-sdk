@@ -6,6 +6,7 @@
 
 pub mod error;
 pub mod faucet;
+pub mod move_view_call;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
@@ -32,15 +33,15 @@ use query_types::{
     DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
     DynamicObjectFieldQuery, Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, Event, EventFilter,
     EventsQuery, EventsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
-    LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter, MoveViewCallArgs,
-    MoveViewCallQuery, MoveViewResult, NormalizedMoveFunctionQuery,
-    NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
-    ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs, PackageArgs,
-    PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
-    PackagesQuery, PackagesQueryArgs, ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs,
-    ServiceConfig, ServiceConfigQuery, TransactionBlockArgs, TransactionBlockEffectsQuery,
-    TransactionBlockQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-    TransactionBlocksQueryArgs, TransactionMetadata, TransactionsFilter, Validator,
+    LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
+    NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
+    NormalizedMoveModuleQueryArgs, ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery,
+    ObjectsQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs,
+    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs, ProtocolConfigQuery, ProtocolConfigs,
+    ProtocolVersionArgs, ServiceConfig, ServiceConfigQuery, TransactionBlockArgs,
+    TransactionBlockEffectsQuery, TransactionBlockQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionMetadata, TransactionsFilter,
+    Validator,
 };
 use reqwest::Url;
 use streams::stream_paginated_query;
@@ -1656,49 +1657,6 @@ impl Client {
             Error::from_error(Kind::Parse, format!("invalid name: {name}"))
         })?))
     }
-
-    /// Execute a Move View Function.
-    ///
-    /// A View Function is a function in a Move module with a return type that
-    /// does not alter the state of the ledger. When using this interface,
-    /// no transactions are submitted to the network for inclusion into the
-    /// ledger.
-    ///
-    /// This method allows calling nearly any Move function with a return type
-    /// and any arguments. The function's result values are provided and
-    /// decoded using the appropriate Move type, then formatted in JSON.
-    ///
-    /// The use of this interface does not require signature checks (even for
-    /// functions that take Owned Objects as input) or gas coins, as it does
-    /// not alter ledger state. Spam attacks are dealt with at the RPC level
-    /// rather than execution level.
-    ///
-    /// # Arguments
-    /// * `function_name` - The Move function fully qualified name as
-    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x3::iota_system::get_total_iota_supply`
-    /// * `type_args` - The type arguments of the Move function
-    /// * `arguments` - The arguments to be passed into the Move function, in
-    ///   JSON format
-    ///
-    /// # Returns
-    /// A `MoveViewResult` containing either execution results (return values)
-    /// or an error.
-    pub async fn move_view_call(
-        &self,
-        function_name: impl Into<String>,
-        type_args: impl Into<Option<Vec<String>>>,
-        arguments: impl Into<Option<Vec<serde_json::Value>>>,
-    ) -> Result<MoveViewResult> {
-        let operation = MoveViewCallQuery::build(MoveViewCallArgs {
-            function_name: function_name.into(),
-            type_args: type_args.into(),
-            arguments: arguments.into(),
-        });
-        let response = self.run_query(&operation).await?;
-
-        Ok(response.move_view_call)
-    }
 }
 
 // This function is used in tests to create a new client instance for the local
@@ -2369,5 +2327,67 @@ mod tests {
             )
             .await
             .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_move_view_call() {
+        let client = test_client();
+
+        // Test blake2b256 hash function with typed arguments
+        let result = client
+            .move_view_call("0x2::hash::blake2b256", None, vec![0u8, 1, 2])
+            .await
+            .map_err(|e| {
+                format!(
+                    "Move view call query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
+
+        assert!(
+            result.error.is_none(),
+            "Move view call returned error for {} network: {:?}",
+            client.rpc_server(),
+            result.error
+        );
+        assert!(
+            result.results.is_some(),
+            "Move view call returned no results for {} network",
+            client.rpc_server()
+        );
+    }
+
+    #[tokio::test]
+    async fn test_move_view_call_json() {
+        let client = test_client();
+
+        // Test blake2b256 hash function with JSON arguments
+        let result = client
+            .move_view_call_json(
+                "0x2::hash::blake2b256",
+                None,
+                Some(vec![serde_json::json!([0, 1, 2])]),
+            )
+            .await
+            .map_err(|e| {
+                format!(
+                    "Move view call JSON query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
+
+        assert!(
+            result.error.is_none(),
+            "Move view call JSON returned error for {} network: {:?}",
+            client.rpc_server(),
+            result.error
+        );
+        assert!(
+            result.results.is_some(),
+            "Move view call JSON returned no results for {} network",
+            client.rpc_server()
+        );
     }
 }

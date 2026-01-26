@@ -1,0 +1,352 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+use cynic::QueryBuilder;
+use iota_types::{Address, ObjectId, ObjectReference};
+
+use crate::{
+    Client,
+    error::Result,
+    query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
+};
+
+impl Client {
+    /// Execute a Move View Function with raw JSON arguments.
+    ///
+    /// This is an alternative to [`Client::move_view_call`] that accepts raw
+    /// JSON values instead of typed arguments.
+    ///
+    /// A View Function is a function in a Move module with a return type that
+    /// does not alter the state of the ledger. When using this interface,
+    /// no transactions are submitted to the network for inclusion into the
+    /// ledger.
+    ///
+    /// # Arguments
+    /// * `function_name` - The Move function fully qualified name as
+    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
+    ///   `0x2::hash::blake2b256`
+    /// * `type_args` - The type arguments of the Move function
+    /// * `arguments` - The arguments to be passed into the Move function, in
+    ///   JSON format
+    ///
+    /// # Returns
+    /// A `MoveViewResult` containing either execution results (return values)
+    /// or an error.
+    pub async fn move_view_call_json(
+        &self,
+        function_name: impl Into<String>,
+        type_args: impl Into<Option<Vec<String>>>,
+        arguments: impl Into<Option<Vec<serde_json::Value>>>,
+    ) -> Result<MoveViewResult> {
+        let operation = MoveViewCallQuery::build(MoveViewCallArgs {
+            function_name: function_name.into(),
+            type_args: type_args.into(),
+            arguments: arguments.into(),
+        });
+        let response = self.run_query(&operation).await?;
+
+        Ok(response.move_view_call)
+    }
+
+    /// Execute a Move View Function.
+    ///
+    /// A View Function is a function in a Move module with a return type that
+    /// does not alter the state of the ledger. When using this interface,
+    /// no transactions are submitted to the network for inclusion into the
+    /// ledger.
+    ///
+    /// This method allows calling nearly any Move function with a return type
+    /// and any arguments. The function's result values are provided and
+    /// decoded using the appropriate Move type, then formatted in JSON.
+    ///
+    /// The use of this interface does not require signature checks (even for
+    /// functions that take Owned Objects as input) or gas coins, as it does
+    /// not alter ledger state. Spam attacks are dealt with at the RPC level
+    /// rather than execution level.
+    ///
+    /// # Arguments
+    /// * `function_name` - The Move function fully qualified name as
+    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
+    ///   `0x2::hash::blake2b256`
+    /// * `type_args` - The type arguments of the Move function
+    /// * `arguments` - The typed arguments to be passed into the Move function
+    ///
+    /// # Example
+    /// ```rust,ignore
+    /// // Single argument: pass a Vec<u8> directly
+    /// let result = client.move_view_call(
+    ///     "0x2::hash::blake2b256",
+    ///     None,
+    ///     vec![0u8, 1, 2],
+    /// ).await?;
+    /// ```
+    ///
+    /// # Returns
+    /// A `MoveViewResult` containing either execution results (return values)
+    /// or an error.
+    pub async fn move_view_call<A: MoveViewArgList>(
+        &self,
+        function_name: impl Into<String>,
+        type_args: impl Into<Option<Vec<String>>>,
+        arguments: A,
+    ) -> Result<MoveViewResult> {
+        self.move_view_call_json(function_name, type_args, Some(arguments.to_json_vec()))
+            .await
+    }
+}
+
+/// A trait which defines a single argument for a Move View Function call.
+#[diagnostic::on_unimplemented(message = "Provided value is not a valid Move view argument.")]
+pub trait MoveViewArg {
+    /// Convert this argument to a JSON value for the GraphQL API.
+    fn to_json(&self) -> serde_json::Value;
+}
+
+// Primitive type implementations
+impl MoveViewArg for bool {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Bool(*self)
+    }
+}
+
+impl MoveViewArg for u8 {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Number((*self).into())
+    }
+}
+
+impl MoveViewArg for u16 {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Number((*self).into())
+    }
+}
+
+impl MoveViewArg for u32 {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Number((*self).into())
+    }
+}
+
+impl MoveViewArg for u64 {
+    fn to_json(&self) -> serde_json::Value {
+        // u64 must be represented as a string in JSON to avoid precision loss
+        serde_json::Value::String(self.to_string())
+    }
+}
+
+impl MoveViewArg for u128 {
+    fn to_json(&self) -> serde_json::Value {
+        // u128 must be represented as a string in JSON to avoid precision loss
+        serde_json::Value::String(self.to_string())
+    }
+}
+
+impl MoveViewArg for &str {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String((*self).to_string())
+    }
+}
+
+impl MoveViewArg for String {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.clone())
+    }
+}
+
+impl MoveViewArg for &String {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String((*self).clone())
+    }
+}
+
+// Object-related implementations
+impl MoveViewArg for ObjectId {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.to_string())
+    }
+}
+
+impl MoveViewArg for &ObjectId {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.to_string())
+    }
+}
+
+impl MoveViewArg for ObjectReference {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.object_id.to_string())
+    }
+}
+
+impl MoveViewArg for &ObjectReference {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.object_id.to_string())
+    }
+}
+
+impl MoveViewArg for Address {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.to_string())
+    }
+}
+
+impl MoveViewArg for &Address {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::String(self.to_string())
+    }
+}
+
+/// Wrapper for specifying shared (immutable) object parameters.
+pub struct Shared<T>(pub T);
+
+impl<T: MoveViewArg> MoveViewArg for Shared<T> {
+    fn to_json(&self) -> serde_json::Value {
+        self.0.to_json()
+    }
+}
+
+impl<T: MoveViewArg> MoveViewArg for &Shared<T> {
+    fn to_json(&self) -> serde_json::Value {
+        self.0.to_json()
+    }
+}
+
+// Collection implementations
+impl<T: MoveViewArg> MoveViewArg for Vec<T> {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Array(self.iter().map(|v| v.to_json()).collect())
+    }
+}
+
+impl<T: MoveViewArg> MoveViewArg for &[T] {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Array(self.iter().map(|v| v.to_json()).collect())
+    }
+}
+
+impl<const N: usize, T: MoveViewArg> MoveViewArg for [T; N] {
+    fn to_json(&self) -> serde_json::Value {
+        serde_json::Value::Array(self.iter().map(|v| v.to_json()).collect())
+    }
+}
+
+impl<T: MoveViewArg> MoveViewArg for Option<T> {
+    fn to_json(&self) -> serde_json::Value {
+        match self {
+            Some(v) => v.to_json(),
+            None => serde_json::Value::Null,
+        }
+    }
+}
+
+// Smart pointer implementations
+impl<T: MoveViewArg> MoveViewArg for std::sync::Arc<T> {
+    fn to_json(&self) -> serde_json::Value {
+        self.as_ref().to_json()
+    }
+}
+
+impl<T: MoveViewArg> MoveViewArg for Box<T> {
+    fn to_json(&self) -> serde_json::Value {
+        self.as_ref().to_json()
+    }
+}
+
+// Allow passing raw JSON values
+impl MoveViewArg for serde_json::Value {
+    fn to_json(&self) -> serde_json::Value {
+        self.clone()
+    }
+}
+
+impl MoveViewArg for &serde_json::Value {
+    fn to_json(&self) -> serde_json::Value {
+        (*self).clone()
+    }
+}
+
+// ===========================================================================
+// MoveViewArgList Trait and Implementations
+// ===========================================================================
+
+/// A trait which defines a list of arguments for a Move View Function call.
+#[diagnostic::on_unimplemented(
+    message = "Provided value is not a valid list of Move view arguments.",
+    note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
+)]
+pub trait MoveViewArgList {
+    /// Convert the arguments to a vector of JSON values.
+    fn to_json_vec(self) -> Vec<serde_json::Value>;
+}
+
+// Single element implementation
+impl<T: MoveViewArg> MoveViewArgList for T {
+    fn to_json_vec(self) -> Vec<serde_json::Value> {
+        vec![self.to_json()]
+    }
+}
+
+// Tuple implementations using a macro
+macro_rules! impl_move_view_args_tuple {
+    ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> MoveViewArgList for ($($T),+)
+        where $($T: MoveViewArg),+
+        {
+            fn to_json_vec(self) -> Vec<serde_json::Value> {
+                vec![
+                    $(
+                        self.$n.to_json()
+                    ),+
+                ]
+            }
+        }
+    };
+}
+
+impl_move_view_args_tuple!((0, T0), (1, T1));
+impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2));
+impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2), (3, T3));
+impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2), (3, T3), (4, T4));
+impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2), (3, T3), (4, T4), (5, T5));
+impl_move_view_args_tuple!(
+    (0, T0),
+    (1, T1),
+    (2, T2),
+    (3, T3),
+    (4, T4),
+    (5, T5),
+    (6, T6)
+);
+impl_move_view_args_tuple!(
+    (0, T0),
+    (1, T1),
+    (2, T2),
+    (3, T3),
+    (4, T4),
+    (5, T5),
+    (6, T6),
+    (7, T7)
+);
+impl_move_view_args_tuple!(
+    (0, T0),
+    (1, T1),
+    (2, T2),
+    (3, T3),
+    (4, T4),
+    (5, T5),
+    (6, T6),
+    (7, T7),
+    (8, T8)
+);
+impl_move_view_args_tuple!(
+    (0, T0),
+    (1, T1),
+    (2, T2),
+    (3, T3),
+    (4, T4),
+    (5, T5),
+    (6, T6),
+    (7, T7),
+    (8, T8),
+    (9, T9)
+);

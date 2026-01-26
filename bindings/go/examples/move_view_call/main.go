@@ -10,26 +10,23 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func identifier(ident string) *iota_sdk.Identifier {
-	identifier, err := iota_sdk.NewIdentifier(ident)
-	if err != nil {
-		log.Fatalf("Failed to parse identifier: %v", err)
-	}
-	return identifier
-}
-
 func main() {
 	client := iota_sdk.GraphQlClientNewDevnet()
 
-	arguments := []string{
-		"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b",
-		"auc.iota",
+	// ===========================================================================
+	// Example 1: Using MoveViewCall() for blake2b256 hash function
+	// ===========================================================================
+	fmt.Println("=== Example 1: MoveViewCall() for blake2b256 ===")
+	fmt.Println()
+
+	hashArgs := []string{
+		"[0,1,2]",
 	}
 
 	result, err := client.MoveViewCall(
-		"0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+		"0x2::hash::blake2b256",
 		nil,
-		&arguments,
+		&hashArgs,
 	)
 	if err != nil {
 		if sdkErr, ok := err.(*iota_sdk.SdkFfiError); !ok || sdkErr != nil {
@@ -45,24 +42,34 @@ func main() {
 		fmt.Println("No results")
 	}
 
-	hashArgs := []string{
-		"[0,1,2]",
+	// ===========================================================================
+	// Example 2: Using MoveViewCall() for auction metadata
+	// ===========================================================================
+	fmt.Println()
+	fmt.Println("=== Example 2: MoveViewCall() for auction ===")
+	fmt.Println()
+
+	auctionArgs := []string{
+		"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b",
+		"auc.iota",
 	}
 
-	hashResult, err := client.MoveViewCall(
-		"0x2::hash::blake2b256",
+	auctionResult, err := client.MoveViewCall(
+		"0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
 		nil,
-		&hashArgs,
+		&auctionArgs,
 	)
-	if err.(*iota_sdk.SdkFfiError) != nil {
-		log.Fatalf("Failed to call hash function: %v", err)
+	if err != nil {
+		if sdkErr, ok := err.(*iota_sdk.SdkFfiError); !ok || sdkErr != nil {
+			log.Fatalf("Failed to call auction function: %v", err)
+		}
 	}
 
-	if hashResult.Error != nil {
-		fmt.Println("Hash Error:", *hashResult.Error)
-	} else if hashResult.Results != nil {
-		fmt.Println("Hash Results:", *hashResult.Results)
+	if auctionResult.Error != nil {
+		fmt.Println("Auction Error:", *auctionResult.Error)
+	} else if auctionResult.Results != nil {
+		fmt.Println("Auction Results:", *auctionResult.Results)
 	} else {
-		fmt.Println("No hash results")
+		fmt.Println("No auction results")
 	}
 }
