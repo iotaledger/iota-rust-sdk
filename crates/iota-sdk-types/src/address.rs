@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::ObjectId;
+
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
 /// An `Address` is a 32-byte pseudonymous identifier used to uniquely identify
@@ -69,18 +71,33 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const STD: Self = Self::from_u8(1);
-    pub const FRAMEWORK: Self = Self::from_u8(2);
-    pub const SYSTEM: Self = Self::from_u8(3);
+    pub const STD: Self = Self::from_u16(1);
+    pub const FRAMEWORK: Self = Self::from_u16(2);
+    pub const SYSTEM: Self = Self::from_u16(3);
+    pub const GENESIS_BRIDGE: Self = Self::from_u16(0xb);
+    pub const STARDUST: Self = Self::from_u16(0x107a);
 
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
         Self(bytes)
     }
 
-    pub(crate) const fn from_u8(byte: u8) -> Self {
+    pub const fn from_u16(suffix: u16) -> Self {
         let mut address = Self::ZERO;
-        address.0[31] = byte;
+        let [hi, lo] = suffix.to_be_bytes();
+        address.0[Address::LENGTH - 2] = hi;
+        address.0[Address::LENGTH - 1] = lo;
         address
+    }
+
+    pub fn is_system_package(&self) -> bool {
+        [
+            Self::STD,
+            Self::FRAMEWORK,
+            Self::SYSTEM,
+            Self::GENESIS_BRIDGE,
+            Self::STARDUST,
+        ]
+        .contains(self)
     }
 
     #[cfg(feature = "rand")]
@@ -94,17 +111,27 @@ impl Address {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of a Address.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
     pub const fn as_bytes(&self) -> &[u8] {
         &self.0
+    }
+
+    pub const fn from_object_id(object_id: ObjectId) -> Self {
+        object_id.0
     }
 
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
@@ -165,6 +192,11 @@ impl Address {
             .map_err(|_| AddressParseError)
             .map(Self)
     }
+
+    /// Returns the next address in byte-increasing order.
+    pub const fn next_lexicographical(&self) -> Self {
+        Self::new(crate::next_lexicographical_array(self.bytes()))
+    }
 }
 
 impl std::str::FromStr for Address {
@@ -189,7 +221,7 @@ impl AsRef<[u8; 32]> for Address {
 
 impl From<Address> for [u8; 32] {
     fn from(address: Address) -> Self {
-        address.into_inner()
+        address.into_bytes()
     }
 }
 
@@ -207,7 +239,7 @@ impl From<Address> for Vec<u8> {
 
 impl From<super::ObjectId> for Address {
     fn from(value: super::ObjectId) -> Self {
-        Self::new(value.into_inner())
+        Self::new(value.into_bytes())
     }
 }
 
@@ -249,7 +281,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
         D: serde::Deserializer<'de>,
     {
         let address: Address = serde_with::DisplayFromStr::deserialize_as(deserializer)?;
-        Ok(address.into_inner())
+        Ok(address.into_bytes())
     }
 }
 
