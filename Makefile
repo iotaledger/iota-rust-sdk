@@ -31,8 +31,8 @@ test-docs: ## Run doc tests
 build-docs: ## Build docs
 	cargo doc --all-features --workspace --no-deps
 
-package_%.json: crates/iota-sdk-transaction-builder/tests/%/Move.toml crates/iota-sdk-transaction-builder/tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/iota-sdk-transaction-builder/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+package_%.json: crates/iota-sdk-graphql-client/tests/%/Move.toml crates/iota-sdk-graphql-client/tests/%/sources/*.move ## Generate JSON files for tests
+	cd crates/iota-sdk-graphql-client/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
