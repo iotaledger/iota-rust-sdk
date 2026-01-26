@@ -31,12 +31,12 @@ test-docs: ## Run doc tests
 build-docs: ## Build docs
 	cargo doc --all-features --workspace --no-deps
 
-package_%.json: crates/iota-sdk-graphql-client/tests/%/Move.toml crates/iota-sdk-graphql-client/tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/iota-sdk-graphql-client/tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/sources/*.move ## Generate JSON files for tests
+	cd crates/integration-tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
-	cargo nextest run -p iota-sdk-graphql-client
+	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
 
 .PHONY: wasm
 wasm: ## Build WASM modules

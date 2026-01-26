@@ -1,0 +1,18 @@
+[package]
+name = "tests"
+version = "0.1.0"
+edition = "2024"
+
+[dev-dependencies]
+eyre.workspace = true
+rand.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+
+iota-crypto.workspace = true
+iota-graphql-client.workspace = true
+iota-transaction-builder.workspace = true
+iota-types = { workspace = true, features = ["rand"] }
+
+[lints]
+workspace = true

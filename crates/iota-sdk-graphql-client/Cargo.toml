@@ -35,7 +35,6 @@ eyre.workspace = true
 rand.workspace = true
 
 iota-crypto = { workspace = true, features = ["ed25519"] }
-iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
