@@ -7,6 +7,10 @@ license = "Apache-2.0"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
+[features]
+default = []
+test-client = []
+
 [dependencies]
 base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true

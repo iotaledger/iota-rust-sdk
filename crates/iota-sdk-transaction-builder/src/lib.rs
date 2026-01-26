@@ -284,7 +284,7 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
-#[cfg(test)]
+#[cfg(feature = "test-client")]
 pub use self::builder::client_methods::test_client::{TestClient, TestClientError};
 pub use self::{
     builder::{

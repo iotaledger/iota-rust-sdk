@@ -246,7 +246,7 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     }
 }
 
-#[cfg(test)]
+#[cfg(feature = "test-client")]
 pub(crate) mod test_client {
     //! Test utilities for the transaction builder.
 
