@@ -27,7 +27,6 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 tokio = { workspace = true, features = ["macros", "rt"] }
-getrandom = { version = "0.2", features = ["js"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 tokio = { workspace = true, features = ["full"] }
@@ -38,3 +37,6 @@ rand.workspace = true
 serde_json.workspace = true
 
 iota-types = { workspace = true, features = ["rand"] }
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+getrandom = { version = "0.2", features = ["js"] }
