@@ -21,7 +21,7 @@ clippy: ## Run Clippy linter
 
 .PHONY: test
 test: ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto
+	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder
 
 .PHONY: test-docs
 test-docs: ## Run doc tests
@@ -36,7 +36,7 @@ package_%.json: crates/iota-sdk-transaction-builder/tests/%/Move.toml crates/iot
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
-	cargo nextest run -p iota-sdk-graphql-client -p iota-sdk-transaction-builder
+	cargo nextest run -p iota-sdk-graphql-client
 
 .PHONY: wasm
 wasm: ## Build WASM modules
