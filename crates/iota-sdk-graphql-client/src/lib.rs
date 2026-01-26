@@ -1686,12 +1686,12 @@ impl Client {
     /// or an error.
     pub async fn move_view_call(
         &self,
-        function_name: String,
+        function_name: impl Into<String>,
         type_args: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
     ) -> Result<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
-            function_name,
+            function_name: function_name.into(),
             type_args: type_args.into(),
             arguments: arguments.into(),
         });
