@@ -157,11 +157,11 @@ go-examples: ## Run all Go bindings examples
 
 .PHONY: go-examples-format-check
 go-examples-format-check: ## Check format of all Go bindings examples
-	@test -z "$$(find bindings/go/examples -name "*.go" -not -path "*/release/*" -exec gofmt -l {} \;)"
+	@test -z "$$(find bindings/go/examples -name "*.go" -exec gofmt -l {} \;)"
 
 .PHONY: go-examples-format
 go-examples-format: ## Format all Go bindings examples
-	@find bindings/go/examples -name "*.go" -not -path "*/release/*" -exec gofmt -w {} \;
+	@find bindings/go/examples -name "*.go" -exec gofmt -w {} \;
 
 .PHONY: kotlin-example
 kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
@@ -208,11 +208,11 @@ python-examples: ## Run all Python bindings examples
 
 .PHONY: python-examples-format-check
 python-examples-format-check: ## Check format of all Python bindings examples
-	@yapf --style google -d $$(find bindings/python/examples -name "*.py" -not -path "*/release/*") --recursive
+	@yapf --style google -d $$(find bindings/python/examples -name "*.py") --recursive
 
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
-	@yapf --style google -i $$(find bindings/python/examples -name "*.py" -not -path "*/release/*") --recursive
+	@yapf --style google -i $$(find bindings/python/examples -name "*.py") --recursive
 
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
