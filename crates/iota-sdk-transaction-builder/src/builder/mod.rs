@@ -655,8 +655,15 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    /// let validator_address =
-    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let validator_address = client
+    ///     .active_validators(None, Default::default())
+    ///     .await?
+    ///     .data
+    ///     .into_iter()
+    ///     .next()
+    ///     .ok_or_else(|| eyre::eyre!("no validators found"))?
+    ///     .address
+    ///     .address;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.stake(1000000000u64, validator_address);

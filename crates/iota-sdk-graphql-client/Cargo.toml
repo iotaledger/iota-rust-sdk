@@ -34,7 +34,6 @@ getrandom = { version = "0.2", features = ["js"] }
 eyre.workspace = true
 rand.workspace = true
 
-iota-crypto = { workspace = true, features = ["ed25519"] }
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
