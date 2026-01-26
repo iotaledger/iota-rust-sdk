@@ -33,11 +33,11 @@ async def main():
                                          arguments)
 
     if result.error is not None:
-        print("Error:", result.error)
+        print("Hash Error:", result.error)
     elif result.results is not None:
-        print("Results:", result.results)
+        print("Hash Results:", result.results)
     else:
-        print("No results")
+        print("No hash results")
 
 
 if __name__ == "__main__":
