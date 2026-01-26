@@ -19,15 +19,9 @@ func main() {
 	fmt.Println("=== Example 1: MoveViewCall() with typed arguments (blake2b256) ===")
 	fmt.Println()
 
-	// Using typed arguments: an array of u8 values
-	hashArgs := []iota_sdk.MoveViewArg{
-		iota_sdk.MoveViewArgArray{
-			Value: []iota_sdk.MoveViewArg{
-				iota_sdk.MoveViewArgU8{Value: 0},
-				iota_sdk.MoveViewArgU8{Value: 1},
-				iota_sdk.MoveViewArgU8{Value: 2},
-			},
-		},
+	// Using typed arguments: an array of u8 values using the u8_vec constructor
+	hashArgs := []*iota_sdk.MoveViewArg{
+		iota_sdk.MoveViewArgU8Vec([]uint8{0, 1, 2}),
 	}
 
 	result, err := client.MoveViewCall(
@@ -92,9 +86,9 @@ func main() {
 		log.Fatalf("Failed to parse object id: %v", err)
 	}
 
-	auctionArgs := []iota_sdk.MoveViewArg{
-		iota_sdk.MoveViewArgObject{Value: objectId},
-		iota_sdk.MoveViewArgStr{Value: "auc.iota"},
+	auctionArgs := []*iota_sdk.MoveViewArg{
+		iota_sdk.MoveViewArgObjectId(objectId),
+		iota_sdk.MoveViewArgString("auc.iota"),
 	}
 
 	auctionResult, err := client.MoveViewCall(

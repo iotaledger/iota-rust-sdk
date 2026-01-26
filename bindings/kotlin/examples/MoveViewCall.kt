@@ -16,13 +16,8 @@ fun main() = runBlocking {
         println("=== Example 1: moveViewCall() with typed arguments (blake2b256) ===")
         println()
 
-        // Using typed arguments: an array of u8 values
-        val hashArgs =
-            listOf(
-                MoveViewArg.Array(
-                    listOf(MoveViewArg.U8(0u), MoveViewArg.U8(1u), MoveViewArg.U8(2u))
-                )
-            )
+        // Using typed arguments: an array of u8 values using the u8Vec constructor
+        val hashArgs = listOf(MoveViewArg.u8Vec(byteArrayOf(0, 1, 2)))
 
         val hashResult = client.moveViewCall("0x2::hash::blake2b256", null, hashArgs)
 
@@ -42,7 +37,7 @@ fun main() = runBlocking {
         println()
 
         val jsonHashResult =
-            client.moveViewCallJson("0x2::hash::blake2b256", null, listOf("[0, 1, 2]"))
+                client.moveViewCallJson("0x2::hash::blake2b256", null, listOf("[0, 1, 2]"))
 
         if (jsonHashResult.error != null) {
             println("JSON Error: ${jsonHashResult.error}")
@@ -60,16 +55,18 @@ fun main() = runBlocking {
         println()
 
         val objectId =
-            ObjectId.fromHex("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")
+                ObjectId.fromHex(
+                        "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b"
+                )
 
-        val auctionArgs = listOf(MoveViewArg.Object(objectId), MoveViewArg.Str("auc.iota"))
+        val auctionArgs = listOf(MoveViewArg.objectId(objectId), MoveViewArg.string("auc.iota"))
 
         val auctionResult =
-            client.moveViewCall(
-                "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-                null,
-                auctionArgs,
-            )
+                client.moveViewCall(
+                        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+                        null,
+                        auctionArgs,
+                )
 
         if (auctionResult.error != null) {
             println("Auction Error: ${auctionResult.error}")
@@ -87,14 +84,14 @@ fun main() = runBlocking {
         println()
 
         val auctionJsonResult =
-            client.moveViewCallJson(
-                "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-                null,
-                listOf(
-                    "\"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b\"",
-                    "\"auc.iota\"",
-                ),
-            )
+                client.moveViewCallJson(
+                        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+                        null,
+                        listOf(
+                                "\"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b\"",
+                                "\"auc.iota\"",
+                        ),
+                )
 
         if (auctionJsonResult.error != null) {
             println("Auction JSON Error: ${auctionJsonResult.error}")
