@@ -186,6 +186,25 @@ pub use version::Version;
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
 
+/// Returns the next array in byte-increasing order.
+pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
+    let mut next = *array;
+    let mut i = N;
+
+    // We manually iterate backwards from N-1 down to 0
+    while i > 0 {
+        i -= 1;
+        let (new_byte, overflow) = next[i].overflowing_add(1);
+        next[i] = new_byte;
+
+        if !overflow {
+            break;
+        }
+    }
+
+    next
+}
+
 #[macro_export]
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
@@ -546,5 +565,41 @@ mod _schemars {
         fn is_referenceable() -> bool {
             false
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::next_lexicographical_array;
+
+    #[test]
+    fn test_lexical_order() {
+        fn array_from_str(s: &str) -> [u8; 32] {
+            hex::decode(s).unwrap().try_into().unwrap()
+        }
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000000"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000000001"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000000ffff"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000010000"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002c"
+            )),
+            array_from_str("000000000000000000000000000000000000000000000000000000000001002d"),
+        );
+        assert_eq!(
+            next_lexicographical_array(&array_from_str(
+                "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            )),
+            array_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
+        );
     }
 }

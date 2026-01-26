@@ -239,7 +239,7 @@ impl From<Address> for Vec<u8> {
 
 impl From<super::ObjectId> for Address {
     fn from(value: super::ObjectId) -> Self {
-        Self::new(value.into_bytes())
+        Self::from_object_id(value)
     }
 }
 
