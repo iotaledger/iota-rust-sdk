@@ -40,7 +40,7 @@ impl Client {
     ) -> Result<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
             function_name: function_name.into(),
-            type_args: type_arguments.into(),
+            type_arguments: type_arguments.into(),
             arguments: arguments.into(),
         });
         let response = self.run_query(&operation).await?;
