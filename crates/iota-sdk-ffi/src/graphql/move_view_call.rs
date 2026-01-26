@@ -157,25 +157,25 @@ impl GraphQLClient {
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
     ///   `0x2::hash::blake2b256`
-    /// * `type_args` - The type arguments of the Move function
+    /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function, in
     ///   JSON format
     ///
     /// # Returns
     /// A `MoveViewResult` containing either execution results (return values)
     /// or an error.
-    #[uniffi::method(default(type_args = None, arguments = None))]
+    #[uniffi::method(default(type_arguments = None, arguments = None))]
     pub async fn move_view_call_json(
         &self,
         function_name: String,
-        type_args: Option<Vec<String>>,
+        type_arguments: Option<Vec<String>>,
         arguments: Option<Vec<serde_json::Value>>,
     ) -> Result<MoveViewResult> {
         Ok(self
             .0
             .read()
             .await
-            .move_view_call_json(function_name, type_args, arguments)
+            .move_view_call_json(function_name, type_arguments, arguments)
             .await?
             .into())
     }
@@ -200,22 +200,22 @@ impl GraphQLClient {
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
     ///   `0x2::hash::blake2b256`
-    /// * `type_args` - The type arguments of the Move function
+    /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
     /// # Returns
     /// A `MoveViewResult` containing either execution results (return values)
     /// or an error.
-    #[uniffi::method(default(type_args = None, arguments = None))]
+    #[uniffi::method(default(type_arguments = None, arguments = None))]
     pub async fn move_view_call(
         &self,
         function_name: String,
-        type_args: Option<Vec<String>>,
+        type_arguments: Option<Vec<String>>,
         arguments: Option<Vec<Arc<MoveViewArg>>>,
     ) -> Result<MoveViewResult> {
         let arguments = arguments.map(|args| args.iter().map(|arg| arg.to_json()).collect());
 
-        self.move_view_call_json(function_name, type_args, arguments)
+        self.move_view_call_json(function_name, type_arguments, arguments)
             .await
     }
 }

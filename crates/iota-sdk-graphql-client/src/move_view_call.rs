@@ -25,7 +25,7 @@ impl Client {
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
     ///   `0x2::hash::blake2b256`
-    /// * `type_args` - The type arguments of the Move function
+    /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function, in
     ///   JSON format
     ///
@@ -35,12 +35,12 @@ impl Client {
     pub async fn move_view_call_json(
         &self,
         function_name: impl Into<String>,
-        type_args: impl Into<Option<Vec<String>>>,
+        type_arguments: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
     ) -> Result<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
             function_name: function_name.into(),
-            type_args: type_args.into(),
+            type_args: type_arguments.into(),
             arguments: arguments.into(),
         });
         let response = self.run_query(&operation).await?;
@@ -68,7 +68,7 @@ impl Client {
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
     ///   `0x2::hash::blake2b256`
-    /// * `type_args` - The type arguments of the Move function
+    /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
     /// # Example
@@ -87,10 +87,10 @@ impl Client {
     pub async fn move_view_call<A: MoveViewArgList>(
         &self,
         function_name: impl Into<String>,
-        type_args: impl Into<Option<Vec<String>>>,
+        type_arguments: impl Into<Option<Vec<String>>>,
         arguments: A,
     ) -> Result<MoveViewResult> {
-        self.move_view_call_json(function_name, type_args, Some(arguments.to_json_vec()))
+        self.move_view_call_json(function_name, type_arguments, Some(arguments.to_json_vec()))
             .await
     }
 }

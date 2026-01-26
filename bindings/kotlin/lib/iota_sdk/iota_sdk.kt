@@ -7588,9 +7588,9 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(`ptr`: Poin
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
 ): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
 ): Long
@@ -12453,10 +12453,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 8588.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 20146.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 14844.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
@@ -28739,14 +28739,14 @@ public interface GraphQlClientInterface {
      * * `function_name` - The Move function fully qualified name as
      * `<package_id>::<module_name>::<function_name>`, e.g.,
      * `0x2::hash::blake2b256`
-     * * `type_args` - The type arguments of the Move function
+     * * `type_arguments` - The type arguments of the Move function
      * * `arguments` - The typed arguments to be passed into the Move function
      *
      * # Returns
      * A `MoveViewResult` containing either execution results (return values)
      * or an error.
      */
-    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>? = null, `arguments`: List<MoveViewArg>? = null): MoveViewResult
+    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>? = null, `arguments`: List<MoveViewArg>? = null): MoveViewResult
     
     /**
      * Execute a Move View Function with raw JSON arguments.
@@ -28763,7 +28763,7 @@ public interface GraphQlClientInterface {
      * * `function_name` - The Move function fully qualified name as
      * `<package_id>::<module_name>::<function_name>`, e.g.,
      * `0x2::hash::blake2b256`
-     * * `type_args` - The type arguments of the Move function
+     * * `type_arguments` - The type arguments of the Move function
      * * `arguments` - The arguments to be passed into the Move function, in
      * JSON format
      *
@@ -28771,7 +28771,7 @@ public interface GraphQlClientInterface {
      * A `MoveViewResult` containing either execution results (return values)
      * or an error.
      */
-    suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>? = null, `arguments`: List<Value>? = null): MoveViewResult
+    suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>? = null, `arguments`: List<Value>? = null): MoveViewResult
     
     /**
      * Return the normalized Move function data for the provided package,
@@ -29766,7 +29766,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * * `function_name` - The Move function fully qualified name as
      * `<package_id>::<module_name>::<function_name>`, e.g.,
      * `0x2::hash::blake2b256`
-     * * `type_args` - The type arguments of the Move function
+     * * `type_arguments` - The type arguments of the Move function
      * * `arguments` - The typed arguments to be passed into the Move function
      *
      * # Returns
@@ -29775,12 +29775,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<MoveViewArg>?) : MoveViewResult {
+    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>?, `arguments`: List<MoveViewArg>?) : MoveViewResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 thisPtr,
-                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceTypeMoveViewArg.lower(`arguments`),
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArguments`),FfiConverterOptionalSequenceTypeMoveViewArg.lower(`arguments`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -29809,7 +29809,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * * `function_name` - The Move function fully qualified name as
      * `<package_id>::<module_name>::<function_name>`, e.g.,
      * `0x2::hash::blake2b256`
-     * * `type_args` - The type arguments of the Move function
+     * * `type_arguments` - The type arguments of the Move function
      * * `arguments` - The arguments to be passed into the Move function, in
      * JSON format
      *
@@ -29819,12 +29819,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<Value>?) : MoveViewResult {
+    override suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>?, `arguments`: List<Value>?) : MoveViewResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
                 thisPtr,
-                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceTypeValue.lower(`arguments`),
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArguments`),FfiConverterOptionalSequenceTypeValue.lower(`arguments`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },

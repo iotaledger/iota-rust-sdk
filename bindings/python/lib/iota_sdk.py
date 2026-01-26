@@ -1695,9 +1695,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 8588:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 20146:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 14844:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -39186,7 +39186,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_view_call(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
+    def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
         """
         Execute a Move View Function.
 
@@ -39208,7 +39208,7 @@ class GraphQlClientProtocol(typing.Protocol):
         * `function_name` - The Move function fully qualified name as
         `<package_id>::<module_name>::<function_name>`, e.g.,
         `0x2::hash::blake2b256`
-        * `type_args` - The type arguments of the Move function
+        * `type_arguments` - The type arguments of the Move function
         * `arguments` - The typed arguments to be passed into the Move function
 
         # Returns
@@ -39217,7 +39217,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_view_call_json(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT):
+    def move_view_call_json(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT):
         """
         Execute a Move View Function with raw JSON arguments.
 
@@ -39233,7 +39233,7 @@ class GraphQlClientProtocol(typing.Protocol):
         * `function_name` - The Move function fully qualified name as
         `<package_id>::<module_name>::<function_name>`, e.g.,
         `0x2::hash::blake2b256`
-        * `type_args` - The type arguments of the Move function
+        * `type_arguments` - The type arguments of the Move function
         * `arguments` - The arguments to be passed into the Move function, in
         JSON format
 
@@ -40341,7 +40341,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_view_call(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
+    async def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
         """
         Execute a Move View Function.
 
@@ -40363,7 +40363,7 @@ _UniffiConverterTypeSdkFfiError,
         * `function_name` - The Move function fully qualified name as
         `<package_id>::<module_name>::<function_name>`, e.g.,
         `0x2::hash::blake2b256`
-        * `type_args` - The type arguments of the Move function
+        * `type_arguments` - The type arguments of the Move function
         * `arguments` - The typed arguments to be passed into the Move function
 
         # Returns
@@ -40373,9 +40373,9 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterString.check_lower(function_name)
         
-        if type_args is _DEFAULT:
-            type_args = None
-        _UniffiConverterOptionalSequenceString.check_lower(type_args)
+        if type_arguments is _DEFAULT:
+            type_arguments = None
+        _UniffiConverterOptionalSequenceString.check_lower(type_arguments)
         
         if arguments is _DEFAULT:
             arguments = None
@@ -40385,7 +40385,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterString.lower(function_name),
-        _UniffiConverterOptionalSequenceString.lower(type_args),
+        _UniffiConverterOptionalSequenceString.lower(type_arguments),
         _UniffiConverterOptionalSequenceTypeMoveViewArg.lower(arguments)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -40401,7 +40401,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_view_call_json(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT) -> "MoveViewResult":
+    async def move_view_call_json(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT) -> "MoveViewResult":
         """
         Execute a Move View Function with raw JSON arguments.
 
@@ -40417,7 +40417,7 @@ _UniffiConverterTypeSdkFfiError,
         * `function_name` - The Move function fully qualified name as
         `<package_id>::<module_name>::<function_name>`, e.g.,
         `0x2::hash::blake2b256`
-        * `type_args` - The type arguments of the Move function
+        * `type_arguments` - The type arguments of the Move function
         * `arguments` - The arguments to be passed into the Move function, in
         JSON format
 
@@ -40428,9 +40428,9 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterString.check_lower(function_name)
         
-        if type_args is _DEFAULT:
-            type_args = None
-        _UniffiConverterOptionalSequenceString.check_lower(type_args)
+        if type_arguments is _DEFAULT:
+            type_arguments = None
+        _UniffiConverterOptionalSequenceString.check_lower(type_arguments)
         
         if arguments is _DEFAULT:
             arguments = None
@@ -40440,7 +40440,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterString.lower(function_name),
-        _UniffiConverterOptionalSequenceString.lower(type_args),
+        _UniffiConverterOptionalSequenceString.lower(type_arguments),
         _UniffiConverterOptionalSequenceTypeValue.lower(arguments)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,

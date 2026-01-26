@@ -5918,7 +5918,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call()
 	})
-	if checksum != 8588 {
+	if checksum != 20146 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call: UniFFI API checksum mismatch")
 	}
@@ -5927,7 +5927,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json()
 	})
-	if checksum != 14844 {
+	if checksum != 5635 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json: UniFFI API checksum mismatch")
 	}
@@ -19853,13 +19853,13 @@ type GraphQlClientInterface interface {
 	// * `function_name` - The Move function fully qualified name as
 	// `<package_id>::<module_name>::<function_name>`, e.g.,
 	// `0x2::hash::blake2b256`
-	// * `type_args` - The type arguments of the Move function
+	// * `type_arguments` - The type arguments of the Move function
 	// * `arguments` - The typed arguments to be passed into the Move function
 	//
 	// # Returns
 	// A `MoveViewResult` containing either execution results (return values)
 	// or an error.
-	MoveViewCall(functionName string, typeArgs *[]string, arguments *[]*MoveViewArg) (MoveViewResult, error)
+	MoveViewCall(functionName string, typeArguments *[]string, arguments *[]*MoveViewArg) (MoveViewResult, error)
 	// Execute a Move View Function with raw JSON arguments.
 	//
 	// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
@@ -19874,14 +19874,14 @@ type GraphQlClientInterface interface {
 	// * `function_name` - The Move function fully qualified name as
 	// `<package_id>::<module_name>::<function_name>`, e.g.,
 	// `0x2::hash::blake2b256`
-	// * `type_args` - The type arguments of the Move function
+	// * `type_arguments` - The type arguments of the Move function
 	// * `arguments` - The arguments to be passed into the Move function, in
 	// JSON format
 	//
 	// # Returns
 	// A `MoveViewResult` containing either execution results (return values)
 	// or an error.
-	MoveViewCallJson(functionName string, typeArgs *[]string, arguments *[]Value) (MoveViewResult, error)
+	MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
 	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
@@ -20961,13 +20961,13 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 // * `function_name` - The Move function fully qualified name as
 // `<package_id>::<module_name>::<function_name>`, e.g.,
 // `0x2::hash::blake2b256`
-// * `type_args` - The type arguments of the Move function
+// * `type_arguments` - The type arguments of the Move function
 // * `arguments` - The typed arguments to be passed into the Move function
 //
 // # Returns
 // A `MoveViewResult` containing either execution results (return values)
 // or an error.
-func (_self *GraphQlClient) MoveViewCall(functionName string, typeArgs *[]string, arguments *[]*MoveViewArg) (MoveViewResult, error) {
+func (_self *GraphQlClient) MoveViewCall(functionName string, typeArguments *[]string, arguments *[]*MoveViewArg) (MoveViewResult, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -20984,7 +20984,7 @@ func (_self *GraphQlClient) MoveViewCall(functionName string, typeArgs *[]string
 			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
-		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArgs), FfiConverterOptionalSequenceMoveViewArgINSTANCE.Lower(arguments)),
+		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArguments), FfiConverterOptionalSequenceMoveViewArgINSTANCE.Lower(arguments)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -21012,14 +21012,14 @@ func (_self *GraphQlClient) MoveViewCall(functionName string, typeArgs *[]string
 // * `function_name` - The Move function fully qualified name as
 // `<package_id>::<module_name>::<function_name>`, e.g.,
 // `0x2::hash::blake2b256`
-// * `type_args` - The type arguments of the Move function
+// * `type_arguments` - The type arguments of the Move function
 // * `arguments` - The arguments to be passed into the Move function, in
 // JSON format
 //
 // # Returns
 // A `MoveViewResult` containing either execution results (return values)
 // or an error.
-func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArgs *[]string, arguments *[]Value) (MoveViewResult, error) {
+func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -21036,7 +21036,7 @@ func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArgs *[]st
 			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
-		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArgs), FfiConverterOptionalSequenceTypeValueINSTANCE.Lower(arguments)),
+		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArguments), FfiConverterOptionalSequenceTypeValueINSTANCE.Lower(arguments)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)

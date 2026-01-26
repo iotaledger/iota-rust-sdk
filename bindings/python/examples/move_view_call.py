@@ -58,7 +58,10 @@ async def main():
     object_id = ObjectId.from_hex(
         "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")
 
-    auction_args = [MoveViewArg.object_id(object_id), MoveViewArg.string("auc.iota")]
+    auction_args = [
+        MoveViewArg.object_id(object_id),
+        MoveViewArg.string("auc.iota")
+    ]
 
     auction_result = await client.move_view_call(
         "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
