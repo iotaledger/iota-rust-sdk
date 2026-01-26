@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+mod move_view_call;
+
 use std::{sync::Arc, time::Duration};
 
 use iota_sdk::{
@@ -21,8 +23,7 @@ use crate::{
         digest::Digest,
         graphql::{
             CoinMetadata, DynamicFieldOutput, Epoch, EventFilter, MoveFunction, MoveModule,
-            MoveViewResult, ObjectFilter, TransactionDataEffects, TransactionMetadata,
-            TransactionsFilter,
+            ObjectFilter, TransactionDataEffects, TransactionMetadata, TransactionsFilter,
         },
         iota_names::Name,
         object::{MovePackage, Object, ObjectId},
@@ -972,57 +973,6 @@ impl GraphQLClient {
             .await?
             .map(Into::into)
             .map(Arc::new))
-    }
-
-    /// Execute a Move View Function.
-    ///
-    /// A View Function is a function in a Move module with a return type that
-    /// does not alter the state of the ledger. When using this interface,
-    /// no transactions are submitted to the network for inclusion into the
-    /// ledger.
-    ///
-    /// This method allows calling nearly any Move function with a return type
-    /// and any arguments. The function's result values are provided and
-    /// decoded using the appropriate Move type, then formatted in JSON.
-    ///
-    /// The use of this interface does not require signature checks (even for
-    /// functions that take Owned Objects as input) or gas coins, as it does
-    /// not alter ledger state. Spam attacks are dealt with at the RPC level
-    /// rather than execution level.
-    ///
-    /// # Arguments
-    /// * `function_name` - The Move function fully qualified name as
-    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
-    /// * `type_args` - The type arguments of the Move function
-    /// * `arguments` - The arguments to be passed into the Move function as
-    ///   strings (will be parsed as JSON)
-    ///
-    /// # Returns
-    /// A `MoveViewResult` containing either execution results (return values)
-    /// or an error.
-    pub async fn move_view_call(
-        &self,
-        function_name: String,
-        type_args: Option<Vec<String>>,
-        arguments: Option<Vec<String>>,
-    ) -> Result<MoveViewResult> {
-        let arguments = arguments.map(|args| {
-            args.into_iter()
-                .map(|arg| {
-                    // Try to parse as JSON first, fall back to string
-                    serde_json::from_str(&arg).unwrap_or(serde_json::Value::String(arg))
-                })
-                .collect::<Vec<_>>()
-        });
-
-        Ok(self
-            .0
-            .read()
-            .await
-            .move_view_call_json(function_name, type_args, arguments)
-            .await?
-            .into())
     }
 }
 

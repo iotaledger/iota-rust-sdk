@@ -3927,6 +3927,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5177,6 +5179,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents(
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function(
 ): Short
@@ -7527,6 +7531,8 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(`ptr`: Poin
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
 ): Long
@@ -12357,7 +12363,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 4861.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 59995.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 14844.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
@@ -28599,14 +28608,38 @@ public interface GraphQlClientInterface {
      * `<package_id>::<module_name>::<function_name>`, e.g.,
      * `0x2::hash::blake2b256`
      * * `type_args` - The type arguments of the Move function
-     * * `arguments` - The arguments to be passed into the Move function as
-     * strings (will be parsed as JSON)
+     * * `arguments` - The typed arguments to be passed into the Move function
      *
      * # Returns
      * A `MoveViewResult` containing either execution results (return values)
      * or an error.
      */
-    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<kotlin.String>?): MoveViewResult
+    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>? = null, `arguments`: List<MoveViewArg>? = null): MoveViewResult
+    
+    /**
+     * Execute a Move View Function with raw JSON arguments.
+     *
+     * This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+     * raw JSON values instead of typed arguments.
+     *
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x2::hash::blake2b256`
+     * * `type_args` - The type arguments of the Move function
+     * * `arguments` - The arguments to be passed into the Move function, in
+     * JSON format
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
+     */
+    suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>? = null, `arguments`: List<Value>? = null): MoveViewResult
     
     /**
      * Return the normalized Move function data for the provided package,
@@ -29602,8 +29635,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      * `<package_id>::<module_name>::<function_name>`, e.g.,
      * `0x2::hash::blake2b256`
      * * `type_args` - The type arguments of the Move function
-     * * `arguments` - The arguments to be passed into the Move function as
-     * strings (will be parsed as JSON)
+     * * `arguments` - The typed arguments to be passed into the Move function
      *
      * # Returns
      * A `MoveViewResult` containing either execution results (return values)
@@ -29611,12 +29643,56 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<kotlin.String>?) : MoveViewResult {
+    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<MoveViewArg>?) : MoveViewResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 thisPtr,
-                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceString.lower(`arguments`),
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceTypeMoveViewArg.lower(`arguments`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeMoveViewResult.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute a Move View Function with raw JSON arguments.
+     *
+     * This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+     * raw JSON values instead of typed arguments.
+     *
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x2::hash::blake2b256`
+     * * `type_args` - The type arguments of the Move function
+     * * `arguments` - The arguments to be passed into the Move function, in
+     * JSON format
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArgs`: List<kotlin.String>?, `arguments`: List<Value>?) : MoveViewResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
+                thisPtr,
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArgs`),FfiConverterOptionalSequenceTypeValue.lower(`arguments`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -61173,6 +61249,14 @@ public object FfiConverterTypeMoveStructTypeParameter: FfiConverterRustBuffer<Mo
 
 
 
+/**
+ * The result of executing a Move View Function.
+ *
+ * Execution errors are captured in the `error` field, in which case the
+ * `results` field will be `None`. On success, the `results` field will contain
+ * the return values of the Move view function, and the `error` field will be
+ * `None`.
+ */
 data class MoveViewResult (
     /**
      * Execution error from executing the Move view function.
@@ -65379,6 +65463,397 @@ public object FfiConverterTypeMoveAbility: FfiConverterRustBuffer<MoveAbility> {
 
 
 
+/**
+ * An argument for a Move View Function call.
+ *
+ * This enum represents the different types of values that can be passed
+ * as arguments to a Move View Function.
+ */
+sealed class MoveViewArg: Disposable  {
+    
+    /**
+     * A boolean value.
+     */
+    data class Bool(
+        val `value`: kotlin.Boolean) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An unsigned 8-bit integer.
+     */
+    data class U8(
+        val `value`: kotlin.UByte) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An unsigned 16-bit integer.
+     */
+    data class U16(
+        val `value`: kotlin.UShort) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An unsigned 32-bit integer.
+     */
+    data class U32(
+        val `value`: kotlin.UInt) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An unsigned 64-bit integer.
+     */
+    data class U64(
+        val `value`: kotlin.ULong) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An unsigned 128-bit integer (as string to avoid precision loss).
+     */
+    data class U128(
+        val `value`: kotlin.String) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * A string value.
+     */
+    data class Str(
+        val `value`: kotlin.String) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An object ID.
+     */
+    data class Object(
+        val `value`: ObjectId) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * An address.
+     */
+    data class Addr(
+        val `value`: Address) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * A vector/array of arguments.
+     */
+    data class Array(
+        val `value`: List<MoveViewArg>) : MoveViewArg() {
+        companion object
+    }
+    
+    /**
+     * A null/none value (for Option::None).
+     */
+    object Null : MoveViewArg()
+    
+    
+    /**
+     * A raw JSON value (as string, will be parsed).
+     */
+    data class Json(
+        val `value`: kotlin.String) : MoveViewArg() {
+        companion object
+    }
+    
+
+    
+    @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
+    override fun destroy() {
+        when(this) {
+            is MoveViewArg.Bool -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.U8 -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.U16 -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.U32 -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.U64 -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.U128 -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.Str -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.Object -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.Addr -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.Array -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+            is MoveViewArg.Null -> {// Nothing to destroy
+            }
+            is MoveViewArg.Json -> {
+                
+    Disposable.destroy(
+        this.`value`
+    )
+                
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveViewArg : FfiConverterRustBuffer<MoveViewArg>{
+    override fun read(buf: ByteBuffer): MoveViewArg {
+        return when(buf.getInt()) {
+            1 -> MoveViewArg.Bool(
+                FfiConverterBoolean.read(buf),
+                )
+            2 -> MoveViewArg.U8(
+                FfiConverterUByte.read(buf),
+                )
+            3 -> MoveViewArg.U16(
+                FfiConverterUShort.read(buf),
+                )
+            4 -> MoveViewArg.U32(
+                FfiConverterUInt.read(buf),
+                )
+            5 -> MoveViewArg.U64(
+                FfiConverterULong.read(buf),
+                )
+            6 -> MoveViewArg.U128(
+                FfiConverterString.read(buf),
+                )
+            7 -> MoveViewArg.Str(
+                FfiConverterString.read(buf),
+                )
+            8 -> MoveViewArg.Object(
+                FfiConverterTypeObjectId.read(buf),
+                )
+            9 -> MoveViewArg.Addr(
+                FfiConverterTypeAddress.read(buf),
+                )
+            10 -> MoveViewArg.Array(
+                FfiConverterSequenceTypeMoveViewArg.read(buf),
+                )
+            11 -> MoveViewArg.Null
+            12 -> MoveViewArg.Json(
+                FfiConverterString.read(buf),
+                )
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: MoveViewArg) = when(value) {
+        is MoveViewArg.Bool -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterBoolean.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.U8 -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUByte.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.U16 -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUShort.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.U32 -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterUInt.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.U64 -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterULong.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.U128 -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.Str -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.Object -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeObjectId.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.Addr -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterTypeAddress.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.Array -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterSequenceTypeMoveViewArg.allocationSize(value.`value`)
+            )
+        }
+        is MoveViewArg.Null -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is MoveViewArg.Json -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`value`)
+            )
+        }
+    }
+
+    override fun write(value: MoveViewArg, buf: ByteBuffer) {
+        when(value) {
+            is MoveViewArg.Bool -> {
+                buf.putInt(1)
+                FfiConverterBoolean.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.U8 -> {
+                buf.putInt(2)
+                FfiConverterUByte.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.U16 -> {
+                buf.putInt(3)
+                FfiConverterUShort.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.U32 -> {
+                buf.putInt(4)
+                FfiConverterUInt.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.U64 -> {
+                buf.putInt(5)
+                FfiConverterULong.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.U128 -> {
+                buf.putInt(6)
+                FfiConverterString.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.Str -> {
+                buf.putInt(7)
+                FfiConverterString.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.Object -> {
+                buf.putInt(8)
+                FfiConverterTypeObjectId.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.Addr -> {
+                buf.putInt(9)
+                FfiConverterTypeAddress.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.Array -> {
+                buf.putInt(10)
+                FfiConverterSequenceTypeMoveViewArg.write(value.`value`, buf)
+                Unit
+            }
+            is MoveViewArg.Null -> {
+                buf.putInt(11)
+                Unit
+            }
+            is MoveViewArg.Json -> {
+                buf.putInt(12)
+                FfiConverterString.write(value.`value`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+}
+
+
+
+
+
 
 enum class MoveVisibility {
     
@@ -68831,6 +69306,70 @@ public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffe
 /**
  * @suppress
  */
+public object FfiConverterOptionalSequenceTypeMoveViewArg: FfiConverterRustBuffer<List<MoveViewArg>?> {
+    override fun read(buf: ByteBuffer): List<MoveViewArg>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveViewArg.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveViewArg>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveViewArg.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveViewArg>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveViewArg.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeValue: FfiConverterRustBuffer<List<Value>?> {
+    override fun read(buf: ByteBuffer): List<Value>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeValue.read(buf)
+    }
+
+    override fun allocationSize(value: List<Value>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeValue.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<Value>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeValue.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalMapStringSequenceString: FfiConverterRustBuffer<Map<kotlin.String, List<kotlin.String>>?> {
     override fun read(buf: ByteBuffer): Map<kotlin.String, List<kotlin.String>>? {
         if (buf.get().toInt() == 0) {
@@ -70741,6 +71280,62 @@ public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMoveAbility.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveViewArg: FfiConverterRustBuffer<List<MoveViewArg>> {
+    override fun read(buf: ByteBuffer): List<MoveViewArg> {
+        val len = buf.getInt()
+        return List<MoveViewArg>(len) {
+            FfiConverterTypeMoveViewArg.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveViewArg>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveViewArg.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveViewArg>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveViewArg.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeValue: FfiConverterRustBuffer<List<Value>> {
+    override fun read(buf: ByteBuffer): List<Value> {
+        val len = buf.getInt()
+        return List<Value>(len) {
+            FfiConverterTypeValue.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Value>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeValue.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Value>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeValue.write(it, buf)
         }
     }
 }

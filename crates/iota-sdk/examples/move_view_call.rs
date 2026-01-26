@@ -4,7 +4,7 @@
 use std::str::FromStr;
 
 use iota_sdk::{
-    graphql_client::{Client, error::Result, move_view_call::Shared},
+    graphql_client::{Client, error::Result},
     types::ObjectId,
 };
 
@@ -55,14 +55,11 @@ async fn main() -> Result<()> {
     // ===========================================================================
     println!("\n=== Example 3: move_view_call() with typed arguments (auction) ===\n");
 
-    let auction_object =
-        ObjectId::from_str("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")?;
-
     let result = client
         .move_view_call(
             "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
             None,
-            (Shared(auction_object), "auc.iota"),
+            (ObjectId::from_str("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")?, "auc.iota"),
         )
         .await?;
 

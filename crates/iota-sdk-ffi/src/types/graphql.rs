@@ -1182,6 +1182,12 @@ pub struct MoveEnum {
     pub variants: Option<Vec<MoveEnumVariant>>,
 }
 
+/// The result of executing a Move View Function.
+///
+/// Execution errors are captured in the `error` field, in which case the
+/// `results` field will be `None`. On success, the `results` field will contain
+/// the return values of the Move view function, and the `error` field will be
+/// `None`.
 #[derive(uniffi::Record)]
 pub struct MoveViewResult {
     /// Execution error from executing the Move view function.

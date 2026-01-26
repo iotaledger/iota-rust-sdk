@@ -1695,7 +1695,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 4861:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 59995:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 14844:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5559,6 +5561,13 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.argtypes =
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -15038,6 +15047,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_content
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.restype = ctypes.c_uint16
@@ -20518,6 +20530,15 @@ class _UniffiConverterTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
 
 
 class MoveViewResult:
+    """
+    The result of executing a Move View Function.
+
+    Execution errors are captured in the `error` field, in which case the
+    `results` field will be `None`. On success, the `results` field will contain
+    the return values of the Move view function, and the `error` field will be
+    `None`.
+    """
+
     error: "typing.Optional[str]"
     """
     Execution error from executing the Move view function.
@@ -25895,6 +25916,464 @@ class _UniffiConverterTypeMoveAbility(_UniffiConverterRustBuffer):
 
 
 
+class MoveViewArg:
+    """
+    An argument for a Move View Function call.
+
+    This enum represents the different types of values that can be passed
+    as arguments to a Move View Function.
+    """
+
+    def __init__(self):
+        raise RuntimeError("MoveViewArg cannot be instantiated directly")
+
+    # Each enum variant is a nested class of the enum itself.
+    class BOOL:
+        """
+        A boolean value.
+        """
+
+        value: "bool"
+
+        def __init__(self,value: "bool"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.BOOL(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_BOOL():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class U8:
+        """
+        An unsigned 8-bit integer.
+        """
+
+        value: "int"
+
+        def __init__(self,value: "int"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.U8(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_U8():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class U16:
+        """
+        An unsigned 16-bit integer.
+        """
+
+        value: "int"
+
+        def __init__(self,value: "int"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.U16(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_U16():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class U32:
+        """
+        An unsigned 32-bit integer.
+        """
+
+        value: "int"
+
+        def __init__(self,value: "int"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.U32(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_U32():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class U64:
+        """
+        An unsigned 64-bit integer.
+        """
+
+        value: "int"
+
+        def __init__(self,value: "int"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.U64(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_U64():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class U128:
+        """
+        An unsigned 128-bit integer (as string to avoid precision loss).
+        """
+
+        value: "str"
+
+        def __init__(self,value: "str"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.U128(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_U128():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class STR:
+        """
+        A string value.
+        """
+
+        value: "str"
+
+        def __init__(self,value: "str"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.STR(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_STR():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class OBJECT:
+        """
+        An object ID.
+        """
+
+        value: "ObjectId"
+
+        def __init__(self,value: "ObjectId"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.OBJECT(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_OBJECT():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class ADDR:
+        """
+        An address.
+        """
+
+        value: "Address"
+
+        def __init__(self,value: "Address"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.ADDR(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_ADDR():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class ARRAY:
+        """
+        A vector/array of arguments.
+        """
+
+        value: "typing.List[MoveViewArg]"
+
+        def __init__(self,value: "typing.List[MoveViewArg]"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.ARRAY(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_ARRAY():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    class NULL:
+        """
+        A null/none value (for Option::None).
+        """
+
+
+        def __init__(self,):
+            pass
+
+        def __str__(self):
+            return "MoveViewArg.NULL()".format()
+
+        def __eq__(self, other):
+            if not other.is_NULL():
+                return False
+            return True
+    
+    class JSON:
+        """
+        A raw JSON value (as string, will be parsed).
+        """
+
+        value: "str"
+
+        def __init__(self,value: "str"):
+            self.value = value
+
+        def __str__(self):
+            return "MoveViewArg.JSON(value={})".format(self.value)
+
+        def __eq__(self, other):
+            if not other.is_JSON():
+                return False
+            if self.value != other.value:
+                return False
+            return True
+    
+    
+
+    # For each variant, we have `is_NAME` and `is_name` methods for easily checking
+    # whether an instance is that variant.
+    def is_BOOL(self) -> bool:
+        return isinstance(self, MoveViewArg.BOOL)
+    def is_bool(self) -> bool:
+        return isinstance(self, MoveViewArg.BOOL)
+    def is_U8(self) -> bool:
+        return isinstance(self, MoveViewArg.U8)
+    def is_u8(self) -> bool:
+        return isinstance(self, MoveViewArg.U8)
+    def is_U16(self) -> bool:
+        return isinstance(self, MoveViewArg.U16)
+    def is_u16(self) -> bool:
+        return isinstance(self, MoveViewArg.U16)
+    def is_U32(self) -> bool:
+        return isinstance(self, MoveViewArg.U32)
+    def is_u32(self) -> bool:
+        return isinstance(self, MoveViewArg.U32)
+    def is_U64(self) -> bool:
+        return isinstance(self, MoveViewArg.U64)
+    def is_u64(self) -> bool:
+        return isinstance(self, MoveViewArg.U64)
+    def is_U128(self) -> bool:
+        return isinstance(self, MoveViewArg.U128)
+    def is_u128(self) -> bool:
+        return isinstance(self, MoveViewArg.U128)
+    def is_STR(self) -> bool:
+        return isinstance(self, MoveViewArg.STR)
+    def is_str(self) -> bool:
+        return isinstance(self, MoveViewArg.STR)
+    def is_OBJECT(self) -> bool:
+        return isinstance(self, MoveViewArg.OBJECT)
+    def is_object(self) -> bool:
+        return isinstance(self, MoveViewArg.OBJECT)
+    def is_ADDR(self) -> bool:
+        return isinstance(self, MoveViewArg.ADDR)
+    def is_addr(self) -> bool:
+        return isinstance(self, MoveViewArg.ADDR)
+    def is_ARRAY(self) -> bool:
+        return isinstance(self, MoveViewArg.ARRAY)
+    def is_array(self) -> bool:
+        return isinstance(self, MoveViewArg.ARRAY)
+    def is_NULL(self) -> bool:
+        return isinstance(self, MoveViewArg.NULL)
+    def is_null(self) -> bool:
+        return isinstance(self, MoveViewArg.NULL)
+    def is_JSON(self) -> bool:
+        return isinstance(self, MoveViewArg.JSON)
+    def is_json(self) -> bool:
+        return isinstance(self, MoveViewArg.JSON)
+    
+
+# Now, a little trick - we make each nested variant class be a subclass of the main
+# enum class, so that method calls and instance checks etc will work intuitively.
+# We might be able to do this a little more neatly with a metaclass, but this'll do.
+MoveViewArg.BOOL = type("MoveViewArg.BOOL", (MoveViewArg.BOOL, MoveViewArg,), {})  # type: ignore
+MoveViewArg.U8 = type("MoveViewArg.U8", (MoveViewArg.U8, MoveViewArg,), {})  # type: ignore
+MoveViewArg.U16 = type("MoveViewArg.U16", (MoveViewArg.U16, MoveViewArg,), {})  # type: ignore
+MoveViewArg.U32 = type("MoveViewArg.U32", (MoveViewArg.U32, MoveViewArg,), {})  # type: ignore
+MoveViewArg.U64 = type("MoveViewArg.U64", (MoveViewArg.U64, MoveViewArg,), {})  # type: ignore
+MoveViewArg.U128 = type("MoveViewArg.U128", (MoveViewArg.U128, MoveViewArg,), {})  # type: ignore
+MoveViewArg.STR = type("MoveViewArg.STR", (MoveViewArg.STR, MoveViewArg,), {})  # type: ignore
+MoveViewArg.OBJECT = type("MoveViewArg.OBJECT", (MoveViewArg.OBJECT, MoveViewArg,), {})  # type: ignore
+MoveViewArg.ADDR = type("MoveViewArg.ADDR", (MoveViewArg.ADDR, MoveViewArg,), {})  # type: ignore
+MoveViewArg.ARRAY = type("MoveViewArg.ARRAY", (MoveViewArg.ARRAY, MoveViewArg,), {})  # type: ignore
+MoveViewArg.NULL = type("MoveViewArg.NULL", (MoveViewArg.NULL, MoveViewArg,), {})  # type: ignore
+MoveViewArg.JSON = type("MoveViewArg.JSON", (MoveViewArg.JSON, MoveViewArg,), {})  # type: ignore
+
+
+
+
+class _UniffiConverterTypeMoveViewArg(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        variant = buf.read_i32()
+        if variant == 1:
+            return MoveViewArg.BOOL(
+                _UniffiConverterBool.read(buf),
+            )
+        if variant == 2:
+            return MoveViewArg.U8(
+                _UniffiConverterUInt8.read(buf),
+            )
+        if variant == 3:
+            return MoveViewArg.U16(
+                _UniffiConverterUInt16.read(buf),
+            )
+        if variant == 4:
+            return MoveViewArg.U32(
+                _UniffiConverterUInt32.read(buf),
+            )
+        if variant == 5:
+            return MoveViewArg.U64(
+                _UniffiConverterUInt64.read(buf),
+            )
+        if variant == 6:
+            return MoveViewArg.U128(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 7:
+            return MoveViewArg.STR(
+                _UniffiConverterString.read(buf),
+            )
+        if variant == 8:
+            return MoveViewArg.OBJECT(
+                _UniffiConverterTypeObjectId.read(buf),
+            )
+        if variant == 9:
+            return MoveViewArg.ADDR(
+                _UniffiConverterTypeAddress.read(buf),
+            )
+        if variant == 10:
+            return MoveViewArg.ARRAY(
+                _UniffiConverterSequenceTypeMoveViewArg.read(buf),
+            )
+        if variant == 11:
+            return MoveViewArg.NULL(
+            )
+        if variant == 12:
+            return MoveViewArg.JSON(
+                _UniffiConverterString.read(buf),
+            )
+        raise InternalError("Raw enum value doesn't match any cases")
+
+    @staticmethod
+    def check_lower(value):
+        if value.is_BOOL():
+            _UniffiConverterBool.check_lower(value.value)
+            return
+        if value.is_U8():
+            _UniffiConverterUInt8.check_lower(value.value)
+            return
+        if value.is_U16():
+            _UniffiConverterUInt16.check_lower(value.value)
+            return
+        if value.is_U32():
+            _UniffiConverterUInt32.check_lower(value.value)
+            return
+        if value.is_U64():
+            _UniffiConverterUInt64.check_lower(value.value)
+            return
+        if value.is_U128():
+            _UniffiConverterString.check_lower(value.value)
+            return
+        if value.is_STR():
+            _UniffiConverterString.check_lower(value.value)
+            return
+        if value.is_OBJECT():
+            _UniffiConverterTypeObjectId.check_lower(value.value)
+            return
+        if value.is_ADDR():
+            _UniffiConverterTypeAddress.check_lower(value.value)
+            return
+        if value.is_ARRAY():
+            _UniffiConverterSequenceTypeMoveViewArg.check_lower(value.value)
+            return
+        if value.is_NULL():
+            return
+        if value.is_JSON():
+            _UniffiConverterString.check_lower(value.value)
+            return
+        raise ValueError(value)
+
+    @staticmethod
+    def write(value, buf):
+        if value.is_BOOL():
+            buf.write_i32(1)
+            _UniffiConverterBool.write(value.value, buf)
+        if value.is_U8():
+            buf.write_i32(2)
+            _UniffiConverterUInt8.write(value.value, buf)
+        if value.is_U16():
+            buf.write_i32(3)
+            _UniffiConverterUInt16.write(value.value, buf)
+        if value.is_U32():
+            buf.write_i32(4)
+            _UniffiConverterUInt32.write(value.value, buf)
+        if value.is_U64():
+            buf.write_i32(5)
+            _UniffiConverterUInt64.write(value.value, buf)
+        if value.is_U128():
+            buf.write_i32(6)
+            _UniffiConverterString.write(value.value, buf)
+        if value.is_STR():
+            buf.write_i32(7)
+            _UniffiConverterString.write(value.value, buf)
+        if value.is_OBJECT():
+            buf.write_i32(8)
+            _UniffiConverterTypeObjectId.write(value.value, buf)
+        if value.is_ADDR():
+            buf.write_i32(9)
+            _UniffiConverterTypeAddress.write(value.value, buf)
+        if value.is_ARRAY():
+            buf.write_i32(10)
+            _UniffiConverterSequenceTypeMoveViewArg.write(value.value, buf)
+        if value.is_NULL():
+            buf.write_i32(11)
+        if value.is_JSON():
+            buf.write_i32(12)
+            _UniffiConverterString.write(value.value, buf)
+
+
+
+
+
+
+
 class MoveVisibility(enum.Enum):
     PUBLIC = 0
     
@@ -29328,6 +29807,60 @@ class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer
 
 
 
+class _UniffiConverterOptionalSequenceTypeMoveViewArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveViewArg.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveViewArg.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveViewArg.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeValue(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeValue.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeValue.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeValue.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalMapStringSequenceString(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -31032,6 +31565,56 @@ class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveViewArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveViewArg.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveViewArg.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveViewArg.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeValue(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeValue.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeValue.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeValue.read(buf) for i in range(count)
         ]
 
 
@@ -38883,7 +39466,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[str]]"):
+    def move_view_call(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
         """
         Execute a Move View Function.
 
@@ -38906,8 +39489,33 @@ class GraphQlClientProtocol(typing.Protocol):
         `<package_id>::<module_name>::<function_name>`, e.g.,
         `0x2::hash::blake2b256`
         * `type_args` - The type arguments of the Move function
-        * `arguments` - The arguments to be passed into the Move function as
-        strings (will be parsed as JSON)
+        * `arguments` - The typed arguments to be passed into the Move function
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
+        """
+
+        raise NotImplementedError
+    def move_view_call_json(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT):
+        """
+        Execute a Move View Function with raw JSON arguments.
+
+        This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+        raw JSON values instead of typed arguments.
+
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x2::hash::blake2b256`
+        * `type_args` - The type arguments of the Move function
+        * `arguments` - The arguments to be passed into the Move function, in
+        JSON format
 
         # Returns
         A `MoveViewResult` containing either execution results (return values)
@@ -40013,7 +40621,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_view_call(self, function_name: "str",type_args: "typing.Optional[typing.List[str]]",arguments: "typing.Optional[typing.List[str]]") -> "MoveViewResult":
+    async def move_view_call(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
         """
         Execute a Move View Function.
 
@@ -40036,8 +40644,7 @@ _UniffiConverterTypeSdkFfiError,
         `<package_id>::<module_name>::<function_name>`, e.g.,
         `0x2::hash::blake2b256`
         * `type_args` - The type arguments of the Move function
-        * `arguments` - The arguments to be passed into the Move function as
-        strings (will be parsed as JSON)
+        * `arguments` - The typed arguments to be passed into the Move function
 
         # Returns
         A `MoveViewResult` containing either execution results (return values)
@@ -40046,16 +40653,75 @@ _UniffiConverterTypeSdkFfiError,
 
         _UniffiConverterString.check_lower(function_name)
         
+        if type_args is _DEFAULT:
+            type_args = None
         _UniffiConverterOptionalSequenceString.check_lower(type_args)
         
-        _UniffiConverterOptionalSequenceString.check_lower(arguments)
+        if arguments is _DEFAULT:
+            arguments = None
+        _UniffiConverterOptionalSequenceTypeMoveViewArg.check_lower(arguments)
         
         return await _uniffi_rust_call_async(
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterString.lower(function_name),
         _UniffiConverterOptionalSequenceString.lower(type_args),
-        _UniffiConverterOptionalSequenceString.lower(arguments)
+        _UniffiConverterOptionalSequenceTypeMoveViewArg.lower(arguments)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMoveViewResult.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def move_view_call_json(self, function_name: "str",type_args: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT) -> "MoveViewResult":
+        """
+        Execute a Move View Function with raw JSON arguments.
+
+        This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+        raw JSON values instead of typed arguments.
+
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x2::hash::blake2b256`
+        * `type_args` - The type arguments of the Move function
+        * `arguments` - The arguments to be passed into the Move function, in
+        JSON format
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
+        """
+
+        _UniffiConverterString.check_lower(function_name)
+        
+        if type_args is _DEFAULT:
+            type_args = None
+        _UniffiConverterOptionalSequenceString.check_lower(type_args)
+        
+        if arguments is _DEFAULT:
+            arguments = None
+        _UniffiConverterOptionalSequenceTypeValue.check_lower(arguments)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(function_name),
+        _UniffiConverterOptionalSequenceString.lower(type_args),
+        _UniffiConverterOptionalSequenceTypeValue.lower(arguments)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -61114,6 +61780,7 @@ __all__ = [
     "IntentVersion",
     "MnemonicLength",
     "MoveAbility",
+    "MoveViewArg",
     "MoveVisibility",
     "NameFormat",
     "ObjectIn",

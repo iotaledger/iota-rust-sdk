@@ -196,21 +196,6 @@ impl MoveViewArg for &Address {
     }
 }
 
-/// Wrapper for specifying shared (immutable) object parameters.
-pub struct Shared<T>(pub T);
-
-impl<T: MoveViewArg> MoveViewArg for Shared<T> {
-    fn to_json(&self) -> serde_json::Value {
-        self.0.to_json()
-    }
-}
-
-impl<T: MoveViewArg> MoveViewArg for &Shared<T> {
-    fn to_json(&self) -> serde_json::Value {
-        self.0.to_json()
-    }
-}
-
 // Collection implementations
 impl<T: MoveViewArg> MoveViewArg for Vec<T> {
     fn to_json(&self) -> serde_json::Value {
@@ -265,10 +250,6 @@ impl MoveViewArg for &serde_json::Value {
     }
 }
 
-// ===========================================================================
-// MoveViewArgList Trait and Implementations
-// ===========================================================================
-
 /// A trait which defines a list of arguments for a Move View Function call.
 #[diagnostic::on_unimplemented(
     message = "Provided value is not a valid list of Move view arguments.",
@@ -303,50 +284,4 @@ macro_rules! impl_move_view_args_tuple {
     };
 }
 
-impl_move_view_args_tuple!((0, T0), (1, T1));
-impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2));
-impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2), (3, T3));
-impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2), (3, T3), (4, T4));
-impl_move_view_args_tuple!((0, T0), (1, T1), (2, T2), (3, T3), (4, T4), (5, T5));
-impl_move_view_args_tuple!(
-    (0, T0),
-    (1, T1),
-    (2, T2),
-    (3, T3),
-    (4, T4),
-    (5, T5),
-    (6, T6)
-);
-impl_move_view_args_tuple!(
-    (0, T0),
-    (1, T1),
-    (2, T2),
-    (3, T3),
-    (4, T4),
-    (5, T5),
-    (6, T6),
-    (7, T7)
-);
-impl_move_view_args_tuple!(
-    (0, T0),
-    (1, T1),
-    (2, T2),
-    (3, T3),
-    (4, T4),
-    (5, T5),
-    (6, T6),
-    (7, T7),
-    (8, T8)
-);
-impl_move_view_args_tuple!(
-    (0, T0),
-    (1, T1),
-    (2, T2),
-    (3, T3),
-    (4, T4),
-    (5, T5),
-    (6, T6),
-    (7, T7),
-    (8, T8),
-    (9, T9)
-);
+variadics_please::all_tuples_enumerated!(impl_move_view_args_tuple, 2, 15, T);
