@@ -9,7 +9,6 @@ use std::{
     time::Duration,
 };
 
-use iota_graphql_client::Client;
 use iota_types::{
     Address, GasPayment, Identifier, MovePackageData, ObjectId, ObjectReference, Owner,
     ProgrammableTransaction, StructTag, Transaction, TransactionEffects, TransactionExpiration,
@@ -335,7 +334,8 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -344,7 +344,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
     ///
-    /// let client = iota_graphql_client::Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
@@ -405,14 +405,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_devnet();
+    /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     /// let to_address =
@@ -460,14 +460,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_devnet();
+    /// # let client = TestClient;
     /// let from_address =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     /// let to_address =
@@ -536,14 +536,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
@@ -576,14 +576,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     /// let coin =
@@ -645,25 +645,18 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
-    /// let validator_address = client
-    ///     .active_validators(None, Default::default())
-    ///     .await?
-    ///     .data
-    ///     .into_iter()
-    ///     .next()
-    ///     .ok_or_else(|| eyre::eyre!("no validators found"))?
-    ///     .address
-    ///     .address;
+    /// let validator_address =
+    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.stake(1000000000u64, validator_address);
@@ -686,14 +679,14 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust
-    /// use iota_graphql_client::Client;
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
     /// // This is a 0x3::staking_pool::StakedIota owned by the sender
@@ -724,7 +717,8 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -732,7 +726,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
@@ -894,16 +888,9 @@ impl<L> TransactionBuilder<(), L> {
     }
 }
 
-impl<L> TransactionBuilder<&Client, L> {
+impl<C, L> TransactionBuilder<C, L> {
     /// Get the client used by the builder.
-    pub fn get_client(&self) -> &Client {
-        self.client
-    }
-}
-
-impl<L> TransactionBuilder<Client, L> {
-    /// Get the client used by the builder.
-    pub fn get_client(&self) -> &Client {
+    pub fn get_client(&self) -> &C {
         &self.client
     }
 }
@@ -914,7 +901,8 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::TestClient;
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
@@ -922,7 +910,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
-    /// let client = iota_graphql_client::Client::new_devnet();
+    /// # let client = TestClient;
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///

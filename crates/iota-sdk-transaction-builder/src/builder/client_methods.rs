@@ -1,15 +1,20 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{
-    DryRunResult, WaitForTx,
-    pagination::{Direction, PaginationFilter},
-    query_types::{ObjectFilter, TransactionMetadata},
-};
 use iota_types::{
     Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects, TypeTag,
     UserSignature,
 };
+
+/// Determines what to wait for after executing a transaction.
+pub enum WaitForTx {
+    /// Indicates that the transaction effects will be usable in subsequent
+    /// transactions, and that the transaction itself is indexed on the node.
+    Indexed,
+    /// Indicates that the transaction has been included in a checkpoint, and
+    /// all queries may include it.
+    Finalized,
+}
 
 /// A trait which defines methods needed from the client for the Transaction
 /// Builder.
@@ -162,117 +167,6 @@ impl<T: ClientMethods> ClientMethods for &T {
     }
 }
 
-impl ClientMethods for iota_graphql_client::Client {
-    type Error = iota_graphql_client::error::Error;
-    type DryRunResult = DryRunResult;
-
-    async fn object(
-        &self,
-        object_id: ObjectId,
-        version: impl Into<Option<u64>>,
-    ) -> Result<Option<Object>, Self::Error> {
-        self.object(object_id, version).await
-    }
-
-    async fn objects(
-        &self,
-        type_tag: Option<TypeTag>,
-        owner: Option<Address>,
-        object_ids: Option<Vec<ObjectId>>,
-        ascending: bool,
-        cursor: Option<String>,
-        limit: Option<usize>,
-    ) -> Result<Vec<Object>, Self::Error> {
-        Ok(self
-            .objects(
-                ObjectFilter {
-                    type_: type_tag.as_ref().map(ToString::to_string),
-                    owner,
-                    object_ids,
-                },
-                PaginationFilter {
-                    direction: if ascending {
-                        Direction::Forward
-                    } else {
-                        Direction::Backward
-                    },
-                    cursor,
-                    limit: limit.map(|v| v as _),
-                },
-            )
-            .await?
-            .data)
-    }
-
-    async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>, Self::Error> {
-        self.transaction(digest).await
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: Digest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        self.transaction_effects(digest).await
-    }
-
-    async fn reference_gas_price(
-        &self,
-        epoch: impl Into<Option<u64>>,
-    ) -> Result<Option<u64>, Self::Error> {
-        self.reference_gas_price(epoch).await
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        let res = self.dry_run_tx(tx, true).await?;
-        Ok(res.effects.map(|e| e.gas_summary().gas_used()))
-    }
-
-    async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: bool,
-    ) -> Result<Self::DryRunResult, Self::Error> {
-        let Transaction::V1(tx) = &tx else {
-            unimplemented!("a new enum variant was added and needs to be handled")
-        };
-        let gas_objects = tx
-            .gas_payment
-            .objects
-            .iter()
-            .map(|r| iota_graphql_client::query_types::ObjectRef {
-                address: r.object_id,
-                digest: r.digest.to_base58(),
-                version: r.version,
-            })
-            .collect::<Vec<_>>();
-        self.dry_run_tx_kind(
-            &tx.kind,
-            skip_checks,
-            TransactionMetadata {
-                gas_budget: (tx.gas_payment.budget > 0).then_some(tx.gas_payment.budget),
-                gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
-                gas_price: Some(tx.gas_payment.price),
-                gas_sponsor: Some(tx.gas_payment.owner),
-                sender: Some(tx.sender),
-            },
-        )
-        .await
-    }
-
-    async fn execute_tx(
-        &self,
-        signatures: &[UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
-    ) -> Result<TransactionEffects, Self::Error> {
-        self.execute_tx(signatures, tx, wait_for).await
-    }
-
-    async fn wait_for_tx(&self, digest: Digest, wait_for: WaitForTx) -> Result<(), Self::Error> {
-        self.wait_for_tx(digest, wait_for, None).await
-    }
-}
-
 impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
     type Error = T::Error;
     type DryRunResult = T::DryRunResult;
@@ -349,5 +243,115 @@ impl<T: ClientMethods> ClientMethods for std::sync::Arc<T> {
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         self.as_ref().wait_for_tx(digest, wait_for)
+    }
+}
+
+#[cfg(test)]
+pub(crate) mod test_client {
+    //! Test utilities for the transaction builder.
+
+    use iota_types::{
+        Address, Digest, Object, ObjectId, SignedTransaction, Transaction, TransactionEffects,
+        TypeTag, UserSignature,
+    };
+
+    use super::{ClientMethods, WaitForTx};
+
+    /// A test client that implements [`ClientMethods`] with stub
+    /// implementations.
+    ///
+    /// This client is useful for testing scenarios where a real client
+    /// connection is not needed. All methods return default or empty
+    /// values.
+    #[derive(Debug, Clone, Copy, Default)]
+    pub struct TestClient;
+
+    /// Error type for [`TestClient`].
+    #[derive(Debug, Clone)]
+    pub struct TestClientError(pub String);
+
+    impl std::fmt::Display for TestClientError {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TestClientError: {}", self.0)
+        }
+    }
+
+    impl std::error::Error for TestClientError {}
+
+    impl ClientMethods for TestClient {
+        type Error = TestClientError;
+        type DryRunResult = ();
+
+        async fn object(
+            &self,
+            _object_id: ObjectId,
+            _version: impl Into<Option<u64>>,
+        ) -> Result<Option<Object>, Self::Error> {
+            Ok(None)
+        }
+
+        async fn objects(
+            &self,
+            _type_tag: Option<TypeTag>,
+            _owner: Option<Address>,
+            _object_ids: Option<Vec<ObjectId>>,
+            _ascending: bool,
+            _cursor: Option<String>,
+            _limit: Option<usize>,
+        ) -> Result<Vec<Object>, Self::Error> {
+            Ok(Vec::new())
+        }
+
+        async fn transaction(
+            &self,
+            _digest: Digest,
+        ) -> Result<Option<SignedTransaction>, Self::Error> {
+            Ok(None)
+        }
+
+        async fn transaction_effects(
+            &self,
+            _digest: Digest,
+        ) -> Result<Option<TransactionEffects>, Self::Error> {
+            Ok(None)
+        }
+
+        async fn reference_gas_price(
+            &self,
+            _epoch: impl Into<Option<u64>>,
+        ) -> Result<Option<u64>, Self::Error> {
+            Ok(Some(1000))
+        }
+
+        async fn estimate_tx_budget(&self, _tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            Ok(Some(50_000_000))
+        }
+
+        async fn dry_run_tx(
+            &self,
+            _tx: &Transaction,
+            _skip_checks: bool,
+        ) -> Result<Self::DryRunResult, Self::Error> {
+            Ok(())
+        }
+
+        async fn execute_tx(
+            &self,
+            _signatures: &[UserSignature],
+            _tx: &Transaction,
+            _wait_for: impl Into<Option<WaitForTx>>,
+        ) -> Result<TransactionEffects, Self::Error> {
+            Err(TestClientError(
+                "TestClient cannot execute transactions".to_string(),
+            ))
+        }
+
+        async fn wait_for_tx(
+            &self,
+            _digest: Digest,
+            _wait_for: WaitForTx,
+        ) -> Result<(), Self::Error> {
+            Ok(())
+        }
     }
 }

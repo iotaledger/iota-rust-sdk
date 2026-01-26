@@ -4,6 +4,7 @@
 
 #![doc = include_str!("../README.md")]
 
+mod client_methods;
 pub mod error;
 pub mod faucet;
 pub mod output_types;
@@ -17,6 +18,7 @@ use base64ct::Encoding;
 use cynic::{GraphQlResponse, MutationBuilder, Operation, QueryBuilder, serde};
 use error::{Error, Kind};
 use futures::Stream;
+pub use iota_transaction_builder::WaitForTx;
 use iota_types::{
     Address, CheckpointSequenceNumber, CheckpointSummary, Digest, IdentifierRef, MovePackage,
     Object, ObjectId, SenderSignedTransaction, SignedTransaction, StructTag, Transaction,
@@ -73,17 +75,6 @@ fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, crate::Error> {
             "Either data or errors must be present in a GraphQL response, but not both"
         ),
     }
-}
-
-/// Determines what to wait for after executing a transaction.
-#[non_exhaustive]
-pub enum WaitForTx {
-    /// Indicates that the transaction effects will be usable in subsequent
-    /// transactions, and that the transaction itself is indexed on the node.
-    Indexed,
-    /// Indicates that the transaction has been included in a checkpoint, and
-    /// all queries may include it.
-    Finalized,
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.

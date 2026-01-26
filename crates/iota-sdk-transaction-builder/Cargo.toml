@@ -12,14 +12,13 @@ base64ct = { workspace = true, features = ["std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 primitive-types.workspace = true
-reqwest.workspace = true
+reqwest = { workspace = true, features = ["rustls-tls", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 variadics_please = "1.1"
 
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
-iota-graphql-client.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
