@@ -1,6 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_sdk::graphql_client::query_types::ServiceConfig;
 use tokio::sync::RwLock;
 
 use crate::error::{Result, SdkFfiError};
@@ -74,6 +75,12 @@ impl GraphQLClient {
     /// valid URL with a host and optionally a port number.
     pub async fn set_rpc_server(&self, server: String) -> Result<()> {
         Ok(self.0.write().await.set_rpc_server(&server)?)
+    }
+
+    /// Get the GraphQL service configuration, including complexity limits, read
+    /// and mutation limits, supported versions, and others.
+    pub async fn service_config(&self) -> Result<ServiceConfig> {
+        Ok(self.0.read().await.service_config().await?.clone())
     }
 
     /// Run a query.

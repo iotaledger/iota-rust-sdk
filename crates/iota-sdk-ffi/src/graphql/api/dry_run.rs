@@ -3,8 +3,6 @@
 
 //! Dry run API implementation.
 
-use iota_sdk::graphql_client::query_types::ServiceConfig;
-
 use crate::{
     error::Result,
     graphql::{
@@ -56,11 +54,5 @@ impl GraphQLClient {
             .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
             .await?
             .into())
-    }
-
-    /// Get the GraphQL service configuration, including complexity limits, read
-    /// and mutation limits, supported versions, and others.
-    pub async fn service_config(&self) -> Result<ServiceConfig> {
-        Ok(self.0.read().await.service_config().await?.clone())
     }
 }
