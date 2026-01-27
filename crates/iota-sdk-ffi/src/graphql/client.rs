@@ -21,10 +21,6 @@ impl GraphQLClient {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Client Misc API
-    // ===========================================================================
-
     /// Create a new GraphQL client with the provided server address.
     #[uniffi::constructor]
     pub fn new(server: String) -> Result<Self> {
