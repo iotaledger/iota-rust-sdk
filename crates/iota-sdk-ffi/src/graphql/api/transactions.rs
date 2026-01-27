@@ -12,10 +12,10 @@ use crate::{
     graphql::{
         client::GraphQLClient,
         pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
+        query_types::{TransactionDataEffects, TransactionsFilter},
     },
     types::{
         digest::Digest,
-        graphql::{TransactionDataEffects, TransactionsFilter},
         signature::UserSignature,
         transaction::{SignedTransaction, Transaction, TransactionEffects},
     },

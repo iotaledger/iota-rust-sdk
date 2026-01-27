@@ -3,14 +3,16 @@
 
 use iota_sdk::graphql_client::query_types::PageInfo;
 
-use crate::types::{
-    checkpoint::CheckpointSummary,
-    coin::Coin,
-    events::Event,
-    graphql::{DynamicFieldOutput, Epoch, TransactionDataEffects, Validator},
-    iota_names::NameRegistration,
-    object::{MovePackage, Object},
-    transaction::{SignedTransaction, TransactionEffects},
+use crate::{
+    graphql::query_types::{DynamicFieldOutput, Epoch, TransactionDataEffects, Validator},
+    types::{
+        checkpoint::CheckpointSummary,
+        coin::Coin,
+        events::Event,
+        iota_names::NameRegistration,
+        object::{MovePackage, Object},
+        transaction::{SignedTransaction, TransactionEffects},
+    },
 };
 
 macro_rules! define_paged_record {

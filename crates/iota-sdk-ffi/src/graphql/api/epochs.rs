@@ -3,7 +3,10 @@
 
 //! Epoch API implementation.
 
-use crate::{error::Result, graphql::client::GraphQLClient, types::graphql::Epoch};
+use crate::{
+    error::Result,
+    graphql::{client::GraphQLClient, query_types::Epoch},
+};
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {

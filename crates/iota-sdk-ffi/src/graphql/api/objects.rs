@@ -9,11 +9,8 @@ use iota_sdk::graphql_client::pagination::PaginationFilter;
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::ObjectPage},
-    types::{
-        graphql::ObjectFilter,
-        object::{Object, ObjectId},
-    },
+    graphql::{client::GraphQLClient, pagination::ObjectPage, query_types::ObjectFilter},
+    types::object::{Object, ObjectId},
 };
 
 #[uniffi::export(async_runtime = "tokio")]

@@ -9,12 +9,12 @@ use iota_sdk::graphql_client::pagination::PaginationFilter;
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::MovePackagePage},
-    types::{
-        address::Address,
-        graphql::{MoveFunction, MoveModule},
-        object::MovePackage,
+    graphql::{
+        client::GraphQLClient,
+        pagination::MovePackagePage,
+        query_types::{MoveFunction, MoveModule},
     },
+    types::{address::Address, object::MovePackage},
 };
 
 #[uniffi::export(async_runtime = "tokio")]

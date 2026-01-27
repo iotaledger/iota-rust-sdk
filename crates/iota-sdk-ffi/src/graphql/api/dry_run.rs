@@ -7,11 +7,10 @@ use iota_sdk::graphql_client::query_types::ServiceConfig;
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::{client::GraphQLClient, output_types::DryRunResult},
-    types::{
-        graphql::TransactionMetadata,
-        transaction::{Transaction, TransactionKind},
+    graphql::{
+        client::GraphQLClient, output_types::DryRunResult, query_types::TransactionMetadata,
     },
+    types::transaction::{Transaction, TransactionKind},
 };
 
 #[derive(Debug, uniffi::Record, serde::Serialize)]

@@ -7,8 +7,7 @@ use iota_sdk::graphql_client::pagination::PaginationFilter;
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::EventPage},
-    types::graphql::EventFilter,
+    graphql::{client::GraphQLClient, pagination::EventPage, query_types::EventFilter},
 };
 
 #[uniffi::export(async_runtime = "tokio")]

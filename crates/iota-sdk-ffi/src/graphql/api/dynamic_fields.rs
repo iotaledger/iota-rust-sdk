@@ -7,8 +7,10 @@ use iota_sdk::graphql_client::pagination::PaginationFilter;
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::DynamicFieldOutputPage},
-    types::{address::Address, graphql::DynamicFieldOutput, type_tag::TypeTag},
+    graphql::{
+        client::GraphQLClient, pagination::DynamicFieldOutputPage, query_types::DynamicFieldOutput,
+    },
+    types::{address::Address, type_tag::TypeTag},
 };
 
 #[uniffi::export(async_runtime = "tokio")]
