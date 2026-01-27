@@ -1695,6 +1695,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355:
@@ -2740,6 +2744,34 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json() != 13174:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new() != 65225:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address() != 16142:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool() != 22335:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json() != 28379:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null() != 64193:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id() != 5941:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option() != 51508:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string() != 21544:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec() != 46543:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128() != 54996:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16() != 8159:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32() != 57064:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64() != 23977:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8() != 23834:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() != 19629:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5550,6 +5582,20 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs.
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json.argtypes = (
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -6399,6 +6445,85 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveviewarg.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveviewarg.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveviewarg.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveviewarg.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool.argtypes = (
+    ctypes.c_int8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_json.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_json.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_object_id.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_object_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_option.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_option.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string_vec.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u128.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u128.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16.argtypes = (
+    ctypes.c_uint16,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32.argtypes = (
+    ctypes.c_uint32,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64.argtypes = (
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8.argtypes = (
+    ctypes.c_uint8,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8_vec.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8_vec.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -15026,6 +15151,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_content
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.restype = ctypes.c_uint16
@@ -16595,6 +16726,48 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new.restype = ctypes.c_uint16
@@ -17444,6 +17617,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -20503,6 +20678,66 @@ class _UniffiConverterTypeMoveStructTypeParameter(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterSequenceTypeMoveAbility.write(value.constraints, buf)
         _UniffiConverterBool.write(value.is_phantom, buf)
+
+
+class MoveViewResult:
+    """
+    The result of executing a Move View Function.
+
+    Execution errors are captured in the `error` field, in which case the
+    `results` field will be `None`. On success, the `results` field will contain
+    the return values of the Move view function, and the `error` field will be
+    `None`.
+    """
+
+    error: "typing.Optional[str]"
+    """
+    Execution error from executing the Move view function.
+    """
+
+    results: "typing.Optional[typing.List[str]]"
+    """
+    The return values of the Move view function, resolved and formatted as
+    JSON.
+    """
+
+    def __init__(self, *, error: "typing.Optional[str]" = _DEFAULT, results: "typing.Optional[typing.List[str]]" = _DEFAULT):
+        if error is _DEFAULT:
+            self.error = None
+        else:
+            self.error = error
+        if results is _DEFAULT:
+            self.results = None
+        else:
+            self.results = results
+
+    def __str__(self):
+        return "MoveViewResult(error={}, results={})".format(self.error, self.results)
+
+    def __eq__(self, other):
+        if self.error != other.error:
+            return False
+        if self.results != other.results:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveViewResult(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveViewResult(
+            error=_UniffiConverterOptionalString.read(buf),
+            results=_UniffiConverterOptionalSequenceString.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalString.check_lower(value.error)
+        _UniffiConverterOptionalSequenceString.check_lower(value.results)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalString.write(value.error, buf)
+        _UniffiConverterOptionalSequenceString.write(value.results, buf)
 
 
 class NameRegistrationPage:
@@ -27780,6 +28015,33 @@ class _UniffiConverterOptionalTypeMovePackage(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalTypeMoveViewArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterTypeMoveViewArg.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterTypeMoveViewArg.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterTypeMoveViewArg.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalTypeMultisigAggregatedSignature(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -29049,6 +29311,33 @@ class _UniffiConverterOptionalSequenceString(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalSequenceTypeMoveViewArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeMoveViewArg.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeMoveViewArg.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeMoveViewArg.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalSequenceTypeObjectId(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -29071,6 +29360,33 @@ class _UniffiConverterOptionalSequenceTypeObjectId(_UniffiConverterRustBuffer):
             return None
         elif flag == 1:
             return _UniffiConverterSequenceTypeObjectId.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeTypeTag(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeTypeTag.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeTypeTag.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeTypeTag.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -29260,6 +29576,33 @@ class _UniffiConverterOptionalSequenceTypeMoveAbility(_UniffiConverterRustBuffer
             return None
         elif flag == 1:
             return _UniffiConverterSequenceTypeMoveAbility.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
+class _UniffiConverterOptionalSequenceTypeValue(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeValue.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeValue.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeValue.read(buf)
         else:
             raise InternalError("Unexpected flag byte for optional type")
 
@@ -29944,6 +30287,31 @@ class _UniffiConverterSequenceTypeMovePackage(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeMovePackage.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeMoveViewArg(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeMoveViewArg.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeMoveViewArg.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeMoveViewArg.read(buf) for i in range(count)
         ]
 
 
@@ -30969,6 +31337,31 @@ class _UniffiConverterSequenceTypeMoveAbility(_UniffiConverterRustBuffer):
 
         return [
             _UniffiConverterTypeMoveAbility.read(buf) for i in range(count)
+        ]
+
+
+
+class _UniffiConverterSequenceTypeValue(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        for item in value:
+            _UniffiConverterTypeValue.check_lower(item)
+
+    @classmethod
+    def write(cls, value, buf):
+        items = len(value)
+        buf.write_i32(items)
+        for item in value:
+            _UniffiConverterTypeValue.write(item, buf)
+
+    @classmethod
+    def read(cls, buf):
+        count = buf.read_i32()
+        if count < 0:
+            raise InternalError("Unexpected negative sequence length")
+
+        return [
+            _UniffiConverterTypeValue.read(buf) for i in range(count)
         ]
 
 
@@ -38820,6 +39213,63 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
+        """
+        Execute a Move View Function.
+
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
+
+        This method allows calling nearly any Move function with a return type
+        and any arguments. The function's result values are provided and
+        decoded using the appropriate Move type, then formatted in JSON.
+
+        The use of this interface does not require signature checks (even for
+        functions that take Owned Objects as input) or gas coins, as it does
+        not alter ledger state. Spam attacks are dealt with at the RPC level
+        rather than execution level.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x2::hash::blake2b256`
+        * `type_arguments` - The type arguments of the Move function
+        * `arguments` - The typed arguments to be passed into the Move function
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
+        """
+
+        raise NotImplementedError
+    def move_view_call_json(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT):
+        """
+        Execute a Move View Function with raw JSON arguments.
+
+        This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+        raw JSON values instead of typed arguments.
+
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x2::hash::blake2b256`
+        * `type_arguments` - The type arguments of the Move function
+        * `arguments` - The arguments to be passed into the Move function, in
+        JSON format
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
+        """
+
+        raise NotImplementedError
     def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
         """
         Return the normalized Move function data for the provided package,
@@ -39910,6 +40360,121 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterOptionalBytes.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
+        """
+        Execute a Move View Function.
+
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
+
+        This method allows calling nearly any Move function with a return type
+        and any arguments. The function's result values are provided and
+        decoded using the appropriate Move type, then formatted in JSON.
+
+        The use of this interface does not require signature checks (even for
+        functions that take Owned Objects as input) or gas coins, as it does
+        not alter ledger state. Spam attacks are dealt with at the RPC level
+        rather than execution level.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x2::hash::blake2b256`
+        * `type_arguments` - The type arguments of the Move function
+        * `arguments` - The typed arguments to be passed into the Move function
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
+        """
+
+        _UniffiConverterString.check_lower(function_name)
+        
+        if type_arguments is _DEFAULT:
+            type_arguments = None
+        _UniffiConverterOptionalSequenceTypeTypeTag.check_lower(type_arguments)
+        
+        if arguments is _DEFAULT:
+            arguments = None
+        _UniffiConverterOptionalSequenceTypeMoveViewArg.check_lower(arguments)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(function_name),
+        _UniffiConverterOptionalSequenceTypeTypeTag.lower(type_arguments),
+        _UniffiConverterOptionalSequenceTypeMoveViewArg.lower(arguments)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMoveViewResult.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def move_view_call_json(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[Value]]]" = _DEFAULT) -> "MoveViewResult":
+        """
+        Execute a Move View Function with raw JSON arguments.
+
+        This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+        raw JSON values instead of typed arguments.
+
+        A View Function is a function in a Move module with a return type that
+        does not alter the state of the ledger. When using this interface,
+        no transactions are submitted to the network for inclusion into the
+        ledger.
+
+        # Arguments
+        * `function_name` - The Move function fully qualified name as
+        `<package_id>::<module_name>::<function_name>`, e.g.,
+        `0x2::hash::blake2b256`
+        * `type_arguments` - The type arguments of the Move function
+        * `arguments` - The arguments to be passed into the Move function, in
+        JSON format
+
+        # Returns
+        A `MoveViewResult` containing either execution results (return values)
+        or an error.
+        """
+
+        _UniffiConverterString.check_lower(function_name)
+        
+        if type_arguments is _DEFAULT:
+            type_arguments = None
+        _UniffiConverterOptionalSequenceString.check_lower(type_arguments)
+        
+        if arguments is _DEFAULT:
+            arguments = None
+        _UniffiConverterOptionalSequenceTypeValue.check_lower(arguments)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterString.lower(function_name),
+        _UniffiConverterOptionalSequenceString.lower(type_arguments),
+        _UniffiConverterOptionalSequenceTypeValue.lower(arguments)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterTypeMoveViewResult.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -42885,6 +43450,199 @@ class _UniffiConverterTypeMovePackageData:
 
     @classmethod
     def write(cls, value: MovePackageDataProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class MoveViewArgProtocol(typing.Protocol):
+    """
+    An argument for a Move View Function call.
+
+    This enum represents the different types of values that can be passed
+    as arguments to a Move View Function.
+    """
+
+    pass
+# MoveViewArg is a Rust-only trait - it's a wrapper around a Rust implementation.
+class MoveViewArg():
+    """
+    An argument for a Move View Function call.
+
+    This enum represents the different types of values that can be passed
+    as arguments to a Move View Function.
+    """
+
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveviewarg, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveviewarg, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def address(cls, value: "Address"):
+        _UniffiConverterTypeAddress.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_address,
+        _UniffiConverterTypeAddress.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def bool(cls, value: "bool"):
+        _UniffiConverterBool.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool,
+        _UniffiConverterBool.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def json(cls, value: "str"):
+        _UniffiConverterString.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_json,
+        _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def null(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def object_id(cls, value: "ObjectId"):
+        _UniffiConverterTypeObjectId.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_object_id,
+        _UniffiConverterTypeObjectId.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def option(cls, value: "typing.Optional[MoveViewArg]"):
+        _UniffiConverterOptionalTypeMoveViewArg.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_option,
+        _UniffiConverterOptionalTypeMoveViewArg.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def string(cls, value: "str"):
+        _UniffiConverterString.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string,
+        _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def string_vec(cls, values: "typing.List[str]"):
+        _UniffiConverterSequenceString.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string_vec,
+        _UniffiConverterSequenceString.lower(values))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u128(cls, value: "str"):
+        _UniffiConverterString.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u128,
+        _UniffiConverterString.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u16(cls, value: "int"):
+        _UniffiConverterUInt16.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16,
+        _UniffiConverterUInt16.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u32(cls, value: "int"):
+        _UniffiConverterUInt32.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32,
+        _UniffiConverterUInt32.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u64(cls, value: "int"):
+        _UniffiConverterUInt64.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64,
+        _UniffiConverterUInt64.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u8(cls, value: "int"):
+        _UniffiConverterUInt8.check_lower(value)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8,
+        _UniffiConverterUInt8.lower(value))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def u8_vec(cls, values: "bytes"):
+        _UniffiConverterBytes.check_lower(values)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8_vec,
+        _UniffiConverterBytes.lower(values))
+        return cls._make_instance_(pointer)
+
+
+
+
+class _UniffiConverterTypeMoveViewArg:
+
+    @staticmethod
+    def lift(value: int):
+        return MoveViewArg._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: MoveViewArg):
+        if not isinstance(value, MoveViewArg):
+            raise TypeError("Expected MoveViewArg instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: MoveViewArgProtocol):
+        if not isinstance(value, MoveViewArg):
+            raise TypeError("Expected MoveViewArg instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: MoveViewArgProtocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MultisigAggregatedSignatureProtocol(typing.Protocol):
     """
@@ -61021,6 +61779,7 @@ __all__ = [
     "MoveStructConnection",
     "MoveStructQuery",
     "MoveStructTypeParameter",
+    "MoveViewResult",
     "NameRegistrationPage",
     "ObjectFilter",
     "ObjectPage",
@@ -61545,6 +62304,7 @@ __all__ = [
     "MoveFunction",
     "MovePackage",
     "MovePackageData",
+    "MoveViewArg",
     "MultisigAggregatedSignature",
     "MultisigAggregator",
     "MultisigCommittee",
