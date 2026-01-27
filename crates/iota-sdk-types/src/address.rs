@@ -81,6 +81,7 @@ impl Address {
         Self(bytes)
     }
 
+    /// Creates an `Address` from a `u16` suffix by setting the last two bytes.
     pub const fn from_u16(suffix: u16) -> Self {
         let mut address = Self::ZERO;
         let [hi, lo] = suffix.to_be_bytes();
