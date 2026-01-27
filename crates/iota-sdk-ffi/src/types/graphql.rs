@@ -1182,6 +1182,36 @@ pub struct MoveEnum {
     pub variants: Option<Vec<MoveEnumVariant>>,
 }
 
+/// The result of executing a Move View Function.
+///
+/// Execution errors are captured in the `error` field, in which case the
+/// `results` field will be `None`. On success, the `results` field will contain
+/// the return values of the Move view function, and the `error` field will be
+/// `None`.
+#[derive(uniffi::Record)]
+pub struct MoveViewResult {
+    /// Execution error from executing the Move view function.
+    #[uniffi(default = None)]
+    pub error: Option<String>,
+    /// The return values of the Move view function, resolved and formatted as
+    /// JSON.
+    #[uniffi(default = None)]
+    pub results: Option<Vec<String>>,
+}
+
+impl From<iota_sdk::graphql_client::query_types::MoveViewResult> for MoveViewResult {
+    fn from(value: iota_sdk::graphql_client::query_types::MoveViewResult) -> Self {
+        Self {
+            error: value.error,
+            results: value.results.map(|v| {
+                v.into_iter()
+                    .map(|json| serde_json::to_string(&json).unwrap_or_default())
+                    .collect()
+            }),
+        }
+    }
+}
+
 // Information about the configuration of the GraphQL service.
 #[uniffi::remote(Record)]
 pub struct ServiceConfig {
