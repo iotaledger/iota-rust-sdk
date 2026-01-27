@@ -6,20 +6,12 @@
 use iota_sdk::graphql_client::query_types::ServiceConfig;
 
 use crate::{
-    error::{Result, SdkFfiError},
+    error::Result,
     graphql::{
         client::GraphQLClient, output_types::DryRunResult, query_types::TransactionMetadata,
     },
     types::transaction::{Transaction, TransactionKind},
 };
-
-#[derive(Debug, uniffi::Record, serde::Serialize)]
-pub struct Query {
-    pub query: String,
-    #[uniffi(default = None)]
-    #[serde(default)]
-    pub variables: Option<serde_json::Value>,
-}
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
@@ -64,22 +56,6 @@ impl GraphQLClient {
             .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
             .await?
             .into())
-    }
-
-    /// Run a query.
-    pub async fn run_query(&self, query: Query) -> Result<serde_json::Value> {
-        self.0
-            .read()
-            .await
-            .run_query_from_json(
-                serde_json::to_value(query)?
-                    .as_object()
-                    .ok_or_else(|| SdkFfiError::custom("invalid json; must be a map"))?
-                    .clone(),
-            )
-            .await?
-            .data
-            .ok_or_else(|| SdkFfiError::custom("query yielded no data"))
     }
 
     /// Get the GraphQL service configuration, including complexity limits, read
