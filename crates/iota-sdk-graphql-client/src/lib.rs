@@ -2335,7 +2335,7 @@ mod tests {
 
         // Test blake2b256 hash function with typed arguments
         let result = client
-            .move_view_call("0x2::hash::blake2b256", None, vec![0u8, 1, 2])
+            .move_view_call("0x2::hash::blake2b256", None, (vec![0u8, 1, 2],))
             .await
             .map_err(|e| {
                 format!(
@@ -2373,7 +2373,7 @@ mod tests {
 
         // Test option::some with type argument
         let result = client
-            .move_view_call("0x1::option::some", Some(vec![TypeTag::U8]), 2u8)
+            .move_view_call("0x1::option::some", Some(vec![TypeTag::U8]), (2u8,))
             .await
             .map_err(|e| {
                 format!(

@@ -77,7 +77,7 @@ impl Client {
     /// let result = client.move_view_call(
     ///     "0x2::hash::blake2b256",
     ///     None,
-    ///     vec![0u8, 1, 2],
+    ///     (vec![0u8, 1, 2],),
     /// ).await?;
     /// ```
     ///
@@ -109,44 +109,42 @@ pub trait MoveViewArg {
     fn to_json(&self) -> serde_json::Value;
 }
 
-// Primitive type implementations
+// Macro for types that convert to JSON Number
+macro_rules! impl_move_view_arg_number {
+    ($($ty:ty),* $(,)?) => {
+        $(
+            impl MoveViewArg for $ty {
+                fn to_json(&self) -> serde_json::Value {
+                    serde_json::Value::Number((*self).into())
+                }
+            }
+        )*
+    };
+}
+
+// Macro for types that convert to JSON String via to_string()
+macro_rules! impl_move_view_arg_string {
+    ($($ty:ty),* $(,)?) => {
+        $(
+            impl MoveViewArg for $ty {
+                fn to_json(&self) -> serde_json::Value {
+                    serde_json::Value::String(self.to_string())
+                }
+            }
+        )*
+    };
+}
+
 impl MoveViewArg for bool {
     fn to_json(&self) -> serde_json::Value {
         serde_json::Value::Bool(*self)
     }
 }
 
-impl MoveViewArg for u8 {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::Number((*self).into())
-    }
-}
+impl_move_view_arg_number!(u8, u16, u32);
 
-impl MoveViewArg for u16 {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::Number((*self).into())
-    }
-}
-
-impl MoveViewArg for u32 {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::Number((*self).into())
-    }
-}
-
-impl MoveViewArg for u64 {
-    fn to_json(&self) -> serde_json::Value {
-        // u64 must be represented as a string in JSON to avoid precision loss
-        serde_json::Value::String(self.to_string())
-    }
-}
-
-impl MoveViewArg for u128 {
-    fn to_json(&self) -> serde_json::Value {
-        // u128 must be represented as a string in JSON to avoid precision loss
-        serde_json::Value::String(self.to_string())
-    }
-}
+// u64 and u128 must be represented as strings in JSON to avoid precision loss
+impl_move_view_arg_string!(u64, u128, ObjectId, Address);
 
 impl MoveViewArg for &str {
     fn to_json(&self) -> serde_json::Value {
@@ -160,22 +158,9 @@ impl MoveViewArg for String {
     }
 }
 
-// Object-related implementations
-impl MoveViewArg for ObjectId {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::String(self.to_string())
-    }
-}
-
 impl MoveViewArg for ObjectReference {
     fn to_json(&self) -> serde_json::Value {
         serde_json::Value::String(self.object_id.to_string())
-    }
-}
-
-impl MoveViewArg for Address {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::String(self.to_string())
     }
 }
 
@@ -227,27 +212,61 @@ impl MoveViewArg for serde_json::Value {
     }
 }
 
-// Blanket implementation for references to any MoveViewArg
-impl<T: MoveViewArg> MoveViewArg for &T {
-    fn to_json(&self) -> serde_json::Value {
-        (*self).to_json()
-    }
-}
-
 /// A trait which defines a list of arguments for a Move View Function call.
 #[diagnostic::on_unimplemented(
     message = "Provided value is not a valid list of Move view arguments.",
-    note = "Expected a tuple of types that implement `MoveViewArg`."
+    note = "Expected a tuple, vector, array, or slice of types that implement `PTBArgument`."
 )]
 pub trait MoveViewArgList {
     /// Convert the arguments to a vector of JSON values.
     fn to_json_vec(self) -> Vec<serde_json::Value>;
 }
 
-// Single element implementation
-impl<T: MoveViewArg> MoveViewArgList for T {
+// Macro to implement MoveViewArgList for Vec, array, and slice of a specific
+// type
+macro_rules! impl_move_view_arg_list_for_collections {
+    ($($ty:ty),* $(,)?) => {
+        $(
+            impl MoveViewArgList for Vec<$ty> {
+                fn to_json_vec(self) -> Vec<serde_json::Value> {
+                    self.into_iter().map(|v| v.to_json()).collect()
+                }
+            }
+
+            impl<const N: usize> MoveViewArgList for [$ty; N] {
+                fn to_json_vec(self) -> Vec<serde_json::Value> {
+                    self.into_iter().map(|v| v.to_json()).collect()
+                }
+            }
+
+            impl MoveViewArgList for &[$ty] {
+                fn to_json_vec(self) -> Vec<serde_json::Value> {
+                    self.iter().map(|v| v.to_json()).collect()
+                }
+            }
+        )*
+    };
+}
+
+impl_move_view_arg_list_for_collections!(
+    bool,
+    u8,
+    u16,
+    u32,
+    u64,
+    u128,
+    String,
+    ObjectId,
+    ObjectReference,
+    Address,
+    serde_json::Value,
+    Vec<u8>,
+);
+
+// Single element tuple implementation
+impl<T: MoveViewArg> MoveViewArgList for (T,) {
     fn to_json_vec(self) -> Vec<serde_json::Value> {
-        vec![self.to_json()]
+        vec![self.0.to_json()]
     }
 }
 

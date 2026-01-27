@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
     println!("=== Example 1: move_view_call() with typed arguments (blake2b256) ===\n");
 
     let result = client
-        .move_view_call("0x2::hash::blake2b256", None, vec![0u8, 1, 2])
+        .move_view_call("0x2::hash::blake2b256", None, (vec![0u8, 1, 2],))
         .await?;
 
     if let Some(error) = result.error {
