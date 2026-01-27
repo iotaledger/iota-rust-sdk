@@ -1,8 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::graphql_client::query_types::{Base64, BigInt, PageInfo};
-use serde_json::Value;
+use iota_sdk::graphql_client::query_types::PageInfo;
 
 use crate::types::{
     checkpoint::CheckpointSummary,
@@ -78,21 +77,3 @@ define_paged_object!(TransactionEffectsPage, TransactionEffects);
 define_paged_object!(MovePackagePage, MovePackage);
 define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
 define_paged_object!(NameRegistrationPage, NameRegistration);
-
-uniffi::custom_type!(Value, String, {
-    remote,
-    lower: |val| val.to_string(),
-    try_lift: |s| Ok(serde_json::from_str(&s)?),
-});
-
-uniffi::custom_type!(Base64, String, {
-    remote,
-    lower: |val| val.0,
-    try_lift: |s| Ok(Base64(s)),
-});
-
-uniffi::custom_type!(BigInt, String, {
-    remote,
-    lower: |val| val.0,
-    try_lift: |s| Ok(BigInt(s)),
-});

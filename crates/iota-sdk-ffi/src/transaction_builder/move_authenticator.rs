@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
-    graphql::GraphQLClient,
+    graphql::client::GraphQLClient,
     transaction_builder::ptb_arg::PTBArgument,
     types::{crypto::move_authenticator::MoveAuthenticator, object::ObjectId, type_tag::TypeTag},
 };
