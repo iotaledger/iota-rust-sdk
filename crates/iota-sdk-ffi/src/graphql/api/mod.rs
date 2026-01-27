@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! GraphQL client FFI bindings.
+//! GraphQL client API FFI bindings.
 
 mod balance;
 mod checkpoints;
