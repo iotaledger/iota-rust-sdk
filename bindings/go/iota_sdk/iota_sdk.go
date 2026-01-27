@@ -5916,6 +5916,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call()
+	})
+	if checksum != 52742 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json()
+	})
+	if checksum != 5635 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function()
 	})
 	if checksum != 16965 {
@@ -10619,6 +10637,132 @@ func uniffiCheckChecksums() {
 	if checksum != 65225 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address()
+	})
+	if checksum != 16142 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool()
+	})
+	if checksum != 22335 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json()
+	})
+	if checksum != 28379 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null()
+	})
+	if checksum != 64193 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id()
+	})
+	if checksum != 5941 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option()
+	})
+	if checksum != 51508 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string()
+	})
+	if checksum != 21544 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec()
+	})
+	if checksum != 46543 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128()
+	})
+	if checksum != 54996 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16()
+	})
+	if checksum != 8159 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32()
+	})
+	if checksum != 57064 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64()
+	})
+	if checksum != 23977 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8()
+	})
+	if checksum != 23834 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec()
+	})
+	if checksum != 19629 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -19689,6 +19833,55 @@ type GraphQlClientInterface interface {
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
 	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
+	// Execute a Move View Function.
+	//
+	// A View Function is a function in a Move module with a return type that
+	// does not alter the state of the ledger. When using this interface,
+	// no transactions are submitted to the network for inclusion into the
+	// ledger.
+	//
+	// This method allows calling nearly any Move function with a return type
+	// and any arguments. The function's result values are provided and
+	// decoded using the appropriate Move type, then formatted in JSON.
+	//
+	// The use of this interface does not require signature checks (even for
+	// functions that take Owned Objects as input) or gas coins, as it does
+	// not alter ledger state. Spam attacks are dealt with at the RPC level
+	// rather than execution level.
+	//
+	// # Arguments
+	// * `function_name` - The Move function fully qualified name as
+	// `<package_id>::<module_name>::<function_name>`, e.g.,
+	// `0x2::hash::blake2b256`
+	// * `type_arguments` - The type arguments of the Move function
+	// * `arguments` - The typed arguments to be passed into the Move function
+	//
+	// # Returns
+	// A `MoveViewResult` containing either execution results (return values)
+	// or an error.
+	MoveViewCall(functionName string, typeArguments *[]*TypeTag, arguments *[]*MoveViewArg) (MoveViewResult, error)
+	// Execute a Move View Function with raw JSON arguments.
+	//
+	// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+	// raw JSON values instead of typed arguments.
+	//
+	// A View Function is a function in a Move module with a return type that
+	// does not alter the state of the ledger. When using this interface,
+	// no transactions are submitted to the network for inclusion into the
+	// ledger.
+	//
+	// # Arguments
+	// * `function_name` - The Move function fully qualified name as
+	// `<package_id>::<module_name>::<function_name>`, e.g.,
+	// `0x2::hash::blake2b256`
+	// * `type_arguments` - The type arguments of the Move function
+	// * `arguments` - The arguments to be passed into the Move function, in
+	// JSON format
+	//
+	// # Returns
+	// A `MoveViewResult` containing either execution results (return values)
+	// or an error.
+	MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error)
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
 	NormalizedMoveFunction(varPackage *Address, module string, function string, version *uint64) (**MoveFunction, error)
@@ -20735,6 +20928,115 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
 		_pointer,FfiConverterObjectIdINSTANCE.Lower(objectId), FfiConverterOptionalUint64INSTANCE.Lower(version)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Execute a Move View Function.
+//
+// A View Function is a function in a Move module with a return type that
+// does not alter the state of the ledger. When using this interface,
+// no transactions are submitted to the network for inclusion into the
+// ledger.
+//
+// This method allows calling nearly any Move function with a return type
+// and any arguments. The function's result values are provided and
+// decoded using the appropriate Move type, then formatted in JSON.
+//
+// The use of this interface does not require signature checks (even for
+// functions that take Owned Objects as input) or gas coins, as it does
+// not alter ledger state. Spam attacks are dealt with at the RPC level
+// rather than execution level.
+//
+// # Arguments
+// * `function_name` - The Move function fully qualified name as
+// `<package_id>::<module_name>::<function_name>`, e.g.,
+// `0x2::hash::blake2b256`
+// * `type_arguments` - The type arguments of the Move function
+// * `arguments` - The typed arguments to be passed into the Move function
+//
+// # Returns
+// A `MoveViewResult` containing either execution results (return values)
+// or an error.
+func (_self *GraphQlClient) MoveViewCall(functionName string, typeArguments *[]*TypeTag, arguments *[]*MoveViewArg) (MoveViewResult, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) MoveViewResult {
+			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
+		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceTypeTagINSTANCE.Lower(typeArguments), FfiConverterOptionalSequenceMoveViewArgINSTANCE.Lower(arguments)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Execute a Move View Function with raw JSON arguments.
+//
+// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+// raw JSON values instead of typed arguments.
+//
+// A View Function is a function in a Move module with a return type that
+// does not alter the state of the ledger. When using this interface,
+// no transactions are submitted to the network for inclusion into the
+// ledger.
+//
+// # Arguments
+// * `function_name` - The Move function fully qualified name as
+// `<package_id>::<module_name>::<function_name>`, e.g.,
+// `0x2::hash::blake2b256`
+// * `type_arguments` - The type arguments of the Move function
+// * `arguments` - The arguments to be passed into the Move function, in
+// JSON format
+//
+// # Returns
+// A `MoveViewResult` containing either execution results (return values)
+// or an error.
+func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error) {
+	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) MoveViewResult {
+			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
+		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArguments), FfiConverterOptionalSequenceTypeValueINSTANCE.Lower(arguments)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -23700,6 +24002,158 @@ func (c FfiConverterMovePackageData) Write(writer io.Writer, value *MovePackageD
 type FfiDestroyerMovePackageData struct {}
 
 func (_ FfiDestroyerMovePackageData) Destroy(value *MovePackageData) {
+		value.Destroy()
+}
+
+
+
+// An argument for a Move View Function call.
+//
+// This enum represents the different types of values that can be passed
+// as arguments to a Move View Function.
+type MoveViewArgInterface interface {
+}
+// An argument for a Move View Function call.
+//
+// This enum represents the different types of values that can be passed
+// as arguments to a Move View Function.
+type MoveViewArg struct {
+	ffiObject FfiObject
+}
+
+
+func MoveViewArgAddress(value *Address) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_address(FfiConverterAddressINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgBool(value bool) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool(FfiConverterBoolINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgJson(value string) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_json(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgNull() *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null(_uniffiStatus)
+	}))
+}
+
+func MoveViewArgObjectId(value *ObjectId) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_object_id(FfiConverterObjectIdINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgOption(value **MoveViewArg) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_option(FfiConverterOptionalMoveViewArgINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgString(value string) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgStringVec(values []string) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string_vec(FfiConverterSequenceStringINSTANCE.Lower(values),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgU128(value string) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u128(FfiConverterStringINSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgU16(value uint16) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16(FfiConverterUint16INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgU32(value uint32) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32(FfiConverterUint32INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgU64(value uint64) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64(FfiConverterUint64INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgU8(value uint8) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8(FfiConverterUint8INSTANCE.Lower(value),_uniffiStatus)
+	}))
+}
+
+func MoveViewArgU8Vec(values []byte) *MoveViewArg {
+	return FfiConverterMoveViewArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8_vec(FfiConverterBytesINSTANCE.Lower(values),_uniffiStatus)
+	}))
+}
+
+
+func (object *MoveViewArg) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoveViewArg struct {}
+
+var FfiConverterMoveViewArgINSTANCE = FfiConverterMoveViewArg{}
+
+
+func (c FfiConverterMoveViewArg) Lift(pointer unsafe.Pointer) *MoveViewArg {
+	result := &MoveViewArg {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_moveviewarg(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_moveviewarg(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoveViewArg).Destroy)
+	return result
+}
+
+func (c FfiConverterMoveViewArg) Read(reader io.Reader) *MoveViewArg {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMoveViewArg) Lower(value *MoveViewArg) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MoveViewArg")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterMoveViewArg) Write(writer io.Writer, value *MoveViewArg) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMoveViewArg struct {}
+
+func (_ FfiDestroyerMoveViewArg) Destroy(value *MoveViewArg) {
 		value.Destroy()
 }
 
@@ -38907,6 +39361,54 @@ type FfiDestroyerMoveStructTypeParameter struct {}
 func (_ FfiDestroyerMoveStructTypeParameter) Destroy(value MoveStructTypeParameter) {
 	value.Destroy()
 }
+// The result of executing a Move View Function.
+//
+// Execution errors are captured in the `error` field, in which case the
+// `results` field will be `None`. On success, the `results` field will contain
+// the return values of the Move view function, and the `error` field will be
+// `None`.
+type MoveViewResult struct {
+	// Execution error from executing the Move view function.
+	Error *string
+	// The return values of the Move view function, resolved and formatted as
+	// JSON.
+	Results *[]string
+}
+
+func (r *MoveViewResult) Destroy() {
+		FfiDestroyerOptionalString{}.Destroy(r.Error);
+		FfiDestroyerOptionalSequenceString{}.Destroy(r.Results);
+}
+
+type FfiConverterMoveViewResult struct {}
+
+var FfiConverterMoveViewResultINSTANCE = FfiConverterMoveViewResult{}
+
+func (c FfiConverterMoveViewResult) Lift(rb RustBufferI) MoveViewResult {
+	return LiftFromRustBuffer[MoveViewResult](c, rb)
+}
+
+func (c FfiConverterMoveViewResult) Read(reader io.Reader) MoveViewResult {
+	return MoveViewResult {
+			FfiConverterOptionalStringINSTANCE.Read(reader),
+			FfiConverterOptionalSequenceStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoveViewResult) Lower(value MoveViewResult) C.RustBuffer {
+	return LowerIntoRustBuffer[MoveViewResult](c, value)
+}
+
+func (c FfiConverterMoveViewResult) Write(writer io.Writer, value MoveViewResult) {
+		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
+		FfiConverterOptionalSequenceStringINSTANCE.Write(writer, value.Results);
+}
+
+type FfiDestroyerMoveViewResult struct {}
+
+func (_ FfiDestroyerMoveViewResult) Destroy(value MoveViewResult) {
+	value.Destroy()
+}
 // A page of items returned by the GraphQL server.
 type NameRegistrationPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -43978,6 +44480,43 @@ func (_ FfiDestroyerOptionalMovePackage) Destroy(value **MovePackage) {
 	}
 }
 
+type FfiConverterOptionalMoveViewArg struct{}
+
+var FfiConverterOptionalMoveViewArgINSTANCE = FfiConverterOptionalMoveViewArg{}
+
+func (c FfiConverterOptionalMoveViewArg) Lift(rb RustBufferI) **MoveViewArg {
+	return LiftFromRustBuffer[**MoveViewArg](c, rb)
+}
+
+func (_ FfiConverterOptionalMoveViewArg) Read(reader io.Reader) **MoveViewArg {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoveViewArgINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoveViewArg) Lower(value **MoveViewArg) C.RustBuffer {
+	return LowerIntoRustBuffer[**MoveViewArg](c, value)
+}
+
+func (_ FfiConverterOptionalMoveViewArg) Write(writer io.Writer, value **MoveViewArg) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoveViewArgINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoveViewArg struct {}
+
+func (_ FfiDestroyerOptionalMoveViewArg) Destroy(value **MoveViewArg) {
+	if value != nil {
+		FfiDestroyerMoveViewArg{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalMultisigAggregatedSignature struct{}
 
 var FfiConverterOptionalMultisigAggregatedSignatureINSTANCE = FfiConverterOptionalMultisigAggregatedSignature{}
@@ -45717,6 +46256,43 @@ func (_ FfiDestroyerOptionalSequenceString) Destroy(value *[]string) {
 	}
 }
 
+type FfiConverterOptionalSequenceMoveViewArg struct{}
+
+var FfiConverterOptionalSequenceMoveViewArgINSTANCE = FfiConverterOptionalSequenceMoveViewArg{}
+
+func (c FfiConverterOptionalSequenceMoveViewArg) Lift(rb RustBufferI) *[]*MoveViewArg {
+	return LiftFromRustBuffer[*[]*MoveViewArg](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceMoveViewArg) Read(reader io.Reader) *[]*MoveViewArg {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceMoveViewArgINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceMoveViewArg) Lower(value *[]*MoveViewArg) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]*MoveViewArg](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceMoveViewArg) Write(writer io.Writer, value *[]*MoveViewArg) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceMoveViewArgINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceMoveViewArg struct {}
+
+func (_ FfiDestroyerOptionalSequenceMoveViewArg) Destroy(value *[]*MoveViewArg) {
+	if value != nil {
+		FfiDestroyerSequenceMoveViewArg{}.Destroy(*value)
+	}
+}
+
 type FfiConverterOptionalSequenceObjectId struct{}
 
 var FfiConverterOptionalSequenceObjectIdINSTANCE = FfiConverterOptionalSequenceObjectId{}
@@ -45751,6 +46327,43 @@ type FfiDestroyerOptionalSequenceObjectId struct {}
 func (_ FfiDestroyerOptionalSequenceObjectId) Destroy(value *[]*ObjectId) {
 	if value != nil {
 		FfiDestroyerSequenceObjectId{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceTypeTag struct{}
+
+var FfiConverterOptionalSequenceTypeTagINSTANCE = FfiConverterOptionalSequenceTypeTag{}
+
+func (c FfiConverterOptionalSequenceTypeTag) Lift(rb RustBufferI) *[]*TypeTag {
+	return LiftFromRustBuffer[*[]*TypeTag](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceTypeTag) Read(reader io.Reader) *[]*TypeTag {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceTypeTagINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceTypeTag) Lower(value *[]*TypeTag) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]*TypeTag](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceTypeTag) Write(writer io.Writer, value *[]*TypeTag) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceTypeTagINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceTypeTag struct {}
+
+func (_ FfiDestroyerOptionalSequenceTypeTag) Destroy(value *[]*TypeTag) {
+	if value != nil {
+		FfiDestroyerSequenceTypeTag{}.Destroy(*value)
 	}
 }
 
@@ -46010,6 +46623,43 @@ type FfiDestroyerOptionalSequenceMoveAbility struct {}
 func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
 	if value != nil {
 		FfiDestroyerSequenceMoveAbility{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceTypeValue struct{}
+
+var FfiConverterOptionalSequenceTypeValueINSTANCE = FfiConverterOptionalSequenceTypeValue{}
+
+func (c FfiConverterOptionalSequenceTypeValue) Lift(rb RustBufferI) *[]Value {
+	return LiftFromRustBuffer[*[]Value](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceTypeValue) Read(reader io.Reader) *[]Value {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceTypeValueINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceTypeValue) Lower(value *[]Value) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]Value](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceTypeValue) Write(writer io.Writer, value *[]Value) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceTypeValueINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceTypeValue struct {}
+
+func (_ FfiDestroyerOptionalSequenceTypeValue) Destroy(value *[]Value) {
+	if value != nil {
+		FfiDestroyerSequenceTypeValue{}.Destroy(*value)
 	}
 }
 
@@ -47147,6 +47797,49 @@ type FfiDestroyerSequenceMovePackage struct {}
 func (FfiDestroyerSequenceMovePackage) Destroy(sequence []*MovePackage) {
 	for _, value := range sequence {
 		FfiDestroyerMovePackage{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceMoveViewArg struct{}
+
+var FfiConverterSequenceMoveViewArgINSTANCE = FfiConverterSequenceMoveViewArg{}
+
+func (c FfiConverterSequenceMoveViewArg) Lift(rb RustBufferI) []*MoveViewArg {
+	return LiftFromRustBuffer[[]*MoveViewArg](c, rb)
+}
+
+func (c FfiConverterSequenceMoveViewArg) Read(reader io.Reader) []*MoveViewArg {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]*MoveViewArg, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterMoveViewArgINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceMoveViewArg) Lower(value []*MoveViewArg) C.RustBuffer {
+	return LowerIntoRustBuffer[[]*MoveViewArg](c, value)
+}
+
+func (c FfiConverterSequenceMoveViewArg) Write(writer io.Writer, value []*MoveViewArg) {
+	if len(value) > math.MaxInt32 {
+		panic("[]*MoveViewArg is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterMoveViewArgINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceMoveViewArg struct {}
+
+func (FfiDestroyerSequenceMoveViewArg) Destroy(sequence []*MoveViewArg) {
+	for _, value := range sequence {
+		FfiDestroyerMoveViewArg{}.Destroy(value)
 	}
 }
 
@@ -48910,6 +49603,49 @@ type FfiDestroyerSequenceMoveAbility struct {}
 func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
 	for _, value := range sequence {
 		FfiDestroyerMoveAbility{}.Destroy(value)
+	}
+}
+
+type FfiConverterSequenceTypeValue struct{}
+
+var FfiConverterSequenceTypeValueINSTANCE = FfiConverterSequenceTypeValue{}
+
+func (c FfiConverterSequenceTypeValue) Lift(rb RustBufferI) []Value {
+	return LiftFromRustBuffer[[]Value](c, rb)
+}
+
+func (c FfiConverterSequenceTypeValue) Read(reader io.Reader) []Value {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]Value, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterTypeValueINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceTypeValue) Lower(value []Value) C.RustBuffer {
+	return LowerIntoRustBuffer[[]Value](c, value)
+}
+
+func (c FfiConverterSequenceTypeValue) Write(writer io.Writer, value []Value) {
+	if len(value) > math.MaxInt32 {
+		panic("[]Value is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterTypeValueINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceTypeValue struct {}
+
+func (FfiDestroyerSequenceTypeValue) Destroy(sequence []Value) {
+	for _, value := range sequence {
+		FfiDestroyerTypeValue{}.Destroy(value)
 	}
 }
 

@@ -128,7 +128,7 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	@python bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
+	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
@@ -157,11 +157,11 @@ go-examples: ## Run all Go bindings examples
 
 .PHONY: go-examples-format-check
 go-examples-format-check: ## Check format of all Go bindings examples
-	@test -z "$$(find bindings/go/examples -name "*.go" -not -path "*/release/*" -exec gofmt -l {} \;)"
+	@test -z "$$(find bindings/go/examples -name "*.go" -exec gofmt -l {} \;)"
 
 .PHONY: go-examples-format
 go-examples-format: ## Format all Go bindings examples
-	@find bindings/go/examples -name "*.go" -not -path "*/release/*" -exec gofmt -w {} \;
+	@find bindings/go/examples -name "*.go" -exec gofmt -w {} \;
 
 .PHONY: kotlin-example
 kotlin-example: ## Run a specific Kotlin example. Usage: make kotlin-example example
@@ -183,13 +183,13 @@ kotlin-examples: ## Run all Kotlin bindings examples
 .PHONY: kotlin-examples-format-check
 kotlin-examples-format-check: ## Check format of all Kotlin bindings examples
 	cd bindings/kotlin; \
-	find examples -name "*.kt" -not -path "*/release/*" -exec ./gradlew KtfmtCheck --files {} \; || exit $$?; \
+	./gradlew KtfmtCheck || exit $$?; \
 	cd -
 
 .PHONY: kotlin-examples-format
 kotlin-examples-format: ## Format all Kotlin bindings examples
 	cd bindings/kotlin; \
-	find examples -name "*.kt" -not -path "*/release/*" -exec ./gradlew KtfmtFormat --files {} \; ; \
+	./gradlew KtfmtFormat; \
 	cd -
 
 .PHONY: python-example
@@ -208,11 +208,11 @@ python-examples: ## Run all Python bindings examples
 
 .PHONY: python-examples-format-check
 python-examples-format-check: ## Check format of all Python bindings examples
-	@yapf --style google -d $$(find bindings/python/examples -name "*.py" -not -path "*/release/*") --recursive
+	@yapf --style google -d $$(find bindings/python/examples -name "*.py") --recursive
 
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
-	@yapf --style google -i $$(find bindings/python/examples -name "*.py" -not -path "*/release/*") --recursive
+	@yapf --style google -i $$(find bindings/python/examples -name "*.py") --recursive
 
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example

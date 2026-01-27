@@ -3925,6 +3925,40 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5174,6 +5208,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module(
@@ -6219,6 +6257,34 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64(
 fun uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_json(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new(
 ): Short
@@ -7522,6 +7588,10 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(`ptr`: Poin
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`paginationFilterEnums`: RustBuffer.ByValue,`paginationFilterFriends`: RustBuffer.ByValue,`paginationFilterFunctions`: RustBuffer.ByValue,`paginationFilterStructs`: RustBuffer.ByValue,
@@ -7840,6 +7910,38 @@ fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_to_json(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_movepackagedata_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_clone_moveviewarg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_moveviewarg(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_address(`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_json(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_object_id(`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_option(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u128(`value`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16(`value`: Short,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32(`value`: Int,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64(`value`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8(`value`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8_vec(`values`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_clone_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_multisigaggregatedsignature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12351,6 +12453,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13918,6 +14026,48 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_new() != 65225.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_address() != 16142.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_bool() != 22335.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_json() != 28379.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_null() != 64193.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_object_id() != 5941.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_option() != 51508.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string() != 21544.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_string_vec() != 46543.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u128() != 54996.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u16() != 8159.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u32() != 57064.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u64() != 23977.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8() != 23834.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() != 19629.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() != 3396.toShort()) {
@@ -28569,6 +28719,61 @@ public interface GraphQlClientInterface {
     suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): kotlin.ByteArray?
     
     /**
+     * Execute a Move View Function.
+     *
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
+     *
+     * This method allows calling nearly any Move function with a return type
+     * and any arguments. The function's result values are provided and
+     * decoded using the appropriate Move type, then formatted in JSON.
+     *
+     * The use of this interface does not require signature checks (even for
+     * functions that take Owned Objects as input) or gas coins, as it does
+     * not alter ledger state. Spam attacks are dealt with at the RPC level
+     * rather than execution level.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x2::hash::blake2b256`
+     * * `type_arguments` - The type arguments of the Move function
+     * * `arguments` - The typed arguments to be passed into the Move function
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
+     */
+    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<TypeTag>? = null, `arguments`: List<MoveViewArg>? = null): MoveViewResult
+    
+    /**
+     * Execute a Move View Function with raw JSON arguments.
+     *
+     * This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+     * raw JSON values instead of typed arguments.
+     *
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x2::hash::blake2b256`
+     * * `type_arguments` - The type arguments of the Move function
+     * * `arguments` - The arguments to be passed into the Move function, in
+     * JSON format
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
+     */
+    suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>? = null, `arguments`: List<Value>? = null): MoveViewResult
+    
+    /**
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
@@ -29534,6 +29739,99 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterOptionalByteArray.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute a Move View Function.
+     *
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
+     *
+     * This method allows calling nearly any Move function with a return type
+     * and any arguments. The function's result values are provided and
+     * decoded using the appropriate Move type, then formatted in JSON.
+     *
+     * The use of this interface does not require signature checks (even for
+     * functions that take Owned Objects as input) or gas coins, as it does
+     * not alter ledger state. Spam attacks are dealt with at the RPC level
+     * rather than execution level.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x2::hash::blake2b256`
+     * * `type_arguments` - The type arguments of the Move function
+     * * `arguments` - The typed arguments to be passed into the Move function
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<TypeTag>?, `arguments`: List<MoveViewArg>?) : MoveViewResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
+                thisPtr,
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterOptionalSequenceTypeMoveViewArg.lower(`arguments`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeMoveViewResult.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Execute a Move View Function with raw JSON arguments.
+     *
+     * This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+     * raw JSON values instead of typed arguments.
+     *
+     * A View Function is a function in a Move module with a return type that
+     * does not alter the state of the ledger. When using this interface,
+     * no transactions are submitted to the network for inclusion into the
+     * ledger.
+     *
+     * # Arguments
+     * * `function_name` - The Move function fully qualified name as
+     * `<package_id>::<module_name>::<function_name>`, e.g.,
+     * `0x2::hash::blake2b256`
+     * * `type_arguments` - The type arguments of the Move function
+     * * `arguments` - The arguments to be passed into the Move function, in
+     * JSON format
+     *
+     * # Returns
+     * A `MoveViewResult` containing either execution results (return values)
+     * or an error.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>?, `arguments`: List<Value>?) : MoveViewResult {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(
+                thisPtr,
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArguments`),FfiConverterOptionalSequenceTypeValue.lower(`arguments`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeMoveViewResult.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -34436,6 +34734,381 @@ public object FfiConverterTypeMovePackageData: FfiConverter<MovePackageData, Poi
     override fun allocationSize(value: MovePackageData) = 8UL
 
     override fun write(value: MovePackageData, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * An argument for a Move View Function call.
+ *
+ * This enum represents the different types of values that can be passed
+ * as arguments to a Move View Function.
+ */
+public interface MoveViewArgInterface {
+    
+    companion object
+}
+
+/**
+ * An argument for a Move View Function call.
+ *
+ * This enum represents the different types of values that can be passed
+ * as arguments to a Move View Function.
+ */
+open class MoveViewArg: Disposable, AutoCloseable, MoveViewArgInterface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_moveviewarg(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_moveviewarg(pointer!!, status)
+        }
+    }
+
+    
+
+    
+    companion object {
+         fun `address`(`value`: Address): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_address(
+        FfiConverterTypeAddress.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `bool`(`value`: kotlin.Boolean): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_bool(
+        FfiConverterBoolean.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `json`(`value`: kotlin.String): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_json(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `null`(): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_null(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectId`(`value`: ObjectId): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_object_id(
+        FfiConverterTypeObjectId.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `option`(`value`: MoveViewArg?): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_option(
+        FfiConverterOptionalTypeMoveViewArg.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `string`(`value`: kotlin.String): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `stringVec`(`values`: List<kotlin.String>): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_string_vec(
+        FfiConverterSequenceString.lower(`values`),_status)
+}
+    )
+    }
+    
+
+         fun `u128`(`value`: kotlin.String): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u128(
+        FfiConverterString.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u16`(`value`: kotlin.UShort): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u16(
+        FfiConverterUShort.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u32`(`value`: kotlin.UInt): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u32(
+        FfiConverterUInt.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u64`(`value`: kotlin.ULong): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u64(
+        FfiConverterULong.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u8`(`value`: kotlin.UByte): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8(
+        FfiConverterUByte.lower(`value`),_status)
+}
+    )
+    }
+    
+
+         fun `u8Vec`(`values`: kotlin.ByteArray): MoveViewArg {
+            return FfiConverterTypeMoveViewArg.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveviewarg_u8_vec(
+        FfiConverterByteArray.lower(`values`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveViewArg: FfiConverter<MoveViewArg, Pointer> {
+
+    override fun lower(value: MoveViewArg): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): MoveViewArg {
+        return MoveViewArg(value)
+    }
+
+    override fun read(buf: ByteBuffer): MoveViewArg {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: MoveViewArg) = 8UL
+
+    override fun write(value: MoveViewArg, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -61084,6 +61757,53 @@ public object FfiConverterTypeMoveStructTypeParameter: FfiConverterRustBuffer<Mo
 
 
 /**
+ * The result of executing a Move View Function.
+ *
+ * Execution errors are captured in the `error` field, in which case the
+ * `results` field will be `None`. On success, the `results` field will contain
+ * the return values of the Move view function, and the `error` field will be
+ * `None`.
+ */
+data class MoveViewResult (
+    /**
+     * Execution error from executing the Move view function.
+     */
+    var `error`: kotlin.String? = null, 
+    /**
+     * The return values of the Move view function, resolved and formatted as
+     * JSON.
+     */
+    var `results`: List<kotlin.String>? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveViewResult: FfiConverterRustBuffer<MoveViewResult> {
+    override fun read(buf: ByteBuffer): MoveViewResult {
+        return MoveViewResult(
+            FfiConverterOptionalString.read(buf),
+            FfiConverterOptionalSequenceString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveViewResult) = (
+            FfiConverterOptionalString.allocationSize(value.`error`) +
+            FfiConverterOptionalSequenceString.allocationSize(value.`results`)
+    )
+
+    override fun write(value: MoveViewResult, buf: ByteBuffer) {
+            FfiConverterOptionalString.write(value.`error`, buf)
+            FfiConverterOptionalSequenceString.write(value.`results`, buf)
+    }
+}
+
+
+
+/**
  * A page of items returned by the GraphQL server.
  */
 data class NameRegistrationPage (
@@ -66942,6 +67662,38 @@ public object FfiConverterOptionalTypeMovePackage: FfiConverterRustBuffer<MovePa
 /**
  * @suppress
  */
+public object FfiConverterOptionalTypeMoveViewArg: FfiConverterRustBuffer<MoveViewArg?> {
+    override fun read(buf: ByteBuffer): MoveViewArg? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeMoveViewArg.read(buf)
+    }
+
+    override fun allocationSize(value: MoveViewArg?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterTypeMoveViewArg.allocationSize(value)
+        }
+    }
+
+    override fun write(value: MoveViewArg?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeMoveViewArg.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalTypeMultisigAggregatedSignature: FfiConverterRustBuffer<MultisigAggregatedSignature?> {
     override fun read(buf: ByteBuffer): MultisigAggregatedSignature? {
         if (buf.get().toInt() == 0) {
@@ -68446,6 +69198,38 @@ public object FfiConverterOptionalSequenceString: FfiConverterRustBuffer<List<ko
 /**
  * @suppress
  */
+public object FfiConverterOptionalSequenceTypeMoveViewArg: FfiConverterRustBuffer<List<MoveViewArg>?> {
+    override fun read(buf: ByteBuffer): List<MoveViewArg>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeMoveViewArg.read(buf)
+    }
+
+    override fun allocationSize(value: List<MoveViewArg>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeMoveViewArg.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<MoveViewArg>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeMoveViewArg.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
 public object FfiConverterOptionalSequenceTypeObjectId: FfiConverterRustBuffer<List<ObjectId>?> {
     override fun read(buf: ByteBuffer): List<ObjectId>? {
         if (buf.get().toInt() == 0) {
@@ -68468,6 +69252,38 @@ public object FfiConverterOptionalSequenceTypeObjectId: FfiConverterRustBuffer<L
         } else {
             buf.put(1)
             FfiConverterSequenceTypeObjectId.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeTypeTag: FfiConverterRustBuffer<List<TypeTag>?> {
+    override fun read(buf: ByteBuffer): List<TypeTag>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeTypeTag.read(buf)
+    }
+
+    override fun allocationSize(value: List<TypeTag>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeTypeTag.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<TypeTag>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeTypeTag.write(value, buf)
         }
     }
 }
@@ -68692,6 +69508,38 @@ public object FfiConverterOptionalSequenceTypeMoveAbility: FfiConverterRustBuffe
         } else {
             buf.put(1)
             FfiConverterSequenceTypeMoveAbility.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeValue: FfiConverterRustBuffer<List<Value>?> {
+    override fun read(buf: ByteBuffer): List<Value>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeValue.read(buf)
+    }
+
+    override fun allocationSize(value: List<Value>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeValue.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<Value>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeValue.write(value, buf)
         }
     }
 }
@@ -69464,6 +70312,34 @@ public object FfiConverterSequenceTypeMovePackage: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMovePackage.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeMoveViewArg: FfiConverterRustBuffer<List<MoveViewArg>> {
+    override fun read(buf: ByteBuffer): List<MoveViewArg> {
+        val len = buf.getInt()
+        return List<MoveViewArg>(len) {
+            FfiConverterTypeMoveViewArg.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<MoveViewArg>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeMoveViewArg.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<MoveViewArg>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeMoveViewArg.write(it, buf)
         }
     }
 }
@@ -70612,6 +71488,34 @@ public object FfiConverterSequenceTypeMoveAbility: FfiConverterRustBuffer<List<M
         buf.putInt(value.size)
         value.iterator().forEach {
             FfiConverterTypeMoveAbility.write(it, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterSequenceTypeValue: FfiConverterRustBuffer<List<Value>> {
+    override fun read(buf: ByteBuffer): List<Value> {
+        val len = buf.getInt()
+        return List<Value>(len) {
+            FfiConverterTypeValue.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<Value>): ULong {
+        val sizeForLength = 4UL
+        val sizeForItems = value.map { FfiConverterTypeValue.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<Value>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.iterator().forEach {
+            FfiConverterTypeValue.write(it, buf)
         }
     }
 }
