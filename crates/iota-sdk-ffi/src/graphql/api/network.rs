@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Network info API implementation.
+//! Network API implementation.
 
 use iota_sdk::graphql_client::{pagination::PaginationFilter, query_types::ProtocolConfigs};
 
