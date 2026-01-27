@@ -15,5 +15,4 @@ mod iota_names;
 mod network;
 mod objects;
 mod package;
-mod packages;
 pub(crate) mod transactions;
