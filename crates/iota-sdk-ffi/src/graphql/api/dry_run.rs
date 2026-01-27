@@ -23,10 +23,6 @@ pub struct Query {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Dry Run API
-    // ===========================================================================
-
     /// Dry run a `Transaction` and return the transaction effects and dry run
     /// error (if any).
     ///

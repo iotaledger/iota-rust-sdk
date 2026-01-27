@@ -15,10 +15,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Objects API
-    // ===========================================================================
-
     /// Return an object based on the provided `Address`.
     ///
     /// If the object does not exist (e.g., due to pruning), this will return

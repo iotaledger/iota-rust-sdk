@@ -15,10 +15,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Dynamic Field(s) API
-    // ===========================================================================
-
     /// Access a dynamic field on an object using its name. Names are arbitrary
     /// Move values whose type have copy, drop, and store, and are specified
     /// using their type, and their BCS contents, Base64 encoded.

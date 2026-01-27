@@ -19,10 +19,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Package API
-    // ===========================================================================
-
     /// The package corresponding to the given address (at the optionally given
     /// version). When no version is given, the package is loaded directly
     /// from the address given. Otherwise, the address is translated before
@@ -117,10 +113,6 @@ impl GraphQLClient {
             .map(Into::into)
             .into())
     }
-
-    // ===========================================================================
-    // Normalized Move Package API
-    // ===========================================================================
 
     /// Return the normalized Move function data for the provided package,
     /// module, and function.

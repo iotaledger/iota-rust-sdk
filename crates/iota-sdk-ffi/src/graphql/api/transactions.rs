@@ -35,10 +35,6 @@ pub enum WaitForTx {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Transaction API
-    // ===========================================================================
-
     /// Get a transaction by its digest.
     pub async fn transaction(&self, digest: &Digest) -> Result<Option<SignedTransaction>> {
         Ok(self

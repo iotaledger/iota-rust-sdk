@@ -15,10 +15,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // IOTA Names API
-    // ===========================================================================
-
     /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {
         Ok(self

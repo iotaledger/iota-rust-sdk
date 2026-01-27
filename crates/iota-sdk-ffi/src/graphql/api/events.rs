@@ -12,10 +12,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Events API
-    // ===========================================================================
-
     /// Return a page of tuple (event, transaction digest) based on the
     /// (optional) event filter.
     #[uniffi::method(default(pagination_filter = None, filter = None))]

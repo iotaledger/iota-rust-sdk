@@ -13,10 +13,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Network info API
-    // ===========================================================================
-
     /// Get the chain identifier.
     pub async fn chain_id(&self) -> Result<String> {
         Ok(self.0.read().await.chain_id().await?)

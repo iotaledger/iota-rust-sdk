@@ -10,10 +10,6 @@ use crate::{
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GraphQLClient {
-    // ===========================================================================
-    // Epoch API
-    // ===========================================================================
-
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
     #[uniffi::method(default(epoch = None))]
