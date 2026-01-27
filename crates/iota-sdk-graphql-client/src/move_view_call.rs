@@ -186,7 +186,7 @@ impl<T: MoveViewArg> MoveViewArg for Vec<T> {
     }
 }
 
-impl<T: MoveViewArg> MoveViewArg for &[T] {
+impl<T: MoveViewArg> MoveViewArg for [T] {
     fn to_json(&self) -> serde_json::Value {
         serde_json::Value::Array(self.iter().map(|v| v.to_json()).collect())
     }
