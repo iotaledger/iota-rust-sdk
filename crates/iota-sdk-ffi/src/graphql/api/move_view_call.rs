@@ -3,10 +3,10 @@
 
 use std::sync::Arc;
 
-use super::GraphQLClient;
 use crate::{
     error::Result,
-    types::{address::Address, graphql::MoveViewResult, object::ObjectId, type_tag::TypeTag},
+    graphql::{client::GraphQLClient, query_types::MoveViewResult},
+    types::{address::Address, object::ObjectId, type_tag::TypeTag},
 };
 
 /// An argument for a Move View Function call.
