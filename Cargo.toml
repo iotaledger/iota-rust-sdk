@@ -37,6 +37,7 @@ strum = "0.27.2"
 test-strategy = "0.4.0"
 thiserror = "2.0"
 tokio = "1.40.0"
+variadics_please = "1.1"
 
 iota-crypto = { version = "0.0.1-alpha.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
 iota-graphql-client = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }

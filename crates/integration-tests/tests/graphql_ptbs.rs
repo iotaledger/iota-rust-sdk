@@ -79,7 +79,7 @@ async fn helper_setup() -> (
 /// Wait for the transaction to be finalized and indexed. This queries the
 /// GraphQL server until it retrieves the requested transaction.
 async fn wait_for_tx(client: &Client, digest: Digest) {
-    while client.transaction(digest).await.unwrap().is_none() {
+    while !client.is_tx_finalized(digest).await.unwrap() {
         tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
     }
 }

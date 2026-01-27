@@ -23,6 +23,7 @@ thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tracing = "0.1.37"
 url = "2.5.3"
+variadics_please.workspace = true
 
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }

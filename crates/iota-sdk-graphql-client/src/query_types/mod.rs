@@ -13,6 +13,7 @@ mod epoch;
 mod events;
 mod execute_tx;
 mod iota_names;
+mod move_view_call;
 mod normalized_move;
 mod object;
 mod packages;
@@ -50,6 +51,7 @@ pub use iota_names::{
     ResolveIotaNamesAddressQuery,
 };
 use iota_types::{Address, ObjectId};
+pub use move_view_call::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,

@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+mod move_view_call;
+
 use std::{sync::Arc, time::Duration};
 
 use iota_sdk::{

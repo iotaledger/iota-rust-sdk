@@ -1157,12 +1157,10 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
 
         Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, signer).await?;
-            if let Some(wait_for) = wait_for {
-                self.client
-                    .wait_for_tx(digest, wait_for)
-                    .await
-                    .map_err(Error::client)?;
-            }
+            self.client
+                .wait_for_tx(digest, wait_for.unwrap_or(WaitForTx::Indexed))
+                .await
+                .map_err(Error::client)?;
             self.client
                 .transaction_effects(digest)
                 .await
