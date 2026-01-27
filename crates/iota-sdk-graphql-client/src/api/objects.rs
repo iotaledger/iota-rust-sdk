@@ -31,7 +31,7 @@ impl Client {
         )
     }
 
-    /// Return an object based on the provided [`Address`].
+    /// Return an object based on the provided [`Address`](iota_types::Address).
     ///
     /// If the object does not exist (e.g., due to pruning), this will return
     /// `Ok(None)`. Similarly, if this is not an object but an address, it
@@ -113,7 +113,7 @@ impl Client {
     }
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
-    /// [`Address`].
+    /// [`Address`](iota_types::Address).
     pub async fn object_bcs(&self, object_id: ObjectId) -> Result<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
