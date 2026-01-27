@@ -12453,7 +12453,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 20146.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635.toShort()) {
@@ -28746,7 +28746,7 @@ public interface GraphQlClientInterface {
      * A `MoveViewResult` containing either execution results (return values)
      * or an error.
      */
-    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>? = null, `arguments`: List<MoveViewArg>? = null): MoveViewResult
+    suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<TypeTag>? = null, `arguments`: List<MoveViewArg>? = null): MoveViewResult
     
     /**
      * Execute a Move View Function with raw JSON arguments.
@@ -29775,12 +29775,12 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>?, `arguments`: List<MoveViewArg>?) : MoveViewResult {
+    override suspend fun `moveViewCall`(`functionName`: kotlin.String, `typeArguments`: List<TypeTag>?, `arguments`: List<MoveViewArg>?) : MoveViewResult {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 thisPtr,
-                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceString.lower(`typeArguments`),FfiConverterOptionalSequenceTypeMoveViewArg.lower(`arguments`),
+                FfiConverterString.lower(`functionName`),FfiConverterOptionalSequenceTypeTypeTag.lower(`typeArguments`),FfiConverterOptionalSequenceTypeMoveViewArg.lower(`arguments`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -69252,6 +69252,38 @@ public object FfiConverterOptionalSequenceTypeObjectId: FfiConverterRustBuffer<L
         } else {
             buf.put(1)
             FfiConverterSequenceTypeObjectId.write(value, buf)
+        }
+    }
+}
+
+
+
+
+/**
+ * @suppress
+ */
+public object FfiConverterOptionalSequenceTypeTypeTag: FfiConverterRustBuffer<List<TypeTag>?> {
+    override fun read(buf: ByteBuffer): List<TypeTag>? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterSequenceTypeTypeTag.read(buf)
+    }
+
+    override fun allocationSize(value: List<TypeTag>?): ULong {
+        if (value == null) {
+            return 1UL
+        } else {
+            return 1UL + FfiConverterSequenceTypeTypeTag.allocationSize(value)
+        }
+    }
+
+    override fun write(value: List<TypeTag>?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterSequenceTypeTypeTag.write(value, buf)
         }
     }
 }

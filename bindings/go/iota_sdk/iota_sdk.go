@@ -5918,7 +5918,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call()
 	})
-	if checksum != 20146 {
+	if checksum != 52742 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call: UniFFI API checksum mismatch")
 	}
@@ -19859,7 +19859,7 @@ type GraphQlClientInterface interface {
 	// # Returns
 	// A `MoveViewResult` containing either execution results (return values)
 	// or an error.
-	MoveViewCall(functionName string, typeArguments *[]string, arguments *[]*MoveViewArg) (MoveViewResult, error)
+	MoveViewCall(functionName string, typeArguments *[]*TypeTag, arguments *[]*MoveViewArg) (MoveViewResult, error)
 	// Execute a Move View Function with raw JSON arguments.
 	//
 	// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
@@ -20967,7 +20967,7 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 // # Returns
 // A `MoveViewResult` containing either execution results (return values)
 // or an error.
-func (_self *GraphQlClient) MoveViewCall(functionName string, typeArguments *[]string, arguments *[]*MoveViewArg) (MoveViewResult, error) {
+func (_self *GraphQlClient) MoveViewCall(functionName string, typeArguments *[]*TypeTag, arguments *[]*MoveViewArg) (MoveViewResult, error) {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
 	 res, err :=uniffiRustCallAsync[SdkFfiError](
@@ -20984,7 +20984,7 @@ func (_self *GraphQlClient) MoveViewCall(functionName string, typeArguments *[]s
 			return FfiConverterMoveViewResultINSTANCE.Lift(ffi)
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
-		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceStringINSTANCE.Lower(typeArguments), FfiConverterOptionalSequenceMoveViewArgINSTANCE.Lower(arguments)),
+		_pointer,FfiConverterStringINSTANCE.Lower(functionName), FfiConverterOptionalSequenceTypeTagINSTANCE.Lower(typeArguments), FfiConverterOptionalSequenceMoveViewArgINSTANCE.Lower(arguments)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -46327,6 +46327,43 @@ type FfiDestroyerOptionalSequenceObjectId struct {}
 func (_ FfiDestroyerOptionalSequenceObjectId) Destroy(value *[]*ObjectId) {
 	if value != nil {
 		FfiDestroyerSequenceObjectId{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalSequenceTypeTag struct{}
+
+var FfiConverterOptionalSequenceTypeTagINSTANCE = FfiConverterOptionalSequenceTypeTag{}
+
+func (c FfiConverterOptionalSequenceTypeTag) Lift(rb RustBufferI) *[]*TypeTag {
+	return LiftFromRustBuffer[*[]*TypeTag](c, rb)
+}
+
+func (_ FfiConverterOptionalSequenceTypeTag) Read(reader io.Reader) *[]*TypeTag {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterSequenceTypeTagINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalSequenceTypeTag) Lower(value *[]*TypeTag) C.RustBuffer {
+	return LowerIntoRustBuffer[*[]*TypeTag](c, value)
+}
+
+func (_ FfiConverterOptionalSequenceTypeTag) Write(writer io.Writer, value *[]*TypeTag) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterSequenceTypeTagINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalSequenceTypeTag struct {}
+
+func (_ FfiDestroyerOptionalSequenceTypeTag) Destroy(value *[]*TypeTag) {
+	if value != nil {
+		FfiDestroyerSequenceTypeTag{}.Destroy(*value)
 	}
 }
 

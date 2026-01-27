@@ -6,7 +6,7 @@ use std::sync::Arc;
 use super::GraphQLClient;
 use crate::{
     error::Result,
-    types::{address::Address, graphql::MoveViewResult, object::ObjectId},
+    types::{address::Address, graphql::MoveViewResult, object::ObjectId, type_tag::TypeTag},
 };
 
 /// An argument for a Move View Function call.
@@ -210,10 +210,12 @@ impl GraphQLClient {
     pub async fn move_view_call(
         &self,
         function_name: String,
-        type_arguments: Option<Vec<String>>,
+        type_arguments: Option<Vec<Arc<TypeTag>>>,
         arguments: Option<Vec<Arc<MoveViewArg>>>,
     ) -> Result<MoveViewResult> {
         let arguments = arguments.map(|args| args.iter().map(|arg| arg.to_json()).collect());
+        let type_arguments =
+            type_arguments.map(|tags| tags.iter().map(|t| t.to_string()).collect());
 
         self.move_view_call_json(function_name, type_arguments, arguments)
             .await

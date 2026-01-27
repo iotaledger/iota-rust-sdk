@@ -2333,6 +2333,7 @@ mod tests {
     async fn test_move_view_call() {
         let client = test_client();
 
+        // Test blake2b256 hash function with typed arguments
         let result = client
             .move_view_call("0x2::hash::blake2b256", None, vec![0u8, 1, 2])
             .await
@@ -2372,11 +2373,7 @@ mod tests {
 
         // Test option::some with type argument
         let result = client
-            .move_view_call_json(
-                "0x1::option::some",
-                Some(vec!["u8".to_string()]),
-                Some(vec![serde_json::json!(2u8)]),
-            )
+            .move_view_call("0x1::option::some", Some(vec![TypeTag::U8]), 2u8)
             .await
             .map_err(|e| {
                 format!(
@@ -2423,16 +2420,62 @@ mod tests {
             })
             .unwrap();
 
-        assert!(
-            result.error.is_none(),
-            "Move view call JSON returned error for {} network: {:?}",
-            client.rpc_server(),
-            result.error
+        assert_eq!(
+            result.error, None,
+            "Move view call JSON should not return an error"
         );
         assert!(
             result.results.is_some(),
-            "Move view call JSON returned no results for {} network",
-            client.rpc_server()
+            "Move view call JSON should return results"
         );
+        let results = result.results.unwrap();
+        assert_eq!(
+            results.len(),
+            1,
+            "Move view call JSON should return exactly one result"
+        );
+        let expected_hash: Vec<u8> = vec![
+            61, 140, 61, 89, 73, 40, 39, 31, 68, 170, 215, 160, 75, 23, 113, 84, 128, 104, 103,
+            188, 249, 24, 225, 84, 156, 11, 193, 111, 157, 162, 176, 155,
+        ];
+        let actual_hash: Vec<u8> = results[0]
+            .as_array()
+            .expect("First result should be a JSON array")
+            .iter()
+            .map(|v| v.as_u64().expect("Each element should be a number") as u8)
+            .collect();
+        assert_eq!(actual_hash, expected_hash);
+
+        // Test option::some with type argument
+        let result = client
+            .move_view_call_json(
+                "0x1::option::some",
+                Some(vec!["u8".to_string()]),
+                Some(vec![serde_json::json!(2u8)]),
+            )
+            .await
+            .map_err(|e| {
+                format!(
+                    "Move view call JSON query failed for {} network: Error: {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
+        assert_eq!(
+            result.error, None,
+            "Move view call JSON should not return an error"
+        );
+        assert!(
+            result.results.is_some(),
+            "Move view call JSON should return results"
+        );
+        let results = result.results.unwrap();
+        assert_eq!(
+            results.len(),
+            1,
+            "Move view call JSON should return exactly one result"
+        );
+        // option::some returns the wrapped value directly
+        assert_eq!(results[0], serde_json::json!(2));
     }
 }

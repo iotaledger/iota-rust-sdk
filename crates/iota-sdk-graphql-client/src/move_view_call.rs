@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use cynic::QueryBuilder;
-use iota_types::{Address, ObjectId, ObjectReference};
+use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
     Client,
@@ -87,11 +87,18 @@ impl Client {
     pub async fn move_view_call<A: MoveViewArgList>(
         &self,
         function_name: impl Into<String>,
-        type_arguments: impl Into<Option<Vec<String>>>,
+        type_arguments: impl Into<Option<Vec<TypeTag>>>,
         arguments: A,
     ) -> Result<MoveViewResult> {
-        self.move_view_call_json(function_name, type_arguments, Some(arguments.to_json_vec()))
-            .await
+        let type_args_strings = type_arguments
+            .into()
+            .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());
+        self.move_view_call_json(
+            function_name,
+            type_args_strings,
+            Some(arguments.to_json_vec()),
+        )
+        .await
     }
 }
 

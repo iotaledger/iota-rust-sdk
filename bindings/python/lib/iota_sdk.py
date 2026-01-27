@@ -1695,7 +1695,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 20146:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -29365,6 +29365,33 @@ class _UniffiConverterOptionalSequenceTypeObjectId(_UniffiConverterRustBuffer):
 
 
 
+class _UniffiConverterOptionalSequenceTypeTypeTag(_UniffiConverterRustBuffer):
+    @classmethod
+    def check_lower(cls, value):
+        if value is not None:
+            _UniffiConverterSequenceTypeTypeTag.check_lower(value)
+
+    @classmethod
+    def write(cls, value, buf):
+        if value is None:
+            buf.write_u8(0)
+            return
+
+        buf.write_u8(1)
+        _UniffiConverterSequenceTypeTypeTag.write(value, buf)
+
+    @classmethod
+    def read(cls, buf):
+        flag = buf.read_u8()
+        if flag == 0:
+            return None
+        elif flag == 1:
+            return _UniffiConverterSequenceTypeTypeTag.read(buf)
+        else:
+            raise InternalError("Unexpected flag byte for optional type")
+
+
+
 class _UniffiConverterOptionalSequenceTypeMoveEnumVariant(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
@@ -39186,7 +39213,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
+    def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
         """
         Execute a Move View Function.
 
@@ -40341,7 +40368,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[str]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
+    async def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
         """
         Execute a Move View Function.
 
@@ -40375,7 +40402,7 @@ _UniffiConverterTypeSdkFfiError,
         
         if type_arguments is _DEFAULT:
             type_arguments = None
-        _UniffiConverterOptionalSequenceString.check_lower(type_arguments)
+        _UniffiConverterOptionalSequenceTypeTypeTag.check_lower(type_arguments)
         
         if arguments is _DEFAULT:
             arguments = None
@@ -40385,7 +40412,7 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterString.lower(function_name),
-        _UniffiConverterOptionalSequenceString.lower(type_arguments),
+        _UniffiConverterOptionalSequenceTypeTypeTag.lower(type_arguments),
         _UniffiConverterOptionalSequenceTypeMoveViewArg.lower(arguments)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
