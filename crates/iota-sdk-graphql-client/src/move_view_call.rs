@@ -153,20 +153,8 @@ impl MoveViewArg for String {
     }
 }
 
-impl MoveViewArg for &String {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::String((*self).clone())
-    }
-}
-
 // Object-related implementations
 impl MoveViewArg for ObjectId {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::String(self.to_string())
-    }
-}
-
-impl MoveViewArg for &ObjectId {
     fn to_json(&self) -> serde_json::Value {
         serde_json::Value::String(self.to_string())
     }
@@ -178,19 +166,7 @@ impl MoveViewArg for ObjectReference {
     }
 }
 
-impl MoveViewArg for &ObjectReference {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::String(self.object_id.to_string())
-    }
-}
-
 impl MoveViewArg for Address {
-    fn to_json(&self) -> serde_json::Value {
-        serde_json::Value::String(self.to_string())
-    }
-}
-
-impl MoveViewArg for &Address {
     fn to_json(&self) -> serde_json::Value {
         serde_json::Value::String(self.to_string())
     }
@@ -244,16 +220,17 @@ impl MoveViewArg for serde_json::Value {
     }
 }
 
-impl MoveViewArg for &serde_json::Value {
+// Blanket implementation for references to any MoveViewArg
+impl<T: MoveViewArg> MoveViewArg for &T {
     fn to_json(&self) -> serde_json::Value {
-        (*self).clone()
+        (*self).to_json()
     }
 }
 
 /// A trait which defines a list of arguments for a Move View Function call.
 #[diagnostic::on_unimplemented(
     message = "Provided value is not a valid list of Move view arguments.",
-    note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
+    note = "Expected a tuple of types that implement `MoveViewArg`."
 )]
 pub trait MoveViewArgList {
     /// Convert the arguments to a vector of JSON values.
