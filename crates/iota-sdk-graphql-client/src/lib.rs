@@ -17,8 +17,8 @@ pub mod streams;
 mod test_utils;
 
 // Re-export types used by query_types module internally
-pub use client::{Client};
+pub use api::transactions::WaitForTx;
+pub use client::Client;
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
-pub use api::transactions::WaitForTx;
