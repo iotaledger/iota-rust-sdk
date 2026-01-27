@@ -62,4 +62,32 @@ impl GraphQLClient {
             .latest_checkpoint_sequence_number()
             .await?)
     }
+
+    /// The total number of transaction blocks in the network by the end of the
+    /// provided checkpoint digest.
+    pub async fn total_transaction_blocks_by_digest(&self, digest: &Digest) -> Result<Option<u64>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .total_transaction_blocks_by_digest(**digest)
+            .await?)
+    }
+
+    /// The total number of transaction blocks in the network by the end of the
+    /// provided checkpoint sequence number.
+    pub async fn total_transaction_blocks_by_seq_num(&self, seq_num: u64) -> Result<Option<u64>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .total_transaction_blocks_by_seq_num(seq_num)
+            .await?)
+    }
+
+    /// The total number of transaction blocks in the network by the end of the
+    /// last known checkpoint.
+    pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
+        Ok(self.0.read().await.total_transaction_blocks().await?)
+    }
 }
