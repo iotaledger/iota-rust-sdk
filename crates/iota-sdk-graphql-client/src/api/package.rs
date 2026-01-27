@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Normalized Move Package API implementation.
+//! Package API implementation.
 
 use base64ct::Encoding;
 use cynic::QueryBuilder;
