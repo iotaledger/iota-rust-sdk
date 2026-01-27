@@ -10,7 +10,7 @@ use std::{
 use super::client_builder::ClientTransactionBuilder;
 use crate::{
     error::Result,
-    graphql::GraphQLClient,
+    graphql::client::GraphQLClient,
     transaction_builder::{
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
