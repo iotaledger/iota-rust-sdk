@@ -73,11 +73,11 @@ impl Client {
     ///
     /// # Example
     /// ```rust,ignore
-    /// // Single argument: wrap in a 1-tuple
+    /// // Single argument: pass a Vec<u8> directly
     /// let result = client.move_view_call(
     ///     "0x2::hash::blake2b256",
     ///     None,
-    ///     (vec![0u8, 1, 2],),
+    ///     vec![0u8, 1, 2],
     /// ).await?;
     /// ```
     ///
@@ -237,38 +237,17 @@ impl<T: MoveViewArg> MoveViewArg for &T {
 /// A trait which defines a list of arguments for a Move View Function call.
 #[diagnostic::on_unimplemented(
     message = "Provided value is not a valid list of Move view arguments.",
-    note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
+    note = "Expected a tuple of types that implement `MoveViewArg`."
 )]
 pub trait MoveViewArgList {
     /// Convert the arguments to a vector of JSON values.
     fn to_json_vec(self) -> Vec<serde_json::Value>;
 }
 
-// Single element tuple implementation
-impl<T: MoveViewArg> MoveViewArgList for (T,) {
+// Single element implementation
+impl<T: MoveViewArg> MoveViewArgList for T {
     fn to_json_vec(self) -> Vec<serde_json::Value> {
-        vec![self.0.to_json()]
-    }
-}
-
-impl<T: MoveViewArg> MoveViewArgList for Vec<T> {
-    fn to_json_vec(self) -> Vec<serde_json::Value> {
-        self.into_iter().map(|v| v.to_json()).collect()
-    }
-}
-
-impl<const N: usize, T: MoveViewArg> MoveViewArgList for [T; N] {
-    fn to_json_vec(self) -> Vec<serde_json::Value> {
-        self.into_iter().map(|v| v.to_json()).collect()
-    }
-}
-
-impl<T> MoveViewArgList for &[T]
-where
-    for<'a> &'a T: MoveViewArg,
-{
-    fn to_json_vec(self) -> Vec<serde_json::Value> {
-        self.iter().map(|v| v.to_json()).collect()
+        vec![self.to_json()]
     }
 }
 

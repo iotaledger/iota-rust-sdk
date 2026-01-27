@@ -2373,7 +2373,7 @@ mod tests {
 
         // Test option::some with type argument
         let result = client
-            .move_view_call("0x1::option::some", Some(vec![TypeTag::U8]), (2u8,))
+            .move_view_call("0x1::option::some", Some(vec![TypeTag::U8]), 2u8)
             .await
             .map_err(|e| {
                 format!(
