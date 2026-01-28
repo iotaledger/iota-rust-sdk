@@ -26,13 +26,13 @@ use super::Address;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-pub struct ObjectId(Address);
+pub struct ObjectId(pub(crate) Address);
 
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);
-    pub const SYSTEM: Self = Self(Address::from_u8(5));
-    pub const CLOCK: Self = Self(Address::from_u8(6));
+    pub const SYSTEM: Self = Self(Address::from_u16(5));
+    pub const CLOCK: Self = Self(Address::from_u16(6));
 
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
@@ -50,12 +50,12 @@ impl ObjectId {
 
     /// Returns the underlying byte array of an ObjectId.
     pub const fn into_inner(self) -> [u8; Self::LENGTH] {
-        self.0.into_inner()
+        self.0.into_bytes()
     }
 
     /// Returns a reference to the underlying byte array of an ObjectId.
     pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        self.0.inner()
+        self.0.bytes()
     }
 
     /// Returns a slice of bytes of an ObjectId.
