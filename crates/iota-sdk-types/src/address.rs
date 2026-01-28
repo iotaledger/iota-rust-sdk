@@ -107,6 +107,9 @@ impl Address {
         &self.0
     }
 
+    /// Parses an Address from a hex string, with or without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         let hex = hex.as_ref();
         let hex = if hex.starts_with(b"0x") {
