@@ -2477,7 +2477,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 63442:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -31878,6 +31878,12 @@ class Address():
 
     @classmethod
     def from_hex(cls, hex: "str"):
+        """
+        Parses an Address from a hex string, with or without a `0x` prefix.
+        The string can be of variable length; if it's shorter than 64 hex
+        characters, it will be left-padded with `0`s.
+        """
+
         _UniffiConverterString.check_lower(hex)
         
         # Call the (fallible) function before creating any half-baked object instances.
