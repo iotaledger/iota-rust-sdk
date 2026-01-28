@@ -254,7 +254,8 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
     }
 }
 
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error, PartialEq)]
+#[non_exhaustive]
 pub enum AddressParseError {
     #[error("address must be hex string of length {}", Address::LENGTH * 2)]
     FromHex(#[from] hex::FromHexError),
