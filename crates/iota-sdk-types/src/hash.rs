@@ -236,6 +236,23 @@ impl crate::PasskeyPublicKey {
     }
 }
 
+impl crate::MultisigMemberPublicKey {
+    /// Derive an `Address` from this MultisigMemberPublicKey.
+    ///
+    /// An `Address` can be derived from a `MultisigMemberPublicKey` by
+    /// delegating to the corresponding public key's `derive_address` method.
+    pub fn derive_address(&self) -> Address {
+        use crate::MultisigMemberPublicKey::*;
+
+        match self {
+            Ed25519(p) => p.derive_address(),
+            Secp256k1(p) => p.derive_address(),
+            Secp256r1(p) => p.derive_address(),
+            ZkLogin(p) => p.derive_address_padded(),
+        }
+    }
+}
+
 impl crate::MultisigCommittee {
     /// Derive an `Address` from this MultisigCommittee.
     ///
