@@ -9534,11 +9534,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_generate()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_random()
 	})
-	if checksum != 48865 {
+	if checksum != 55074 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_generate: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_random: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13295,9 +13295,9 @@ func AddressFromHex(hex string) (*Address, error) {
 		}
 }
 
-func AddressGenerate() *Address {
+func AddressRandom() *Address {
 	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_address_generate(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_random(_uniffiStatus)
 	}))
 }
 
@@ -20066,8 +20066,7 @@ type GraphQlClientInterface interface {
 	// If the object does not exist (e.g., due to pruning), this will return
 	// `Ok(None)`. Similarly, if this is not an object but an address, it
 	// will return `Ok(None)`.
-<<<<<<< HEAD
-	MoveObjectContentsBcs(objectId *ObjectId, version *uint64) (*[]byte, error)
+	MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error)
 	// Execute a Move View Function.
 	//
 	// A View Function is a function in a Move module with a return type that
@@ -20117,9 +20116,6 @@ type GraphQlClientInterface interface {
 	// A `MoveViewResult` containing either execution results (return values)
 	// or an error.
 	MoveViewCallJson(functionName string, typeArguments *[]string, arguments *[]Value) (MoveViewResult, error)
-=======
-	MoveObjectContentsBcs(objectId *ObjectId, version **Version) (*[]byte, error)
->>>>>>> cf355bc2 (feat: Use Version struct over type def (#521))
 	// Return the normalized Move function data for the provided package,
 	// module, and function.
 	NormalizedMoveFunction(varPackage *Address, module string, function string, version **Version) (**MoveFunction, error)

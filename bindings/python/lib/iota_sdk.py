@@ -1699,15 +1699,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-<<<<<<< HEAD
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
-=======
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444:
->>>>>>> cf355bc2 (feat: Use Version struct over type def (#521))
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2503,7 +2499,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3354,10 +3350,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_random.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_random.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_std.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -16495,9 +16491,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_random.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_random.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_std.restype = ctypes.c_uint16
@@ -17809,6 +17805,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -32150,9 +32148,9 @@ class Address():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def generate(cls, ):
+    def random(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_generate,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_random,)
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -39554,7 +39552,6 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-<<<<<<< HEAD
     def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
         """
         Execute a Move View Function.
@@ -39612,10 +39609,7 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
-    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
-=======
     def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT):
->>>>>>> cf355bc2 (feat: Use Version struct over type def (#521))
         """
         Return the normalized Move function data for the provided package,
         module, and function.
@@ -40713,7 +40707,6 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-<<<<<<< HEAD
     async def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
         """
         Execute a Move View Function.
@@ -40829,10 +40822,7 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
-    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
-=======
     async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[Version]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
->>>>>>> cf355bc2 (feat: Use Version struct over type def (#521))
         """
         Return the normalized Move function data for the provided package,
         module, and function.
