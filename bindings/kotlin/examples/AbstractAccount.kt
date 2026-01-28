@@ -1,16 +1,6 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-/**
- * This example demonstrates the Abstract Account feature which allows
- * authentication through Move code instead of traditional signatures.
- *
- * With this example it is necessary to run a localnet:
- * ```sh
- * iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
- * ```
- */
-
 import iota_sdk.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
