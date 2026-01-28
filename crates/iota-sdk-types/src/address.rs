@@ -355,7 +355,12 @@ mod tests {
     fn parse_address_invalid_hex_char() {
         let result = Address::from_hex("0xGGGG");
         assert!(result.is_err());
-        assert!(matches!(result, Err(AddressParseError::FromHex(_))));
+        assert!(matches!(
+            result,
+            Err(AddressParseError::FromHex(
+                hex::FromHexError::InvalidHexCharacter { .. }
+            ))
+        ));
     }
 
     #[test]
@@ -363,6 +368,15 @@ mod tests {
         // 65 hex chars (one more than allowed 64)
         let result = Address::from_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331",
+        );
+        assert!(matches!(
+            result,
+            Err(AddressParseError::FromHex(hex::FromHexError::OddLength))
+        ));
+
+        // 66 hex chars (two more than allowed 64)
+        let result = Address::from_hex(
+            "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f3316",
         );
         assert!(matches!(
             result,
