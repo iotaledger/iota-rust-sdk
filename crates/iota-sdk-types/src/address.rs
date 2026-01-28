@@ -109,12 +109,11 @@ impl Address {
 
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         let hex = hex.as_ref();
-
-        if !hex.starts_with(b"0x") {
-            return Err(AddressParseError);
-        }
-
-        let hex = &hex[2..];
+        let hex = if hex.starts_with(b"0x") {
+            &hex[2..]
+        } else {
+            hex
+        };
 
         // If the string is too short we'll need to pad with 0's
         if hex.len() < Self::LENGTH * 2 {
@@ -128,8 +127,7 @@ impl Address {
             <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
         }
         .map(Self)
-        // TODO fix error to contain hex parse error
-        .map_err(|_| AddressParseError)
+        .map_err(AddressParseError::FromHex)
     }
 
     pub fn to_hex(&self) -> String {
@@ -161,8 +159,11 @@ impl Address {
     }
 
     pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
-        <[u8; Self::LENGTH]>::try_from(bytes.as_ref())
-            .map_err(|_| AddressParseError)
+        let bytes = bytes.as_ref();
+        <[u8; Self::LENGTH]>::try_from(bytes)
+            .map_err(|_| AddressParseError::InvalidLength {
+                actual: bytes.len(),
+            })
             .map(Self)
     }
 }
@@ -253,20 +254,16 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct AddressParseError;
-
-impl std::fmt::Display for AddressParseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "Unable to parse Address (must be hex string of length {})",
-            2 * Address::LENGTH
-        )
-    }
+#[derive(Debug, thiserror::Error)]
+pub enum AddressParseError {
+    #[error("address must be hex string of length {}", Address::LENGTH * 2)]
+    FromHex(#[from] hex::FromHexError),
+    #[error(
+        "invalid address byte length: expected {}, got {actual}",
+        Address::LENGTH
+    )]
+    InvalidLength { actual: usize },
 }
-
-impl std::error::Error for AddressParseError {}
 
 #[cfg(feature = "schemars")]
 impl schemars::JsonSchema for Address {
