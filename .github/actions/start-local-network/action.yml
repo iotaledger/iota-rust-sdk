@@ -31,7 +31,7 @@ runs:
         nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --event schedule --branch develop --limit 1 --json startedAt --json databaseId -q '.[0]')
         database_id=$(echo $nightly | jq '.databaseId')
         started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
-        gh run download --repo iotaledger/iota $database_id -n "iota-nightly-$started_at-linux-arm64"
+        gh run download --repo iotaledger/iota $database_id -n "iota-nightly-$started_at-linux-x86_64"
         tar -zxvf "iota-nightly-$started_at-linux-arm64.tgz" ./iota
 
         # Uncomment when using a released build
