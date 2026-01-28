@@ -93,15 +93,7 @@ impl Digest {
 
     /// Returns the next digest in byte-increasing order.
     pub fn next_lexicographical(&self) -> Self {
-        let mut next_digest = *self;
-        for byte in next_digest.0.iter_mut().rev() {
-            let (new_byte, overflow) = byte.overflowing_add(1);
-            *byte = new_byte;
-            if !overflow {
-                break;
-            }
-        }
-        next_digest
+        Self(crate::next_lexicographical_array(&self.0))
     }
 }
 
