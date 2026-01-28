@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use super::Address;
+use super::{Address, address::AddressParseError};
 
 /// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 /// the IOTA blockchain.
@@ -33,6 +33,10 @@ impl ObjectId {
     pub const ZERO: Self = Self(Address::ZERO);
     pub const SYSTEM: Self = Self(Address::from_u16(5));
     pub const CLOCK: Self = Self(Address::from_u16(6));
+    pub const AUTHENTICATOR_STATE: Self = Self(Address::from_u16(7));
+    pub const RANDOMNESS_STATE: Self = Self(Address::from_u16(8));
+    pub const GENESIS_IOTA_BRIDGE: Self = Self(Address::from_u16(9));
+    pub const DENY_LIST: Self = Self(Address::from_u16(0x403));
 
     /// Generates a new ObjectId from the provided byte array.
     pub const fn new(bytes: [u8; Self::LENGTH]) -> Self {
@@ -44,17 +48,25 @@ impl ObjectId {
     }
 
     /// Parse an ObjectId from a hex string.
-    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, super::address::AddressParseError> {
+    pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_hex(hex).map(Self)
     }
 
+    pub const fn from_address(address: Address) -> Self {
+        Self(address)
+    }
+
+    pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
+        Address::from_bytes(bytes).map(Self)
+    }
+
     /// Returns the underlying byte array of an ObjectId.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0.into_bytes()
     }
 
     /// Returns a reference to the underlying byte array of an ObjectId.
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         self.0.bytes()
     }
 
@@ -79,6 +91,26 @@ impl ObjectId {
     pub fn to_short_string(&self, with_prefix: bool) -> String {
         self.0.to_short_string(with_prefix)
     }
+
+    /// Returns the next object id in byte-increasing order.
+    pub const fn next_lexicographical(&self) -> Self {
+        Self::new(crate::next_lexicographical_array(self.bytes()))
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn generate<R>(rng: R) -> Self
+    where
+        R: rand_core::RngCore + rand_core::CryptoRng,
+    {
+        Self::from_address(Address::generate(rng))
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
 }
 
 impl AsRef<[u8]> for ObjectId {
@@ -95,7 +127,7 @@ impl AsRef<[u8; 32]> for ObjectId {
 
 impl From<ObjectId> for [u8; 32] {
     fn from(object_id: ObjectId) -> Self {
-        object_id.into_inner()
+        object_id.into_bytes()
     }
 }
 
@@ -118,7 +150,7 @@ impl From<ObjectId> for Vec<u8> {
 }
 
 impl std::str::FromStr for ObjectId {
-    type Err = super::address::AddressParseError;
+    type Err = AddressParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Address::from_str(s).map(Self)
