@@ -32,7 +32,7 @@ runs:
         database_id=$(echo $nightly | jq '.databaseId')
         started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
         gh run download --repo iotaledger/iota $database_id -n "iota-nightly-$started_at-linux-arm64"
-        tar -zxvf "iota-nightly-$started_at-linux-arm64" ./iota
+        tar -zxvf "iota-nightly-$started_at-linux-arm64.tgz" ./iota
 
         # Uncomment when using a released build
         # ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
