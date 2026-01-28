@@ -1,0 +1,58 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+//! Dry run API implementation.
+
+use crate::{
+    error::Result,
+    graphql::{
+        client::GraphQLClient, output_types::DryRunResult, query_types::TransactionMetadata,
+    },
+    types::transaction::{Transaction, TransactionKind},
+};
+
+#[uniffi::export(async_runtime = "tokio")]
+impl GraphQLClient {
+    /// Dry run a `Transaction` and return the transaction effects and dry run
+    /// error (if any).
+    ///
+    /// `skipChecks` optional flag disables the usual verification checks that
+    /// prevent access to objects that are owned by addresses other than the
+    /// sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to false.
+    #[uniffi::method(default(skip_checks = false))]
+    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .dry_run_tx(&tx.0, skip_checks)
+            .await?
+            .into())
+    }
+
+    /// Dry run a `TransactionKind` and return the transaction effects and dry
+    /// run error (if any).
+    ///
+    /// `skipChecks` optional flag disables the usual verification checks that
+    /// prevent access to objects that are owned by addresses other than the
+    /// sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to false.
+    ///
+    /// `tx_meta` is the transaction metadata.
+    #[uniffi::method(default(skip_checks = false))]
+    pub async fn dry_run_tx_kind(
+        &self,
+        tx_kind: &TransactionKind,
+        tx_meta: TransactionMetadata,
+        skip_checks: bool,
+    ) -> Result<DryRunResult> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .dry_run_tx_kind(&tx_kind.0, skip_checks, tx_meta.into())
+            .await?
+            .into())
+    }
+}
