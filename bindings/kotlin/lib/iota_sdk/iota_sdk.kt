@@ -13626,7 +13626,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 63442.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865.toShort()) {
@@ -15704,6 +15704,11 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     
 
         
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
