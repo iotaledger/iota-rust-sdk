@@ -35,6 +35,8 @@ pub enum Error {
     MissingGasBudget,
     #[error("Missing gas price")]
     MissingGasPrice,
+    #[error("Missing transaction sender")]
+    MissingSender,
     #[error("Missing object kind for object {0}")]
     MissingObjectKind(ObjectId),
     #[error("Missing initial shared version for object {0}")]

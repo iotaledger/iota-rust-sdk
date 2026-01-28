@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
         validator.name.as_deref().unwrap_or("with no name")
     );
 
-    let mut builder = TransactionBuilder::new(my_address).with_client(client);
+    let mut builder = TransactionBuilder::new_with_sender(my_address).with_client(client);
 
     builder.stake(1000000000u64, validator.address.address);
 

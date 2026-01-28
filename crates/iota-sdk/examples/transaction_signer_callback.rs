@@ -14,6 +14,10 @@ struct AsyncSigner(Ed25519PrivateKey);
 impl TransactionSigner for AsyncSigner {
     type Error = SignatureError;
 
+    fn address(&self) -> Address {
+        self.0.public_key().derive_address()
+    }
+
     async fn sign(&self, transaction: &Transaction) -> Result<UserSignature, Self::Error> {
         self.0.sign_transaction(transaction)
     }
@@ -37,7 +41,7 @@ async fn main() -> Result<()> {
 
     let client = Client::new_localnet();
 
-    let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
+    let mut builder = TransactionBuilder::new().with_client(&client);
     builder.send_iota(recipient_address, amount);
 
     let signer = AsyncSigner(private_key);

@@ -53,8 +53,8 @@ impl TransactionBuilder {
 impl TransactionBuilder {
     /// Create a new transaction builder and initialize its elements to default.
     #[uniffi::constructor]
-    pub fn new(sender: &Address) -> Self {
-        Self(iota_sdk::transaction_builder::TransactionBuilder::new(**sender).into())
+    pub fn new() -> Self {
+        Self(iota_sdk::transaction_builder::TransactionBuilder::new().into())
     }
 
     pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
@@ -84,6 +84,14 @@ impl TransactionBuilder {
     pub fn gas_price(self: Arc<Self>, price: u64) -> Arc<Self> {
         self.write(|builder| {
             builder.gas_price(price);
+        });
+        self
+    }
+
+    /// Set the sender of the transaction.
+    pub fn sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
+        self.write(|builder| {
+            builder.sender(**sender);
         });
         self
     }

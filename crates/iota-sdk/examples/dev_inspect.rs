@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
 
     println!("Looking up name: {name}");
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client);
+    let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
 
     // Step 1: Get the shared registry object
     builder

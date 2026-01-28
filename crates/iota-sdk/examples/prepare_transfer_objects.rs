@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
         ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?,
     ];
 
-    let mut builder = TransactionBuilder::new(from_address).with_client(&client);
+    let mut builder = TransactionBuilder::new_with_sender(from_address).with_client(&client);
 
     builder.transfer_objects(to_address, objs_to_transfer);
 

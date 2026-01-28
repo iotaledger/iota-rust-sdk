@@ -56,7 +56,7 @@ pub struct TransactionBuilder<C = (), L = ()> {
 }
 
 /// Transaction data used to build a [`Transaction`].
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 #[repr(C)]
 pub struct TransactionBuildData {
     /// The inputs to the transaction.
@@ -69,7 +69,7 @@ pub struct TransactionBuildData {
     /// The gas price for the transaction.
     gas_price: Option<u64>,
     /// The sender of the transaction.
-    sender: Address,
+    sender: Option<Address>,
     /// The sponsor of the transaction. If None, the sender is also the sponsor.
     sponsor: Option<Address>,
     /// The expiration of the transaction. The default value of this type is no
@@ -135,6 +135,12 @@ impl TransactionBuildData {
         self
     }
 
+    /// Set the sender.
+    pub fn sender(&mut self, sender: Address) -> &mut Self {
+        self.sender = Some(sender);
+        self
+    }
+
     /// Set the sponsor. Optional.
     pub fn sponsor(&mut self, sponsor: Address) -> &mut Self {
         self.sponsor = Some(sponsor);
@@ -188,22 +194,20 @@ impl TransactionBuildData {
 
 impl TransactionBuilder {
     /// Instantiate a new PTB.
-    pub fn new(sender: Address) -> Self {
+    pub fn new() -> Self {
         TransactionBuilder {
-            data: TransactionBuildData {
-                inputs: Default::default(),
-                commands: Default::default(),
-                gas_budget: Default::default(),
-                gas_price: Default::default(),
-                sender,
-                sponsor: Default::default(),
-                expiration: Default::default(),
-                assigned_results: Default::default(),
-                gas_station_data: Default::default(),
-            },
+            data: Default::default(),
             client: (),
             last_command: PhantomData,
         }
+    }
+
+    /// Instantiate a new PTB with the given sender.
+    pub fn new_with_sender(sender: Address) -> Self {
+        let mut builder = Self::new();
+        builder.sender(sender);
+
+        builder
     }
 
     /// Set the client to enable automatic object resolution.
@@ -262,6 +266,15 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Set the gas price. Optional.
     pub fn gas_price(&mut self, gas_price: u64) -> &mut Self {
         self.data.gas_price(gas_price);
+        self
+    }
+
+    /// Set the sender.
+    ///
+    /// If no sender is set, it will be derived from the signer during
+    /// transaction finalization.
+    pub fn sender(&mut self, sender: Address) -> &mut Self {
+        self.data.sender(sender);
         self
     }
 
@@ -348,7 +361,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     ///
     /// # builder
     /// #     .split_coins(
@@ -418,7 +431,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let to_address =
     ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
     ///
-    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(from_address).with_client(client);
     /// builder.send_iota(to_address, 5000000000u64);
     /// let txn = builder.finish().await?;
     /// # Ok(())
@@ -478,7 +491,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let coin =
     ///     ObjectId::from_hex("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
     ///
-    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(from_address).with_client(client);
     /// builder.send_coins([coin], to_address, 50000000000u64);
     /// let txn = builder.finish().await?;
     /// #   Ok(())
@@ -552,7 +565,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let coin_1 =
     ///     ObjectId::from_hex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699")?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     /// builder.merge_coins(coin_0, [coin_1]);
     /// let txn = builder.finish().await?;
     /// # Ok(())
@@ -589,7 +602,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let coin =
     ///     ObjectId::from_hex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     /// builder
     ///     .split_coins(coin, [1000u64, 2000, 3000])
     ///     .assign(("coin1", "coin2", "coin3"))
@@ -665,7 +678,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///     .address
     ///     .address;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     /// builder.stake(1000000000u64, validator_address);
     /// let txn = builder.finish().await?;
     /// # Ok(())
@@ -700,7 +713,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let staked_iota =
     ///     ObjectId::from_hex("0x00030af99878926cd11f8bdf4d2f67c4aa753a4afc249d776c8ed2cc88d7b8d5")?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     /// builder.unstake(staked_iota);
     /// let txn = builder.finish().await?;
     /// # Ok(())
@@ -735,7 +748,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let client = iota_graphql_client::Client::new_devnet();
     /// let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     ///
     /// let address1 =
     ///     Address::from_str("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")?;
@@ -782,7 +795,7 @@ impl<L> TransactionBuilder<(), L> {
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender);
     ///
     /// let gas_coin1 = ObjectReference {
     ///     object_id: ObjectId::from_str(
@@ -856,15 +869,16 @@ impl<L> TransactionBuilder<(), L> {
             .into_iter()
             .map(|c| c.resolve(&input_map))
             .collect();
+        let sender = self.data.sender.ok_or(Error::MissingSender)?;
         Ok(TransactionV1 {
             kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
                 inputs,
                 commands,
             }),
-            sender: self.data.sender,
+            sender,
             gas_payment: GasPayment {
                 objects: gas,
-                owner: self.data.sponsor.unwrap_or(self.data.sender),
+                owner: self.data.sponsor.unwrap_or(sender),
                 price,
                 budget: self.data.gas_budget.unwrap_or(0),
             },
@@ -886,6 +900,7 @@ impl<L> TransactionBuilder<(), L> {
         let gas_station_data = self.data.gas_station_data.take();
 
         Ok(if let Some(gas_station_data) = gas_station_data {
+            self.data.sender = Some(signer.address());
             let mut txn = self.finish()?;
             gas_station_data.execute_txn_json(&mut txn, signer).await?
         } else {
@@ -926,7 +941,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     /// let sender =
     ///     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
     ///
-    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
     ///
     /// let gas_coin1 =
     ///     ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
@@ -952,6 +967,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
+
+        // Ensure transaction sender has been set before this call.
+        let Some(sender) = self.data.sender else {
+            return Err(Error::MissingSender);
+        };
 
         if default_gas && !self.data.inputs.values().any(|i| i.is_gas) {
             // Some commands have arguments which cannot safely be replaced by
@@ -979,7 +999,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .client
                 .objects(
                     Some(StructTag::new_gas_coin().into()),
-                    Some(self.data.sponsor.unwrap_or(self.data.sender)),
+                    Some(self.data.sponsor.unwrap_or(sender)),
                     None,
                     true,
                     None,
@@ -1099,10 +1119,10 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 inputs,
                 commands,
             }),
-            sender: self.data.sender,
+            sender,
             gas_payment: GasPayment {
                 objects: gas,
-                owner: self.data.sponsor.unwrap_or(self.data.sender),
+                owner: self.data.sponsor.unwrap_or(sender),
                 price,
                 budget: self.data.gas_budget.unwrap_or(0),
             },
@@ -1165,6 +1185,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
+        self.sender(signer.address());
         let mut txn = self.finish_internal().await?;
 
         Ok(if let Some(gas_station_data) = gas_station_data {
@@ -1199,6 +1220,8 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
+        self.sender(signer.address());
+        self.sponsor(sponsor_signer.address());
         let txn = self.finish_internal().await?;
 
         let signatures = vec![

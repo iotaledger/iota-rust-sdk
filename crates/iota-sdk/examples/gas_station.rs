@@ -14,9 +14,8 @@ async fn main() -> Result<()> {
     let gas_station_url = reqwest::Url::parse("http://0.0.0.0:9527")?;
     let gas_station_auth_token = "test";
     let keypair = Ed25519PrivateKey::generate(rand::thread_rng());
-    let sender = keypair.public_key().derive_address();
 
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = TransactionBuilder::new().with_client(&client);
 
     builder
         .move_call(Address::STD, "u64", "sqrt")

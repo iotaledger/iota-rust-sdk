@@ -17,7 +17,8 @@ async fn main() -> Result<()> {
     let sender_address =
         Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
 
-    let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
+    let mut builder =
+        TransactionBuilder::new_with_sender(sender_address).with_client(client.clone());
     builder
         .move_call(Address::STD, "u64", "max")
         .arguments((0u64, 1000u64))

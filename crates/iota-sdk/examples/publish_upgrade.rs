@@ -61,7 +61,7 @@ async fn main() -> Result<()> {
     let client = Client::new_localnet();
 
     // Build the `publish` PTB
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client.clone());
     builder
         // Publish the package and receive the upgrade cap
         .publish(package_data.clone())
@@ -125,7 +125,7 @@ async fn main() -> Result<()> {
     };
 
     // Build the `upgrade` PTB
-    let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
+    let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client.clone());
     builder
         // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
         // ticket

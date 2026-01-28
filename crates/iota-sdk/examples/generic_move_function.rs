@@ -12,7 +12,7 @@ async fn main() -> Result<()> {
 
     let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client);
+    let mut builder = TransactionBuilder::new_with_sender(sender).with_client(client);
 
     let address1 =
         Address::from_str("0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e")?;

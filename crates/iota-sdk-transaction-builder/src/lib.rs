@@ -35,7 +35,7 @@
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
-//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_devnet());
+//! let mut builder = TransactionBuilder::new_with_sender(sender).with_client(Client::new_devnet());
 //!
 //! let coin =
 //!     ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
@@ -59,7 +59,7 @@
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
-//! let mut builder = TransactionBuilder::new(sender);
+//! let mut builder = TransactionBuilder::new_with_sender(sender);
 //!
 //! let coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
@@ -358,7 +358,7 @@ mod tests {
     ) {
         let (address, pk) = helper_address_pk();
         let client = Client::new_localnet();
-        let mut tx = TransactionBuilder::new(address).with_client(client.clone());
+        let mut tx = TransactionBuilder::new().with_client(client.clone());
         let coins = FaucetClient::new_localnet()
             .request_and_wait(address)
             .await
@@ -394,7 +394,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_finish() {
-        let mut tx = TransactionBuilder::new(
+        let mut tx = TransactionBuilder::new();
+        tx.sender(
             "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
                 .parse()
                 .unwrap(),
@@ -586,7 +587,7 @@ mod tests {
         check_effects_status_success(effects).await;
 
         let client = Client::new_localnet();
-        let mut tx = TransactionBuilder::new(address).with_client(&client);
+        let mut tx = TransactionBuilder::new().with_client(&client);
         let mut upgrade_cap = None;
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();

@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
         .object_ref();
     let gas_price = client.reference_gas_price(None).await?.unwrap_or(100);
 
-    let mut builder = TransactionBuilder::new(from_address);
+    let mut builder = TransactionBuilder::new_with_sender(from_address);
 
     builder
         .transfer_objects(to_address, objs_to_transfer)

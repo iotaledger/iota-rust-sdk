@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
         ),
     ];
 
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = TransactionBuilder::new_with_sender(sender).with_client(&client);
 
     // Extract amounts from recipients
     let amounts: Vec<u64> = recipients.iter().map(|(_, amt)| *amt).collect();
