@@ -266,7 +266,12 @@ impl std::str::FromStr for Address {
     type Err = AddressParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_short_hex(s)
+        // If the string is not prefixed, we only accept full-length hex
+        if s.starts_with("0x") {
+            Self::from_prefixed_short_hex(s)
+        } else {
+            Self::from_hex(s)
+        }
     }
 }
 
