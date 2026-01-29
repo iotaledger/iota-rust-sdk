@@ -4005,6 +4005,14 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6060,6 +6068,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_random(
@@ -6387,6 +6399,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
 ): Short
@@ -6839,6 +6855,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_framework(uniffi_out_err: UniffiR
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8321,6 +8341,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(`digest`: Pointer,`cou
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -13800,6 +13824,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex() != 61183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex() != 62018.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14290,6 +14320,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex() != 58728.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex() != 12289.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
@@ -15969,6 +16005,38 @@ open class Address: Disposable, AutoCloseable, AddressInterface
             return FfiConverterTypeAddress.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedShortHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
@@ -40131,6 +40199,38 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
             return FfiConverterTypeObjectId.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedShortHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
