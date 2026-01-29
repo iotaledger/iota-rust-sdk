@@ -37,7 +37,7 @@ runs:
         # Uncomment when using a released build
         # ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
         # download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
-        # echo "Downloading testnet binary from $download_url"
+        # echo "Downloading binary from $download_url"
         # wget -q $download_url -O iota.tgz
         # tar -zxvf iota.tgz ./iota
 
