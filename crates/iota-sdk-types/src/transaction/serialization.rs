@@ -409,6 +409,7 @@ mod input_argument {
             value: Vec<u8>,
         },
         ImmutableOrOwned(ObjectReference),
+        #[serde(rename_all = "camelCase")]
         Shared {
             object_id: ObjectId,
             #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -1109,7 +1110,7 @@ mod tests {
                 Input::ImmutableOrOwned(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
                 serde_json::json!({
                   "type": "immutable_or_owned",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "objectId": "0x0000000000000000000000000000000000000000000000000000000000000000",
                   "version": "1",
                   "digest": "11111111111111111111111111111111"
                 }),
@@ -1122,8 +1123,8 @@ mod tests {
                 },
                 serde_json::json!({
                   "type": "shared",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "initial_shared_version": "1",
+                  "objectId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "initialSharedVersion": "1",
                   "mutable": true
                 }),
             ),
@@ -1131,7 +1132,7 @@ mod tests {
                 Input::Receiving(ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO)),
                 serde_json::json!({
                   "type": "receiving",
-                  "object_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  "objectId": "0x0000000000000000000000000000000000000000000000000000000000000000",
                   "version": "1",
                   "digest": "11111111111111111111111111111111"
                 }),
