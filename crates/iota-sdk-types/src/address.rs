@@ -91,6 +91,13 @@ impl Address {
         address
     }
 
+    /// Checks if the address is one of the system package addresses.
+    /// The system packages are:
+    /// - STD
+    /// - FRAMEWORK
+    /// - SYSTEM
+    /// - GENESIS_BRIDGE
+    /// - STARDUST
     pub fn is_system_package(&self) -> bool {
         [
             Self::STD,

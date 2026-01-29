@@ -49,6 +49,24 @@ impl ObjectId {
         Self(Address::from_u16(suffix))
     }
 
+    /// Checks if the object id is one of the system package ids.
+    /// The system packages are:
+    /// - STD
+    /// - FRAMEWORK
+    /// - SYSTEM
+    /// - GENESIS_BRIDGE
+    /// - STARDUST
+    pub fn is_system_package(&self) -> bool {
+        [
+            Address::STD,
+            Address::FRAMEWORK,
+            Address::SYSTEM,
+            Address::GENESIS_BRIDGE,
+            Address::STARDUST,
+        ]
+        .contains(self.as_address())
+    }
+
     pub fn to_hex(&self) -> String {
         self.to_string()
     }
