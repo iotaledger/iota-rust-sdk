@@ -16,13 +16,13 @@ use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let from_address = Address::from(setup_account().await?);
+    let account_address = Address::from(setup_account().await?);
     let to_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 
     // Fund the sender address for gas payment
     if FaucetClient::new_localnet()
-        .request_and_wait(from_address)
+        .request_and_wait(account_address)
         .await?
         .is_none()
     {
@@ -31,10 +31,10 @@ async fn main() -> Result<()> {
 
     let client = Client::new_localnet();
 
-    let mut builder = TransactionBuilder::new(from_address).with_client(&client);
+    let mut builder = TransactionBuilder::new(account_address).with_client(&client);
     builder.send_iota(to_address, 5000000000u64);
 
-    let move_authenticator = MoveAuthenticatorBuilder::new(from_address.into())
+    let move_authenticator = MoveAuthenticatorBuilder::new(account_address.into())
         .call_args(("hello", Shared(ObjectId::CLOCK)))
         .finish(&client)
         .await?;
