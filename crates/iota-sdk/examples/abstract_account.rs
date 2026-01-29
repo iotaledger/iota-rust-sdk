@@ -16,7 +16,8 @@ use rand::rngs::OsRng;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let account_address = Address::from(setup_account().await?);
+    let client = Client::new_localnet();
+    let account_address = Address::from(setup_account(&client).await?);
     let to_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 
@@ -28,8 +29,6 @@ async fn main() -> Result<()> {
     {
         bail!("Failed to request coins from faucet");
     };
-
-    let client = Client::new_localnet();
 
     let mut builder = TransactionBuilder::new(account_address).with_client(&client);
     builder.send_iota(to_address, 5000000000u64);
@@ -48,7 +47,7 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-async fn setup_account() -> Result<ObjectId> {
+async fn setup_account(client: &Client) -> Result<ObjectId> {
     // Parse the precompiled move package
     let package_data = serde_json::from_str::<MovePackageData>(PRECOMPILED_PACKAGE)?;
 
@@ -64,8 +63,6 @@ async fn setup_account() -> Result<ObjectId> {
     {
         bail!("Failed to request coins from faucet");
     };
-
-    let client = Client::new_localnet();
 
     // Build the `publish` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(&client);

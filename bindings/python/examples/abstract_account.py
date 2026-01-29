@@ -7,7 +7,8 @@ import asyncio
 
 
 async def main():
-    account_id = await setup_account()
+    client = GraphQlClient.new_localnet()
+    account_id = await setup_account(client)
     from_address = account_id.to_address()
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
@@ -18,8 +19,6 @@ async def main():
     faucet_receipt = await faucet.request_and_wait(from_address)
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
-
-    client = GraphQlClient.new_localnet()
 
     builder = TransactionBuilder(from_address).with_client(client)
     builder.send_iota(to_address, PtbArgument.u64(5000000000))
@@ -36,7 +35,7 @@ async def main():
     print(f"Sending IOTA via abstract account: {effects.as_v1().status}")
 
 
-async def setup_account() -> ObjectId:
+async def setup_account(client: GraphQlClient) -> ObjectId:
     # Parse the precompiled move package
     package_data = MovePackageData.from_json(PRECOMPILED_PACKAGE)
 
@@ -49,8 +48,6 @@ async def setup_account() -> ObjectId:
     faucet_receipt = await faucet.request_and_wait(sender)
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
-
-    client = GraphQlClient.new_localnet()
 
     # Build the `publish` PTB
     builder = TransactionBuilder(sender).with_client(client)

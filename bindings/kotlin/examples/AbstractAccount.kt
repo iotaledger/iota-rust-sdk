@@ -7,15 +7,14 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val accountId = setupAccount()
+        val client = GraphQlClient.newLocalnet()
+        val accountId = setupAccount(client)
         val fromAddress = accountId.toAddress()
         val toAddress = Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
         // Fund the sender address for gas payment
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWait(fromAddress) ?: throw Exception("Failed to request coins from faucet")
-
-        val client = GraphQlClient.newLocalnet()
 
         val builder = TransactionBuilder(fromAddress).withClient(client)
         builder.sendIota(toAddress, PtbArgument.u64(5000000000uL))
@@ -39,7 +38,7 @@ fun main() = runBlocking {
     }
 }
 
-suspend fun setupAccount(): ObjectId {
+suspend fun setupAccount(client: GraphQlClient): ObjectId {
     // Parse the precompiled move package
     val packageData = MovePackageData.fromJson(PRECOMPILED_AA_PACKAGE)
 
@@ -50,8 +49,6 @@ suspend fun setupAccount(): ObjectId {
     // Fund the sender address for gas payment
     val faucet = FaucetClient.newLocalnet()
     faucet.requestAndWait(sender) ?: throw Exception("Failed to request coins from faucet")
-
-    val client = GraphQlClient.newLocalnet()
 
     // Build the `publish` PTB
     var builder = TransactionBuilder(sender).withClient(client)

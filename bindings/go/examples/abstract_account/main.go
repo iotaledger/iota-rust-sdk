@@ -12,7 +12,8 @@ import (
 )
 
 func main() {
-	accountId, err := setupAccount()
+	client := iota_sdk.GraphQlClientNewLocalnet()
+	accountId, err := setupAccount(client)
 	if err != nil {
 		log.Fatalf("Failed to setup account: %v", err)
 	}
@@ -29,8 +30,6 @@ func main() {
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
-
-	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
 	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
@@ -57,7 +56,7 @@ func main() {
 	fmt.Printf("Sending IOTA via abstract account: %v\n", (*effects).AsV1().Status)
 }
 
-func setupAccount() (*iota_sdk.ObjectId, error) {
+func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	// Parse the precompiled move package
 	packageData, err := iota_sdk.MovePackageDataFromJson(PRECOMPILED_PACKAGE)
 	if err != nil {
@@ -74,8 +73,6 @@ func setupAccount() (*iota_sdk.ObjectId, error) {
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		return nil, fmt.Errorf("failed to request coins from faucet: %w", err)
 	}
-
-	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	// Build the `publish` PTB
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
