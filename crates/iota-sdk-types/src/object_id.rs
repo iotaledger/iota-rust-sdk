@@ -67,8 +67,28 @@ impl ObjectId {
         .contains(self.as_address())
     }
 
+    /// Returns the string representation of this object id in hex format with
+    /// `0x` prefix.
     pub fn to_hex(&self) -> String {
-        self.to_string()
+        self.0.to_hex()
+    }
+
+    /// Returns the string representation of this object id in hex format
+    /// without `0x` prefix.
+    pub fn to_raw_hex(&self) -> String {
+        self.0.to_raw_hex()
+    }
+
+    /// Returns the shortest possible string representation of the object ID
+    /// (i.e. with leading zeroes trimmed).
+    pub fn to_short_hex(&self) -> String {
+        self.0.to_short_hex()
+    }
+
+    /// Returns the shortest possible string representation of the object id
+    /// (i.e. with leading zeroes trimmed), without `0x` prefix.
+    pub fn to_raw_short_hex(&self) -> String {
+        self.0.to_raw_short_hex()
     }
 
     /// Parses an ObjectId from a full-length hex string (64 hex characters),
@@ -117,12 +137,6 @@ impl ObjectId {
     /// canonical display, with or without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
         self.0.to_canonical_string(with_prefix)
-    }
-
-    /// Returns the shortest possible string representation of the object ID
-    /// (i.e. with leading zeroes trimmed).
-    pub fn to_short_string(&self, with_prefix: bool) -> String {
-        self.0.to_short_string(with_prefix)
     }
 
     /// Returns the next object id in byte-increasing order.

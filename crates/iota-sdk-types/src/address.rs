@@ -189,8 +189,31 @@ impl Address {
         .map_err(AddressParseError::FromHex)
     }
 
+    /// Returns the string representation of this address in hex format with
+    /// `0x` prefix.
     pub fn to_hex(&self) -> String {
-        self.to_string()
+        self.to_canonical_string(true)
+    }
+
+    /// Returns the string representation of this address in hex format without
+    /// `0x` prefix.
+    pub fn to_raw_hex(&self) -> String {
+        self.to_canonical_string(false)
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed).
+    pub fn to_short_hex(&self) -> String {
+        format!("0x{}", self.to_raw_short_hex())
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed), without `0x` prefix.
+    pub fn to_raw_short_hex(&self) -> String {
+        let full_str = self.to_canonical_string(false);
+        let trimmed = full_str.trim_start_matches('0');
+        let hex_str = if trimmed.is_empty() { "0" } else { trimmed };
+        hex_str.to_owned()
     }
 
     /// Returns the string representation of this address using the
@@ -201,19 +224,6 @@ impl Address {
             format!("0x{hex_str}")
         } else {
             hex_str
-        }
-    }
-
-    /// Returns the shortest possible string representation of the address (i.e.
-    /// with leading zeroes trimmed).
-    pub fn to_short_string(&self, with_prefix: bool) -> String {
-        let full_str = self.to_canonical_string(false);
-        let trimmed = full_str.trim_start_matches('0');
-        let hex_str = if trimmed.is_empty() { "0" } else { trimmed };
-        if with_prefix {
-            format!("0x{hex_str}")
-        } else {
-            hex_str.to_owned()
         }
     }
 
@@ -478,12 +488,12 @@ mod tests {
     #[test]
     fn to_short_string_formats() {
         let address = Address::from_short_hex("0x2").unwrap();
-        assert_eq!(address.to_short_string(true), "0x2");
-        assert_eq!(address.to_short_string(false), "2");
+        assert_eq!(address.to_short_hex(), "0x2");
+        assert_eq!(address.to_raw_short_hex(), "2");
 
         let zero = Address::ZERO;
-        assert_eq!(zero.to_short_string(true), "0x0");
-        assert_eq!(zero.to_short_string(false), "0");
+        assert_eq!(zero.to_short_hex(), "0x0");
+        assert_eq!(zero.to_raw_short_hex(), "0");
     }
 
     #[test]

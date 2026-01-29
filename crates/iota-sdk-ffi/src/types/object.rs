@@ -54,9 +54,20 @@ impl ObjectId {
         )))
     }
 
+    /// Parses an ObjectId from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_hex(hex)?))
+    }
+
+    /// Parses an ObjectId from a hex string, with or without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    #[uniffi::constructor]
+    pub fn from_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::ObjectId::from_short_hex(hex)?))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -65,10 +76,6 @@ impl ObjectId {
 
     pub fn to_address(&self) -> Address {
         (*self.0.as_address()).into()
-    }
-
-    pub fn to_hex(&self) -> String {
-        self.0.to_hex()
     }
 
     /// Create an ObjectId from a transaction digest and the number of objects
@@ -93,10 +100,28 @@ impl ObjectId {
         self.0.to_canonical_string(with_prefix)
     }
 
+    /// Returns the string representation of this object id in hex format with
+    /// `0x` prefix.
+    pub fn to_hex(&self) -> String {
+        self.0.to_hex()
+    }
+
+    /// Returns the string representation of this object id in hex format
+    /// without `0x` prefix.
+    pub fn to_raw_hex(&self) -> String {
+        self.0.to_raw_hex()
+    }
+
     /// Returns the shortest possible string representation of the object ID
     /// (i.e. with leading zeroes trimmed).
-    pub fn to_short_string(&self, with_prefix: bool) -> String {
-        self.0.to_short_string(with_prefix)
+    pub fn to_short_hex(&self) -> String {
+        self.0.to_short_hex()
+    }
+
+    /// Returns the shortest possible string representation of the object id
+    /// (i.e. with leading zeroes trimmed), without `0x` prefix.
+    pub fn to_raw_short_hex(&self) -> String {
+        self.0.to_raw_short_hex()
     }
 }
 
