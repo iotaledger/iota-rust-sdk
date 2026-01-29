@@ -66,11 +66,19 @@ impl Address {
     }
 
     #[uniffi::constructor]
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    pub fn from_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
+    }
+
+    #[uniffi::constructor]
     /// Parses an Address from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
-    pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
+    pub fn from_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_short_hex(hex)?))
     }
 
     #[uniffi::constructor]
