@@ -32,6 +32,11 @@ impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);
     pub const MAX: Self = Self(Address::MAX);
+    pub const STD_PACKAGE: Self = Self(Address::STD);
+    pub const FRAMEWORK_PACKAGE: Self = Self(Address::FRAMEWORK);
+    pub const SYSTEM_PACKAGE: Self = Self(Address::SYSTEM);
+    pub const GENESIS_BRIDGE_PACKAGE: Self = Self(Address::GENESIS_BRIDGE);
+    pub const STARDUST_PACKAGE: Self = Self(Address::STARDUST);
     pub const SYSTEM: Self = Self::from_u16(5);
     pub const CLOCK: Self = Self::from_u16(6);
     pub const AUTHENTICATOR_STATE: Self = Self::from_u16(7);
@@ -58,13 +63,13 @@ impl ObjectId {
     /// - STARDUST
     pub fn is_system_package(&self) -> bool {
         [
-            Address::STD,
-            Address::FRAMEWORK,
-            Address::SYSTEM,
-            Address::GENESIS_BRIDGE,
-            Address::STARDUST,
+            Self::STD_PACKAGE,
+            Self::FRAMEWORK_PACKAGE,
+            Self::SYSTEM_PACKAGE,
+            Self::GENESIS_BRIDGE_PACKAGE,
+            Self::STARDUST_PACKAGE,
         ]
-        .contains(self.as_address())
+        .contains(self)
     }
 
     /// Returns the string representation of this object id in hex format with
