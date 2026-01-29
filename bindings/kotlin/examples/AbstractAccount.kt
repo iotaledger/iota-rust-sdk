@@ -132,5 +132,44 @@ suspend fun setupAccount(): ObjectId {
     return accountId
 }
 
-// The package below, compiled and exported using --dump-bytecode-as-base64
+// The package below, compiled and exported using `iota move build --dump-bytecode-as-base64`
 const val PRECOMPILED_AA_PACKAGE = """{"modules":["oRzrCwYAAAALAQAUAhQmAzorBGUGBWtPB7oBwAII+gNgBtoECRDjBCoKjQULDJgFQgAJAgkCCwINAg4CFgIXAhoCGwEKAAEMAAAAAgACAgIAAwMHAQgBBAQIAAUIBAAGBQgACAcCAAkGBwAAEwABAAAUAgEAAAwDAQABDwsBAQgDEAkKAQgFFQQFAAcYBwEBDAkZDA0ABgYEBgMGAggBBwgHAAQIAAYIBggICAgFBggACAgGCAQGCAIGCAcBBwgHAQgFAQgAAQkAAQsDAQgAAwYIBggICAgBCwMBCQACCQALAwEJAAEKAgEICAdBQ0NPVU5UB0FjY291bnQLQXV0aENvbnRleHQaQXV0aGVudGljYXRvckZ1bmN0aW9uUmVmVjEFQ2xvY2sRUGFja2FnZU1ldGFkYXRhVjEGU3RyaW5nCVR4Q29udGV4dANVSUQHYWNjb3VudAVhc2NpaQxhdXRoX2NvbnRleHQMYXV0aGVudGljYXRlFmF1dGhlbnRpY2F0b3JfZnVuY3Rpb24FY2xvY2sRY3JlYXRlX2FjY291bnRfdjEbY3JlYXRlX2F1dGhfZnVuY3Rpb25fcmVmX3YxC2R1bW15X2ZpZWxkAmlkBGluaXQJbGlua19hdXRoA25ldwZvYmplY3QQcGFja2FnZV9tZXRhZGF0YRNwdWJsaWNfc2hhcmVfb2JqZWN0BnN0cmluZwh0cmFuc2Zlcgp0eF9jb250ZXh0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCgIGBWhlbGxvDmlvdGE6Om1ldGFkYXRhGgEAAAAAAAAAEQEMYXV0aGVudGljYXRlAQABAAIBEggFAQIBEQEAAAAAAQULAREFEgA4AAIBAQAACAkLAQsCCwM4AQwECwALBDgCAgIBAAABCQsBBwARByEEBgUIBgAAAAAAAAAAJwIA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[236,68,86,252,91,28,224,206,146,112,120,93,47,52,14,168,169,132,252,75,45,104,10,116,171,91,155,100,66,111,66,147]}"""
+
+@Suppress("unused")
+const val PACKAGE = """
+module account::account;
+
+use iota::package_metadata::PackageMetadataV1;
+use iota::account;
+use iota::authenticator_function;
+
+public struct Account has key, store {
+    id: UID,
+}
+
+public struct ACCOUNT has drop {}
+
+fun init(_otw: ACCOUNT, ctx: &mut TxContext) {
+    // Shares the account object, anyone can claim it by calling the link_auth function
+    transfer::public_share_object(Account {
+        id: object::new(ctx),
+    });
+}
+
+public fun link_auth(account: Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
+    let authenticator = authenticator_function::create_auth_function_ref_v1<Account>(package, module_name, function_name);
+    account::create_account_v1<Account>(account, authenticator);
+}
+
+/// An unsecure example authenticator function that checks if the provided message is "hello".
+#[authenticator]
+public fun authenticate(
+    _account: &Account,
+    msg: std::ascii::String,
+    _clock: &iota::clock::Clock,
+    _auth_ctx: &iota::auth_context::AuthContext,
+    _ctx: &TxContext,
+) {
+    assert!(msg == std::ascii::string(b"hello"), 0);
+}
+"""
