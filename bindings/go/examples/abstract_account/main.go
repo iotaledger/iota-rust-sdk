@@ -81,18 +81,10 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	// Transfer the upgrade cap to the sender address
 	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 
-	tx, err := builder.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
-		return nil, fmt.Errorf("failed to finish transaction: %w", err)
-	}
-
 	// Sign and execute the transaction (publish the package)
-	sig, err := privateKey.SignTransaction(tx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to sign transaction: %w", err)
-	}
+	signer := iota_sdk.TransactionSignerFromEd25519(privateKey)
 	waitFor := iota_sdk.WaitForTxFinalized
-	effects, err := client.ExecuteTx([]*iota_sdk.UserSignature{sig}, tx, &waitFor)
+	effects, err := builder.Execute(signer, &waitFor)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
@@ -165,17 +157,8 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 		nil,
 	)
 
-	tx, err = builder.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
-		return nil, fmt.Errorf("failed to finish transaction: %w", err)
-	}
-
 	// Sign and execute the transaction (link the authenticator)
-	sig, err = privateKey.SignTransaction(tx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to sign transaction: %w", err)
-	}
-	effects, err = client.ExecuteTx([]*iota_sdk.UserSignature{sig}, tx, &waitFor)
+	effects, err = builder.Execute(signer, &waitFor)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}

@@ -57,11 +57,9 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     // Transfer the upgrade cap to the sender address
     builder.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
 
-    var tx = builder.finish()
-
     // Sign and execute the transaction (publish the package)
-    var sig = privateKey.signTransaction(tx)
-    var effects = client.executeTx(listOf(sig), tx, WaitForTx.FINALIZED)
+    val signer = TransactionSigner.fromEd25519(privateKey)
+    var effects = builder.execute(signer, WaitForTx.FINALIZED)
 
     println("Publishing package: ${effects.asV1().status}\n")
 
@@ -118,11 +116,8 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
         )
     )
 
-    tx = builder.finish()
-
     // Sign and execute the transaction (link the authenticator)
-    sig = privateKey.signTransaction(tx)
-    effects = client.executeTx(listOf(sig), tx, WaitForTx.FINALIZED)
+    effects = builder.execute(signer, WaitForTx.FINALIZED)
 
     println("Linking account to authenticate method: ${effects.asV1().status}\n")
 

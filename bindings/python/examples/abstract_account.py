@@ -57,9 +57,8 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
 
     # Sign and execute the transaction (publish the package)
-    tx = await builder.finish()
-    sig = private_key.sign_transaction(tx)
-    effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
+    signer = TransactionSigner.from_ed25519(private_key)
+    effects = await builder.execute(signer, WaitForTx.FINALIZED)
 
     print(f"Publishing package: {effects.as_v1().status}\n")
 
@@ -111,9 +110,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     )
 
     # Sign and execute the transaction (link the authenticator)
-    tx = await builder.finish()
-    sig = private_key.sign_transaction(tx)
-    effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
+    effects = await builder.execute(signer, WaitForTx.FINALIZED)
 
     print(f"Linking account to authenticate method: {effects.as_v1().status}\n")
 
