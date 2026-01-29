@@ -31,6 +31,7 @@ pub struct ObjectId(pub(crate) Address);
 impl ObjectId {
     pub const LENGTH: usize = Address::LENGTH;
     pub const ZERO: Self = Self(Address::ZERO);
+    pub const MAX: Self = Self(Address::MAX);
     pub const SYSTEM: Self = Self(Address::from_u16(5));
     pub const CLOCK: Self = Self(Address::from_u16(6));
     pub const AUTHENTICATOR_STATE: Self = Self(Address::from_u16(7));
