@@ -3991,6 +3991,20 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4894,7 +4908,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_string(
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(
 ): Short
@@ -5514,7 +5532,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
 ): Short
@@ -6038,6 +6060,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_std(
@@ -6242,6 +6266,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex(
@@ -6361,6 +6387,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
 ): Short
@@ -6812,6 +6840,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.By
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_std(uniffi_out_err: UniffiRustCallStatus, 
@@ -6826,7 +6856,11 @@ fun uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(`ptr`: Pointer,`wi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_address_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7814,6 +7848,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address(`address`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -8286,6 +8322,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustCallStatus, 
@@ -8300,7 +8338,11 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(`ptr`: Pointer,`w
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -12027,10 +12069,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 2770.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex() != 32277.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex() != 57104.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex() != 9559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358.toShort()) {
@@ -12957,10 +13005,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex() != 56907.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex() != 17836.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
@@ -13743,7 +13797,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074.toShort()) {
@@ -14052,6 +14109,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex() != 35587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14229,7 +14289,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
@@ -15593,13 +15656,29 @@ public interface AddressInterface {
      */
     fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+    fun `toRawHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+    fun `toRawShortHex`(): kotlin.String
     
     /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    fun `toShortHex`(): kotlin.String
     
     companion object
 }
@@ -15756,7 +15835,11 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
-    override fun `toHex`(): kotlin.String {
+    
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -15770,14 +15853,46 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     /**
-     * Returns the shortest possible string representation of the address (i.e.
-     * with leading zeroes trimmed).
-     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */override fun `toRawHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
-        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */override fun `toRawShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed).
+     */override fun `toShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(
+        it, _status)
 }
     }
     )
@@ -15846,14 +15961,30 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
         
     /**
-     * Parses an Address from a hex string, with or without a `0x` prefix.
-     * The string can be of variable length; if it's shorter than 64 hex
-     * characters, it will be left-padded with `0`s.
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
      */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromShortHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
@@ -32636,6 +32767,17 @@ open class MoveArg: Disposable, AutoCloseable, MoveArgInterface
     }
     
 
+        
+    @Throws(SdkFfiException::class) fun `addressFromShortHex`(`hex`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
          fun `addressVec`(`addresses`: List<Address>): MoveArg {
             return FfiConverterTypeMoveArg.lift(
     uniffiRustCall() { _status ->
@@ -39655,13 +39797,29 @@ public interface ObjectIdInterface {
      */
     fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+    fun `toRawHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+    fun `toRawShortHex`(): kotlin.String
     
     /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    fun `toShortHex`(): kotlin.String
     
     companion object
 }
@@ -39825,7 +39983,11 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
-    override fun `toHex`(): kotlin.String {
+    
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -39839,14 +40001,46 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     /**
-     * Returns the shortest possible string representation of the object ID
-     * (i.e. with leading zeroes trimmed).
-     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */override fun `toRawHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
-        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */override fun `toRawShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */override fun `toShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(
+        it, _status)
 }
     }
     )
@@ -39928,10 +40122,31 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     
 
         
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromShortHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
