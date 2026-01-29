@@ -103,11 +103,25 @@ impl ObjectId {
         Address::from_hex(hex).map(Self)
     }
 
+    /// Parses an ObjectId from a full-length hex string (64 hex characters),
+    /// with a mandatory `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    pub fn from_prefixed_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        Address::from_prefixed_hex(hex).map(Self)
+    }
+
     /// Parses an ObjectId from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
     pub fn from_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_short_hex(hex).map(Self)
+    }
+
+    /// Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    pub fn from_prefixed_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        Address::from_prefixed_short_hex(hex).map(Self)
     }
 
     pub const fn from_address(address: Address) -> Self {
