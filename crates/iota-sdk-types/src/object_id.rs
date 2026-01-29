@@ -22,7 +22,7 @@ use super::{Address, address::AddressParseError};
 /// ```text
 /// object-id = 32*OCTET
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -220,6 +220,12 @@ impl std::str::FromStr for ObjectId {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Address::from_str(s).map(Self)
+    }
+}
+
+impl std::fmt::Debug for ObjectId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ObjectId(\"{self}\")")
     }
 }
 
