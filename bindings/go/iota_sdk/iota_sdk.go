@@ -43855,14 +43855,26 @@ func (_ FfiDestroyerUnchangedSharedKind) Destroy(value UnchangedSharedKind) {
 
 
 // Determines what to wait for after executing a transaction.
+//
+// Users should almost always use [`WaitForTx::Finalized`] (the default).
+// The GraphQL client interacts with the indexer, not the fullnode directly.
+// Using [`WaitForTx::IndexedOnNode`] only guarantees the transaction is
+// indexed on the fullnode (meaning you can submit transactions that reference
+// objects created by this transaction), but subsequent queries using the
+// transaction ID can still fail until the transaction is indexed on the
+// indexer.
 type WaitForTx uint
 
 const (
 	// Indicates that the transaction effects will be usable in subsequent
-	// transactions, and that the transaction itself is indexed on the node.
-	// Note: This does not guarantee the transaction is indexed on the indexer,
-	// and indexer queries may still fail.
-	WaitForTxIndexed WaitForTx = 1
+	// transactions (you can reference objects created by this transaction),
+	// and that the transaction itself is indexed on the fullnode.
+	//
+	// **Warning:** This does not guarantee the transaction is indexed on the
+	// indexer. Since the GraphQL client queries the indexer, subsequent
+	// queries with this transaction ID may still fail. Prefer
+	// [`WaitForTx::Finalized`] unless you have a specific reason to use this.
+	WaitForTxIndexedOnNode WaitForTx = 1
 	// Indicates that the transaction has been included in a checkpoint, and
 	// all queries may include it.
 	WaitForTxFinalized WaitForTx = 2
