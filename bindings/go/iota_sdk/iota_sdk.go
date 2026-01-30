@@ -5873,7 +5873,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node()
 	})
-	if checksum != 20156 {
+	if checksum != 14842 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node: UniFFI API checksum mismatch")
 	}
@@ -6152,7 +6152,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx()
 	})
-	if checksum != 25664 {
+	if checksum != 10761 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx: UniFFI API checksum mismatch")
 	}
@@ -19815,7 +19815,7 @@ type GraphQlClientInterface interface {
 	// in a checkpoint (finalized).
 	IsTxFinalized(digest *Digest) (bool, error)
 	// Returns whether the transaction for the given digest has been indexed
-	// on the node. This means that it can be queries by its digest and its
+	// on the node. This means that it can be queried by its digest and its
 	// effects will be usable for subsequent transactions. To check for
 	// full finalization, use `is_tx_finalized`.
 	IsTxIndexedOnNode(digest *Digest) (bool, error)
@@ -19972,9 +19972,9 @@ type GraphQlClientInterface interface {
 	TransactionsDataEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionDataEffectsPage, error)
 	// Get a page of transactions' effects based on the provided filters.
 	TransactionsEffects(filter *TransactionsFilter, paginationFilter *PaginationFilter) (TransactionEffectsPage, error)
-	// Wait for the indexing or finalization of a transaction
-	// by its digest. An optional timeout can be provided, which, if
-	// exceeded, will return an error (default 60s).
+	// Wait for the indexing (on the node, not the indexer) or finalization of
+	// a transaction by its digest. An optional timeout can be provided,
+	// which, if exceeded, will return an error (default 60s).
 	WaitForTx(digest *Digest, waitFor WaitForTx, timeout *time.Duration) error
 }
 // The GraphQL client for interacting with the IOTA blockchain.
@@ -20777,7 +20777,7 @@ func (_self *GraphQlClient) IsTxFinalized(digest *Digest) (bool, error) {
 }
 
 // Returns whether the transaction for the given digest has been indexed
-// on the node. This means that it can be queries by its digest and its
+// on the node. This means that it can be queried by its digest and its
 // effects will be usable for subsequent transactions. To check for
 // full finalization, use `is_tx_finalized`.
 func (_self *GraphQlClient) IsTxIndexedOnNode(digest *Digest) (bool, error) {
@@ -21856,9 +21856,9 @@ func (_self *GraphQlClient) TransactionsEffects(filter *TransactionsFilter, pagi
 	return res, err 
 }
 
-// Wait for the indexing or finalization of a transaction
-// by its digest. An optional timeout can be provided, which, if
-// exceeded, will return an error (default 60s).
+// Wait for the indexing (on the node, not the indexer) or finalization of
+// a transaction by its digest. An optional timeout can be provided,
+// which, if exceeded, will return an error (default 60s).
 func (_self *GraphQlClient) WaitForTx(digest *Digest, waitFor WaitForTx, timeout *time.Duration) error {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
 	defer _self.ffiObject.decrementPointer()
@@ -43855,12 +43855,26 @@ func (_ FfiDestroyerUnchangedSharedKind) Destroy(value UnchangedSharedKind) {
 
 
 // Determines what to wait for after executing a transaction.
+//
+// Users should almost always use WaitForTx::Finalized (the default).
+// The GraphQL client interacts with the indexer, not the fullnode directly.
+// Using WaitForTx::IndexedOnNode only guarantees the transaction is
+// indexed on the fullnode (meaning you can submit transactions that reference
+// objects created by this transaction), but subsequent queries using the
+// transaction ID can still fail until the transaction is indexed on the
+// indexer.
 type WaitForTx uint
 
 const (
 	// Indicates that the transaction effects will be usable in subsequent
-	// transactions, and that the transaction itself is indexed on the node.
-	WaitForTxIndexed WaitForTx = 1
+	// transactions (you can reference objects created by this transaction),
+	// and that the transaction itself is indexed on the fullnode.
+	//
+	// **Warning:** This does not guarantee the transaction is indexed on the
+	// indexer. Since the GraphQL client queries the indexer, subsequent
+	// queries with this transaction ID may still fail. Prefer
+	// WaitForTx::Finalized unless you have a specific reason to use this.
+	WaitForTxIndexedOnNode WaitForTx = 1
 	// Indicates that the transaction has been included in a checkpoint, and
 	// all queries may include it.
 	WaitForTxFinalized WaitForTx = 2
