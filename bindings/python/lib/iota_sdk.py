@@ -27537,9 +27537,9 @@ class WaitForTx(enum.Enum):
     """
     Determines what to wait for after executing a transaction.
 
-    Users should almost always use [`WaitForTx::Finalized`] (the default).
+    Users should almost always use WaitForTx::Finalized (the default).
     The GraphQL client interacts with the indexer, not the fullnode directly.
-    Using [`WaitForTx::IndexedOnNode`] only guarantees the transaction is
+    Using WaitForTx::IndexedOnNode only guarantees the transaction is
     indexed on the fullnode (meaning you can submit transactions that reference
     objects created by this transaction), but subsequent queries using the
     transaction ID can still fail until the transaction is indexed on the
@@ -27555,7 +27555,7 @@ class WaitForTx(enum.Enum):
     **Warning:** This does not guarantee the transaction is indexed on the
     indexer. Since the GraphQL client queries the indexer, subsequent
     queries with this transaction ID may still fail. Prefer
-    [`WaitForTx::Finalized`] unless you have a specific reason to use this.
+    WaitForTx::Finalized unless you have a specific reason to use this.
     """
 
     
