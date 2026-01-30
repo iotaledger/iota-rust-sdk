@@ -11,7 +11,7 @@ use crate::{IotaVerifier, ed25519::Ed25519PrivateKey};
 /// Returns a valid zklogin material for testing only.
 fn test_zklogin_material() -> (Jwk, JwkId, ZkLoginInputs, Ed25519PrivateKey, u64) {
     let inputs = serde_json::json!({
-        "proof_points": {
+        "proofPoints": {
             "a": [
                 "17318089125952421736342263717932719437717844282410187957984751939942898251250",
                 "11373966645469122582074082295985388258840681618268593976697325892280915681207",
@@ -34,12 +34,12 @@ fn test_zklogin_material() -> (Jwk, JwkId, ZkLoginInputs, Ed25519PrivateKey, u64
                 "1"
             ]
         },
-        "iss_base64_details": {
+        "issBase64Details": {
             "value": "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw",
-            "index_mod_4": 2
+            "indexMod4": 2
         },
-        "header_base64": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ",
-        "address_seed": "20794788559620669596206457022966176986688727876128223628113916380927502737911"
+        "headerBase64": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ",
+        "addressSeed": "20794788559620669596206457022966176986688727876128223628113916380927502737911"
     });
 
     let zklogin_inputs: ZkLoginInputs = serde_json::from_value(inputs).unwrap();
