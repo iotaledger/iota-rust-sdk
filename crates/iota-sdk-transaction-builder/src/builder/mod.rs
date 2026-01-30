@@ -82,6 +82,10 @@ pub struct TransactionBuildData {
 }
 
 impl TransactionBuildData {
+    fn set_sender(&mut self, sender: Address) {
+        self.sender = sender;
+    }
+
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
         if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| {
             match (kind.object_id(), input.kind.object_id()) {
@@ -204,6 +208,11 @@ impl TransactionBuilder {
             client: (),
             last_command: PhantomData,
         }
+    }
+
+    /// Set the sender address.
+    pub fn set_sender(&mut self, sender: Address) {
+        self.data.set_sender(sender);
     }
 
     /// Set the client to enable automatic object resolution.
