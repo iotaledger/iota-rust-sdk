@@ -27,6 +27,8 @@ use crate::{
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
+    /// Note: This does not guarantee the transaction is indexed on the indexer,
+    /// and indexer queries may still fail.
     Indexed,
     /// Indicates that the transaction has been included in a checkpoint, and
     /// all queries may include it.
@@ -161,7 +163,7 @@ impl GraphQLClient {
     }
 
     /// Returns whether the transaction for the given digest has been indexed
-    /// on the node. This means that it can be queries by its digest and its
+    /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use `is_tx_finalized`.
     #[uniffi::method]
@@ -176,9 +178,9 @@ impl GraphQLClient {
         Ok(self.0.read().await.is_tx_finalized(**digest).await?)
     }
 
-    /// Wait for the indexing or finalization of a transaction
-    /// by its digest. An optional timeout can be provided, which, if
-    /// exceeded, will return an error (default 60s).
+    /// Wait for the indexing (on the node, not the indexer) or finalization of
+    /// a transaction by its digest. An optional timeout can be provided,
+    /// which, if exceeded, will return an error (default 60s).
     #[uniffi::method(default(timeout = None))]
     pub async fn wait_for_tx(
         &self,
