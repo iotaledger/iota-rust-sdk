@@ -1527,6 +1527,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender() != 20194:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor() != 44990:
@@ -2264,6 +2266,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 6220:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() != 37952:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4387,6 +4391,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -9473,6 +9483,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -14899,6 +14915,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coi
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins.restype = ctypes.c_uint16
@@ -16006,6 +16025,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.restype = ctypes.c_uint16
@@ -35377,6 +35399,12 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def set_sender(self, sender: "Address"):
+        """
+        Set the sender address.
+        """
+
+        raise NotImplementedError
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin into many.
@@ -35831,6 +35859,21 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterTypePtbArgument.lower(amount))
         )
+
+
+
+
+
+    def set_sender(self, sender: "Address") -> None:
+        """
+        Set the sender address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(sender)
+        
+        _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(sender))
+
 
 
 
@@ -52234,6 +52277,12 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def set_sender(self, sender: "Address"):
+        """
+        Set the sender address.
+        """
+
+        raise NotImplementedError
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin by the provided amounts.
@@ -52627,6 +52676,21 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterTypePtbArgument.lower(amount))
         )
+
+
+
+
+
+    def set_sender(self, sender: "Address") -> None:
+        """
+        Set the sender address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(sender)
+        
+        _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(sender))
+
 
 
 

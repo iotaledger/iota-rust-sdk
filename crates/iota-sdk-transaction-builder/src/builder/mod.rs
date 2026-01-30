@@ -210,11 +210,6 @@ impl TransactionBuilder {
         }
     }
 
-    /// Set the sender address.
-    pub fn set_sender(&mut self, sender: Address) {
-        self.data.set_sender(sender);
-    }
-
     /// Set the client to enable automatic object resolution.
     pub fn with_client<C>(self, client: C) -> TransactionBuilder<C> {
         TransactionBuilder {
@@ -226,6 +221,11 @@ impl TransactionBuilder {
 }
 
 impl<C, L> TransactionBuilder<C, L> {
+    /// Set the sender address.
+    pub fn set_sender(&mut self, sender: Address) {
+        self.data.set_sender(sender);
+    }
+
     /// Apply the given parameter and return the generated argument
     pub fn apply_argument<P: PTBArgument>(&mut self, param: P) -> Argument {
         param.arg(&mut self.data)

@@ -1404,6 +1404,11 @@ void* uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(void* pt
 void* uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(void* ptr, void* recipient, void* amount, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_SET_SENDER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_SET_SENDER
+void uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(void* ptr, void* sender, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_SPLIT_COINS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_CLIENTTRANSACTIONBUILDER_SPLIT_COINS
 void* uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins(void* ptr, void* coin, RustBuffer amounts, RustBuffer names, RustCallStatus *out_status
@@ -6287,6 +6292,11 @@ void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(void* ptr, Rus
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_IOTA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SEND_IOTA
 void* uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(void* ptr, void* recipient, void* amount, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SET_SENDER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SET_SENDER
+void uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(void* ptr, void* sender, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_TRANSACTIONBUILDER_SPLIT_COINS
@@ -13277,6 +13287,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota(
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_SET_SENDER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_SET_SENDER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_SPLIT_COINS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_CLIENTTRANSACTIONBUILDER_SPLIT_COINS
 uint16_t uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins(void
@@ -15488,6 +15504,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SEND_IOTA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SEND_IOTA
 uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SET_SENDER
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_TRANSACTIONBUILDER_SET_SENDER
+uint16_t uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender(void
     
 );
 #endif
