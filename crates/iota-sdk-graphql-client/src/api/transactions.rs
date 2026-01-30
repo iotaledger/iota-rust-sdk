@@ -33,6 +33,8 @@ use crate::{
 pub enum WaitForTx {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions, and that the transaction itself is indexed on the node.
+    /// Note: This does not guarantee the transaction is indexed on the indexer,
+    /// and indexer queries may still fail.
     Indexed,
     /// Indicates that the transaction has been included in a checkpoint, and
     /// all queries may include it.
@@ -250,7 +252,7 @@ impl Client {
     }
 
     /// Returns whether the transaction for the given digest has been indexed
-    /// on the node. This means that it can be queries by its digest and its
+    /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_tx_finalized`].
     pub async fn is_tx_indexed_on_node(&self, digest: Digest) -> Result<bool> {
