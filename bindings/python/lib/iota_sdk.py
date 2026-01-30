@@ -1685,7 +1685,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() != 8647:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 20156:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 14842:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1747,7 +1747,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 25664:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 10761:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -27536,12 +27536,26 @@ class _UniffiConverterTypeUnchangedSharedKind(_UniffiConverterRustBuffer):
 class WaitForTx(enum.Enum):
     """
     Determines what to wait for after executing a transaction.
+
+    Users should almost always use WaitForTx::Finalized (the default).
+    The GraphQL client interacts with the indexer, not the fullnode directly.
+    Using WaitForTx::IndexedOnNode only guarantees the transaction is
+    indexed on the fullnode (meaning you can submit transactions that reference
+    objects created by this transaction), but subsequent queries using the
+    transaction ID can still fail until the transaction is indexed on the
+    indexer.
     """
 
-    INDEXED = 0
+    INDEXED_ON_NODE = 0
     """
     Indicates that the transaction effects will be usable in subsequent
-    transactions, and that the transaction itself is indexed on the node.
+    transactions (you can reference objects created by this transaction),
+    and that the transaction itself is indexed on the fullnode.
+
+    **Warning:** This does not guarantee the transaction is indexed on the
+    indexer. Since the GraphQL client queries the indexer, subsequent
+    queries with this transaction ID may still fail. Prefer
+    WaitForTx::Finalized unless you have a specific reason to use this.
     """
 
     
@@ -27559,14 +27573,14 @@ class _UniffiConverterTypeWaitForTx(_UniffiConverterRustBuffer):
     def read(buf):
         variant = buf.read_i32()
         if variant == 1:
-            return WaitForTx.INDEXED
+            return WaitForTx.INDEXED_ON_NODE
         if variant == 2:
             return WaitForTx.FINALIZED
         raise InternalError("Raw enum value doesn't match any cases")
 
     @staticmethod
     def check_lower(value):
-        if value == WaitForTx.INDEXED:
+        if value == WaitForTx.INDEXED_ON_NODE:
             return
         if value == WaitForTx.FINALIZED:
             return
@@ -27574,7 +27588,7 @@ class _UniffiConverterTypeWaitForTx(_UniffiConverterRustBuffer):
 
     @staticmethod
     def write(value, buf):
-        if value == WaitForTx.INDEXED:
+        if value == WaitForTx.INDEXED_ON_NODE:
             buf.write_i32(1)
         if value == WaitForTx.FINALIZED:
             buf.write_i32(2)
@@ -39180,7 +39194,7 @@ class GraphQlClientProtocol(typing.Protocol):
     def is_tx_indexed_on_node(self, digest: "Digest"):
         """
         Returns whether the transaction for the given digest has been indexed
-        on the node. This means that it can be queries by its digest and its
+        on the node. This means that it can be queried by its digest and its
         effects will be usable for subsequent transactions. To check for
         full finalization, use `is_tx_finalized`.
         """
@@ -39461,9 +39475,9 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def wait_for_tx(self, digest: "Digest",wait_for: "WaitForTx",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT):
         """
-        Wait for the indexing or finalization of a transaction
-        by its digest. An optional timeout can be provided, which, if
-        exceeded, will return an error (default 60s).
+        Wait for the indexing (on the node, not the indexer) or finalization of
+        a transaction by its digest. An optional timeout can be provided,
+        which, if exceeded, will return an error (default 60s).
         """
 
         raise NotImplementedError
@@ -40236,7 +40250,7 @@ _UniffiConverterTypeSdkFfiError,
     async def is_tx_indexed_on_node(self, digest: "Digest") -> "bool":
         """
         Returns whether the transaction for the given digest has been indexed
-        on the node. This means that it can be queries by its digest and its
+        on the node. This means that it can be queried by its digest and its
         effects will be usable for subsequent transactions. To check for
         full finalization, use `is_tx_finalized`.
         """
@@ -41235,9 +41249,9 @@ _UniffiConverterTypeSdkFfiError,
     async def wait_for_tx(self, digest: "Digest",wait_for: "WaitForTx",timeout: "typing.Union[object, typing.Optional[Duration]]" = _DEFAULT) -> None:
 
         """
-        Wait for the indexing or finalization of a transaction
-        by its digest. An optional timeout can be provided, which, if
-        exceeded, will return an error (default 60s).
+        Wait for the indexing (on the node, not the indexer) or finalization of
+        a transaction by its digest. An optional timeout can be provided,
+        which, if exceeded, will return an error (default 60s).
         """
 
         _UniffiConverterTypeDigest.check_lower(digest)
