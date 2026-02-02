@@ -5340,6 +5340,33 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive()
+	})
+	if checksum != 42875 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_alive: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted()
+	})
+	if checksum != 43638 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped()
+	})
+	if checksum != 27020 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical()
 	})
 	if checksum != 53914 {
@@ -9975,11 +10002,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_digest_random()
 	})
-	if checksum != 8094 {
+	if checksum != 18621 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_digest_generate: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_digest_random: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -17685,6 +17712,14 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 // meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 // compact 32 bytes.
 type DigestInterface interface {
+	// Returns whether the digest represents an object that is neither deleted
+	// nor wrapped
+	IsAlive() bool
+	// Returns whether the digest represents a deleted object
+	IsDeleted() bool
+	// Returns whether the digest represents an object wrapped in another
+	// object.
+	IsWrapped() bool
 	// Returns the next digest in byte-increasing order.
 	NextLexicographical() *Digest
 	ToBase58() string
@@ -17733,13 +17768,45 @@ func DigestFromBytes(bytes []byte) (*Digest, error) {
 		}
 }
 
-func DigestGenerate() *Digest {
+func DigestRandom() *Digest {
 	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_digest_generate(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_digest_random(_uniffiStatus)
 	}))
 }
 
 
+
+// Returns whether the digest represents an object that is neither deleted
+// nor wrapped
+func (_self *Digest) IsAlive() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_alive(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns whether the digest represents a deleted object
+func (_self *Digest) IsDeleted() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns whether the digest represents an object wrapped in another
+// object.
+func (_self *Digest) IsWrapped() bool {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped(
+		_pointer,_uniffiStatus)
+	}))
+}
 
 // Returns the next digest in byte-increasing order.
 func (_self *Digest) NextLexicographical() *Digest {
