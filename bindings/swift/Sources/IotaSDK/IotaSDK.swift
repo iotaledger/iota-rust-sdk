@@ -697,13 +697,29 @@ public protocol AddressProtocol: AnyObject, Sendable {
      */
     func toCanonicalString(withPrefix: Bool)  -> String
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
     func toHex()  -> String
+    
+    /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+    func toRawHex()  -> String
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+    func toRawShortHex()  -> String
     
     /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-    func toShortString(withPrefix: Bool)  -> String
+    func toShortHex()  -> String
     
 }
 /**
@@ -814,13 +830,52 @@ public static func fromBytes(bytes: Data)throws  -> Address  {
 }
     
     /**
-     * Parses an Address from a hex string, with or without a `0x` prefix.
-     * The string can be of variable length; if it's shorter than 64 hex
-     * characters, it will be left-padded with `0`s.
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
      */
 public static func fromHex(hex: String)throws  -> Address  {
     return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+public static func fromPrefixedHex(hex: String)throws  -> Address  {
+    return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an Address from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromPrefixedShortHex(hex: String)throws  -> Address  {
+    return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromShortHex(hex: String)throws  -> Address  {
+    return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(
         FfiConverterString.lower(hex),$0
     )
 })
@@ -875,6 +930,10 @@ open func toCanonicalString(withPrefix: Bool) -> String  {
 })
 }
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
 open func toHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_address_to_hex(self.uniffiClonePointer(),$0
@@ -883,13 +942,34 @@ open func toHex() -> String  {
 }
     
     /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+open func toRawHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+open func toRawShortHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-open func toShortString(withPrefix: Bool) -> String  {
+open func toShortHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_address_to_short_string(self.uniffiClonePointer(),
-        FfiConverterBool.lower(withPrefix),$0
+    uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -11053,6 +11133,14 @@ public static func addressFromHex(hex: String)throws  -> MoveArg  {
 })
 }
     
+public static func addressFromShortHex(hex: String)throws  -> MoveArg  {
+    return try  FfiConverterTypeMoveArg_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
 public static func addressVec(addresses: [Address]) -> MoveArg  {
     return try!  FfiConverterTypeMoveArg_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(
@@ -15693,13 +15781,29 @@ public protocol ObjectIdProtocol: AnyObject, Sendable {
      */
     func toCanonicalString(withPrefix: Bool)  -> String
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
     func toHex()  -> String
+    
+    /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+    func toRawHex()  -> String
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+    func toRawShortHex()  -> String
     
     /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-    func toShortString(withPrefix: Bool)  -> String
+    func toShortHex()  -> String
     
 }
 /**
@@ -15800,9 +15904,53 @@ public static func fromBytes(bytes: Data)throws  -> ObjectId  {
 })
 }
     
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
 public static func fromHex(hex: String)throws  -> ObjectId  {
     return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+public static func fromPrefixedHex(hex: String)throws  -> ObjectId  {
+    return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromPrefixedShortHex(hex: String)throws  -> ObjectId  {
+    return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an ObjectId from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromShortHex(hex: String)throws  -> ObjectId  {
+    return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(
         FfiConverterString.lower(hex),$0
     )
 })
@@ -15864,6 +16012,10 @@ open func toCanonicalString(withPrefix: Bool) -> String  {
 })
 }
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
 open func toHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(self.uniffiClonePointer(),$0
@@ -15872,13 +16024,34 @@ open func toHex() -> String  {
 }
     
     /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+open func toRawHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+open func toRawShortHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-open func toShortString(withPrefix: Bool) -> String  {
+open func toShortHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(self.uniffiClonePointer(),
-        FfiConverterBool.lower(withPrefix),$0
+    uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -45787,10 +45960,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032) {
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 2770) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908) {
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex() != 32277) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex() != 57104) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex() != 9559) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358) {
@@ -46708,10 +46887,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 13326) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex() != 56907) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex() != 17836) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094) {
@@ -47413,7 +47598,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex() != 61183) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex() != 62018) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074) {
@@ -47674,6 +47868,9 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex() != 35587) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47854,7 +48051,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex() != 58728) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex() != 12289) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600) {
