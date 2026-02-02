@@ -38,7 +38,7 @@
 ///                    u64 ; storage-rebate
 ///                    u64 ; non-refundable-storage-fee
 /// ```
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, derive_more::AddAssign, derive_more::SubAssign)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -108,6 +108,26 @@ impl GasCostSummary {
     /// A positive number means used gas; negative number means refund.
     pub fn net_gas_usage(&self) -> i64 {
         self.gas_used() as i64 - self.storage_rebate as i64
+    }
+}
+
+impl std::ops::AddAssign<&Self> for GasCostSummary {
+    fn add_assign(&mut self, other: &Self) {
+        self.computation_cost += other.computation_cost;
+        self.computation_cost_burned += other.computation_cost_burned;
+        self.storage_cost += other.storage_cost;
+        self.storage_rebate += other.storage_rebate;
+        self.non_refundable_storage_fee += other.non_refundable_storage_fee;
+    }
+}
+
+impl std::ops::SubAssign<&Self> for GasCostSummary {
+    fn sub_assign(&mut self, other: &Self) {
+        self.computation_cost -= other.computation_cost;
+        self.computation_cost_burned -= other.computation_cost_burned;
+        self.storage_cost -= other.storage_cost;
+        self.storage_rebate -= other.storage_rebate;
+        self.non_refundable_storage_fee -= other.non_refundable_storage_fee;
     }
 }
 
