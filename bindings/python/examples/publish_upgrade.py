@@ -49,13 +49,13 @@ async def main():
     sender = private_key.public_key().derive_address()
     print(f"Sender: {sender.to_hex()}")
 
+    client = GraphQlClient.new_localnet()
+
     # Fund the sender address for gas payment
     faucet = FaucetClient.new_localnet()
-    faucet_receipt = await faucet.request_and_wait(sender)
+    faucet_receipt = await faucet.request_and_wait_for_finalized(sender, client)
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
-
-    client = GraphQlClient.new_localnet()
 
     # Build the `publish` PTB
     builder = TransactionBuilder(sender).with_client(client)

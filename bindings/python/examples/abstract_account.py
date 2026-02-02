@@ -15,7 +15,8 @@ async def main():
 
     # Fund the sender address for gas payment
     faucet = FaucetClient.new_localnet()
-    faucet_receipt = await faucet.request_and_wait(from_address)
+    faucet_receipt = await faucet.request_and_wait_for_finalized(
+        from_address, client)
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
 

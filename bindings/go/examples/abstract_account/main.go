@@ -26,7 +26,7 @@ func main() {
 
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
-	_, err = faucet.RequestAndWait(fromAddress)
+	_, err = faucet.RequestAndWaitForFinalized(fromAddress, client)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
