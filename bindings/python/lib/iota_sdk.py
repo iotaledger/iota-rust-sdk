@@ -1625,7 +1625,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 25235:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized() != 39496:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -38574,6 +38574,10 @@ class FaucetClientProtocol(typing.Protocol):
 
         Note that the faucet is heavily rate-limited, so calling repeatedly the
         faucet would likely result in a 429 code or 502 code.
+
+        If you intend to use the transferred tokens with the graphql client,
+        consider using `request_and_wait_for_finalized` instead to ensure
+        the tokens are available in the indexer.
         """
 
         raise NotImplementedError
@@ -38701,6 +38705,10 @@ _UniffiConverterTypeSdkFfiError,
 
         Note that the faucet is heavily rate-limited, so calling repeatedly the
         faucet would likely result in a 429 code or 502 code.
+
+        If you intend to use the transferred tokens with the graphql client,
+        consider using `request_and_wait_for_finalized` instead to ensure
+        the tokens are available in the indexer.
         """
 
         _UniffiConverterTypeAddress.check_lower(address)

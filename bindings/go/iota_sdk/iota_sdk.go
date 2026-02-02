@@ -5603,7 +5603,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait()
 	})
-	if checksum != 22484 {
+	if checksum != 25235 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait: UniFFI API checksum mismatch")
 	}
@@ -19246,6 +19246,10 @@ type FaucetClientInterface interface {
 	//
 	// Note that the faucet is heavily rate-limited, so calling repeatedly the
 	// faucet would likely result in a 429 code or 502 code.
+	//
+	// If you intend to use the transferred tokens with the graphql client,
+	// consider using `request_and_wait_for_finalized` instead to ensure
+	// the tokens are available in the indexer.
 	RequestAndWait(address *Address) (*FaucetReceipt, error)
 	// Request gas from the faucet and wait until the request is completed and
 	// token is transferred and finalized on the ledger. Returns
@@ -19342,6 +19346,10 @@ func (_self *FaucetClient) Request(address *Address) (*string, error) {
 //
 // Note that the faucet is heavily rate-limited, so calling repeatedly the
 // faucet would likely result in a 429 code or 502 code.
+//
+// If you intend to use the transferred tokens with the graphql client,
+// consider using `request_and_wait_for_finalized` instead to ensure
+// the tokens are available in the indexer.
 func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, error) {
 	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
 	defer _self.ffiObject.decrementPointer()

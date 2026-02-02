@@ -12366,7 +12366,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 25235.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized() != 39496.toShort()) {
@@ -27568,6 +27568,10 @@ public interface FaucetClientInterface {
      *
      * Note that the faucet is heavily rate-limited, so calling repeatedly the
      * faucet would likely result in a 429 code or 502 code.
+     *
+     * If you intend to use the transferred tokens with the graphql client,
+     * consider using `request_and_wait_for_finalized` instead to ensure
+     * the tokens are available in the indexer.
      */
     suspend fun `requestAndWait`(`address`: Address): FaucetReceipt?
     
@@ -27726,6 +27730,10 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
      *
      * Note that the faucet is heavily rate-limited, so calling repeatedly the
      * faucet would likely result in a 429 code or 502 code.
+     *
+     * If you intend to use the transferred tokens with the graphql client,
+     * consider using `request_and_wait_for_finalized` instead to ensure
+     * the tokens are available in the indexer.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
