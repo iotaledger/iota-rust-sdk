@@ -4352,18 +4352,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_hex()
 	})
-	if checksum != 22032 {
+	if checksum != 2770 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string()
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex()
 	})
-	if checksum != 56908 {
+	if checksum != 32277 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_short_string: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex()
+	})
+	if checksum != 57104 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex()
+	})
+	if checksum != 9559 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7160,18 +7178,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex()
 	})
-	if checksum != 4418 {
+	if checksum != 13326 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string()
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex()
 	})
-	if checksum != 63526 {
+	if checksum != 56907 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex()
+	})
+	if checksum != 17836 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex()
+	})
+	if checksum != 29478 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -9527,9 +9563,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex()
 	})
-	if checksum != 38044 {
+	if checksum != 59948 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex()
+	})
+	if checksum != 61183 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex()
+	})
+	if checksum != 62018 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex()
+	})
+	if checksum != 60759 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10452,6 +10515,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex()
+	})
+	if checksum != 35587 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec()
 	})
 	if checksum != 6097 {
@@ -10985,9 +11057,36 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex()
 	})
-	if checksum != 30954 {
+	if checksum != 39262 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex()
+	})
+	if checksum != 58728 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex()
+	})
+	if checksum != 12289 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex()
+	})
+	if checksum != 24855 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13212,10 +13311,18 @@ type AddressInterface interface {
 	// Returns the string representation of this address using the
 	// canonical display, with or without a `0x` prefix.
 	ToCanonicalString(withPrefix bool) string
+	// Returns the string representation of this address in hex format with
+	// `0x` prefix.
 	ToHex() string
+	// Returns the string representation of this address in hex format without
+	// `0x` prefix.
+	ToRawHex() string
+	// Returns the shortest possible string representation of the address (i.e.
+	// with leading zeroes trimmed), without `0x` prefix.
+	ToRawShortHex() string
 	// Returns the shortest possible string representation of the address (i.e.
 	// with leading zeroes trimmed).
-	ToShortString(withPrefix bool) string
+	ToShortHex() string
 }
 // Unique identifier for an Account on the IOTA blockchain.
 //
@@ -13280,12 +13387,57 @@ func AddressFromBytes(bytes []byte) (*Address, error) {
 		}
 }
 
-// Parses an Address from a hex string, with or without a `0x` prefix.
-// The string can be of variable length; if it's shorter than 64 hex
-// characters, it will be left-padded with `0`s.
+// Parses an Address from a full-length hex string (64 hex characters),
+// with or without a `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
 func AddressFromHex(hex string) (*Address, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an Address from a full-length hex string (64 hex characters),
+// with a mandatory `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
+func AddressFromPrefixedHex(hex string) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an Address from a hex string with a mandatory `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func AddressFromPrefixedShortHex(hex string) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *Address
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterAddressINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an Address from a hex string, with or without a `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func AddressFromShortHex(hex string) (*Address, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *Address
@@ -13345,6 +13497,8 @@ func (_self *Address) ToCanonicalString(withPrefix bool) string {
 	}))
 }
 
+// Returns the string representation of this address in hex format with
+// `0x` prefix.
 func (_self *Address) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
 	defer _self.ffiObject.decrementPointer()
@@ -13356,15 +13510,41 @@ func (_self *Address) ToHex() string {
 	}))
 }
 
-// Returns the shortest possible string representation of the address (i.e.
-// with leading zeroes trimmed).
-func (_self *Address) ToShortString(withPrefix bool) string {
+// Returns the string representation of this address in hex format without
+// `0x` prefix.
+func (_self *Address) ToRawHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
-		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the address (i.e.
+// with leading zeroes trimmed), without `0x` prefix.
+func (_self *Address) ToRawShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the address (i.e.
+// with leading zeroes trimmed).
+func (_self *Address) ToShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(
+		_pointer,_uniffiStatus),
 	}
 	}))
 }
@@ -23062,6 +23242,18 @@ func MoveArgAddressFromHex(hex string) (*MoveArg, error) {
 		}
 }
 
+func MoveArgAddressFromShortHex(hex string) (*MoveArg, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *MoveArg
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterMoveArgINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
 func MoveArgAddressVec(addresses []*Address) *MoveArg {
 	return FfiConverterMoveArgINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(FfiConverterSequenceAddressINSTANCE.Lower(addresses),_uniffiStatus)
@@ -26672,10 +26864,18 @@ type ObjectIdInterface interface {
 	// Returns the string representation of this object ID using the
 	// canonical display, with or without a `0x` prefix.
 	ToCanonicalString(withPrefix bool) string
+	// Returns the string representation of this object id in hex format with
+	// `0x` prefix.
 	ToHex() string
+	// Returns the string representation of this object id in hex format
+	// without `0x` prefix.
+	ToRawHex() string
+	// Returns the shortest possible string representation of the object id
+	// (i.e. with leading zeroes trimmed), without `0x` prefix.
+	ToRawShortHex() string
 	// Returns the shortest possible string representation of the object ID
 	// (i.e. with leading zeroes trimmed).
-	ToShortString(withPrefix bool) string
+	ToShortHex() string
 }
 // An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
 // the IOTA blockchain.
@@ -26726,9 +26926,57 @@ func ObjectIdFromBytes(bytes []byte) (*ObjectId, error) {
 		}
 }
 
+// Parses an ObjectId from a full-length hex string (64 hex characters),
+// with or without a `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
 func ObjectIdFromHex(hex string) (*ObjectId, error) {
 	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ObjectId
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an ObjectId from a full-length hex string (64 hex characters),
+// with a mandatory `0x` prefix. Will return an error if the string is not
+// exactly 64 hex characters long (excluding the `0x` prefix).
+func ObjectIdFromPrefixedHex(hex string) (*ObjectId, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ObjectId
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func ObjectIdFromPrefixedShortHex(hex string) (*ObjectId, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
+	})
+		if _uniffiErr != nil {
+			var _uniffiDefaultValue *ObjectId
+			return _uniffiDefaultValue, _uniffiErr
+		} else {
+			return FfiConverterObjectIdINSTANCE.Lift(_uniffiRV), nil
+		}
+}
+
+// Parses an ObjectId from a hex string, with or without a `0x` prefix.
+// The string can be of variable length; if it's shorter than 64 hex
+// characters, it will be left-padded with `0`s.
+func ObjectIdFromShortHex(hex string) (*ObjectId, error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[SdkFfiError](FfiConverterSdkFfiError{},func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(FfiConverterStringINSTANCE.Lower(hex),_uniffiStatus)
 	})
 		if _uniffiErr != nil {
 			var _uniffiDefaultValue *ObjectId
@@ -26797,6 +27045,8 @@ func (_self *ObjectId) ToCanonicalString(withPrefix bool) string {
 	}))
 }
 
+// Returns the string representation of this object id in hex format with
+// `0x` prefix.
 func (_self *ObjectId) ToHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
@@ -26808,15 +27058,41 @@ func (_self *ObjectId) ToHex() string {
 	}))
 }
 
-// Returns the shortest possible string representation of the object ID
-// (i.e. with leading zeroes trimmed).
-func (_self *ObjectId) ToShortString(withPrefix bool) string {
+// Returns the string representation of this object id in hex format
+// without `0x` prefix.
+func (_self *ObjectId) ToRawHex() string {
 	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
-		_pointer,FfiConverterBoolINSTANCE.Lower(withPrefix),_uniffiStatus),
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object id
+// (i.e. with leading zeroes trimmed), without `0x` prefix.
+func (_self *ObjectId) ToRawShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Returns the shortest possible string representation of the object ID
+// (i.e. with leading zeroes trimmed).
+func (_self *ObjectId) ToShortHex() string {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(
+		_pointer,_uniffiStatus),
 	}
 	}))
 }
