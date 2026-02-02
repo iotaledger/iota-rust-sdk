@@ -159,14 +159,48 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
     fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
         use proptest::prelude::*;
 
-        (any::<ZkLoginProof>(), any::<Bn254FieldElement>())
-            .prop_map(|(proof_points, address_seed)| {
-                // TODO implement Arbitrary for real for ZkLoginClaim and header_base64 values
-                let iss_base64_details = ZkLoginClaim {
-                    value: "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw".to_owned(),
-                    index_mod_4: 2,
+        // Generate a valid base64url-encoded claim that will pass validation
+        // The claim should decode to a JSON-like string with an "iss" field
+        let iss_claim_strategy = ("[a-z]{10,50}").prop_map(|iss_value| {
+            use base64ct::{Base64UrlUnpadded, Encoding};
+            
+            // Create an extended claim in the format: "iss":"<value>",
+            // This is what the verify_extended_claim expects after decoding and processing
+            let extended_claim = format!(r#""iss":"https://{}.example.com","#, iss_value);
+            
+            // For simplicity, use index_mod_4 = 0 which means no bit offset
+            // Encode the extended claim as base64url
+            let value = Base64UrlUnpadded::encode_string(extended_claim.as_bytes());
+            
+            ZkLoginClaim {
+                value,
+                index_mod_4: 0,
+            }
+        });
+
+        (
+            any::<ZkLoginProof>(),
+            iss_claim_strategy,
+            any::<Bn254FieldElement>(),
+        )
+            .prop_map(|(proof_points, iss_base64_details, address_seed)| {
+                use base64ct::{Base64UrlUnpadded, Encoding};
+
+                // Generate a valid JWT header with random alg, kid, and optional typ
+                let alg = "RS256"; // Using a common algorithm for consistency
+                let kid = "1"; // Using a simple kid for consistency
+                let typ = Some("JWT");
+
+                // Create a JSON representation of the JWT header
+                let header_json = if let Some(t) = typ {
+                    format!(r#"{{"alg":"{}","typ":"{}","kid":"{}"}}"#, alg, t, kid)
+                } else {
+                    format!(r#"{{"alg":"{}","kid":"{}"}}"#, alg, kid)
                 };
-                let header_base64 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ".to_owned();
+
+                // Encode the JWT header as base64url (unpadded)
+                let header_base64 = Base64UrlUnpadded::encode_string(header_json.as_bytes());
+
                 Self::new(
                     proof_points,
                     iss_base64_details,
