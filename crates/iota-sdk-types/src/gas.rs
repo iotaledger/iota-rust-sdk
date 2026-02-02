@@ -121,6 +121,12 @@ impl std::ops::AddAssign<&Self> for GasCostSummary {
     }
 }
 
+impl std::ops::AddAssign for GasCostSummary {
+    fn add_assign(&mut self, other: Self) {
+        *self += &other;
+    }
+}
+
 impl std::ops::SubAssign<&Self> for GasCostSummary {
     fn sub_assign(&mut self, other: &Self) {
         self.computation_cost -= other.computation_cost;
@@ -128,6 +134,12 @@ impl std::ops::SubAssign<&Self> for GasCostSummary {
         self.storage_cost -= other.storage_cost;
         self.storage_rebate -= other.storage_rebate;
         self.non_refundable_storage_fee -= other.non_refundable_storage_fee;
+    }
+}
+
+impl std::ops::SubAssign for GasCostSummary {
+    fn sub_assign(&mut self, other: Self) {
+        *self -= &other;
     }
 }
 
