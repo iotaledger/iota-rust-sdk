@@ -82,6 +82,10 @@ pub struct TransactionBuildData {
 }
 
 impl TransactionBuildData {
+    fn set_sender(&mut self, sender: Address) {
+        self.sender = sender;
+    }
+
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
         if let Some((i, input)) = self.inputs.iter_mut().find(|(_, input)| {
             match (kind.object_id(), input.kind.object_id()) {
@@ -217,6 +221,11 @@ impl TransactionBuilder {
 }
 
 impl<C, L> TransactionBuilder<C, L> {
+    /// Set the sender address.
+    pub fn set_sender(&mut self, sender: Address) {
+        self.data.set_sender(sender);
+    }
+
     /// Apply the given parameter and return the generated argument
     pub fn apply_argument<P: PTBArgument>(&mut self, param: P) -> Argument {
         param.arg(&mut self.data)

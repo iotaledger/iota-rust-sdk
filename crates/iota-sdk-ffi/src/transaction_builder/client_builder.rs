@@ -53,6 +53,13 @@ impl ClientTransactionBuilder {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl ClientTransactionBuilder {
+    /// Set the sender address.
+    pub fn set_sender(self: Arc<Self>, sender: &Address) {
+        self.write(|builder| {
+            builder.set_sender(**sender);
+        });
+    }
+
     /// Add gas coins that will be consumed. Optional.
     pub fn gas(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
         self.write(|builder| {

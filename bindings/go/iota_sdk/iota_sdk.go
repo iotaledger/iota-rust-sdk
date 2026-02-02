@@ -5160,6 +5160,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender()
+	})
+	if checksum != 20194 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins()
 	})
 	if checksum != 2932 {
@@ -8486,6 +8495,15 @@ func uniffiCheckChecksums() {
 	if checksum != 2185 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender()
+	})
+	if checksum != 37952 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -16266,6 +16284,8 @@ type ClientTransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *ClientTransactionBuilder
+	// Set the sender address.
+	SetSender(sender *Address) 
 	// Split a coin into many.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *ClientTransactionBuilder
 	// Set the sponsor of the transaction.
@@ -16568,6 +16588,17 @@ func (_self *ClientTransactionBuilder) SendIota(recipient *Address, amount *PtbA
 		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
+}
+
+// Set the sender address.
+func (_self *ClientTransactionBuilder) SetSender(sender *Address)  {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+		return false
+	})
 }
 
 // Split a coin into many.
@@ -32536,6 +32567,8 @@ type TransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *TransactionBuilder
+	// Set the sender address.
+	SetSender(sender *Address) 
 	// Split a coin by the provided amounts.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
@@ -32776,6 +32809,17 @@ func (_self *TransactionBuilder) SendIota(recipient *Address, amount *PtbArgumen
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
+}
+
+// Set the sender address.
+func (_self *TransactionBuilder) SetSender(sender *Address)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+		return false
+	})
 }
 
 // Split a coin by the provided amounts.
