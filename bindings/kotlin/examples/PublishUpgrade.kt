@@ -53,7 +53,8 @@ fun main() = runBlocking {
 
         // Fund the sender address for gas payment
         val faucet = FaucetClient.newLocalnet()
-        faucet.requestAndWaitForFinalized(sender, client) ?: throw Exception("Failed to request coins from faucet")
+        faucet.requestAndWaitForFinalized(sender, client)
+            ?: throw Exception("Failed to request coins from faucet")
 
         // Build the `publish` PTB
         val builderPublish = TransactionBuilder(sender).withClient(client)

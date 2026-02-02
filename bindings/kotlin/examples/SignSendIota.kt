@@ -17,11 +17,10 @@ fun main() = runBlocking {
         println("Sender address: ${senderAddress.toHex()}")
 
         val client = GraphQlClient.newLocalnet()
-        
+
         // Request funds from faucet
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWaitForFinalized(senderAddress, client)
-
 
         val builder = TransactionBuilder(senderAddress).withClient(client)
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
