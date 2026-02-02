@@ -4013,6 +4013,12 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5132,6 +5138,12 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_alive(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_to_base58(
@@ -6158,7 +6170,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_digest_generate(
+fun uniffi_iota_sdk_ffi_checksum_constructor_digest_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32(
 ): Short
@@ -7352,8 +7364,14 @@ fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_base58(`base58`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_digest_generate(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_digest_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_alive(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_deleted(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_base58(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12422,6 +12440,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive() != 42875.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted() != 43638.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped() != 27020.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13961,7 +13988,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() != 65530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_random() != 18621.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() != 16842.toShort()) {
@@ -24352,6 +24379,23 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
 public interface DigestInterface {
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+    fun `isAlive`(): kotlin.Boolean
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+    fun `isDeleted`(): kotlin.Boolean
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+    fun `isWrapped`(): kotlin.Boolean
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
     fun `nextLexicographical`(): Digest
@@ -24463,6 +24507,53 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
 
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */override fun `isAlive`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_alive(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */override fun `isDeleted`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */override fun `isWrapped`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */override fun `nextLexicographical`(): Digest {
             return FfiConverterTypeDigest.lift(
@@ -24561,10 +24652,10 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     }
     
 
-         fun `generate`(): Digest {
+         fun `random`(): Digest {
             return FfiConverterTypeDigest.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_digest_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_digest_random(
         _status)
 }
     )

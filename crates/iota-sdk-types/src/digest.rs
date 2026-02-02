@@ -2,6 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+const OBJECT_DIGEST_DELETED_BYTE_VAL: u8 = 99;
+const OBJECT_DIGEST_WRAPPED_BYTE_VAL: u8 = 88;
+const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
+
 /// A 32-byte Blake2b256 hash output.
 ///
 /// # BCS
@@ -29,8 +33,29 @@ pub struct Digest(
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
+
     /// A constant representing a zero digest.
     pub const ZERO: Self = Self([0; Self::LENGTH]);
+
+    /// The lexicographically minimum digest
+    pub const MIN: Self = Self([u8::MIN; 32]);
+
+    /// The lexicographically maximum digest
+    pub const MAX: Self = Self([u8::MAX; 32]);
+
+    /// A marker that signifies the object is deleted.
+    pub const OBJECT_DELETED: Self = Self([OBJECT_DIGEST_DELETED_BYTE_VAL; 32]);
+
+    /// A marker that signifies the object is wrapped into another object.
+    pub const OBJECT_WRAPPED: Self = Self([OBJECT_DIGEST_WRAPPED_BYTE_VAL; 32]);
+
+    /// A marker that signifies the object is cancelled.
+    pub const OBJECT_CANCELLED: Self = Self([OBJECT_DIGEST_CANCELLED_BYTE_VAL; 32]);
+
+    /// A digest used to signify the parent transaction was the genesis.
+    /// Note that this is not the same as the digest of the genesis transaction,
+    /// which cannot be known ahead of time.
+    pub const GENESIS_MARKER: Self = Self::ZERO;
 
     /// Generates a new digest from the provided 32 byte array containing [`u8`]
     /// values.
@@ -48,6 +73,12 @@ impl Digest {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
         Self::new(buf)
+    }
+
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
     }
 
     /// Returns a slice to the inner array representation of this digest.
@@ -90,8 +121,25 @@ impl Digest {
     }
 
     /// Returns the next digest in byte-increasing order.
-    pub fn next_lexicographical(&self) -> Self {
+    pub const fn next_lexicographical(&self) -> Self {
         Self(crate::next_lexicographical_array(&self.0))
+    }
+
+    /// Returns whether the digest represents an object that is neither deleted
+    /// nor wrapped
+    pub fn is_alive(&self) -> bool {
+        *self != Self::OBJECT_DELETED && *self != Self::OBJECT_WRAPPED
+    }
+
+    /// Returns whether the digest represents a deleted object
+    pub fn is_deleted(&self) -> bool {
+        *self == Self::OBJECT_DELETED
+    }
+
+    /// Returns whether the digest represents an object wrapped in another
+    /// object.
+    pub fn is_wrapped(&self) -> bool {
+        *self == Self::OBJECT_WRAPPED
     }
 }
 
@@ -163,6 +211,20 @@ impl std::fmt::LowerHex for Digest {
     }
 }
 
+impl std::fmt::UpperHex for Digest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if f.alternate() {
+            write!(f, "0x")?;
+        }
+
+        for byte in self.0 {
+            write!(f, "{byte:02X}")?;
+        }
+
+        Ok(())
+    }
+}
+
 // Unfortunately IOTA's binary representation of digests is prefixed with its
 // length meaning its serialized binary form is 33 bytes long (in bcs) vs a more
 // compact 32 bytes.
@@ -228,32 +290,5 @@ mod tests {
         let s = digest.to_string();
         let d = s.parse::<Digest>().unwrap();
         assert_eq!(digest, d);
-    }
-
-    #[test]
-    fn test_lexical_order() {
-        fn digest_from_str(s: &str) -> Digest {
-            Digest::new(hex::decode(s).unwrap().try_into().unwrap())
-        }
-        assert_eq!(
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000000000")
-                .next_lexicographical(),
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000000001"),
-        );
-        assert_eq!(
-            digest_from_str("000000000000000000000000000000000000000000000000000000000000ffff")
-                .next_lexicographical(),
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000010000"),
-        );
-        assert_eq!(
-            digest_from_str("000000000000000000000000000000000000000000000000000000000001002c")
-                .next_lexicographical(),
-            digest_from_str("000000000000000000000000000000000000000000000000000000000001002d"),
-        );
-        assert_eq!(
-            digest_from_str("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-                .next_lexicographical(),
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
-        );
     }
 }

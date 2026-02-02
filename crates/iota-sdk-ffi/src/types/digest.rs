@@ -45,9 +45,8 @@ impl Digest {
     }
 
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        let mut rng = rand::thread_rng();
-        Self(iota_sdk::types::Digest::generate(&mut rng))
+    pub fn random() -> Self {
+        Self(iota_sdk::types::Digest::random())
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -61,6 +60,23 @@ impl Digest {
     /// Returns the next digest in byte-increasing order.
     pub fn next_lexicographical(&self) -> Self {
         self.0.next_lexicographical().into()
+    }
+
+    /// Returns whether the digest represents an object that is neither deleted
+    /// nor wrapped
+    pub fn is_alive(&self) -> bool {
+        self.0.is_alive()
+    }
+
+    /// Returns whether the digest represents a deleted object
+    pub fn is_deleted(&self) -> bool {
+        self.0.is_deleted()
+    }
+
+    /// Returns whether the digest represents an object wrapped in another
+    /// object.
+    pub fn is_wrapped(&self) -> bool {
+        self.0.is_wrapped()
     }
 }
 
