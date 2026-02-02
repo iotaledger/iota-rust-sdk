@@ -37,7 +37,7 @@ serde = [
   "dep:serde_repr",
 ]
 schemars = ["serde", "dep:schemars", "dep:serde_json"]
-rand = ["dep:rand_core"]
+rand = ["dep:rand_core", "rand_core/getrandom"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 

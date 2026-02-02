@@ -1347,9 +1347,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 2770:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex() != 32277:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex() != 57104:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex() != 9559:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1967,9 +1971,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 13326:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex() != 56907:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex() != 17836:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2491,7 +2499,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex() != 61183:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex() != 62018:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2697,6 +2711,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex() != 35587:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex() != 4963:
@@ -2815,7 +2831,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex() != 58728:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex() != 12289:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3344,6 +3366,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_random.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -3376,12 +3413,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_hex.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_int8,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6060,6 +6106,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex.argtypes 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7295,6 +7346,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex.argtypes = (
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -7331,12 +7397,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex.argtypes = (
     ctypes.c_void_p,
-    ctypes.c_int8,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14742,9 +14817,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result.restype = ctypes.c_uint16
@@ -15672,9 +15753,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string.rest
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct.restype = ctypes.c_uint16
@@ -16458,6 +16545,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_random.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_address_random.restype = ctypes.c_uint16
@@ -16764,6 +16860,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec.restype = ctypes.c_uint16
@@ -16944,6 +17043,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system.restype = ctypes.c_uint16
@@ -32009,8 +32117,27 @@ class AddressProtocol(typing.Protocol):
 
         raise NotImplementedError
     def to_hex(self, ):
+        """
+        Returns the string representation of this address in hex format with
+        `0x` prefix.
+        """
+
         raise NotImplementedError
-    def to_short_string(self, with_prefix: "bool"):
+    def to_raw_hex(self, ):
+        """
+        Returns the string representation of this address in hex format without
+        `0x` prefix.
+        """
+
+        raise NotImplementedError
+    def to_raw_short_hex(self, ):
+        """
+        Returns the shortest possible string representation of the address (i.e.
+        with leading zeroes trimmed), without `0x` prefix.
+        """
+
+        raise NotImplementedError
+    def to_short_hex(self, ):
         """
         Returns the shortest possible string representation of the address (i.e.
         with leading zeroes trimmed).
@@ -32102,6 +32229,51 @@ class Address():
     @classmethod
     def from_hex(cls, hex: "str"):
         """
+        Parses an Address from a full-length hex string (64 hex characters),
+        with or without a `0x` prefix. Will return an error if the string is not
+        exactly 64 hex characters long (excluding the `0x` prefix).
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_prefixed_hex(cls, hex: "str"):
+        """
+        Parses an Address from a full-length hex string (64 hex characters),
+        with a mandatory `0x` prefix. Will return an error if the string is not
+        exactly 64 hex characters long (excluding the `0x` prefix).
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_prefixed_short_hex(cls, hex: "str"):
+        """
+        Parses an Address from a hex string with a mandatory `0x` prefix.
+        The string can be of variable length; if it's shorter than 64 hex
+        characters, it will be left-padded with `0`s.
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_short_hex(cls, hex: "str"):
+        """
         Parses an Address from a hex string, with or without a `0x` prefix.
         The string can be of variable length; if it's shorter than 64 hex
         characters, it will be left-padded with `0`s.
@@ -32110,7 +32282,7 @@ class Address():
         _UniffiConverterString.check_lower(hex)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex,
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex,
         _UniffiConverterString.lower(hex))
         return cls._make_instance_(pointer)
 
@@ -32167,6 +32339,11 @@ class Address():
 
 
     def to_hex(self, ) -> "str":
+        """
+        Returns the string representation of this address in hex format with
+        `0x` prefix.
+        """
+
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_hex,self._uniffi_clone_pointer(),)
         )
@@ -32175,17 +32352,42 @@ class Address():
 
 
 
-    def to_short_string(self, with_prefix: "bool") -> "str":
+    def to_raw_hex(self, ) -> "str":
+        """
+        Returns the string representation of this address in hex format without
+        `0x` prefix.
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_raw_short_hex(self, ) -> "str":
+        """
+        Returns the shortest possible string representation of the address (i.e.
+        with leading zeroes trimmed), without `0x` prefix.
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_short_hex(self, ) -> "str":
         """
         Returns the shortest possible string representation of the address (i.e.
         with leading zeroes trimmed).
         """
 
-        _UniffiConverterBool.check_lower(with_prefix)
-        
         return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_string,self._uniffi_clone_pointer(),
-        _UniffiConverterBool.lower(with_prefix))
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex,self._uniffi_clone_pointer(),)
         )
 
 
@@ -42461,6 +42663,15 @@ class MoveArg():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def address_from_short_hex(cls, hex: "str"):
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def address_vec(cls, addresses: "typing.List[Address]"):
         _UniffiConverterSequenceTypeAddress.check_lower(addresses)
         
@@ -46309,8 +46520,27 @@ class ObjectIdProtocol(typing.Protocol):
 
         raise NotImplementedError
     def to_hex(self, ):
+        """
+        Returns the string representation of this object id in hex format with
+        `0x` prefix.
+        """
+
         raise NotImplementedError
-    def to_short_string(self, with_prefix: "bool"):
+    def to_raw_hex(self, ):
+        """
+        Returns the string representation of this object id in hex format
+        without `0x` prefix.
+        """
+
+        raise NotImplementedError
+    def to_raw_short_hex(self, ):
+        """
+        Returns the shortest possible string representation of the object id
+        (i.e. with leading zeroes trimmed), without `0x` prefix.
+        """
+
+        raise NotImplementedError
+    def to_short_hex(self, ):
         """
         Returns the shortest possible string representation of the object ID
         (i.e. with leading zeroes trimmed).
@@ -46396,10 +46626,61 @@ class ObjectId():
 
     @classmethod
     def from_hex(cls, hex: "str"):
+        """
+        Parses an ObjectId from a full-length hex string (64 hex characters),
+        with or without a `0x` prefix. Will return an error if the string is not
+        exactly 64 hex characters long (excluding the `0x` prefix).
+        """
+
         _UniffiConverterString.check_lower(hex)
         
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_prefixed_hex(cls, hex: "str"):
+        """
+        Parses an ObjectId from a full-length hex string (64 hex characters),
+        with a mandatory `0x` prefix. Will return an error if the string is not
+        exactly 64 hex characters long (excluding the `0x` prefix).
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_prefixed_short_hex(cls, hex: "str"):
+        """
+        Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+        The string can be of variable length; if it's shorter than 64 hex
+        characters, it will be left-padded with `0`s.
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex,
+        _UniffiConverterString.lower(hex))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def from_short_hex(cls, hex: "str"):
+        """
+        Parses an ObjectId from a hex string, with or without a `0x` prefix.
+        The string can be of variable length; if it's shorter than 64 hex
+        characters, it will be left-padded with `0`s.
+        """
+
+        _UniffiConverterString.check_lower(hex)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call_with_error(_UniffiConverterTypeSdkFfiError,_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex,
         _UniffiConverterString.lower(hex))
         return cls._make_instance_(pointer)
 
@@ -46474,6 +46755,11 @@ class ObjectId():
 
 
     def to_hex(self, ) -> "str":
+        """
+        Returns the string representation of this object id in hex format with
+        `0x` prefix.
+        """
+
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_hex,self._uniffi_clone_pointer(),)
         )
@@ -46482,17 +46768,42 @@ class ObjectId():
 
 
 
-    def to_short_string(self, with_prefix: "bool") -> "str":
+    def to_raw_hex(self, ) -> "str":
+        """
+        Returns the string representation of this object id in hex format
+        without `0x` prefix.
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_raw_short_hex(self, ) -> "str":
+        """
+        Returns the shortest possible string representation of the object id
+        (i.e. with leading zeroes trimmed), without `0x` prefix.
+        """
+
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def to_short_hex(self, ) -> "str":
         """
         Returns the shortest possible string representation of the object ID
         (i.e. with leading zeroes trimmed).
         """
 
-        _UniffiConverterBool.check_lower(with_prefix)
-        
         return _UniffiConverterString.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string,self._uniffi_clone_pointer(),
-        _UniffiConverterBool.lower(with_prefix))
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex,self._uniffi_clone_pointer(),)
         )
 
 

@@ -3991,6 +3991,28 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4894,7 +4916,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_string(
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result(
 ): Short
@@ -5514,7 +5540,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string(
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct(
 ): Short
@@ -6038,6 +6068,12 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_std(
@@ -6242,6 +6278,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec_from_hex(
@@ -6361,6 +6399,12 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
 ): Short
@@ -6812,6 +6856,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.By
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_std(uniffi_out_err: UniffiRustCallStatus, 
@@ -6826,7 +6876,11 @@ fun uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(`ptr`: Pointer,`wi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_address_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -7814,6 +7868,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address(`address`: Pointer,uniffi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_movearg_address_vec_from_hex(`addresses`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -8286,6 +8342,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustCallStatus, 
@@ -8300,7 +8362,11 @@ fun uniffi_iota_sdk_ffi_fn_method_objectid_to_canonical_string(`ptr`: Pointer,`w
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8674,6 +8740,19 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(`ptr`: Poi
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
+): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9674,17 +9753,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(`ptr`: Pointer,`jwks`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -12027,10 +12095,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 2770.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex() != 32277.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex() != 57104.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex() != 9559.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358.toShort()) {
@@ -12957,10 +13031,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex() != 56907.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex() != 17836.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094.toShort()) {
@@ -13743,7 +13823,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex() != 61183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex() != 62018.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074.toShort()) {
@@ -14052,6 +14141,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex() != 35587.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14229,7 +14321,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex() != 58728.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex() != 12289.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
@@ -15593,13 +15694,29 @@ public interface AddressInterface {
      */
     fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+    fun `toRawHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+    fun `toRawShortHex`(): kotlin.String
     
     /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    fun `toShortHex`(): kotlin.String
     
     companion object
 }
@@ -15756,7 +15873,11 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
-    override fun `toHex`(): kotlin.String {
+    
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -15770,14 +15891,46 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     /**
-     * Returns the shortest possible string representation of the address (i.e.
-     * with leading zeroes trimmed).
-     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */override fun `toRawHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_string(
-        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */override fun `toRawShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed).
+     */override fun `toShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(
+        it, _status)
 }
     }
     )
@@ -15846,14 +15999,62 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
         
     /**
-     * Parses an Address from a hex string, with or without a `0x` prefix.
-     * The string can be of variable length; if it's shorter than 64 hex
-     * characters, it will be left-padded with `0`s.
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
      */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedShortHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromShortHex`(`hex`: kotlin.String): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
@@ -32636,6 +32837,17 @@ open class MoveArg: Disposable, AutoCloseable, MoveArgInterface
     }
     
 
+        
+    @Throws(SdkFfiException::class) fun `addressFromShortHex`(`hex`: kotlin.String): MoveArg {
+            return FfiConverterTypeMoveArg.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
          fun `addressVec`(`addresses`: List<Address>): MoveArg {
             return FfiConverterTypeMoveArg.lift(
     uniffiRustCall() { _status ->
@@ -39655,13 +39867,29 @@ public interface ObjectIdInterface {
      */
     fun `toCanonicalString`(`withPrefix`: kotlin.Boolean): kotlin.String
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
     fun `toHex`(): kotlin.String
+    
+    /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+    fun `toRawHex`(): kotlin.String
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+    fun `toRawShortHex`(): kotlin.String
     
     /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-    fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String
+    fun `toShortHex`(): kotlin.String
     
     companion object
 }
@@ -39825,7 +40053,11 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
-    override fun `toHex`(): kotlin.String {
+    
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */override fun `toHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
@@ -39839,14 +40071,46 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     /**
-     * Returns the shortest possible string representation of the object ID
-     * (i.e. with leading zeroes trimmed).
-     */override fun `toShortString`(`withPrefix`: kotlin.Boolean): kotlin.String {
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */override fun `toRawHex`(): kotlin.String {
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(
-        it, FfiConverterBoolean.lower(`withPrefix`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */override fun `toRawShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the shortest possible string representation of the object ID
+     * (i.e. with leading zeroes trimmed).
+     */override fun `toShortHex`(): kotlin.String {
+            return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(
+        it, _status)
 }
     }
     )
@@ -39928,10 +40192,63 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     
 
         
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromPrefixedShortHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(
+        FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Parses an ObjectId from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+    @Throws(SdkFfiException::class) fun `fromShortHex`(`hex`: kotlin.String): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCallWithError(SdkFfiException) { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(
         FfiConverterString.lower(`hex`),_status)
 }
     )
@@ -45087,7 +45404,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1VerifyingKey.lower(`other`),_status)
 }
     }
@@ -45338,7 +45655,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     constructor(`bytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -45394,7 +45711,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
                 }
             }
         }
@@ -45402,7 +45719,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
         }
     }
 
@@ -45413,7 +45730,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
         it, _status)
 }
     }
@@ -45425,7 +45742,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
         it, _status)
 }
     }
@@ -45441,7 +45758,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -45457,7 +45774,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -45474,7 +45791,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
         it, _status)
 }
     }
@@ -45489,7 +45806,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
         it, _status)
 }
     }
@@ -45505,7 +45822,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
         it, _status)
 }
     }
@@ -45521,7 +45838,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
         it, _status)
 }
     }
@@ -45537,7 +45854,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -45553,7 +45870,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -45569,7 +45886,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -45581,7 +45898,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
         it, _status)
 }
     }
@@ -45597,7 +45914,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PrivateKey.lower(`other`),_status)
 }
     }
@@ -45615,7 +45932,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -45630,7 +45947,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -45644,7 +45961,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
         FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -45659,7 +45976,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
         FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -45673,7 +45990,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -45686,7 +46003,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
      */ fun `generate`(): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
         _status)
 }
     )
@@ -45945,7 +46262,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
                 }
             }
         }
@@ -45953,7 +46270,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
         }
     }
 
@@ -45970,7 +46287,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
         it, _status)
 }
     }
@@ -45985,7 +46302,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
         it, _status)
 }
     }
@@ -45997,7 +46314,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
         it, _status)
 }
     }
@@ -46012,7 +46329,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -46028,7 +46345,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PublicKey.lower(`other`),_status)
 }
     }
@@ -46039,7 +46356,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -46052,7 +46369,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46063,7 +46380,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46073,7 +46390,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
          fun `generate`(): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
         _status)
 }
     )
@@ -46311,7 +46628,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
                 }
             }
         }
@@ -46319,7 +46636,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
         }
     }
 
@@ -46327,7 +46644,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(
         it, _status)
 }
     }
@@ -46343,7 +46660,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1Signature.lower(`other`),_status)
 }
     }
@@ -46354,7 +46671,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -46367,7 +46684,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46378,7 +46695,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46388,7 +46705,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
          fun `generate`(): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
         _status)
 }
     )
@@ -46557,7 +46874,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
         _status)
 }
     )
@@ -46613,7 +46930,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(ptr, status)
                 }
             }
         }
@@ -46621,7 +46938,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer!!, status)
         }
     }
 
@@ -46630,7 +46947,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -46642,7 +46959,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -46828,7 +47145,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     constructor(`publicKey`: Secp256r1PublicKey) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
         FfiConverterTypeSecp256r1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -46884,7 +47201,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(ptr, status)
                 }
             }
         }
@@ -46892,7 +47209,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(pointer!!, status)
         }
     }
 
@@ -46900,7 +47217,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
         it, _status)
 }
     }
@@ -46916,7 +47233,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
         it, _status)
 }
     }
@@ -46932,7 +47249,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
         it, _status)
 }
     }
@@ -46945,7 +47262,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSecp256r1Signature.lower(`signature`),_status)
 }
     }
@@ -46957,7 +47274,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -46969,7 +47286,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -46984,7 +47301,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1VerifyingKey.lower(`other`),_status)
 }
     }
@@ -47001,7 +47318,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256r1VerifyingKey {
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47015,7 +47332,7 @@ open class Secp256r1VerifyingKey: Disposable, AutoCloseable, Secp256r1VerifyingK
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256r1VerifyingKey {
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -47270,7 +47587,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplekeypair(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplekeypair(ptr, status)
                 }
             }
         }
@@ -47278,7 +47595,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplekeypair(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplekeypair(pointer!!, status)
         }
     }
 
@@ -47286,7 +47603,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeMultisigMemberPublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
         it, _status)
 }
     }
@@ -47298,7 +47615,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
         it, _status)
 }
     }
@@ -47314,7 +47631,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -47330,7 +47647,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -47347,7 +47664,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
         it, _status)
 }
     }
@@ -47362,7 +47679,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
         it, _status)
 }
     }
@@ -47378,7 +47695,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
         it, _status)
 }
     }
@@ -47394,7 +47711,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
         it, _status)
 }
     }
@@ -47407,7 +47724,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -47420,7 +47737,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -47432,7 +47749,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
             return FfiConverterTypeSimpleVerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
         it, _status)
 }
     }
@@ -47453,7 +47770,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -47467,7 +47784,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47482,7 +47799,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47492,7 +47809,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
          fun `fromEd25519`(`keypair`: Ed25519PrivateKey): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
         FfiConverterTypeEd25519PrivateKey.lower(`keypair`),_status)
 }
     )
@@ -47506,7 +47823,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -47516,7 +47833,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
          fun `fromSecp256k1`(`keypair`: Secp256k1PrivateKey): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
         FfiConverterTypeSecp256k1PrivateKey.lower(`keypair`),_status)
 }
     )
@@ -47526,7 +47843,7 @@ open class SimpleKeypair: Disposable, AutoCloseable, SimpleKeypairInterface
          fun `fromSecp256r1`(`keypair`: Secp256r1PrivateKey): SimpleKeypair {
             return FfiConverterTypeSimpleKeypair.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
         FfiConverterTypeSecp256r1PrivateKey.lower(`keypair`),_status)
 }
     )
@@ -47822,7 +48139,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplesignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simplesignature(ptr, status)
                 }
             }
         }
@@ -47830,7 +48147,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplesignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simplesignature(pointer!!, status)
         }
     }
 
@@ -47838,7 +48155,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeEd25519PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key(
         it, _status)
 }
     }
@@ -47850,7 +48167,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeEd25519PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_pub_key_opt(
         it, _status)
 }
     }
@@ -47862,7 +48179,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeEd25519Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig(
         it, _status)
 }
     }
@@ -47874,7 +48191,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeEd25519Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_ed25519_sig_opt(
         it, _status)
 }
     }
@@ -47886,7 +48203,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_ed25519(
         it, _status)
 }
     }
@@ -47898,7 +48215,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256k1(
         it, _status)
 }
     }
@@ -47910,7 +48227,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_is_secp256r1(
         it, _status)
 }
     }
@@ -47922,7 +48239,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_scheme(
         it, _status)
 }
     }
@@ -47934,7 +48251,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256k1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key(
         it, _status)
 }
     }
@@ -47946,7 +48263,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256k1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_pub_key_opt(
         it, _status)
 }
     }
@@ -47958,7 +48275,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256k1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig(
         it, _status)
 }
     }
@@ -47970,7 +48287,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256k1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256k1_sig_opt(
         it, _status)
 }
     }
@@ -47982,7 +48299,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key(
         it, _status)
 }
     }
@@ -47994,7 +48311,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_pub_key_opt(
         it, _status)
 }
     }
@@ -48006,7 +48323,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig(
         it, _status)
 }
     }
@@ -48018,7 +48335,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterOptionalTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_secp256r1_sig_opt(
         it, _status)
 }
     }
@@ -48030,7 +48347,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_to_bytes(
         it, _status)
 }
     }
@@ -48046,7 +48363,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeSimpleSignature.lower(`other`),_status)
 }
     }
@@ -48057,7 +48374,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -48069,7 +48386,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
          fun `newEd25519`(`signature`: Ed25519Signature, `publicKey`: Ed25519PublicKey): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_ed25519(
         FfiConverterTypeEd25519Signature.lower(`signature`),FfiConverterTypeEd25519PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -48079,7 +48396,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
          fun `newSecp256k1`(`signature`: Secp256k1Signature, `publicKey`: Secp256k1PublicKey): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256k1(
         FfiConverterTypeSecp256k1Signature.lower(`signature`),FfiConverterTypeSecp256k1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -48089,7 +48406,7 @@ open class SimpleSignature: Disposable, AutoCloseable, SimpleSignatureInterface
          fun `newSecp256r1`(`signature`: Secp256r1Signature, `publicKey`: Secp256r1PublicKey): SimpleSignature {
             return FfiConverterTypeSimpleSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simplesignature_new_secp256r1(
         FfiConverterTypeSecp256r1Signature.lower(`signature`),FfiConverterTypeSecp256r1PublicKey.lower(`publicKey`),_status)
 }
     )
@@ -48256,7 +48573,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
         _status)
 }
     )
@@ -48312,7 +48629,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifier(ptr, status)
                 }
             }
         }
@@ -48320,7 +48637,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifier(pointer!!, status)
         }
     }
 
@@ -48329,7 +48646,7 @@ open class SimpleVerifier: Disposable, AutoCloseable, SimpleVerifierInterface
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -48562,7 +48879,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(ptr, status)
                 }
             }
         }
@@ -48570,7 +48887,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(pointer!!, status)
         }
     }
 
@@ -48578,7 +48895,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterTypeMultisigMemberPublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
         it, _status)
 }
     }
@@ -48590,7 +48907,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
         it, _status)
 }
     }
@@ -48606,7 +48923,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
         it, _status)
 }
     }
@@ -48622,7 +48939,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
         it, _status)
 }
     }
@@ -48635,7 +48952,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     }
@@ -48650,7 +48967,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSimpleVerifyingKey.lower(`other`),_status)
 }
     }
@@ -48668,7 +48985,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): SimpleVerifyingKey {
             return FfiConverterTypeSimpleVerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -48682,7 +48999,7 @@ open class SimpleVerifyingKey: Disposable, AutoCloseable, SimpleVerifyingKeyInte
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): SimpleVerifyingKey {
             return FfiConverterTypeSimpleVerifyingKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -48879,7 +49196,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
     constructor(`coin`: Argument, `amounts`: List<Argument>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_splitcoins_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_splitcoins_new(
         FfiConverterTypeArgument.lower(`coin`),FfiConverterSequenceTypeArgument.lower(`amounts`),_status)
 }
     )
@@ -48935,7 +49252,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_splitcoins(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_splitcoins(ptr, status)
                 }
             }
         }
@@ -48943,7 +49260,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_splitcoins(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_splitcoins(pointer!!, status)
         }
     }
 
@@ -48954,7 +49271,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
             return FfiConverterSequenceTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_amounts(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_amounts(
         it, _status)
 }
     }
@@ -48969,7 +49286,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_coin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_coin(
         it, _status)
 }
     }
@@ -48985,7 +49302,7 @@ open class SplitCoins: Disposable, AutoCloseable, SplitCoinsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_splitcoins_uniffi_trait_eq_eq(
         it, FfiConverterTypeSplitCoins.lower(`other`),_status)
 }
     }
@@ -49216,7 +49533,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     constructor(`address`: Address, `module`: Identifier, `name`: Identifier, `typeParams`: List<TypeTag> = listOf()) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new(
         FfiConverterTypeAddress.lower(`address`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`name`),FfiConverterSequenceTypeTypeTag.lower(`typeParams`),_status)
 }
     )
@@ -49272,7 +49589,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_structtag(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_structtag(ptr, status)
                 }
             }
         }
@@ -49280,7 +49597,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_structtag(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_structtag(pointer!!, status)
         }
     }
 
@@ -49291,7 +49608,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_address(
         it, _status)
 }
     }
@@ -49306,7 +49623,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(
         it, _status)
 }
     }
@@ -49321,7 +49638,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
         it, _status)
 }
     }
@@ -49336,7 +49653,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_module(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_module(
         it, _status)
 }
     }
@@ -49351,7 +49668,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_name(
         it, _status)
 }
     }
@@ -49367,7 +49684,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_to_canonical_string(
         it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
@@ -49382,7 +49699,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterSequenceTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_type_args(
         it, _status)
 }
     }
@@ -49395,7 +49712,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_display(
         it, _status)
 }
     }
@@ -49409,7 +49726,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_eq_eq(
         it, FfiConverterTypeStructTag.lower(`other`),_status)
 }
     }
@@ -49420,7 +49737,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -49432,7 +49749,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newAsciiString`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(
         _status)
 }
     )
@@ -49442,7 +49759,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newBalance`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49452,7 +49769,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newClock`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(
         _status)
 }
     )
@@ -49462,7 +49779,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newCoin`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49472,7 +49789,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newCoinManager`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_manager(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_manager(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49482,7 +49799,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newCoinMetadata`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_metadata(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_coin_metadata(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49492,7 +49809,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newConfig`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config(
         _status)
 }
     )
@@ -49502,7 +49819,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newConfigSetting`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config_setting(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_config_setting(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49512,7 +49829,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDenyListAddressKey`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_address_key(
         _status)
 }
     )
@@ -49522,7 +49839,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDenyListConfigKey`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_config_key(
         _status)
 }
     )
@@ -49532,7 +49849,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDenyListGlobalPauseKey`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
         _status)
 }
     )
@@ -49542,7 +49859,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDisplayCreated`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49552,7 +49869,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49562,7 +49879,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newField`(`key`: TypeTag, `value`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
         FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
 }
     )
@@ -49572,7 +49889,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newGasCoin`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(
         _status)
 }
     )
@@ -49582,7 +49899,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newId`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
         _status)
 }
     )
@@ -49592,7 +49909,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaCoinType`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
         _status)
 }
     )
@@ -49602,7 +49919,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaSystemAdminCap`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(
         _status)
 }
     )
@@ -49612,7 +49929,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaSystemState`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(
         _status)
 }
     )
@@ -49622,7 +49939,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newIotaTreasuryCap`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(
         _status)
 }
     )
@@ -49632,7 +49949,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newName`(`address`: Address): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress.lower(`address`),_status)
 }
     )
@@ -49642,7 +49959,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newStakedIota`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(
         _status)
 }
     )
@@ -49652,7 +49969,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newString`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_string(
         _status)
 }
     )
@@ -49662,7 +49979,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newSystemEpochInfoEvent`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_system_epoch_info_event(
         _status)
 }
     )
@@ -49672,7 +49989,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTimeLock`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_time_lock(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_time_lock(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -49682,7 +49999,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTimelockedStakedIota`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_timelocked_staked_iota(
         _status)
 }
     )
@@ -49692,7 +50009,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTransferReceiving`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(
         _status)
 }
     )
@@ -49702,7 +50019,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newTreasuryCap`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49712,7 +50029,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUid`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(
         _status)
 }
     )
@@ -49722,7 +50039,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUpgradeCap`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(
         _status)
 }
     )
@@ -49732,7 +50049,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUpgradeReceipt`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(
         _status)
 }
     )
@@ -49742,7 +50059,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newUpgradeTicket`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
         _status)
 }
     )
@@ -49752,7 +50069,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
          fun `newVersionUpdated`(`structTag`: StructTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -49949,7 +50266,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
     constructor(`version`: Version, `modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
         FfiConverterTypeVersion.lower(`version`),FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),_status)
 }
     )
@@ -50005,7 +50322,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_systempackage(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_systempackage(ptr, status)
                 }
             }
         }
@@ -50013,7 +50330,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_systempackage(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_systempackage(pointer!!, status)
         }
     }
 
@@ -50021,7 +50338,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_dependencies(
         it, _status)
 }
     }
@@ -50033,7 +50350,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_modules(
         it, _status)
 }
     }
@@ -50045,7 +50362,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_version(
         it, _status)
 }
     }
@@ -50061,7 +50378,7 @@ open class SystemPackage: Disposable, AutoCloseable, SystemPackageInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_systempackage_uniffi_trait_eq_eq(
         it, FfiConverterTypeSystemPackage.lower(`other`),_status)
 }
     }
@@ -50330,7 +50647,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transaction(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transaction(ptr, status)
                 }
             }
         }
@@ -50338,7 +50655,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transaction(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transaction(pointer!!, status)
         }
     }
 
@@ -50346,7 +50663,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeTransactionV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_as_v1(
         it, _status)
 }
     }
@@ -50358,7 +50675,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_digest(
         it, _status)
 }
     }
@@ -50370,7 +50687,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeTransactionExpiration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_expiration(
         it, _status)
 }
     }
@@ -50382,7 +50699,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeGasPayment.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_gas_payment(
         it, _status)
 }
     }
@@ -50394,7 +50711,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeTransactionKind.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_kind(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_kind(
         it, _status)
 }
     }
@@ -50406,7 +50723,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_sender(
         it, _status)
 }
     }
@@ -50421,7 +50738,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest(
         it, _status)
 }
     }
@@ -50436,7 +50753,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_signing_digest_hex(
         it, _status)
 }
     }
@@ -50451,7 +50768,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_to_base64(
         it, _status)
 }
     }
@@ -50467,7 +50784,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transaction_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransaction.lower(`other`),_status)
 }
     }
@@ -50484,7 +50801,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
     @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): Transaction {
             return FfiConverterTypeTransaction.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_from_base64(
         FfiConverterString.lower(`base64`),_status)
 }
     )
@@ -50494,7 +50811,7 @@ open class Transaction: Disposable, AutoCloseable, TransactionInterface
          fun `newV1`(`transactionV1`: TransactionV1): Transaction {
             return FfiConverterTypeTransaction.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transaction_new_v1(
         FfiConverterTypeTransactionV1.lower(`transactionV1`),_status)
 }
     )
@@ -50822,7 +51139,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     constructor(`sender`: Address) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionbuilder_new(
         FfiConverterTypeAddress.lower(`sender`),_status)
 }
     )
@@ -50878,7 +51195,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionbuilder(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionbuilder(ptr, status)
                 }
             }
         }
@@ -50886,7 +51203,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionbuilder(pointer!!, status)
         }
     }
 
@@ -50904,7 +51221,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     override suspend fun `executeWithGasStation`(`signer`: TransactionSigner) : Value {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_execute_with_gas_station(
                 thisPtr,
                 FfiConverterTypeTransactionSigner.lower(`signer`),
             )
@@ -50926,7 +51243,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_expiration(
         it, FfiConverterULong.lower(`epoch`),_status)
 }
     }
@@ -50942,7 +51259,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransaction.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_finish(
         it, _status)
 }
     }
@@ -50957,7 +51274,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas(
         it, FfiConverterSequenceTypeObjectReference.lower(`objectRefs`),_status)
 }
     }
@@ -50972,7 +51289,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_budget(
         it, FfiConverterULong.lower(`budget`),_status)
 }
     }
@@ -50987,7 +51304,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_price(
         it, FfiConverterULong.lower(`price`),_status)
 }
     }
@@ -51002,7 +51319,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_gas_station_sponsor(
         it, FfiConverterString.lower(`url`),FfiConverterOptionalDuration.lower(`duration`),FfiConverterOptionalMapStringSequenceString.lower(`headers`),_status)
 }
     }
@@ -51018,7 +51335,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_make_move_vec(
         it, FfiConverterSequenceTypeMoveArg.lower(`elements`),FfiConverterTypeTypeTag.lower(`typeTag`),FfiConverterString.lower(`name`),_status)
 }
     }
@@ -51038,7 +51355,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_merge_coins(
         it, FfiConverterTypePTBArgument.lower(`primaryCoin`),FfiConverterSequenceTypePTBArgument.lower(`consumedCoins`),_status)
 }
     }
@@ -51053,7 +51370,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_move_call(
         it, FfiConverterTypeAddress.lower(`package`),FfiConverterTypeIdentifier.lower(`module`),FfiConverterTypeIdentifier.lower(`function`),FfiConverterSequenceTypePTBArgument.lower(`arguments`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
@@ -51080,7 +51397,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_publish(
         it, FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterString.lower(`upgradeCapName`),_status)
 }
     }
@@ -51109,7 +51426,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(
         it, FfiConverterSequenceTypePTBArgument.lower(`coins`),FfiConverterTypeAddress.lower(`recipient`),FfiConverterOptionalTypePTBArgument.lower(`amount`),_status)
 }
     }
@@ -51128,7 +51445,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterTypePTBArgument.lower(`amount`),_status)
 }
     }
@@ -51143,7 +51460,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(
         it, FfiConverterTypePTBArgument.lower(`coin`),FfiConverterSequenceTypePTBArgument.lower(`amounts`),FfiConverterSequenceString.lower(`names`),_status)
 }
     }
@@ -51158,7 +51475,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(
         it, FfiConverterTypeAddress.lower(`sponsor`),_status)
 }
     }
@@ -51176,7 +51493,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_stake(
         it, FfiConverterTypePTBArgument.lower(`stake`),FfiConverterTypeAddress.lower(`validatorAddress`),_status)
 }
     }
@@ -51192,7 +51509,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_transfer_objects(
         it, FfiConverterTypeAddress.lower(`recipient`),FfiConverterSequenceTypePTBArgument.lower(`objects`),_status)
 }
     }
@@ -51207,7 +51524,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_unstake(
         it, FfiConverterTypePTBArgument.lower(`stakedIota`),_status)
 }
     }
@@ -51232,7 +51549,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_upgrade(
         it, FfiConverterTypeObjectId.lower(`packageId`),FfiConverterTypeMovePackageData.lower(`packageData`),FfiConverterTypePTBArgument.lower(`upgradeTicket`),FfiConverterOptionalString.lower(`name`),_status)
 }
     }
@@ -51244,7 +51561,7 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
             return FfiConverterTypeClientTransactionBuilder.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_with_client(
         it, FfiConverterTypeGraphQLClient.lower(`client`),_status)
 }
     }
@@ -51492,7 +51809,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactioneffects(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactioneffects(ptr, status)
                 }
             }
         }
@@ -51500,7 +51817,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactioneffects(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactioneffects(pointer!!, status)
         }
     }
 
@@ -51508,7 +51825,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
             return FfiConverterTypeTransactionEffectsV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_as_v1(
         it, _status)
 }
     }
@@ -51520,7 +51837,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_digest(
         it, _status)
 }
     }
@@ -51532,7 +51849,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_is_v1(
         it, _status)
 }
     }
@@ -51548,7 +51865,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactioneffects_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionEffects.lower(`other`),_status)
 }
     }
@@ -51561,7 +51878,7 @@ open class TransactionEffects: Disposable, AutoCloseable, TransactionEffectsInte
          fun `newV1`(`effects`: TransactionEffectsV1): TransactionEffects {
             return FfiConverterTypeTransactionEffects.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactioneffects_new_v1(
         FfiConverterTypeTransactionEffectsV1.lower(`effects`),_status)
 }
     )
@@ -51752,7 +52069,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
     constructor(`events`: List<Event>) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionevents_new(
         FfiConverterSequenceTypeEvent.lower(`events`),_status)
 }
     )
@@ -51808,7 +52125,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionevents(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionevents(ptr, status)
                 }
             }
         }
@@ -51816,7 +52133,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionevents(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionevents(pointer!!, status)
         }
     }
 
@@ -51824,7 +52141,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_digest(
         it, _status)
 }
     }
@@ -51836,7 +52153,7 @@ open class TransactionEvents: Disposable, AutoCloseable, TransactionEventsInterf
             return FfiConverterSequenceTypeEvent.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionevents_events(
         it, _status)
 }
     }
@@ -52092,7 +52409,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionkind(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionkind(ptr, status)
                 }
             }
         }
@@ -52100,7 +52417,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionkind(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionkind(pointer!!, status)
         }
     }
 
@@ -52112,7 +52429,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionKind.lower(`other`),_status)
 }
     }
@@ -52125,7 +52442,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newAuthenticatorStateUpdateV1`(`tx`: AuthenticatorStateUpdateV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
         FfiConverterTypeAuthenticatorStateUpdateV1.lower(`tx`),_status)
 }
     )
@@ -52135,7 +52452,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newConsensusCommitPrologueV1`(`tx`: ConsensusCommitPrologueV1): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
         FfiConverterTypeConsensusCommitPrologueV1.lower(`tx`),_status)
 }
     )
@@ -52145,7 +52462,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newEndOfEpoch`(`tx`: List<EndOfEpochTransactionKind>): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
         FfiConverterSequenceTypeEndOfEpochTransactionKind.lower(`tx`),_status)
 }
     )
@@ -52155,7 +52472,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newGenesis`(`tx`: GenesisTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
         FfiConverterTypeGenesisTransaction.lower(`tx`),_status)
 }
     )
@@ -52165,7 +52482,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newProgrammableTransaction`(`tx`: ProgrammableTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
         FfiConverterTypeProgrammableTransaction.lower(`tx`),_status)
 }
     )
@@ -52175,7 +52492,7 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
          fun `newRandomnessStateUpdate`(`tx`: RandomnessStateUpdate): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
         FfiConverterTypeRandomnessStateUpdate.lower(`tx`),_status)
 }
     )
@@ -52350,7 +52667,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     constructor(`signerFn`: TransactionSignerFn) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
         FfiConverterTypeTransactionSignerFn.lower(`signerFn`),_status)
 }
     )
@@ -52406,7 +52723,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsigner(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsigner(ptr, status)
                 }
             }
         }
@@ -52414,7 +52731,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsigner(pointer!!, status)
         }
     }
 
@@ -52424,7 +52741,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
     override suspend fun `sign`(`txn`: Transaction) : UserSignature {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsigner_sign(
                 thisPtr,
                 FfiConverterTypeTransaction.lower(`txn`),
             )
@@ -52446,7 +52763,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromEd25519`(`key`: Ed25519PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
         FfiConverterTypeEd25519PrivateKey.lower(`key`),_status)
 }
     )
@@ -52456,7 +52773,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromKeypair`(`key`: SimpleKeypair): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
         FfiConverterTypeSimpleKeypair.lower(`key`),_status)
 }
     )
@@ -52466,7 +52783,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromMoveAuthenticator`(`auth`: MoveAuthenticator): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`auth`),_status)
 }
     )
@@ -52476,7 +52793,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256k1`(`key`: Secp256k1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
         FfiConverterTypeSecp256k1PrivateKey.lower(`key`),_status)
 }
     )
@@ -52486,7 +52803,7 @@ open class TransactionSigner: Disposable, AutoCloseable, TransactionSignerInterf
          fun `fromSecp256r1`(`key`: Secp256r1PrivateKey): TransactionSigner {
             return FfiConverterTypeTransactionSigner.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
         FfiConverterTypeSecp256r1PrivateKey.lower(`key`),_status)
 }
     )
@@ -52717,7 +53034,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionsignerfn(ptr, status)
                 }
             }
         }
@@ -52725,7 +53042,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionsignerfn(pointer!!, status)
         }
     }
 
@@ -52738,7 +53055,7 @@ open class TransactionSignerFnImpl: Disposable, AutoCloseable, TransactionSigner
     override suspend fun `sign`(`transaction`: Transaction) : TransactionSignerFnOutput {
         return uniffiRustCallAsync(
         callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionsignerfn_sign(
                 thisPtr,
                 FfiConverterTypeTransaction.lower(`transaction`),
             )
@@ -53024,7 +53341,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     constructor(`kind`: TransactionKind, `sender`: Address, `gasPayment`: GasPayment, `expiration`: TransactionExpiration) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_new(
         FfiConverterTypeTransactionKind.lower(`kind`),FfiConverterTypeAddress.lower(`sender`),FfiConverterTypeGasPayment.lower(`gasPayment`),FfiConverterTypeTransactionExpiration.lower(`expiration`),_status)
 }
     )
@@ -53080,7 +53397,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transactionv1(ptr, status)
                 }
             }
         }
@@ -53088,7 +53405,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transactionv1(pointer!!, status)
         }
     }
 
@@ -53096,7 +53413,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_digest(
         it, _status)
 }
     }
@@ -53108,7 +53425,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionExpiration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_expiration(
         it, _status)
 }
     }
@@ -53120,7 +53437,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeGasPayment.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_gas_payment(
         it, _status)
 }
     }
@@ -53132,7 +53449,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeTransactionKind.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_kind(
         it, _status)
 }
     }
@@ -53144,7 +53461,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_sender(
         it, _status)
 }
     }
@@ -53159,7 +53476,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest(
         it, _status)
 }
     }
@@ -53174,7 +53491,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_signing_digest_hex(
         it, _status)
 }
     }
@@ -53189,7 +53506,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_to_base64(
         it, _status)
 }
     }
@@ -53205,7 +53522,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionv1_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransactionV1.lower(`other`),_status)
 }
     }
@@ -53222,7 +53539,7 @@ open class TransactionV1: Disposable, AutoCloseable, TransactionV1Interface
     @Throws(SdkFfiException::class) fun `fromBase64`(`bytes`: kotlin.String): TransactionV1 {
             return FfiConverterTypeTransactionV1.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionv1_from_base64(
         FfiConverterString.lower(`bytes`),_status)
 }
     )
@@ -53419,7 +53736,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
     constructor(`objects`: List<Argument>, `address`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transferobjects_new(
         FfiConverterSequenceTypeArgument.lower(`objects`),FfiConverterTypeArgument.lower(`address`),_status)
 }
     )
@@ -53475,7 +53792,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_transferobjects(ptr, status)
                 }
             }
         }
@@ -53483,7 +53800,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_transferobjects(pointer!!, status)
         }
     }
 
@@ -53494,7 +53811,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_address(
         it, _status)
 }
     }
@@ -53509,7 +53826,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
             return FfiConverterSequenceTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_objects(
         it, _status)
 }
     }
@@ -53525,7 +53842,7 @@ open class TransferObjects: Disposable, AutoCloseable, TransferObjectsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transferobjects_uniffi_trait_eq_eq(
         it, FfiConverterTypeTransferObjects.lower(`other`),_status)
 }
     }
@@ -53843,7 +54160,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_typetag(ptr, status)
                 }
             }
         }
@@ -53851,7 +54168,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_typetag(pointer!!, status)
         }
     }
 
@@ -53859,7 +54176,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag(
         it, _status)
 }
     }
@@ -53871,7 +54188,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterOptionalTypeStructTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_struct_tag_opt(
         it, _status)
 }
     }
@@ -53883,7 +54200,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag(
         it, _status)
 }
     }
@@ -53895,7 +54212,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_as_vector_type_tag_opt(
         it, _status)
 }
     }
@@ -53907,7 +54224,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_address(
         it, _status)
 }
     }
@@ -53919,7 +54236,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_bool(
         it, _status)
 }
     }
@@ -53931,7 +54248,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_signer(
         it, _status)
 }
     }
@@ -53943,7 +54260,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_struct(
         it, _status)
 }
     }
@@ -53955,7 +54272,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u128(
         it, _status)
 }
     }
@@ -53967,7 +54284,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u16(
         it, _status)
 }
     }
@@ -53979,7 +54296,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u256(
         it, _status)
 }
     }
@@ -53991,7 +54308,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u32(
         it, _status)
 }
     }
@@ -54003,7 +54320,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u64(
         it, _status)
 }
     }
@@ -54015,7 +54332,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_u8(
         it, _status)
 }
     }
@@ -54027,7 +54344,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_is_vector(
         it, _status)
 }
     }
@@ -54043,7 +54360,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_to_canonical_string(
         it, FfiConverterBoolean.lower(`withPrefix`),_status)
 }
     }
@@ -54056,7 +54373,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_display(
         it, _status)
 }
     }
@@ -54070,7 +54387,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_eq_eq(
         it, FfiConverterTypeTypeTag.lower(`other`),_status)
 }
     }
@@ -54081,7 +54398,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_typetag_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -54093,7 +54410,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newAddress`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_address(
         _status)
 }
     )
@@ -54103,7 +54420,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newBool`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_bool(
         _status)
 }
     )
@@ -54113,7 +54430,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newSigner`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_signer(
         _status)
 }
     )
@@ -54123,7 +54440,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newStruct`(`structTag`: StructTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_struct(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
@@ -54133,7 +54450,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU128`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u128(
         _status)
 }
     )
@@ -54143,7 +54460,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU16`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u16(
         _status)
 }
     )
@@ -54153,7 +54470,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU256`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u256(
         _status)
 }
     )
@@ -54163,7 +54480,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU32`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u32(
         _status)
 }
     )
@@ -54173,7 +54490,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU64`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u64(
         _status)
 }
     )
@@ -54183,7 +54500,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newU8`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_u8(
         _status)
 }
     )
@@ -54193,7 +54510,7 @@ open class TypeTag: Disposable, AutoCloseable, TypeTagInterface
          fun `newVector`(`typeTag`: TypeTag): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_typetag_new_vector(
         FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
@@ -54406,7 +54723,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
     constructor(`modules`: List<kotlin.ByteArray>, `dependencies`: List<ObjectId>, `package`: ObjectId, `ticket`: Argument) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgrade_new(
         FfiConverterSequenceByteArray.lower(`modules`),FfiConverterSequenceTypeObjectId.lower(`dependencies`),FfiConverterTypeObjectId.lower(`package`),FfiConverterTypeArgument.lower(`ticket`),_status)
 }
     )
@@ -54462,7 +54779,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgrade(ptr, status)
                 }
             }
         }
@@ -54470,7 +54787,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgrade(pointer!!, status)
         }
     }
 
@@ -54481,7 +54798,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_dependencies(
         it, _status)
 }
     }
@@ -54496,7 +54813,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterSequenceByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_modules(
         it, _status)
 }
     }
@@ -54511,7 +54828,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_package(
         it, _status)
 }
     }
@@ -54526,7 +54843,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
             return FfiConverterTypeArgument.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_ticket(
         it, _status)
 }
     }
@@ -54542,7 +54859,7 @@ open class Upgrade: Disposable, AutoCloseable, UpgradeInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgrade_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgrade.lower(`other`),_status)
 }
     }
@@ -54769,7 +55086,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_upgradepolicy(ptr, status)
                 }
             }
         }
@@ -54777,7 +55094,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_upgradepolicy(pointer!!, status)
         }
     }
 
@@ -54788,7 +55105,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
             return FfiConverterUByte.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_as_u8(
         it, _status)
 }
     }
@@ -54801,7 +55118,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_display(
         it, _status)
 }
     }
@@ -54815,7 +55132,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_upgradepolicy_uniffi_trait_eq_eq(
         it, FfiConverterTypeUpgradePolicy.lower(`other`),_status)
 }
     }
@@ -54832,7 +55149,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `additive`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_additive(
         _status)
 }
     )
@@ -54849,7 +55166,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `compatible`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_compatible(
         _status)
 }
     )
@@ -54862,7 +55179,7 @@ open class UpgradePolicy: Disposable, AutoCloseable, UpgradePolicyInterface
      */ fun `depOnly`(): UpgradePolicy {
             return FfiConverterTypeUpgradePolicy.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_upgradepolicy_dep_only(
         _status)
 }
     )
@@ -55157,7 +55474,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignature(ptr, status)
                 }
             }
         }
@@ -55165,7 +55482,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignature(pointer!!, status)
         }
     }
 
@@ -55173,7 +55490,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator(
         it, _status)
 }
     }
@@ -55185,7 +55502,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeMoveAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_move_authenticator_opt(
         it, _status)
 }
     }
@@ -55197,7 +55514,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig(
         it, _status)
 }
     }
@@ -55209,7 +55526,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeMultisigAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_multisig_opt(
         it, _status)
 }
     }
@@ -55221,7 +55538,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator(
         it, _status)
 }
     }
@@ -55233,7 +55550,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypePasskeyAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_passkey_authenticator_opt(
         it, _status)
 }
     }
@@ -55245,7 +55562,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple(
         it, _status)
 }
     }
@@ -55257,7 +55574,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_simple_opt(
         it, _status)
 }
     }
@@ -55269,7 +55586,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeZkLoginAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator(
         it, _status)
 }
     }
@@ -55281,7 +55598,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterOptionalTypeZkLoginAuthenticator.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_as_zklogin_authenticator_opt(
         it, _status)
 }
     }
@@ -55293,7 +55610,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_move_authenticator(
         it, _status)
 }
     }
@@ -55305,7 +55622,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_multisig(
         it, _status)
 }
     }
@@ -55317,7 +55634,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_passkey_authenticator(
         it, _status)
 }
     }
@@ -55329,7 +55646,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_simple(
         it, _status)
 }
     }
@@ -55341,7 +55658,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_is_zklogin_authenticator(
         it, _status)
 }
     }
@@ -55356,7 +55673,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_scheme(
         it, _status)
 }
     }
@@ -55368,7 +55685,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_base64(
         it, _status)
 }
     }
@@ -55380,7 +55697,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_to_bytes(
         it, _status)
 }
     }
@@ -55396,7 +55713,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeUserSignature.lower(`other`),_status)
 }
     }
@@ -55410,7 +55727,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBase64`(`base64`: kotlin.String): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_base64(
         FfiConverterString.lower(`base64`),_status)
 }
     )
@@ -55421,7 +55738,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -55431,7 +55748,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMoveAuthenticator`(`authenticator`: MoveAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55441,7 +55758,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newMultisig`(`signature`: MultisigAggregatedSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_multisig(
         FfiConverterTypeMultisigAggregatedSignature.lower(`signature`),_status)
 }
     )
@@ -55451,7 +55768,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newPasskeyAuthenticator`(`authenticator`: PasskeyAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_passkey_authenticator(
         FfiConverterTypePasskeyAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55461,7 +55778,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newSimple`(`signature`: SimpleSignature): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_simple(
         FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     )
@@ -55471,7 +55788,7 @@ open class UserSignature: Disposable, AutoCloseable, UserSignatureInterface
          fun `newZkloginAuthenticator`(`authenticator`: ZkLoginAuthenticator): UserSignature {
             return FfiConverterTypeUserSignature.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignature_new_zklogin_authenticator(
         FfiConverterTypeZkLoginAuthenticator.lower(`authenticator`),_status)
 }
     )
@@ -55648,7 +55965,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
         _status)
 }
     )
@@ -55704,7 +56021,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(ptr, status)
                 }
             }
         }
@@ -55712,7 +56029,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer!!, status)
         }
     }
 
@@ -55721,7 +56038,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -55732,7 +56049,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
             return FfiConverterTypeUserSignatureVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
         it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
 }
     }
@@ -55744,7 +56061,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
             return FfiConverterOptionalTypeZkloginVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
         it, _status)
 }
     }
@@ -55957,7 +56274,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
     constructor(`epoch`: kotlin.ULong, `signature`: Bls12381Signature, `bitmapBytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(
         FfiConverterULong.lower(`epoch`),FfiConverterTypeBls12381Signature.lower(`signature`),FfiConverterByteArray.lower(`bitmapBytes`),_status)
 }
     )
@@ -56013,7 +56330,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(ptr, status)
                 }
             }
         }
@@ -56021,7 +56338,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
         }
     }
 
@@ -56030,7 +56347,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
         it, _status)
 }
     }
@@ -56042,7 +56359,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
         it, _status)
 }
     }
@@ -56054,7 +56371,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterTypeBls12381Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
         it, _status)
 }
     }
@@ -56278,7 +56595,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(ptr, status)
                 }
             }
         }
@@ -56286,7 +56603,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer!!, status)
         }
     }
 
@@ -56295,7 +56612,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
         it, FfiConverterTypeValidatorSignature.lower(`signature`),_status)
 }
     }
@@ -56306,7 +56623,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
             return FfiConverterTypeValidatorCommittee.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
         it, _status)
 }
     }
@@ -56319,7 +56636,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
             return FfiConverterTypeValidatorAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
         it, _status)
 }
     }
@@ -56335,7 +56652,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
     @Throws(SdkFfiException::class) fun `newCheckpointSummary`(`committee`: ValidatorCommittee, `summary`: CheckpointSummary): ValidatorCommitteeSignatureAggregator {
             return FfiConverterTypeValidatorCommitteeSignatureAggregator.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
         FfiConverterTypeValidatorCommittee.lower(`committee`),FfiConverterTypeCheckpointSummary.lower(`summary`),_status)
 }
     )
@@ -56508,7 +56825,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
     constructor(`committee`: ValidatorCommittee) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
         FfiConverterTypeValidatorCommittee.lower(`committee`),_status)
 }
     )
@@ -56564,7 +56881,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(ptr, status)
                 }
             }
         }
@@ -56572,7 +56889,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer!!, status)
         }
     }
 
@@ -56580,7 +56897,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
             return FfiConverterTypeValidatorCommittee.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
         it, _status)
 }
     }
@@ -56593,7 +56910,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeValidatorSignature.lower(`signature`),_status)
 }
     }
@@ -56605,7 +56922,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeValidatorAggregatedSignature.lower(`signature`),_status)
 }
     }
@@ -56617,7 +56934,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
         it, FfiConverterTypeCheckpointSummary.lower(`summary`),FfiConverterTypeValidatorAggregatedSignature.lower(`signature`),_status)
 }
     }
@@ -56815,7 +57132,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
     constructor(`validator`: Bls12381PublicKey, `duration`: java.time.Duration) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
         FfiConverterTypeBls12381PublicKey.lower(`validator`),FfiConverterDuration.lower(`duration`),_status)
 }
     )
@@ -56871,7 +57188,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
                 }
             }
         }
@@ -56879,7 +57196,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
         }
     }
 
@@ -56887,7 +57204,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
             return FfiConverterDuration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
         it, _status)
 }
     }
@@ -56899,7 +57216,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
             return FfiConverterTypeBls12381PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
         it, _status)
 }
     }
@@ -56915,7 +57232,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
         it, FfiConverterTypeValidatorExecutionTimeObservation.lower(`other`),_status)
 }
     }
@@ -56926,7 +57243,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -57124,7 +57441,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
     constructor(`epoch`: kotlin.ULong, `publicKey`: Bls12381PublicKey, `signature`: Bls12381Signature) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(
         FfiConverterULong.lower(`epoch`),FfiConverterTypeBls12381PublicKey.lower(`publicKey`),FfiConverterTypeBls12381Signature.lower(`signature`),_status)
 }
     )
@@ -57180,7 +57497,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorsignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorsignature(ptr, status)
                 }
             }
         }
@@ -57188,7 +57505,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer!!, status)
         }
     }
 
@@ -57196,7 +57513,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
         it, _status)
 }
     }
@@ -57208,7 +57525,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterTypeBls12381PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
         it, _status)
 }
     }
@@ -57220,7 +57537,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterTypeBls12381Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
         it, _status)
 }
     }
@@ -57236,7 +57553,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeValidatorSignature.lower(`other`),_status)
 }
     }
@@ -57493,7 +57810,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_version(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_version(ptr, status)
                 }
             }
         }
@@ -57501,7 +57818,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_version(pointer!!, status)
         }
     }
 
@@ -57512,7 +57829,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_as_u64(
         it, _status)
 }
     }
@@ -57531,7 +57848,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(
         it, _status)
 }
     }
@@ -57547,7 +57864,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(
         it, _status)
 }
     }
@@ -57563,7 +57880,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_congested(
         it, _status)
 }
     }
@@ -57579,7 +57896,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_is_valid(
         it, _status)
 }
     }
@@ -57595,7 +57912,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_next(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_next(
         it, _status)
 }
     }
@@ -57611,7 +57928,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_previous(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_version_previous(
         it, _status)
 }
     }
@@ -57630,7 +57947,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `cancelledRead`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read(
         _status)
 }
     )
@@ -57646,7 +57963,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `congestedPriorToGasPriceFeedback`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback(
         _status)
 }
     )
@@ -57659,7 +57976,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `fromU64`(`value`: kotlin.ULong): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
         FfiConverterULong.lower(`value`),_status)
 }
     )
@@ -57674,7 +57991,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
     @Throws(SdkFfiException::class) fun `lamportIncrement`(`inputs`: List<Version>): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
         FfiConverterSequenceTypeVersion.lower(`inputs`),_status)
 }
     )
@@ -57693,7 +58010,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `maxValidExcl`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl(
         _status)
 }
     )
@@ -57709,7 +58026,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
      */ fun `minValidIncl`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl(
         _status)
 }
     )
@@ -57727,7 +58044,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
     @Throws(SdkFfiException::class) fun `newCongestedWithSuggestedGasPrice`(`suggestedGasPrice`: kotlin.ULong): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
         FfiConverterULong.lower(`suggestedGasPrice`),_status)
 }
     )
@@ -57737,7 +58054,7 @@ open class Version: Disposable, AutoCloseable, VersionInterface
          fun `randomnessUnavailable`(): Version {
             return FfiConverterTypeVersion.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable(
         _status)
 }
     )
@@ -57928,7 +58245,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
     constructor(`objectId`: ObjectId, `version`: Version) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterTypeVersion.lower(`version`),_status)
 }
     )
@@ -57984,7 +58301,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_versionassignment(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_versionassignment(ptr, status)
                 }
             }
         }
@@ -57992,7 +58309,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_versionassignment(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_versionassignment(pointer!!, status)
         }
     }
 
@@ -58000,7 +58317,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(
         it, _status)
 }
     }
@@ -58012,7 +58329,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
             return FfiConverterTypeVersion.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
         it, _status)
 }
     }
@@ -58028,7 +58345,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
         it, FfiConverterTypeVersionAssignment.lower(`other`),_status)
 }
     }
@@ -58243,7 +58560,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
     constructor(`inputs`: ZkLoginInputs, `maxEpoch`: kotlin.ULong, `signature`: SimpleSignature) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
         FfiConverterTypeZkLoginInputs.lower(`inputs`),FfiConverterULong.lower(`maxEpoch`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     )
@@ -58299,7 +58616,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
                 }
             }
         }
@@ -58307,7 +58624,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
         }
     }
 
@@ -58315,7 +58632,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterTypeZkLoginInputs.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
         it, _status)
 }
     }
@@ -58327,7 +58644,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
         it, _status)
 }
     }
@@ -58339,7 +58656,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
         it, _status)
 }
     }
@@ -58355,7 +58672,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginAuthenticator.lower(`other`),_status)
 }
     }
@@ -58566,7 +58883,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
     constructor(`proofPoints`: ZkLoginProof, `issBase64Details`: ZkLoginClaim, `headerBase64`: kotlin.String, `addressSeed`: Bn254FieldElement) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
         FfiConverterTypeZkLoginProof.lower(`proofPoints`),FfiConverterTypeZkLoginClaim.lower(`issBase64Details`),FfiConverterString.lower(`headerBase64`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
 }
     )
@@ -58622,7 +58939,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
                 }
             }
         }
@@ -58630,7 +58947,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
         }
     }
 
@@ -58638,7 +58955,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeBn254FieldElement.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
         it, _status)
 }
     }
@@ -58650,7 +58967,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
         it, _status)
 }
     }
@@ -58662,7 +58979,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
         it, _status)
 }
     }
@@ -58674,7 +58991,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginClaim.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
         it, _status)
 }
     }
@@ -58686,7 +59003,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeJwkId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
         it, _status)
 }
     }
@@ -58698,7 +59015,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginProof.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
         it, _status)
 }
     }
@@ -58710,7 +59027,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginPublicIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
         it, _status)
 }
     }
@@ -58726,7 +59043,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginInputs.lower(`other`),_status)
 }
     }
@@ -58921,7 +59238,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
     constructor(`a`: CircomG1, `b`: CircomG2, `c`: CircomG1) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
         FfiConverterTypeCircomG1.lower(`a`),FfiConverterTypeCircomG2.lower(`b`),FfiConverterTypeCircomG1.lower(`c`),_status)
 }
     )
@@ -58977,7 +59294,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
                 }
             }
         }
@@ -58985,7 +59302,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
         }
     }
 
@@ -58993,7 +59310,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
         it, _status)
 }
     }
@@ -59005,7 +59322,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG2.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
         it, _status)
 }
     }
@@ -59017,7 +59334,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
         it, _status)
 }
     }
@@ -59033,7 +59350,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginProof.lower(`other`),_status)
 }
     }
@@ -59340,7 +59657,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
     constructor(`iss`: kotlin.String, `addressSeed`: Bn254FieldElement) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
         FfiConverterString.lower(`iss`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
 }
     )
@@ -59396,7 +59713,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
                 }
             }
         }
@@ -59404,7 +59721,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
         }
     }
 
@@ -59412,7 +59729,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeBn254FieldElement.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
         it, _status)
 }
     }
@@ -59433,7 +59750,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterSequenceTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
         it, _status)
 }
     }
@@ -59453,7 +59770,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
         it, _status)
 }
     }
@@ -59474,7 +59791,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
         it, _status)
 }
     }
@@ -59486,7 +59803,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
         it, _status)
 }
     }
@@ -59502,7 +59819,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginPublicIdentifier.lower(`other`),_status)
 }
     }
@@ -59724,7 +60041,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
                 }
             }
         }
@@ -59732,7 +60049,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
         }
     }
 
@@ -59740,7 +60057,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
             return FfiConverterMapTypeJwkIdTypeJwk.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
         it, _status)
 }
     }
@@ -59783,7 +60100,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
      */ fun `newDev`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
         _status)
 }
     )
@@ -59793,7 +60110,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
          fun `newMainnet`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
         _status)
 }
     )
