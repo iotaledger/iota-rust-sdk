@@ -46,6 +46,13 @@ impl MoveArg {
     }
 
     #[uniffi::constructor]
+    pub fn address_from_short_hex(hex: String) -> Result<Self> {
+        Ok(Self::Address(iota_sdk::types::Address::from_short_hex(
+            hex,
+        )?))
+    }
+
+    #[uniffi::constructor]
     pub fn digest(digest: &Digest) -> Self {
         Self::Digest(**digest)
     }
