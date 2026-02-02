@@ -64,6 +64,13 @@ impl TransactionBuilder {
         )
     }
 
+    /// Set the sender address.
+    pub fn set_sender(self: Arc<Self>, sender: &Address) {
+        self.write(|builder| {
+            builder.set_sender(**sender);
+        });
+    }
+
     /// Add gas coins that will be consumed. Optional.
     pub fn gas(self: Arc<Self>, object_refs: Vec<ObjectReference>) -> Arc<Self> {
         self.write(|builder| {

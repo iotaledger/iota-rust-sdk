@@ -3959,6 +3959,10 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5040,6 +5044,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor(
@@ -5777,6 +5783,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
 ): Short
@@ -7138,6 +7146,8 @@ fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(`ptr`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(`ptr`: Pointer,`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9068,6 +9078,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(`ptr`: Pointer,`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12201,6 +12213,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender() != 20194.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13306,6 +13321,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() != 37952.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
@@ -21994,6 +22012,11 @@ public interface ClientTransactionBuilderInterface {
     fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): ClientTransactionBuilder
     
     /**
+     * Set the sender address.
+     */
+    fun `setSender`(`sender`: Address)
+    
+    /**
      * Split a coin into many.
      */
     fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
@@ -22421,6 +22444,20 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
     }
     )
     }
+    
+
+    
+    /**
+     * Set the sender address.
+     */override fun `setSender`(`sender`: Address)
+        = 
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(
+        it, FfiConverterTypeAddress.lower(`sender`),_status)
+}
+    }
+    
     
 
     
@@ -50605,6 +50642,11 @@ public interface TransactionBuilderInterface {
     fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder
     
     /**
+     * Set the sender address.
+     */
+    fun `setSender`(`sender`: Address)
+    
+    /**
      * Split a coin by the provided amounts.
      */
     fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
@@ -50993,6 +51035,20 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     }
     )
     }
+    
+
+    
+    /**
+     * Set the sender address.
+     */override fun `setSender`(`sender`: Address)
+        = 
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
+        it, FfiConverterTypeAddress.lower(`sender`),_status)
+}
+    }
+    
     
 
     
