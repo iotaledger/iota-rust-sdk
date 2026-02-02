@@ -5601,6 +5601,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized()
+	})
+	if checksum != 39496 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status()
 	})
 	if checksum != 48258 {
@@ -19207,6 +19216,15 @@ type FaucetClientInterface interface {
 	// Note that the faucet is heavily rate-limited, so calling repeatedly the
 	// faucet would likely result in a 429 code or 502 code.
 	RequestAndWait(address *Address) (*FaucetReceipt, error)
+	// Request gas from the faucet and wait until the request is completed and
+	// token is transferred and finalized on the ledger. Returns
+	// `FaucetReceipt` if the request is successful, which contains the
+	// list of tokens transferred, and the transaction digest.
+	//
+	// This is a convenience method that combines `request_and_wait` and
+	// waiting for the funding transactions to be finalized using the provided
+	// GraphQL `Client`.
+	RequestAndWaitForFinalized(address *Address, client *GraphQlClient) (*FaucetReceipt, error)
 	// Check the faucet request status.
 	//
 	// Possible statuses are defined in: `BatchSendStatusType`
@@ -19311,6 +19329,45 @@ func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, err
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
 		_pointer,FfiConverterAddressINSTANCE.Lower(address)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Request gas from the faucet and wait until the request is completed and
+// token is transferred and finalized on the ledger. Returns
+// `FaucetReceipt` if the request is successful, which contains the
+// list of tokens transferred, and the transaction digest.
+//
+// This is a convenience method that combines `request_and_wait` and
+// waiting for the funding transactions to be finalized using the provided
+// GraphQL `Client`.
+func (_self *FaucetClient) RequestAndWaitForFinalized(address *Address, client *GraphQlClient) (*FaucetReceipt, error) {
+	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) *FaucetReceipt {
+			return FfiConverterOptionalFaucetReceiptINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterGraphQlClientINSTANCE.Lower(client)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)

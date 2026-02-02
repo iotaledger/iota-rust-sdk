@@ -1625,6 +1625,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized() != 39496:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 48258:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_genesisobject_data() != 26598:
@@ -5292,6 +5294,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait.argtypes 
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -15046,6 +15054,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.restype = ctypes.c_uint16
@@ -38523,6 +38534,19 @@ class FaucetClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def request_and_wait_for_finalized(self, address: "Address",client: "GraphQlClient"):
+        """
+        Request gas from the faucet and wait until the request is completed and
+        token is transferred and finalized on the ledger. Returns
+        `FaucetReceipt` if the request is successful, which contains the
+        list of tokens transferred, and the transaction digest.
+
+        This is a convenience method that combines `request_and_wait` and
+        waiting for the funding transactions to be finalized using the provided
+        GraphQL `Client`.
+        """
+
+        raise NotImplementedError
     def request_status(self, id: "str"):
         """
         Check the faucet request status.
@@ -38642,6 +38666,41 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeFaucetReceipt.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def request_and_wait_for_finalized(self, address: "Address",client: "GraphQlClient") -> "typing.Optional[FaucetReceipt]":
+        """
+        Request gas from the faucet and wait until the request is completed and
+        token is transferred and finalized on the ledger. Returns
+        `FaucetReceipt` if the request is successful, which contains the
+        list of tokens transferred, and the transaction digest.
+
+        This is a convenience method that combines `request_and_wait` and
+        waiting for the funding transactions to be finalized using the provided
+        GraphQL `Client`.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        _UniffiConverterTypeGraphQlClient.check_lower(client)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterTypeGraphQlClient.lower(client)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,

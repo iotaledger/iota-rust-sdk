@@ -2274,6 +2274,11 @@ uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request(void* ptr, void* add
 uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(void* ptr, void* address
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_AND_WAIT_FOR_FINALIZED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_AND_WAIT_FOR_FINALIZED
+uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(void* ptr, void* address, void* client
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_STATUS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_FAUCETCLIENT_REQUEST_STATUS
 uint64_t uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(void* ptr, RustBuffer id
@@ -13568,6 +13573,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_faucetclient_request(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_FAUCETCLIENT_REQUEST_AND_WAIT
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_FAUCETCLIENT_REQUEST_AND_WAIT
 uint16_t uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_FAUCETCLIENT_REQUEST_AND_WAIT_FOR_FINALIZED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_FAUCETCLIENT_REQUEST_AND_WAIT_FOR_FINALIZED
+uint16_t uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized(void
     
 );
 #endif

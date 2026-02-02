@@ -2,13 +2,15 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::time::Duration;
+use std::{collections::HashSet, time::Duration};
 
 use iota_types::{Address, Digest, ObjectId};
 use reqwest::{StatusCode, Url};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
+
+use crate::WaitForTx;
 
 pub const FAUCET_DEVNET_HOST: &str = "https://faucet.devnet.iota.cafe";
 pub const FAUCET_TESTNET_HOST: &str = "https://faucet.testnet.iota.cafe";
@@ -215,12 +217,46 @@ impl FaucetClient {
                 );
                 FaucetError::TimedOut
             })??;
-            // Wait some extra time for the indexer to process the objects
-            tokio::time::sleep(Duration::from_millis(250)).await;
             Ok(status_response.transferred_gas_objects)
         } else {
             Ok(None)
         }
+    }
+
+    /// Request gas from the faucet and wait until the request is completed and
+    /// token is transferred and finalized on the ledger. Returns
+    /// `FaucetReceipt` if the request is successful, which contains the
+    /// list of tokens transferred, and the transaction digest.
+    ///
+    /// This is a convenience method that combines `request_and_wait` and
+    /// waiting for the funding transactions to be finalized using the provided
+    /// GraphQL `Client`.
+    pub async fn request_and_wait_for_finalized(
+        &self,
+        address: Address,
+        client: &crate::Client,
+    ) -> Result<Option<FaucetReceipt>, crate::error::Error> {
+        let Some(receipt) = self
+            .request_and_wait(address)
+            .await
+            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Other, e))?
+        else {
+            return Ok(None);
+        };
+
+        // Wait for the funding transactions to be finalized
+        let tx_digests = receipt
+            .sent
+            .iter()
+            .map(|coin| coin.transfer_tx_digest)
+            .collect::<HashSet<_>>();
+        for digest in tx_digests {
+            client
+                .wait_for_tx(digest, WaitForTx::Finalized, None)
+                .await?;
+        }
+
+        Ok(Some(receipt))
     }
 
     /// Check the faucet request status.

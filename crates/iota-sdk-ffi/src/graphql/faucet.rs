@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::{
     error::{Result, SdkFfiError},
+    graphql::client::GraphQLClient,
     types::{address::Address, digest::Digest, object::ObjectId},
 };
 
@@ -63,6 +64,28 @@ impl FaucetClient {
         Ok(self
             .0
             .request_and_wait(**address)
+            .await
+            .map_err(SdkFfiError::custom)?
+            .map(Into::into))
+    }
+
+    /// Request gas from the faucet and wait until the request is completed and
+    /// token is transferred and finalized on the ledger. Returns
+    /// `FaucetReceipt` if the request is successful, which contains the
+    /// list of tokens transferred, and the transaction digest.
+    ///
+    /// This is a convenience method that combines `request_and_wait` and
+    /// waiting for the funding transactions to be finalized using the provided
+    /// GraphQL `Client`.
+    pub async fn request_and_wait_for_finalized(
+        &self,
+        address: &Address,
+        client: &GraphQLClient,
+    ) -> Result<Option<FaucetReceipt>> {
+        let client_lock = client.inner().read().await;
+        Ok(self
+            .0
+            .request_and_wait_for_finalized(**address, &client_lock)
             .await
             .map_err(SdkFfiError::custom)?
             .map(Into::into))

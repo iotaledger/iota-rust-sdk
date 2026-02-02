@@ -21,12 +21,12 @@ async fn main() -> Result<()> {
     let sender_address = public_key.derive_address();
     println!("Sender address: {sender_address}");
 
+    let client = Client::new_localnet();
+
     // Request funds from faucet
     FaucetClient::new_localnet()
-        .request_and_wait(sender_address)
+        .request_and_wait_for_finalized(sender_address, &client)
         .await?;
-
-    let client = Client::new_localnet();
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
     builder.send_iota(recipient_address, amount);
