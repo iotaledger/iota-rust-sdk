@@ -543,7 +543,7 @@ mod tests {
         .unwrap();
 
         let inputs = serde_json::json!({
-            "proof_points": {
+            "proofPoints": {
                 "a": [
                     "8247215875293406890829839156897863742504615191361518281091302475904551111016",
                     "6872980335748205979379321982220498484242209225765686471076081944034292159666",
@@ -566,12 +566,12 @@ mod tests {
                     "1"
                 ]
             },
-            "iss_base64_details": {
+            "issBase64Details": {
                 "value": "yJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLC",
-                "index_mod_4": 1
+                "indexMod4": 1
             },
-            "header_base64": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmNzI1NDEwMWY1NmU0MWNmMzVjOTkyNmRlODRhMmQ1NTJiNGM2ZjEiLCJ0eXAiOiJKV1QifQ",
-            "address_seed": address_seed
+            "headerBase64": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmNzI1NDEwMWY1NmU0MWNmMzVjOTkyNmRlODRhMmQ1NTJiNGM2ZjEiLCJ0eXAiOiJKV1QifQ",
+            "addressSeed": address_seed
         });
 
         let zklogin_inputs: ZkLoginInputs = serde_json::from_value(inputs).unwrap();

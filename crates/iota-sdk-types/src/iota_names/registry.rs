@@ -20,7 +20,11 @@ pub struct Table {
 }
 
 #[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct Registry {
     /// The `registry` table maps `Name` to `NameRecord`.
     /// Added / replaced in the `add_record` function.
@@ -31,7 +35,11 @@ pub struct Registry {
 }
 
 #[derive(Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct RegistryEntry {
     pub id: ObjectId,
     pub name: Name,
@@ -48,7 +56,11 @@ pub struct ReverseRegistryEntry {
 
 /// A single record in the registry.
 #[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct NameRecord {
     /// The ID of the registration NFT assigned to this record.
     ///

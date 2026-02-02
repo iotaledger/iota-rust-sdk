@@ -240,7 +240,7 @@ impl Client {
     }
 
     /// Returns whether the transaction for the given digest has been indexed
-    /// on the node. This means that it can be queries by its digest and its
+    /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_tx_finalized`].
     pub async fn is_tx_indexed_on_node(&self, digest: Digest) -> Result<bool> {
@@ -288,7 +288,7 @@ impl Client {
                 loop {
                     interval.tick().await;
                     if match wait_for {
-                        WaitForTx::Indexed => self.is_tx_indexed_on_node(digest).await?,
+                        WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
                         WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
                     } {
                         break Ok(());

@@ -12438,7 +12438,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_finalized() != 8647.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 20156.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_is_tx_indexed_on_node() != 14842.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_latest_checkpoint_sequence_number() != 40336.toShort()) {
@@ -12531,7 +12531,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() != 25858.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 25664.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() != 10761.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() != 63815.toShort()) {
@@ -13626,7 +13626,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 63442.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865.toShort()) {
@@ -15704,6 +15704,11 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     
 
         
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
     @Throws(SdkFfiException::class) fun `fromHex`(`hex`: kotlin.String): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
@@ -28683,7 +28688,7 @@ public interface GraphQlClientInterface {
     
     /**
      * Returns whether the transaction for the given digest has been indexed
-     * on the node. This means that it can be queries by its digest and its
+     * on the node. This means that it can be queried by its digest and its
      * effects will be usable for subsequent transactions. To check for
      * full finalization, use `is_tx_finalized`.
      */
@@ -28933,9 +28938,9 @@ public interface GraphQlClientInterface {
     suspend fun `transactionsEffects`(`filter`: TransactionsFilter? = null, `paginationFilter`: PaginationFilter? = null): TransactionEffectsPage
     
     /**
-     * Wait for the indexing or finalization of a transaction
-     * by its digest. An optional timeout can be provided, which, if
-     * exceeded, will return an error (default 60s).
+     * Wait for the indexing (on the node, not the indexer) or finalization of
+     * a transaction by its digest. An optional timeout can be provided,
+     * which, if exceeded, will return an error (default 60s).
      */
     suspend fun `waitForTx`(`digest`: Digest, `waitFor`: WaitForTx, `timeout`: java.time.Duration? = null)
     
@@ -29615,7 +29620,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
     
     /**
      * Returns whether the transaction for the given digest has been indexed
-     * on the node. This means that it can be queries by its digest and its
+     * on the node. This means that it can be queried by its digest and its
      * effects will be usable for subsequent transactions. To check for
      * full finalization, use `is_tx_finalized`.
      */
@@ -30455,9 +30460,9 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Wait for the indexing or finalization of a transaction
-     * by its digest. An optional timeout can be provided, which, if
-     * exceeded, will return an error (default 60s).
+     * Wait for the indexing (on the node, not the indexer) or finalization of
+     * a transaction by its digest. An optional timeout can be provided,
+     * which, if exceeded, will return an error (default 60s).
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -67107,15 +67112,29 @@ public object FfiConverterTypeUnchangedSharedKind : FfiConverterRustBuffer<Uncha
 
 /**
  * Determines what to wait for after executing a transaction.
+ *
+ * Users should almost always use WaitForTx::Finalized (the default).
+ * The GraphQL client interacts with the indexer, not the fullnode directly.
+ * Using WaitForTx::IndexedOnNode only guarantees the transaction is
+ * indexed on the fullnode (meaning you can submit transactions that reference
+ * objects created by this transaction), but subsequent queries using the
+ * transaction ID can still fail until the transaction is indexed on the
+ * indexer.
  */
 
 enum class WaitForTx {
     
     /**
      * Indicates that the transaction effects will be usable in subsequent
-     * transactions, and that the transaction itself is indexed on the node.
+     * transactions (you can reference objects created by this transaction),
+     * and that the transaction itself is indexed on the fullnode.
+     *
+     * **Warning:** This does not guarantee the transaction is indexed on the
+     * indexer. Since the GraphQL client queries the indexer, subsequent
+     * queries with this transaction ID may still fail. Prefer
+     * WaitForTx::Finalized unless you have a specific reason to use this.
      */
-    INDEXED,
+    INDEXED_ON_NODE,
     /**
      * Indicates that the transaction has been included in a checkpoint, and
      * all queries may include it.

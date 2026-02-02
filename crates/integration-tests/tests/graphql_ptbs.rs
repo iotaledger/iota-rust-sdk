@@ -125,7 +125,7 @@ async fn test_move_call() {
         .generics::<u64>()
         .arguments([Some(1u64)]);
 
-    let effects = tx.execute(&pk, WaitForTx::Indexed).await;
+    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
     check_effects_status_success(effects).await;
 }
 
@@ -160,7 +160,7 @@ async fn test_split_without_transfer_should_fail() {
     // transfer 1 IOTA
     tx.split_coins(coin, [1_000_000_000u64]);
 
-    let effects = tx.execute(&pk, WaitForTx::Indexed).await.unwrap();
+    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await.unwrap();
 
     let expected_status = ExecutionStatus::Success;
     // The tx failed, so we expect Failure instead of Success
@@ -199,7 +199,7 @@ async fn test_make_move_vec() {
 
     tx.make_move_vec([1u64]);
 
-    let effects = tx.execute(&pk, WaitForTx::Indexed).await;
+    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
     check_effects_status_success(effects).await;
 }
 
@@ -212,7 +212,7 @@ async fn test_publish() {
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
-    let effects = tx.execute(&pk, WaitForTx::Indexed).await;
+    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
     check_effects_status_success(effects).await;
 }
 
@@ -286,6 +286,6 @@ async fn test_upgrade() {
 
     tx.gas([coins.last().unwrap().id]);
 
-    let effects = tx.execute(&pk, WaitForTx::Indexed).await;
+    let effects = tx.execute(&pk, WaitForTx::IndexedOnNode).await;
     check_effects_status_success(effects).await;
 }
