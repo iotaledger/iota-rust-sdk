@@ -215,6 +215,8 @@ impl FaucetClient {
                 );
                 FaucetError::TimedOut
             })??;
+            // Wait some extra time for the indexer to process the objects
+            tokio::time::sleep(Duration::from_millis(250)).await;
             Ok(status_response.transferred_gas_objects)
         } else {
             Ok(None)

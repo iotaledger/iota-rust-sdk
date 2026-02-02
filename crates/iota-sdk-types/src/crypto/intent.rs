@@ -42,7 +42,11 @@ pub enum IntentError {
 /// intent = intent-scope intent-version intent-app-id
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct Intent {
     pub scope: IntentScope,
     pub version: IntentVersion,
