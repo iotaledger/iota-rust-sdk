@@ -51,14 +51,17 @@ async fn main() -> Result<()> {
     let private_key = Ed25519PrivateKey::generate(OsRng);
     let sender = private_key.public_key().derive_address();
     println!("Sender: {sender}");
+    let client = Client::new_localnet();
 
     // Fund the sender address for gas payment
     let faucet = FaucetClient::new_localnet();
-    if faucet.request_and_wait(sender).await?.is_none() {
+    if faucet
+        .request_and_wait_for_finalized(sender, &client)
+        .await?
+        .is_none()
+    {
         bail!("Failed to request coins from faucet");
     };
-
-    let client = Client::new_localnet();
 
     // Build the `publish` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());

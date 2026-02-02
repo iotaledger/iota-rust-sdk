@@ -55,9 +55,11 @@ func main() {
 	sender := publicKey.DeriveAddress()
 	fmt.Printf("Sender: %s\n", sender.ToHex())
 
+	client := iota_sdk.GraphQlClientNewLocalnet()
+
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
-	faucetReceipt, err := faucet.RequestAndWait(sender)
+	faucetReceipt, err := faucet.RequestAndWaitForFinalized(sender, client)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
@@ -65,8 +67,6 @@ func main() {
 	for _, coin := range faucetReceipt.Sent {
 		totalBalance += coin.Amount
 	}
-
-	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	// Build the `publish` PTB
 	builderPublish := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
