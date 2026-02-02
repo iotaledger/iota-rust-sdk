@@ -65,12 +65,38 @@ impl Address {
         Ok(Self(iota_sdk::types::Address::from_bytes(bytes)?))
     }
 
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with or without a `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
     #[uniffi::constructor]
+    pub fn from_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
+    }
+
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// with a mandatory `0x` prefix. Will return an error if the string is not
+    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    #[uniffi::constructor]
+    pub fn from_prefixed_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_prefixed_hex(hex)?))
+    }
+
     /// Parses an Address from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
-    pub fn from_hex(hex: &str) -> Result<Self> {
-        Ok(Self(iota_sdk::types::Address::from_hex(hex)?))
+    #[uniffi::constructor]
+    pub fn from_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_short_hex(hex)?))
+    }
+
+    /// Parses an Address from a hex string with a mandatory `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
+    #[uniffi::constructor]
+    pub fn from_prefixed_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_prefixed_short_hex(
+            hex,
+        )?))
     }
 
     #[uniffi::constructor]
@@ -82,8 +108,16 @@ impl Address {
         self.0.as_bytes().to_vec()
     }
 
+    /// Returns the string representation of this address in hex format with
+    /// `0x` prefix.
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
+    }
+
+    /// Returns the string representation of this address in hex format without
+    /// `0x` prefix.
+    pub fn to_raw_hex(&self) -> String {
+        self.0.to_raw_hex()
     }
 
     /// Returns the string representation of this address using the
@@ -94,8 +128,14 @@ impl Address {
 
     /// Returns the shortest possible string representation of the address (i.e.
     /// with leading zeroes trimmed).
-    pub fn to_short_string(&self, with_prefix: bool) -> String {
-        self.0.to_short_string(with_prefix)
+    pub fn to_short_hex(&self) -> String {
+        self.0.to_short_hex()
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed), without `0x` prefix.
+    pub fn to_raw_short_hex(&self) -> String {
+        self.0.to_raw_short_hex()
     }
 }
 
