@@ -38,7 +38,7 @@
 ///                    u64 ; storage-rebate
 ///                    u64 ; non-refundable-storage-fee
 /// ```
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, derive_more::AddAssign, derive_more::SubAssign)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
