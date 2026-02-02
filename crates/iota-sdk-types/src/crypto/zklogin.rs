@@ -168,8 +168,9 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
             // This is what the verify_extended_claim expects after decoding and processing
             let extended_claim = format!(r#""iss":"https://{}.example.com","#, iss_value);
             
-            // For simplicity, use index_mod_4 = 0 which means no bit offset
-            // Encode the extended claim as base64url
+            // Use index_mod_4 = 0 for simplicity (no bit offset)
+            // Different values would require complex bit padding logic to ensure the
+            // extended claim decodes correctly
             let value = Base64UrlUnpadded::encode_string(extended_claim.as_bytes());
             
             ZkLoginClaim {
@@ -186,9 +187,11 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
             .prop_map(|(proof_points, iss_base64_details, address_seed)| {
                 use base64ct::{Base64UrlUnpadded, Encoding};
 
-                // Generate a valid JWT header with random alg, kid, and optional typ
-                let alg = "RS256"; // Using a common algorithm for consistency
-                let kid = "1"; // Using a simple kid for consistency
+                // Generate a valid JWT header
+                // Using consistent values for alg, kid, and typ ensures the header
+                // passes validation while allowing other fields to vary for testing
+                let alg = "RS256";
+                let kid = "1";
                 let typ = Some("JWT");
 
                 // Create a JSON representation of the JWT header
