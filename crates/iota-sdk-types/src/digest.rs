@@ -98,14 +98,7 @@ impl Digest {
 
     /// Decodes a digest from a Base58 encoded string.
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
-        let mut buf = [0; Self::LENGTH];
-
-        bs58::decode(base58)
-            .onto(&mut buf)
-            // TODO fix error to contain bs58 parse error
-            .map_err(|_| DigestParseError)?;
-
-        Ok(Self(buf))
+        Self::from_bytes(bs58::decode(base58).into_vec()?)
     }
 
     /// Returns a Base58 encoded string representation of this digest.
@@ -115,8 +108,11 @@ impl Digest {
 
     /// Generates a digest from bytes.
     pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, DigestParseError> {
-        <[u8; Self::LENGTH]>::try_from(bytes.as_ref())
-            .map_err(|_| DigestParseError)
+        let bytes = bytes.as_ref();
+        <[u8; Self::LENGTH]>::try_from(bytes)
+            .map_err(|_| DigestParseError::InvalidByteLength {
+                actual: bytes.len(),
+            })
             .map(Self)
     }
 
@@ -260,20 +256,16 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct DigestParseError;
-
-impl std::fmt::Display for DigestParseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "Unable to parse Digest (must be Base58 string of length {})",
-            44,
-        )
-    }
+#[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
+pub enum DigestParseError {
+    #[error("digest must be Base58 string of length 44")]
+    Base58(#[from] bs58::decode::Error),
+    #[error(
+        "invalid digest byte length: expected {}, got {actual}",
+        Digest::LENGTH
+    )]
+    InvalidByteLength { actual: usize },
 }
-
-impl std::error::Error for DigestParseError {}
 
 // Don't implement like the other digest type since this isn't intended to be
 // serialized
@@ -290,5 +282,96 @@ mod tests {
         let s = digest.to_string();
         let d = s.parse::<Digest>().unwrap();
         assert_eq!(digest, d);
+    }
+
+    #[test]
+    fn parse_valid_base58() {
+        // A valid Base58 encoded digest (32 bytes)
+        let digest = Digest::new([1u8; 32]);
+        let base58 = digest.to_base58();
+        let parsed = Digest::from_base58(&base58).unwrap();
+        assert_eq!(digest, parsed);
+    }
+
+    #[test]
+    fn parse_invalid_base58_characters() {
+        // '0', 'O', 'I', 'l' are not valid Base58 characters
+        let result = Digest::from_base58("0OIl");
+        assert_eq!(
+            result,
+            Err(DigestParseError::Base58(
+                bs58::decode::Error::InvalidCharacter {
+                    character: '0',
+                    index: 0
+                }
+            ))
+        );
+    }
+
+    #[test]
+    fn parse_empty_string() {
+        let result = Digest::from_base58("");
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 0 })
+        );
+    }
+
+    #[test]
+    fn parse_too_short_base58() {
+        // This decodes to fewer than 32 bytes
+        let result = Digest::from_base58("abc");
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 3 })
+        );
+    }
+
+    #[test]
+    fn parse_too_long_base58() {
+        // Create a string that would decode to more than 32 bytes
+        let long_base58 = "1".repeat(100);
+        let result = Digest::from_base58(&long_base58);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 100 })
+        );
+    }
+
+    #[test]
+    fn from_bytes_valid() {
+        let bytes = [42u8; 32];
+        let digest = Digest::from_bytes(&bytes).unwrap();
+        assert_eq!(digest.into_inner(), bytes);
+    }
+
+    #[test]
+    fn from_bytes_too_short() {
+        let bytes = [1u8; 31];
+        let result = Digest::from_bytes(&bytes);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 31 })
+        );
+    }
+
+    #[test]
+    fn from_bytes_too_long() {
+        let bytes = [1u8; 33];
+        let result = Digest::from_bytes(&bytes);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 33 })
+        );
+    }
+
+    #[test]
+    fn from_bytes_empty() {
+        let bytes: [u8; 0] = [];
+        let result = Digest::from_bytes(&bytes);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 0 })
+        );
     }
 }
