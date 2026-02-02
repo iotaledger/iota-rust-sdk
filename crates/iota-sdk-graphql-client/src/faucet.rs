@@ -176,6 +176,10 @@ impl FaucetClient {
     ///
     /// Note that the faucet is heavily rate-limited, so calling repeatedly the
     /// faucet would likely result in a 429 code or 502 code.
+    ///
+    /// If you intend to use the transferred tokens with the graphql client,
+    /// consider using `request_and_wait_for_finalized` instead to ensure
+    /// the tokens are available in the indexer.
     pub async fn request_and_wait(
         &self,
         address: Address,
