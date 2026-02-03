@@ -327,7 +327,7 @@ impl PTBArgument for Receiving<ObjectReference> {
 
 impl PTBArgument for &Receiving<ObjectReference> {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Receiving(self.0.clone()))
+        InputKind::Input(iota_types::Input::Receiving(self.0))
     }
 }
 
