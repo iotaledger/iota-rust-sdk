@@ -210,7 +210,6 @@ pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8;
 pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> Option<[u8; N]> {
     let mut next = *array;
     let mut i = N;
-    let mut wrapped = true;
 
     while i > 0 {
         i -= 1;
@@ -218,12 +217,11 @@ pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> 
         next[i] = new_byte;
 
         if !overflow {
-            wrapped = false;
-            break;
+            return Some(next);
         }
     }
 
-    if wrapped { None } else { Some(next) }
+    None
 }
 
 #[macro_export]
