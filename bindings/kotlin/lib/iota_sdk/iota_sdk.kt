@@ -4019,6 +4019,22 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -4916,6 +4932,10 @@ fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string(
@@ -5140,7 +5160,15 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_to_base58(
 ): Short
@@ -5541,6 +5569,10 @@ fun uniffi_iota_sdk_ffi_checksum_method_objectdata_is_package(
 fun uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_objectid_to_address(
 ): Short
@@ -6170,7 +6202,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_digest_generate(
+fun uniffi_iota_sdk_ffi_checksum_constructor_digest_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32(
 ): Short
@@ -6882,6 +6914,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_system(uniffi_out_err: UniffiRust
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_address_to_canonical_string(`ptr`: Pointer,`withPrefix`: Byte,uniffi_out_err: UniffiRustCallStatus, 
@@ -7366,10 +7402,18 @@ fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_base58(`base58`: RustBuffer.B
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_digest_generate(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_digest_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_base58(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_digest_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8370,6 +8414,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustC
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(`ptr`: Pointer,`keyTypeTag`: Pointer,`keyBytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_objectid_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12107,6 +12155,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json() != 12096.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12443,7 +12497,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive() != 57678.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted() != 32964.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped() != 15502.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt() != 23877.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638.toShort()) {
@@ -13044,6 +13110,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() != 47819.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical() != 15534.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt() != 278.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address() != 21880.toShort()) {
@@ -13988,7 +14060,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() != 65530.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_random() != 18621.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() != 16842.toShort()) {
@@ -15713,6 +15785,17 @@ public object FfiConverterDuration: FfiConverterRustBuffer<java.time.Duration> {
  */
 public interface AddressInterface {
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    fun `nextLexicographical`(): Address
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    fun `nextLexicographicalOpt`(): Address?
+    
     fun `toBytes`(): kotlin.ByteArray
     
     /**
@@ -15871,6 +15954,37 @@ open class Address: Disposable, AutoCloseable, AddressInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_address(pointer!!, status)
         }
     }
+
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */override fun `nextLexicographical`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */override fun `nextLexicographicalOpt`(): Address? {
+            return FfiConverterOptionalTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
 
     override fun `toBytes`(): kotlin.ByteArray {
             return FfiConverterByteArray.lift(
@@ -24398,9 +24512,32 @@ public object FfiConverterTypeConsensusDeterminedVersionAssignments: FfiConverte
 public interface DigestInterface {
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+    fun `isObjectAlive`(): kotlin.Boolean
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+    fun `isObjectDeleted`(): kotlin.Boolean
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+    fun `isObjectWrapped`(): kotlin.Boolean
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
     fun `nextLexicographical`(): Digest
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    fun `nextLexicographicalOpt`(): Digest?
     
     fun `toBase58`(): kotlin.String
     
@@ -24509,12 +24646,75 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
 
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */override fun `isObjectAlive`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */override fun `isObjectDeleted`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */override fun `isObjectWrapped`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */override fun `nextLexicographical`(): Digest {
             return FfiConverterTypeDigest.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */override fun `nextLexicographicalOpt`(): Digest? {
+            return FfiConverterOptionalTypeDigest.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(
         it, _status)
 }
     }
@@ -24607,10 +24807,10 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     }
     
 
-         fun `generate`(): Digest {
+         fun `random`(): Digest {
             return FfiConverterTypeDigest.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_digest_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_digest_random(
         _status)
 }
     )
@@ -39954,6 +40154,17 @@ public interface ObjectIdInterface {
      */
     fun `deriveDynamicChildId`(`keyTypeTag`: TypeTag, `keyBytes`: kotlin.ByteArray): ObjectId
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    fun `nextLexicographical`(): ObjectId
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    fun `nextLexicographicalOpt`(): ObjectId?
+    
     fun `toAddress`(): Address
     
     fun `toBytes`(): kotlin.ByteArray
@@ -40104,6 +40315,37 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(
         it, FfiConverterTypeTypeTag.lower(`keyTypeTag`),FfiConverterByteArray.lower(`keyBytes`),_status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */override fun `nextLexicographical`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */override fun `nextLexicographicalOpt`(): ObjectId? {
+            return FfiConverterOptionalTypeObjectId.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(
+        it, _status)
 }
     }
     )

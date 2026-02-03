@@ -1,6 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use crate::error::Result;
 
 /// A 32-byte Blake2b256 hash output.
@@ -45,9 +47,8 @@ impl Digest {
     }
 
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        let mut rng = rand::thread_rng();
-        Self(iota_sdk::types::Digest::generate(&mut rng))
+    pub fn random() -> Self {
+        Self(iota_sdk::types::Digest::random())
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -60,7 +61,30 @@ impl Digest {
 
     /// Returns the next digest in byte-increasing order.
     pub fn next_lexicographical(&self) -> Self {
-        self.0.next_lexicographical().into()
+        Self(self.0.next_lexicographical())
+    }
+
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
+        self.0.next_lexicographical_opt().map(Self).map(Arc::new)
+    }
+
+    /// Returns whether the digest represents an object that is neither deleted
+    /// nor wrapped
+    pub fn is_object_alive(&self) -> bool {
+        self.0.is_object_alive()
+    }
+
+    /// Returns whether the digest represents a deleted object
+    pub fn is_object_deleted(&self) -> bool {
+        self.0.is_object_deleted()
+    }
+
+    /// Returns whether the digest represents an object wrapped in another
+    /// object.
+    pub fn is_object_wrapped(&self) -> bool {
+        self.0.is_object_wrapped()
     }
 }
 

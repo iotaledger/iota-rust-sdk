@@ -465,6 +465,16 @@ void* uniffi_iota_sdk_ffi_fn_constructor_address_zero(RustCallStatus *out_status
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL
+void* uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_ADDRESS_TO_BYTES
 RustBuffer uniffi_iota_sdk_ffi_fn_method_address_to_bytes(void* ptr, RustCallStatus *out_status
@@ -1679,15 +1689,35 @@ void* uniffi_iota_sdk_ffi_fn_constructor_digest_from_base58(RustBuffer base58, R
 void* uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(RustBuffer bytes, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_DIGEST_GENERATE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_DIGEST_GENERATE
-void* uniffi_iota_sdk_ffi_fn_constructor_digest_generate(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_DIGEST_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_DIGEST_RANDOM
+void* uniffi_iota_sdk_ffi_fn_constructor_digest_random(RustCallStatus *out_status
     
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_IS_OBJECT_ALIVE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_IS_OBJECT_ALIVE
+int8_t uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_IS_OBJECT_DELETED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_IS_OBJECT_DELETED
+int8_t uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_IS_OBJECT_WRAPPED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_IS_OBJECT_WRAPPED
+int8_t uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
 void* uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_DIGEST_TO_BASE58
@@ -4213,6 +4243,16 @@ void* uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(RustCallStatus *out_statu
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_DERIVE_DYNAMIC_CHILD_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_DERIVE_DYNAMIC_CHILD_ID
 void* uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(void* ptr, void* key_type_tag, RustBuffer key_bytes, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL
+void* uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL_OPT
+RustBuffer uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_OBJECTID_TO_ADDRESS
@@ -12885,6 +12925,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json(vo
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL
+uint16_t uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_NEXT_LEXICOGRAPHICAL_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_BYTES
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_ADDRESS_TO_BYTES
 uint16_t uniffi_iota_sdk_ffi_checksum_method_address_to_bytes(void
@@ -13557,9 +13609,33 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignmen
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_IS_OBJECT_ALIVE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_IS_OBJECT_ALIVE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_IS_OBJECT_DELETED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_IS_OBJECT_DELETED
+uint16_t uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_IS_OBJECT_WRAPPED
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_IS_OBJECT_WRAPPED
+uint16_t uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL
 uint16_t uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_DIGEST_NEXT_LEXICOGRAPHICAL_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt(void
     
 );
 #endif
@@ -14760,6 +14836,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_DERIVE_DYNAMIC_CHILD_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_DERIVE_DYNAMIC_CHILD_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL_OPT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_OBJECTID_NEXT_LEXICOGRAPHICAL_OPT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt(void
     
 );
 #endif
@@ -16647,9 +16735,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_DIGEST_GENERATE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_DIGEST_GENERATE
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_digest_generate(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_DIGEST_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_DIGEST_RANDOM
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_digest_random(void
     
 );
 #endif

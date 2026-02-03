@@ -205,6 +205,25 @@ pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8;
     next
 }
 
+/// Returns the next array in byte-increasing order, or `None` if the result
+/// would overflow.
+pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> Option<[u8; N]> {
+    let mut next = *array;
+    let mut i = N;
+
+    while i > 0 {
+        i -= 1;
+        let (new_byte, overflow) = next[i].overflowing_add(1);
+        next[i] = new_byte;
+
+        if !overflow {
+            return Some(next);
+        }
+    }
+
+    None
+}
+
 #[macro_export]
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
@@ -570,7 +589,7 @@ mod _schemars {
 
 #[cfg(test)]
 mod test {
-    use super::next_lexicographical_array;
+    use super::{next_lexicographical_array, next_lexicographical_array_opt};
 
     #[test]
     fn test_lexical_order() {
@@ -600,6 +619,43 @@ mod test {
                 "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             )),
             array_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
+        );
+    }
+
+    #[test]
+    fn test_lexical_order_opt() {
+        fn array_from_str(s: &str) -> [u8; 32] {
+            hex::decode(s).unwrap().try_into().unwrap()
+        }
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000000"
+            )),
+            Some(array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000000001"
+            )),
+        );
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000000ffff"
+            )),
+            Some(array_from_str(
+                "0000000000000000000000000000000000000000000000000000000000010000"
+            )),
+        );
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002c"
+            )),
+            Some(array_from_str(
+                "000000000000000000000000000000000000000000000000000000000001002d"
+            )),
+        );
+        assert_eq!(
+            next_lexicographical_array_opt(&array_from_str(
+                "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            )),
+            None,
         );
     }
 }
