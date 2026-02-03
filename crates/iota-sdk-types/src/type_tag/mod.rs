@@ -287,7 +287,7 @@ impl Identifier {
 
 impl std::fmt::Display for Identifier {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(&self.0)
+        self.as_str().fmt(f)
     }
 }
 
@@ -333,9 +333,21 @@ impl PartialEq<IdentifierRef> for Identifier {
     }
 }
 
+impl PartialEq<&IdentifierRef> for Identifier {
+    fn eq(&self, other: &&IdentifierRef) -> bool {
+        self.as_ref() == *other
+    }
+}
+
 impl PartialEq<Identifier> for IdentifierRef {
     fn eq(&self, other: &Identifier) -> bool {
         self == other.as_ref()
+    }
+}
+
+impl PartialEq<Identifier> for &IdentifierRef {
+    fn eq(&self, other: &Identifier) -> bool {
+        *self == other.as_ref()
     }
 }
 
@@ -344,36 +356,53 @@ impl PartialEq<Identifier> for IdentifierRef {
 pub struct IdentifierRef(str);
 
 impl IdentifierRef {
+    /// Creates a new `IdentifierRef` from the given static string slice.
+    ///
+    /// This function will panic if the string is not a valid Move identifier.
     pub const fn const_new(s: &'static str) -> &'static Self {
         if !Identifier::is_valid(s) {
             panic!("String is not a valid Move identifier");
         }
 
         // SAFETY: the following transmute is safe because
-        // (1) it's equivalent to the unsafe-reborrow inside IdentStr::ref_cast()
-        //     (which we can't use b/c it's not const).
-        // (2) we've just asserted that IdentStr impls RefCast<From = str>, which
-        //     already guarantees the transmute is safe (RefCast checks that
-        //     IdentStr(str) is #[repr(transparent)]).
-        // (3) both in and out lifetimes are 'static, so we're not widening the
+        // (1) both in and out lifetimes are 'static, so we're not widening the
         //     lifetime.
-        // (4) we've just asserted that the IdentStr passes the
-        //     is_valid check.
+        // (2) the IdentifierRef is #[repr(transparent)] over str meaning the
+        //     memory layout is the same.
         unsafe { std::mem::transmute::<&'static str, &'static Self>(s) }
     }
 
+    /// Creates a new `IdentifierRef` from the given string slice.
+    ///
+    /// This function will return an error if the string is not a valid Move
+    /// identifier.
+    pub fn new<'a>(s: &'a str) -> Result<&'a Self, TypeParseError> {
+        if !Identifier::is_valid(s) {
+            return Err(TypeParseError {
+                source: s.to_owned(),
+            });
+        }
+
+        // SAFETY: the following transmute is safe because
+        // (1) both in and out lifetimes are 'static, so we're not widening the
+        //     lifetime.
+        // (2) the IdentifierRef is #[repr(transparent)] over str meaning the
+        //     memory layout is the same.
+        unsafe { Ok(std::mem::transmute::<&'a str, &'a Self>(s)) }
+    }
+
     /// Returns true if this string is a valid identifier.
-    pub fn is_valid(s: &str) -> bool {
+    pub const fn is_valid(s: &str) -> bool {
         Identifier::is_valid(s)
     }
 
     /// Returns the length of `self` in bytes.
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.0.len()
     }
 
     /// Returns `true` if `self` has a length of zero bytes.
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
@@ -381,12 +410,12 @@ impl IdentifierRef {
     ///
     /// This is not implemented as a `From` trait to discourage automatic
     /// conversions -- these conversions should not typically happen.
-    pub fn as_str(&self) -> &str {
+    pub const fn as_str(&self) -> &str {
         &self.0
     }
 
     /// Converts `self` to a byte slice.
-    pub fn as_bytes(&self) -> &[u8] {
+    pub const fn as_bytes(&self) -> &[u8] {
         self.0.as_bytes()
     }
 }
@@ -405,6 +434,12 @@ impl ToOwned for IdentifierRef {
     }
 }
 
+impl std::fmt::Display for IdentifierRef {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.as_str().fmt(f)
+    }
+}
+
 macro_rules! add_struct_tag_ctor {
     ($address:ident, $module:literal, $name:literal) => {
         paste::paste! {
@@ -415,6 +450,12 @@ macro_rules! add_struct_tag_ctor {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![],
                 }
+            }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
@@ -427,6 +468,12 @@ macro_rules! add_struct_tag_ctor {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![],
                 }
+            }
+
+            pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
@@ -443,6 +490,12 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                     type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
                 }
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
+            }
         }
     };
     ($address:ident, $module:literal, $name:literal, "with-module") => {
@@ -454,6 +507,12 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
                 }
+            }
+
+            pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
@@ -470,6 +529,12 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                     type_params: vec![type_tag.into()],
                 }
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
+            }
         }
     };
     ($address:ident, $module:literal, $name:literal, "with-module") => {
@@ -481,6 +546,12 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                     name: IdentifierRef::const_new($name).into(),
                     type_params: vec![type_tag.into()],
                 }
+            }
+
+            pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
+                self.address == Address::$address
+                    && self.module == IdentifierRef::const_new($module)
+                    && self.name == IdentifierRef::const_new($name)
             }
         }
     };
@@ -511,14 +582,14 @@ pub struct StructTag {
 impl StructTag {
     pub fn new(
         address: Address,
-        module: Identifier,
-        name: Identifier,
+        module: impl Into<Identifier>,
+        name: impl Into<Identifier>,
         type_params: Vec<TypeTag>,
     ) -> Self {
         Self {
             address,
-            module,
-            name,
+            module: module.into(),
+            name: name.into(),
             type_params,
         }
     }
