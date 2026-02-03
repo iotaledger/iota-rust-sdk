@@ -1527,6 +1527,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender() != 20194:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor() != 44990:
@@ -1623,7 +1625,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 25235:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized() != 39496:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 48258:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2264,6 +2268,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins() != 6220:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() != 37952:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4387,6 +4393,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -5292,6 +5304,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait.argtypes 
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -9473,6 +9491,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender.restype = None
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -14899,6 +14923,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coi
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins.restype = ctypes.c_uint16
@@ -15046,6 +15073,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status.restype = ctypes.c_uint16
@@ -16006,6 +16036,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins.restype = ctypes.c_uint16
@@ -35391,6 +35424,12 @@ class ClientTransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def set_sender(self, sender: "Address"):
+        """
+        Set the sender address.
+        """
+
+        raise NotImplementedError
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin into many.
@@ -35845,6 +35884,21 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterTypePtbArgument.lower(amount))
         )
+
+
+
+
+
+    def set_sender(self, sender: "Address") -> None:
+        """
+        Set the sender address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(sender)
+        
+        _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(sender))
+
 
 
 
@@ -38520,6 +38574,23 @@ class FaucetClientProtocol(typing.Protocol):
 
         Note that the faucet is heavily rate-limited, so calling repeatedly the
         faucet would likely result in a 429 code or 502 code.
+
+        If you intend to use the transferred tokens with the graphql client,
+        consider using `request_and_wait_for_finalized` instead to ensure
+        the tokens are available in the indexer.
+        """
+
+        raise NotImplementedError
+    def request_and_wait_for_finalized(self, address: "Address",client: "GraphQlClient"):
+        """
+        Request gas from the faucet and wait until the request is completed and
+        token is transferred and finalized on the ledger. Returns
+        `FaucetReceipt` if the request is successful, which contains the
+        list of tokens transferred, and the transaction digest.
+
+        This is a convenience method that combines `request_and_wait` and
+        waiting for the funding transactions to be finalized using the provided
+        GraphQL `Client`.
         """
 
         raise NotImplementedError
@@ -38634,6 +38705,10 @@ _UniffiConverterTypeSdkFfiError,
 
         Note that the faucet is heavily rate-limited, so calling repeatedly the
         faucet would likely result in a 429 code or 502 code.
+
+        If you intend to use the transferred tokens with the graphql client,
+        consider using `request_and_wait_for_finalized` instead to ensure
+        the tokens are available in the indexer.
         """
 
         _UniffiConverterTypeAddress.check_lower(address)
@@ -38642,6 +38717,41 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
                 self._uniffi_clone_pointer(), 
         _UniffiConverterTypeAddress.lower(address)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeFaucetReceipt.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def request_and_wait_for_finalized(self, address: "Address",client: "GraphQlClient") -> "typing.Optional[FaucetReceipt]":
+        """
+        Request gas from the faucet and wait until the request is completed and
+        token is transferred and finalized on the ledger. Returns
+        `FaucetReceipt` if the request is successful, which contains the
+        list of tokens transferred, and the transaction digest.
+
+        This is a convenience method that combines `request_and_wait` and
+        waiting for the funding transactions to be finalized using the provided
+        GraphQL `Client`.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(address)
+        
+        _UniffiConverterTypeGraphQlClient.check_lower(client)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(address),
+        _UniffiConverterTypeGraphQlClient.lower(client)
             ),
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
@@ -52248,6 +52358,12 @@ class TransactionBuilderProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def set_sender(self, sender: "Address"):
+        """
+        Set the sender address.
+        """
+
+        raise NotImplementedError
     def split_coins(self, coin: "PtbArgument",amounts: "typing.List[PtbArgument]",names: "typing.Union[object, typing.List[str]]" = _DEFAULT):
         """
         Split a coin by the provided amounts.
@@ -52641,6 +52757,21 @@ _UniffiConverterTypeSdkFfiError,
         _UniffiConverterTypeAddress.lower(recipient),
         _UniffiConverterTypePtbArgument.lower(amount))
         )
+
+
+
+
+
+    def set_sender(self, sender: "Address") -> None:
+        """
+        Set the sender address.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(sender)
+        
+        _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeAddress.lower(sender))
+
 
 
 

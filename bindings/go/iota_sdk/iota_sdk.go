@@ -5160,6 +5160,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender()
+	})
+	if checksum != 20194 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins()
 	})
 	if checksum != 2932 {
@@ -5594,9 +5603,18 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait()
 	})
-	if checksum != 22484 {
+	if checksum != 25235 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized()
+	})
+	if checksum != 39496 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8477,6 +8495,15 @@ func uniffiCheckChecksums() {
 	if checksum != 2185 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender()
+	})
+	if checksum != 37952 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -16257,6 +16284,8 @@ type ClientTransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *ClientTransactionBuilder
+	// Set the sender address.
+	SetSender(sender *Address) 
 	// Split a coin into many.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *ClientTransactionBuilder
 	// Set the sponsor of the transaction.
@@ -16559,6 +16588,17 @@ func (_self *ClientTransactionBuilder) SendIota(recipient *Address, amount *PtbA
 		return C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
+}
+
+// Set the sender address.
+func (_self *ClientTransactionBuilder) SetSender(sender *Address)  {
+	_pointer := _self.ffiObject.incrementPointer("*ClientTransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+		return false
+	})
 }
 
 // Split a coin into many.
@@ -19206,7 +19246,20 @@ type FaucetClientInterface interface {
 	//
 	// Note that the faucet is heavily rate-limited, so calling repeatedly the
 	// faucet would likely result in a 429 code or 502 code.
+	//
+	// If you intend to use the transferred tokens with the graphql client,
+	// consider using `request_and_wait_for_finalized` instead to ensure
+	// the tokens are available in the indexer.
 	RequestAndWait(address *Address) (*FaucetReceipt, error)
+	// Request gas from the faucet and wait until the request is completed and
+	// token is transferred and finalized on the ledger. Returns
+	// `FaucetReceipt` if the request is successful, which contains the
+	// list of tokens transferred, and the transaction digest.
+	//
+	// This is a convenience method that combines `request_and_wait` and
+	// waiting for the funding transactions to be finalized using the provided
+	// GraphQL `Client`.
+	RequestAndWaitForFinalized(address *Address, client *GraphQlClient) (*FaucetReceipt, error)
 	// Check the faucet request status.
 	//
 	// Possible statuses are defined in: `BatchSendStatusType`
@@ -19293,6 +19346,10 @@ func (_self *FaucetClient) Request(address *Address) (*string, error) {
 //
 // Note that the faucet is heavily rate-limited, so calling repeatedly the
 // faucet would likely result in a 429 code or 502 code.
+//
+// If you intend to use the transferred tokens with the graphql client,
+// consider using `request_and_wait_for_finalized` instead to ensure
+// the tokens are available in the indexer.
 func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, error) {
 	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
 	defer _self.ffiObject.decrementPointer()
@@ -19311,6 +19368,45 @@ func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, err
 		},
 		C.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
 		_pointer,FfiConverterAddressINSTANCE.Lower(address)),
+		// pollFn
+		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func (handle C.uint64_t) {
+			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	return res, err 
+}
+
+// Request gas from the faucet and wait until the request is completed and
+// token is transferred and finalized on the ledger. Returns
+// `FaucetReceipt` if the request is successful, which contains the
+// list of tokens transferred, and the transaction digest.
+//
+// This is a convenience method that combines `request_and_wait` and
+// waiting for the funding transactions to be finalized using the provided
+// GraphQL `Client`.
+func (_self *FaucetClient) RequestAndWaitForFinalized(address *Address, client *GraphQlClient) (*FaucetReceipt, error) {
+	_pointer := _self.ffiObject.incrementPointer("*FaucetClient")
+	defer _self.ffiObject.decrementPointer()
+	 res, err :=uniffiRustCallAsync[SdkFfiError](
+        FfiConverterSdkFfiErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer {
+		inner: res,
+	}
+		},
+		// liftFn
+		func(ffi RustBufferI) *FaucetReceipt {
+			return FfiConverterOptionalFaucetReceiptINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
+		_pointer,FfiConverterAddressINSTANCE.Lower(address), FfiConverterGraphQlClientINSTANCE.Lower(client)),
 		// pollFn
 		func (handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
 			C.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
@@ -32479,6 +32575,8 @@ type TransactionBuilderInterface interface {
 	// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
 	// sent.
 	SendIota(recipient *Address, amount *PtbArgument) *TransactionBuilder
+	// Set the sender address.
+	SetSender(sender *Address) 
 	// Split a coin by the provided amounts.
 	SplitCoins(coin *PtbArgument, amounts []*PtbArgument, names []string) *TransactionBuilder
 	// Set the sponsor of the transaction.
@@ -32719,6 +32817,17 @@ func (_self *TransactionBuilder) SendIota(recipient *Address, amount *PtbArgumen
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(
 		_pointer,FfiConverterAddressINSTANCE.Lower(recipient), FfiConverterPtbArgumentINSTANCE.Lower(amount),_uniffiStatus)
 	}))
+}
+
+// Set the sender address.
+func (_self *TransactionBuilder) SetSender(sender *Address)  {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionBuilder")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
+		_pointer,FfiConverterAddressINSTANCE.Lower(sender),_uniffiStatus)
+		return false
+	})
 }
 
 // Split a coin by the provided amounts.

@@ -49,11 +49,12 @@ fun main() = runBlocking {
         val sender = privateKey.publicKey().deriveAddress()
         println("Sender: ${sender.toHex()}")
 
+        val client = GraphQlClient.newLocalnet()
+
         // Fund the sender address for gas payment
         val faucet = FaucetClient.newLocalnet()
-        faucet.requestAndWait(sender) ?: throw Exception("Failed to request coins from faucet")
-
-        val client = GraphQlClient.newLocalnet()
+        faucet.requestAndWaitForFinalized(sender, client)
+            ?: throw Exception("Failed to request coins from faucet")
 
         // Build the `publish` PTB
         val builderPublish = TransactionBuilder(sender).withClient(client)

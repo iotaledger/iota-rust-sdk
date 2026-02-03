@@ -17,11 +17,11 @@ async def main():
     sender_address = public_key.derive_address()
     print(f"Sender address: {sender_address.to_hex()}")
 
+    client = GraphQlClient.new_localnet()
+
     # Request funds from faucet
     faucet = FaucetClient.new_localnet()
-    await faucet.request_and_wait(sender_address)
-
-    client = GraphQlClient.new_localnet()
+    await faucet.request_and_wait_for_finalized(sender_address, client)
 
     builder = TransactionBuilder(sender_address).with_client(client)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))

@@ -32,14 +32,14 @@ func main() {
 	senderAddress := publicKey.DeriveAddress()
 	log.Printf("Sender address: %s", senderAddress.ToHex())
 
+	client := iota_sdk.GraphQlClientNewLocalnet()
+
 	// Request funds from faucet
 	faucet := iota_sdk.FaucetClientNewLocalnet()
-	_, err = faucet.RequestAndWait(senderAddress)
+	_, err = faucet.RequestAndWaitForFinalized(senderAddress, client)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
-
-	client := iota_sdk.GraphQlClientNewLocalnet()
 
 	builder := iota_sdk.NewTransactionBuilder(senderAddress).WithClient(client)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))

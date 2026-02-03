@@ -3959,6 +3959,12 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5040,6 +5046,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_sponsor(
@@ -5137,6 +5145,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations(
 fun uniffi_iota_sdk_ffi_checksum_method_faucetclient_request(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status(
 ): Short
@@ -5777,6 +5787,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_publish(
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_coins(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins(
 ): Short
@@ -7138,6 +7150,8 @@ fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_coins(`ptr`: Poi
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(`ptr`: Pointer,`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7479,6 +7493,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new_testnet(uniffi_out_err: 
 fun uniffi_iota_sdk_ffi_fn_method_faucetclient_request(`ptr`: Pointer,`address`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(`ptr`: Pointer,`address`: Pointer,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(`ptr`: Pointer,`address`: Pointer,`client`: Pointer,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_faucetclient_request_status(`ptr`: Pointer,`id`: RustBuffer.ByValue,
 ): Long
@@ -9068,6 +9084,8 @@ fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_coins(`ptr`: Pointer,`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_send_iota(`ptr`: Pointer,`recipient`: Pointer,`amount`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(`ptr`: Pointer,`sender`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_split_coins(`ptr`: Pointer,`coin`: Pointer,`amounts`: RustBuffer.ByValue,`names`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionbuilder_sponsor(`ptr`: Pointer,`sponsor`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -12201,6 +12219,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_send_iota() != 65011.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_set_sender() != 20194.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_clienttransactionbuilder_split_coins() != 2932.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -12345,7 +12366,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() != 13326.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 22484.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait() != 25235.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_and_wait_for_finalized() != 39496.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_faucetclient_request_status() != 48258.toShort()) {
@@ -13306,6 +13330,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_send_iota() != 2185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_set_sender() != 37952.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_transactionbuilder_split_coins() != 17747.toShort()) {
@@ -21994,6 +22021,11 @@ public interface ClientTransactionBuilderInterface {
     fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): ClientTransactionBuilder
     
     /**
+     * Set the sender address.
+     */
+    fun `setSender`(`sender`: Address)
+    
+    /**
      * Split a coin into many.
      */
     fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): ClientTransactionBuilder
@@ -22421,6 +22453,20 @@ open class ClientTransactionBuilder: Disposable, AutoCloseable, ClientTransactio
     }
     )
     }
+    
+
+    
+    /**
+     * Set the sender address.
+     */override fun `setSender`(`sender`: Address)
+        = 
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_clienttransactionbuilder_set_sender(
+        it, FfiConverterTypeAddress.lower(`sender`),_status)
+}
+    }
+    
     
 
     
@@ -27522,8 +27568,24 @@ public interface FaucetClientInterface {
      *
      * Note that the faucet is heavily rate-limited, so calling repeatedly the
      * faucet would likely result in a 429 code or 502 code.
+     *
+     * If you intend to use the transferred tokens with the graphql client,
+     * consider using `request_and_wait_for_finalized` instead to ensure
+     * the tokens are available in the indexer.
      */
     suspend fun `requestAndWait`(`address`: Address): FaucetReceipt?
+    
+    /**
+     * Request gas from the faucet and wait until the request is completed and
+     * token is transferred and finalized on the ledger. Returns
+     * `FaucetReceipt` if the request is successful, which contains the
+     * list of tokens transferred, and the transaction digest.
+     *
+     * This is a convenience method that combines `request_and_wait` and
+     * waiting for the funding transactions to be finalized using the provided
+     * GraphQL `Client`.
+     */
+    suspend fun `requestAndWaitForFinalized`(`address`: Address, `client`: GraphQlClient): FaucetReceipt?
     
     /**
      * Check the faucet request status.
@@ -27668,6 +27730,10 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
      *
      * Note that the faucet is heavily rate-limited, so calling repeatedly the
      * faucet would likely result in a 429 code or 502 code.
+     *
+     * If you intend to use the transferred tokens with the graphql client,
+     * consider using `request_and_wait_for_finalized` instead to ensure
+     * the tokens are available in the indexer.
      */
     @Throws(SdkFfiException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -27677,6 +27743,37 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
             UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait(
                 thisPtr,
                 FfiConverterTypeAddress.lower(`address`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterOptionalTypeFaucetReceipt.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Request gas from the faucet and wait until the request is completed and
+     * token is transferred and finalized on the ledger. Returns
+     * `FaucetReceipt` if the request is successful, which contains the
+     * list of tokens transferred, and the transaction digest.
+     *
+     * This is a convenience method that combines `request_and_wait` and
+     * waiting for the funding transactions to be finalized using the provided
+     * GraphQL `Client`.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `requestAndWaitForFinalized`(`address`: Address, `client`: GraphQlClient) : FaucetReceipt? {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_faucetclient_request_and_wait_for_finalized(
+                thisPtr,
+                FfiConverterTypeAddress.lower(`address`),FfiConverterTypeGraphQLClient.lower(`client`),
             )
         },
         { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
@@ -50605,6 +50702,11 @@ public interface TransactionBuilderInterface {
     fun `sendIota`(`recipient`: Address, `amount`: PtbArgument): TransactionBuilder
     
     /**
+     * Set the sender address.
+     */
+    fun `setSender`(`sender`: Address)
+    
+    /**
      * Split a coin by the provided amounts.
      */
     fun `splitCoins`(`coin`: PtbArgument, `amounts`: List<PtbArgument>, `names`: List<kotlin.String> = listOf()): TransactionBuilder
@@ -50993,6 +51095,20 @@ open class TransactionBuilder: Disposable, AutoCloseable, TransactionBuilderInte
     }
     )
     }
+    
+
+    
+    /**
+     * Set the sender address.
+     */override fun `setSender`(`sender`: Address)
+        = 
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionbuilder_set_sender(
+        it, FfiConverterTypeAddress.lower(`sender`),_status)
+}
+    }
+    
     
 
     
