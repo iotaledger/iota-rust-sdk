@@ -49,7 +49,8 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
 
     // Fund the sender address for gas payment
     val faucet = FaucetClient.newLocalnet()
-    faucet.requestAndWaitForFinalized(sender, client) ?: throw Exception("Failed to request coins from faucet")
+    faucet.requestAndWaitForFinalized(sender, client)
+        ?: throw Exception("Failed to request coins from faucet")
 
     // Build the `publish` PTB
     var builder = TransactionBuilder(sender).withClient(client)
