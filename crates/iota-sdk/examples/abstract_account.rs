@@ -57,7 +57,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     // Fund the sender address for gas payment
     if FaucetClient::new_localnet()
-        .request_and_wait(sender)
+        .request_and_wait_for_finalized(sender, client)
         .await?
         .is_none()
     {
