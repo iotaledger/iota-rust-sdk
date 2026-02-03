@@ -350,14 +350,14 @@ mod tests {
     #[test]
     fn from_bytes_valid() {
         let bytes = [42u8; 32];
-        let digest = Digest::from_bytes(&bytes).unwrap();
+        let digest = Digest::from_bytes(bytes).unwrap();
         assert_eq!(digest.into_inner(), bytes);
     }
 
     #[test]
     fn from_bytes_too_short() {
         let bytes = [1u8; 31];
-        let result = Digest::from_bytes(&bytes);
+        let result = Digest::from_bytes(bytes);
         assert_eq!(
             result,
             Err(DigestParseError::InvalidByteLength { actual: 31 })
@@ -367,7 +367,7 @@ mod tests {
     #[test]
     fn from_bytes_too_long() {
         let bytes = [1u8; 33];
-        let result = Digest::from_bytes(&bytes);
+        let result = Digest::from_bytes(bytes);
         assert_eq!(
             result,
             Err(DigestParseError::InvalidByteLength { actual: 33 })
@@ -377,7 +377,7 @@ mod tests {
     #[test]
     fn from_bytes_empty() {
         let bytes: [u8; 0] = [];
-        let result = Digest::from_bytes(&bytes);
+        let result = Digest::from_bytes(bytes);
         assert_eq!(
             result,
             Err(DigestParseError::InvalidByteLength { actual: 0 })
