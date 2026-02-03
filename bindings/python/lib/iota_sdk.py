@@ -1343,6 +1343,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json() != 12096:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical() != 10365:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt() != 51160:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes() != 57710:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168:
@@ -1574,6 +1578,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped() != 27020:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt() != 23877:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -1974,6 +1980,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct() != 58579:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() != 47819:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical() != 15534:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt() != 278:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address() != 21880:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3409,6 +3419,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_zero.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_zero.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_to_bytes.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -4774,6 +4794,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.argtypes = 
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_to_base58.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -7415,6 +7440,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_to_address.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14853,6 +14888,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_bcs.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_func_zk_login_public_identifier_to_json.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes.restype = ctypes.c_uint16
@@ -15201,6 +15242,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped.restype = ctype
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_to_base58.restype = ctypes.c_uint16
@@ -15801,6 +15845,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct.restype = ct
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_objectid_to_address.restype = ctypes.c_uint16
@@ -32170,6 +32220,19 @@ class AddressProtocol(typing.Protocol):
     ```
     """
 
+    def next_lexicographical(self, ):
+        """
+        Returns the next digest in byte-increasing order.
+        """
+
+        raise NotImplementedError
+    def next_lexicographical_opt(self, ):
+        """
+        Returns the next digest in byte-increasing order, or `None` if the
+        result would overflow.
+        """
+
+        raise NotImplementedError
     def to_bytes(self, ):
         raise NotImplementedError
     def to_canonical_string(self, with_prefix: "bool"):
@@ -32372,6 +32435,33 @@ class Address():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_address_zero,)
         return cls._make_instance_(pointer)
+
+
+
+    def next_lexicographical(self, ) -> "Address":
+        """
+        Returns the next digest in byte-increasing order.
+        """
+
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def next_lexicographical_opt(self, ) -> "typing.Optional[Address]":
+        """
+        Returns the next digest in byte-increasing order, or `None` if the
+        result would overflow.
+        """
+
+        return _UniffiConverterOptionalTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt,self._uniffi_clone_pointer(),)
+        )
+
+
 
 
 
@@ -37234,6 +37324,13 @@ class DigestProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def next_lexicographical_opt(self, ):
+        """
+        Returns the next digest in byte-increasing order, or `None` if the
+        result would overflow.
+        """
+
+        raise NotImplementedError
     def to_base58(self, ):
         raise NotImplementedError
     def to_bytes(self, ):
@@ -37353,6 +37450,20 @@ class Digest():
 
         return _UniffiConverterTypeDigest.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def next_lexicographical_opt(self, ) -> "typing.Optional[Digest]":
+        """
+        Returns the next digest in byte-increasing order, or `None` if the
+        result would overflow.
+        """
+
+        return _UniffiConverterOptionalTypeDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt,self._uniffi_clone_pointer(),)
         )
 
 
@@ -46709,6 +46820,19 @@ class ObjectIdProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def next_lexicographical(self, ):
+        """
+        Returns the next digest in byte-increasing order.
+        """
+
+        raise NotImplementedError
+    def next_lexicographical_opt(self, ):
+        """
+        Returns the next digest in byte-increasing order, or `None` if the
+        result would overflow.
+        """
+
+        raise NotImplementedError
     def to_address(self, ):
         raise NotImplementedError
     def to_bytes(self, ):
@@ -46914,6 +47038,33 @@ class ObjectId():
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id,self._uniffi_clone_pointer(),
         _UniffiConverterTypeTypeTag.lower(key_type_tag),
         _UniffiConverterBytes.lower(key_bytes))
+        )
+
+
+
+
+
+    def next_lexicographical(self, ) -> "ObjectId":
+        """
+        Returns the next digest in byte-increasing order.
+        """
+
+        return _UniffiConverterTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def next_lexicographical_opt(self, ) -> "typing.Optional[ObjectId]":
+        """
+        Returns the next digest in byte-increasing order, or `None` if the
+        result would overflow.
+        """
+
+        return _UniffiConverterOptionalTypeObjectId.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt,self._uniffi_clone_pointer(),)
         )
 
 

@@ -4332,6 +4332,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical()
+	})
+	if checksum != 10365 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt()
+	})
+	if checksum != 51160 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_address_next_lexicographical_opt: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_address_to_bytes()
 	})
 	if checksum != 57710 {
@@ -5372,6 +5390,15 @@ func uniffiCheckChecksums() {
 	if checksum != 53914 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt()
+	})
+	if checksum != 23877 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -7172,6 +7199,24 @@ func uniffiCheckChecksums() {
 	if checksum != 47819 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical()
+	})
+	if checksum != 15534 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt()
+	})
+	if checksum != 278 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13334,6 +13379,11 @@ func (ffiObject *FfiObject)freeRustArcPtr() {
 // address = 32OCTET
 // ```
 type AddressInterface interface {
+	// Returns the next digest in byte-increasing order.
+	NextLexicographical() *Address
+	// Returns the next digest in byte-increasing order, or `None` if the
+	// result would overflow.
+	NextLexicographicalOpt() **Address
 	ToBytes() []byte
 	// Returns the string representation of this address using the
 	// canonical display, with or without a `0x` prefix.
@@ -13499,6 +13549,29 @@ func AddressZero() *Address {
 }
 
 
+
+// Returns the next digest in byte-increasing order.
+func (_self *Address) NextLexicographical() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order, or `None` if the
+// result would overflow.
+func (_self *Address) NextLexicographicalOpt() **Address {
+	_pointer := _self.ffiObject.incrementPointer("*Address")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *Address) ToBytes() []byte {
 	_pointer := _self.ffiObject.incrementPointer("*Address")
@@ -17722,6 +17795,9 @@ type DigestInterface interface {
 	IsWrapped() bool
 	// Returns the next digest in byte-increasing order.
 	NextLexicographical() *Digest
+	// Returns the next digest in byte-increasing order, or `None` if the
+	// result would overflow.
+	NextLexicographicalOpt() **Digest
 	ToBase58() string
 	ToBytes() []byte
 }
@@ -17815,6 +17891,19 @@ func (_self *Digest) NextLexicographical() *Digest {
 	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(
 		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order, or `None` if the
+// result would overflow.
+func (_self *Digest) NextLexicographicalOpt() **Digest {
+	_pointer := _self.ffiObject.incrementPointer("*Digest")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
@@ -26926,6 +27015,11 @@ type ObjectIdInterface interface {
 	//
 	// hash(parent || len(key) || key || key_type_tag)
 	DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte) *ObjectId
+	// Returns the next digest in byte-increasing order.
+	NextLexicographical() *ObjectId
+	// Returns the next digest in byte-increasing order, or `None` if the
+	// result would overflow.
+	NextLexicographicalOpt() **ObjectId
 	ToAddress() *Address
 	ToBytes() []byte
 	// Returns the string representation of this object ID using the
@@ -27076,6 +27170,29 @@ func (_self *ObjectId) DeriveDynamicChildId(keyTypeTag *TypeTag, keyBytes []byte
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(
 		_pointer,FfiConverterTypeTagINSTANCE.Lower(keyTypeTag), FfiConverterBytesINSTANCE.Lower(keyBytes),_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order.
+func (_self *ObjectId) NextLexicographical() *ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Returns the next digest in byte-increasing order, or `None` if the
+// result would overflow.
+func (_self *ObjectId) NextLexicographicalOpt() **ObjectId {
+	_pointer := _self.ffiObject.incrementPointer("*ObjectId")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(
+		_pointer,_uniffiStatus),
+	}
 	}))
 }
 
