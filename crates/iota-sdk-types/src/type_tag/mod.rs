@@ -594,6 +594,12 @@ impl StructTag {
         }
     }
 
+    /// Returns whether the type (excluding the type params) is the same as
+    /// another struct tag.
+    pub fn is_same_type_as(&self, other: &StructTag) -> bool {
+        self.address == other.address && self.module == other.module && self.name == other.name
+    }
+
     pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -603,8 +609,26 @@ impl StructTag {
         }
     }
 
+    pub fn is_iota_coin_type(&self) -> bool {
+        self.address == Address::FRAMEWORK
+            && self.module == IdentifierRef::const_new("iota")
+            && self.name == IdentifierRef::const_new("IOTA")
+            && self.type_params.is_empty()
+    }
+
     pub fn new_gas_coin() -> Self {
         Self::new_coin(Self::new_iota_coin_type())
+    }
+
+    pub fn is_gas_coin(&self) -> bool {
+        self.address == Address::FRAMEWORK
+            && self.module == IdentifierRef::const_new("coin")
+            && self.name == IdentifierRef::const_new("Coin")
+            && matches!(
+                self.type_params.first(),
+                Some(TypeTag::Struct(boxed_struct_tag))
+                if boxed_struct_tag.is_iota_coin_type()
+            )
     }
 
     pub fn new_id() -> Self {
@@ -616,6 +640,12 @@ impl StructTag {
         }
     }
 
+    pub fn is_id(&self) -> bool {
+        self.address == Address::FRAMEWORK
+            && self.module == IdentifierRef::const_new("object")
+            && self.name == IdentifierRef::const_new("ID")
+    }
+
     pub fn new_uid() -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -623,6 +653,12 @@ impl StructTag {
             name: IdentifierRef::const_new("UID").into(),
             type_params: vec![],
         }
+    }
+
+    pub fn is_uid(&self) -> bool {
+        self.address == Address::FRAMEWORK
+            && self.module == IdentifierRef::const_new("object")
+            && self.name == IdentifierRef::const_new("UID")
     }
 
     pub fn new_name(address: Address) -> Self {
@@ -641,6 +677,12 @@ impl StructTag {
             name: IdentifierRef::const_new("Field").into(),
             type_params: vec![key.into(), value.into()],
         }
+    }
+
+    pub fn is_field(&self) -> bool {
+        self.address == Address::FRAMEWORK
+            && self.module == IdentifierRef::const_new("dynamic_field")
+            && self.name == IdentifierRef::const_new("Field")
     }
 
     add_struct_tag_ctor!(FRAMEWORK, "clock", "Clock");
@@ -671,7 +713,7 @@ impl StructTag {
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "config", "Setting", "with-module");
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, "dynamic_object_field", "Wrapper", "with-module");
 
-    /// Checks if this is a Coin type
+    /// Returns the coin type if this is a Coin type, None otherwise
     pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
         let Self {
             address,
@@ -691,7 +733,7 @@ impl StructTag {
         }
     }
 
-    /// Checks if this is a Coin type
+    /// Returns the coin type of this `StructTag`, panics if not a coin
     pub fn coin_type(&self) -> &TypeTag {
         self.coin_type_opt().expect("not a coin")
     }
@@ -714,6 +756,11 @@ impl StructTag {
     /// Returns the type params part of a `StructTag`
     pub fn type_params(&self) -> &[TypeTag] {
         &self.type_params
+    }
+
+    /// Decomposes the StructTag into its parts
+    pub fn into_parts(self) -> (Address, Identifier, Identifier, Vec<TypeTag>) {
+        (self.address, self.module, self.name, self.type_params)
     }
 
     /// Returns the string representation of this struct tag using the

@@ -45,6 +45,10 @@ macro_rules! export_struct_tag_ctors {
             pub fn [< new_ $name:snake >]() -> Self {
                 Self(iota_sdk::types::StructTag::[< new_ $name:snake >]())
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.0.[< is_ $name:snake >]()
+            }
         )+}
     } }
 }
@@ -57,6 +61,10 @@ macro_rules! export_struct_tag_from_type_tag_ctors {
             pub fn [< new_ $name:snake >](type_tag: &TypeTag) -> Self {
                 Self(iota_sdk::types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
             }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.0.[< is_ $name:snake >]()
+            }
         )+}
     } }
 }
@@ -68,6 +76,10 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
             #[uniffi::constructor]
             pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
                 Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
+            }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.0.[< is_ $name:snake >]()
             }
         )+}
     } }
@@ -120,6 +132,11 @@ impl StructTag {
             key.0.clone(),
             value.0.clone(),
         ))
+    }
+
+    /// Checks if this StructTag is a Field type
+    pub fn is_field(&self) -> bool {
+        self.0.is_field()
     }
 
     /// Checks if this is a Coin type
