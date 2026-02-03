@@ -40,7 +40,7 @@ pub struct ObjectReference {
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
+    pub const fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
         Self {
             object_id,
             version,
