@@ -4035,6 +4035,74 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5824,6 +5892,72 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_config(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_field(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_name(
@@ -6670,6 +6804,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_paus
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field(
@@ -6687,6 +6823,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state(
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota(
 ): Short
@@ -6709,8 +6847,6 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap(
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
@@ -8806,19 +8942,6 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(`ptr`: Point
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
-): Unit
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8887,6 +9010,19 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(`ptr`: Pointer,uniff
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
+): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9125,6 +9261,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9142,6 +9280,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(uniffi_ou
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9165,14 +9305,78 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_config(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_field(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_option(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_module(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -13493,6 +13697,105 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock() != 5225.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin() != 61913.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager() != 52348.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata() != 34817.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config() != 41259.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting() != 27038.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key() != 64455.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key() != 30183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key() != 4914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created() != 21370.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_field() != 59183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id() != 41991.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type() != 31521.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap() != 56508.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state() != 60130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota() != 19914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_string() != 21518.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event() != 20500.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock() != 6190.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota() != 14954.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving() != 5695.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap() != 65088.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid() != 1904.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap() != 64642.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt() != 4130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket() != 6624.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14762,6 +15065,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() != 24465.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14787,6 +15093,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970.toShort()) {
@@ -14820,9 +15129,6 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() != 43936.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944.toShort()) {
@@ -45743,7 +46049,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1VerifyingKey.lower(`other`),_status)
 }
     }
@@ -45994,7 +46300,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     constructor(`bytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46050,7 +46356,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
                 }
             }
         }
@@ -46058,7 +46364,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
         }
     }
 
@@ -46069,7 +46375,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
         it, _status)
 }
     }
@@ -46081,7 +46387,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
         it, _status)
 }
     }
@@ -46097,7 +46403,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -46113,7 +46419,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -46130,7 +46436,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
         it, _status)
 }
     }
@@ -46145,7 +46451,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
         it, _status)
 }
     }
@@ -46161,7 +46467,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
         it, _status)
 }
     }
@@ -46177,7 +46483,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
         it, _status)
 }
     }
@@ -46193,7 +46499,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -46209,7 +46515,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -46225,7 +46531,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -46237,7 +46543,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
         it, _status)
 }
     }
@@ -46253,7 +46559,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PrivateKey.lower(`other`),_status)
 }
     }
@@ -46271,7 +46577,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -46286,7 +46592,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46300,7 +46606,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
         FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -46315,7 +46621,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
         FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -46329,7 +46635,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46342,7 +46648,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
      */ fun `generate`(): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
         _status)
 }
     )
@@ -46601,7 +46907,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
                 }
             }
         }
@@ -46609,7 +46915,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
         }
     }
 
@@ -46626,7 +46932,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
         it, _status)
 }
     }
@@ -46641,7 +46947,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
         it, _status)
 }
     }
@@ -46653,7 +46959,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
         it, _status)
 }
     }
@@ -46708,7 +47014,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46719,7 +47025,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46729,7 +47035,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
          fun `generate`(): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
         _status)
 }
     )
@@ -49813,6 +50119,75 @@ public interface StructTagInterface {
      */
     fun `coinTypeOpt`(): TypeTag?
     
+    fun `isAsciiString`(): kotlin.Boolean
+    
+    fun `isBalance`(): kotlin.Boolean
+    
+    fun `isClock`(): kotlin.Boolean
+    
+    fun `isCoin`(): kotlin.Boolean
+    
+    fun `isCoinManager`(): kotlin.Boolean
+    
+    fun `isCoinMetadata`(): kotlin.Boolean
+    
+    fun `isConfig`(): kotlin.Boolean
+    
+    fun `isConfigSetting`(): kotlin.Boolean
+    
+    fun `isDenyListAddressKey`(): kotlin.Boolean
+    
+    fun `isDenyListConfigKey`(): kotlin.Boolean
+    
+    fun `isDenyListGlobalPauseKey`(): kotlin.Boolean
+    
+    fun `isDisplayCreated`(): kotlin.Boolean
+    
+    fun `isDisplayVersionUpdated`(): kotlin.Boolean
+    
+    fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean
+    
+    /**
+     * Checks if this StructTag is a Field type
+     */
+    fun `isField`(): kotlin.Boolean
+    
+    fun `isGasCoin`(): kotlin.Boolean
+    
+    fun `isId`(): kotlin.Boolean
+    
+    fun `isIotaCoinType`(): kotlin.Boolean
+    
+    fun `isIotaSystemAdminCap`(): kotlin.Boolean
+    
+    fun `isIotaSystemState`(): kotlin.Boolean
+    
+    fun `isIotaTreasuryCap`(): kotlin.Boolean
+    
+    fun `isOption`(): kotlin.Boolean
+    
+    fun `isStakedIota`(): kotlin.Boolean
+    
+    fun `isString`(): kotlin.Boolean
+    
+    fun `isSystemEpochInfoEvent`(): kotlin.Boolean
+    
+    fun `isTimeLock`(): kotlin.Boolean
+    
+    fun `isTimelockedStakedIota`(): kotlin.Boolean
+    
+    fun `isTransferReceiving`(): kotlin.Boolean
+    
+    fun `isTreasuryCap`(): kotlin.Boolean
+    
+    fun `isUid`(): kotlin.Boolean
+    
+    fun `isUpgradeCap`(): kotlin.Boolean
+    
+    fun `isUpgradeReceipt`(): kotlin.Boolean
+    
+    fun `isUpgradeTicket`(): kotlin.Boolean
+    
     /**
      * Returns the module part of a `StructTag`
      */
@@ -49978,6 +50353,405 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAsciiString`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isBalance`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isClock`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoin`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoinManager`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoinMetadata`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isConfig`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_config(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isConfigSetting`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListAddressKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListConfigKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListGlobalPauseKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDisplayCreated`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDisplayVersionUpdated`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this StructTag is a Field type
+     */override fun `isField`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_field(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isGasCoin`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isId`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaCoinType`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaSystemAdminCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaSystemState`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaTreasuryCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isOption`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_option(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isStakedIota`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isString`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_string(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isSystemEpochInfoEvent`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTimeLock`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTimelockedStakedIota`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTransferReceiving`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTreasuryCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUid`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeReceipt`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeTicket`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(
         it, _status)
 }
     }
@@ -50205,6 +50979,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+         fun `newDisplayVersionUpdated`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
          fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
@@ -50290,6 +51074,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `newOption`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
     }
@@ -50400,16 +51194,6 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(
         _status)
-}
-    )
-    }
-    
-
-         fun `newVersionUpdated`(`structTag`: StructTag): StructTag {
-            return FfiConverterTypeStructTag.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
-        FfiConverterTypeStructTag.lower(`structTag`),_status)
 }
     )
     }

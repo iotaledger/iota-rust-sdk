@@ -214,14 +214,15 @@ export_struct_tag_from_type_tag_ctors!(
     ConfigSetting,
     DynamicObjectFieldWrapper,
     Coin,
-    TimeLock
+    TimeLock,
+    Option
 );
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,
     CoinMetadata,
     DisplayCreated,
     TreasuryCap,
-    VersionUpdated,
+    DisplayVersionUpdated,
 );
 
 crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);
