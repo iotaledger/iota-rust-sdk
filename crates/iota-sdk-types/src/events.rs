@@ -13,7 +13,7 @@ use super::{Address, Identifier, ObjectId, StructTag};
 /// ```text
 /// transaction-events = vector event
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -28,7 +28,7 @@ pub struct TransactionEvents(pub Vec<Event>);
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(PartialEq, Eq, Debug, Clone)]
+#[derive(PartialEq, Eq, Debug, Clone, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
