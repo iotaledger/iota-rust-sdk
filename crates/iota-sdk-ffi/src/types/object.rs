@@ -141,6 +141,17 @@ impl ObjectId {
     pub fn to_raw_short_hex(&self) -> String {
         self.0.to_raw_short_hex()
     }
+
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        Self(self.0.next_lexicographical())
+    }
+
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
+        self.0.next_lexicographical_opt().map(Self).map(Arc::new)
+    }
 }
 
 macro_rules! named_object_id {

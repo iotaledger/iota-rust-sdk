@@ -2,6 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+const OBJECT_DIGEST_DELETED_BYTE_VAL: u8 = 99;
+const OBJECT_DIGEST_WRAPPED_BYTE_VAL: u8 = 88;
+const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
+
 /// A 32-byte Blake2b256 hash output.
 ///
 /// # BCS
@@ -29,8 +33,29 @@ pub struct Digest(
 impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
+
     /// A constant representing a zero digest.
     pub const ZERO: Self = Self([0; Self::LENGTH]);
+
+    /// The lexicographically minimum digest
+    pub const MIN: Self = Self([u8::MIN; 32]);
+
+    /// The lexicographically maximum digest
+    pub const MAX: Self = Self([u8::MAX; 32]);
+
+    /// A marker that signifies the object is deleted.
+    pub const OBJECT_DELETED: Self = Self([OBJECT_DIGEST_DELETED_BYTE_VAL; 32]);
+
+    /// A marker that signifies the object is wrapped into another object.
+    pub const OBJECT_WRAPPED: Self = Self([OBJECT_DIGEST_WRAPPED_BYTE_VAL; 32]);
+
+    /// A marker that signifies the object is cancelled.
+    pub const OBJECT_CANCELLED: Self = Self([OBJECT_DIGEST_CANCELLED_BYTE_VAL; 32]);
+
+    /// A digest used to signify the parent transaction was the genesis.
+    /// Note that this is not the same as the digest of the genesis transaction,
+    /// which cannot be known ahead of time.
+    pub const GENESIS_MARKER: Self = Self::ZERO;
 
     /// Generates a new digest from the provided 32 byte array containing [`u8`]
     /// values.
@@ -50,6 +75,12 @@ impl Digest {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::generate(rand_core::OsRng)
+    }
+
     /// Returns a slice to the inner array representation of this digest.
     pub const fn inner(&self) -> &[u8; Self::LENGTH] {
         &self.0
@@ -67,14 +98,7 @@ impl Digest {
 
     /// Decodes a digest from a Base58 encoded string.
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
-        let mut buf = [0; Self::LENGTH];
-
-        bs58::decode(base58)
-            .onto(&mut buf)
-            // TODO fix error to contain bs58 parse error
-            .map_err(|_| DigestParseError)?;
-
-        Ok(Self(buf))
+        Self::from_bytes(bs58::decode(base58).into_vec()?)
     }
 
     /// Returns a Base58 encoded string representation of this digest.
@@ -84,14 +108,43 @@ impl Digest {
 
     /// Generates a digest from bytes.
     pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, DigestParseError> {
-        <[u8; Self::LENGTH]>::try_from(bytes.as_ref())
-            .map_err(|_| DigestParseError)
+        let bytes = bytes.as_ref();
+        <[u8; Self::LENGTH]>::try_from(bytes)
+            .map_err(|_| DigestParseError::InvalidByteLength {
+                actual: bytes.len(),
+            })
             .map(Self)
     }
 
     /// Returns the next digest in byte-increasing order.
-    pub fn next_lexicographical(&self) -> Self {
+    pub const fn next_lexicographical(&self) -> Self {
         Self(crate::next_lexicographical_array(&self.0))
+    }
+
+    /// Returns the next digest in byte-increasing order, or `None` if the
+    /// result would overflow.
+    pub const fn next_lexicographical_opt(&self) -> Option<Self> {
+        match crate::next_lexicographical_array_opt(&self.0) {
+            Some(val) => Some(Self(val)),
+            None => None,
+        }
+    }
+
+    /// Returns whether the digest represents an object that is neither deleted
+    /// nor wrapped
+    pub fn is_object_alive(&self) -> bool {
+        !self.is_object_deleted() && !self.is_object_wrapped()
+    }
+
+    /// Returns whether the digest represents a deleted object
+    pub fn is_object_deleted(&self) -> bool {
+        *self == Self::OBJECT_DELETED
+    }
+
+    /// Returns whether the digest represents an object wrapped in another
+    /// object.
+    pub fn is_object_wrapped(&self) -> bool {
+        *self == Self::OBJECT_WRAPPED
     }
 }
 
@@ -163,6 +216,20 @@ impl std::fmt::LowerHex for Digest {
     }
 }
 
+impl std::fmt::UpperHex for Digest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if f.alternate() {
+            write!(f, "0x")?;
+        }
+
+        for byte in self.0 {
+            write!(f, "{byte:02X}")?;
+        }
+
+        Ok(())
+    }
+}
+
 // Unfortunately IOTA's binary representation of digests is prefixed with its
 // length meaning its serialized binary form is 33 bytes long (in bcs) vs a more
 // compact 32 bytes.
@@ -198,20 +265,16 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct DigestParseError;
-
-impl std::fmt::Display for DigestParseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "Unable to parse Digest (must be Base58 string of length {})",
-            44,
-        )
-    }
+#[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
+pub enum DigestParseError {
+    #[error("digest must be Base58 string of length 44")]
+    Base58(#[from] bs58::decode::Error),
+    #[error(
+        "invalid digest byte length: expected {}, got {actual}",
+        Digest::LENGTH
+    )]
+    InvalidByteLength { actual: usize },
 }
-
-impl std::error::Error for DigestParseError {}
 
 // Don't implement like the other digest type since this isn't intended to be
 // serialized
@@ -231,29 +294,93 @@ mod tests {
     }
 
     #[test]
-    fn test_lexical_order() {
-        fn digest_from_str(s: &str) -> Digest {
-            Digest::new(hex::decode(s).unwrap().try_into().unwrap())
-        }
+    fn parse_valid_base58() {
+        // A valid Base58 encoded digest (32 bytes)
+        let digest = Digest::new([1u8; 32]);
+        let base58 = digest.to_base58();
+        let parsed = Digest::from_base58(&base58).unwrap();
+        assert_eq!(digest, parsed);
+    }
+
+    #[test]
+    fn parse_invalid_base58_characters() {
+        // '0', 'O', 'I', 'l' are not valid Base58 characters
+        let result = Digest::from_base58("0OIl");
         assert_eq!(
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000000000")
-                .next_lexicographical(),
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000000001"),
+            result,
+            Err(DigestParseError::Base58(
+                bs58::decode::Error::InvalidCharacter {
+                    character: '0',
+                    index: 0
+                }
+            ))
         );
+    }
+
+    #[test]
+    fn parse_empty_string() {
+        let result = Digest::from_base58("");
         assert_eq!(
-            digest_from_str("000000000000000000000000000000000000000000000000000000000000ffff")
-                .next_lexicographical(),
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000010000"),
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 0 })
         );
+    }
+
+    #[test]
+    fn parse_too_short_base58() {
+        // This decodes to fewer than 32 bytes
+        let result = Digest::from_base58("abc");
         assert_eq!(
-            digest_from_str("000000000000000000000000000000000000000000000000000000000001002c")
-                .next_lexicographical(),
-            digest_from_str("000000000000000000000000000000000000000000000000000000000001002d"),
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 3 })
         );
+    }
+
+    #[test]
+    fn parse_too_long_base58() {
+        // Create a string that would decode to more than 32 bytes
+        let long_base58 = "1".repeat(100);
+        let result = Digest::from_base58(&long_base58);
         assert_eq!(
-            digest_from_str("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-                .next_lexicographical(),
-            digest_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 100 })
+        );
+    }
+
+    #[test]
+    fn from_bytes_valid() {
+        let bytes = [42u8; 32];
+        let digest = Digest::from_bytes(bytes).unwrap();
+        assert_eq!(digest.into_inner(), bytes);
+    }
+
+    #[test]
+    fn from_bytes_too_short() {
+        let bytes = [1u8; 31];
+        let result = Digest::from_bytes(bytes);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 31 })
+        );
+    }
+
+    #[test]
+    fn from_bytes_too_long() {
+        let bytes = [1u8; 33];
+        let result = Digest::from_bytes(bytes);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 33 })
+        );
+    }
+
+    #[test]
+    fn from_bytes_empty() {
+        let bytes: [u8; 0] = [];
+        let result = Digest::from_bytes(bytes);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidByteLength { actual: 0 })
         );
     }
 }
