@@ -5358,29 +5358,29 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive()
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive()
 	})
-	if checksum != 42875 {
+	if checksum != 57678 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_alive: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted()
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted()
 	})
-	if checksum != 43638 {
+	if checksum != 32964 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped()
+		return C.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped()
 	})
-	if checksum != 27020 {
+	if checksum != 15502 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -17787,12 +17787,12 @@ func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *Consen
 type DigestInterface interface {
 	// Returns whether the digest represents an object that is neither deleted
 	// nor wrapped
-	IsAlive() bool
+	IsObjectAlive() bool
 	// Returns whether the digest represents a deleted object
-	IsDeleted() bool
+	IsObjectDeleted() bool
 	// Returns whether the digest represents an object wrapped in another
 	// object.
-	IsWrapped() bool
+	IsObjectWrapped() bool
 	// Returns the next digest in byte-increasing order.
 	NextLexicographical() *Digest
 	// Returns the next digest in byte-increasing order, or `None` if the
@@ -17854,32 +17854,32 @@ func DigestRandom() *Digest {
 
 // Returns whether the digest represents an object that is neither deleted
 // nor wrapped
-func (_self *Digest) IsAlive() bool {
+func (_self *Digest) IsObjectAlive() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_alive(
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(
 		_pointer,_uniffiStatus)
 	}))
 }
 
 // Returns whether the digest represents a deleted object
-func (_self *Digest) IsDeleted() bool {
+func (_self *Digest) IsObjectDeleted() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted(
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(
 		_pointer,_uniffiStatus)
 	}))
 }
 
 // Returns whether the digest represents an object wrapped in another
 // object.
-func (_self *Digest) IsWrapped() bool {
+func (_self *Digest) IsObjectWrapped() bool {
 	_pointer := _self.ffiObject.incrementPointer("*Digest")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped(
+		return C.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(
 		_pointer,_uniffiStatus)
 	}))
 }

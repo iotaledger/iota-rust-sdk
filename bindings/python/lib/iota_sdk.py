@@ -1571,11 +1571,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive() != 42875:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive() != 57678:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted() != 43638:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted() != 32964:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped() != 27020:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped() != 15502:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4774,21 +4774,21 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_digest_random.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_digest_random.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_alive.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_alive.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -15230,15 +15230,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignm
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical.restype = ctypes.c_uint16
@@ -37298,20 +37298,20 @@ class DigestProtocol(typing.Protocol):
     compact 32 bytes.
     """
 
-    def is_alive(self, ):
+    def is_object_alive(self, ):
         """
         Returns whether the digest represents an object that is neither deleted
         nor wrapped
         """
 
         raise NotImplementedError
-    def is_deleted(self, ):
+    def is_object_deleted(self, ):
         """
         Returns whether the digest represents a deleted object
         """
 
         raise NotImplementedError
-    def is_wrapped(self, ):
+    def is_object_wrapped(self, ):
         """
         Returns whether the digest represents an object wrapped in another
         object.
@@ -37402,41 +37402,41 @@ class Digest():
 
 
 
-    def is_alive(self, ) -> "bool":
+    def is_object_alive(self, ) -> "bool":
         """
         Returns whether the digest represents an object that is neither deleted
         nor wrapped
         """
 
         return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_alive,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive,self._uniffi_clone_pointer(),)
         )
 
 
 
 
 
-    def is_deleted(self, ) -> "bool":
+    def is_object_deleted(self, ) -> "bool":
         """
         Returns whether the digest represents a deleted object
         """
 
         return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted,self._uniffi_clone_pointer(),)
         )
 
 
 
 
 
-    def is_wrapped(self, ) -> "bool":
+    def is_object_wrapped(self, ) -> "bool":
         """
         Returns whether the digest represents an object wrapped in another
         object.
         """
 
         return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped,self._uniffi_clone_pointer(),)
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped,self._uniffi_clone_pointer(),)
         )
 
 

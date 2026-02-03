@@ -5160,11 +5160,11 @@ fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_digest_is_alive(
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted(
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped(
+fun uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical(
 ): Short
@@ -7404,11 +7404,11 @@ fun uniffi_iota_sdk_ffi_fn_constructor_digest_from_bytes(`bytes`: RustBuffer.ByV
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_digest_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_digest_is_alive(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_method_digest_is_deleted(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -12497,13 +12497,13 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_alive() != 42875.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive() != 57678.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_deleted() != 43638.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted() != 32964.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_wrapped() != 27020.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped() != 15502.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914.toShort()) {
@@ -24515,18 +24515,18 @@ public interface DigestInterface {
      * Returns whether the digest represents an object that is neither deleted
      * nor wrapped
      */
-    fun `isAlive`(): kotlin.Boolean
+    fun `isObjectAlive`(): kotlin.Boolean
     
     /**
      * Returns whether the digest represents a deleted object
      */
-    fun `isDeleted`(): kotlin.Boolean
+    fun `isObjectDeleted`(): kotlin.Boolean
     
     /**
      * Returns whether the digest represents an object wrapped in another
      * object.
      */
-    fun `isWrapped`(): kotlin.Boolean
+    fun `isObjectWrapped`(): kotlin.Boolean
     
     /**
      * Returns the next digest in byte-increasing order.
@@ -24648,11 +24648,11 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     /**
      * Returns whether the digest represents an object that is neither deleted
      * nor wrapped
-     */override fun `isAlive`(): kotlin.Boolean {
+     */override fun `isObjectAlive`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_alive(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(
         it, _status)
 }
     }
@@ -24663,11 +24663,11 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     
     /**
      * Returns whether the digest represents a deleted object
-     */override fun `isDeleted`(): kotlin.Boolean {
+     */override fun `isObjectDeleted`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_deleted(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(
         it, _status)
 }
     }
@@ -24679,11 +24679,11 @@ open class Digest: Disposable, AutoCloseable, DigestInterface
     /**
      * Returns whether the digest represents an object wrapped in another
      * object.
-     */override fun `isWrapped`(): kotlin.Boolean {
+     */override fun `isObjectWrapped`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_wrapped(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(
         it, _status)
 }
     }

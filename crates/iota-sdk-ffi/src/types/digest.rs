@@ -72,19 +72,19 @@ impl Digest {
 
     /// Returns whether the digest represents an object that is neither deleted
     /// nor wrapped
-    pub fn is_alive(&self) -> bool {
-        self.0.is_alive()
+    pub fn is_object_alive(&self) -> bool {
+        self.0.is_object_alive()
     }
 
     /// Returns whether the digest represents a deleted object
-    pub fn is_deleted(&self) -> bool {
-        self.0.is_deleted()
+    pub fn is_object_deleted(&self) -> bool {
+        self.0.is_object_deleted()
     }
 
     /// Returns whether the digest represents an object wrapped in another
     /// object.
-    pub fn is_wrapped(&self) -> bool {
-        self.0.is_wrapped()
+    pub fn is_object_wrapped(&self) -> bool {
+        self.0.is_object_wrapped()
     }
 }
 
