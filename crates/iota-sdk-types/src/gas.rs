@@ -101,33 +101,61 @@ impl GasCostSummary {
 
     /// The total gas used, which is the sum of computation and storage costs.
     pub fn gas_used(&self) -> u64 {
-        self.computation_cost + self.storage_cost
+        self.computation_cost
+            .checked_add(self.storage_cost)
+            .unwrap()
     }
 
     /// The net gas usage, which is the total gas used minus the storage rebate.
     /// A positive number means used gas; negative number means refund.
     pub fn net_gas_usage(&self) -> i64 {
-        self.gas_used() as i64 - self.storage_rebate as i64
+        (self.gas_used() as i64)
+            .checked_sub(self.storage_rebate as i64)
+            .unwrap()
     }
 }
 
 impl std::ops::AddAssign<&Self> for GasCostSummary {
     fn add_assign(&mut self, other: &Self) {
-        self.computation_cost += other.computation_cost;
-        self.computation_cost_burned += other.computation_cost_burned;
-        self.storage_cost += other.storage_cost;
-        self.storage_rebate += other.storage_rebate;
-        self.non_refundable_storage_fee += other.non_refundable_storage_fee;
+        self.computation_cost = self
+            .computation_cost
+            .checked_add(other.computation_cost)
+            .unwrap();
+        self.computation_cost_burned = self
+            .computation_cost_burned
+            .checked_add(other.computation_cost_burned)
+            .unwrap();
+        self.storage_cost = self.storage_cost.checked_add(other.storage_cost).unwrap();
+        self.storage_rebate = self
+            .storage_rebate
+            .checked_add(other.storage_rebate)
+            .unwrap();
+        self.non_refundable_storage_fee = self
+            .non_refundable_storage_fee
+            .checked_add(other.non_refundable_storage_fee)
+            .unwrap();
     }
 }
 
 impl std::ops::SubAssign<&Self> for GasCostSummary {
     fn sub_assign(&mut self, other: &Self) {
-        self.computation_cost -= other.computation_cost;
-        self.computation_cost_burned -= other.computation_cost_burned;
-        self.storage_cost -= other.storage_cost;
-        self.storage_rebate -= other.storage_rebate;
-        self.non_refundable_storage_fee -= other.non_refundable_storage_fee;
+        self.computation_cost = self
+            .computation_cost
+            .checked_sub(other.computation_cost)
+            .unwrap();
+        self.computation_cost_burned = self
+            .computation_cost_burned
+            .checked_sub(other.computation_cost_burned)
+            .unwrap();
+        self.storage_cost = self.storage_cost.checked_sub(other.storage_cost).unwrap();
+        self.storage_rebate = self
+            .storage_rebate
+            .checked_sub(other.storage_rebate)
+            .unwrap();
+        self.non_refundable_storage_fee = self
+            .non_refundable_storage_fee
+            .checked_sub(other.non_refundable_storage_fee)
+            .unwrap();
     }
 }
 
