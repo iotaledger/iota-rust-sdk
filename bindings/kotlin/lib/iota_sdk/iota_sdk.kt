@@ -13775,7 +13775,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 31516.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 59690.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
@@ -15116,7 +15116,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 25235.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 51044.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
@@ -50204,7 +50204,7 @@ public interface StructTagInterface {
     
     /**
      * Checks if this is a Dynamic Field type
-     * (0x2::dynamic_field::Field<KeyType, ValueType>)
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
      */
     fun `isDynamicField`(): kotlin.Boolean
     
@@ -50594,7 +50594,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     
     /**
      * Checks if this is a Dynamic Field type
-     * (0x2::dynamic_field::Field<KeyType, ValueType>)
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
      */override fun `isDynamicField`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
@@ -51102,7 +51102,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
         
     /**
      * Creates a new dynamic field struct tag
-     * (0x2::dynamic_field::Field<KeyType, ValueType>)
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
      */ fun `newDynamicField`(`key`: TypeTag, `value`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->

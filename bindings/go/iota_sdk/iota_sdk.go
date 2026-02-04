@@ -8474,7 +8474,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field()
 	})
-	if checksum != 31516 {
+	if checksum != 59690 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -12497,7 +12497,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field()
 	})
-	if checksum != 25235 {
+	if checksum != 51044 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field: UniFFI API checksum mismatch")
 	}
@@ -32665,7 +32665,7 @@ type StructTagInterface interface {
 	IsDisplayCreated() bool
 	IsDisplayVersionUpdated() bool
 	// Checks if this is a Dynamic Field type
-	// (0x2::dynamic_field::Field<KeyType, ValueType>)
+	// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
 	IsDynamicField() bool
 	IsDynamicObjectFieldWrapper() bool
 	IsGasCoin() bool
@@ -32805,7 +32805,7 @@ func StructTagNewDisplayVersionUpdated(structTag *StructTag) *StructTag {
 }
 
 // Creates a new dynamic field struct tag
-// (0x2::dynamic_field::Field<KeyType, ValueType>)
+// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
 func StructTagNewDynamicField(key *TypeTag, value *TypeTag) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(FfiConverterTypeTagINSTANCE.Lower(key), FfiConverterTypeTagINSTANCE.Lower(value),_uniffiStatus)
@@ -33106,7 +33106,7 @@ func (_self *StructTag) IsDisplayVersionUpdated() bool {
 }
 
 // Checks if this is a Dynamic Field type
-// (0x2::dynamic_field::Field<KeyType, ValueType>)
+// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
 func (_self *StructTag) IsDynamicField() bool {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()

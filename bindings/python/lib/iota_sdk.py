@@ -2263,7 +2263,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 31516:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 59690:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3157,7 +3157,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 25235:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 51044:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -52549,7 +52549,7 @@ class StructTagProtocol(typing.Protocol):
     def is_dynamic_field(self, ):
         """
         Checks if this is a Dynamic Field type
-        (0x2::dynamic_field::Field<KeyType, ValueType>)
+        (`0x2::dynamic_field::Field<KeyType, ValueType>`)
         """
 
         raise NotImplementedError
@@ -52781,7 +52781,7 @@ class StructTag():
     def new_dynamic_field(cls, key: "TypeTag",value: "TypeTag"):
         """
         Creates a new dynamic field struct tag
-        (0x2::dynamic_field::Field<KeyType, ValueType>)
+        (`0x2::dynamic_field::Field<KeyType, ValueType>`)
         """
 
         _UniffiConverterTypeTypeTag.check_lower(key)
@@ -53112,7 +53112,7 @@ class StructTag():
     def is_dynamic_field(self, ) -> "bool":
         """
         Checks if this is a Dynamic Field type
-        (0x2::dynamic_field::Field<KeyType, ValueType>)
+        (`0x2::dynamic_field::Field<KeyType, ValueType>`)
         """
 
         return _UniffiConverterBool.lift(

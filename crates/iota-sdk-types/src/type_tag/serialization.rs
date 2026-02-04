@@ -350,7 +350,7 @@ mod tests {
             ],
         }));
 
-        let display = "0x0000000000000000000000000000000000000000000000000000000000000001::Foo::Bar<bool,u8,u64,u128,address,signer,u16,u32,u256,vector<address>>";
+        let display = "0x1::Foo::Bar<bool,u8,u64,u128,address,signer,u16,u32,u256,vector<address>>";
         let bcs_fixture: &[u8] = &[
             7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 1, 3, 70, 111, 111, 3, 66, 97, 114, 10, 0, 1, 2, 3, 4, 5, 8, 9, 10, 6, 4,
