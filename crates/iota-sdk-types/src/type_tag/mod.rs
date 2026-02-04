@@ -176,7 +176,19 @@ impl TypeTag {
 
 impl std::fmt::Display for TypeTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.to_canonical_string(true).fmt(f)
+        match self {
+            TypeTag::U8 => write!(f, "u8"),
+            TypeTag::U16 => write!(f, "u16"),
+            TypeTag::U32 => write!(f, "u32"),
+            TypeTag::U64 => write!(f, "u64"),
+            TypeTag::U128 => write!(f, "u128"),
+            TypeTag::U256 => write!(f, "u256"),
+            TypeTag::Bool => write!(f, "bool"),
+            TypeTag::Address => write!(f, "address"),
+            TypeTag::Signer => write!(f, "signer"),
+            TypeTag::Vector(t) => write!(f, "vector<{t}>"),
+            TypeTag::Struct(s) => write!(f, "{s}"),
+        }
     }
 }
 
