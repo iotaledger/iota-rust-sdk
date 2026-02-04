@@ -821,7 +821,21 @@ impl StructTag {
 
 impl std::fmt::Display for StructTag {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.to_canonical_string(true).fmt(f)
+        write!(
+            f,
+            "{}::{}::{}",
+            self.address.to_short_hex(),
+            self.module,
+            self.name
+        )?;
+        if let Some(first_type) = self.type_params.first() {
+            write!(f, "<{first_type}")?;
+            for ty in self.type_params.iter().skip(1) {
+                write!(f, ", {ty}")?;
+            }
+            write!(f, ">")?;
+        }
+        Ok(())
     }
 }
 
