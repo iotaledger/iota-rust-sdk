@@ -4111,6 +4111,10 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5944,6 +5948,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_option(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota(
@@ -6837,6 +6843,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state(
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option(
 ): Short
@@ -9034,6 +9042,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne(`ptr`: P
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -9047,10 +9059,6 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
-fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -9299,6 +9307,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(uniffi_ou
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
@@ -9374,6 +9384,8 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(`ptr`: Poin
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_option(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -13787,6 +13799,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -15126,6 +15141,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037.toShort()) {
@@ -47309,7 +47327,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
                 }
             }
         }
@@ -47317,7 +47335,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
         }
     }
 
@@ -50202,6 +50220,8 @@ public interface StructTagInterface {
     
     fun `isIotaTreasuryCap`(): kotlin.Boolean
     
+    fun `isObjectBag`(): kotlin.Boolean
+    
     fun `isOption`(): kotlin.Boolean
     
     fun `isStakedIota`(): kotlin.Boolean
@@ -50660,6 +50680,18 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isObjectBag`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(
         it, _status)
 }
     }
@@ -51148,6 +51180,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `newObjectBag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(
+        _status)
 }
     )
     }

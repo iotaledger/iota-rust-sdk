@@ -8544,6 +8544,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag()
+	})
+	if checksum != 8625 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option()
 	})
 	if checksum != 10696 {
@@ -12563,6 +12572,15 @@ func uniffiCheckChecksums() {
 	if checksum != 26361 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag()
+	})
+	if checksum != 12890 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -32654,6 +32672,7 @@ type StructTagInterface interface {
 	IsIotaSystemAdminCap() bool
 	IsIotaSystemState() bool
 	IsIotaTreasuryCap() bool
+	IsObjectBag() bool
 	IsOption() bool
 	IsStakedIota() bool
 	IsString() bool
@@ -32834,6 +32853,12 @@ func StructTagNewIotaTreasuryCap() *StructTag {
 func StructTagNewName(address *Address) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(FfiConverterAddressINSTANCE.Lower(address),_uniffiStatus)
+	}))
+}
+
+func StructTagNewObjectBag() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(_uniffiStatus)
 	}))
 }
 
@@ -33144,6 +33169,15 @@ func (_self *StructTag) IsIotaTreasuryCap() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsObjectBag() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(
 		_pointer,_uniffiStatus)
 	}))
 }

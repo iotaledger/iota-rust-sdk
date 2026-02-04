@@ -6071,6 +6071,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(RustCal
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(void* address, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_OBJECT_BAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_OBJECT_BAG
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_OPTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_OPTION
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(void* type_tag, RustCallStatus *out_status
@@ -6269,6 +6275,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(void* ptr, R
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_TREASURY_CAP
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_OBJECT_BAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_OBJECT_BAG
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_OPTION
@@ -15925,6 +15936,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_OBJECT_BAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_OBJECT_BAG
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_OPTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_OPTION
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_option(void
@@ -18604,6 +18621,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_ca
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_NAME
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_NAME
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_OBJECT_BAG
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_OBJECT_BAG
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag(void
     
 );
 #endif

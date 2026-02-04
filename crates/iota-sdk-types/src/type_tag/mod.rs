@@ -708,6 +708,7 @@ impl StructTag {
         system_admin_cap::IotaSystemAdminCap,
         url::Url,
         bag::Bag,
+        object_bag::ObjectBag,
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey, transfer::Receiving);
     add_struct_tag_ctor!(
