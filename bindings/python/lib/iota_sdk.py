@@ -2231,9 +2231,9 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 64023:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 46821:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2263,7 +2263,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 61233:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 31516:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3157,7 +3157,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 37889:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 25235:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -52507,13 +52507,14 @@ class StructTagProtocol(typing.Protocol):
         raise NotImplementedError
     def coin_type(self, ):
         """
-        Checks if this is a Coin type
+        Returns the coin type part of a `StructTag`, panics if this is not a
+        Coin type
         """
 
         raise NotImplementedError
     def coin_type_opt(self, ):
         """
-        Checks if this is a Coin type
+        Returns the coin type part of a `StructTag`, if this is a Coin type
         """
 
         raise NotImplementedError
@@ -52547,7 +52548,8 @@ class StructTagProtocol(typing.Protocol):
         raise NotImplementedError
     def is_dynamic_field(self, ):
         """
-        Checks if this StructTag is a Field type
+        Checks if this is a Dynamic Field type
+        (0x2::dynamic_field::Field<KeyType, ValueType>)
         """
 
         raise NotImplementedError
@@ -52777,6 +52779,11 @@ class StructTag():
 
     @classmethod
     def new_dynamic_field(cls, key: "TypeTag",value: "TypeTag"):
+        """
+        Creates a new dynamic field struct tag
+        (0x2::dynamic_field::Field<KeyType, ValueType>)
+        """
+
         _UniffiConverterTypeTypeTag.check_lower(key)
         
         _UniffiConverterTypeTypeTag.check_lower(value)
@@ -52951,7 +52958,8 @@ class StructTag():
 
     def coin_type(self, ) -> "TypeTag":
         """
-        Checks if this is a Coin type
+        Returns the coin type part of a `StructTag`, panics if this is not a
+        Coin type
         """
 
         return _UniffiConverterTypeTypeTag.lift(
@@ -52964,7 +52972,7 @@ class StructTag():
 
     def coin_type_opt(self, ) -> "typing.Optional[TypeTag]":
         """
-        Checks if this is a Coin type
+        Returns the coin type part of a `StructTag`, if this is a Coin type
         """
 
         return _UniffiConverterOptionalTypeTypeTag.lift(
@@ -53103,7 +53111,8 @@ class StructTag():
 
     def is_dynamic_field(self, ) -> "bool":
         """
-        Checks if this StructTag is a Field type
+        Checks if this is a Dynamic Field type
+        (0x2::dynamic_field::Field<KeyType, ValueType>)
         """
 
         return _UniffiConverterBool.lift(

@@ -13727,10 +13727,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 64023.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 46821.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768.toShort()) {
@@ -13775,7 +13775,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 61233.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 31516.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
@@ -15116,7 +15116,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 37889.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 25235.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
@@ -50164,12 +50164,13 @@ public interface StructTagInterface {
     fun `address`(): Address
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
     fun `coinType`(): TypeTag
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
     fun `coinTypeOpt`(): TypeTag?
     
@@ -50202,7 +50203,8 @@ public interface StructTagInterface {
     fun `isDisplayVersionUpdated`(): kotlin.Boolean
     
     /**
-     * Checks if this StructTag is a Field type
+     * Checks if this is a Dynamic Field type
+     * (0x2::dynamic_field::Field<KeyType, ValueType>)
      */
     fun `isDynamicField`(): kotlin.Boolean
     
@@ -50392,7 +50394,8 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */override fun `coinType`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
@@ -50407,7 +50410,7 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */override fun `coinTypeOpt`(): TypeTag? {
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
@@ -50590,7 +50593,8 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this StructTag is a Field type
+     * Checks if this is a Dynamic Field type
+     * (0x2::dynamic_field::Field<KeyType, ValueType>)
      */override fun `isDynamicField`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
@@ -51095,7 +51099,11 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-         fun `newDynamicField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+        
+    /**
+     * Creates a new dynamic field struct tag
+     * (0x2::dynamic_field::Field<KeyType, ValueType>)
+     */ fun `newDynamicField`(`key`: TypeTag, `value`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(
