@@ -628,7 +628,7 @@ impl StructTag {
         self.address == other.address && self.module == other.module && self.name == other.name
     }
 
-    /// Creates a new framework IOTA coin struct tag (0x2::iota::IOTA)
+    /// Creates a new framework IOTA coin struct tag (`0x2::iota::IOTA`)
     pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -638,7 +638,7 @@ impl StructTag {
         }
     }
 
-    /// Checks if this is a framework IOTA coin type (0x2::iota::IOTA)
+    /// Checks if this is a framework IOTA coin type (`0x2::iota::IOTA`)
     pub fn is_iota_coin_type(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == IdentifierRef::const_new("iota")
@@ -647,12 +647,12 @@ impl StructTag {
     }
 
     /// Creates a new framework gas coin struct tag
-    /// (0x2::coin::Coin<0x2::iota::IOTA>)
+    /// (`0x2::coin::Coin<0x2::iota::IOTA>`)
     pub fn new_gas_coin() -> Self {
         Self::new_coin(Self::new_iota_coin_type())
     }
 
-    /// Creates a new framework coin struct tag (0x2::coin::Coin<CoinType>)
+    /// Creates a new framework coin struct tag (`0x2::coin::Coin<CoinType>`)
     pub fn is_gas_coin(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == IdentifierRef::const_new("coin")
@@ -664,7 +664,7 @@ impl StructTag {
             )
     }
 
-    /// Creates a new framework object ID struct tag (0x2::object::ID)
+    /// Creates a new framework object ID struct tag (`0x2::object::ID`)
     pub fn new_id() -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -674,14 +674,14 @@ impl StructTag {
         }
     }
 
-    /// Checks if this is a framework object ID type (0x2::object::ID)
+    /// Checks if this is a framework object ID type (`0x2::object::ID`)
     pub fn is_id(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == IdentifierRef::const_new("object")
             && self.name == IdentifierRef::const_new("ID")
     }
 
-    /// Creates a new framework object UID struct tag (0x2::object::UID)
+    /// Creates a new framework object UID struct tag (`0x2::object::UID`)
     pub fn new_uid() -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -691,7 +691,7 @@ impl StructTag {
         }
     }
 
-    /// Checks if this is a framework object UID type (0x2::object::UID)
+    /// Checks if this is a framework object UID type (`0x2::object::UID`)
     pub fn is_uid(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == IdentifierRef::const_new("object")
@@ -708,7 +708,7 @@ impl StructTag {
     }
 
     /// Creates a new dynamic field struct tag
-    /// (0x2::dynamic_field::Field<KeyType, ValueType>)
+    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     pub fn new_dynamic_field(key: impl Into<TypeTag>, value: impl Into<TypeTag>) -> Self {
         Self {
             address: Address::FRAMEWORK,
@@ -719,7 +719,7 @@ impl StructTag {
     }
 
     /// Checks if this is a Dynamic Field type
-    /// (0x2::dynamic_field::Field<KeyType, ValueType>)
+    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     pub fn is_dynamic_field(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == IdentifierRef::const_new("dynamic_field")
@@ -856,5 +856,21 @@ impl std::str::FromStr for StructTag {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         parse::parse_struct_tag(s).map_err(|_| TypeParseError { source: s.into() })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_struct_tag_parsing() {
+        let tag_str = "0x2::coin::Coin<0x2::iota::IOTA>";
+        let struct_tag: StructTag = tag_str.parse().unwrap();
+        assert!(struct_tag.is_coin());
+        let coin_type = struct_tag.coin_type();
+        assert!(coin_type.is_struct());
+        let coin_struct = coin_type.as_struct_tag();
+        assert!(coin_struct.is_iota_coin_type());
     }
 }

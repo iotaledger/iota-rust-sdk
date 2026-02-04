@@ -221,7 +221,7 @@ mod tests {
             assert_eq!(
                 st.to_string().replace(' ', ""),
                 text.replace(' ', "")
-                    .replace("0x1", &Address::from_str("0x1").unwrap().to_string()),
+                    .replace("0x1", &Address::from_str("0x1").unwrap().to_short_hex()),
                 "text: {text:?}, StructTag: {st:?}"
             );
         }

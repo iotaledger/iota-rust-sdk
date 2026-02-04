@@ -127,7 +127,7 @@ impl StructTag {
     }
 
     /// Creates a new dynamic field struct tag
-    /// (0x2::dynamic_field::Field<KeyType, ValueType>)
+    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     #[uniffi::constructor]
     pub fn new_dynamic_field(key: &TypeTag, value: &TypeTag) -> Self {
         Self(iota_sdk::types::StructTag::new_dynamic_field(
@@ -137,7 +137,7 @@ impl StructTag {
     }
 
     /// Checks if this is a Dynamic Field type
-    /// (0x2::dynamic_field::Field<KeyType, ValueType>)
+    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     pub fn is_dynamic_field(&self) -> bool {
         self.0.is_dynamic_field()
     }
