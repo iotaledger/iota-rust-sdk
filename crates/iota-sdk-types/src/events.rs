@@ -57,3 +57,23 @@ pub struct Event {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub contents: Vec<u8>,
 }
+
+fn is_system_epoch_info_event_type(type_: &StructTag, name: &str) -> bool {
+    type_.address() == Address::SYSTEM
+        && type_.module().as_str() == "iota_system_state_inner"
+        && type_.name().as_str() == name
+}
+
+impl Event {
+    pub fn is_system_epoch_info_event(&self) -> bool {
+        self.is_system_epoch_info_event_v1() || self.is_system_epoch_info_event_v2()
+    }
+
+    pub fn is_system_epoch_info_event_v1(&self) -> bool {
+        is_system_epoch_info_event_type(&self.type_, "SystemEpochInfoEventV1")
+    }
+
+    pub fn is_system_epoch_info_event_v2(&self) -> bool {
+        is_system_epoch_info_event_type(&self.type_, "SystemEpochInfoEventV2")
+    }
+}
