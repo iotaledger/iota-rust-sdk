@@ -126,6 +126,8 @@ impl StructTag {
         Self(iota_sdk::types::StructTag::new_name(address.0))
     }
 
+    /// Creates a new dynamic field struct tag
+    /// (0x2::dynamic_field::Field<KeyType, ValueType>)
     #[uniffi::constructor]
     pub fn new_dynamic_field(key: &TypeTag, value: &TypeTag) -> Self {
         Self(iota_sdk::types::StructTag::new_dynamic_field(
@@ -134,12 +136,13 @@ impl StructTag {
         ))
     }
 
-    /// Checks if this StructTag is a Field type
+    /// Checks if this is a Dynamic Field type
+    /// (0x2::dynamic_field::Field<KeyType, ValueType>)
     pub fn is_dynamic_field(&self) -> bool {
         self.0.is_dynamic_field()
     }
 
-    /// Checks if this is a Coin type
+    /// Returns the coin type part of a `StructTag`, if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<Arc<TypeTag>> {
         self.0
             .coin_type_opt()
@@ -148,7 +151,8 @@ impl StructTag {
             .map(Arc::new)
     }
 
-    /// Checks if this is a Coin type
+    /// Returns the coin type part of a `StructTag`, panics if this is not a
+    /// Coin type
     pub fn coin_type(&self) -> TypeTag {
         self.0.coin_type().clone().into()
     }
