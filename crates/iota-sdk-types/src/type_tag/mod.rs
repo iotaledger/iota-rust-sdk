@@ -500,6 +500,7 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                     self.address == Address::$address
                         && self.module == IdentifierRef::const_new(stringify!($module))
                         && self.name == IdentifierRef::const_new(stringify!($name))
+                        && self.type_params.len() == 1
                 }
             }
         )+
@@ -520,6 +521,7 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                     self.address == Address::$address
                         && self.module == IdentifierRef::const_new(stringify!($module))
                         && self.name == IdentifierRef::const_new(stringify!($name))
+                        && self.type_params.len() == 1
                 }
             }
         )+
@@ -543,6 +545,7 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                     self.address == Address::$address
                         && self.module == IdentifierRef::const_new(stringify!($module))
                         && self.name == IdentifierRef::const_new(stringify!($name))
+                        && self.type_params.len() == 1
                 }
             }
         )+
@@ -563,6 +566,7 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                     self.address == Address::$address
                         && self.module == IdentifierRef::const_new(stringify!($module))
                         && self.name == IdentifierRef::const_new(stringify!($name))
+                        && self.type_params.len() == 1
                 }
             }
         )+
