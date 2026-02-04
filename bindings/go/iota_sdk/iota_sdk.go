@@ -8355,6 +8355,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag()
+	})
+	if checksum != 46309 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance()
 	})
 	if checksum != 61723 {
@@ -8463,20 +8472,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field()
+	})
+	if checksum != 61233 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper()
 	})
 	if checksum != 8218 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_field()
-	})
-	if checksum != 59183 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_field: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -12360,6 +12369,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag()
+	})
+	if checksum != 17783 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance()
 	})
 	if checksum != 10874 {
@@ -12468,20 +12486,20 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field()
+	})
+	if checksum != 37889 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper()
 	})
 	if checksum != 48905 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field()
-	})
-	if checksum != 4196 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -32614,6 +32632,7 @@ type StructTagInterface interface {
 	// Checks if this is a Coin type
 	CoinTypeOpt() **TypeTag
 	IsAsciiString() bool
+	IsBag() bool
 	IsBalance() bool
 	IsClock() bool
 	IsCoin() bool
@@ -32626,9 +32645,9 @@ type StructTagInterface interface {
 	IsDenyListGlobalPauseKey() bool
 	IsDisplayCreated() bool
 	IsDisplayVersionUpdated() bool
-	IsDynamicObjectFieldWrapper() bool
 	// Checks if this StructTag is a Field type
-	IsField() bool
+	IsDynamicField() bool
+	IsDynamicObjectFieldWrapper() bool
 	IsGasCoin() bool
 	IsId() bool
 	IsIotaCoinType() bool
@@ -32683,6 +32702,12 @@ func NewStructTag(address *Address, module *Identifier, name *Identifier, typePa
 func StructTagNewAsciiString() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(_uniffiStatus)
+	}))
+}
+
+func StructTagNewBag() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(_uniffiStatus)
 	}))
 }
 
@@ -32758,15 +32783,15 @@ func StructTagNewDisplayVersionUpdated(structTag *StructTag) *StructTag {
 	}))
 }
 
-func StructTagNewDynamicObjectFieldWrapper(typeTag *TypeTag) *StructTag {
+func StructTagNewDynamicField(key *TypeTag, value *TypeTag) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(FfiConverterTypeTagINSTANCE.Lower(key), FfiConverterTypeTagINSTANCE.Lower(value),_uniffiStatus)
 	}))
 }
 
-func StructTagNewField(key *TypeTag, value *TypeTag) *StructTag {
+func StructTagNewDynamicObjectFieldWrapper(typeTag *TypeTag) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(FfiConverterTypeTagINSTANCE.Lower(key), FfiConverterTypeTagINSTANCE.Lower(value),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(FfiConverterTypeTagINSTANCE.Lower(typeTag),_uniffiStatus)
 	}))
 }
 
@@ -32933,6 +32958,15 @@ func (_self *StructTag) IsAsciiString() bool {
 	}))
 }
 
+func (_self *StructTag) IsBag() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *StructTag) IsBalance() bool {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
@@ -33041,21 +33075,21 @@ func (_self *StructTag) IsDisplayVersionUpdated() bool {
 	}))
 }
 
+// Checks if this StructTag is a Field type
+func (_self *StructTag) IsDynamicField() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *StructTag) IsDynamicObjectFieldWrapper() bool {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-// Checks if this StructTag is a Field type
-func (_self *StructTag) IsField() bool {
-	_pointer := _self.ffiObject.incrementPointer("*StructTag")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_field(
 		_pointer,_uniffiStatus)
 	}))
 }

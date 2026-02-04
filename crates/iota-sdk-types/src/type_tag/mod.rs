@@ -682,7 +682,7 @@ impl StructTag {
         }
     }
 
-    pub fn new_field(key: impl Into<TypeTag>, value: impl Into<TypeTag>) -> Self {
+    pub fn new_dynamic_field(key: impl Into<TypeTag>, value: impl Into<TypeTag>) -> Self {
         Self {
             address: Address::FRAMEWORK,
             module: IdentifierRef::const_new("dynamic_field").into(),
@@ -691,7 +691,7 @@ impl StructTag {
         }
     }
 
-    pub fn is_field(&self) -> bool {
+    pub fn is_dynamic_field(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == IdentifierRef::const_new("dynamic_field")
             && self.name == IdentifierRef::const_new("Field")
@@ -707,6 +707,7 @@ impl StructTag {
         package::UpgradeReceipt,
         system_admin_cap::IotaSystemAdminCap,
         url::Url,
+        bag::Bag,
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey, transfer::Receiving);
     add_struct_tag_ctor!(

@@ -4107,6 +4107,10 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5898,6 +5902,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock(
@@ -5922,9 +5928,9 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper(
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_field(
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin(
 ): Short
@@ -6788,6 +6794,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_clock(
@@ -6812,9 +6820,9 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(
 ): Short
@@ -9022,6 +9030,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(`ptr`: Poi
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -9035,10 +9047,6 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
-fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Byte
-fun uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Long
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9247,6 +9255,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new(`address`: Pointer,`module`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(uniffi_out_err: UniffiRustCallStatus, 
@@ -9271,9 +9281,9 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(`structTag`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9323,6 +9333,8 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9347,9 +9359,9 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(`ptr`: Pointer,un
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
-fun uniffi_iota_sdk_ffi_fn_method_structtag_is_field(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -13712,6 +13724,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag() != 46309.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13748,10 +13763,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 61233.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_field() != 59183.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314.toShort()) {
@@ -15047,6 +15062,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag() != 17783.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -15083,10 +15101,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 37889.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() != 4196.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754.toShort()) {
@@ -47019,7 +47037,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -50139,6 +50157,8 @@ public interface StructTagInterface {
     
     fun `isAsciiString`(): kotlin.Boolean
     
+    fun `isBag`(): kotlin.Boolean
+    
     fun `isBalance`(): kotlin.Boolean
     
     fun `isClock`(): kotlin.Boolean
@@ -50163,12 +50183,12 @@ public interface StructTagInterface {
     
     fun `isDisplayVersionUpdated`(): kotlin.Boolean
     
-    fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean
-    
     /**
      * Checks if this StructTag is a Field type
      */
-    fun `isField`(): kotlin.Boolean
+    fun `isDynamicField`(): kotlin.Boolean
+    
+    fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean
     
     fun `isGasCoin`(): kotlin.Boolean
     
@@ -50392,6 +50412,18 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+    override fun `isBag`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `isBalance`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
@@ -50536,11 +50568,14 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-    override fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean {
+    
+    /**
+     * Checks if this StructTag is a Field type
+     */override fun `isDynamicField`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(
         it, _status)
 }
     }
@@ -50548,14 +50583,11 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-    
-    /**
-     * Checks if this StructTag is a Field type
-     */override fun `isField`(): kotlin.Boolean {
+    override fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_field(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
         it, _status)
 }
     }
@@ -50901,6 +50933,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+         fun `newBag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(
+        _status)
+}
+    )
+    }
+    
+
          fun `newBalance`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
@@ -51021,21 +51063,21 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-         fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
+         fun `newDynamicField`(`key`: TypeTag, `value`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
-        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(
+        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
 }
     )
     }
     
 
-         fun `newField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+         fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
-        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
 }
     )
     }

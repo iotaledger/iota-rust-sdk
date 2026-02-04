@@ -127,16 +127,16 @@ impl StructTag {
     }
 
     #[uniffi::constructor]
-    pub fn new_field(key: &TypeTag, value: &TypeTag) -> Self {
-        Self(iota_sdk::types::StructTag::new_field(
+    pub fn new_dynamic_field(key: &TypeTag, value: &TypeTag) -> Self {
+        Self(iota_sdk::types::StructTag::new_dynamic_field(
             key.0.clone(),
             value.0.clone(),
         ))
     }
 
     /// Checks if this StructTag is a Field type
-    pub fn is_field(&self) -> bool {
-        self.0.is_field()
+    pub fn is_dynamic_field(&self) -> bool {
+        self.0.is_dynamic_field()
     }
 
     /// Checks if this is a Coin type
@@ -209,6 +209,7 @@ export_struct_tag_ctors!(
     TransferReceiving,
     Uid,
     Url,
+    Bag,
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
