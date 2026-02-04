@@ -8643,6 +8643,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_url()
+	})
+	if checksum != 59887 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_url: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_module()
 	})
 	if checksum != 28022 {
@@ -12644,6 +12653,15 @@ func uniffiCheckChecksums() {
 	if checksum != 43936 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url()
+	})
+	if checksum != 23915 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -32629,6 +32647,7 @@ type StructTagInterface interface {
 	IsUpgradeCap() bool
 	IsUpgradeReceipt() bool
 	IsUpgradeTicket() bool
+	IsUrl() bool
 	// Returns the module part of a `StructTag`
 	Module() *Identifier
 	// Returns the name part of a `StructTag`
@@ -32862,6 +32881,12 @@ func StructTagNewUpgradeReceipt() *StructTag {
 func StructTagNewUpgradeTicket() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(_uniffiStatus)
+	}))
+}
+
+func StructTagNewUrl() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(_uniffiStatus)
 	}))
 }
 
@@ -33193,6 +33218,15 @@ func (_self *StructTag) IsUpgradeTicket() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsUrl() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_url(
 		_pointer,_uniffiStatus)
 	}))
 }

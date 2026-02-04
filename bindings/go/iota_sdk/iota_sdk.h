@@ -6134,6 +6134,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(RustCallSt
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_URL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_URL
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_ADDRESS
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_ADDRESS
 void* uniffi_iota_sdk_ffi_fn_method_structtag_address(void* ptr, RustCallStatus *out_status
@@ -6312,6 +6318,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(void* ptr, Rus
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_UPGRADE_TICKET
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_UPGRADE_TICKET
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_URL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_URL
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_url(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_MODULE
@@ -15969,6 +15980,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_URL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_URL
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_url(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_MODULE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_MODULE
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_module(void
@@ -18636,6 +18653,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt(
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_UPGRADE_TICKET
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_UPGRADE_TICKET
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_URL
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_URL
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url(void
     
 );
 #endif

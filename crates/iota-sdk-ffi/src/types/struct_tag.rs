@@ -208,6 +208,7 @@ export_struct_tag_ctors!(
     TimelockedStakedIota,
     TransferReceiving,
     Uid,
+    Url,
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
