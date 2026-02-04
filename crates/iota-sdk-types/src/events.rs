@@ -76,4 +76,19 @@ impl Event {
     pub fn is_system_epoch_info_event_v2(&self) -> bool {
         is_system_epoch_info_event_type(&self.type_, "SystemEpochInfoEventV2")
     }
+
+    pub fn random_for_testing() -> Self {
+        Self {
+            package_id: ObjectId::random(),
+            module: Identifier::new("test").unwrap(),
+            sender: Address::random(),
+            type_: StructTag::new(
+                Address::random(),
+                Identifier::new("test").unwrap(),
+                Identifier::new("test").unwrap(),
+                vec![],
+            ),
+            contents: vec![],
+        }
+    }
 }
