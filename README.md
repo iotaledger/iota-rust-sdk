@@ -1,5 +1,7 @@
 # IOTA SDK
 
+[![Coverage Status](https://coveralls.io/repos/github/iotaledger/iota-rust-sdk/badge.svg?branch=develop)](https://coveralls.io/github/iotaledger/iota-rust-sdk?branch=develop)
+
 A Rust SDK for integrating with the [IOTA blockchain](https://docs.iota.org/).
 
 > [!NOTE]
