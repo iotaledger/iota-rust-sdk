@@ -71,7 +71,8 @@ impl StructTag {
         Self::new_coin(Self::new_iota_coin_type())
     }
 
-    /// Creates a new framework coin struct tag (`0x2::coin::Coin<CoinType>`)
+    /// Checks if this is a framework gas coin type
+    /// (`0x2::coin::Coin<0x2::iota::IOTA>`)
     pub fn is_gas_coin(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == Identifier::from_static("coin")
