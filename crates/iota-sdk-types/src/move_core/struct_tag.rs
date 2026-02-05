@@ -191,6 +191,11 @@ impl StructTag {
         &self.type_params
     }
 
+    /// Returns a mutable reference to the type params part of a `StructTag`
+    pub fn type_params_mut(&mut self) -> &mut Vec<TypeTag> {
+        &mut self.type_params
+    }
+
     /// Decomposes the StructTag into its parts
     pub fn into_parts(self) -> (Address, Identifier, Identifier, Vec<TypeTag>) {
         (self.address, self.module, self.name, self.type_params)
