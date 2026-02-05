@@ -94,7 +94,7 @@ impl Identifier {
     ///
     /// Note: this function allows the special identifier `<SELF>`.
     pub const fn is_valid(s: &str) -> bool {
-        if s.len() == 0 || s.len() > 128 {
+        if s.is_empty() || s.len() > 128 {
             return false;
         }
 

@@ -51,8 +51,8 @@ impl StructTag {
     pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("iota").into(),
-            name: Identifier::from_static("IOTA").into(),
+            module: Identifier::from_static("iota"),
+            name: Identifier::from_static("IOTA"),
             type_params: vec![],
         }
     }
@@ -88,8 +88,8 @@ impl StructTag {
     pub fn new_id() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("object").into(),
-            name: Identifier::from_static("ID").into(),
+            module: Identifier::from_static("object"),
+            name: Identifier::from_static("ID"),
             type_params: vec![],
         }
     }
@@ -105,8 +105,8 @@ impl StructTag {
     pub fn new_uid() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("object").into(),
-            name: Identifier::from_static("UID").into(),
+            module: Identifier::from_static("object"),
+            name: Identifier::from_static("UID"),
             type_params: vec![],
         }
     }
@@ -121,8 +121,8 @@ impl StructTag {
     pub fn new_name(address: Address) -> Self {
         Self {
             address,
-            module: Identifier::from_static("name").into(),
-            name: Identifier::from_static("Name").into(),
+            module: Identifier::from_static("name"),
+            name: Identifier::from_static("Name"),
             type_params: vec![],
         }
     }
@@ -132,8 +132,8 @@ impl StructTag {
     pub fn new_dynamic_field(key: impl Into<TypeTag>, value: impl Into<TypeTag>) -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("dynamic_field").into(),
-            name: Identifier::from_static("Field").into(),
+            module: Identifier::from_static("dynamic_field"),
+            name: Identifier::from_static("Field"),
             type_params: vec![key.into(), value.into()],
         }
     }

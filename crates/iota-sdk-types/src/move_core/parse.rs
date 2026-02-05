@@ -73,9 +73,9 @@ fn struct_tag(input: &mut &str) -> ModalResult<StructTag> {
     let (address, _, module, _, name) = (
         parse_address.try_map(|s| s.parse::<Address>()),
         "::",
-        identifier.map(|ident| Identifier::new_unchecked(ident)),
+        identifier.map(Identifier::new_unchecked),
         "::",
-        identifier.map(|ident| Identifier::new_unchecked(ident)),
+        identifier.map(Identifier::new_unchecked),
     )
         .parse_next(input)?;
 
