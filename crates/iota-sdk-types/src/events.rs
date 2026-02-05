@@ -90,8 +90,8 @@ impl Event {
     ///
     /// This is not fully random but designed to produce valid, varied test
     /// data.
-    #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    #[cfg(all(feature = "rand", not(target_arch = "wasm32")))]
+    #[cfg_attr(doc_cfg, doc(cfg(all(feature = "rand", not(target_arch = "wasm32")))))]
     pub fn random() -> Self {
         use rand_core::{OsRng, RngCore};
 
@@ -137,7 +137,7 @@ impl Event {
 }
 
 #[cfg(test)]
-#[cfg(feature = "rand")]
+#[cfg(all(feature = "rand", not(target_arch = "wasm32")))]
 mod tests {
     use super::*;
 
