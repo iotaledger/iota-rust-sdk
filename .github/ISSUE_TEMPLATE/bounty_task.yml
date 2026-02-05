@@ -70,4 +70,4 @@ body:
       value: >
         ## Important
 
-        - When submitting PRs to resolve incentivized issues, your commits should be signed in order to guarantee that the account can be verified.
+        - When submitting PRs to resolve bounty issues, your commits should be signed in order to guarantee that the account can be verified.
