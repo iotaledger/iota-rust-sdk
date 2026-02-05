@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use crate::types::struct_tag::StructTag;
+use crate::types::move_core::struct_tag::StructTag;
 
 /// Type of a move value
 ///

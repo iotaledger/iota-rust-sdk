@@ -10,15 +10,11 @@ use winnow::{
     token::{one_of, take_while},
 };
 
-use super::{Address, Identifier, StructTag, TypeTag};
+use crate::{Address, Identifier, StructTag, TypeTag};
 
 // static ALLOWED_IDENTIFIERS: &str =
 // r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
 static MAX_IDENTIFIER_LENGTH: usize = 128;
-
-pub(super) fn parse_identifier(mut input: &str) -> ModalResult<&str> {
-    (identifier, eof).take().parse_next(&mut input)
-}
 
 fn identifier<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
     alt((
@@ -77,9 +73,9 @@ fn struct_tag(input: &mut &str) -> ModalResult<StructTag> {
     let (address, _, module, _, name) = (
         parse_address.try_map(|s| s.parse::<Address>()),
         "::",
-        identifier.map(|ident| Identifier(ident.into())),
+        identifier.map(|ident| Identifier::new_unchecked(ident)),
         "::",
-        identifier.map(|ident| Identifier(ident.into())),
+        identifier.map(|ident| Identifier::new_unchecked(ident)),
     )
         .parse_next(input)?;
 
@@ -88,12 +84,7 @@ fn struct_tag(input: &mut &str) -> ModalResult<StructTag> {
         .parse_next(input)?
         .unwrap_or_default();
 
-    Ok(StructTag {
-        address,
-        module,
-        name,
-        type_params: generics,
-    })
+    Ok(StructTag::new(address, module, name, generics))
 }
 
 fn generics(input: &mut &str) -> ModalResult<Vec<TypeTag>> {

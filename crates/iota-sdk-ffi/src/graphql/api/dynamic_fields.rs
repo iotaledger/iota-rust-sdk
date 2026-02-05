@@ -10,7 +10,7 @@ use crate::{
     graphql::{
         client::GraphQLClient, pagination::DynamicFieldOutputPage, query_types::DynamicFieldOutput,
     },
-    types::{address::Address, type_tag::TypeTag},
+    types::{address::Address, move_core::TypeTag},
 };
 
 #[uniffi::export(async_runtime = "tokio")]

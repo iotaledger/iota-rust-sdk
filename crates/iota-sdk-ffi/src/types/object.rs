@@ -8,8 +8,7 @@ use crate::{
     types::{
         address::Address,
         digest::Digest,
-        struct_tag::{Identifier, StructTag},
-        type_tag::TypeTag,
+        move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
 };

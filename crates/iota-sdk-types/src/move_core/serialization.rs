@@ -6,6 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Visitor};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::*;
+use crate::Address;
 
 impl Serialize for Identifier {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -336,8 +337,8 @@ mod tests {
     fn type_tag_fixture() {
         let expected = TypeTag::Struct(Box::new(StructTag {
             address: Address::from_str("0x1").unwrap(),
-            module: Identifier("Foo".into()),
-            name: Identifier("Bar".into()),
+            module: Identifier::from_static("Foo"),
+            name: Identifier::from_static("Bar"),
             type_params: vec![
                 TypeTag::Bool,
                 TypeTag::U8,

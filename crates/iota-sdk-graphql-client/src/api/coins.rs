@@ -6,7 +6,7 @@
 
 use cynic::QueryBuilder;
 use futures::Stream;
-use iota_types::{Address, IdentifierRef, StructTag, framework::Coin};
+use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
     Client,
@@ -64,8 +64,8 @@ impl Client {
                     .unwrap_or_else(|| {
                         StructTag::new(
                             Address::FRAMEWORK,
-                            IdentifierRef::const_new("coin"),
-                            IdentifierRef::const_new("Coin"),
+                            Identifier::from_static("coin"),
+                            Identifier::from_static("Coin"),
                             Default::default(),
                         )
                     })
