@@ -228,8 +228,8 @@ macro_rules! add_struct_tag_ctor {
                 pub fn [< new_ $module:snake _ $name:snake >]() -> Self {
                     Self {
                         address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)).into(),
-                        name: Identifier::from_static(stringify!($name)).into(),
+                        module: Identifier::from_static(stringify!($module)),
+                        name: Identifier::from_static(stringify!($name)),
                         type_params: vec![],
                     }
                 }
@@ -248,8 +248,8 @@ macro_rules! add_struct_tag_ctor {
                 pub fn [< new_ $name:snake >]() -> Self {
                     Self {
                         address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)).into(),
-                        name: Identifier::from_static(stringify!($name)).into(),
+                        module: Identifier::from_static(stringify!($module)),
+                        name: Identifier::from_static(stringify!($name)),
                         type_params: vec![],
                     }
                 }
@@ -271,8 +271,8 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                 pub fn [< new_ $module:snake _ $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
                     Self {
                         address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)).into(),
-                        name: Identifier::from_static(stringify!($name)).into(),
+                        module: Identifier::from_static(stringify!($module)),
+                        name: Identifier::from_static(stringify!($name)),
                         type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
                     }
                 }
@@ -292,8 +292,8 @@ macro_rules! add_struct_tag_ctor_from_struct_tag {
                 pub fn [< new_ $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
                     Self {
                         address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)).into(),
-                        name: Identifier::from_static(stringify!($name)).into(),
+                        module: Identifier::from_static(stringify!($module)),
+                        name: Identifier::from_static(stringify!($name)),
                         type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
                     }
                 }
@@ -316,8 +316,8 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                 pub fn [< new_ $module:snake _ $name:snake >](type_tag: impl Into<TypeTag>) -> Self {
                     Self {
                         address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)).into(),
-                        name: Identifier::from_static(stringify!($name)).into(),
+                        module: Identifier::from_static(stringify!($module)),
+                        name: Identifier::from_static(stringify!($name)),
                         type_params: vec![type_tag.into()],
                     }
                 }
@@ -337,8 +337,8 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
                 pub fn [< new_ $name:snake >](type_tag: impl Into<TypeTag>) -> Self {
                     Self {
                         address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)).into(),
-                        name: Identifier::from_static(stringify!($name)).into(),
+                        module: Identifier::from_static(stringify!($module)),
+                        name: Identifier::from_static(stringify!($name)),
                         type_params: vec![type_tag.into()],
                     }
                 }
