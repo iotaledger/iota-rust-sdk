@@ -38,7 +38,7 @@
 ///                    u64 ; storage-rebate
 ///                    u64 ; non-refundable-storage-fee
 /// ```
-#[derive(Clone, Debug, Default, PartialEq, Eq, derive_more::AddAssign, derive_more::SubAssign)]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -156,6 +156,18 @@ impl std::ops::SubAssign<&Self> for GasCostSummary {
             .non_refundable_storage_fee
             .checked_sub(other.non_refundable_storage_fee)
             .unwrap();
+    }
+}
+
+impl std::ops::AddAssign<Self> for GasCostSummary {
+    fn add_assign(&mut self, other: Self) {
+        self.add_assign(&other);
+    }
+}
+
+impl std::ops::SubAssign<Self> for GasCostSummary {
+    fn sub_assign(&mut self, other: Self) {
+        self.sub_assign(&other);
     }
 }
 
