@@ -4,7 +4,7 @@
 
 use winnow::{
     ModalParser, ModalResult, Parser,
-    ascii::space0,
+    ascii::multispace0,
     combinator::{alt, delimited, eof, opt, separated},
     stream::AsChar,
     token::{one_of, take_while},
@@ -14,7 +14,8 @@ use crate::{Address, Identifier, StructTag, TypeTag};
 
 // static ALLOWED_IDENTIFIERS: &str =
 // r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
-static MAX_IDENTIFIER_LENGTH: usize = 128;
+pub const MAX_IDENTIFIER_LENGTH: usize = 128;
+pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
 fn identifier<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
     alt((
@@ -45,50 +46,79 @@ fn parse_address<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
 }
 
 pub(super) fn parse_type_tag(mut input: &str) -> ModalResult<TypeTag> {
-    (type_tag, eof).parse_next(&mut input).map(|(t, _)| t)
+    (type_tag_impl(0), eof)
+        .parse_next(&mut input)
+        .map(|(t, _)| t)
 }
 
-fn type_tag(input: &mut &str) -> ModalResult<TypeTag> {
-    alt((
-        "u8".value(TypeTag::U8),
-        "u16".value(TypeTag::U16),
-        "u32".value(TypeTag::U32),
-        "u64".value(TypeTag::U64),
-        "u128".value(TypeTag::U128),
-        "u256".value(TypeTag::U256),
-        "bool".value(TypeTag::Bool),
-        "address".value(TypeTag::Address),
-        "signer".value(TypeTag::Signer),
-        delimited("vector<", type_tag, ">").map(|ty| TypeTag::Vector(Box::new(ty))),
-        struct_tag.map(|s| TypeTag::Struct(Box::new(s))),
-    ))
-    .parse_next(input)
+fn type_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<TypeTag> {
+    move |input: &mut &str| {
+        if depth > MAX_TYPE_TAG_NESTING {
+            return Err(winnow::error::ErrMode::Cut(
+                winnow::error::ContextError::new(),
+            ));
+        }
+        alt((
+            "u8".value(TypeTag::U8),
+            "u16".value(TypeTag::U16),
+            "u32".value(TypeTag::U32),
+            "u64".value(TypeTag::U64),
+            "u128".value(TypeTag::U128),
+            "u256".value(TypeTag::U256),
+            "bool".value(TypeTag::Bool),
+            "address".value(TypeTag::Address),
+            "signer".value(TypeTag::Signer),
+            delimited(
+                ("vector", multispace0, '<', multispace0),
+                type_tag_impl(depth + 1),
+                (multispace0, '>'),
+            )
+            .map(|ty| TypeTag::Vector(Box::new(ty))),
+            struct_tag_impl(depth).map(|s| TypeTag::Struct(Box::new(s))),
+        ))
+        .parse_next(input)
+    }
 }
 
 pub(super) fn parse_struct_tag(mut input: &str) -> ModalResult<StructTag> {
-    (struct_tag, eof).parse_next(&mut input).map(|(s, _)| s)
+    (struct_tag_impl(0), eof)
+        .parse_next(&mut input)
+        .map(|(s, _)| s)
 }
 
-fn struct_tag(input: &mut &str) -> ModalResult<StructTag> {
-    let (address, _, module, _, name) = (
-        parse_address.try_map(|s| s.parse::<Address>()),
-        "::",
-        identifier.map(Identifier::new_unchecked),
-        "::",
-        identifier.map(Identifier::new_unchecked),
-    )
-        .parse_next(input)?;
+fn struct_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<StructTag> {
+    move |input: &mut &str| {
+        let (address, _, module, _, name) = (
+            parse_address.try_map(|s| s.parse::<Address>()),
+            "::",
+            identifier.map(Identifier::new_unchecked),
+            "::",
+            identifier.map(Identifier::new_unchecked),
+        )
+            .parse_next(input)?;
 
-    // optional generic
-    let generics = opt(delimited("<", generics, ">"))
+        // optional generic
+        let generics = opt(delimited(
+            (multispace0, '<', multispace0),
+            generics_impl(depth),
+            (multispace0, '>'),
+        ))
         .parse_next(input)?
         .unwrap_or_default();
 
-    Ok(StructTag::new(address, module, name, generics))
+        Ok(StructTag::new(address, module, name, generics))
+    }
 }
 
-fn generics(input: &mut &str) -> ModalResult<Vec<TypeTag>> {
-    separated(1.., delimited(space0, type_tag, space0), ",").parse_next(input)
+fn generics_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<Vec<TypeTag>> {
+    move |input: &mut &str| {
+        separated(
+            1..,
+            delimited(multispace0, type_tag_impl(depth + 1), multispace0),
+            ",",
+        )
+        .parse_next(input)
+    }
 }
 
 // TODO add proptests
@@ -179,10 +209,9 @@ mod tests {
             "0x5d32d749705c5f07c741f1818df3db466128bf01677611a959b03040ac5dc774::slippage::HopSwapEvent<0x2::iota::IOTA, 0x3c86bba6a3d3ce958615ae51cc5604f58956b1583323f664cf5f048da0fcbb19::_spd::_SPD>",
         ];
         for s in valid {
-            let mut input = s;
             assert!(
-                dbg!((type_tag, eof).parse_next(&mut input)).is_ok(),
-                "Failed to parse struct {s}, remainder {input}",
+                dbg!(parse_type_tag(s)).is_ok(),
+                "Failed to parse struct {s}",
             );
         }
     }
@@ -216,5 +245,73 @@ mod tests {
                 "text: {text:?}, StructTag: {st:?}"
             );
         }
+    }
+
+    #[test]
+    fn test_type_tag_with_newlines() {
+        // Newlines should be allowed in type parameters
+        let valid = vec![
+            "vector<\nu8\n>",
+            "vector<\n    u8\n>",
+            "0x1::Foo::Bar<\n    u8,\n    u64\n>",
+            "0x1::Foo::Bar<\n    u8,\n    0x2::Baz::Qux<\n        bool\n    >\n>",
+            "0x1::Foo::Bar  <u8>",
+            "0x1::Foo::Bar\n<u8>",
+            "0x1::Foo::Bar\n<\n    u8\n>",
+            "vector\n<\nu8\n>",
+        ];
+        for s in valid {
+            assert!(
+                parse_type_tag(s).is_ok(),
+                "Failed to parse type tag with newlines: {s:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_type_tag_max_nesting_depth() {
+        // Generate a type tag with exactly MAX_TYPE_TAG_NESTING levels (should succeed)
+        let mut valid_nested = "u8".to_string();
+        for _ in 0..MAX_TYPE_TAG_NESTING {
+            valid_nested = format!("vector<{valid_nested}>");
+        }
+        assert!(
+            parse_type_tag(&valid_nested).is_ok(),
+            "Should parse type tag with exactly {MAX_TYPE_TAG_NESTING} levels of nesting"
+        );
+
+        // Generate a type tag with MAX_TYPE_TAG_NESTING + 1 levels (should fail)
+        let mut invalid_nested = "u8".to_string();
+        for _ in 0..=MAX_TYPE_TAG_NESTING {
+            invalid_nested = format!("vector<{invalid_nested}>");
+        }
+        assert!(
+            parse_type_tag(&invalid_nested).is_err(),
+            "Should reject type tag with more than {MAX_TYPE_TAG_NESTING} levels of nesting"
+        );
+    }
+
+    #[test]
+    fn test_struct_tag_nesting_depth() {
+        // Test deeply nested struct generics
+        // Each struct generic adds one nesting level
+        let mut valid_struct = "0x1::A::B".to_string();
+        // Start at depth 0, each generic wrapper adds 1 to the depth of inner types
+        // With MAX_TYPE_TAG_NESTING iterations, the innermost type reaches depth
+        // MAX_TYPE_TAG_NESTING
+        for i in 0..MAX_TYPE_TAG_NESTING {
+            valid_struct = format!("0x{}::A::B<{valid_struct}>", i + 2);
+        }
+        assert!(
+            parse_struct_tag(&valid_struct).is_ok(),
+            "Should parse struct tag within nesting limit"
+        );
+
+        // Add one more level to exceed the limit
+        let invalid_struct = format!("0xff::A::B<{valid_struct}>");
+        assert!(
+            parse_struct_tag(&invalid_struct).is_err(),
+            "Should reject struct tag exceeding nesting limit"
+        );
     }
 }

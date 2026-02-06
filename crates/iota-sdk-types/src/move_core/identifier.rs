@@ -4,7 +4,7 @@
 
 use bytestring::ByteString;
 
-use crate::TypeParseError;
+use crate::{TypeParseError, move_core::parse::MAX_IDENTIFIER_LENGTH};
 
 /// A move identifier
 ///
@@ -94,7 +94,7 @@ impl Identifier {
     ///
     /// Note: this function allows the special identifier `<SELF>`.
     pub const fn is_valid(s: &str) -> bool {
-        if s.is_empty() || s.len() > 128 {
+        if s.is_empty() || s.len() > MAX_IDENTIFIER_LENGTH {
             return false;
         }
 
