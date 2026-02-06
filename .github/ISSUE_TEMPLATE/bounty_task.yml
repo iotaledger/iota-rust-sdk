@@ -1,8 +1,8 @@
-name: Create incentivized task
-description: Create a task for the SDK Incentivized Program.
-title: "[Incentivized] "
+name: Create bounty task
+description: Create a task for the IOTA Bounties - SDK Testing Program.
+title: "[Bounty] "
 labels:
-  - "incentivized"
+  - "bounty"
 
 body:
   - type: textarea
@@ -44,7 +44,7 @@ body:
     attributes:
       label: Details & acceptance criteria
       description: >
-        Provide a clear description, scope, and acceptance criteria for this incentivized task.
+        Provide a clear description, scope, and acceptance criteria for this bounty task.
       placeholder: |
         - Background / context
         - What is _in_ scope
@@ -70,4 +70,4 @@ body:
       value: >
         ## Important
 
-        - When submitting PRs to resolve incentivized issues, your commits should be signed in order to guarantee that the account can be verified.
+        - When submitting PRs to resolve bounty issues, your commits should be signed in order to guarantee that the account can be verified.
