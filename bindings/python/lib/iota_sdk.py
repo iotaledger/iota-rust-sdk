@@ -1729,7 +1729,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 31958:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 63707:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_supply() != 21504:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2635,7 +2635,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 4619:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 15001:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -21538,7 +21538,7 @@ class ServiceConfig:
     mutation_timeout_ms: "int"
     """
     Maximum time in milliseconds spent waiting for a response from fullnode
-    after issuing a a transaction to execute. Note that the transaction
+    after issuing a transaction to execute. Note that the transaction
     may still succeed even in the case of a timeout. Transactions are
     idempotent, so a transaction that times out should be resubmitted
     until the network returns a definite response (success or failure, not
@@ -27189,7 +27189,7 @@ class TransactionExpiration:
     
     class EPOCH:
         """
-        Validators wont sign a transaction unless the expiration Epoch
+        Validators won't sign a transaction unless the expiration Epoch
         is greater than or equal to the current epoch
         """
 
@@ -32414,7 +32414,7 @@ class Bls12381PublicKeyProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTECT
+    bls-public-key = %x60 96OCTET
     ```
 
     Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -32435,7 +32435,7 @@ class Bls12381PublicKey():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTECT
+    bls-public-key = %x60 96OCTET
     ```
 
     Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -32560,7 +32560,7 @@ class Bls12381SignatureProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTECT
+    bls-public-key = %x60 96OCTET
     ```
 
     Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -32581,7 +32581,7 @@ class Bls12381Signature():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    bls-public-key = %x60 96OCTECT
+    bls-public-key = %x60 96OCTET
     ```
 
     Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -37320,7 +37320,7 @@ class Ed25519PublicKeyProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    ed25519-public-key = 32OCTECT
+    ed25519-public-key = 32OCTET
     ```
     """
 
@@ -37359,7 +37359,7 @@ class Ed25519PublicKey():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    ed25519-public-key = 32OCTECT
+    ed25519-public-key = 32OCTET
     ```
     """
 
@@ -37523,7 +37523,7 @@ class Ed25519SignatureProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    ed25519-signature = 64OCTECT
+    ed25519-signature = 64OCTET
     ```
     """
 
@@ -37539,7 +37539,7 @@ class Ed25519Signature():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    ed25519-signature = 64OCTECT
+    ed25519-signature = 64OCTET
     ```
     """
 
@@ -38613,7 +38613,7 @@ class FaucetClient():
         endpoint, just the top level service endpoint.
 
         - /v1/gas is used to request gas
-        - /v1/status/taks-uuid is used to check the status of the request
+        - /v1/status/task-uuid is used to check the status of the request
         """
 
         _UniffiConverterString.check_lower(faucet_url)
@@ -39514,7 +39514,7 @@ class GraphQlClientProtocol(typing.Protocol):
         raise NotImplementedError
     def set_rpc_server(self, server: "str"):
         """
-        Set the server address for the GraphQL GraphQL client. It should be a
+        Set the server address for the GraphQL client. It should be a
         valid URL with a host and optionally a port number.
         """
 
@@ -41059,7 +41059,7 @@ _UniffiConverterTypeSdkFfiError,
     async def set_rpc_server(self, server: "str") -> None:
 
         """
-        Set the server address for the GraphQL GraphQL client. It should be a
+        Set the server address for the GraphQL client. It should be a
         valid URL with a host and optionally a port number.
         """
 
@@ -48571,7 +48571,7 @@ class Secp256k1PublicKeyProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-signature = 64OCTECT
+    secp256k1-signature = 64OCTET
     ```
     """
 
@@ -48611,7 +48611,7 @@ class Secp256k1PublicKey():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-signature = 64OCTECT
+    secp256k1-signature = 64OCTET
     ```
     """
 
@@ -48776,7 +48776,7 @@ class Secp256k1SignatureProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-public-key = 33OCTECT
+    secp256k1-public-key = 33OCTET
     ```
     """
 
@@ -48792,7 +48792,7 @@ class Secp256k1Signature():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256k1-public-key = 33OCTECT
+    secp256k1-public-key = 33OCTET
     ```
     """
 
@@ -49613,7 +49613,7 @@ class Secp256r1PublicKeyProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-signature = 64OCTECT
+    secp256r1-signature = 64OCTET
     ```
     """
 
@@ -49653,7 +49653,7 @@ class Secp256r1PublicKey():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-signature = 64OCTECT
+    secp256r1-signature = 64OCTET
     ```
     """
 
@@ -49818,7 +49818,7 @@ class Secp256r1SignatureProtocol(typing.Protocol):
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-public-key = 33OCTECT
+    secp256r1-public-key = 33OCTET
     ```
     """
 
@@ -49834,7 +49834,7 @@ class Secp256r1Signature():
     The BCS serialized form for this type is defined by the following ABNF:
 
     ```text
-    secp256r1-public-key = 33OCTECT
+    secp256r1-public-key = 33OCTET
     ```
     """
 

@@ -215,7 +215,7 @@ impl Client {
             after_functions: functions.after.as_deref(),
             after_structs: structs.after.as_deref(),
             after_friends: friends.after.as_deref(),
-            before_enums: enums.after.as_deref(),
+            before_enums: enums.before.as_deref(),
             before_functions: functions.before.as_deref(),
             before_structs: structs.before.as_deref(),
             before_friends: friends.before.as_deref(),

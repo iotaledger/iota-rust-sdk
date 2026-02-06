@@ -6071,7 +6071,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server()
 	})
-	if checksum != 31958 {
+	if checksum != 63707 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server: UniFFI API checksum mismatch")
 	}
@@ -10148,7 +10148,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new()
 	})
-	if checksum != 4619 {
+	if checksum != 15001 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new: UniFFI API checksum mismatch")
 	}
@@ -13659,7 +13659,7 @@ func (_ FfiDestroyerBls12381PrivateKey) Destroy(value *Bls12381PrivateKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTECT
+// bls-public-key = %x60 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -13676,7 +13676,7 @@ type Bls12381PublicKeyInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTECT
+// bls-public-key = %x60 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -13820,7 +13820,7 @@ func (_ FfiDestroyerBls12381PublicKey) Destroy(value *Bls12381PublicKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTECT
+// bls-public-key = %x60 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -13837,7 +13837,7 @@ type Bls12381SignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// bls-public-key = %x60 96OCTECT
+// bls-public-key = %x60 96OCTET
 // ```
 //
 // Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -17943,7 +17943,7 @@ func (_ FfiDestroyerEd25519PrivateKey) Destroy(value *Ed25519PrivateKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// ed25519-public-key = 32OCTECT
+// ed25519-public-key = 32OCTET
 // ```
 type Ed25519PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -17966,7 +17966,7 @@ type Ed25519PublicKeyInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// ed25519-public-key = 32OCTECT
+// ed25519-public-key = 32OCTET
 // ```
 type Ed25519PublicKey struct {
 	ffiObject FfiObject
@@ -18144,7 +18144,7 @@ func (_ FfiDestroyerEd25519PublicKey) Destroy(value *Ed25519PublicKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// ed25519-signature = 64OCTECT
+// ed25519-signature = 64OCTET
 // ```
 type Ed25519SignatureInterface interface {
 	ToBytes() []byte
@@ -18156,7 +18156,7 @@ type Ed25519SignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// ed25519-signature = 64OCTECT
+// ed25519-signature = 64OCTET
 // ```
 type Ed25519Signature struct {
 	ffiObject FfiObject
@@ -19274,7 +19274,7 @@ type FaucetClient struct {
 // endpoint, just the top level service endpoint.
 //
 // - /v1/gas is used to request gas
-// - /v1/status/taks-uuid is used to check the status of the request
+// - /v1/status/task-uuid is used to check the status of the request
 func NewFaucetClient(faucetUrl string) *FaucetClient {
 	return FfiConverterFaucetClientINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_faucetclient_new(FfiConverterStringINSTANCE.Lower(faucetUrl),_uniffiStatus)
@@ -20041,7 +20041,7 @@ type GraphQlClientInterface interface {
 	// Get the GraphQL service configuration, including complexity limits, read
 	// and mutation limits, supported versions, and others.
 	ServiceConfig() (ServiceConfig, error)
-	// Set the server address for the GraphQL GraphQL client. It should be a
+	// Set the server address for the GraphQL client. It should be a
 	// valid URL with a host and optionally a port number.
 	SetRpcServer(server string) error
 	// Get total supply for the coin type.
@@ -21599,7 +21599,7 @@ func (_self *GraphQlClient) ServiceConfig() (ServiceConfig, error) {
 	return res, err 
 }
 
-// Set the server address for the GraphQL GraphQL client. It should be a
+// Set the server address for the GraphQL client. It should be a
 // valid URL with a host and optionally a port number.
 func (_self *GraphQlClient) SetRpcServer(server string) error {
 	_pointer := _self.ffiObject.incrementPointer("*GraphQlClient")
@@ -28872,7 +28872,7 @@ func (_ FfiDestroyerSecp256k1PrivateKey) Destroy(value *Secp256k1PrivateKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-signature = 64OCTECT
+// secp256k1-signature = 64OCTET
 // ```
 type Secp256k1PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -28896,7 +28896,7 @@ type Secp256k1PublicKeyInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-signature = 64OCTECT
+// secp256k1-signature = 64OCTET
 // ```
 type Secp256k1PublicKey struct {
 	ffiObject FfiObject
@@ -29075,7 +29075,7 @@ func (_ FfiDestroyerSecp256k1PublicKey) Destroy(value *Secp256k1PublicKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-public-key = 33OCTECT
+// secp256k1-public-key = 33OCTET
 // ```
 type Secp256k1SignatureInterface interface {
 	ToBytes() []byte
@@ -29087,7 +29087,7 @@ type Secp256k1SignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256k1-public-key = 33OCTECT
+// secp256k1-public-key = 33OCTET
 // ```
 type Secp256k1Signature struct {
 	ffiObject FfiObject
@@ -29923,7 +29923,7 @@ func (_ FfiDestroyerSecp256r1PrivateKey) Destroy(value *Secp256r1PrivateKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-signature = 64OCTECT
+// secp256r1-signature = 64OCTET
 // ```
 type Secp256r1PublicKeyInterface interface {
 	// Derive an `Address` from this Public Key
@@ -29947,7 +29947,7 @@ type Secp256r1PublicKeyInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-signature = 64OCTECT
+// secp256r1-signature = 64OCTET
 // ```
 type Secp256r1PublicKey struct {
 	ffiObject FfiObject
@@ -30126,7 +30126,7 @@ func (_ FfiDestroyerSecp256r1PublicKey) Destroy(value *Secp256r1PublicKey) {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-public-key = 33OCTECT
+// secp256r1-public-key = 33OCTET
 // ```
 type Secp256r1SignatureInterface interface {
 	ToBytes() []byte
@@ -30138,7 +30138,7 @@ type Secp256r1SignatureInterface interface {
 // The BCS serialized form for this type is defined by the following ABNF:
 //
 // ```text
-// secp256r1-public-key = 33OCTECT
+// secp256r1-public-key = 33OCTET
 // ```
 type Secp256r1Signature struct {
 	ffiObject FfiObject
@@ -40161,7 +40161,7 @@ type ServiceConfig struct {
 	// layout of a single Move Type.
 	MaxTypeNodes int32
 	// Maximum time in milliseconds spent waiting for a response from fullnode
-	// after issuing a a transaction to execute. Note that the transaction
+	// after issuing a transaction to execute. Note that the transaction
 	// may still succeed even in the case of a timeout. Transactions are
 	// idempotent, so a transaction that times out should be resubmitted
 	// until the network returns a definite response (success or failure, not
@@ -43725,7 +43725,7 @@ type TransactionExpirationNone struct {
 
 func (e TransactionExpirationNone) Destroy() {
 }
-// Validators wont sign a transaction unless the expiration Epoch
+// Validators won't sign a transaction unless the expiration Epoch
 // is greater than or equal to the current epoch
 type TransactionExpirationEpoch struct {
 	Field0 uint64

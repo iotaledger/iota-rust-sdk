@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of ed25519 public-key cryptogrophy.
+//! Implementation of ed25519 public-key cryptography.
 
 use crate::crypto::{PublicKeyExt, SignatureScheme};
 
@@ -13,7 +13,7 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// ed25519-public-key = 32OCTECT
+/// ed25519-public-key = 32OCTET
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -129,7 +129,7 @@ impl std::fmt::Debug for Ed25519PublicKey {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// ed25519-signature = 64OCTECT
+/// ed25519-signature = 64OCTET
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

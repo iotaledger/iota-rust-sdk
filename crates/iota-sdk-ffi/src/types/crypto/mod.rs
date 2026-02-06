@@ -51,7 +51,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// bls-public-key = %x60 96OCTECT
+    /// bls-public-key = %x60 96OCTET
     /// ```
     ///
     /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -68,7 +68,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// ed25519-public-key = 32OCTECT
+    /// ed25519-public-key = 32OCTET
     /// ```
     Ed25519PublicKey
 );
@@ -104,7 +104,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// secp256k1-signature = 64OCTECT
+    /// secp256k1-signature = 64OCTET
     /// ```
     Secp256k1PublicKey
 );
@@ -141,7 +141,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// secp256r1-signature = 64OCTECT
+    /// secp256r1-signature = 64OCTET
     /// ```
     Secp256r1PublicKey
 );
@@ -178,7 +178,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// ed25519-signature = 64OCTECT
+    /// ed25519-signature = 64OCTET
     /// ```
     Ed25519Signature
 );
@@ -190,7 +190,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// bls-public-key = %x60 96OCTECT
+    /// bls-public-key = %x60 96OCTET
     /// ```
     ///
     /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -207,7 +207,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// secp256k1-public-key = 33OCTECT
+    /// secp256k1-public-key = 33OCTET
     /// ```
     Secp256k1Signature
 );
@@ -219,7 +219,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// secp256r1-public-key = 33OCTECT
+    /// secp256r1-public-key = 33OCTET
     /// ```
     Secp256r1Signature
 );
