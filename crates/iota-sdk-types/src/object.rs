@@ -1010,10 +1010,8 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(
-        feature = "schemars",
-        derive(schemars::JsonSchema),
-    )]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    #[serde(rename_all = "camelCase")]
     struct StructObjectReference {
         object_id: ObjectId,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
@@ -1074,20 +1072,19 @@ mod serialization {
         where
             D: Deserializer<'de>,
         {
-            let (object_id, version, digest) = match ObjectReferenceHelper::deserialize(
-                deserializer,
-            )? {
-                ObjectReferenceHelper::Struct(StructObjectReference {
-                    object_id,
-                    version,
-                    digest,
-                }) => (object_id, version, digest),
-                ObjectReferenceHelper::Tuple(TupleObjectReference(
-                    object_id,
-                    version,
-                    digest,
-                )) => (object_id, version, digest),
-            };
+            let (object_id, version, digest) =
+                match ObjectReferenceHelper::deserialize(deserializer)? {
+                    ObjectReferenceHelper::Struct(StructObjectReference {
+                        object_id,
+                        version,
+                        digest,
+                    }) => (object_id, version, digest),
+                    ObjectReferenceHelper::Tuple(TupleObjectReference(
+                        object_id,
+                        version,
+                        digest,
+                    )) => (object_id, version, digest),
+                };
             Ok(ObjectReference {
                 object_id,
                 version,
