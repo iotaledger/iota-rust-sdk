@@ -36,13 +36,7 @@ impl Identifier {
     /// Creates a new `Identifier` from the given string slice, checking
     /// that it is a valid Move identifier and returning an error if not.
     pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
-        if !Self::is_valid(identifier.as_ref()) {
-            return Err(TypeParseError {
-                source: identifier.as_ref().into(),
-            });
-        }
-
-        Ok(Self(identifier.as_ref().into()))
+        Ok(identifier.as_ref().parse()?)
     }
 
     /// Creates a new `Identifier` from the given string slice without
@@ -142,7 +136,10 @@ impl std::str::FromStr for Identifier {
     type Err = TypeParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::new(s)
+        use winnow::Parser;
+        crate::move_core::parse::parse_identifier
+            .parse(s)
+            .map_err(|e| e.into_inner())
     }
 }
 

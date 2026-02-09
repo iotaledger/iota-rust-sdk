@@ -3,32 +3,39 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use winnow::{
-    ModalParser, ModalResult, Parser,
+    ModalResult, Parser,
     ascii::multispace0,
-    combinator::{alt, delimited, eof, opt, separated},
+    combinator::{alt, delimited, opt, separated},
     stream::AsChar,
     token::{one_of, take_while},
 };
 
-use crate::{Address, Identifier, StructTag, TypeTag};
+use crate::{Address, Identifier, StructTag, TypeParseError, TypeTag};
 
-// static ALLOWED_IDENTIFIERS: &str =
-// r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
 pub const MAX_IDENTIFIER_LENGTH: usize = 128;
 pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
-fn identifier<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
+/// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
+pub(crate) fn parse_identifier<'s>(input: &mut &'s str) -> ModalResult<Identifier, TypeParseError> {
+    if input.len() > MAX_IDENTIFIER_LENGTH {
+        return Err(winnow::error::ErrMode::Cut(
+            TypeParseError::IdentifierMaxLengthExceeded {
+                actual: input.len(),
+            },
+        ));
+    }
     alt((
         (one_of(|c: char| c.is_alpha()), valid_remainder(0)),
         ('_', valid_remainder(1)),
     ))
     .take()
     .parse_next(input)
+    .map(Identifier::new_unchecked)
 }
 
 fn valid_remainder<'a>(
     minimum: usize,
-) -> impl ModalParser<&'a str, &'a str, winnow::error::ContextError> {
+) -> impl FnMut(&mut &'a str) -> ModalResult<&'a str, TypeParseError> {
     move |input: &mut &'a str| {
         take_while(
             // Use .. instead of ..= since we've already processed a single character
@@ -39,23 +46,21 @@ fn valid_remainder<'a>(
     }
 }
 
-fn parse_address<'s>(input: &mut &'s str) -> ModalResult<&'s str> {
-    ("0x", take_while(1..=64, AsChar::is_hex_digit))
-        .take()
-        .parse_next(input)
+pub(crate) fn parse_address(input: &mut &str) -> ModalResult<Address, TypeParseError> {
+    Address::from_prefixed_hex(input).map_err(|e| winnow::error::ErrMode::Cut(e.into()))
 }
 
-pub(super) fn parse_type_tag(mut input: &str) -> ModalResult<TypeTag> {
-    (type_tag_impl(0), eof)
-        .parse_next(&mut input)
-        .map(|(t, _)| t)
+pub(crate) fn parse_type_tag(input: &mut &str) -> ModalResult<TypeTag, TypeParseError> {
+    parse_type_tag_impl(0).parse_next(input)
 }
 
-fn type_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<TypeTag> {
+fn parse_type_tag_impl(
+    depth: usize,
+) -> impl FnMut(&mut &str) -> ModalResult<TypeTag, TypeParseError> {
     move |input: &mut &str| {
         if depth > MAX_TYPE_TAG_NESTING {
             return Err(winnow::error::ErrMode::Cut(
-                winnow::error::ContextError::new(),
+                TypeParseError::NestingLimitExceeded,
             ));
         }
         alt((
@@ -70,37 +75,37 @@ fn type_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<TypeTag> 
             "signer".value(TypeTag::Signer),
             delimited(
                 ("vector", multispace0, '<', multispace0),
-                type_tag_impl(depth + 1),
+                parse_type_tag_impl(depth + 1),
                 (multispace0, '>'),
             )
             .map(|ty| TypeTag::Vector(Box::new(ty))),
-            struct_tag_impl(depth).map(|s| TypeTag::Struct(Box::new(s))),
+            parse_struct_tag_impl(depth).map(|s| TypeTag::Struct(Box::new(s))),
         ))
         .parse_next(input)
     }
 }
 
-pub(super) fn parse_struct_tag(mut input: &str) -> ModalResult<StructTag> {
-    (struct_tag_impl(0), eof)
-        .parse_next(&mut input)
-        .map(|(s, _)| s)
+pub(crate) fn parse_struct_tag(input: &mut &str) -> ModalResult<StructTag, TypeParseError> {
+    parse_struct_tag_impl(0).parse_next(input)
 }
 
-fn struct_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<StructTag> {
+fn parse_struct_tag_impl(
+    depth: usize,
+) -> impl FnMut(&mut &str) -> ModalResult<StructTag, TypeParseError> {
     move |input: &mut &str| {
         let (address, _, module, _, name) = (
-            parse_address.try_map(|s| s.parse::<Address>()),
+            parse_address,
             "::",
-            identifier.map(Identifier::new_unchecked),
+            parse_identifier,
             "::",
-            identifier.map(Identifier::new_unchecked),
+            parse_identifier,
         )
             .parse_next(input)?;
 
         // optional generic
         let generics = opt(delimited(
             (multispace0, '<', multispace0),
-            generics_impl(depth),
+            parse_generics(depth),
             (multispace0, '>'),
         ))
         .parse_next(input)?
@@ -110,11 +115,13 @@ fn struct_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<StructT
     }
 }
 
-fn generics_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<Vec<TypeTag>> {
+fn parse_generics(
+    depth: usize,
+) -> impl FnMut(&mut &str) -> ModalResult<Vec<TypeTag>, TypeParseError> {
     move |input: &mut &str| {
         separated(
             1..,
-            delimited(multispace0, type_tag_impl(depth + 1), multispace0),
+            delimited(multispace0, parse_type_tag_impl(depth + 1), multispace0),
             ",",
         )
         .parse_next(input)
@@ -172,7 +179,7 @@ mod tests {
             "0x1::__::__<0x2::_____::______fooo______, 0xff::Bar____::_______foo>",
             "0x5d32d749705c5f07c741f1818df3db466128bf01677611a959b03040ac5dc774::slippage::HopSwapEvent<0x2::iota::IOTA, 0x3c86bba6a3d3ce958615ae51cc5604f58956b1583323f664cf5f048da0fcbb19::_spd::_SPD>",
         ] {
-            assert!(parse_type_tag(s).is_ok(), "Failed to parse tag {s}");
+            assert!(s.parse::<TypeTag>().is_ok(), "Failed to parse tag {s}");
         }
     }
 
@@ -210,7 +217,7 @@ mod tests {
         ];
         for s in valid {
             assert!(
-                dbg!(parse_type_tag(s)).is_ok(),
+                dbg!(s.parse::<TypeTag>()).is_ok(),
                 "Failed to parse struct {s}",
             );
         }
@@ -237,7 +244,7 @@ mod tests {
         }
 
         for text in tests.iter().chain(instantiations.iter()) {
-            let st = parse_struct_tag(text).expect("valid StructTag");
+            let st = text.parse::<StructTag>().expect("valid StructTag");
             assert_eq!(
                 st.to_string().replace(' ', ""),
                 text.replace(' ', "")
@@ -262,7 +269,7 @@ mod tests {
         ];
         for s in valid {
             assert!(
-                parse_type_tag(s).is_ok(),
+                s.parse::<TypeTag>().is_ok(),
                 "Failed to parse type tag with newlines: {s:?}"
             );
         }
@@ -276,7 +283,7 @@ mod tests {
             valid_nested = format!("vector<{valid_nested}>");
         }
         assert!(
-            parse_type_tag(&valid_nested).is_ok(),
+            valid_nested.parse::<TypeTag>().is_ok(),
             "Should parse type tag with exactly {MAX_TYPE_TAG_NESTING} levels of nesting"
         );
 
@@ -286,7 +293,7 @@ mod tests {
             invalid_nested = format!("vector<{invalid_nested}>");
         }
         assert!(
-            parse_type_tag(&invalid_nested).is_err(),
+            invalid_nested.parse::<TypeTag>().is_err(),
             "Should reject type tag with more than {MAX_TYPE_TAG_NESTING} levels of nesting"
         );
     }
@@ -303,14 +310,14 @@ mod tests {
             valid_struct = format!("0x{}::A::B<{valid_struct}>", i + 2);
         }
         assert!(
-            parse_struct_tag(&valid_struct).is_ok(),
+            valid_struct.parse::<StructTag>().is_ok(),
             "Should parse struct tag within nesting limit"
         );
 
         // Add one more level to exceed the limit
         let invalid_struct = format!("0xff::A::B<{valid_struct}>");
         assert!(
-            parse_struct_tag(&invalid_struct).is_err(),
+            invalid_struct.parse::<StructTag>().is_err(),
             "Should reject struct tag exceeding nesting limit"
         );
     }

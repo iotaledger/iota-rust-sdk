@@ -190,7 +190,10 @@ impl std::str::FromStr for TypeTag {
     type Err = TypeParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        crate::move_core::parse::parse_type_tag(s).map_err(|_| TypeParseError { source: s.into() })
+        use winnow::Parser;
+        crate::move_core::parse::parse_type_tag
+            .parse(s)
+            .map_err(|e| e.into_inner())
     }
 }
 

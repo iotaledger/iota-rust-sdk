@@ -42,6 +42,7 @@ hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
+annotate-snippets = "0.12.11"
 base64ct = { workspace = true, features = ["alloc"] }
 bnum.workspace = true
 bs58 = "0.5.1"
