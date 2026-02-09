@@ -1011,7 +1011,11 @@ mod serialization {
 
     // Custom serialization to be backwards compatible with the JSON RPC
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "ObjectReference")
+    )]
     struct TupleObjectReference(
         ObjectId,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))] Version,
