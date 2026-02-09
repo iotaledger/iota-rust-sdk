@@ -4299,6 +4299,8 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6734,6 +6736,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module(
@@ -8451,6 +8455,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_option(uniffi_out_err: UniffiR
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -15252,6 +15258,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module() != 762.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module() != 31781.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random() != 50490.toShort()) {
@@ -33175,6 +33184,16 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `payModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(
         _status)
 }
     )

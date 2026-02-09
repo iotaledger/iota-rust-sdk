@@ -66,6 +66,7 @@ export_identifier_consts!(
     OBJECT_BAG_MODULE,
     OPTION_MODULE,
     PACKAGE_MODULE,
+    PAY_MODULE,
     RANDOM_MODULE,
     STAKING_POOL_MODULE,
     STRING_MODULE,

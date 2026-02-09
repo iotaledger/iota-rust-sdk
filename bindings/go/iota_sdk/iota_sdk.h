@@ -3063,6 +3063,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(RustCallStatu
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_PAY_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_PAY_MODULE
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_RANDOM
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_RANDOM
 void* uniffi_iota_sdk_ffi_fn_constructor_identifier_random(RustCallStatus *out_status
@@ -18288,6 +18294,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_PACKAGE_MODULE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_PACKAGE_MODULE
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_PAY_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_PAY_MODULE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module(void
     
 );
 #endif

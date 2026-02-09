@@ -149,6 +149,7 @@ impl Identifier {
     pub const OBJECT_BAG_MODULE: Self = Self::from_static("object_bag");
     pub const OPTION_MODULE: Self = Self::from_static("option");
     pub const PACKAGE_MODULE: Self = Self::from_static("package");
+    pub const PAY_MODULE: Self = Self::from_static("pay");
     pub const RANDOM_MODULE: Self = Self::from_static("random");
     pub const STAKING_POOL_MODULE: Self = Self::from_static("staking_pool");
     pub const STRING_MODULE: Self = Self::from_static("string");
