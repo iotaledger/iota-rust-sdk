@@ -42,7 +42,6 @@ hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
-annotate-snippets = "0.12.11"
 base64ct = { workspace = true, features = ["alloc"] }
 bnum.workspace = true
 bs58 = "0.5.1"
@@ -77,14 +76,12 @@ proptest = { workspace = true, default-features = false, features = ["std"], opt
 test-strategy = { workspace = true, optional = true }
 
 [dev-dependencies]
-ahash = "0.8.12"
 bcs.workspace = true
 eyre.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste.workspace = true
 serde_json.workspace = true
-static_assertions = "1.1.0"
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test = "0.3"
