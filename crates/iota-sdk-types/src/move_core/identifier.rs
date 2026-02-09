@@ -36,7 +36,7 @@ impl Identifier {
     /// Creates a new `Identifier` from the given string slice, checking
     /// that it is a valid Move identifier and returning an error if not.
     pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
-        Ok(identifier.as_ref().parse()?)
+        identifier.as_ref().parse()
     }
 
     /// Creates a new `Identifier` from the given string slice without

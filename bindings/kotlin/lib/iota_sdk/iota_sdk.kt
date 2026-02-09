@@ -6602,7 +6602,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero(
 ): Short
@@ -8568,7 +8568,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(`hex`: R
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -14780,7 +14780,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526.toShort()) {
@@ -40954,10 +40954,10 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
-         fun `system`(): ObjectId {
+         fun `systemState`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(
         _status)
 }
     )

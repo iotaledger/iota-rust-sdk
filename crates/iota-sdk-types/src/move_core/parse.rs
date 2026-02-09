@@ -16,7 +16,7 @@ pub const MAX_IDENTIFIER_LENGTH: usize = 128;
 pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
 /// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
-pub(crate) fn parse_identifier<'s>(input: &mut &'s str) -> ModalResult<Identifier, TypeParseError> {
+pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier, TypeParseError> {
     alt((
         (one_of(|c: char| c.is_alpha()), valid_remainder(0)),
         ('_', valid_remainder(1)),

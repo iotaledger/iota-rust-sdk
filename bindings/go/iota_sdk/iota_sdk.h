@@ -4228,9 +4228,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(RustBu
 void* uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(RustBuffer hex, RustCallStatus *out_status
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_SYSTEM
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_SYSTEM
-void* uniffi_iota_sdk_ffi_fn_constructor_objectid_system(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_SYSTEM_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_OBJECTID_SYSTEM_STATE
+void* uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(RustCallStatus *out_status
     
 );
 #endif
@@ -17898,9 +17898,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_SYSTEM
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_SYSTEM
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_SYSTEM_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_OBJECTID_SYSTEM_STATE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state(void
     
 );
 #endif

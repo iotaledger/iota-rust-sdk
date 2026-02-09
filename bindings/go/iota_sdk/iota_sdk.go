@@ -11487,11 +11487,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state()
 	})
-	if checksum != 9600 {
+	if checksum != 17627 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_system: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -27507,9 +27507,9 @@ func ObjectIdFromShortHex(hex string) (*ObjectId, error) {
 		}
 }
 
-func ObjectIdSystem() *ObjectId {
+func ObjectIdSystemState() *ObjectId {
 	return FfiConverterObjectIdINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(_uniffiStatus)
 	}))
 }
 

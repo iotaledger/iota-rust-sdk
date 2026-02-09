@@ -2933,7 +2933,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -7505,10 +7505,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_zero.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -17550,9 +17550,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero.restype = ctypes.c_uint16
@@ -47407,9 +47407,9 @@ class ObjectId():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def system(cls, ):
+    def system_state(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state,)
         return cls._make_instance_(pointer)
 
     @classmethod
