@@ -19,19 +19,11 @@ use crate::Version;
 /// object-ref = object-id u64 digest
 /// ```
 #[derive(Clone, Copy, Debug, Ord, PartialOrd, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectReference {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -1017,6 +1009,93 @@ mod serialization {
         }
     }
 
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+    )]
+    struct StructObjectReference {
+        object_id: ObjectId,
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        version: Version,
+        digest: Digest,
+    }
+
+    #[derive(serde::Deserialize)]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    struct TupleObjectReference(
+        ObjectId,
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))] Version,
+        Digest,
+    );
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "ObjectReference")]
+    #[serde(untagged)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "ObjectReference")
+    )]
+    enum ObjectReferenceHelper {
+        Struct(StructObjectReference),
+        Tuple(TupleObjectReference),
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for ObjectReference {
+        fn schema_name() -> String {
+            ObjectReferenceHelper::schema_name()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ObjectReferenceHelper::json_schema(generator)
+        }
+    }
+
+    impl Serialize for ObjectReference {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let readable = StructObjectReference {
+                object_id: self.object_id,
+                version: self.version,
+                digest: self.digest,
+            };
+            readable.serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for ObjectReference {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let (object_id, version, digest) = match ObjectReferenceHelper::deserialize(
+                deserializer,
+            )? {
+                ObjectReferenceHelper::Struct(StructObjectReference {
+                    object_id,
+                    version,
+                    digest,
+                }) => (object_id, version, digest),
+                ObjectReferenceHelper::Tuple(TupleObjectReference(
+                    object_id,
+                    version,
+                    digest,
+                )) => (object_id, version, digest),
+            };
+            Ok(ObjectReference {
+                object_id,
+                version,
+                digest,
+            })
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         #[cfg(target_arch = "wasm32")]
@@ -1058,6 +1137,38 @@ mod serialization {
                 })
                 .unwrap()
             );
+        }
+
+        #[test]
+        fn object_reference_tuple_format() {
+            let json = r#"["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]"#;
+            let obj_ref: ObjectReference = serde_json::from_str(json).unwrap();
+            assert_eq!(obj_ref.object_id, ObjectId::ZERO);
+            assert_eq!(obj_ref.version, Version::from_u64(0));
+            assert_eq!(obj_ref.digest, Digest::ZERO);
+
+            // Roundtrip
+            let serialized = serde_json::to_string(&obj_ref).unwrap();
+            let roundtrip: ObjectReference = serde_json::from_str(&serialized).unwrap();
+            assert_eq!(obj_ref, roundtrip);
+        }
+
+        #[test]
+        fn object_reference_in_map() {
+            use std::collections::BTreeMap;
+
+            let json = r#"{"4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi":[["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]],"8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR":[["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]]}"#;
+
+            let from_json: BTreeMap<String, Vec<ObjectReference>> =
+                serde_json::from_str(json).unwrap();
+
+            assert_eq!(from_json.len(), 2);
+            for refs in from_json.values() {
+                assert_eq!(refs.len(), 1);
+                assert_eq!(refs[0].object_id, ObjectId::ZERO);
+                assert_eq!(refs[0].version, Version::from_u64(0));
+                assert_eq!(refs[0].digest, Digest::ZERO);
+            }
         }
 
         #[test]
