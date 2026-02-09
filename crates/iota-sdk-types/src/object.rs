@@ -1009,21 +1009,7 @@ mod serialization {
         }
     }
 
-    #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(
-        feature = "schemars",
-        derive(schemars::JsonSchema),
-        schemars(rename_all = "camelCase")
-    )]
-    #[serde(rename_all = "camelCase")]
-    struct StructObjectReference {
-        object_id: ObjectId,
-        #[serde(with = "crate::_serde::ReadableDisplay")]
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        version: Version,
-        digest: Digest,
-    }
-
+    // Custom serialization to be backwards compatible with the JSON RPC
     #[derive(serde::Serialize, serde::Deserialize)]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct TupleObjectReference(
@@ -1032,29 +1018,16 @@ mod serialization {
         Digest,
     );
 
-    #[derive(serde::Deserialize)]
-    #[serde(rename = "ObjectReference")]
-    #[serde(untagged)]
-    #[cfg_attr(
-        feature = "schemars",
-        derive(schemars::JsonSchema),
-        schemars(rename = "ObjectReference")
-    )]
-    enum ObjectReferenceHelper {
-        Struct(StructObjectReference),
-        Tuple(TupleObjectReference),
-    }
-
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for ObjectReference {
         fn schema_name() -> String {
-            ObjectReferenceHelper::schema_name()
+            TupleObjectReference::schema_name()
         }
 
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            ObjectReferenceHelper::json_schema(generator)
+            TupleObjectReference::json_schema(generator)
         }
     }
 
@@ -1063,17 +1036,7 @@ mod serialization {
         where
             S: Serializer,
         {
-            if serializer.is_human_readable() {
-                let readable = StructObjectReference {
-                    object_id: self.object_id,
-                    version: self.version,
-                    digest: self.digest,
-                };
-                readable.serialize(serializer)
-            } else {
-                TupleObjectReference(self.object_id, self.version, self.digest)
-                    .serialize(serializer)
-            }
+            TupleObjectReference(self.object_id, self.version, self.digest).serialize(serializer)
         }
     }
 
@@ -1082,34 +1045,14 @@ mod serialization {
         where
             D: Deserializer<'de>,
         {
-            if deserializer.is_human_readable() {
-                let (object_id, version, digest) =
-                    match ObjectReferenceHelper::deserialize(deserializer)? {
-                        ObjectReferenceHelper::Struct(StructObjectReference {
-                            object_id,
-                            version,
-                            digest,
-                        }) => (object_id, version, digest),
-                        ObjectReferenceHelper::Tuple(TupleObjectReference(
-                            object_id,
-                            version,
-                            digest,
-                        )) => (object_id, version, digest),
-                    };
-                Ok(ObjectReference {
-                    object_id,
-                    version,
-                    digest,
-                })
-            } else {
-                let TupleObjectReference(object_id, version, digest) =
-                    TupleObjectReference::deserialize(deserializer)?;
-                Ok(ObjectReference {
-                    object_id,
-                    version,
-                    digest,
-                })
-            }
+            let TupleObjectReference(object_id, version, digest) =
+                TupleObjectReference::deserialize(deserializer)?;
+
+            Ok(ObjectReference {
+                object_id,
+                version,
+                digest,
+            })
         }
     }
 

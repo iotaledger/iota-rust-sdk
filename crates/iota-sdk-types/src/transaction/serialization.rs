@@ -402,7 +402,7 @@ mod input_argument {
     use crate::{Version, transaction::Input};
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
+    #[serde(tag = "type", content = "value", rename_all = "snake_case")]
     enum ReadableInput {
         Pure {
             #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
