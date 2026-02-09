@@ -17,19 +17,20 @@ pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
 /// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
 pub(crate) fn parse_identifier<'s>(input: &mut &'s str) -> ModalResult<Identifier, TypeParseError> {
-    if input.len() > MAX_IDENTIFIER_LENGTH {
-        return Err(winnow::error::ErrMode::Cut(
-            TypeParseError::IdentifierMaxLengthExceeded {
-                actual: input.len(),
-            },
-        ));
-    }
     alt((
         (one_of(|c: char| c.is_alpha()), valid_remainder(0)),
         ('_', valid_remainder(1)),
     ))
     .take()
     .parse_next(input)
+    .and_then(|s| {
+        if s.len() > MAX_IDENTIFIER_LENGTH {
+            return Err(winnow::error::ErrMode::Cut(
+                TypeParseError::IdentifierMaxLengthExceeded { actual: s.len() },
+            ));
+        }
+        Ok(s)
+    })
     .map(Identifier::new_unchecked)
 }
 
@@ -47,7 +48,10 @@ fn valid_remainder<'a>(
 }
 
 pub(crate) fn parse_address(input: &mut &str) -> ModalResult<Address, TypeParseError> {
-    Address::from_prefixed_hex(input).map_err(|e| winnow::error::ErrMode::Cut(e.into()))
+    ("0x", take_while(1..=64, AsChar::is_hex_digit))
+        .take()
+        .try_map(Address::from_prefixed_short_hex)
+        .parse_next(input)
 }
 
 pub(crate) fn parse_type_tag(input: &mut &str) -> ModalResult<TypeTag, TypeParseError> {
@@ -131,8 +135,6 @@ fn parse_generics(
 // TODO add proptests
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
-
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -179,7 +181,12 @@ mod tests {
             "0x1::__::__<0x2::_____::______fooo______, 0xff::Bar____::_______foo>",
             "0x5d32d749705c5f07c741f1818df3db466128bf01677611a959b03040ac5dc774::slippage::HopSwapEvent<0x2::iota::IOTA, 0x3c86bba6a3d3ce958615ae51cc5604f58956b1583323f664cf5f048da0fcbb19::_spd::_SPD>",
         ] {
-            assert!(s.parse::<TypeTag>().is_ok(), "Failed to parse tag {s}");
+            let parsed = s.parse::<TypeTag>();
+            assert!(
+                parsed.is_ok(),
+                "Failed to parse tag {s}: {}",
+                parsed.unwrap_err()
+            );
         }
     }
 
@@ -216,9 +223,11 @@ mod tests {
             "0x5d32d749705c5f07c741f1818df3db466128bf01677611a959b03040ac5dc774::slippage::HopSwapEvent<0x2::iota::IOTA, 0x3c86bba6a3d3ce958615ae51cc5604f58956b1583323f664cf5f048da0fcbb19::_spd::_SPD>",
         ];
         for s in valid {
+            let parsed = s.parse::<StructTag>();
             assert!(
-                dbg!(s.parse::<TypeTag>()).is_ok(),
-                "Failed to parse struct {s}",
+                parsed.is_ok(),
+                "Failed to parse struct {s}: {}",
+                parsed.unwrap_err()
             );
         }
     }
@@ -247,8 +256,7 @@ mod tests {
             let st = text.parse::<StructTag>().expect("valid StructTag");
             assert_eq!(
                 st.to_string().replace(' ', ""),
-                text.replace(' ', "")
-                    .replace("0x1", &Address::from_str("0x1").unwrap().to_short_hex()),
+                text.replace(' ', ""),
                 "text: {text:?}, StructTag: {st:?}"
             );
         }
@@ -268,9 +276,11 @@ mod tests {
             "vector\n<\nu8\n>",
         ];
         for s in valid {
+            let parsed = s.parse::<TypeTag>();
             assert!(
-                s.parse::<TypeTag>().is_ok(),
-                "Failed to parse type tag with newlines: {s:?}"
+                parsed.is_ok(),
+                "Failed to parse type tag ({s}) with newlines: {}",
+                parsed.unwrap_err()
             );
         }
     }
@@ -309,16 +319,18 @@ mod tests {
         for i in 0..MAX_TYPE_TAG_NESTING {
             valid_struct = format!("0x{}::A::B<{valid_struct}>", i + 2);
         }
+        let parsed = valid_struct.parse::<StructTag>();
         assert!(
-            valid_struct.parse::<StructTag>().is_ok(),
-            "Should parse struct tag within nesting limit"
+            parsed.is_ok(),
+            "Should parse struct tag ({valid_struct}) within nesting limit: {}",
+            parsed.unwrap_err()
         );
 
         // Add one more level to exceed the limit
         let invalid_struct = format!("0xff::A::B<{valid_struct}>");
         assert!(
             invalid_struct.parse::<StructTag>().is_err(),
-            "Should reject struct tag exceeding nesting limit"
+            "Should reject struct tag ({invalid_struct}) exceeding nesting limit"
         );
     }
 }
