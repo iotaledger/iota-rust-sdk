@@ -31,3 +31,81 @@ impl Identifier {
         self.0.as_str().to_owned()
     }
 }
+
+macro_rules! export_identifier_consts {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl Identifier {$(
+            #[uniffi::constructor]
+            pub fn [< $name:lower >]() -> Self {
+                Self(iota_sdk::types::Identifier::$name)
+            }
+        )+}
+    } }
+}
+
+export_identifier_consts!(
+    // Module name constants
+    ASCII_MODULE,
+    BAG_MODULE,
+    BALANCE_MODULE,
+    CLOCK_MODULE,
+    COIN_MODULE,
+    COIN_MANAGER_MODULE,
+    CONFIG_MODULE,
+    DENY_LIST_MODULE,
+    DISPLAY_MODULE,
+    DYNAMIC_FIELD_MODULE,
+    DYNAMIC_OBJECT_FIELD_MODULE,
+    IOTA_MODULE,
+    IOTA_SYSTEM_MODULE,
+    IOTA_SYSTEM_STATE_INNER_MODULE,
+    NAME_MODULE,
+    OBJECT_MODULE,
+    OBJECT_BAG_MODULE,
+    OPTION_MODULE,
+    PACKAGE_MODULE,
+    STAKING_POOL_MODULE,
+    STRING_MODULE,
+    SYSTEM_ADMIN_CAP_MODULE,
+    TIMELOCK_MODULE,
+    TIMELOCKED_STAKING_MODULE,
+    TRANSFER_MODULE,
+    URL_MODULE,
+    // Struct/type name constants
+    ADDRESS_KEY,
+    BAG,
+    BALANCE,
+    CLOCK,
+    COIN,
+    COIN_MANAGER,
+    COIN_METADATA,
+    CONFIG,
+    CONFIG_KEY,
+    DISPLAY_CREATED,
+    FIELD,
+    GLOBAL_PAUSE_KEY,
+    ID,
+    IOTA_COIN,
+    IOTA_SYSTEM_ADMIN_CAP,
+    IOTA_SYSTEM_STATE,
+    IOTA_TREASURY_CAP,
+    NAME,
+    OBJECT_BAG,
+    OPTION,
+    RECEIVING,
+    SETTING,
+    STAKED_IOTA,
+    STRING,
+    SYSTEM_EPOCH_INFO_EVENT,
+    TIME_LOCK,
+    TIMELOCKED_STAKED_IOTA,
+    TREASURY_CAP,
+    UID,
+    UPGRADE_CAP,
+    UPGRADE_RECEIPT,
+    UPGRADE_TICKET,
+    URL_TYPE,
+    VERSION_UPDATED,
+    WRAPPER,
+);
