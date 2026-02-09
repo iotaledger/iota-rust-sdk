@@ -1010,16 +1010,21 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename_all = "camelCase")
+    )]
     #[serde(rename_all = "camelCase")]
     struct StructObjectReference {
         object_id: ObjectId,
+        #[serde(with = "crate::_serde::ReadableDisplay")]
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         version: Version,
         digest: Digest,
     }
 
-    #[derive(serde::Deserialize)]
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     struct TupleObjectReference(
         ObjectId,
@@ -1058,12 +1063,17 @@ mod serialization {
         where
             S: Serializer,
         {
-            let readable = StructObjectReference {
-                object_id: self.object_id,
-                version: self.version,
-                digest: self.digest,
-            };
-            readable.serialize(serializer)
+            if serializer.is_human_readable() {
+                let readable = StructObjectReference {
+                    object_id: self.object_id,
+                    version: self.version,
+                    digest: self.digest,
+                };
+                readable.serialize(serializer)
+            } else {
+                TupleObjectReference(self.object_id, self.version, self.digest)
+                    .serialize(serializer)
+            }
         }
     }
 
@@ -1072,24 +1082,34 @@ mod serialization {
         where
             D: Deserializer<'de>,
         {
-            let (object_id, version, digest) =
-                match ObjectReferenceHelper::deserialize(deserializer)? {
-                    ObjectReferenceHelper::Struct(StructObjectReference {
-                        object_id,
-                        version,
-                        digest,
-                    }) => (object_id, version, digest),
-                    ObjectReferenceHelper::Tuple(TupleObjectReference(
-                        object_id,
-                        version,
-                        digest,
-                    )) => (object_id, version, digest),
-                };
-            Ok(ObjectReference {
-                object_id,
-                version,
-                digest,
-            })
+            if deserializer.is_human_readable() {
+                let (object_id, version, digest) =
+                    match ObjectReferenceHelper::deserialize(deserializer)? {
+                        ObjectReferenceHelper::Struct(StructObjectReference {
+                            object_id,
+                            version,
+                            digest,
+                        }) => (object_id, version, digest),
+                        ObjectReferenceHelper::Tuple(TupleObjectReference(
+                            object_id,
+                            version,
+                            digest,
+                        )) => (object_id, version, digest),
+                    };
+                Ok(ObjectReference {
+                    object_id,
+                    version,
+                    digest,
+                })
+            } else {
+                let TupleObjectReference(object_id, version, digest) =
+                    TupleObjectReference::deserialize(deserializer)?;
+                Ok(ObjectReference {
+                    object_id,
+                    version,
+                    digest,
+                })
+            }
         }
     }
 
