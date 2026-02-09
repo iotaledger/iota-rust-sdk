@@ -186,6 +186,7 @@ export_struct_tag_ctors!(
     Url,
     Bag,
     ObjectBag,
+    TxContext
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,

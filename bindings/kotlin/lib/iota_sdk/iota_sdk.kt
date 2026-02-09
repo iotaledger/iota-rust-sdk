@@ -4275,6 +4275,14 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6126,6 +6134,8 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap(
@@ -6728,6 +6738,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap(
@@ -7181,6 +7195,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_timelocked_staked_iot
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid(
 ): Short
@@ -8428,6 +8444,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module(uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
@@ -9526,6 +9546,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(`ptr`: Pointer,uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1signature(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -9539,10 +9563,6 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
-fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(`s`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9805,6 +9825,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(uniffi_o
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
@@ -9882,6 +9904,8 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(`ptr`: Poi
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
@@ -14306,6 +14330,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap() != 65088.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context() != 18584.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid() != 1904.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -15209,6 +15236,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap() != 21659.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context() != 53898.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module() != 6086.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid() != 39877.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -15888,6 +15921,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() != 2523.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context() != 39269.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() != 54533.toShort()) {
@@ -33193,6 +33229,26 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
     }
     
 
+         fun `txContext`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(
+        _status)
+}
+    )
+    }
+    
+
+         fun `txContextModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(
+        _status)
+}
+    )
+    }
+    
+
          fun `uid`(): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
@@ -48904,7 +48960,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -48915,7 +48971,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -51761,6 +51817,8 @@ public interface StructTagInterface {
     
     fun `isTreasuryCap`(): kotlin.Boolean
     
+    fun `isTxContext`(): kotlin.Boolean
+    
     fun `isUid`(): kotlin.Boolean
     
     fun `isUpgradeCap`(): kotlin.Boolean
@@ -52320,6 +52378,18 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+    override fun `isTxContext`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
     override fun `isUid`(): kotlin.Boolean {
             return FfiConverterBoolean.lift(
     callWithPointer {
@@ -52799,6 +52869,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(
         FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newTxContext`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(
+        _status)
 }
     )
     }

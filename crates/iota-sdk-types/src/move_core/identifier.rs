@@ -154,6 +154,7 @@ impl Identifier {
     pub const TIMELOCK_MODULE: Self = Self::from_static("timelock");
     pub const TIMELOCKED_STAKING_MODULE: Self = Self::from_static("timelocked_staking");
     pub const TRANSFER_MODULE: Self = Self::from_static("transfer");
+    pub const TX_CONTEXT_MODULE: Self = Self::from_static("tx_context");
     pub const URL_MODULE: Self = Self::from_static("url");
 
     // ========================================================================
@@ -188,6 +189,7 @@ impl Identifier {
     pub const TIME_LOCK: Self = Self::from_static("TimeLock");
     pub const TIMELOCKED_STAKED_IOTA: Self = Self::from_static("TimelockedStakedIota");
     pub const TREASURY_CAP: Self = Self::from_static("TreasuryCap");
+    pub const TX_CONTEXT: Self = Self::from_static("TxContext");
     pub const UID: Self = Self::from_static("UID");
     pub const UPGRADE_CAP: Self = Self::from_static("UpgradeCap");
     pub const UPGRADE_RECEIPT: Self = Self::from_static("UpgradeReceipt");

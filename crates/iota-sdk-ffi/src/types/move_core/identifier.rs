@@ -71,6 +71,7 @@ export_identifier_consts!(
     TIMELOCK_MODULE,
     TIMELOCKED_STAKING_MODULE,
     TRANSFER_MODULE,
+    TX_CONTEXT_MODULE,
     URL_MODULE,
     // Struct/type name constants
     ADDRESS_KEY,
@@ -101,6 +102,7 @@ export_identifier_consts!(
     TIME_LOCK,
     TIMELOCKED_STAKED_IOTA,
     TREASURY_CAP,
+    TX_CONTEXT,
     UID,
     UPGRADE_CAP,
     UPGRADE_RECEIPT,

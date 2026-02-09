@@ -8625,6 +8625,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context()
+	})
+	if checksum != 18584 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid()
 	})
 	if checksum != 1904 {
@@ -11334,6 +11343,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context()
+	})
+	if checksum != 53898 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module()
+	})
+	if checksum != 6086 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid()
 	})
 	if checksum != 39877 {
@@ -13373,6 +13400,15 @@ func uniffiCheckChecksums() {
 	if checksum != 2523 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context()
+	})
+	if checksum != 39269 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -24001,6 +24037,18 @@ func IdentifierTreasuryCap() *Identifier {
 	}))
 }
 
+func IdentifierTxContext() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(_uniffiStatus)
+	}))
+}
+
+func IdentifierTxContextModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(_uniffiStatus)
+	}))
+}
+
 func IdentifierUid() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(_uniffiStatus)
@@ -33883,6 +33931,7 @@ type StructTagInterface interface {
 	IsTimelockedStakedIota() bool
 	IsTransferReceiving() bool
 	IsTreasuryCap() bool
+	IsTxContext() bool
 	IsUid() bool
 	IsUpgradeCap() bool
 	IsUpgradeReceipt() bool
@@ -34111,6 +34160,12 @@ func StructTagNewTransferReceiving() *StructTag {
 func StructTagNewTreasuryCap(structTag *StructTag) *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(FfiConverterStructTagINSTANCE.Lower(structTag),_uniffiStatus)
+	}))
+}
+
+func StructTagNewTxContext() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(_uniffiStatus)
 	}))
 }
 
@@ -34456,6 +34511,15 @@ func (_self *StructTag) IsTreasuryCap() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsTxContext() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(
 		_pointer,_uniffiStatus)
 	}))
 }

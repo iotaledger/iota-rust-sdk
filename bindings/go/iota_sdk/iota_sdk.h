@@ -3135,6 +3135,18 @@ void* uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(RustCallStatus 
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT_MODULE
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_UID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_UID
 void* uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(RustCallStatus *out_status
@@ -6602,6 +6614,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(RustCa
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(void* struct_tag, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_TX_CONTEXT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_TX_CONTEXT
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_UID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_UID
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(RustCallStatus *out_status
@@ -6800,6 +6818,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(void* ptr, 
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_TREASURY_CAP
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_TX_CONTEXT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_TX_CONTEXT
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_UID
@@ -16470,6 +16493,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_TX_CONTEXT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_TX_CONTEXT
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_UID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_UID
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid(void
@@ -18276,6 +18305,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_TX_CONTEXT_MODULE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_UID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_UID
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid(void
@@ -19635,6 +19676,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receivi
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_TREASURY_CAP
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_TX_CONTEXT
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_TX_CONTEXT
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context(void
     
 );
 #endif
