@@ -4115,6 +4115,44 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -6258,6 +6296,12 @@ fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_framework(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
@@ -6270,11 +6314,23 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_max(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_stardust(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_std(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_zero(
 ): Short
@@ -6588,9 +6644,15 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
@@ -6601,6 +6663,20 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex(
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_max(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_std(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state(
 ): Short
@@ -7054,6 +7130,12 @@ internal interface UniffiLib : Library {
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_framework(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -7066,11 +7148,23 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(`hex`: Ru
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_max(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_random(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_stardust(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_std(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_system(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_system_state(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8554,9 +8648,15 @@ fun uniffi_iota_sdk_ffi_fn_clone_objectid(`ptr`: Pointer,uniffi_out_err: UniffiR
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(`digest`: Pointer,`count`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8567,6 +8667,20 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(`hex`: RustBuf
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_max(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_std(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -14264,6 +14378,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state() != 23906.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_clock() != 41996.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list() != 26355.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14282,13 +14405,31 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge() != 48414.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge() != 43861.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_max() != 5717.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state() != 62353.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_stardust() != 7116.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system_state() != 26799.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553.toShort()) {
@@ -14759,10 +14900,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state() != 13697.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list() != 39911.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework() != 24526.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789.toShort()) {
@@ -14778,6 +14928,27 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge() != 44008.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge() != 39804.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_max() != 27865.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state() != 39736.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust() != 21114.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_std() != 6468.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627.toShort()) {
@@ -16477,6 +16648,36 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     companion object {
+         fun `authenticatorState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clock`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyList`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(
+        _status)
+}
+    )
+    }
+    
+
          fun `framework`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
@@ -16562,10 +16763,60 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
+         fun `genesisBridge`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `genesisIotaBridge`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `max`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_max(
+        _status)
+}
+    )
+    }
+    
+
          fun `random`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_random(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomnessState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stardust`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_stardust(
         _status)
 }
     )
@@ -16586,6 +16837,16 @@ open class Address: Disposable, AutoCloseable, AddressInterface
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system_state(
         _status)
 }
     )
@@ -40855,10 +41116,30 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     companion object {
+         fun `authenticatorState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
          fun `clock`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyList`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(
         _status)
 }
     )
@@ -40874,6 +41155,16 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(
         FfiConverterTypeDigest.lower(`digest`),FfiConverterULong.lower(`count`),_status)
+}
+    )
+    }
+    
+
+         fun `framework`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(
+        _status)
 }
     )
     }
@@ -40949,6 +41240,76 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     uniffiRustCallWithError(SdkFfiException) { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(
         FfiConverterString.lower(`hex`),_status)
+}
+    )
+    }
+    
+
+         fun `genesisBridge`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `genesisIotaBridge`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `max`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_max(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomnessState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stardust`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(
+        _status)
+}
+    )
+    }
+    
+
+         fun `std`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_std(
+        _status)
+}
+    )
+    }
+    
+
+         fun `system`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(
+        _status)
 }
     )
     }

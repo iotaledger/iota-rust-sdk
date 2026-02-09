@@ -167,7 +167,21 @@ macro_rules! named_object_id {
     }
 }
 
-named_object_id!(ZERO, SYSTEM_STATE, CLOCK);
+named_object_id!(
+    ZERO,
+    MAX,
+    STD,
+    FRAMEWORK,
+    SYSTEM,
+    GENESIS_BRIDGE,
+    STARDUST,
+    SYSTEM_STATE,
+    CLOCK,
+    AUTHENTICATOR_STATE,
+    RANDOMNESS_STATE,
+    GENESIS_IOTA_BRIDGE,
+    DENY_LIST
+);
 
 /// Reference to an object
 ///
