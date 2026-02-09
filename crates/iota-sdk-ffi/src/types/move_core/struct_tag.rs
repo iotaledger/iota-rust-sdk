@@ -163,6 +163,7 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
 
 export_struct_tag_ctors!(
     AsciiString,
+    AuthenticatorState,
     Clock,
     Config,
     DenyListAddressKey,
@@ -174,6 +175,7 @@ export_struct_tag_ctors!(
     IotaSystemAdminCap,
     IotaSystemState,
     IotaTreasuryCap,
+    Random,
     UpgradeCap,
     UpgradeTicket,
     UpgradeReceipt,

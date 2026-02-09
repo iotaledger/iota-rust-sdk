@@ -2237,6 +2237,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state() != 10185:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag() != 46309:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723:
@@ -2282,6 +2284,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random() != 4566:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota() != 19914:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2797,6 +2801,10 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module() != 21861:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state() != 16216:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module() != 64126:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag() != 48457:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module() != 54361:
@@ -2872,6 +2880,10 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module() != 36087:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module() != 762:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random() != 50490:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module() != 5588:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving() != 44248:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3297,6 +3309,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state() != 59432:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag() != 17783:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874:
@@ -3344,6 +3358,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random() != 25141:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6183,6 +6199,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module.argtypes =
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -6336,6 +6360,14 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_random.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_random.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -9788,6 +9820,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string.argtype
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -9896,6 +9932,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -9970,6 +10010,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_bag.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10085,6 +10130,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_option.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_option.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_random.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_random.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -17011,6 +17061,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag.restype = ctypes.c_uint16
@@ -17080,6 +17133,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag.restype =
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota.restype = ctypes.c_uint16
@@ -17851,6 +17907,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key.resty
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag.restype = ctypes.c_uint16
@@ -17965,6 +18027,12 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving.restype = ctypes.c_uint16
@@ -18601,6 +18669,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new.restype = ctyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag.restype = ctypes.c_uint16
@@ -18673,6 +18744,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag.res
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota.restype = ctypes.c_uint16
@@ -43317,6 +43391,18 @@ class Identifier():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def authenticator_state(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def authenticator_state_module(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def bag(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag,)
@@ -43536,6 +43622,18 @@ class Identifier():
     def package_module(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def random(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_random,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def random_module(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module,)
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -53769,6 +53867,8 @@ class StructTagProtocol(typing.Protocol):
         raise NotImplementedError
     def is_ascii_string(self, ):
         raise NotImplementedError
+    def is_authenticator_state(self, ):
+        raise NotImplementedError
     def is_bag(self, ):
         raise NotImplementedError
     def is_balance(self, ):
@@ -53819,6 +53919,8 @@ class StructTagProtocol(typing.Protocol):
     def is_object_bag(self, ):
         raise NotImplementedError
     def is_option(self, ):
+        raise NotImplementedError
+    def is_random(self, ):
         raise NotImplementedError
     def is_staked_iota(self, ):
         raise NotImplementedError
@@ -53927,6 +54029,12 @@ class StructTag():
     def new_ascii_string(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_authenticator_state(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state,)
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -54115,6 +54223,12 @@ class StructTag():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def new_random(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def new_staked_iota(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota,)
@@ -54243,6 +54357,15 @@ class StructTag():
     def is_ascii_string(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_authenticator_state(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state,self._uniffi_clone_pointer(),)
         )
 
 
@@ -54455,6 +54578,15 @@ class StructTag():
     def is_option(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_option,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_random(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_random,self._uniffi_clone_pointer(),)
         )
 
 

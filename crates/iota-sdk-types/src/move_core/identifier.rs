@@ -130,6 +130,7 @@ impl Identifier {
     // ========================================================================
 
     pub const ASCII_MODULE: Self = Self::from_static("ascii");
+    pub const AUTHENTICATOR_STATE_MODULE: Self = Self::from_static("authenticator_state");
     pub const BAG_MODULE: Self = Self::from_static("bag");
     pub const BALANCE_MODULE: Self = Self::from_static("balance");
     pub const CLOCK_MODULE: Self = Self::from_static("clock");
@@ -148,6 +149,7 @@ impl Identifier {
     pub const OBJECT_BAG_MODULE: Self = Self::from_static("object_bag");
     pub const OPTION_MODULE: Self = Self::from_static("option");
     pub const PACKAGE_MODULE: Self = Self::from_static("package");
+    pub const RANDOM_MODULE: Self = Self::from_static("random");
     pub const STAKING_POOL_MODULE: Self = Self::from_static("staking_pool");
     pub const STRING_MODULE: Self = Self::from_static("string");
     pub const SYSTEM_ADMIN_CAP_MODULE: Self = Self::from_static("system_admin_cap");
@@ -162,6 +164,7 @@ impl Identifier {
     // ========================================================================
 
     pub const ADDRESS_KEY: Self = Self::from_static("AddressKey");
+    pub const AUTHENTICATOR_STATE: Self = Self::from_static("AuthenticatorState");
     pub const BAG: Self = Self::from_static("Bag");
     pub const BALANCE: Self = Self::from_static("Balance");
     pub const CLOCK: Self = Self::from_static("Clock");
@@ -181,6 +184,7 @@ impl Identifier {
     pub const NAME: Self = Self::from_static("Name");
     pub const OBJECT_BAG: Self = Self::from_static("ObjectBag");
     pub const OPTION: Self = Self::from_static("Option");
+    pub const RANDOM: Self = Self::from_static("Random");
     pub const RECEIVING: Self = Self::from_static("Receiving");
     pub const SETTING: Self = Self::from_static("Setting");
     pub const STAKED_IOTA: Self = Self::from_static("StakedIota");

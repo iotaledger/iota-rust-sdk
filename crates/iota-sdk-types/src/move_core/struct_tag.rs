@@ -357,12 +357,14 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 impl StructTag {
     add_struct_tag_ctor!(
         FRAMEWORK,
+        authenticator_state::AuthenticatorState,
         clock::Clock,
         config::Config,
         iota::IotaTreasuryCap,
         package::UpgradeCap,
         package::UpgradeTicket,
         package::UpgradeReceipt,
+        random::Random,
         system_admin_cap::IotaSystemAdminCap,
         url::Url,
         bag::Bag,

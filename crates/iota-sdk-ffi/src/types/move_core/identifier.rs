@@ -47,6 +47,7 @@ macro_rules! export_identifier_consts {
 export_identifier_consts!(
     // Module name constants
     ASCII_MODULE,
+    AUTHENTICATOR_STATE_MODULE,
     BAG_MODULE,
     BALANCE_MODULE,
     CLOCK_MODULE,
@@ -65,6 +66,7 @@ export_identifier_consts!(
     OBJECT_BAG_MODULE,
     OPTION_MODULE,
     PACKAGE_MODULE,
+    RANDOM_MODULE,
     STAKING_POOL_MODULE,
     STRING_MODULE,
     SYSTEM_ADMIN_CAP_MODULE,
@@ -75,6 +77,7 @@ export_identifier_consts!(
     URL_MODULE,
     // Struct/type name constants
     ADDRESS_KEY,
+    AUTHENTICATOR_STATE,
     BAG,
     BALANCE,
     CLOCK,
@@ -94,6 +97,7 @@ export_identifier_consts!(
     NAME,
     OBJECT_BAG,
     OPTION,
+    RANDOM,
     RECEIVING,
     SETTING,
     STAKED_IOTA,

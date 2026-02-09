@@ -8355,6 +8355,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state()
+	})
+	if checksum != 10185 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag()
 	})
 	if checksum != 46309 {
@@ -8558,6 +8567,15 @@ func uniffiCheckChecksums() {
 	if checksum != 10696 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_option: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random()
+	})
+	if checksum != 4566 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_random: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10875,6 +10893,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state()
+	})
+	if checksum != 16216 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module()
+	})
+	if checksum != 64126 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag()
 	})
 	if checksum != 48457 {
@@ -11213,6 +11249,24 @@ func uniffiCheckChecksums() {
 	if checksum != 762 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random()
+	})
+	if checksum != 50490 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_random: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module()
+	})
+	if checksum != 5588 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13125,6 +13179,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state()
+	})
+	if checksum != 59432 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag()
 	})
 	if checksum != 17783 {
@@ -13337,6 +13400,15 @@ func uniffiCheckChecksums() {
 	if checksum != 36037 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random()
+	})
+	if checksum != 25141 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -23731,6 +23803,18 @@ func IdentifierAsciiModule() *Identifier {
 	}))
 }
 
+func IdentifierAuthenticatorState() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(_uniffiStatus)
+	}))
+}
+
+func IdentifierAuthenticatorStateModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(_uniffiStatus)
+	}))
+}
+
 func IdentifierBag() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(_uniffiStatus)
@@ -23950,6 +24034,18 @@ func IdentifierOptionModule() *Identifier {
 func IdentifierPackageModule() *Identifier {
 	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(_uniffiStatus)
+	}))
+}
+
+func IdentifierRandom() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_random(_uniffiStatus)
+	}))
+}
+
+func IdentifierRandomModule() *Identifier {
+	return FfiConverterIdentifierINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(_uniffiStatus)
 	}))
 }
 
@@ -33899,6 +33995,7 @@ type StructTagInterface interface {
 	// Returns the coin type part of a `StructTag`, if this is a Coin type
 	CoinTypeOpt() **TypeTag
 	IsAsciiString() bool
+	IsAuthenticatorState() bool
 	IsBag() bool
 	IsBalance() bool
 	IsClock() bool
@@ -33924,6 +34021,7 @@ type StructTagInterface interface {
 	IsIotaTreasuryCap() bool
 	IsObjectBag() bool
 	IsOption() bool
+	IsRandom() bool
 	IsStakedIota() bool
 	IsString() bool
 	IsSystemEpochInfoEvent() bool
@@ -33972,6 +34070,12 @@ func NewStructTag(address *Address, module *Identifier, name *Identifier, typePa
 func StructTagNewAsciiString() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(_uniffiStatus)
+	}))
+}
+
+func StructTagNewAuthenticatorState() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(_uniffiStatus)
 	}))
 }
 
@@ -34121,6 +34225,12 @@ func StructTagNewOption(typeTag *TypeTag) *StructTag {
 	}))
 }
 
+func StructTagNewRandom() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(_uniffiStatus)
+	}))
+}
+
 func StructTagNewStakedIota() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(_uniffiStatus)
@@ -34239,6 +34349,15 @@ func (_self *StructTag) IsAsciiString() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsAuthenticatorState() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -34448,6 +34567,15 @@ func (_self *StructTag) IsOption() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_option(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsRandom() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_random(
 		_pointer,_uniffiStatus)
 	}))
 }

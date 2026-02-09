@@ -2824,6 +2824,18 @@ void* uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(RustCallStatus 
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE_MODULE
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_BAG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_BAG
 void* uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(RustCallStatus *out_status
@@ -3048,6 +3060,18 @@ void* uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(RustCallStatus
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_PACKAGE_MODULE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_PACKAGE_MODULE
 void* uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_RANDOM
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_random(RustCallStatus *out_status
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_RANDOM_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_RANDOM_MODULE
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(RustCallStatus *out_status
     
 );
 #endif
@@ -6441,6 +6465,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(RustCallStat
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_AUTHENTICATOR_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_AUTHENTICATOR_STATE
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_BAG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_BAG
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(RustCallStatus *out_status
@@ -6574,6 +6604,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(RustCallStatus
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(void* type_tag, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_RANDOM
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_STAKED_IOTA
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_STAKED_IOTA
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(RustCallStatus *out_status
@@ -6668,6 +6704,11 @@ RustBuffer uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(void* ptr, Rust
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_ASCII_STRING
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_ASCII_STRING
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_AUTHENTICATOR_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_AUTHENTICATOR_STATE
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_BAG
@@ -6783,6 +6824,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(void* ptr, RustCall
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_OPTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_OPTION
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_option(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_RANDOM
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_random(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_STAKED_IOTA
@@ -16313,6 +16359,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_AUTHENTICATOR_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_AUTHENTICATOR_STATE
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_BAG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_BAG
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag(void
@@ -16448,6 +16500,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_OPTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_OPTION
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_option(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_RANDOM
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_random(void
     
 );
 #endif
@@ -17993,6 +18051,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_AUTHENTICATOR_STATE_MODULE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_BAG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_BAG
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag(void
@@ -18218,6 +18288,18 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_PACKAGE_MODULE
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_PACKAGE_MODULE
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_RANDOM
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_random(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_RANDOM_MODULE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_RANDOM_MODULE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module(void
     
 );
 #endif
@@ -19493,6 +19575,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string(voi
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_AUTHENTICATOR_STATE
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_AUTHENTICATOR_STATE
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_BAG
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_BAG
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag(void
@@ -19634,6 +19722,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_OPTION
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_OPTION
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_RANDOM
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_RANDOM
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random(void
     
 );
 #endif
