@@ -12522,7 +12522,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() != 11931.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 31958.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() != 63707.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_supply() != 21504.toShort()) {
@@ -13881,7 +13881,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_executiontimeobservations_new_v1() != 19098.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 4619.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new() != 15001.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_faucetclient_new_devnet() != 41429.toShort()) {
@@ -16590,7 +16590,7 @@ public object FfiConverterTypeBls12381PrivateKey: FfiConverter<Bls12381PrivateKe
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTECT
+ * bls-public-key = %x60 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -16613,7 +16613,7 @@ public interface Bls12381PublicKeyInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTECT
+ * bls-public-key = %x60 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -16915,7 +16915,7 @@ public object FfiConverterTypeBls12381PublicKey: FfiConverter<Bls12381PublicKey,
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTECT
+ * bls-public-key = %x60 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -16938,7 +16938,7 @@ public interface Bls12381SignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * bls-public-key = %x60 96OCTECT
+ * bls-public-key = %x60 96OCTET
  * ```
  *
  * Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -24956,7 +24956,7 @@ public object FfiConverterTypeEd25519PrivateKey: FfiConverter<Ed25519PrivateKey,
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * ed25519-public-key = 32OCTECT
+ * ed25519-public-key = 32OCTET
  * ```
  */
 public interface Ed25519PublicKeyInterface {
@@ -24994,7 +24994,7 @@ public interface Ed25519PublicKeyInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * ed25519-public-key = 32OCTECT
+ * ed25519-public-key = 32OCTET
  * ```
  */
 open class Ed25519PublicKey: Disposable, AutoCloseable, Ed25519PublicKeyInterface
@@ -25341,7 +25341,7 @@ public object FfiConverterTypeEd25519PublicKey: FfiConverter<Ed25519PublicKey, P
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * ed25519-signature = 64OCTECT
+ * ed25519-signature = 64OCTET
  * ```
  */
 public interface Ed25519SignatureInterface {
@@ -25359,7 +25359,7 @@ public interface Ed25519SignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * ed25519-signature = 64OCTECT
+ * ed25519-signature = 64OCTET
  * ```
  */
 open class Ed25519Signature: Disposable, AutoCloseable, Ed25519SignatureInterface
@@ -27622,7 +27622,7 @@ open class FaucetClient: Disposable, AutoCloseable, FaucetClientInterface
      * endpoint, just the top level service endpoint.
      *
      * - /v1/gas is used to request gas
-     * - /v1/status/taks-uuid is used to check the status of the request
+     * - /v1/status/task-uuid is used to check the status of the request
      */
     constructor(`faucetUrl`: kotlin.String) :
         this(
@@ -28975,7 +28975,7 @@ public interface GraphQlClientInterface {
     suspend fun `serviceConfig`(): ServiceConfig
     
     /**
-     * Set the server address for the GraphQL GraphQL client. It should be a
+     * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
     suspend fun `setRpcServer`(`server`: kotlin.String)
@@ -30287,7 +30287,7 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
-     * Set the server address for the GraphQL GraphQL client. It should be a
+     * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
     @Throws(SdkFfiException::class)
@@ -43892,7 +43892,7 @@ public object FfiConverterTypeSecp256k1PrivateKey: FfiConverter<Secp256k1Private
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTECT
+ * secp256k1-signature = 64OCTET
  * ```
  */
 public interface Secp256k1PublicKeyInterface {
@@ -43931,7 +43931,7 @@ public interface Secp256k1PublicKeyInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-signature = 64OCTECT
+ * secp256k1-signature = 64OCTET
  * ```
  */
 open class Secp256k1PublicKey: Disposable, AutoCloseable, Secp256k1PublicKeyInterface
@@ -44279,7 +44279,7 @@ public object FfiConverterTypeSecp256k1PublicKey: FfiConverter<Secp256k1PublicKe
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTECT
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 public interface Secp256k1SignatureInterface {
@@ -44297,7 +44297,7 @@ public interface Secp256k1SignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256k1-public-key = 33OCTECT
+ * secp256k1-public-key = 33OCTET
  * ```
  */
 open class Secp256k1Signature: Disposable, AutoCloseable, Secp256k1SignatureInterface
@@ -45789,7 +45789,7 @@ public object FfiConverterTypeSecp256r1PrivateKey: FfiConverter<Secp256r1Private
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTECT
+ * secp256r1-signature = 64OCTET
  * ```
  */
 public interface Secp256r1PublicKeyInterface {
@@ -45828,7 +45828,7 @@ public interface Secp256r1PublicKeyInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-signature = 64OCTECT
+ * secp256r1-signature = 64OCTET
  * ```
  */
 open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInterface
@@ -46176,7 +46176,7 @@ public object FfiConverterTypeSecp256r1PublicKey: FfiConverter<Secp256r1PublicKe
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTECT
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 public interface Secp256r1SignatureInterface {
@@ -46194,7 +46194,7 @@ public interface Secp256r1SignatureInterface {
  * The BCS serialized form for this type is defined by the following ABNF:
  *
  * ```text
- * secp256r1-public-key = 33OCTECT
+ * secp256r1-public-key = 33OCTET
  * ```
  */
 open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInterface
@@ -62598,7 +62598,7 @@ data class ServiceConfig (
     var `maxTypeNodes`: kotlin.Int, 
     /**
      * Maximum time in milliseconds spent waiting for a response from fullnode
-     * after issuing a a transaction to execute. Note that the transaction
+     * after issuing a transaction to execute. Note that the transaction
      * may still succeed even in the case of a timeout. Transactions are
      * idempotent, so a transaction that times out should be resubmitted
      * until the network returns a definite response (success or failure, not
@@ -66910,7 +66910,7 @@ sealed class TransactionExpiration {
     
     
     /**
-     * Validators wont sign a transaction unless the expiration Epoch
+     * Validators won't sign a transaction unless the expiration Epoch
      * is greater than or equal to the current epoch
      */
     data class Epoch(

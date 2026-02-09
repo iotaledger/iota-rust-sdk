@@ -92,7 +92,7 @@ impl FaucetClient {
     /// endpoint, just the top level service endpoint.
     ///
     /// - /v1/gas is used to request gas
-    /// - /v1/status/taks-uuid is used to check the status of the request
+    /// - /v1/status/task-uuid is used to check the status of the request
     pub fn new(faucet_url: &str) -> Self {
         let inner = reqwest::Client::new();
         let faucet_url = Url::parse(faucet_url).expect("Invalid faucet URL");

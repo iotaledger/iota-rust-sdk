@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of bls12381 min-sig public-key cryptogrophy.
+//! Implementation of bls12381 min-sig public-key cryptography.
 
 /// A bls12381 min-sig public key.
 ///
@@ -11,7 +11,7 @@
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// bls-public-key = %x60 96OCTECT
+/// bls-public-key = %x60 96OCTET
 /// ```
 ///
 /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -123,7 +123,7 @@ impl std::fmt::Debug for Bls12381PublicKey {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// bls-signature = 48OCTECT
+/// bls-signature = 48OCTET
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
