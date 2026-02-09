@@ -151,7 +151,7 @@ pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
 };
-pub use events::{BalanceChange, Event, TransactionEvents};
+pub use events::{Event, TransactionEvents};
 pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
@@ -486,6 +486,7 @@ mod _schemars {
         }
     }
 
+    #[expect(dead_code)]
     pub(crate) struct I128;
 
     impl JsonSchema for I128 {
