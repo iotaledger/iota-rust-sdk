@@ -77,7 +77,7 @@ impl Address {
     pub const SYSTEM: Self = Self::from_u16(3);
     pub const GENESIS_BRIDGE: Self = Self::from_u16(0xb);
     pub const STARDUST: Self = Self::from_u16(0x107a);
-    pub const SYSTEM_OBJECT: Self = Self::from_object_id(ObjectId::SYSTEM);
+    pub const SYSTEM_STATE_OBJECT: Self = Self::from_object_id(ObjectId::SYSTEM_STATE);
     pub const CLOCK_OBJECT: Self = Self::from_object_id(ObjectId::CLOCK);
     pub const AUTHENTICATOR_STATE_OBJECT: Self =
         Self::from_object_id(ObjectId::AUTHENTICATOR_STATE);

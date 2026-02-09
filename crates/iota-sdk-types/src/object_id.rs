@@ -37,7 +37,7 @@ impl ObjectId {
     pub const SYSTEM_PACKAGE: Self = Self(Address::SYSTEM);
     pub const GENESIS_BRIDGE_PACKAGE: Self = Self(Address::GENESIS_BRIDGE);
     pub const STARDUST_PACKAGE: Self = Self(Address::STARDUST);
-    pub const SYSTEM: Self = Self::from_u16(5);
+    pub const SYSTEM_STATE: Self = Self::from_u16(5);
     pub const CLOCK: Self = Self::from_u16(6);
     pub const AUTHENTICATOR_STATE: Self = Self::from_u16(7);
     pub const RANDOMNESS_STATE: Self = Self::from_u16(8);

@@ -167,7 +167,7 @@ macro_rules! named_object_id {
     }
 }
 
-named_object_id!(ZERO, SYSTEM, CLOCK);
+named_object_id!(ZERO, SYSTEM_STATE, CLOCK);
 
 /// Reference to an object
 ///

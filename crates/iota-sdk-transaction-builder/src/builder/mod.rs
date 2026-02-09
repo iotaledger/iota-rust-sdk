@@ -687,7 +687,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ) -> &mut Self {
         let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
         self.move_call(Address::SYSTEM, IOTA_SYSTEM_MODULE, REQUEST_ADD_STAKE_FN)
-            .arguments((SharedMut(ObjectId::SYSTEM), coin, validator_address))
+            .arguments((SharedMut(ObjectId::SYSTEM_STATE), coin, validator_address))
             .state_change()
     }
 
@@ -721,7 +721,7 @@ impl<C, L> TransactionBuilder<C, L> {
             IOTA_SYSTEM_MODULE,
             REQUEST_WITHDRAW_STAKE_FN,
         )
-        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota))
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), staked_iota))
         .state_change()
     }
 

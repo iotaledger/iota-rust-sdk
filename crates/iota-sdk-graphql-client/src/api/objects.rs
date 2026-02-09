@@ -211,7 +211,7 @@ mod tests {
     async fn test_object_query() {
         let client = test_client();
         client
-            .object(ObjectId::SYSTEM, None)
+            .object(ObjectId::SYSTEM_STATE, None)
             .await
             .map_err(|e| {
                 format!(
@@ -227,7 +227,7 @@ mod tests {
     async fn test_object_bcs_query() {
         let client = test_client();
         client
-            .object_bcs(ObjectId::SYSTEM)
+            .object_bcs(ObjectId::SYSTEM_STATE)
             .await
             .map_err(|e| {
                 format!(
