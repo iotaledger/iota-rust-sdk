@@ -52,7 +52,7 @@ impl StructTag {
         Self {
             address: Address::FRAMEWORK,
             module: Identifier::IOTA_MODULE,
-            name: Identifier::IOTA_COIN,
+            name: Identifier::IOTA,
             type_params: vec![],
         }
     }
@@ -61,7 +61,7 @@ impl StructTag {
     pub fn is_iota_coin_type(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == Identifier::IOTA_MODULE
-            && self.name == Identifier::IOTA_COIN
+            && self.name == Identifier::IOTA
             && self.type_params.is_empty()
     }
 

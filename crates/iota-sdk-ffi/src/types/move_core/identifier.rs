@@ -87,7 +87,7 @@ export_identifier_consts!(
     FIELD,
     GLOBAL_PAUSE_KEY,
     ID,
-    IOTA_COIN,
+    IOTA,
     IOTA_SYSTEM_ADMIN_CAP,
     IOTA_SYSTEM_STATE,
     IOTA_TREASURY_CAP,

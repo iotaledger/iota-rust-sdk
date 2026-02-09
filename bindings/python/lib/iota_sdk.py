@@ -2841,7 +2841,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id() != 9401:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_coin() != 55150:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota() != 34383:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module() != 20466:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6271,10 +6271,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_id.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_id.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_coin.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_coin.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -17917,9 +17917,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_coin.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_coin.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module.restype = ctypes.c_uint16
@@ -43449,9 +43449,9 @@ class Identifier():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def iota_coin(cls, ):
+    def iota(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_coin,)
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota,)
         return cls._make_instance_(pointer)
 
     @classmethod

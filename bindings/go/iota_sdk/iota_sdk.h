@@ -2956,9 +2956,9 @@ void* uniffi_iota_sdk_ffi_fn_constructor_identifier_id(RustCallStatus *out_statu
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_IOTA_COIN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_IOTA_COIN
-void* uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_coin(RustCallStatus *out_status
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_IOTA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_IDENTIFIER_IOTA
+void* uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(RustCallStatus *out_status
     
 );
 #endif
@@ -18125,9 +18125,9 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_id(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_IOTA_COIN
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_IOTA_COIN
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_coin(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_IOTA
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_IDENTIFIER_IOTA
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota(void
     
 );
 #endif

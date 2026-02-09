@@ -6678,7 +6678,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_id(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_coin(
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module(
 ): Short
@@ -8384,7 +8384,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key(uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_id(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_coin(uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -15146,7 +15146,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id() != 9401.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_coin() != 55150.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota() != 34383.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module() != 20466.toShort()) {
@@ -32939,10 +32939,10 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
     }
     
 
-         fun `iotaCoin`(): Identifier {
+         fun `iota`(): Identifier {
             return FfiConverterTypeIdentifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_coin(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(
         _status)
 }
     )

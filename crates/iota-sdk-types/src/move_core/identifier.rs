@@ -174,7 +174,7 @@ impl Identifier {
     pub const FIELD: Self = Self::from_static("Field");
     pub const GLOBAL_PAUSE_KEY: Self = Self::from_static("GlobalPauseKey");
     pub const ID: Self = Self::from_static("ID");
-    pub const IOTA_COIN: Self = Self::from_static("IOTA");
+    pub const IOTA: Self = Self::from_static("IOTA");
     pub const IOTA_SYSTEM_ADMIN_CAP: Self = Self::from_static("IotaSystemAdminCap");
     pub const IOTA_SYSTEM_STATE: Self = Self::from_static("IotaSystemState");
     pub const IOTA_TREASURY_CAP: Self = Self::from_static("IotaTreasuryCap");
