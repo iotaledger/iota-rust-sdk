@@ -51,8 +51,8 @@ impl StructTag {
     pub fn new_iota_coin_type() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("iota"),
-            name: Identifier::from_static("IOTA"),
+            module: Identifier::IOTA_MODULE,
+            name: Identifier::IOTA_COIN,
             type_params: vec![],
         }
     }
@@ -60,8 +60,8 @@ impl StructTag {
     /// Checks if this is a framework IOTA coin type (`0x2::iota::IOTA`)
     pub fn is_iota_coin_type(&self) -> bool {
         self.address == Address::FRAMEWORK
-            && self.module == Identifier::from_static("iota")
-            && self.name == Identifier::from_static("IOTA")
+            && self.module == Identifier::IOTA_MODULE
+            && self.name == Identifier::IOTA_COIN
             && self.type_params.is_empty()
     }
 
@@ -75,8 +75,8 @@ impl StructTag {
     /// (`0x2::coin::Coin<0x2::iota::IOTA>`)
     pub fn is_gas_coin(&self) -> bool {
         self.address == Address::FRAMEWORK
-            && self.module == Identifier::from_static("coin")
-            && self.name == Identifier::from_static("Coin")
+            && self.module == Identifier::COIN_MODULE
+            && self.name == Identifier::COIN
             && matches!(
                 self.type_params.first(),
                 Some(TypeTag::Struct(boxed_struct_tag))
@@ -88,8 +88,8 @@ impl StructTag {
     pub fn new_id() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("object"),
-            name: Identifier::from_static("ID"),
+            module: Identifier::OBJECT_MODULE,
+            name: Identifier::ID,
             type_params: vec![],
         }
     }
@@ -97,16 +97,16 @@ impl StructTag {
     /// Checks if this is a framework object ID type (`0x2::object::ID`)
     pub fn is_id(&self) -> bool {
         self.address == Address::FRAMEWORK
-            && self.module == Identifier::from_static("object")
-            && self.name == Identifier::from_static("ID")
+            && self.module == Identifier::OBJECT_MODULE
+            && self.name == Identifier::ID
     }
 
     /// Creates a new framework object UID struct tag (`0x2::object::UID`)
     pub fn new_uid() -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("object"),
-            name: Identifier::from_static("UID"),
+            module: Identifier::OBJECT_MODULE,
+            name: Identifier::UID,
             type_params: vec![],
         }
     }
@@ -114,15 +114,15 @@ impl StructTag {
     /// Checks if this is a framework object UID type (`0x2::object::UID`)
     pub fn is_uid(&self) -> bool {
         self.address == Address::FRAMEWORK
-            && self.module == Identifier::from_static("object")
-            && self.name == Identifier::from_static("UID")
+            && self.module == Identifier::OBJECT_MODULE
+            && self.name == Identifier::UID
     }
 
     pub fn new_name(address: Address) -> Self {
         Self {
             address,
-            module: Identifier::from_static("name"),
-            name: Identifier::from_static("Name"),
+            module: Identifier::NAME_MODULE,
+            name: Identifier::NAME,
             type_params: vec![],
         }
     }
@@ -132,8 +132,8 @@ impl StructTag {
     pub fn new_dynamic_field(key: impl Into<TypeTag>, value: impl Into<TypeTag>) -> Self {
         Self {
             address: Address::FRAMEWORK,
-            module: Identifier::from_static("dynamic_field"),
-            name: Identifier::from_static("Field"),
+            module: Identifier::DYNAMIC_FIELD_MODULE,
+            name: Identifier::FIELD,
             type_params: vec![key.into(), value.into()],
         }
     }
@@ -142,8 +142,8 @@ impl StructTag {
     /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     pub fn is_dynamic_field(&self) -> bool {
         self.address == Address::FRAMEWORK
-            && self.module == Identifier::from_static("dynamic_field")
-            && self.name == Identifier::from_static("Field")
+            && self.module == Identifier::DYNAMIC_FIELD_MODULE
+            && self.name == Identifier::FIELD
     }
 
     /// Returns the coin type if this is a Coin type, None otherwise

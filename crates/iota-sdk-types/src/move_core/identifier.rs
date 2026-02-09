@@ -124,6 +124,77 @@ impl Identifier {
     pub const fn is_valid_char(c: char) -> bool {
         matches!(c, '_' | 'a'..='z' | 'A'..='Z' | '0'..='9')
     }
+
+    // ========================================================================
+    // Module name constants
+    // ========================================================================
+
+    pub const ASCII_MODULE: Self = Self::from_static("ascii");
+    pub const BAG_MODULE: Self = Self::from_static("bag");
+    pub const BALANCE_MODULE: Self = Self::from_static("balance");
+    pub const CLOCK_MODULE: Self = Self::from_static("clock");
+    pub const COIN_MODULE: Self = Self::from_static("coin");
+    pub const COIN_MANAGER_MODULE: Self = Self::from_static("coin_manager");
+    pub const CONFIG_MODULE: Self = Self::from_static("config");
+    pub const DENY_LIST_MODULE: Self = Self::from_static("deny_list");
+    pub const DISPLAY_MODULE: Self = Self::from_static("display");
+    pub const DYNAMIC_FIELD_MODULE: Self = Self::from_static("dynamic_field");
+    pub const DYNAMIC_OBJECT_FIELD_MODULE: Self = Self::from_static("dynamic_object_field");
+    pub const IOTA_MODULE: Self = Self::from_static("iota");
+    pub const IOTA_SYSTEM_MODULE: Self = Self::from_static("iota_system");
+    pub const IOTA_SYSTEM_STATE_INNER_MODULE: Self = Self::from_static("iota_system_state_inner");
+    pub const NAME_MODULE: Self = Self::from_static("name");
+    pub const OBJECT_MODULE: Self = Self::from_static("object");
+    pub const OBJECT_BAG_MODULE: Self = Self::from_static("object_bag");
+    pub const OPTION_MODULE: Self = Self::from_static("option");
+    pub const PACKAGE_MODULE: Self = Self::from_static("package");
+    pub const STAKING_POOL_MODULE: Self = Self::from_static("staking_pool");
+    pub const STRING_MODULE: Self = Self::from_static("string");
+    pub const SYSTEM_ADMIN_CAP_MODULE: Self = Self::from_static("system_admin_cap");
+    pub const TIMELOCK_MODULE: Self = Self::from_static("timelock");
+    pub const TIMELOCKED_STAKING_MODULE: Self = Self::from_static("timelocked_staking");
+    pub const TRANSFER_MODULE: Self = Self::from_static("transfer");
+    pub const URL_MODULE: Self = Self::from_static("url");
+
+    // ========================================================================
+    // Type/struct name constants
+    // ========================================================================
+
+    pub const ADDRESS_KEY: Self = Self::from_static("AddressKey");
+    pub const BAG: Self = Self::from_static("Bag");
+    pub const BALANCE: Self = Self::from_static("Balance");
+    pub const CLOCK: Self = Self::from_static("Clock");
+    pub const COIN: Self = Self::from_static("Coin");
+    pub const COIN_MANAGER: Self = Self::from_static("CoinManager");
+    pub const COIN_METADATA: Self = Self::from_static("CoinMetadata");
+    pub const CONFIG: Self = Self::from_static("Config");
+    pub const CONFIG_KEY: Self = Self::from_static("ConfigKey");
+    pub const DISPLAY_CREATED: Self = Self::from_static("DisplayCreated");
+    pub const FIELD: Self = Self::from_static("Field");
+    pub const GLOBAL_PAUSE_KEY: Self = Self::from_static("GlobalPauseKey");
+    pub const ID: Self = Self::from_static("ID");
+    pub const IOTA_COIN: Self = Self::from_static("IOTA");
+    pub const IOTA_SYSTEM_ADMIN_CAP: Self = Self::from_static("IotaSystemAdminCap");
+    pub const IOTA_SYSTEM_STATE: Self = Self::from_static("IotaSystemState");
+    pub const IOTA_TREASURY_CAP: Self = Self::from_static("IotaTreasuryCap");
+    pub const NAME: Self = Self::from_static("Name");
+    pub const OBJECT_BAG: Self = Self::from_static("ObjectBag");
+    pub const OPTION: Self = Self::from_static("Option");
+    pub const RECEIVING: Self = Self::from_static("Receiving");
+    pub const SETTING: Self = Self::from_static("Setting");
+    pub const STAKED_IOTA: Self = Self::from_static("StakedIota");
+    pub const STRING: Self = Self::from_static("String");
+    pub const SYSTEM_EPOCH_INFO_EVENT: Self = Self::from_static("SystemEpochInfoEvent");
+    pub const TIME_LOCK: Self = Self::from_static("TimeLock");
+    pub const TIMELOCKED_STAKED_IOTA: Self = Self::from_static("TimelockedStakedIota");
+    pub const TREASURY_CAP: Self = Self::from_static("TreasuryCap");
+    pub const UID: Self = Self::from_static("UID");
+    pub const UPGRADE_CAP: Self = Self::from_static("UpgradeCap");
+    pub const UPGRADE_RECEIPT: Self = Self::from_static("UpgradeReceipt");
+    pub const UPGRADE_TICKET: Self = Self::from_static("UpgradeTicket");
+    pub const URL_TYPE: Self = Self::from_static("Url");
+    pub const VERSION_UPDATED: Self = Self::from_static("VersionUpdated");
+    pub const WRAPPER: Self = Self::from_static("Wrapper");
 }
 
 impl std::fmt::Display for Identifier {
