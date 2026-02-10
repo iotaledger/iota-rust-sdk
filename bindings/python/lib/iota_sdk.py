@@ -2269,17 +2269,19 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas() != 56237:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id() != 41991:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type() != 31521:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap() != 56508:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state() != 60130:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 5722:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -3343,11 +3345,11 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas() != 58980:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -9900,6 +9902,10 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas.argtypes = (
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -9908,10 +9914,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type.argtypes = (
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
@@ -10096,6 +10098,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10106,11 +10113,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_id.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_id.restype = ctypes.c_int8
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10126,6 +10128,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap.argtypes
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_name.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_name.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -17115,15 +17122,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field.restyp
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap.restype = ctypes.c_uint16
@@ -17133,6 +17140,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state.re
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag.restype = ctypes.c_uint16
@@ -18726,15 +18736,15 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap.restype = ctypes.c_uint16
@@ -53919,17 +53929,19 @@ class StructTagProtocol(typing.Protocol):
         raise NotImplementedError
     def is_dynamic_object_field_wrapper(self, ):
         raise NotImplementedError
+    def is_gas(self, ):
+        raise NotImplementedError
     def is_gas_coin(self, ):
         raise NotImplementedError
     def is_id(self, ):
-        raise NotImplementedError
-    def is_iota_coin_type(self, ):
         raise NotImplementedError
     def is_iota_system_admin_cap(self, ):
         raise NotImplementedError
     def is_iota_system_state(self, ):
         raise NotImplementedError
     def is_iota_treasury_cap(self, ):
+        raise NotImplementedError
+    def is_name(self, ):
         raise NotImplementedError
     def is_object_bag(self, ):
         raise NotImplementedError
@@ -54178,6 +54190,12 @@ class StructTag():
         return cls._make_instance_(pointer)
 
     @classmethod
+    def new_gas(cls, ):
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas,)
+        return cls._make_instance_(pointer)
+
+    @classmethod
     def new_gas_coin(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin,)
@@ -54187,12 +54205,6 @@ class StructTag():
     def new_id(cls, ):
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id,)
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_iota_coin_type(cls, ):
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type,)
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -54527,6 +54539,15 @@ class StructTag():
 
 
 
+    def is_gas(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
     def is_gas_coin(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin,self._uniffi_clone_pointer(),)
@@ -54539,15 +54560,6 @@ class StructTag():
     def is_id(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_id,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def is_iota_coin_type(self, ) -> "bool":
-        return _UniffiConverterBool.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type,self._uniffi_clone_pointer(),)
         )
 
 
@@ -54575,6 +54587,15 @@ class StructTag():
     def is_iota_treasury_cap(self, ) -> "bool":
         return _UniffiConverterBool.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def is_name(self, ) -> "bool":
+        return _UniffiConverterBool.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_structtag_is_name,self._uniffi_clone_pointer(),)
         )
 
 

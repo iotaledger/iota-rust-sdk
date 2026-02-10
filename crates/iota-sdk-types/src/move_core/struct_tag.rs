@@ -47,8 +47,8 @@ impl StructTag {
         self.address == other.address && self.module == other.module && self.name == other.name
     }
 
-    /// Creates a new framework IOTA coin struct tag (`0x2::iota::IOTA`)
-    pub fn new_iota_coin_type() -> Self {
+    /// Creates a new framework IOTA gas struct tag (`0x2::iota::IOTA`)
+    pub fn new_gas() -> Self {
         Self {
             address: Address::FRAMEWORK,
             module: Identifier::IOTA_MODULE,
@@ -57,8 +57,8 @@ impl StructTag {
         }
     }
 
-    /// Checks if this is a framework IOTA coin type (`0x2::iota::IOTA`)
-    pub fn is_iota_coin_type(&self) -> bool {
+    /// Checks if this is a framework IOTA gas type (`0x2::iota::IOTA`)
+    pub fn is_gas(&self) -> bool {
         self.address == Address::FRAMEWORK
             && self.module == Identifier::IOTA_MODULE
             && self.name == Identifier::IOTA
@@ -68,7 +68,7 @@ impl StructTag {
     /// Creates a new framework gas coin struct tag
     /// (`0x2::coin::Coin<0x2::iota::IOTA>`)
     pub fn new_gas_coin() -> Self {
-        Self::new_coin(Self::new_iota_coin_type())
+        Self::new_coin(Self::new_gas())
     }
 
     /// Checks if this is a framework gas coin type
@@ -78,9 +78,9 @@ impl StructTag {
             && self.module == Identifier::COIN_MODULE
             && self.name == Identifier::COIN
             && matches!(
-                self.type_params.first(),
-                Some(TypeTag::Struct(boxed_struct_tag))
-                if boxed_struct_tag.is_iota_coin_type()
+                self.type_params.as_slice(),
+                [TypeTag::Struct(boxed_struct_tag)]
+                if boxed_struct_tag.is_gas()
             )
     }
 
@@ -99,6 +99,7 @@ impl StructTag {
         self.address == Address::FRAMEWORK
             && self.module == Identifier::OBJECT_MODULE
             && self.name == Identifier::ID
+            && self.type_params.is_empty()
     }
 
     /// Creates a new framework object UID struct tag (`0x2::object::UID`)
@@ -116,6 +117,7 @@ impl StructTag {
         self.address == Address::FRAMEWORK
             && self.module == Identifier::OBJECT_MODULE
             && self.name == Identifier::UID
+            && self.type_params.is_empty()
     }
 
     pub fn new_name(address: Address) -> Self {
@@ -125,6 +127,12 @@ impl StructTag {
             name: Identifier::NAME,
             type_params: vec![],
         }
+    }
+
+    pub fn is_name(&self) -> bool {
+        self.module == Identifier::NAME_MODULE
+            && self.name == Identifier::NAME
+            && self.type_params.is_empty()
     }
 
     /// Creates a new dynamic field struct tag
@@ -144,23 +152,13 @@ impl StructTag {
         self.address == Address::FRAMEWORK
             && self.module == Identifier::DYNAMIC_FIELD_MODULE
             && self.name == Identifier::FIELD
+            && self.type_params.len() == 2
     }
 
     /// Returns the coin type if this is a Coin type, None otherwise
     pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
-        let Self {
-            address,
-            module,
-            name,
-            type_params,
-        } = self;
-
-        if address == &Address::FRAMEWORK
-            && module == "coin"
-            && name == "Coin"
-            && type_params.len() == 1
-        {
-            type_params.first()
+        if self.is_coin() {
+            self.type_params.first()
         } else {
             None
         }
@@ -437,6 +435,6 @@ mod tests {
         let coin_type = struct_tag.coin_type();
         assert!(coin_type.is_struct());
         let coin_struct = coin_type.as_struct_tag();
-        assert!(coin_struct.is_iota_coin_type());
+        assert!(coin_struct.is_gas());
     }
 }

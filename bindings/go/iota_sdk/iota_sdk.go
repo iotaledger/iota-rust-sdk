@@ -8499,6 +8499,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas()
+	})
+	if checksum != 56237 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin()
 	})
 	if checksum != 20314 {
@@ -8513,15 +8522,6 @@ func uniffiCheckChecksums() {
 	if checksum != 41991 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_id: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type()
-	})
-	if checksum != 31521 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -8549,6 +8549,15 @@ func uniffiCheckChecksums() {
 	if checksum != 32639 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name()
+	})
+	if checksum != 5722 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_structtag_is_name: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -13332,6 +13341,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas()
+	})
+	if checksum != 58980 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin()
 	})
 	if checksum != 5754 {
@@ -13346,15 +13364,6 @@ func uniffiCheckChecksums() {
 	if checksum != 62017 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type()
-	})
-	if checksum != 44499 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -34028,12 +34037,13 @@ type StructTagInterface interface {
 	// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
 	IsDynamicField() bool
 	IsDynamicObjectFieldWrapper() bool
+	IsGas() bool
 	IsGasCoin() bool
 	IsId() bool
-	IsIotaCoinType() bool
 	IsIotaSystemAdminCap() bool
 	IsIotaSystemState() bool
 	IsIotaTreasuryCap() bool
+	IsName() bool
 	IsObjectBag() bool
 	IsOption() bool
 	IsRandom() bool
@@ -34186,6 +34196,12 @@ func StructTagNewDynamicObjectFieldWrapper(typeTag *TypeTag) *StructTag {
 	}))
 }
 
+func StructTagNewGas() *StructTag {
+	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(_uniffiStatus)
+	}))
+}
+
 func StructTagNewGasCoin() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(_uniffiStatus)
@@ -34195,12 +34211,6 @@ func StructTagNewGasCoin() *StructTag {
 func StructTagNewId() *StructTag {
 	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(_uniffiStatus)
-	}))
-}
-
-func StructTagNewIotaCoinType() *StructTag {
-	return FfiConverterStructTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(_uniffiStatus)
 	}))
 }
 
@@ -34514,6 +34524,15 @@ func (_self *StructTag) IsDynamicObjectFieldWrapper() bool {
 	}))
 }
 
+func (_self *StructTag) IsGas() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(
+		_pointer,_uniffiStatus)
+	}))
+}
+
 func (_self *StructTag) IsGasCoin() bool {
 	_pointer := _self.ffiObject.incrementPointer("*StructTag")
 	defer _self.ffiObject.decrementPointer()
@@ -34528,15 +34547,6 @@ func (_self *StructTag) IsId() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_id(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *StructTag) IsIotaCoinType() bool {
-	_pointer := _self.ffiObject.incrementPointer("*StructTag")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
-		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type(
 		_pointer,_uniffiStatus)
 	}))
 }
@@ -34564,6 +34574,15 @@ func (_self *StructTag) IsIotaTreasuryCap() bool {
 	defer _self.ffiObject.decrementPointer()
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *StructTag) IsName() bool {
+	_pointer := _self.ffiObject.incrementPointer("*StructTag")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_structtag_is_name(
 		_pointer,_uniffiStatus)
 	}))
 }

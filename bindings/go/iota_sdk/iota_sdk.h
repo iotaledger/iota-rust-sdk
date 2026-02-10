@@ -6558,6 +6558,12 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(void* key, 
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(void* type_tag, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_GAS
+void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(RustCallStatus *out_status
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_GAS_COIN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_GAS_COIN
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(RustCallStatus *out_status
@@ -6567,12 +6573,6 @@ void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(RustCallStatus *
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_ID
 void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(RustCallStatus *out_status
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
-void* uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(RustCallStatus *out_status
     
 );
 #endif
@@ -6792,6 +6792,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(void* ptr, RustC
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(void* ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_GAS
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(void* ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_GAS_COIN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_GAS_COIN
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(void* ptr, RustCallStatus *out_status
@@ -6800,11 +6805,6 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(void* ptr, RustCallSt
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_ID
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_id(void* ptr, RustCallStatus *out_status
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_COIN_TYPE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_COIN_TYPE
-int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_coin_type(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_SYSTEM_ADMIN_CAP
@@ -6820,6 +6820,11 @@ int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(void* ptr, R
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_IOTA_TREASURY_CAP
 int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_NAME
+int8_t uniffi_iota_sdk_ffi_fn_method_structtag_is_name(void* ptr, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_FN_METHOD_STRUCTTAG_IS_OBJECT_BAG
@@ -16461,6 +16466,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_w
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_GAS
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_GAS_COIN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_GAS_COIN
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin(void
@@ -16470,12 +16481,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_id(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_IOTA_COIN_TYPE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_IOTA_COIN_TYPE
-uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_coin_type(void
     
 );
 #endif
@@ -16494,6 +16499,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_IOTA_TREASURY_CAP
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_IOTA_TREASURY_CAP
 uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_NAME
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_METHOD_STRUCTTAG_IS_NAME
+uint16_t uniffi_iota_sdk_ffi_checksum_method_structtag_is_name(void
     
 );
 #endif
@@ -19683,6 +19694,12 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_f
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_GAS
+#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_GAS
+uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_GAS_COIN
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_GAS_COIN
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(void
@@ -19692,12 +19709,6 @@ uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_ID
 #define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_ID
 uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(void
-    
-);
-#endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
-#define UNIFFI_FFIDEF_UNIFFI_IOTA_SDK_FFI_CHECKSUM_CONSTRUCTOR_STRUCTTAG_NEW_IOTA_COIN_TYPE
-uint16_t uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type(void
     
 );
 #endif

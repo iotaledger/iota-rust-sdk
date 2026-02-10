@@ -49,6 +49,10 @@ impl StructTag {
         Self(iota_sdk::types::StructTag::new_name(address.0))
     }
 
+    pub fn is_name(&self) -> bool {
+        self.0.is_name()
+    }
+
     /// Creates a new dynamic field struct tag
     /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     #[uniffi::constructor]
@@ -169,9 +173,9 @@ export_struct_tag_ctors!(
     DenyListAddressKey,
     DenyListConfigKey,
     DenyListGlobalPauseKey,
+    Gas,
     GasCoin,
     Id,
-    IotaCoinType,
     IotaSystemAdminCap,
     IotaSystemState,
     IotaTreasuryCap,
