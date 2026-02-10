@@ -486,32 +486,6 @@ mod _schemars {
         }
     }
 
-    #[expect(dead_code)]
-    pub(crate) struct I128;
-
-    impl JsonSchema for I128 {
-        fn schema_name() -> String {
-            "i128".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("i128".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
     pub(crate) struct U256;
 
     impl JsonSchema for U256 {
