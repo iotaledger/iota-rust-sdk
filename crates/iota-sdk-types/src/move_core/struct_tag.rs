@@ -209,7 +209,7 @@ impl StructTag {
             self.name
         );
         if let Some(first_type) = self.type_params.first() {
-            tag.push_str(&format!("<{first_type}"));
+            tag.push_str(&format!("<{}", first_type.to_canonical_string(with_prefix)));
             for ty in self.type_params.iter().skip(1) {
                 tag.push_str(&format!(", {}", ty.to_canonical_string(with_prefix)));
             }
