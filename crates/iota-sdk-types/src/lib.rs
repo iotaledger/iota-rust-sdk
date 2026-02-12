@@ -151,7 +151,7 @@ pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
 };
-pub use events::{BalanceChange, Event, TransactionEvents};
+pub use events::{Event, TransactionEvents};
 pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
@@ -476,31 +476,6 @@ mod _schemars {
                 })),
                 instance_type: Some(InstanceType::String.into()),
                 format: Some("u64".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct I128;
-
-    impl JsonSchema for I128 {
-        fn schema_name() -> String {
-            "i128".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("i128".to_owned()),
                 ..Default::default()
             }
             .into()
