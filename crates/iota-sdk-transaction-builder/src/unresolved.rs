@@ -10,13 +10,19 @@ use iota_types::{Identifier, ObjectId, ObjectReference, TypeTag};
 /// An identifier indicating the unresolved index of an input.
 pub type InputId = usize;
 
+/// A PTB input tracked before full on-chain resolution.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Input {
+    /// The unresolved input variant.
     pub kind: InputKind,
+    /// Whether this input is treated as gas.
     pub is_gas: bool,
 }
 
 impl Input {
+    /// Returns the referenced object id when this input points to an object.
+    ///
+    /// Returns `None` for pure-value inputs.
     pub fn object_id(&self) -> Option<&ObjectId> {
         match &self.kind {
             InputKind::ImmutableOrOwned(object_id)
@@ -37,14 +43,22 @@ impl Input {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
+/// Unresolved input variants used during PTB construction.
 pub enum InputKind {
+    /// Immutable or owned object identified by id.
     ImmutableOrOwned(ObjectId),
+    /// Shared object with mutability information.
     Shared { object_id: ObjectId, mutable: bool },
+    /// Receiving object identified by id.
     Receiving(ObjectId),
+    /// Already-resolved input from `iota_types`.
     Input(iota_types::Input),
 }
 
 impl InputKind {
+    /// Returns the object id for object-based inputs.
+    ///
+    /// Returns `None` for non-object inputs.
     pub fn object_id(&self) -> Option<ObjectId> {
         if let Self::ImmutableOrOwned(object_id)
         | Self::Receiving(object_id)
@@ -64,17 +78,26 @@ impl InputKind {
 
 #[derive(Debug, Clone, derive_more::From)]
 #[non_exhaustive]
+/// Unresolved PTB command variants.
 pub enum Command {
+    /// Call a Move function.
     MoveCall(MoveCall),
+    /// Transfer a list of objects to an address.
     TransferObjects(TransferObjects),
+    /// Split a coin into multiple amounts.
     SplitCoins(SplitCoins),
+    /// Merge multiple coins into one target coin.
     MergeCoins(MergeCoins),
+    /// Publish a package.
     Publish(Publish),
+    /// Construct a Move vector.
     MakeMoveVector(MakeMoveVector),
+    /// Upgrade an existing package.
     Upgrade(Upgrade),
 }
 
 impl Command {
+    /// Resolves unresolved command arguments into `iota_types::Command`.
     pub fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::Command {
         match self {
             Command::MoveCall(move_call) => {
@@ -99,11 +122,17 @@ impl Command {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for a Move call command.
 pub struct MoveCall {
+    /// Package object id containing the target module and function.
     pub package: ObjectId,
+    /// Move module name.
     pub module: Identifier,
+    /// Move function name.
     pub function: Identifier,
+    /// Generic type arguments.
     pub type_arguments: Vec<TypeTag>,
+    /// Positional function arguments.
     pub arguments: Vec<Argument>,
 }
 
@@ -124,10 +153,15 @@ impl MoveCall {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for a package upgrade command.
 pub struct Upgrade {
+    /// Compiled Move modules.
     pub modules: Vec<Vec<u8>>,
+    /// Package dependency ids.
     pub dependencies: Vec<ObjectId>,
+    /// Target package id to upgrade.
     pub package: ObjectId,
+    /// Upgrade capability ticket argument.
     pub ticket: Argument,
 }
 
@@ -143,8 +177,11 @@ impl Upgrade {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for creating a Move vector.
 pub struct MakeMoveVector {
+    /// Optional element type tag.
     pub type_: Option<TypeTag>,
+    /// Vector elements.
     pub elements: Vec<Argument>,
 }
 
@@ -162,8 +199,11 @@ impl MakeMoveVector {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for transferring objects.
 pub struct TransferObjects {
+    /// Objects to transfer.
     pub objects: Vec<Argument>,
+    /// Recipient address argument.
     pub address: Argument,
 }
 
@@ -181,8 +221,11 @@ impl TransferObjects {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for splitting a coin.
 pub struct SplitCoins {
+    /// Source coin.
     pub coin: Argument,
+    /// Amount arguments for each split output.
     pub amounts: Vec<Argument>,
 }
 
@@ -200,8 +243,11 @@ impl SplitCoins {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for merging coins.
 pub struct MergeCoins {
+    /// Destination coin.
     pub coin: Argument,
+    /// Coins to merge into `coin`.
     pub coins_to_merge: Vec<Argument>,
 }
 
@@ -219,8 +265,11 @@ impl MergeCoins {
 }
 
 #[derive(Debug, Clone)]
+/// Unresolved payload for publishing a package.
 pub struct Publish {
+    /// Compiled Move modules.
     pub modules: Vec<Vec<u8>>,
+    /// Package dependency ids.
     pub dependencies: Vec<ObjectId>,
 }
 
@@ -235,10 +284,15 @@ impl Publish {
 
 #[derive(Debug, Clone, Copy)]
 #[non_exhaustive]
+/// Unresolved command argument variants.
 pub enum Argument {
+    /// Gas coin argument.
     Gas,
+    /// Input index argument.
     Input(InputId),
+    /// Command result argument.
     Result(u16),
+    /// Nested result argument (`command_index`, `result_index`).
     NestedResult(u16, u16),
 }
 
