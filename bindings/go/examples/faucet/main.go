@@ -19,7 +19,7 @@ func main() {
 	faucetClient := iota_sdk.FaucetClientNewLocalnet()
 
 	faucetReceipt, err := faucetClient.RequestAndWait(address)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 

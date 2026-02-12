@@ -17,7 +17,7 @@ func main() {
 	transactions, err := client.Transactions(&iota_sdk.TransactionsFilter{
 		Function: &function,
 	}, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 

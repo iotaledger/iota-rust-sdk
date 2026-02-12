@@ -24,7 +24,7 @@ func main() {
 	sharedObjId := objIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
 
 	transactions, err := client.Transactions(&iota_sdk.TransactionsFilter{InputObject: &sharedObjId}, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get transactions: %v", err)
 	}
 
