@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
+use super::{Address, Identifier, ObjectId, StructTag};
 
 /// Events emitted during the successful execution of a transaction
 ///
@@ -51,20 +51,4 @@ pub struct Event {
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
     pub contents: Vec<u8>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct BalanceChange {
-    /// Owner of the balance change
-    pub address: Address,
-    /// Type of the Coin
-    pub coin_type: TypeTag,
-    /// The amount indicate the balance value changes.
-    ///
-    /// A negative amount means spending coin value and positive means receiving
-    /// coin value.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    pub amount: i128,
 }
