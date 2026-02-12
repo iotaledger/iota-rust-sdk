@@ -60,7 +60,7 @@ jobs:
       - name: Get the IOTA alphanet binary
         shell: bash
         env:
-          IOTA_BINARY_VERSION: "v1.16.0-alpha"
+          IOTA_BINARY_VERSION: "v1.16.2"
         run: |
           ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
           download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
