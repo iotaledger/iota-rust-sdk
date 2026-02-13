@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{Address, Identifier, ObjectId, StructTag};
+
 /// Events emitted during the successful execution of a transaction
 ///
 /// # BCS
