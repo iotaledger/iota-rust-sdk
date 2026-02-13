@@ -120,11 +120,11 @@ pub mod execution_status;
 pub mod framework;
 pub mod gas;
 pub mod iota_names;
+pub mod move_core;
 pub mod move_package;
 pub mod object;
 pub mod object_id;
 pub mod transaction;
-pub mod type_tag;
 pub mod u256;
 pub mod validator;
 pub mod version;
@@ -156,6 +156,7 @@ pub use execution_status::{
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
+pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
 pub use move_package::{MovePackageData, UpgradePolicy};
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
@@ -173,7 +174,6 @@ pub use transaction::{
     SignedTransaction, SplitCoins, SystemPackage, Transaction, TransactionExpiration,
     TransactionKind, TransactionV1, TransferObjects, Upgrade, VersionAssignment,
 };
-pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };

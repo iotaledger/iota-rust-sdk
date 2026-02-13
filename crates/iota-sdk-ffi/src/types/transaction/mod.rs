@@ -12,11 +12,10 @@ use crate::{
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
         digest::Digest,
         events::Event,
+        move_core::{Identifier, TypeTag},
         object::{GenesisObject, ObjectId, ObjectReference},
         signature::UserSignature,
-        struct_tag::Identifier,
         transaction::v1::TransactionEffectsV1,
-        type_tag::TypeTag,
         version::Version,
     },
 };

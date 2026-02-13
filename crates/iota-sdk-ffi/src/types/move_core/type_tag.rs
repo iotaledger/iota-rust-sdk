@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use crate::types::struct_tag::StructTag;
+use crate::types::move_core::struct_tag::StructTag;
 
 /// Type of a move value
 ///
@@ -12,29 +12,17 @@ use crate::types::struct_tag::StructTag;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// type-tag = type-tag-u8 \
-///            type-tag-u16 \
-///            type-tag-u32 \
-///            type-tag-u64 \
-///            type-tag-u128 \
-///            type-tag-u256 \
-///            type-tag-bool \
-///            type-tag-address \
-///            type-tag-signer \
-///            type-tag-vector \
-///            type-tag-struct
-///
-/// type-tag-u8 = %d01
-/// type-tag-u16 = %d08
-/// type-tag-u32 = %d09
-/// type-tag-u64 = %d02
-/// type-tag-u128 = %d03
-/// type-tag-u256 = %d10
-/// type-tag-bool = %d00
-/// type-tag-address = %d04
-/// type-tag-signer = %d05
-/// type-tag-vector = %d06 type-tag
-/// type-tag-struct = %d07 struct-tag
+/// type-tag = %d00            ; Bool
+///          / %d01            ; U8
+///          / %d02            ; U64
+///          / %d03            ; U128
+///          / %d04            ; Address
+///          / %d05            ; Signer
+///          / %d06 type-tag   ; Vector
+///          / %d07 struct-tag ; Struct
+///          / %d08            ; U16
+///          / %d09            ; U32
+///          / %d10            ; U256
 /// ```
 #[derive(
     Debug,
