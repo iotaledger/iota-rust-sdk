@@ -59,15 +59,9 @@ pub struct Event {
 }
 
 impl Event {
-    const IOTA_SYSTEM_INNER: Identifier = Identifier::from_static("iota_system_state_inner");
-    const SYSTEM_EPOCH_INFO_EVENT_V1: Identifier =
-        Identifier::from_static("SystemEpochInfoEventV1");
-    const SYSTEM_EPOCH_INFO_EVENT_V2: Identifier =
-        Identifier::from_static("SystemEpochInfoEventV2");
-
     fn is_system_epoch_info_event_type(&self, name: Identifier) -> bool {
         self.type_.address() == Address::SYSTEM
-            && *self.type_.module() == Self::IOTA_SYSTEM_INNER
+            && *self.type_.module() == Identifier::IOTA_SYSTEM_STATE_INNER_MODULE
             && *self.type_.name() == name
     }
 
@@ -76,10 +70,10 @@ impl Event {
     }
 
     pub fn is_system_epoch_info_event_v1(&self) -> bool {
-        self.is_system_epoch_info_event_type(Self::SYSTEM_EPOCH_INFO_EVENT_V1)
+        self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V1)
     }
 
     pub fn is_system_epoch_info_event_v2(&self) -> bool {
-        self.is_system_epoch_info_event_type(Self::SYSTEM_EPOCH_INFO_EVENT_V2)
+        self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
     }
 }
