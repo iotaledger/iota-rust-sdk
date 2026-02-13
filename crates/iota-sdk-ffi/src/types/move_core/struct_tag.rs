@@ -3,75 +3,10 @@
 
 use std::sync::Arc;
 
-use crate::{
-    error::Result,
-    types::{address::Address, type_tag::TypeTag},
+use crate::types::{
+    address::Address,
+    move_core::{identifier::Identifier, type_tag::TypeTag},
 };
-
-/// A move identifier
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// identifier = %d1-128    ; length of the identifier
-///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
-///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
-///
-/// UNDERSCORE = %x95
-/// ```
-#[derive(Debug, PartialEq, Eq, Hash, derive_more::From, derive_more::Display, uniffi::Object)]
-#[uniffi::export(Debug, Display, Eq, Hash)]
-pub struct Identifier(pub iota_sdk::types::Identifier);
-
-#[uniffi::export]
-impl Identifier {
-    #[uniffi::constructor]
-    pub fn new(identifier: String) -> Result<Self> {
-        Ok(Self(iota_sdk::types::Identifier::new(identifier)?))
-    }
-
-    pub fn as_str(&self) -> String {
-        self.0.as_str().to_owned()
-    }
-}
-
-macro_rules! export_struct_tag_ctors {
-    ($($name:ident),+ $(,)?) => { paste::paste! {
-        #[uniffi::export]
-        impl StructTag {$(
-            #[uniffi::constructor]
-            pub fn [< new_ $name:snake >]() -> Self {
-                Self(iota_sdk::types::StructTag::[< new_ $name:snake >]())
-            }
-        )+}
-    } }
-}
-
-macro_rules! export_struct_tag_from_type_tag_ctors {
-    ($($name:ident),+ $(,)?) => { paste::paste! {
-        #[uniffi::export]
-        impl StructTag {$(
-            #[uniffi::constructor]
-            pub fn [< new_ $name:snake >](type_tag: &TypeTag) -> Self {
-                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
-            }
-        )+}
-    } }
-}
-
-macro_rules! export_struct_tag_from_struct_tag_ctors {
-    ($($name:ident),+ $(,)?) => { paste::paste! {
-        #[uniffi::export]
-        impl StructTag {$(
-            #[uniffi::constructor]
-            pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
-                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
-            }
-        )+}
-    } }
-}
 
 /// Type information for a move struct
 ///
@@ -114,15 +49,27 @@ impl StructTag {
         Self(iota_sdk::types::StructTag::new_name(address.0))
     }
 
+    pub fn is_name(&self) -> bool {
+        self.0.is_name()
+    }
+
+    /// Creates a new dynamic field struct tag
+    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     #[uniffi::constructor]
-    pub fn new_field(key: &TypeTag, value: &TypeTag) -> Self {
-        Self(iota_sdk::types::StructTag::new_field(
+    pub fn new_dynamic_field(key: &TypeTag, value: &TypeTag) -> Self {
+        Self(iota_sdk::types::StructTag::new_dynamic_field(
             key.0.clone(),
             value.0.clone(),
         ))
     }
 
-    /// Checks if this is a Coin type
+    /// Checks if this is a Dynamic Field type
+    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+    pub fn is_dynamic_field(&self) -> bool {
+        self.0.is_dynamic_field()
+    }
+
+    /// Returns the coin type part of a `StructTag`, if this is a Coin type
     pub fn coin_type_opt(&self) -> Option<Arc<TypeTag>> {
         self.0
             .coin_type_opt()
@@ -131,7 +78,8 @@ impl StructTag {
             .map(Arc::new)
     }
 
-    /// Checks if this is a Coin type
+    /// Returns the coin type part of a `StructTag`, panics if this is not a
+    /// Coin type
     pub fn coin_type(&self) -> TypeTag {
         self.0.coin_type().clone().into()
     }
@@ -169,19 +117,69 @@ impl StructTag {
     }
 }
 
+macro_rules! export_struct_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >]() -> Self {
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >]())
+            }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.0.[< is_ $name:snake >]()
+            }
+        )+}
+    } }
+}
+
+macro_rules! export_struct_tag_from_type_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >](type_tag: &TypeTag) -> Self {
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](type_tag.0.clone()))
+            }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.0.[< is_ $name:snake >]()
+            }
+        )+}
+    } }
+}
+
+macro_rules! export_struct_tag_from_struct_tag_ctors {
+    ($($name:ident),+ $(,)?) => { paste::paste! {
+        #[uniffi::export]
+        impl StructTag {$(
+            #[uniffi::constructor]
+            pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
+                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
+            }
+
+            pub fn [< is_ $name:snake >](&self) -> bool {
+                self.0.[< is_ $name:snake >]()
+            }
+        )+}
+    } }
+}
+
 export_struct_tag_ctors!(
     AsciiString,
+    AuthenticatorState,
     Clock,
     Config,
     DenyListAddressKey,
     DenyListConfigKey,
     DenyListGlobalPauseKey,
+    Gas,
     GasCoin,
     Id,
-    IotaCoinType,
     IotaSystemAdminCap,
     IotaSystemState,
     IotaTreasuryCap,
+    Random,
     UpgradeCap,
     UpgradeTicket,
     UpgradeReceipt,
@@ -191,20 +189,25 @@ export_struct_tag_ctors!(
     TimelockedStakedIota,
     TransferReceiving,
     Uid,
+    Url,
+    Bag,
+    ObjectBag,
+    TxContext
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
     ConfigSetting,
     DynamicObjectFieldWrapper,
     Coin,
-    TimeLock
+    TimeLock,
+    Option
 );
 export_struct_tag_from_struct_tag_ctors!(
     CoinManager,
     CoinMetadata,
     DisplayCreated,
     TreasuryCap,
-    VersionUpdated,
+    DisplayVersionUpdated,
 );
 
 crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);

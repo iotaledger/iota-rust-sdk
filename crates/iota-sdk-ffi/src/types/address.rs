@@ -166,7 +166,21 @@ macro_rules! named_address {
     }
 }
 
-named_address!(ZERO, STD, FRAMEWORK, SYSTEM);
+named_address!(
+    ZERO,
+    MAX,
+    STD,
+    FRAMEWORK,
+    SYSTEM,
+    GENESIS_BRIDGE,
+    STARDUST,
+    SYSTEM_STATE,
+    CLOCK,
+    AUTHENTICATOR_STATE,
+    RANDOMNESS_STATE,
+    GENESIS_IOTA_BRIDGE,
+    DENY_LIST
+);
 
 crate::export_iota_types_objects_bcs_conversion!(Address);
 crate::export_iota_types_objects_json_conversion!(Address);
