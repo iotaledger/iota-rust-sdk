@@ -17,9 +17,9 @@ use iota_sdk::graphql_client::{
 
 use crate::types::{
     address::Address,
+    move_core::TypeTag,
     object::ObjectId,
     transaction::{SignedTransaction, TransactionEffects},
-    type_tag::TypeTag,
 };
 
 uniffi::custom_type!(Base64, String, {

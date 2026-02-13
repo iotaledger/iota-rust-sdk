@@ -5,9 +5,9 @@ use std::sync::Arc;
 
 use crate::types::{
     address::Address,
+    move_core::TypeTag,
     object::{ObjectId, ObjectReference},
     transaction::Input,
-    type_tag::TypeTag,
     version::Version,
 };
 
