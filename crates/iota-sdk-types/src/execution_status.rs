@@ -306,10 +306,7 @@ pub enum ExecutionError {
     )]
     TypeArityMismatch,
     /// Non Entry Function Invoked. Move Call must start with an entry function.
-    #[error(
-        "Non Entry Function Invoked. Move Call must start with an entry
-function"
-    )]
+    #[error("Non Entry Function Invoked. Move Call must start with an entry function")]
     NonEntryFunctionInvoked,
     /// Invalid command argument
     #[error("Invalid command argument at {argument}. {kind}")]
@@ -336,10 +333,7 @@ function"
     )]
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
-    #[error(
-        "Invalid Transfer Object, object does not have public
-transfer."
-    )]
+    #[error("Invalid Transfer Object, object does not have public transfer.")]
     InvalidTransferObject,
     /// Effects from the transaction are too large
     #[error("Effects of size {current_size} bytes too large. Limit is {max_size} bytes")]
@@ -519,19 +513,20 @@ impl core::fmt::Display for MoveLocation {
     }
 }
 
-#[derive(Eq, PartialEq, Clone, Debug, Hash)]
-pub struct MoveLocationOpt(pub Option<MoveLocation>);
+// TODO do we want this ?
+// #[derive(Eq, PartialEq, Clone, Debug, Hash)]
+// pub struct MoveLocationOpt(pub Option<MoveLocation>);
 
-impl core::fmt::Display for MoveLocationOpt {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self.0 {
-            None => write!(f, "UNKNOWN"),
-            Some(l) => write!(f, "{l}"),
-        }
-    }
-}
+// impl core::fmt::Display for MoveLocationOpt {
+//     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+//         match &self.0 {
+//             None => write!(f, "UNKNOWN"),
+//             Some(l) => write!(f, "{l}"),
+//         }
+//     }
+// }
 
-// // TODO do we want that?
+// TODO do we want that?
 // #[derive(Eq, PartialEq, Clone, Debug, Serialize, Deserialize)]
 // pub struct CongestedObjects(pub Vec<ObjectID>);
 
