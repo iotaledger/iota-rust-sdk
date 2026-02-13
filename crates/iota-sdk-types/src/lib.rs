@@ -120,11 +120,11 @@ pub mod execution_status;
 pub mod framework;
 pub mod gas;
 pub mod iota_names;
+pub mod move_core;
 pub mod move_package;
 pub mod object;
 pub mod object_id;
 pub mod transaction;
-pub mod type_tag;
 pub mod u256;
 pub mod validator;
 pub mod version;
@@ -151,13 +151,14 @@ pub use effects::{
     ChangedObject, IdOperation, ObjectIn, ObjectOut, TransactionEffects, TransactionEffectsV1,
     UnchangedSharedKind, UnchangedSharedObject,
 };
-pub use events::{BalanceChange, Event, TransactionEvents};
+pub use events::{Event, TransactionEvents};
 pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, MoveLocationOpt,
     PackageUpgradeError, TypeArgumentError,
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
+pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
 pub use move_package::{MovePackageData, UpgradePolicy};
 pub use object::{
     GenesisObject, MovePackage, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
@@ -177,7 +178,6 @@ pub use transaction::{
     SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, ValidatorExecutionTimeObservation, VersionAssignment,
 };
-pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag};
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
@@ -476,31 +476,6 @@ mod _schemars {
                 })),
                 instance_type: Some(InstanceType::String.into()),
                 format: Some("u64".to_owned()),
-                ..Default::default()
-            }
-            .into()
-        }
-
-        fn is_referenceable() -> bool {
-            false
-        }
-    }
-
-    pub(crate) struct I128;
-
-    impl JsonSchema for I128 {
-        fn schema_name() -> String {
-            "i128".to_owned()
-        }
-
-        fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
-            SchemaObject {
-                metadata: Some(Box::new(Metadata {
-                    description: Some("Radix-10 encoded 128-bit signed integer".to_owned()),
-                    ..Default::default()
-                })),
-                instance_type: Some(InstanceType::String.into()),
-                format: Some("i128".to_owned()),
                 ..Default::default()
             }
             .into()

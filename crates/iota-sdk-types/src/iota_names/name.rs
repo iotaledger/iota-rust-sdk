@@ -12,7 +12,7 @@ use crate::{
         },
         error::IotaNamesError,
     },
-    type_tag::IdentifierRef,
+    move_core::Identifier,
 };
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
@@ -69,8 +69,8 @@ impl std::fmt::Display for Name {
 
 impl Name {
     pub fn type_(package_address: Address) -> StructTag {
-        const IOTA_NAMES_NAME_MODULE: &IdentifierRef = IdentifierRef::const_new("name");
-        const IOTA_NAMES_NAME_STRUCT: &IdentifierRef = IdentifierRef::const_new("Name");
+        const IOTA_NAMES_NAME_MODULE: Identifier = Identifier::from_static("name");
+        const IOTA_NAMES_NAME_STRUCT: Identifier = Identifier::from_static("Name");
 
         StructTag::new(
             package_address,

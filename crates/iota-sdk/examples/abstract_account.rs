@@ -10,7 +10,7 @@ use iota_sdk::{
     transaction_builder::{
         MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, assigned,
     },
-    types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut},
+    types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut},
 };
 use rand::rngs::OsRng;
 
@@ -97,11 +97,11 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
                 if let Some(object) = object {
                     if object.as_struct().type_.name()
-                        == IdentifierRef::const_new("PackageMetadataV1")
+                        == &Identifier::from_static("PackageMetadataV1")
                     {
                         package_metadata_id.replace(object_id);
                     }
-                    if object.as_struct().type_.name() == IdentifierRef::const_new("Account") {
+                    if object.as_struct().type_.name() == &Identifier::from_static("Account") {
                         account_id.replace(object_id);
                     }
                 }

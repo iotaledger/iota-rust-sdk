@@ -6,7 +6,7 @@
 
 use cynic::QueryBuilder;
 use futures::Stream;
-use iota_types::{Address, IdentifierRef, StructTag, framework::Coin};
+use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
     Client,
@@ -64,8 +64,8 @@ impl Client {
                     .unwrap_or_else(|| {
                         StructTag::new(
                             Address::FRAMEWORK,
-                            IdentifierRef::const_new("coin").into(),
-                            IdentifierRef::const_new("Coin").into(),
+                            Identifier::from_static("coin"),
+                            Identifier::from_static("Coin"),
                             Default::default(),
                         )
                     })
@@ -92,7 +92,7 @@ impl Client {
         owner: Address,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
-        self.coins(owner, StructTag::new_iota_coin_type(), pagination_filter)
+        self.coins(owner, StructTag::new_gas(), pagination_filter)
             .await
     }
 

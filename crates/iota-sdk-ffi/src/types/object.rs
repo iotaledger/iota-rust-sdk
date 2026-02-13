@@ -8,8 +8,7 @@ use crate::{
     types::{
         address::Address,
         digest::Digest,
-        struct_tag::{Identifier, StructTag},
-        type_tag::TypeTag,
+        move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
 };
@@ -168,7 +167,21 @@ macro_rules! named_object_id {
     }
 }
 
-named_object_id!(ZERO, SYSTEM, CLOCK);
+named_object_id!(
+    ZERO,
+    MAX,
+    STD,
+    FRAMEWORK,
+    SYSTEM,
+    GENESIS_BRIDGE,
+    STARDUST,
+    SYSTEM_STATE,
+    CLOCK,
+    AUTHENTICATOR_STATE,
+    RANDOMNESS_STATE,
+    GENESIS_IOTA_BRIDGE,
+    DENY_LIST
+);
 
 /// Reference to an object
 ///

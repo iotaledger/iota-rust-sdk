@@ -17,11 +17,10 @@ use crate::{
     },
     types::{
         address::Address,
+        move_core::{Identifier, TypeTag},
         move_package::MovePackageData,
         object::{ObjectId, ObjectReference},
-        struct_tag::Identifier,
         transaction::Transaction,
-        type_tag::TypeTag,
     },
 };
 
