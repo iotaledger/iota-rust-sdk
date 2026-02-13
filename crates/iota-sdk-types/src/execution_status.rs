@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use thiserror::Error;
+
 use super::{Address, Digest, Identifier, ObjectId};
 
 /// The status of an executed Transaction
@@ -39,6 +41,19 @@ pub enum ExecutionStatus {
 impl ExecutionStatus {
     crate::def_is!(Success, Failure);
 
+    pub fn new_failure(error: ExecutionError, command: Option<u64>) -> ExecutionStatus {
+        ExecutionStatus::Failure { error, command }
+    }
+
+    //     pub fn unwrap(&self) {
+    //     match self {
+    //         ExecutionStatus::Success => {}
+    //         ExecutionStatus::Failure { .. } => {
+    //             panic!("Unable to unwrap() on {self:?}");
+    //         }
+    //     }
+    // }
+
     /// The error encountered during execution.
     pub fn error(&self) -> Option<&ExecutionError> {
         if let Self::Failure { error, .. } = self {
@@ -56,6 +71,56 @@ impl ExecutionStatus {
             None
         }
     }
+
+    //     pub fn unwrap_err(self) -> (ExecutionFailureStatus, Option<CommandIndex>)
+    // {         match self {
+    //             ExecutionStatus::Success => {
+    //                 panic!("Unable to unwrap() on {self:?}");
+    //             }
+    //             ExecutionStatus::Failure { error, command } => (error, command),
+    //         }
+    //     }
+
+    //     /// Returns congested objects if the transaction was cancelled due to
+    //     /// shared object congestion, else returns `None`.
+    //     pub fn get_congested_objects(&self) -> Option<&CongestedObjects> {
+    //         match self {
+    //             ExecutionStatus::Failure {
+    //                 error:
+    //
+    // ExecutionFailureStatus::ExecutionCancelledDueToSharedObjectCongestion {
+    //                         congested_objects,
+    //                     }
+    //                     |
+    // ExecutionFailureStatus::ExecutionCancelledDueToSharedObjectCongestionV2 {
+    //                         congested_objects,
+    //                         ..
+    //                     },
+    //                 ..
+    //             } => Some(congested_objects),
+    //             _ => None,
+    //         }
+    //     }
+
+    //     /// Returns a suggested gas price if the transaction was cancelled due to
+    //     /// shared object congestion (subject to the gas price feedback mechanism
+    //     /// is enabled), otherwise returns `None`.
+    //     pub fn get_feedback_suggested_gas_price(&self) -> Option<u64> {
+    //         if let ExecutionStatus::Failure {
+    //             error:
+    //
+    // ExecutionFailureStatus::ExecutionCancelledDueToSharedObjectCongestionV2 {
+    //                     suggested_gas_price,
+    //                     ..
+    //                 },
+    //             ..
+    //         } = self
+    //         {
+    //             Some(*suggested_gas_price)
+    //         } else {
+    //             None
+    //         }
+    //     }
 }
 
 /// An error that can occur during the execution of a transaction
@@ -142,7 +207,7 @@ impl ExecutionStatus {
 /// coin-type-global-pause                              = %x23 string
 /// execution-cancelled-due-to-randomness-unavailable   = %x24
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -152,14 +217,21 @@ impl ExecutionStatus {
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
+    #[error("Insufficient Gas.")]
     InsufficientGas,
     /// Invalid Gas Object.
+    #[error("Invalid Gas Object. Possibly not address-owned or possibly not an IOTA coin.")]
     InvalidGasObject,
     /// Invariant Violation
+    #[error("INVARIANT VIOLATION.")]
     InvariantViolation,
     /// Attempted to used feature that is not supported yet
+    #[error("Attempted to used feature that is not supported yet")]
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
+    #[error(
+        "Move object with size {object_size} is larger than the maximum object size {max_object_size}"
+    )]
     ObjectTooBig {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
@@ -167,6 +239,9 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
+    #[error(
+        "Move package with size {object_size} is larger than the maximum object size {max_object_size}"
+    )]
     PackageTooBig {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
@@ -174,59 +249,100 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Circular Object Ownership
+    #[error("Circular Object Ownership, including object {object}.")]
     CircularObjectOwnership { object: ObjectId },
     /// Insufficient coin balance for requested operation
+    #[error("Insufficient coin balance for operation.")]
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
+    #[error("The coin balance overflows u64")]
     CoinBalanceOverflow,
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
+    #[error(
+        "Publish Error, Non-zero Address. The modules in the package must have their self-addresses set to zero."
+    )]
     PublishErrorNonZeroAddress,
     /// IOTA Move Bytecode Verification Error.
+    #[error(
+        "IOTA Move Bytecode Verification Error. Please run the IOTA Move Verifier for more information."
+    )]
     IotaMoveVerificationError,
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
+    #[error(
+        "Move Primitive Runtime Error. Location: {location:?}. Arithmetic error, stack overflow, max value depth, etc."
+    )]
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
+    #[error("Move Runtime Abort. Location: {location:?}, Abort Code: {code}")]
     MoveAbort {
         location: MoveLocation,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         code: u64,
     },
     /// Bytecode verification error.
-    VmVerificationOrDeserializationError,
+    #[error(
+        "Move Bytecode Verification Error. Please run the Bytecode Verifier for more information."
+    )]
+    VMVerificationOrDeserializationError,
     /// MoveVm invariant violation
-    VmInvariantViolation,
+    #[error("MOVE VM INVARIANT VIOLATION.")]
+    VMInvariantViolation,
     /// Function not found
+    #[error("Function Not Found.")]
     FunctionNotFound,
     /// Arity mismatch for Move function.
     /// The number of arguments does not match the number of parameters
+    #[error(
+        "Arity mismatch for Move function. The number of arguments does not match the number of parameters"
+    )]
     ArityMismatch,
     /// Type arity mismatch for Move function.
     /// Mismatch between the number of actual versus expected type arguments.
+    #[error(
+        "Type arity mismatch for Move function. Mismatch between the number of actual versus expected type arguments."
+    )]
     TypeArityMismatch,
     /// Non Entry Function Invoked. Move Call must start with an entry function.
+    #[error(
+        "Non Entry Function Invoked. Move Call must start with an entry
+function"
+    )]
     NonEntryFunctionInvoked,
     /// Invalid command argument
+    #[error("Invalid command argument at {argument}. {kind}")]
     CommandArgumentError {
         argument: u16,
         kind: CommandArgumentError,
     },
     /// Type argument error
+    #[error("Error for type argument at index {type_argument}: {kind}")]
     TypeArgumentError {
         /// Index of the problematic type argument
         type_argument: u16,
         kind: TypeArgumentError,
     },
     /// Unused result without the drop ability.
+    #[error(
+        "Unused result without the drop ability. Command result {result}, return value {subresult}"
+    )]
     UnusedValueWithoutDrop { result: u16, subresult: u16 },
     /// Invalid public Move function signature.
     /// Unsupported return type for return value
+    #[error(
+        "Invalid public Move function signature. Unsupported return type for return value {index}"
+    )]
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
+    #[error(
+        "Invalid Transfer Object, object does not have public
+transfer."
+    )]
     InvalidTransferObject,
     /// Effects from the transaction are too large
+    #[error("Effects of size {current_size} bytes too large. Limit is {max_size} bytes")]
     EffectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         current_size: u64,
@@ -234,17 +350,25 @@ pub enum ExecutionError {
         max_size: u64,
     },
     /// Publish or Upgrade is missing dependency
+    #[error(
+        "Publish/Upgrade Error, Missing dependency. A dependency of a published or upgraded package has not been assigned an on-chain address."
+    )]
     PublishUpgradeMissingDependency,
     /// Publish or Upgrade dependency downgrade.
     ///
     /// Indirect (transitive) dependency of published or upgraded package has
     /// been assigned an on-chain version that is less than the version
     /// required by one of the package's transitive dependencies.
+    #[error(
+        "Publish/Upgrade Error, Dependency downgrade. Indirect (transitive) dependency of published or upgraded package has been assigned an on-chain version that is less than the version required by one of the package's transitive dependencies."
+    )]
     PublishUpgradeDependencyDowngrade,
     /// Invalid package upgrade
     #[cfg_attr(feature = "schemars", schemars(title = "PackageUpgradeError"))]
+    #[error("Invalid package upgrade. {kind}")]
     PackageUpgradeError { kind: PackageUpgradeError },
     /// Indicates the transaction tried to write objects too large to storage
+    #[error("Written objects of {object_size} bytes too large. Limit is {max_object_size} bytes")]
     WrittenObjectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
@@ -252,30 +376,44 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Certificate is on the deny list
+    #[error("Certificate is on the deny list")]
     CertificateDenied,
     /// IOTA Move Bytecode verification timed out.
+    #[error(
+        "IOTA Move Bytecode Verification Timeout. Please run the IOTA Move Verifier for more information."
+    )]
     IotaMoveVerificationTimeout,
     /// The requested shared object operation is not allowed
+    #[error("The shared object operation is not allowed.")]
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
+    #[error("Certificate cannot be executed due to a dependency on a deleted shared object")]
     InputObjectDeleted,
     /// Certificate is cancelled due to congestion on shared objects
+    #[error("Certificate is cancelled due to congestion on shared objects: {congested_objects:?}.")]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
+    #[error(
+        "Certificate is cancelled due to congestion on shared objects: {congested_objects:?}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}."
+    )]
     ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
         suggested_gas_price: u64,
     },
     /// Address is denied for this coin type
+    #[error("Address {address:?} is denied for coin {coin_type}")]
     AddressDeniedForCoin { address: Address, coin_type: String },
     /// Coin type is globally paused for use
+    #[error("Coin type is globally paused for use: {coin_type}")]
     CoinTypeGlobalPause { coin_type: String },
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
+    #[error("Certificate is cancelled because randomness could not be generated this epoch")]
     ExecutionCancelledDueToRandomnessUnavailable,
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
+    #[error("A valid linkage was unable to be determined for the transaction")]
     InvalidLinkage,
 }
 
@@ -294,8 +432,8 @@ impl ExecutionError {
         IotaMoveVerificationError,
         MovePrimitiveRuntimeError,
         MoveAbort,
-        VmVerificationOrDeserializationError,
-        VmInvariantViolation,
+        VMVerificationOrDeserializationError,
+        VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
         TypeArityMismatch,
@@ -321,6 +459,10 @@ impl ExecutionError {
         ExecutionCancelledDueToRandomnessUnavailable,
         InvalidLinkage,
     );
+
+    pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
+        Self::CommandArgumentError { argument, kind }
+    }
 }
 
 /// Location in move bytecode where an error occurred
@@ -332,7 +474,7 @@ impl ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -353,6 +495,54 @@ pub struct MoveLocation {
     /// The name of the function if available
     pub function_name: Option<Identifier>,
 }
+
+impl core::fmt::Display for MoveLocation {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            package,
+            module,
+            function,
+            instruction,
+            function_name,
+        } = self;
+        if let Some(fname) = function_name {
+            write!(
+                f,
+                "{package}::{module}::{fname} (function index {function}) at offset {instruction}"
+            )
+        } else {
+            write!(
+                f,
+                "{package}::{module} in function definition {function} at offset {instruction}"
+            )
+        }
+    }
+}
+
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
+pub struct MoveLocationOpt(pub Option<MoveLocation>);
+
+impl core::fmt::Display for MoveLocationOpt {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self.0 {
+            None => write!(f, "UNKNOWN"),
+            Some(l) => write!(f, "{l}"),
+        }
+    }
+}
+
+// // TODO do we want that?
+// #[derive(Eq, PartialEq, Clone, Debug, Serialize, Deserialize)]
+// pub struct CongestedObjects(pub Vec<ObjectID>);
+
+// impl fmt::Display for CongestedObjects {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
+//         for obj in &self.0 {
+//             write!(f, "{obj}, ")?;
+//         }
+//         Ok(())
+//     }
+// }
 
 /// An error with an argument to a command
 ///
@@ -387,7 +577,7 @@ pub struct MoveLocation {
 /// invalid-object-by-mut-ref                   = %x0a
 /// shared-object-operation-not-allowed         = %x0b
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -397,45 +587,81 @@ pub struct MoveLocation {
 #[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
+    #[error("The type of the value does not match the expected type")]
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
-    InvalidBcsBytes,
+    #[error("The argument cannot be deserialized into a value of the specified type")]
+    InvalidBCSBytes,
     /// The argument cannot be instantiated from raw bytes
+    #[error("The argument cannot be instantiated from raw bytes")]
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
+    #[error(
+        "Invalid argument to private entry function. \
+        These functions cannot take arguments from other Move functions"
+    )]
     InvalidArgumentToPrivateEntryFunction,
     /// Out of bounds access to input or results
+    #[error("Out of bounds access to input or result vector {index}")]
     IndexOutOfBounds { index: u16 },
     /// Out of bounds access to subresult
+    #[error(
+        "Out of bounds secondary access to result vector \
+        {result} at secondary index {subresult}"
+    )]
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
     /// Invalid usage of result.
     /// Expected a single result but found either no return value or multiple.
+    #[error(
+        "Invalid usage of result {result}, \
+        expected a single result but found either no return values or multiple."
+    )]
     InvalidResultArity { result: u16 },
     /// Invalid usage of Gas coin.
     /// The Gas coin can only be used by-value with a TransferObjects command.
+    #[error(
+        "Invalid taking of the Gas coin. \
+        It can only be used by-value with TransferObjects"
+    )]
     InvalidGasCoinUsage,
-    /// Invalid usage of move value.
+    /// Invalid usage of move value
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
+    #[error(
+        "Invalid usage of value. \
+        Mutably borrowed values require unique usage. \
+        Immutably borrowed values cannot be taken or borrowed mutably. \
+        Taken values cannot be used again."
+    )]
     InvalidValueUsage,
     /// Immutable objects cannot be passed by-value.
+    #[error("Immutable objects cannot be passed by-value.")]
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
+    #[error("Immutable objects cannot be passed by mutable reference, &mut.")]
     InvalidObjectByMutRef,
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
+    #[error(
+        "Shared object operations such a wrapping, freezing, or converting to owned are not \
+        allowed."
+    )]
     SharedObjectOperationNotAllowed,
     /// Invalid argument arity. Expected a single argument but found a result
     /// that expanded to multiple arguments.
+    #[error(
+        "Invalid argument arity. Expected a single argument but found a result that expanded to \
+        multiple arguments."
+    )]
     InvalidArgumentArity,
 }
 
 impl CommandArgumentError {
     crate::def_is!(
         TypeMismatch,
-        InvalidBcsBytes,
+        InvalidBCSBytes,
         InvalidUsageOfPureArgument,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds,
@@ -470,7 +696,7 @@ impl CommandArgumentError {
 /// unknown-upgrade-policy      = %x04 u8
 /// package-id-does-not-match   = %x05 object-id object-id
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -480,16 +706,22 @@ impl CommandArgumentError {
 #[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
+    #[error("Unable to fetch package at {package_id}")]
     UnableToFetchPackage { package_id: ObjectId },
     /// Object is not a package
+    #[error("Object {object_id} is not a package")]
     NotAPackage { object_id: ObjectId },
     /// Package upgrade is incompatible with previous version
+    #[error("New package is incompatible with previous version")]
     IncompatibleUpgrade,
     /// Digest in upgrade ticket and computed digest differ
+    #[error("Digest in upgrade ticket and computed digest disagree")]
     DigestDoesNotMatch { digest: Digest },
     /// Upgrade policy is not valid
+    #[error("Upgrade policy {policy} is not a valid upgrade policy")]
     UnknownUpgradePolicy { policy: u8 },
-    /// PackageId does not matach PackageId in upgrade ticket
+    /// PackageId does not match PackageId in upgrade ticket
+    #[error("Package ID {package_id} does not match package ID in upgrade ticket {ticket_id}")]
     PackageIdDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
@@ -518,7 +750,7 @@ impl PackageUpgradeError {
 /// type-not-found = %x00
 /// constraint-not-satisfied = %x01
 /// ```
-#[derive(Eq, PartialEq, Clone, Copy, Debug)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -533,8 +765,10 @@ impl PackageUpgradeError {
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
+    #[error("A type was not found in the module specified.")]
     TypeNotFound,
     /// A type provided did not match the specified constraint
+    #[error("A type provided did not match the specified constraints.")]
     ConstraintNotSatisfied,
 }
 
@@ -686,8 +920,8 @@ mod serialization {
             #[serde(with = "crate::_serde::ReadableDisplay")]
             code: u64,
         },
-        VmVerificationOrDeserializationError,
-        VmInvariantViolation,
+        VMVerificationOrDeserializationError,
+        VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
         TypeArityMismatch,
@@ -775,8 +1009,8 @@ mod serialization {
             location: MoveLocation,
             code: u64,
         },
-        VmVerificationOrDeserializationError,
-        VmInvariantViolation,
+        VMVerificationOrDeserializationError,
+        VMInvariantViolation,
         FunctionNotFound,
         ArityMismatch,
         TypeArityMismatch,
@@ -876,10 +1110,10 @@ mod serialization {
                     Self::MoveAbort { location, code } => {
                         ReadableExecutionError::MoveAbort { location, code }
                     }
-                    Self::VmVerificationOrDeserializationError => {
-                        ReadableExecutionError::VmVerificationOrDeserializationError
+                    Self::VMVerificationOrDeserializationError => {
+                        ReadableExecutionError::VMVerificationOrDeserializationError
                     }
-                    Self::VmInvariantViolation => ReadableExecutionError::VmInvariantViolation,
+                    Self::VMInvariantViolation => ReadableExecutionError::VMInvariantViolation,
                     Self::FunctionNotFound => ReadableExecutionError::FunctionNotFound,
                     Self::ArityMismatch => ReadableExecutionError::ArityMismatch,
                     Self::TypeArityMismatch => ReadableExecutionError::TypeArityMismatch,
@@ -995,10 +1229,10 @@ mod serialization {
                     Self::MoveAbort { location, code } => {
                         BinaryExecutionError::MoveAbort { location, code }
                     }
-                    Self::VmVerificationOrDeserializationError => {
-                        BinaryExecutionError::VmVerificationOrDeserializationError
+                    Self::VMVerificationOrDeserializationError => {
+                        BinaryExecutionError::VMVerificationOrDeserializationError
                     }
-                    Self::VmInvariantViolation => BinaryExecutionError::VmInvariantViolation,
+                    Self::VMInvariantViolation => BinaryExecutionError::VMInvariantViolation,
                     Self::FunctionNotFound => BinaryExecutionError::FunctionNotFound,
                     Self::ArityMismatch => BinaryExecutionError::ArityMismatch,
                     Self::TypeArityMismatch => BinaryExecutionError::TypeArityMismatch,
@@ -1123,10 +1357,10 @@ mod serialization {
                     ReadableExecutionError::MoveAbort { location, code } => {
                         Self::MoveAbort { location, code }
                     }
-                    ReadableExecutionError::VmVerificationOrDeserializationError => {
-                        Self::VmVerificationOrDeserializationError
+                    ReadableExecutionError::VMVerificationOrDeserializationError => {
+                        Self::VMVerificationOrDeserializationError
                     }
-                    ReadableExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+                    ReadableExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
                     ReadableExecutionError::FunctionNotFound => Self::FunctionNotFound,
                     ReadableExecutionError::ArityMismatch => Self::ArityMismatch,
                     ReadableExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
@@ -1239,10 +1473,10 @@ mod serialization {
                     BinaryExecutionError::MoveAbort { location, code } => {
                         Self::MoveAbort { location, code }
                     }
-                    BinaryExecutionError::VmVerificationOrDeserializationError => {
-                        Self::VmVerificationOrDeserializationError
+                    BinaryExecutionError::VMVerificationOrDeserializationError => {
+                        Self::VMVerificationOrDeserializationError
                     }
-                    BinaryExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+                    BinaryExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
                     BinaryExecutionError::FunctionNotFound => Self::FunctionNotFound,
                     BinaryExecutionError::ArityMismatch => Self::ArityMismatch,
                     BinaryExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
@@ -1324,7 +1558,7 @@ mod serialization {
     #[serde(tag = "kind", rename_all = "snake_case")]
     enum ReadableCommandArgumentError {
         TypeMismatch,
-        InvalidBcsBytes,
+        InvalidBCSBytes,
         InvalidUsageOfPureArgument,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds { index: u16 },
@@ -1341,7 +1575,7 @@ mod serialization {
     #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryCommandArgumentError {
         TypeMismatch,
-        InvalidBcsBytes,
+        InvalidBCSBytes,
         InvalidUsageOfPureArgument,
         InvalidArgumentToPrivateEntryFunction,
         IndexOutOfBounds { index: u16 },
@@ -1363,7 +1597,7 @@ mod serialization {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
                     Self::TypeMismatch => ReadableCommandArgumentError::TypeMismatch,
-                    Self::InvalidBcsBytes => ReadableCommandArgumentError::InvalidBcsBytes,
+                    Self::InvalidBCSBytes => ReadableCommandArgumentError::InvalidBCSBytes,
                     Self::InvalidUsageOfPureArgument => {
                         ReadableCommandArgumentError::InvalidUsageOfPureArgument
                     }
@@ -1401,7 +1635,7 @@ mod serialization {
             } else {
                 let binary = match self.clone() {
                     Self::TypeMismatch => BinaryCommandArgumentError::TypeMismatch,
-                    Self::InvalidBcsBytes => BinaryCommandArgumentError::InvalidBcsBytes,
+                    Self::InvalidBCSBytes => BinaryCommandArgumentError::InvalidBCSBytes,
                     Self::InvalidUsageOfPureArgument => {
                         BinaryCommandArgumentError::InvalidUsageOfPureArgument
                     }
@@ -1442,7 +1676,7 @@ mod serialization {
                 ReadableCommandArgumentError::deserialize(deserializer).map(|readable| {
                     match readable {
                         ReadableCommandArgumentError::TypeMismatch => Self::TypeMismatch,
-                        ReadableCommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+                        ReadableCommandArgumentError::InvalidBCSBytes => Self::InvalidBCSBytes,
                         ReadableCommandArgumentError::InvalidUsageOfPureArgument => {
                             Self::InvalidUsageOfPureArgument
                         }
@@ -1480,7 +1714,7 @@ mod serialization {
             } else {
                 BinaryCommandArgumentError::deserialize(deserializer).map(|binary| match binary {
                     BinaryCommandArgumentError::TypeMismatch => Self::TypeMismatch,
-                    BinaryCommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+                    BinaryCommandArgumentError::InvalidBCSBytes => Self::InvalidBCSBytes,
                     BinaryCommandArgumentError::InvalidUsageOfPureArgument => {
                         Self::InvalidUsageOfPureArgument
                     }

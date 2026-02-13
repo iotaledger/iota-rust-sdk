@@ -189,7 +189,7 @@ pub enum ExecutionError {
     /// Bytecode verification error.
     VmVerificationOrDeserialization,
     /// MoveVm invariant violation
-    VmInvariantViolation,
+    VMInvariantViolation,
     // Programmable Transaction Errors
     /// Function not found
     FunctionNotFound,
@@ -315,10 +315,10 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 location: location.into(),
                 code,
             },
-            iota_sdk::types::ExecutionError::VmVerificationOrDeserializationError => {
+            iota_sdk::types::ExecutionError::VMVerificationOrDeserializationError => {
                 Self::VmVerificationOrDeserialization
             }
-            iota_sdk::types::ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+            iota_sdk::types::ExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
             iota_sdk::types::ExecutionError::FunctionNotFound => Self::FunctionNotFound,
             iota_sdk::types::ExecutionError::ArityMismatch => Self::ArityMismatch,
             iota_sdk::types::ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
@@ -447,9 +447,9 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 code,
             },
             ExecutionError::VmVerificationOrDeserialization => {
-                Self::VmVerificationOrDeserializationError
+                Self::VMVerificationOrDeserializationError
             }
-            ExecutionError::VmInvariantViolation => Self::VmInvariantViolation,
+            ExecutionError::VMInvariantViolation => Self::VMInvariantViolation,
             ExecutionError::FunctionNotFound => Self::FunctionNotFound,
             ExecutionError::ArityMismatch => Self::ArityMismatch,
             ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
@@ -617,7 +617,7 @@ pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
-    InvalidBcsBytes,
+    InvalidBCSBytes,
     /// The argument cannot be instantiated from raw bytes
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.
