@@ -4035,6 +4035,274 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5824,6 +6092,86 @@ fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_config(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_structtag_is_url(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_structtag_name(
@@ -6106,6 +6454,12 @@ fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_framework(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes(
@@ -6118,11 +6472,23 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_max(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_stardust(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_std(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_address_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_address_zero(
 ): Short
@@ -6290,7 +6656,143 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_mainnet(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_config(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_field(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_random(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_string(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned(
 ): Short
@@ -6436,9 +6938,15 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_package(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes(
 ): Short
@@ -6450,7 +6958,21 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_max(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_std(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero(
 ): Short
@@ -6648,6 +7170,10 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_clock(
@@ -6670,15 +7196,17 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_deny_list_global_paus
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap(
 ): Short
@@ -6687,6 +7215,12 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_state(
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_treasury_cap(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota(
 ): Short
@@ -6702,6 +7236,8 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_transfer_receiving(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_cap(
@@ -6710,7 +7246,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_receipt(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated(
+fun uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new(
 ): Short
@@ -6894,6 +7430,12 @@ internal interface UniffiLib : Library {
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_framework(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -6906,11 +7448,23 @@ fun uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(`hex`: Ru
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_max(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_random(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_stardust(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_std(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_system(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_address_system_state(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_address_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -7822,7 +8376,143 @@ fun uniffi_iota_sdk_ffi_fn_clone_identifier(`ptr`: Pointer,uniffi_out_err: Uniff
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_identifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_balance(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_clock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_config(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_field(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_id(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_name(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_identifier_new(`identifier`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_option(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_random(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_setting(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_string(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_identifier_as_str(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
@@ -8394,9 +9084,15 @@ fun uniffi_iota_sdk_ffi_fn_clone_objectid(`ptr`: Pointer,uniffi_out_err: UniffiR
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_objectid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(`digest`: Pointer,`count`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(`bytes`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8408,7 +9104,21 @@ fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(`hex`: R
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(`hex`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_max(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_std(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_objectid_zero(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -8806,19 +9516,6 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(`ptr`: Point
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
-): Unit
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -8913,6 +9610,19 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne(`ptr`: P
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
+): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9103,6 +9813,10 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new(`address`: Pointer,`module`
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_ascii_string(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_clock(uniffi_out_err: UniffiRustCallStatus, 
@@ -9125,15 +9839,17 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_deny_list_global_pause_key(
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_created(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(`key`: Pointer,`value`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas_coin(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_admin_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9142,6 +9858,12 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_system_state(uniffi_ou
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_treasury_cap(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(`address`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(`typeTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_staked_iota(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9157,6 +9879,8 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_transfer_receiving(uniffi_o
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_treasury_cap(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_cap(uniffi_out_err: UniffiRustCallStatus, 
@@ -9165,7 +9889,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_receipt(uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_upgrade_ticket(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(`structTag`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -9173,6 +9897,86 @@ fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type(`ptr`: Pointer,uniffi_out_
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_config(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_id(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_option(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_random(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_string(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
+fun uniffi_iota_sdk_ffi_fn_method_structtag_is_url(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Byte
 fun uniffi_iota_sdk_ffi_fn_method_structtag_module(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_structtag_name(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -13487,10 +14291,130 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 64023.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 46821.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state() != 10185.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag() != 46309.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock() != 5225.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin() != 61913.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager() != 52348.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata() != 34817.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config() != 41259.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting() != 27038.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key() != 64455.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key() != 30183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key() != 4914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created() != 21370.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 59690.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas() != 56237.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_id() != 41991.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap() != 56508.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state() != 60130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 5722.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_random() != 4566.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota() != 19914.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_string() != 21518.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event() != 20500.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock() != 6190.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota() != 14954.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving() != 5695.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap() != 65088.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context() != 18584.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid() != 1904.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap() != 64642.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt() != 4130.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket() != 6624.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_is_url() != 59887.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022.toShort()) {
@@ -13916,6 +14840,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() != 49665.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_authenticator_state() != 23906.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_clock() != 41996.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_deny_list() != 26355.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -13934,13 +14867,31 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge() != 48414.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge() != 43861.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_max() != 5717.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state() != 62353.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_stardust() != 7116.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_system_state() != 26799.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553.toShort()) {
@@ -14192,7 +15143,211 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module() != 21861.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state() != 16216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module() != 64126.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag() != 48457.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module() != 54361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance() != 45299.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module() != 34758.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock() != 54114.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module() != 45072.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin() != 52194.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager() != 49557.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module() != 55970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata() != 40674.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module() != 34814.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config() != 4576.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key() != 17555.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module() != 11061.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module() != 25060.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created() != 25565.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module() != 18646.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module() != 44243.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module() != 43439.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_field() != 36751.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key() != 59135.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_id() != 9401.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota() != 34383.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module() != 20466.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap() != 27582.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module() != 34279.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state() != 22040.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module() != 21899.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap() != 12741.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_name() != 13462.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module() != 11183.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag() != 36980.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module() != 59882.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module() != 16938.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option() != 5076.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module() != 36087.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module() != 762.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module() != 31781.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random() != 50490.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module() != 5588.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving() != 44248.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting() != 47313.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota() != 39180.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module() != 45878.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_string() != 22623.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module() != 48728.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module() != 43315.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module() != 25559.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota() != 44822.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module() != 27461.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module() != 617.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap() != 21659.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context() != 53898.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module() != 6086.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid() != 39877.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap() != 16692.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt() != 32459.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type() != 23055.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper() != 61185.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() != 33908.toShort()) {
@@ -14411,10 +15566,19 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state() != 13697.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list() != 39911.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework() != 24526.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789.toShort()) {
@@ -14432,7 +15596,28 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge() != 44008.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge() != 39804.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_max() != 27865.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state() != 39736.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust() != 21114.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_std() != 6468.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526.toShort()) {
@@ -14729,6 +15914,12 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state() != 59432.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag() != 17783.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14762,19 +15953,22 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() != 24465.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 51044.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() != 4196.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas() != 58980.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595.toShort()) {
@@ -14787,6 +15981,15 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random() != 25141.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970.toShort()) {
@@ -14810,6 +16013,9 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() != 2523.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context() != 39269.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() != 54533.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
@@ -14822,7 +16028,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() != 43936.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url() != 23915.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944.toShort()) {
@@ -16117,6 +17323,36 @@ open class Address: Disposable, AutoCloseable, AddressInterface
 
     
     companion object {
+         fun `authenticatorState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clock`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyList`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_deny_list(
+        _status)
+}
+    )
+    }
+    
+
          fun `framework`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
@@ -16202,10 +17438,60 @@ open class Address: Disposable, AutoCloseable, AddressInterface
     }
     
 
+         fun `genesisBridge`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `genesisIotaBridge`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `max`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_max(
+        _status)
+}
+    )
+    }
+    
+
          fun `random`(): Address {
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_random(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomnessState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stardust`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_stardust(
         _status)
 }
     )
@@ -16226,6 +17512,16 @@ open class Address: Disposable, AutoCloseable, AddressInterface
             return FfiConverterTypeAddress.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemState`(): Address {
+            return FfiConverterTypeAddress.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_address_system_state(
         _status)
 }
     )
@@ -31492,8 +32788,689 @@ open class Identifier: Disposable, AutoCloseable, IdentifierInterface
     }
 
     
+    companion object {
+         fun `addressKey`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key(
+        _status)
+}
+    )
+    }
     
-    companion object
+
+         fun `asciiModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `authenticatorState`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `authenticatorStateModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `bag`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag(
+        _status)
+}
+    )
+    }
+    
+
+         fun `bagModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `balance`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_balance(
+        _status)
+}
+    )
+    }
+    
+
+         fun `balanceModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clock`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `clockModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coin`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinManager`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinManagerModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinMetadata`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata(
+        _status)
+}
+    )
+    }
+    
+
+         fun `coinModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `config`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_config(
+        _status)
+}
+    )
+    }
+    
+
+         fun `configKey`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `configModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyListModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `displayCreated`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created(
+        _status)
+}
+    )
+    }
+    
+
+         fun `displayModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `dynamicFieldModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `dynamicObjectFieldModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `field`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_field(
+        _status)
+}
+    )
+    }
+    
+
+         fun `globalPauseKey`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key(
+        _status)
+}
+    )
+    }
+    
+
+         fun `id`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_id(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iota`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemAdminCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemState`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaSystemStateInnerModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `iotaTreasuryCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `name`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_name(
+        _status)
+}
+    )
+    }
+    
+
+         fun `nameModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectBag`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectBagModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `objectModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `option`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_option(
+        _status)
+}
+    )
+    }
+    
+
+         fun `optionModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `packageModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `payModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `random`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_random(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `receiving`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving(
+        _status)
+}
+    )
+    }
+    
+
+         fun `setting`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_setting(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stakedIota`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stakingPoolModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `string`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_string(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stringModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemAdminCapModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemEpochInfoEvent`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timeLock`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timelockModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timelockedStakedIota`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota(
+        _status)
+}
+    )
+    }
+    
+
+         fun `timelockedStakingModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `transferModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `treasuryCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `txContext`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context(
+        _status)
+}
+    )
+    }
+    
+
+         fun `txContextModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `uid`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_uid(
+        _status)
+}
+    )
+    }
+    
+
+         fun `upgradeCap`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap(
+        _status)
+}
+    )
+    }
+    
+
+         fun `upgradeReceipt`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt(
+        _status)
+}
+    )
+    }
+    
+
+         fun `upgradeTicket`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket(
+        _status)
+}
+    )
+    }
+    
+
+         fun `urlModule`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module(
+        _status)
+}
+    )
+    }
+    
+
+         fun `urlType`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type(
+        _status)
+}
+    )
+    }
+    
+
+         fun `versionUpdated`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated(
+        _status)
+}
+    )
+    }
+    
+
+         fun `wrapper`(): Identifier {
+            return FfiConverterTypeIdentifier.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper(
+        _status)
+}
+    )
+    }
+    
+
+        
+    }
     
 }
 
@@ -40495,10 +42472,30 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
 
     
     companion object {
+         fun `authenticatorState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
          fun `clock`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_clock(
+        _status)
+}
+    )
+    }
+    
+
+         fun `denyList`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list(
         _status)
 }
     )
@@ -40514,6 +42511,16 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_derive_id(
         FfiConverterTypeDigest.lower(`digest`),FfiConverterULong.lower(`count`),_status)
+}
+    )
+    }
+    
+
+         fun `framework`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_framework(
+        _status)
 }
     )
     }
@@ -40594,10 +42601,80 @@ open class ObjectId: Disposable, AutoCloseable, ObjectIdInterface
     }
     
 
+         fun `genesisBridge`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `genesisIotaBridge`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge(
+        _status)
+}
+    )
+    }
+    
+
+         fun `max`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_max(
+        _status)
+}
+    )
+    }
+    
+
+         fun `randomnessState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `stardust`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust(
+        _status)
+}
+    )
+    }
+    
+
+         fun `std`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_std(
+        _status)
+}
+    )
+    }
+    
+
          fun `system`(): ObjectId {
             return FfiConverterTypeObjectId.lift(
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system(
+        _status)
+}
+    )
+    }
+    
+
+         fun `systemState`(): ObjectId {
+            return FfiConverterTypeObjectId.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state(
         _status)
 }
     )
@@ -45743,7 +47820,7 @@ open class Secp256k1VerifyingKey: Disposable, AutoCloseable, Secp256k1VerifyingK
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256k1VerifyingKey.lower(`other`),_status)
 }
     }
@@ -45994,7 +48071,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     constructor(`bytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46050,7 +48127,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(ptr, status)
                 }
             }
         }
@@ -46058,7 +48135,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer!!, status)
         }
     }
 
@@ -46069,7 +48146,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
         it, _status)
 }
     }
@@ -46081,7 +48158,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
         it, _status)
 }
     }
@@ -46097,7 +48174,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
         it, FfiConverterTypePersonalMessage.lower(`message`),_status)
 }
     }
@@ -46113,7 +48190,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
         it, FfiConverterTypeTransaction.lower(`transaction`),_status)
 }
     }
@@ -46130,7 +48207,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
         it, _status)
 }
     }
@@ -46145,7 +48222,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
         it, _status)
 }
     }
@@ -46161,7 +48238,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
         it, _status)
 }
     }
@@ -46177,7 +48254,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
         it, _status)
 }
     }
@@ -46193,7 +48270,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1Signature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -46209,7 +48286,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -46225,7 +48302,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeUserSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
         it, FfiConverterByteArray.lower(`message`),_status)
 }
     }
@@ -46237,7 +48314,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
             return FfiConverterTypeSecp256r1VerifyingKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
         it, _status)
 }
     }
@@ -46253,7 +48330,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PrivateKey.lower(`other`),_status)
 }
     }
@@ -46271,7 +48348,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromBech32`(`value`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
         FfiConverterString.lower(`value`),_status)
 }
     )
@@ -46286,7 +48363,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromDer`(`bytes`: kotlin.ByteArray): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46300,7 +48377,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonic`(`phrase`: kotlin.String, `accountIndex`: kotlin.ULong = 0uL, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
         FfiConverterString.lower(`phrase`),FfiConverterULong.lower(`accountIndex`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -46315,7 +48392,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromMnemonicWithPath`(`phrase`: kotlin.String, `path`: kotlin.String, `password`: kotlin.String = ""): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
         FfiConverterString.lower(`phrase`),FfiConverterString.lower(`path`),FfiConverterString.lower(`password`),_status)
 }
     )
@@ -46329,7 +48406,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
     @Throws(SdkFfiException::class) fun `fromPem`(`s`: kotlin.String): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46342,7 +48419,7 @@ open class Secp256r1PrivateKey: Disposable, AutoCloseable, Secp256r1PrivateKeyIn
      */ fun `generate`(): Secp256r1PrivateKey {
             return FfiConverterTypeSecp256r1PrivateKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
         _status)
 }
     )
@@ -46601,7 +48678,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1publickey(ptr, status)
                 }
             }
         }
@@ -46609,7 +48686,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(pointer!!, status)
         }
     }
 
@@ -46626,7 +48703,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_derive_address(
         it, _status)
 }
     }
@@ -46641,7 +48718,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterTypeSignatureScheme.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_scheme(
         it, _status)
 }
     }
@@ -46653,7 +48730,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_bytes(
         it, _status)
 }
     }
@@ -46668,7 +48745,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_to_flagged_bytes(
         it, _status)
 }
     }
@@ -46684,7 +48761,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1PublicKey.lower(`other`),_status)
 }
     }
@@ -46695,7 +48772,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1publickey_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -46708,7 +48785,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -46719,7 +48796,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -46729,7 +48806,7 @@ open class Secp256r1PublicKey: Disposable, AutoCloseable, Secp256r1PublicKeyInte
          fun `generate`(): Secp256r1PublicKey {
             return FfiConverterTypeSecp256r1PublicKey.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1publickey_generate(
         _status)
 }
     )
@@ -46967,7 +49044,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1signature(ptr, status)
                 }
             }
         }
@@ -46975,7 +49052,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1signature(pointer!!, status)
         }
     }
 
@@ -46983,7 +49060,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_to_bytes(
         it, _status)
 }
     }
@@ -46999,7 +49076,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_eq(
         it, FfiConverterTypeSecp256r1Signature.lower(`other`),_status)
 }
     }
@@ -47010,7 +49087,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -47023,7 +49100,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromBytes`(`bytes`: kotlin.ByteArray): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_bytes(
         FfiConverterByteArray.lower(`bytes`),_status)
 }
     )
@@ -47034,7 +49111,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
     @Throws(SdkFfiException::class) fun `fromStr`(`s`: kotlin.String): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_from_str(
         FfiConverterString.lower(`s`),_status)
 }
     )
@@ -47044,7 +49121,7 @@ open class Secp256r1Signature: Disposable, AutoCloseable, Secp256r1SignatureInte
          fun `generate`(): Secp256r1Signature {
             return FfiConverterTypeSecp256r1Signature.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_secp256r1signature_generate(
         _status)
 }
     )
@@ -49804,14 +51881,99 @@ public interface StructTagInterface {
     fun `address`(): Address
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
     fun `coinType`(): TypeTag
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
     fun `coinTypeOpt`(): TypeTag?
+    
+    fun `isAsciiString`(): kotlin.Boolean
+    
+    fun `isAuthenticatorState`(): kotlin.Boolean
+    
+    fun `isBag`(): kotlin.Boolean
+    
+    fun `isBalance`(): kotlin.Boolean
+    
+    fun `isClock`(): kotlin.Boolean
+    
+    fun `isCoin`(): kotlin.Boolean
+    
+    fun `isCoinManager`(): kotlin.Boolean
+    
+    fun `isCoinMetadata`(): kotlin.Boolean
+    
+    fun `isConfig`(): kotlin.Boolean
+    
+    fun `isConfigSetting`(): kotlin.Boolean
+    
+    fun `isDenyListAddressKey`(): kotlin.Boolean
+    
+    fun `isDenyListConfigKey`(): kotlin.Boolean
+    
+    fun `isDenyListGlobalPauseKey`(): kotlin.Boolean
+    
+    fun `isDisplayCreated`(): kotlin.Boolean
+    
+    fun `isDisplayVersionUpdated`(): kotlin.Boolean
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+    fun `isDynamicField`(): kotlin.Boolean
+    
+    fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean
+    
+    fun `isGas`(): kotlin.Boolean
+    
+    fun `isGasCoin`(): kotlin.Boolean
+    
+    fun `isId`(): kotlin.Boolean
+    
+    fun `isIotaSystemAdminCap`(): kotlin.Boolean
+    
+    fun `isIotaSystemState`(): kotlin.Boolean
+    
+    fun `isIotaTreasuryCap`(): kotlin.Boolean
+    
+    fun `isName`(): kotlin.Boolean
+    
+    fun `isObjectBag`(): kotlin.Boolean
+    
+    fun `isOption`(): kotlin.Boolean
+    
+    fun `isRandom`(): kotlin.Boolean
+    
+    fun `isStakedIota`(): kotlin.Boolean
+    
+    fun `isString`(): kotlin.Boolean
+    
+    fun `isSystemEpochInfoEvent`(): kotlin.Boolean
+    
+    fun `isTimeLock`(): kotlin.Boolean
+    
+    fun `isTimelockedStakedIota`(): kotlin.Boolean
+    
+    fun `isTransferReceiving`(): kotlin.Boolean
+    
+    fun `isTreasuryCap`(): kotlin.Boolean
+    
+    fun `isTxContext`(): kotlin.Boolean
+    
+    fun `isUid`(): kotlin.Boolean
+    
+    fun `isUpgradeCap`(): kotlin.Boolean
+    
+    fun `isUpgradeReceipt`(): kotlin.Boolean
+    
+    fun `isUpgradeTicket`(): kotlin.Boolean
+    
+    fun `isUrl`(): kotlin.Boolean
     
     /**
      * Returns the module part of a `StructTag`
@@ -49957,7 +52119,8 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */override fun `coinType`(): TypeTag {
             return FfiConverterTypeTypeTag.lift(
     callWithPointer {
@@ -49972,12 +52135,496 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
 
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */override fun `coinTypeOpt`(): TypeTag? {
             return FfiConverterOptionalTypeTypeTag.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAsciiString`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isAuthenticatorState`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isBag`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isBalance`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isClock`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoin`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoinManager`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isCoinMetadata`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isConfig`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_config(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isConfigSetting`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListAddressKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListConfigKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDenyListGlobalPauseKey`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDisplayCreated`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDisplayVersionUpdated`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */override fun `isDynamicField`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isDynamicObjectFieldWrapper`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isGas`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isGasCoin`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isId`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_id(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaSystemAdminCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaSystemState`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isIotaTreasuryCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isName`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_name(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isObjectBag`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isOption`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_option(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isRandom`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_random(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isStakedIota`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isString`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_string(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isSystemEpochInfoEvent`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTimeLock`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTimelockedStakedIota`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTransferReceiving`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTreasuryCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isTxContext`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUid`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeCap`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeReceipt`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUpgradeTicket`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `isUrl`(): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_structtag_is_url(
         it, _status)
 }
     }
@@ -50095,6 +52742,26 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+         fun `newAuthenticatorState`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newBag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag(
+        _status)
+}
+    )
+    }
+    
+
          fun `newBalance`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
@@ -50205,6 +52872,30 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+         fun `newDisplayVersionUpdated`(`structTag`: StructTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(
+        FfiConverterTypeStructTag.lower(`structTag`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Creates a new dynamic field struct tag
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */ fun `newDynamicField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(
+        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
+}
+    )
+    }
+    
+
          fun `newDynamicObjectFieldWrapper`(`typeTag`: TypeTag): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
@@ -50215,11 +52906,11 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-         fun `newField`(`key`: TypeTag, `value`: TypeTag): StructTag {
+         fun `newGas`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
-        FfiConverterTypeTypeTag.lower(`key`),FfiConverterTypeTypeTag.lower(`value`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas(
+        _status)
 }
     )
     }
@@ -50239,16 +52930,6 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id(
-        _status)
-}
-    )
-    }
-    
-
-         fun `newIotaCoinType`(): StructTag {
-            return FfiConverterTypeStructTag.lift(
-    uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type(
         _status)
 }
     )
@@ -50290,6 +52971,36 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     uniffiRustCall() { _status ->
     UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress.lower(`address`),_status)
+}
+    )
+    }
+    
+
+         fun `newObjectBag`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag(
+        _status)
+}
+    )
+    }
+    
+
+         fun `newOption`(`typeTag`: TypeTag): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(
+        FfiConverterTypeTypeTag.lower(`typeTag`),_status)
+}
+    )
+    }
+    
+
+         fun `newRandom`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random(
+        _status)
 }
     )
     }
@@ -50365,6 +53076,16 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
+         fun `newTxContext`(): StructTag {
+            return FfiConverterTypeStructTag.lift(
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context(
+        _status)
+}
+    )
+    }
+    
+
          fun `newUid`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
@@ -50405,11 +53126,11 @@ open class StructTag: Disposable, AutoCloseable, StructTagInterface
     }
     
 
-         fun `newVersionUpdated`(`structTag`: StructTag): StructTag {
+         fun `newUrl`(): StructTag {
             return FfiConverterTypeStructTag.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
-        FfiConverterTypeStructTag.lower(`structTag`),_status)
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url(
+        _status)
 }
     )
     }

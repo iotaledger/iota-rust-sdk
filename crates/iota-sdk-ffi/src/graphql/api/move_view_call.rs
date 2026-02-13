@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::MoveViewResult},
-    types::{address::Address, object::ObjectId, type_tag::TypeTag},
+    types::{address::Address, move_core::TypeTag, object::ObjectId},
 };
 
 /// An argument for a Move View Function call.

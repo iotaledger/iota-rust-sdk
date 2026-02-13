@@ -42,7 +42,6 @@ pub mod move_authenticator;
 pub mod ptb_arguments;
 pub mod signer;
 
-const IOTA_SYSTEM_MODULE: &str = "iota_system";
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 
@@ -686,9 +685,13 @@ impl<C, L> TransactionBuilder<C, L> {
         validator_address: Address,
     ) -> &mut Self {
         let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
-        self.move_call(Address::SYSTEM, IOTA_SYSTEM_MODULE, REQUEST_ADD_STAKE_FN)
-            .arguments((SharedMut(ObjectId::SYSTEM), coin, validator_address))
-            .state_change()
+        self.move_call(
+            Address::SYSTEM,
+            Identifier::IOTA_SYSTEM_MODULE.as_str(),
+            REQUEST_ADD_STAKE_FN,
+        )
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), coin, validator_address))
+        .state_change()
     }
 
     /// Withdraw stake from a validator's staking pool.
@@ -718,10 +721,10 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn unstake<S: PTBArgument>(&mut self, staked_iota: S) -> &mut Self {
         self.move_call(
             Address::SYSTEM,
-            IOTA_SYSTEM_MODULE,
+            Identifier::IOTA_SYSTEM_MODULE.as_str(),
             REQUEST_WITHDRAW_STAKE_FN,
         )
-        .arguments((SharedMut(ObjectId::SYSTEM), staked_iota))
+        .arguments((SharedMut(ObjectId::SYSTEM_STATE), staked_iota))
         .state_change()
     }
 
