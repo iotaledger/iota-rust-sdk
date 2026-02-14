@@ -88,6 +88,47 @@ pub struct ValidatorAggregatedSignature {
     pub bitmap: roaring::RoaringBitmap,
 }
 
+impl std::fmt::Display for ValidatorCommittee {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "ValidatorCommittee(epoch: {}, members: {})",
+            self.epoch,
+            self.members.len()
+        )
+    }
+}
+
+impl std::fmt::Display for ValidatorCommitteeMember {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "ValidatorCommitteeMember(key: {}, stake: {})",
+            self.public_key, self.stake
+        )
+    }
+}
+
+impl std::fmt::Display for ValidatorAggregatedSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "ValidatorAggregatedSignature(epoch: {}, sig: {})",
+            self.epoch, self.signature
+        )
+    }
+}
+
+impl std::fmt::Display for ValidatorSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "ValidatorSignature(epoch: {}, key: {}, sig: {})",
+            self.epoch, self.public_key, self.signature
+        )
+    }
+}
+
 #[cfg(feature = "serde")]
 type RoaringBitMapSerialization = ::serde_with::As<
     ::serde_with::IfIsHumanReadable<

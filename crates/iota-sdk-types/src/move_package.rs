@@ -59,6 +59,18 @@ pub struct MovePackageData {
     pub digest: Digest,
 }
 
+impl std::fmt::Display for MovePackageData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "MovePackageData(modules: {}, dependencies: {}, digest: {})",
+            self.modules.len(),
+            self.dependencies.len(),
+            self.digest
+        )
+    }
+}
+
 impl MovePackageData {
     #[cfg(feature = "hash")]
     pub fn new(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {

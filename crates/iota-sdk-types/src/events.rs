@@ -19,6 +19,12 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransactionEvents(pub Vec<Event>);
 
+impl std::fmt::Display for TransactionEvents {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "TransactionEvents({} events)", self.0.len())
+    }
+}
+
 /// An event
 ///
 /// # BCS
@@ -58,6 +64,16 @@ pub struct Event {
     pub contents: Vec<u8>,
 }
 
+impl std::fmt::Display for Event {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Event(type: {}, sender: {}, package: {}::{})",
+            self.type_, self.sender, self.package_id, self.module
+        )
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(
     feature = "serde",
@@ -78,4 +94,15 @@ pub struct BalanceChange {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
     pub amount: i128,
+}
+
+impl std::fmt::Display for BalanceChange {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let sign = if self.amount >= 0 { "+" } else { "" };
+        write!(
+            f,
+            "BalanceChange({}{} {}, owner: {})",
+            sign, self.amount, self.coin_type, self.address
+        )
+    }
 }

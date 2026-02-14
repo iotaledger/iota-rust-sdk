@@ -52,6 +52,16 @@ pub struct PasskeyAuthenticator {
     client_data_json: String,
 }
 
+impl std::fmt::Display for PasskeyAuthenticator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "PasskeyAuthenticator(authenticator_data_len: {})",
+            self.authenticator_data.len()
+        )
+    }
+}
+
 impl PasskeyAuthenticator {
     /// Opaque authenticator data for this passkey signature.
     ///
@@ -104,6 +114,12 @@ impl PasskeyAuthenticator {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PasskeyPublicKey(Secp256r1PublicKey);
+
+impl std::fmt::Display for PasskeyPublicKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "PasskeyPublicKey")
+    }
+}
 
 impl PasskeyPublicKey {
     pub fn new(public_key: Secp256r1PublicKey) -> Self {

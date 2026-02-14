@@ -53,6 +53,16 @@ pub struct Intent {
     pub app_id: IntentAppId,
 }
 
+impl std::fmt::Display for Intent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Intent(scope: {}, version: {}, app_id: {})",
+            self.scope, self.version, self.app_id
+        )
+    }
+}
+
 impl Intent {
     pub fn new(scope: IntentScope, version: IntentVersion, app_id: IntentAppId) -> Self {
         Self {
@@ -169,6 +179,23 @@ pub enum IntentScope {
     AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
 }
 
+impl std::fmt::Display for IntentScope {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IntentScope::TransactionData => write!(f, "TransactionData"),
+            IntentScope::TransactionEffects => write!(f, "TransactionEffects"),
+            IntentScope::CheckpointSummary => write!(f, "CheckpointSummary"),
+            IntentScope::PersonalMessage => write!(f, "PersonalMessage"),
+            IntentScope::SenderSignedTransaction => write!(f, "SenderSignedTransaction"),
+            IntentScope::ProofOfPossession => write!(f, "ProofOfPossession"),
+            IntentScope::BridgeEventDeprecated => write!(f, "BridgeEventDeprecated"),
+            IntentScope::ConsensusBlock => write!(f, "ConsensusBlock"),
+            IntentScope::DiscoveryPeers => write!(f, "DiscoveryPeers"),
+            IntentScope::AuthorityCapabilities => write!(f, "AuthorityCapabilities"),
+        }
+    }
+}
+
 impl IntentScope {
     crate::def_is!(
         TransactionData,
@@ -217,6 +244,14 @@ pub enum IntentVersion {
     V0 = 0,
 }
 
+impl std::fmt::Display for IntentVersion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IntentVersion::V0 => write!(f, "V0"),
+        }
+    }
+}
+
 impl IntentVersion {
     crate::def_is!(V0);
 }
@@ -257,6 +292,15 @@ pub enum IntentAppId {
     Consensus = 1,
 }
 
+impl std::fmt::Display for IntentAppId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IntentAppId::Iota => write!(f, "Iota"),
+            IntentAppId::Consensus => write!(f, "Consensus"),
+        }
+    }
+}
+
 impl IntentAppId {
     crate::def_is!(Iota, Consensus);
 }
@@ -285,6 +329,12 @@ pub struct IntentMessage<T> {
     pub value: T,
 }
 
+impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "IntentMessage(intent: {}, value: {})", self.intent, self.value)
+    }
+}
+
 impl<T> IntentMessage<T> {
     pub fn new(intent: Intent, value: T) -> Self {
         Self { intent, value }
@@ -307,7 +357,22 @@ pub enum HashingIntentScope {
     RegularObjectId = 0xf1,
 }
 
+impl std::fmt::Display for HashingIntentScope {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            HashingIntentScope::ChildObjectId => write!(f, "ChildObjectId"),
+            HashingIntentScope::RegularObjectId => write!(f, "RegularObjectId"),
+        }
+    }
+}
+
 /// A personal message that wraps around a byte array.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
+
+impl<'a> std::fmt::Display for PersonalMessage<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "PersonalMessage(len: {})", self.0.len())
+    }
+}

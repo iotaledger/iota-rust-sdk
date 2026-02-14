@@ -13,6 +13,16 @@ pub struct Coin {
     balance: u64,
 }
 
+impl std::fmt::Display for Coin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Coin(type: {}, id: {}, balance: {})",
+            self.coin_type, self.id, self.balance
+        )
+    }
+}
+
 impl Coin {
     pub fn coin_type(&self) -> &TypeTag {
         &self.coin_type

@@ -16,7 +16,7 @@ use crate::{checkpoint::EpochId, u256::U256};
 /// zklogin     = zklogin-flag
 ///               zklogin-inputs
 ///               u64               ; max epoch
-///               simple-signature    
+///               simple-signature
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
@@ -35,6 +35,12 @@ pub struct ZkLoginAuthenticator {
     pub max_epoch: EpochId,
     /// User signature with the pubkey attested to by the provided proof.
     pub signature: SimpleSignature,
+}
+
+impl std::fmt::Display for ZkLoginAuthenticator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ZkLoginAuthenticator(max_epoch: {})", self.max_epoch)
+    }
 }
 
 /// A zklogin groth16 proof and the required inputs to perform proof
@@ -59,6 +65,12 @@ pub struct ZkLoginInputs {
     jwt_header: JwtHeader,
     jwk_id: JwkId,
     public_identifier: ZkLoginPublicIdentifier,
+}
+
+impl std::fmt::Display for ZkLoginInputs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ZkLoginInputs(iss: {})", self.public_identifier.iss)
+    }
 }
 
 impl ZkLoginInputs {
@@ -199,6 +211,12 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
 pub struct ZkLoginClaim {
     pub value: String,
     pub index_mod_4: u8,
+}
+
+impl std::fmt::Display for ZkLoginClaim {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ZkLoginClaim(index_mod_4: {})", self.index_mod_4)
+    }
 }
 
 #[derive(Debug)]
@@ -404,6 +422,12 @@ pub struct ZkLoginProof {
     pub c: CircomG1,
 }
 
+impl std::fmt::Display for ZkLoginProof {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ZkLoginProof")
+    }
+}
+
 /// A G1 point
 ///
 /// This represents the canonical decimal representation of the projective
@@ -421,6 +445,12 @@ pub struct ZkLoginProof {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG1(pub [Bn254FieldElement; 3]);
 
+impl std::fmt::Display for CircomG1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CircomG1")
+    }
+}
+
 /// A G2 point
 ///
 /// This represents the canonical decimal representation of the coefficients of
@@ -437,6 +467,12 @@ pub struct CircomG1(pub [Bn254FieldElement; 3]);
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
+
+impl std::fmt::Display for CircomG2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CircomG2")
+    }
+}
 
 /// Public Key equivalent for Zklogin authenticators
 ///
@@ -498,6 +534,12 @@ pub struct ZkLoginPublicIdentifier {
     address_seed: Bn254FieldElement,
 }
 
+impl std::fmt::Display for ZkLoginPublicIdentifier {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ZkLoginPublicIdentifier(iss: {})", self.iss)
+    }
+}
+
 impl ZkLoginPublicIdentifier {
     pub fn new(iss: String, address_seed: Bn254FieldElement) -> Option<Self> {
         if iss.len() > 255 {
@@ -544,6 +586,12 @@ pub struct Jwk {
     pub alg: String,
 }
 
+impl std::fmt::Display for Jwk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Jwk(kty: {}, alg: {})", self.kty, self.alg)
+    }
+}
+
 /// Key to uniquely identify a JWK
 ///
 /// # BCS
@@ -562,6 +610,12 @@ pub struct JwkId {
     pub iss: String,
     /// A key id use to uniquely identify a key from an OIDC provider.
     pub kid: String,
+}
+
+impl std::fmt::Display for JwkId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "JwkId(iss: {}, kid: {})", self.iss, self.kid)
+    }
 }
 
 /// A point on the BN254 elliptic curve.

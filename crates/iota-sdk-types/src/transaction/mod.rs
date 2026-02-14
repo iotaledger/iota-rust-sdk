@@ -37,6 +37,14 @@ pub enum Transaction {
     // in the validity_check function based on the protocol config.
 }
 
+impl std::fmt::Display for Transaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::V1(v1) => write!(f, "Transaction::V1({})", v1),
+        }
+    }
+}
+
 impl Transaction {
     crate::def_is_as_into_opt!(V1(TransactionV1));
 }
@@ -62,6 +70,12 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
+impl std::fmt::Display for TransactionV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "TransactionV1(sender: {}, expiration: {})", self.sender, self.expiration)
+    }
+}
+
 #[cfg_attr(feature = "serde", derive(serde::Deserialize))]
 pub struct SenderSignedTransaction(
     #[cfg_attr(
@@ -71,6 +85,12 @@ pub struct SenderSignedTransaction(
     pub SignedTransaction,
 );
 
+impl std::fmt::Display for SenderSignedTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SenderSignedTransaction({})", self.0)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -78,6 +98,12 @@ pub struct SenderSignedTransaction(
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
+}
+
+impl std::fmt::Display for SignedTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SignedTransaction(signatures: {})", self.signatures.len())
+    }
 }
 
 /// A TTL for a transaction
@@ -100,6 +126,15 @@ pub enum TransactionExpiration {
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
     Epoch(EpochId),
+}
+
+impl std::fmt::Display for TransactionExpiration {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::None => write!(f, "None"),
+            Self::Epoch(epoch) => write!(f, "Epoch({})", epoch),
+        }
+    }
 }
 
 impl TransactionExpiration {
@@ -141,6 +176,12 @@ pub struct GasPayment {
     pub budget: u64,
 }
 
+impl std::fmt::Display for GasPayment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "GasPayment(owner: {}, price: {}, budget: {})", self.owner, self.price, self.budget)
+    }
+}
+
 /// Randomness update
 ///
 /// # BCS
@@ -180,6 +221,12 @@ pub struct RandomnessStateUpdate {
     pub randomness_obj_initial_shared_version: u64,
 }
 
+impl std::fmt::Display for RandomnessStateUpdate {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "RandomnessStateUpdate(epoch: {}, round: {})", self.epoch, self.randomness_round)
+    }
+}
+
 /// Transaction type
 ///
 /// # BCS
@@ -217,6 +264,19 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+}
+
+impl std::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ProgrammableTransaction(_) => write!(f, "ProgrammableTransaction"),
+            Self::Genesis(_) => write!(f, "Genesis"),
+            Self::ConsensusCommitPrologueV1(_) => write!(f, "ConsensusCommitPrologueV1"),
+            Self::AuthenticatorStateUpdateV1(_) => write!(f, "AuthenticatorStateUpdateV1"),
+            Self::EndOfEpoch(_) => write!(f, "EndOfEpoch"),
+            Self::RandomnessStateUpdate(_) => write!(f, "RandomnessStateUpdate"),
+        }
+    }
 }
 
 impl TransactionKind {
@@ -281,6 +341,19 @@ pub enum EndOfEpochTransactionKind {
     AuthenticatorStateExpire(AuthenticatorStateExpire),
 }
 
+impl std::fmt::Display for EndOfEpochTransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ChangeEpoch(_) => write!(f, "ChangeEpoch"),
+            Self::ChangeEpochV2(_) => write!(f, "ChangeEpochV2"),
+            Self::ChangeEpochV3(_) => write!(f, "ChangeEpochV3"),
+            Self::ChangeEpochV4(_) => write!(f, "ChangeEpochV4"),
+            Self::AuthenticatorStateCreate => write!(f, "AuthenticatorStateCreate"),
+            Self::AuthenticatorStateExpire(_) => write!(f, "AuthenticatorStateExpire"),
+        }
+    }
+}
+
 impl EndOfEpochTransactionKind {
     crate::def_is!(AuthenticatorStateCreate);
 
@@ -310,6 +383,14 @@ pub enum ExecutionTimeObservations {
     V1(Vec<ExecutionTimeObservation>),
 }
 
+impl std::fmt::Display for ExecutionTimeObservations {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::V1(observations) => write!(f, "ExecutionTimeObservations::V1({})", observations.len()),
+        }
+    }
+}
+
 impl ExecutionTimeObservations {
     crate::def_is_as_into_opt!(V1(Vec<ExecutionTimeObservation>));
 }
@@ -321,6 +402,12 @@ impl ExecutionTimeObservations {
 pub struct ExecutionTimeObservation {
     pub key: ExecutionTimeObservationKey,
     pub observations: Vec<ValidatorExecutionTimeObservation>,
+}
+
+impl std::fmt::Display for ExecutionTimeObservation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ExecutionTimeObservation(key: {}, observations: {})", self.key, self.observations.len())
+    }
 }
 
 /// An execution time observation from a particular validator
@@ -341,6 +428,12 @@ pub struct ExecutionTimeObservation {
 pub struct ValidatorExecutionTimeObservation {
     pub validator: crate::Bls12381PublicKey,
     pub duration: std::time::Duration,
+}
+
+impl std::fmt::Display for ValidatorExecutionTimeObservation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ValidatorExecutionTimeObservation(duration: {:?})", self.duration)
+    }
 }
 
 /// Key for an execution time observation
@@ -390,6 +483,22 @@ pub enum ExecutionTimeObservationKey {
     Upgrade,
 }
 
+impl std::fmt::Display for ExecutionTimeObservationKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::MoveEntryPoint { package, module, function, .. } => {
+                write!(f, "MoveEntryPoint({}::{}::{})", package, module, function)
+            }
+            Self::TransferObjects => write!(f, "TransferObjects"),
+            Self::SplitCoins => write!(f, "SplitCoins"),
+            Self::MergeCoins => write!(f, "MergeCoins"),
+            Self::Publish => write!(f, "Publish"),
+            Self::MakeMoveVec => write!(f, "MakeMoveVec"),
+            Self::Upgrade => write!(f, "Upgrade"),
+        }
+    }
+}
+
 impl ExecutionTimeObservationKey {
     crate::def_is!(
         MoveEntryPoint,
@@ -430,6 +539,12 @@ pub struct AuthenticatorStateExpire {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
+impl std::fmt::Display for AuthenticatorStateExpire {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "AuthenticatorStateExpire(min_epoch: {})", self.min_epoch)
+    }
+}
+
 /// Update the set of valid JWKs
 ///
 /// # BCS
@@ -467,6 +582,12 @@ pub struct AuthenticatorStateUpdateV1 {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
+impl std::fmt::Display for AuthenticatorStateUpdateV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "AuthenticatorStateUpdateV1(epoch: {}, round: {})", self.epoch, self.round)
+    }
+}
+
 /// A new Jwk
 ///
 /// # BCS
@@ -495,6 +616,12 @@ pub struct ActiveJwk {
     pub epoch: u64,
 }
 
+impl std::fmt::Display for ActiveJwk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ActiveJwk(epoch: {})", self.epoch)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "schemars",
@@ -509,6 +636,16 @@ pub enum ConsensusDeterminedVersionAssignments {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
         cancelled_transactions: Vec<CancelledTransaction>,
     },
+}
+
+impl std::fmt::Display for ConsensusDeterminedVersionAssignments {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::CancelledTransactions { cancelled_transactions } => {
+                write!(f, "CancelledTransactions(count: {})", cancelled_transactions.len())
+            }
+        }
+    }
 }
 
 impl ConsensusDeterminedVersionAssignments {
@@ -545,6 +682,12 @@ pub struct CancelledTransaction {
     pub version_assignments: Vec<VersionAssignment>,
 }
 
+impl std::fmt::Display for CancelledTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CancelledTransaction(digest: {})", self.digest)
+    }
+}
+
 /// Object version assignment from consensus
 ///
 /// # BCS
@@ -567,6 +710,12 @@ pub struct VersionAssignment {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
+}
+
+impl std::fmt::Display for VersionAssignment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "VersionAssignment(version: {})", self.version)
+    }
 }
 
 /// V1 of the consensus commit prologue system transaction
@@ -612,6 +761,12 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_commit_digest: Digest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+}
+
+impl std::fmt::Display for ConsensusCommitPrologueV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ConsensusCommitPrologueV1(epoch: {}, round: {})", self.epoch, self.round)
+    }
 }
 
 /// System transaction used to change the epoch
@@ -675,6 +830,12 @@ pub struct ChangeEpoch {
     /// their package ID), and a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
+}
+
+impl std::fmt::Display for ChangeEpoch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ChangeEpoch(epoch: {}, protocol_version: {})", self.epoch, self.protocol_version)
+    }
 }
 
 /// System transaction used to change the epoch
@@ -745,6 +906,12 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
+impl std::fmt::Display for ChangeEpochV2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ChangeEpochV2(epoch: {}, protocol_version: {})", self.epoch, self.protocol_version)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -797,6 +964,12 @@ pub struct ChangeEpochV3 {
     /// Vector of active validator indices eligible to take part in committee
     /// selection because they support the new, target protocol version.
     pub eligible_active_validators: Vec<u64>,
+}
+
+impl std::fmt::Display for ChangeEpochV3 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ChangeEpochV3(epoch: {}, protocol_version: {})", self.epoch, self.protocol_version)
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -858,6 +1031,12 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
+impl std::fmt::Display for ChangeEpochV4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ChangeEpochV4(epoch: {}, protocol_version: {})", self.epoch, self.protocol_version)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -878,6 +1057,12 @@ pub struct SystemPackage {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl std::fmt::Display for SystemPackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SystemPackage(version: {})", self.version)
+    }
+}
+
 /// The genesis transaction
 ///
 /// # BCS
@@ -896,6 +1081,12 @@ pub struct GenesisTransaction {
     pub objects: Vec<GenesisObject>,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub events: Vec<Event>,
+}
+
+impl std::fmt::Display for GenesisTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "GenesisTransaction(objects: {}, events: {})", self.objects.len(), self.events.len())
+    }
 }
 
 /// A user transaction
@@ -922,6 +1113,12 @@ pub struct ProgrammableTransaction {
     /// result in the failure of the entire transaction.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub commands: Vec<Command>,
+}
+
+impl std::fmt::Display for ProgrammableTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ProgrammableTransaction(inputs: {}, commands: {})", self.inputs.len(), self.commands.len())
+    }
 }
 
 /// An input to a user transaction
@@ -970,6 +1167,19 @@ pub enum Input {
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
+}
+
+impl std::fmt::Display for Input {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Pure { .. } => write!(f, "Pure"),
+            Self::ImmutableOrOwned(obj_ref) => write!(f, "ImmutableOrOwned({})", obj_ref.object_id),
+            Self::Shared { object_id, initial_shared_version, mutable } => {
+                write!(f, "Shared(id: {}, version: {}, mutable: {})", object_id, initial_shared_version, mutable)
+            }
+            Self::Receiving(obj_ref) => write!(f, "Receiving({})", obj_ref.object_id),
+        }
+    }
 }
 
 impl Input {
@@ -1044,6 +1254,20 @@ pub enum Command {
     Upgrade(Upgrade),
 }
 
+impl std::fmt::Display for Command {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::MoveCall(_) => write!(f, "MoveCall"),
+            Self::TransferObjects(_) => write!(f, "TransferObjects"),
+            Self::SplitCoins(_) => write!(f, "SplitCoins"),
+            Self::MergeCoins(_) => write!(f, "MergeCoins"),
+            Self::Publish(_) => write!(f, "Publish"),
+            Self::MakeMoveVector(_) => write!(f, "MakeMoveVector"),
+            Self::Upgrade(_) => write!(f, "Upgrade"),
+        }
+    }
+}
+
 impl Command {
     crate::def_is_as_into_opt!(
         MoveCall,
@@ -1077,6 +1301,12 @@ pub struct TransferObjects {
     pub address: Argument,
 }
 
+impl std::fmt::Display for TransferObjects {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "TransferObjects(objects: {})", self.objects.len())
+    }
+}
+
 /// Command to split a single coin object into multiple coins
 ///
 /// # BCS
@@ -1096,6 +1326,12 @@ pub struct SplitCoins {
     /// The amounts to split off
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub amounts: Vec<Argument>,
+}
+
+impl std::fmt::Display for SplitCoins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SplitCoins(amounts: {})", self.amounts.len())
+    }
 }
 
 /// Command to merge multiple coins of the same type into a single coin
@@ -1123,6 +1359,12 @@ pub struct MergeCoins {
     /// All listed coins must be of the same type and be the same type as `coin`
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub coins_to_merge: Vec<Argument>,
+}
+
+impl std::fmt::Display for MergeCoins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MergeCoins(coins_to_merge: {})", self.coins_to_merge.len())
+    }
 }
 
 /// Command to publish a new move package
@@ -1153,6 +1395,12 @@ pub struct Publish {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl std::fmt::Display for Publish {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Publish(modules: {}, dependencies: {})", self.modules.len(), self.dependencies.len())
+    }
+}
+
 /// Command to build a move vector out of a set of individual elements
 ///
 /// # BCS
@@ -1176,6 +1424,12 @@ pub struct MakeMoveVector {
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
+}
+
+impl std::fmt::Display for MakeMoveVector {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MakeMoveVector(elements: {})", self.elements.len())
+    }
 }
 
 /// Command to upgrade an already published package
@@ -1212,6 +1466,12 @@ pub struct Upgrade {
     pub ticket: Argument,
 }
 
+impl std::fmt::Display for Upgrade {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Upgrade(package: {})", self.package)
+    }
+}
+
 /// An argument to a programmable transaction command
 ///
 /// # BCS
@@ -1246,6 +1506,17 @@ pub enum Argument {
     /// return values.
     // (command index, subresult index)
     NestedResult(u16, u16),
+}
+
+impl std::fmt::Display for Argument {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Gas => write!(f, "Gas"),
+            Self::Input(idx) => write!(f, "Input({})", idx),
+            Self::Result(idx) => write!(f, "Result({})", idx),
+            Self::NestedResult(cmd_idx, res_idx) => write!(f, "NestedResult({}, {})", cmd_idx, res_idx),
+        }
+    }
 }
 
 impl Argument {
@@ -1335,4 +1606,10 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
+}
+
+impl std::fmt::Display for MoveCall {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MoveCall({}::{}::{})", self.package, self.module, self.function)
+    }
 }

@@ -54,6 +54,16 @@ pub enum SimpleSignature {
     },
 }
 
+impl std::fmt::Display for SimpleSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SimpleSignature::Ed25519 { .. } => write!(f, "SimpleSignature(scheme: ed25519)"),
+            SimpleSignature::Secp256k1 { .. } => write!(f, "SimpleSignature(scheme: secp256k1)"),
+            SimpleSignature::Secp256r1 { .. } => write!(f, "SimpleSignature(scheme: secp256r1)"),
+        }
+    }
+}
+
 impl SimpleSignature {
     crate::def_is!(Ed25519, Secp256k1, Secp256r1);
 
@@ -316,6 +326,18 @@ pub enum UserSignature {
     ZkLoginAuthenticator(Box<ZkLoginAuthenticator>),
     PasskeyAuthenticator(PasskeyAuthenticator),
     MoveAuthenticator(MoveAuthenticator),
+}
+
+impl std::fmt::Display for UserSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UserSignature::Simple(sig) => write!(f, "UserSignature(Simple: {})", sig),
+            UserSignature::Multisig(_) => write!(f, "UserSignature(Multisig)"),
+            UserSignature::ZkLoginAuthenticator(_) => write!(f, "UserSignature(ZkLoginAuthenticator)"),
+            UserSignature::PasskeyAuthenticator(_) => write!(f, "UserSignature(PasskeyAuthenticator)"),
+            UserSignature::MoveAuthenticator(_) => write!(f, "UserSignature(MoveAuthenticator)"),
+        }
+    }
 }
 
 impl UserSignature {

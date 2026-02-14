@@ -55,6 +55,17 @@ pub enum MultisigMemberPublicKey {
     ZkLogin(ZkLoginPublicIdentifier),
 }
 
+impl std::fmt::Display for MultisigMemberPublicKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MultisigMemberPublicKey::Ed25519(_) => write!(f, "MultisigMemberPublicKey(ed25519)"),
+            MultisigMemberPublicKey::Secp256k1(_) => write!(f, "MultisigMemberPublicKey(secp256k1)"),
+            MultisigMemberPublicKey::Secp256r1(_) => write!(f, "MultisigMemberPublicKey(secp256r1)"),
+            MultisigMemberPublicKey::ZkLogin(_) => write!(f, "MultisigMemberPublicKey(zklogin)"),
+        }
+    }
+}
+
 impl MultisigMemberPublicKey {
     crate::def_is_as_into_opt!(
         Ed25519(Ed25519PublicKey),
@@ -109,6 +120,12 @@ pub struct MultisigMember {
     weight: WeightUnit,
 }
 
+impl std::fmt::Display for MultisigMember {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MultisigMember(weight: {})", self.weight)
+    }
+}
+
 impl MultisigMember {
     /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
     pub fn new(public_key: MultisigMemberPublicKey, weight: WeightUnit) -> Self {
@@ -159,6 +176,17 @@ pub struct MultisigCommittee {
     /// If the total weight of the public keys corresponding to verified
     /// signatures is larger than threshold, the Multisig is verified.
     threshold: ThresholdUnit,
+}
+
+impl std::fmt::Display for MultisigCommittee {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "MultisigCommittee(members: {}, threshold: {})",
+            self.members.len(),
+            self.threshold
+        )
+    }
 }
 
 impl MultisigCommittee {
@@ -260,6 +288,17 @@ pub struct MultisigAggregatedSignature {
     committee: MultisigCommittee,
 }
 
+impl std::fmt::Display for MultisigAggregatedSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "MultisigAggregatedSignature(signatures: {}, bitmap: {})",
+            self.signatures.len(),
+            self.bitmap
+        )
+    }
+}
+
 impl MultisigAggregatedSignature {
     /// Construct a new aggregated multisig signature.
     ///
@@ -331,6 +370,17 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     ZkLogin(Box<ZkLoginAuthenticator>),
+}
+
+impl std::fmt::Display for MultisigMemberSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MultisigMemberSignature::Ed25519(_) => write!(f, "MultisigMemberSignature(ed25519)"),
+            MultisigMemberSignature::Secp256k1(_) => write!(f, "MultisigMemberSignature(secp256k1)"),
+            MultisigMemberSignature::Secp256r1(_) => write!(f, "MultisigMemberSignature(secp256r1)"),
+            MultisigMemberSignature::ZkLogin(_) => write!(f, "MultisigMemberSignature(zklogin)"),
+        }
+    }
 }
 
 impl MultisigMemberSignature {

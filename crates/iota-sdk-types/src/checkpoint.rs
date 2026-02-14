@@ -39,6 +39,16 @@ pub enum CheckpointCommitment {
     // Other commitment types (e.g. merkle roots) go here.
 }
 
+impl std::fmt::Display for CheckpointCommitment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::EcmhLiveObjectSet { digest } => {
+                write!(f, "EcmhLiveObjectSet({digest})")
+            }
+        }
+    }
+}
+
 impl CheckpointCommitment {
     crate::def_is!(EcmhLiveObjectSet);
 
@@ -171,6 +181,31 @@ pub struct CheckpointSummary {
     pub version_specific_data: Vec<u8>,
 }
 
+impl std::fmt::Display for EndOfEpochData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "EndOfEpochData(next_committee: {} members, next_protocol_version: {}, supply_change: {})",
+            self.next_epoch_committee.len(),
+            self.next_epoch_protocol_version,
+            self.epoch_supply_change
+        )
+    }
+}
+
+impl std::fmt::Display for CheckpointSummary {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Checkpoint(epoch: {}, seq: {}, txns: {}, digest: {})",
+            self.epoch,
+            self.sequence_number,
+            self.network_total_transactions,
+            self.content_digest
+        )
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -178,6 +213,12 @@ pub struct CheckpointSummary {
 pub struct SignedCheckpointSummary {
     pub checkpoint: CheckpointSummary,
     pub signature: ValidatorAggregatedSignature,
+}
+
+impl std::fmt::Display for SignedCheckpointSummary {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SignedCheckpointSummary({})", self.checkpoint)
+    }
 }
 
 /// The committed to contents of a checkpoint.
@@ -206,6 +247,12 @@ pub struct CheckpointContents(
     pub  Vec<CheckpointTransactionInfo>,
 );
 
+impl std::fmt::Display for CheckpointContents {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CheckpointContents({} transactions)", self.0.len())
+    }
+}
+
 impl CheckpointContents {
     pub fn new(transactions: Vec<CheckpointTransactionInfo>) -> Self {
         Self(transactions)
@@ -232,6 +279,16 @@ pub struct CheckpointTransactionInfo {
     pub signatures: Vec<UserSignature>,
 }
 
+impl std::fmt::Display for CheckpointTransactionInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "CheckpointTransactionInfo(tx: {}, effects: {})",
+            self.transaction, self.effects
+        )
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(
     feature = "serde",
@@ -245,6 +302,17 @@ pub struct CheckpointData {
     pub checkpoint_contents: CheckpointContents,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=1).lift()))]
     pub transactions: Vec<CheckpointTransaction>,
+}
+
+impl std::fmt::Display for CheckpointData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "CheckpointData({}, {} transactions)",
+            self.checkpoint_summary.checkpoint,
+            self.transactions.len()
+        )
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -274,6 +342,21 @@ pub struct CheckpointTransaction {
     /// The state of all output objects created or mutated by this transaction.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub output_objects: Vec<Object>,
+}
+
+impl std::fmt::Display for CheckpointTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "CheckpointTransaction(effects: {}, events: {}, inputs: {}, outputs: {})",
+            self.effects,
+            self.events
+                .as_ref()
+                .map_or(0, |e| e.0.len()),
+            self.input_objects.len(),
+            self.output_objects.len()
+        )
+    }
 }
 
 #[cfg(feature = "serde")]

@@ -71,6 +71,20 @@ pub struct TransactionEffectsV1 {
     pub auxiliary_data_digest: Option<Digest>,
 }
 
+impl std::fmt::Display for TransactionEffectsV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "TransactionEffects(status: {}, epoch: {}, digest: {}, changed: {}, unchanged_shared: {})",
+            self.status,
+            self.epoch,
+            self.transaction_digest,
+            self.changed_objects.len(),
+            self.unchanged_shared_objects.len()
+        )
+    }
+}
+
 impl TransactionEffectsV1 {
     /// The status of the execution
     pub fn status(&self) -> &ExecutionStatus {
@@ -116,6 +130,16 @@ pub struct ChangedObject {
     /// This information isn't required by the protocol but is useful for
     /// providing more detailed semantics on object changes.
     pub id_operation: IdOperation,
+}
+
+impl std::fmt::Display for ChangedObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "ChangedObject({}, in: {}, out: {}, op: {})",
+            self.object_id, self.input_state, self.output_state, self.id_operation
+        )
+    }
 }
 
 /// A shared object that wasn't changed during execution
@@ -197,6 +221,26 @@ pub enum UnchangedSharedKind {
     PerEpochConfig,
 }
 
+impl std::fmt::Display for UnchangedSharedObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "UnchangedShared({}, {})", self.object_id, self.kind)
+    }
+}
+
+impl std::fmt::Display for UnchangedSharedKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ReadOnlyRoot { version, digest } => {
+                write!(f, "ReadOnlyRoot(v{version}, {digest})")
+            }
+            Self::MutateDeleted { version } => write!(f, "MutateDeleted(v{version})"),
+            Self::ReadDeleted { version } => write!(f, "ReadDeleted(v{version})"),
+            Self::Cancelled { version } => write!(f, "Cancelled(v{version})"),
+            Self::PerEpochConfig => write!(f, "PerEpochConfig"),
+        }
+    }
+}
+
 impl UnchangedSharedKind {
     crate::def_is!(
         ReadOnlyRoot,
@@ -240,6 +284,19 @@ pub enum ObjectIn {
         digest: Digest,
         owner: Owner,
     },
+}
+
+impl std::fmt::Display for ObjectIn {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Missing => write!(f, "Missing"),
+            Self::Data {
+                version,
+                digest,
+                owner,
+            } => write!(f, "Data(v{version}, {digest}, {owner})"),
+        }
+    }
 }
 
 impl ObjectIn {
@@ -318,6 +375,20 @@ pub enum ObjectOut {
         version: Version,
         digest: Digest,
     },
+}
+
+impl std::fmt::Display for ObjectOut {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Missing => write!(f, "Missing"),
+            Self::ObjectWrite { digest, owner } => {
+                write!(f, "ObjectWrite({digest}, {owner})")
+            }
+            Self::PackageWrite { version, digest } => {
+                write!(f, "PackageWrite(v{version}, {digest})")
+            }
+        }
+    }
 }
 
 impl ObjectOut {
@@ -400,6 +471,16 @@ pub enum IdOperation {
     None,
     Created,
     Deleted,
+}
+
+impl std::fmt::Display for IdOperation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::None => write!(f, "None"),
+            Self::Created => write!(f, "Created"),
+            Self::Deleted => write!(f, "Deleted"),
+        }
+    }
 }
 
 impl IdOperation {

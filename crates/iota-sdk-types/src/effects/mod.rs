@@ -34,6 +34,14 @@ pub enum TransactionEffects {
     V1(Box<TransactionEffectsV1>),
 }
 
+impl std::fmt::Display for TransactionEffects {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::V1(effects) => write!(f, "{effects}"),
+        }
+    }
+}
+
 impl TransactionEffects {
     crate::def_is!(V1);
 

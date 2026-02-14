@@ -79,6 +79,12 @@ impl ObjectReference {
     }
 }
 
+impl std::fmt::Display for ObjectReference {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}(v{})", self.object_id, self.version)
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
@@ -160,6 +166,15 @@ pub enum ObjectData {
     // ... IOTA "native" types go here
 }
 
+impl std::fmt::Display for ObjectData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Struct(s) => write!(f, "Struct({})", s.type_),
+            Self::Package(p) => write!(f, "Package({})", p.id),
+        }
+    }
+}
+
 impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 }
@@ -226,6 +241,18 @@ pub struct MovePackage {
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
+impl std::fmt::Display for MovePackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "MovePackage(id: {}, version: {}, modules: {})",
+            self.id,
+            self.version,
+            self.modules.len()
+        )
+    }
+}
+
 /// Identifies a struct and the module it was defined in
 ///
 /// # BCS
@@ -247,6 +274,16 @@ pub struct TypeOrigin {
     pub module_name: Identifier,
     pub struct_name: Identifier,
     pub package: ObjectId,
+}
+
+impl std::fmt::Display for TypeOrigin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}::{}(package: {})",
+            self.module_name, self.struct_name, self.package
+        )
+    }
 }
 
 /// Upgraded package info for the linkage table
@@ -273,6 +310,16 @@ pub struct UpgradeInfo {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub upgraded_version: Version,
+}
+
+impl std::fmt::Display for UpgradeInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "UpgradeInfo(id: {}, version: {})",
+            self.upgraded_id, self.upgraded_version
+        )
+    }
 }
 
 /// A move struct
@@ -322,6 +369,12 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
+impl std::fmt::Display for MoveStruct {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "MoveStruct(type: {}, version: {})", self.type_, self.version)
+    }
+}
+
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
@@ -368,6 +421,16 @@ pub struct Object {
     /// This number is re-calculated each time the object is mutated based on
     /// the present storage gas price.
     pub storage_rebate: u64,
+}
+
+impl std::fmt::Display for Object {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Object({}, owner: {}, prev_tx: {})",
+            self.data, self.owner, self.previous_transaction
+        )
+    }
 }
 
 impl Object {
@@ -505,6 +568,12 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 pub struct GenesisObject {
     pub data: ObjectData,
     pub owner: Owner,
+}
+
+impl std::fmt::Display for GenesisObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "GenesisObject({}, owner: {})", self.data, self.owner)
+    }
 }
 
 impl GenesisObject {
