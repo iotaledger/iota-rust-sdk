@@ -4,7 +4,7 @@
 
 #![doc = include_str!("../README.md")]
 
-mod api;
+pub(crate) mod api;
 mod client;
 pub mod error;
 pub mod faucet;

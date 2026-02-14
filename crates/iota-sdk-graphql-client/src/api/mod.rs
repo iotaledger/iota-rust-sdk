@@ -11,6 +11,7 @@ mod dry_run;
 mod dynamic_fields;
 mod epochs;
 mod events;
+pub(crate) mod faucet;
 mod iota_names;
 mod move_view_call;
 mod network;
