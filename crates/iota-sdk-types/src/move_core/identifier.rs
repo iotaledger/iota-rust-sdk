@@ -196,6 +196,8 @@ impl Identifier {
     pub const STAKED_IOTA: Self = Self::from_static("StakedIota");
     pub const STRING: Self = Self::from_static("String");
     pub const SYSTEM_EPOCH_INFO_EVENT: Self = Self::from_static("SystemEpochInfoEvent");
+    pub const SYSTEM_EPOCH_INFO_EVENT_V1: Self = Self::from_static("SystemEpochInfoEventV1");
+    pub const SYSTEM_EPOCH_INFO_EVENT_V2: Self = Self::from_static("SystemEpochInfoEventV2");
     pub const TIME_LOCK: Self = Self::from_static("TimeLock");
     pub const TIMELOCKED_STAKED_IOTA: Self = Self::from_static("TimelockedStakedIota");
     pub const TREASURY_CAP: Self = Self::from_static("TreasuryCap");

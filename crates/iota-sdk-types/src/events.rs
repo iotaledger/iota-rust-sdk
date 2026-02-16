@@ -13,7 +13,7 @@ use super::{Address, Identifier, ObjectId, StructTag};
 /// ```text
 /// transaction-events = vector event
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -28,7 +28,7 @@ pub struct TransactionEvents(pub Vec<Event>);
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(PartialEq, Eq, Debug, Clone)]
+#[derive(PartialEq, Eq, Debug, Clone, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -51,4 +51,24 @@ pub struct Event {
         serde(with = "crate::_serde::ReadableBase64Encoded")
     )]
     pub contents: Vec<u8>,
+}
+
+impl Event {
+    fn is_system_epoch_info_event_type(&self, name: Identifier) -> bool {
+        self.type_.address() == Address::SYSTEM
+            && *self.type_.module() == Identifier::IOTA_SYSTEM_STATE_INNER_MODULE
+            && *self.type_.name() == name
+    }
+
+    pub fn is_system_epoch_info_event(&self) -> bool {
+        self.is_system_epoch_info_event_v1() || self.is_system_epoch_info_event_v2()
+    }
+
+    pub fn is_system_epoch_info_event_v1(&self) -> bool {
+        self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V1)
+    }
+
+    pub fn is_system_epoch_info_event_v2(&self) -> bool {
+        self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
+    }
 }
