@@ -118,10 +118,22 @@ impl Owner {
     /// object, and None if it is shared or immutable.
     pub fn address(&self) -> Option<&Address> {
         Some(match self {
-            Self::Address(addr) => addr,
-            Self::Object(obj_id) => obj_id.as_address(),
+            Self::Address(address) => address,
+            Self::Object(object_id) => object_id.as_address(),
             _ => return None,
         })
+    }
+}
+
+impl PartialEq<Address> for Owner {
+    fn eq(&self, other: &Address) -> bool {
+        self.as_address_opt() == Some(other)
+    }
+}
+
+impl PartialEq<ObjectId> for Owner {
+    fn eq(&self, other: &ObjectId) -> bool {
+        self.as_object_opt() == Some(other)
     }
 }
 
