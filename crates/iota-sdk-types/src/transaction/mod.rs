@@ -972,12 +972,106 @@ pub enum Input {
 }
 
 impl Input {
+    /// Shared `Input` for the IOTA system state object (mutable).
+    pub const IOTA_SYSTEM_MUT: Self = Self::Shared {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::from_u64(1),
+        mutable: true,
+    };
+
+    /// Shared `Input` for the clock object (immutable).
+    pub const CLOCK_IMM: Self = Self::Shared {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::from_u64(1),
+        mutable: false,
+    };
+
+    /// Shared `Input` for the clock object (mutable).
+    pub const CLOCK_MUT: Self = Self::Shared {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::from_u64(1),
+        mutable: true,
+    };
+
+    /// Shared `Input` for the authenticator state object (mutable).
+    pub const AUTHENTICATOR_MUT: Self = Self::Shared {
+        object_id: ObjectId::AUTHENTICATOR_STATE,
+        initial_shared_version: Version::from_u64(1),
+        mutable: true,
+    };
+
     crate::def_is!(Pure, Shared);
 
     crate::def_is_as_into_opt!(
         ImmutableOrOwned(ObjectReference),
         Receiving(ObjectReference)
     );
+
+    /// Create a `Pure` input from a BCS-serializable value.
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn pure(value: &impl serde::Serialize) -> Self {
+        Self::Pure {
+            value: bcs::to_bytes(value).expect("value should be serializable"),
+        }
+    }
+
+    /// Returns the object id referenced by this input, if any.
+    ///
+    /// Returns `None` for `Pure` inputs.
+    pub fn object_id(&self) -> Option<&ObjectId> {
+        match self {
+            Self::Pure { .. } => None,
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
+            Self::Shared { object_id, .. } => Some(object_id),
+        }
+    }
+
+    /// Returns `true` if this input references a shared object.
+    pub fn is_mutable_shared(&self) -> bool {
+        matches!(self, Self::Shared { mutable: true, .. })
+    }
+
+    /// If this is a `Shared` input, returns `(object_id,
+    /// initial_shared_version, mutable)`.
+    pub fn as_shared(&self) -> Option<(&ObjectId, Version, bool)> {
+        match self {
+            Self::Shared {
+                object_id,
+                initial_shared_version,
+                mutable,
+            } => Some((object_id, *initial_shared_version, *mutable)),
+            _ => None,
+        }
+    }
+
+    /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
+    /// `Receiving` input.
+    pub fn as_object_ref(&self) -> Option<&ObjectReference> {
+        match self {
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
+            _ => None,
+        }
+    }
+
+    /// Returns the pure value bytes if this is a `Pure` input.
+    pub fn as_pure_value(&self) -> Option<&[u8]> {
+        match self {
+            Self::Pure { value } => Some(value),
+            _ => None,
+        }
+    }
+
+    /// Returns the [`ObjectReference`]s for objects being received in this
+    /// input.
+    ///
+    /// Returns an empty slice for non-`Receiving` variants.
+    pub fn receiving_objects(&self) -> Option<&ObjectReference> {
+        match self {
+            Self::Receiving(obj_ref) => Some(obj_ref),
+            _ => None,
+        }
+    }
 }
 
 /// A single command in a programmable transaction.
