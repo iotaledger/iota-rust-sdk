@@ -113,6 +113,16 @@ impl Owner {
     crate::def_is!(Immutable);
 
     crate::def_is_as_into_opt!(Address, Object(ObjectId), Shared(Version));
+
+    /// Returns an address if this object is owned by an address or
+    /// object, and None if it is shared or immutable.
+    pub fn address(&self) -> Option<&Address> {
+        Some(match self {
+            Self::Address(addr) => addr,
+            Self::Object(obj_id) => obj_id.as_address(),
+            _ => return None,
+        })
+    }
 }
 
 impl std::fmt::Display for Owner {
