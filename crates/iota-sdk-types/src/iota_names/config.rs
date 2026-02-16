@@ -85,18 +85,18 @@ impl IotaNamesConfig {
         )
     }
 
-    // Create a config based on the package and object ids published on devnet.
-    pub fn devnet() -> Self {
+    // Create a config based on the package and object ids published on testnet.
+    pub fn testnet() -> Self {
         const PACKAGE_ADDRESS: &str =
-            "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba";
+            "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea";
         const OBJECT_ID: &str =
-            "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342";
+            "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec";
         const PAYMENTS_PACKAGE_ADDRESS: &str =
-            "0x98b9b33b7c2347a8f4e8b8716fb4c7e6e1af846ec2ea063a47bba81ffe03b440";
+            "0x6b1b01f4c72786a893191d5c6e73d3012f7529f86fdee3bc8c163323cee08441";
         const REGISTRY_ID: &str =
-            "0xe00b2f2400c33b4dbd3081c4dcf2e289d0544caba23a3d130b264bd756403c07";
+            "0x2dfc6f6d46ba55217425643a59dc85fe4d8ed273a9f74077bd0ee280dbb4f590";
         const REVERSE_REGISTRY_ID: &str =
-            "0x1c1da17843cc453ad4079b05ce55e103b7a8cdd4db6ab42dc367b47ed6d8994d";
+            "0x3550bcacb793ef8b776264665e7c99fa3d897695ed664656aac693cf9cf9b76b";
 
         let package_address = Address::from_str(PACKAGE_ADDRESS).unwrap();
         let object_id = ObjectId::from_str(OBJECT_ID).unwrap();
@@ -113,18 +113,18 @@ impl IotaNamesConfig {
         )
     }
 
-    // Create a config based on the package and object ids published on testnet.
-    pub fn testnet() -> Self {
+    // Create a config based on the package and object ids published on devnet.
+    pub fn devnet() -> Self {
         const PACKAGE_ADDRESS: &str =
-            "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea";
+            "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba";
         const OBJECT_ID: &str =
-            "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec";
+            "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342";
         const PAYMENTS_PACKAGE_ADDRESS: &str =
-            "0x6b1b01f4c72786a893191d5c6e73d3012f7529f86fdee3bc8c163323cee08441";
+            "0x98b9b33b7c2347a8f4e8b8716fb4c7e6e1af846ec2ea063a47bba81ffe03b440";
         const REGISTRY_ID: &str =
-            "0x2dfc6f6d46ba55217425643a59dc85fe4d8ed273a9f74077bd0ee280dbb4f590";
+            "0xe00b2f2400c33b4dbd3081c4dcf2e289d0544caba23a3d130b264bd756403c07";
         const REVERSE_REGISTRY_ID: &str =
-            "0x3550bcacb793ef8b776264665e7c99fa3d897695ed664656aac693cf9cf9b76b";
+            "0x1c1da17843cc453ad4079b05ce55e103b7a8cdd4db6ab42dc367b47ed6d8994d";
 
         let package_address = Address::from_str(PACKAGE_ADDRESS).unwrap();
         let object_id = ObjectId::from_str(OBJECT_ID).unwrap();
