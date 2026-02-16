@@ -80,47 +80,6 @@ impl ExecutionStatus {
             None
         }
     }
-
-    //     /// Returns congested objects if the transaction was cancelled due to
-    //     /// shared object congestion, else returns `None`.
-    //     pub fn get_congested_objects(&self) -> Option<&CongestedObjects> {
-    //         match self {
-    //             ExecutionStatus::Failure {
-    //                 error:
-    //
-    // ExecutionFailureStatus::ExecutionCancelledDueToSharedObjectCongestion {
-    //                         congested_objects,
-    //                     }
-    //                     |
-    // ExecutionFailureStatus::ExecutionCancelledDueToSharedObjectCongestionV2 {
-    //                         congested_objects,
-    //                         ..
-    //                     },
-    //                 ..
-    //             } => Some(congested_objects),
-    //             _ => None,
-    //         }
-    //     }
-
-    //     /// Returns a suggested gas price if the transaction was cancelled due to
-    //     /// shared object congestion (subject to the gas price feedback mechanism
-    //     /// is enabled), otherwise returns `None`.
-    //     pub fn get_feedback_suggested_gas_price(&self) -> Option<u64> {
-    //         if let ExecutionStatus::Failure {
-    //             error:
-    //
-    // ExecutionFailureStatus::ExecutionCancelledDueToSharedObjectCongestionV2 {
-    //                     suggested_gas_price,
-    //                     ..
-    //                 },
-    //             ..
-    //         } = self
-    //         {
-    //             Some(*suggested_gas_price)
-    //         } else {
-    //             None
-    //         }
-    //     }
 }
 
 /// An error that can occur during the execution of a transaction
