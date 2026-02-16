@@ -1018,7 +1018,7 @@ mod serialization {
     )]
     struct TupleObjectReference(
         ObjectId,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))] Version,
+        Version,
         Digest,
     );
 
