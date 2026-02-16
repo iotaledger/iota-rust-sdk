@@ -45,14 +45,23 @@ impl ExecutionStatus {
         ExecutionStatus::Failure { error, command }
     }
 
-    //     pub fn unwrap(&self) {
-    //     match self {
-    //         ExecutionStatus::Success => {}
-    //         ExecutionStatus::Failure { .. } => {
-    //             panic!("Unable to unwrap() on {self:?}");
-    //         }
-    //     }
-    // }
+    pub fn unwrap(&self) {
+        match self {
+            ExecutionStatus::Success => {}
+            ExecutionStatus::Failure { .. } => {
+                panic!("Unable to unwrap() on {self:?}");
+            }
+        }
+    }
+
+    pub fn unwrap_err(self) -> (ExecutionError, Option<u64>) {
+        match self {
+            ExecutionStatus::Success => {
+                panic!("Unable to unwrap() on {self:?}");
+            }
+            ExecutionStatus::Failure { error, command } => (error, command),
+        }
+    }
 
     /// The error encountered during execution.
     pub fn error(&self) -> Option<&ExecutionError> {
@@ -71,15 +80,6 @@ impl ExecutionStatus {
             None
         }
     }
-
-    //     pub fn unwrap_err(self) -> (ExecutionFailureStatus, Option<CommandIndex>)
-    // {         match self {
-    //             ExecutionStatus::Success => {
-    //                 panic!("Unable to unwrap() on {self:?}");
-    //             }
-    //             ExecutionStatus::Failure { error, command } => (error, command),
-    //         }
-    //     }
 
     //     /// Returns congested objects if the transaction was cancelled due to
     //     /// shared object congestion, else returns `None`.
