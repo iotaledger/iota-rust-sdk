@@ -579,7 +579,7 @@ pub enum CommandArgumentError {
         It can only be used by-value with TransferObjects"
     )]
     InvalidGasCoinUsage,
-    /// Invalid usage of move value
+    /// Invalid usage of move value.
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
@@ -729,6 +729,78 @@ pub enum TypeArgumentError {
 impl TypeArgumentError {
     crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
 }
+
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+
+//     /// Verify that the BCS discriminant of each ExecutionError variant matches the
+//     /// expected on-wire value. If someone reorders variants in the enum or in the
+//     /// BinaryExecutionError helper, this test will catch it.
+//     #[test]
+//     fn execution_error_bcs_discriminants() {
+//         let zero_id = ObjectId::ZERO;
+//         let dummy_location = MoveLocation {
+//             package: zero_id,
+//             module: "m".parse().unwrap(),
+//             function: 0,
+//             instruction: 0,
+//             function_name: None,
+//         };
+
+//         // WARNING: DO NOT MODIFY EXISTING ENTRIES, ONLY ADD TO THE END
+//         let cases: &[(ExecutionError, u8)] = &[
+//             (ExecutionError::InsufficientGas, 0),
+//             (ExecutionError::InvalidGasObject, 1),
+//             (ExecutionError::InvariantViolation, 2),
+//             (ExecutionError::FeatureNotYetSupported, 3),
+//             (ExecutionError::ObjectTooBig { object_size: 0, max_object_size: 0 }, 4),
+//             (ExecutionError::PackageTooBig { object_size: 0, max_object_size: 0 }, 5),
+//             (ExecutionError::CircularObjectOwnership { object: zero_id }, 6),
+//             (ExecutionError::InsufficientCoinBalance, 7),
+//             (ExecutionError::CoinBalanceOverflow, 8),
+//             (ExecutionError::PublishErrorNonZeroAddress, 9),
+//             (ExecutionError::IotaMoveVerificationError, 10),
+//             (ExecutionError::MovePrimitiveRuntimeError { location: None }, 11),
+//             (ExecutionError::MoveAbort { location: dummy_location, code: 0 }, 12),
+//             (ExecutionError::VMVerificationOrDeserializationError, 13),
+//             (ExecutionError::VMInvariantViolation, 14),
+//             (ExecutionError::FunctionNotFound, 15),
+//             (ExecutionError::ArityMismatch, 16),
+//             (ExecutionError::TypeArityMismatch, 17),
+//             (ExecutionError::NonEntryFunctionInvoked, 18),
+//             (ExecutionError::CommandArgumentError { argument: 0, kind: CommandArgumentError::TypeMismatch }, 19),
+//             (ExecutionError::TypeArgumentError { type_argument: 0, kind: TypeArgumentError::TypeNotFound }, 20),
+//             (ExecutionError::UnusedValueWithoutDrop { result: 0, subresult: 0 }, 21),
+//             (ExecutionError::InvalidPublicFunctionReturnType { index: 0 }, 22),
+//             (ExecutionError::InvalidTransferObject, 23),
+//             (ExecutionError::EffectsTooLarge { current_size: 0, max_size: 0 }, 24),
+//             (ExecutionError::PublishUpgradeMissingDependency, 25),
+//             (ExecutionError::PublishUpgradeDependencyDowngrade, 26),
+//             (ExecutionError::PackageUpgradeError { kind: PackageUpgradeError::IncompatibleUpgrade }, 27),
+//             (ExecutionError::WrittenObjectsTooLarge { object_size: 0, max_object_size: 0 }, 28),
+//             (ExecutionError::CertificateDenied, 29),
+//             (ExecutionError::IotaMoveVerificationTimeout, 30),
+//             (ExecutionError::SharedObjectOperationNotAllowed, 31),
+//             (ExecutionError::InputObjectDeleted, 32),
+//             (ExecutionError::ExecutionCancelledDueToSharedObjectCongestion { congested_objects: vec![] }, 33),
+//             (ExecutionError::AddressDeniedForCoin { address: Address::ZERO, coin_type: String::new() }, 34),
+//             (ExecutionError::CoinTypeGlobalPause { coin_type: String::new() }, 35),
+//             (ExecutionError::ExecutionCancelledDueToRandomnessUnavailable, 36),
+//             (ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 { congested_objects: vec![], suggested_gas_price: 0 }, 37),
+//             (ExecutionError::InvalidLinkage, 38),
+//         ];
+
+//         for (variant, expected) in cases {
+//             let bytes = bcs::to_bytes(variant).expect("BCS serialization failed");
+//             assert_eq!(
+//                 bytes[0], *expected,
+//                 "BCS discriminant mismatch for {variant:?}: expected {expected}, got {}",
+//                 bytes[0]
+//             );
+//         }
+//     }
+// }
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
