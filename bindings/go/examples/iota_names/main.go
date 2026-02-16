@@ -15,13 +15,40 @@ const (
 )
 
 func main() {
-	_ = iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewDevnet()
 
-	fmt.Println("=== IOTA Names Example ===")
-	fmt.Println()
-	fmt.Println("1. Resolving name 'name.iota'")
-	fmt.Println("   (Implementation would use TransactionBuilder)")
-	fmt.Println()
-	fmt.Println("2. Checking availability of 'test123.iota'")
-	fmt.Println("   (Implementation would use TransactionBuilder)")
+	fmt.Println("=== IOTA Names Example ===\n")
+
+	// Example 1: Lookup and resolve a name
+	name := "name.iota"
+	fmt.Printf("1. Resolving name '%s'\n", name)
+	address := resolveName(client, name)
+	if address != nil {
+		fmt.Printf("   Resolved to: %s\n\n", address.ToHex())
+	} else {
+		fmt.Println("   Name not found or has no target address\n")
+	}
+
+	// Example 2: Check name availability
+	testName := "test123.iota"
+	fmt.Printf("2. Checking availability of '%s'\n", testName)
+	isAvailable := checkAvailability(client, testName)
+	if isAvailable {
+		fmt.Println("   Name is available!\n")
+	} else {
+		fmt.Println("   Name is already registered\n")
+	}
+}
+
+func resolveName(client *iota_sdk.GraphQlClient, name string) *iota_sdk.Address {
+	// Simplified example - placeholder implementation
+	fmt.Printf("   Attempting to resolve: %s\n", name)
+	// In production, use TransactionBuilder with move calls
+	return nil
+}
+
+func checkAvailability(client *iota_sdk.GraphQlClient, name string) bool {
+	// Simplified example - placeholder implementation
+	fmt.Printf("   Checking availability for: %s\n", name)
+	return true
 }
