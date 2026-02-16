@@ -1016,11 +1016,7 @@ mod serialization {
         derive(schemars::JsonSchema),
         schemars(rename = "ObjectReference")
     )]
-    struct TupleObjectReference(
-        ObjectId,
-        Version,
-        Digest,
-    );
+    struct TupleObjectReference(ObjectId, Version, Digest);
 
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for ObjectReference {
