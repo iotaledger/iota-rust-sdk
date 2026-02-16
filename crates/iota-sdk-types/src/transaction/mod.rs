@@ -150,7 +150,7 @@ pub struct GasPayment {
 /// ```text
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
