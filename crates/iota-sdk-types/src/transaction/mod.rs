@@ -1248,6 +1248,17 @@ pub enum Argument {
     NestedResult(u16, u16),
 }
 
+impl std::fmt::Display for Argument {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Argument::Gas => write!(f, "Gas"),
+            Argument::Input(i) => write!(f, "Input({i})"),
+            Argument::Result(i) => write!(f, "Result({i})"),
+            Argument::NestedResult(i, j) => write!(f, "NestedResult({i},{j})"),
+        }
+    }
+}
+
 impl Argument {
     crate::def_is!(Gas, Input, Result, NestedResult);
 
