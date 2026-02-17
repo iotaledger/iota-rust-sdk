@@ -96,18 +96,25 @@ jobs:
   swift:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
     needs: diff
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "5.9"
       - name: Build the bindings
         run: make swift
       - name: Checks for uncommitted changes
         run: git diff --exit-code
-      - name: Check format of the examples
+      - name: Install swift-format
         run: |
-          brew install swift-format
-          make swift-examples-format-check
+          git clone --depth 1 --branch 509.0.0 https://github.com/apple/swift-format.git /tmp/swift-format
+          cd /tmp/swift-format && swift build -c release
+          sudo cp /tmp/swift-format/.build/release/swift-format /usr/local/bin/
+      - name: Check format of the examples
+        run: make swift-examples-format-check
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make swift-examples
