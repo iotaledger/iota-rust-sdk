@@ -118,5 +118,6 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make swift-examples
-      - name: Run the release example
-        run: make swift-release-example
+      # Release example requires iota-sdk-swift package to be published first
+      # - name: Run the release example
+      #   run: make swift-release-example
