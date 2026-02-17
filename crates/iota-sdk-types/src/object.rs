@@ -19,14 +19,12 @@ use crate::Version;
 /// object-reference = object-id u64 digest
 /// ```
 #[derive(Clone, Copy, Debug, Ord, PartialOrd, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ObjectReference {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -35,7 +33,7 @@ pub struct ObjectReference {
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
+    pub const fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
         Self {
             object_id,
             version,
@@ -955,6 +953,35 @@ mod serialization {
         }
     }
 
+    // Custom serialization to be backwards compatible with the JSON RPC
+    #[derive(serde::Serialize, serde::Deserialize)]
+    struct TupleObjectReference(ObjectId, Version, Digest);
+
+    impl Serialize for ObjectReference {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            TupleObjectReference(self.object_id, self.version, self.digest).serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for ObjectReference {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let TupleObjectReference(object_id, version, digest) =
+                TupleObjectReference::deserialize(deserializer)?;
+
+            Ok(ObjectReference {
+                object_id,
+                version,
+                digest,
+            })
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         #[cfg(target_arch = "wasm32")]
@@ -996,6 +1023,38 @@ mod serialization {
                 })
                 .unwrap()
             );
+        }
+
+        #[test]
+        fn object_reference_tuple_format() {
+            let json = r#"["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]"#;
+            let obj_ref: ObjectReference = serde_json::from_str(json).unwrap();
+            assert_eq!(obj_ref.object_id, ObjectId::ZERO);
+            assert_eq!(obj_ref.version, Version::from_u64(0));
+            assert_eq!(obj_ref.digest, Digest::ZERO);
+
+            // Roundtrip
+            let serialized = serde_json::to_string(&obj_ref).unwrap();
+            let roundtrip: ObjectReference = serde_json::from_str(&serialized).unwrap();
+            assert_eq!(obj_ref, roundtrip);
+        }
+
+        #[test]
+        fn object_reference_in_map() {
+            use std::collections::BTreeMap;
+
+            let json = r#"{"4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi":[["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]],"8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR":[["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]]}"#;
+
+            let from_json: BTreeMap<String, Vec<ObjectReference>> =
+                serde_json::from_str(json).unwrap();
+
+            assert_eq!(from_json.len(), 2);
+            for refs in from_json.values() {
+                assert_eq!(refs.len(), 1);
+                assert_eq!(refs[0].object_id, ObjectId::ZERO);
+                assert_eq!(refs[0].version, Version::from_u64(0));
+                assert_eq!(refs[0].digest, Digest::ZERO);
+            }
         }
 
         #[test]
