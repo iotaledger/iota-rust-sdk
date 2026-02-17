@@ -74,8 +74,8 @@ impl Name {
 
         StructTag::new(
             package_address,
-            IOTA_NAMES_NAME_MODULE.to_owned(),
-            IOTA_NAMES_NAME_STRUCT.to_owned(),
+            IOTA_NAMES_NAME_MODULE,
+            IOTA_NAMES_NAME_STRUCT,
             vec![],
         )
     }
