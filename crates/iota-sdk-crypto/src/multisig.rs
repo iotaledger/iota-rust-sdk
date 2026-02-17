@@ -404,3 +404,191 @@ fn multisig_pubkey_and_signature_from_user_signature(
         _ => Err(SignatureError::from_source("unknown signature scheme")),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    // --- BitmapIndices ---
+
+    #[test]
+    fn bitmap_indices_empty_bitmap() {
+        let indices: Vec<u8> = BitmapIndices::new(0).collect();
+        assert!(indices.is_empty(), "empty bitmap should yield no indices");
+    }
+
+    #[test]
+    fn bitmap_indices_single_bit() {
+        // 0b0001 = bit 0 set
+        let indices: Vec<u8> = BitmapIndices::new(1).collect();
+        assert_eq!(indices, vec![0]);
+    }
+
+    #[test]
+    fn bitmap_indices_multiple_bits() {
+        // 22 = 0b10110 => bits 1, 2, 4 are set
+        let indices: Vec<u8> = BitmapIndices::new(22).collect();
+        assert_eq!(indices, vec![1, 2, 4]);
+    }
+
+    #[test]
+    fn bitmap_indices_all_low_bits() {
+        // 0b1111 = 15 => bits 0, 1, 2, 3
+        let indices: Vec<u8> = BitmapIndices::new(0b1111).collect();
+        assert_eq!(indices, vec![0, 1, 2, 3]);
+    }
+
+    #[test]
+    fn bitmap_indices_high_bit() {
+        // bit 15 set (highest for u16)
+        let indices: Vec<u8> = BitmapIndices::new(1 << 15).collect();
+        assert_eq!(indices, vec![15]);
+    }
+
+    #[test]
+    fn bitmap_indices_non_contiguous() {
+        // 0b101010101 = bits 0, 2, 4, 6, 8
+        let indices: Vec<u8> = BitmapIndices::new(0b101010101).collect();
+        assert_eq!(indices, vec![0, 2, 4, 6, 8]);
+    }
+
+    #[test]
+    fn bitmap_indices_all_bits_set() {
+        let indices: Vec<u8> = BitmapIndices::new(u16::MAX).collect();
+        let expected: Vec<u8> = (0..16).collect();
+        assert_eq!(indices, expected);
+    }
+
+    // --- MultisigVerifier / UserSignatureVerifier construction ---
+
+    #[test]
+    fn multisig_verifier_default() {
+        let v = MultisigVerifier::new();
+        let v2 = MultisigVerifier::default();
+        assert_eq!(v, v2, "new() and default() should produce identical verifiers");
+    }
+
+    #[test]
+    fn user_signature_verifier_default() {
+        let v = UserSignatureVerifier::new();
+        let v2 = UserSignatureVerifier::default();
+        assert_eq!(v, v2);
+    }
+
+    #[cfg(feature = "ed25519")]
+    #[test]
+    fn test_multisig_verifier_e2e_ed25519() {
+        use rand::rngs::OsRng;
+        use crate::ed25519::Ed25519PrivateKey;
+        use crate::Signer; // trait
+        use iota_types::{
+             MultisigMember, MultisigMemberPublicKey, MultisigCommittee, 
+             MultisigMemberSignature, MultisigAggregatedSignature
+        };
+
+        let msg = b"multisig test message";
+
+        // 1. Generate keys
+        let sk1 = Ed25519PrivateKey::generate(&mut OsRng);
+        let pk1 = sk1.public_key();
+        let sk2 = Ed25519PrivateKey::generate(&mut OsRng);
+        let pk2 = sk2.public_key();
+        let sk3 = Ed25519PrivateKey::generate(&mut OsRng);
+        let pk3 = sk3.public_key();
+
+        // 2. Create Committee (threshold 2)
+        let m1 = MultisigMember::new(MultisigMemberPublicKey::Ed25519(pk1), 1);
+        let m2 = MultisigMember::new(MultisigMemberPublicKey::Ed25519(pk2), 1);
+        let m3 = MultisigMember::new(MultisigMemberPublicKey::Ed25519(pk3), 1);
+        
+        let committee = MultisigCommittee::new(vec![m1, m2, m3], 2);
+
+        // 3. Sign
+        let sig1: iota_types::Ed25519Signature = sk1.try_sign(msg).unwrap();
+        let sig2: iota_types::Ed25519Signature = sk2.try_sign(msg).unwrap();
+        
+        // 4. Create Aggregated Signature
+        // Signers are at indices 0 and 1.
+        let signatures = vec![
+             MultisigMemberSignature::Ed25519(sig1),
+             MultisigMemberSignature::Ed25519(sig2),
+        ];
+        // Bitmap: indices 0 (bit0) and 1 (bit1) -> 0b11 = 3
+        let bitmap = 3;
+        
+        let agg_sig = MultisigAggregatedSignature::new(committee.clone(), signatures, bitmap);
+
+        // 5. Verify
+        let verifier = MultisigVerifier::new();
+        assert!(verifier.verify(msg, &agg_sig).is_ok());
+
+        // 6. Test Failures
+        
+        // Bad Message
+        assert!(verifier.verify(b"bad msg", &agg_sig).is_err());
+        
+        // Insufficient Weight (remove sig2)
+        // Indices: 0. Bitmap: 1.
+        let partial_sigs = vec![
+             MultisigMemberSignature::Ed25519(sk1.try_sign(msg).unwrap()),
+        ];
+        let partial_agg = MultisigAggregatedSignature::new(committee.clone(), partial_sigs, 1);
+        assert!(verifier.verify(msg, &partial_agg).is_err()); // Weight 1 < 2
+        
+        // Mismatched Bitmap (Bitmap says 2 signatures, we provide 1)
+        // Bitmap 3 (2 bits), Sig vector len 1.
+        let bad_bitmap_sig = MultisigAggregatedSignature::new(committee.clone(), vec![MultisigMemberSignature::Ed25519(sk1.try_sign(msg).unwrap())], 3);
+        assert!(verifier.verify(msg, &bad_bitmap_sig).is_err());
+        
+        // Invalid Member Signature (Signed by random key)
+        let sk_random = Ed25519PrivateKey::generate(&mut OsRng);
+        let sig_random: iota_types::Ed25519Signature = sk_random.try_sign(msg).unwrap();
+        let invalid_sigs = vec![
+             MultisigMemberSignature::Ed25519(sk1.try_sign(msg).unwrap()),
+             MultisigMemberSignature::Ed25519(sig_random), // Index 1 expects pk2, but we give sig from random
+        ];
+        let invalid_agg = MultisigAggregatedSignature::new(committee.clone(), invalid_sigs, 3);
+        assert!(verifier.verify(msg, &invalid_agg).is_err());
+    }
+
+    #[cfg(feature = "ed25519")]
+    #[test]
+    fn test_multisig_aggregator_workflow() {
+        use rand::rngs::OsRng;
+        use crate::ed25519::Ed25519PrivateKey;
+        use crate::Signer; 
+        use iota_types::{
+             MultisigMember, MultisigMemberPublicKey, MultisigCommittee, 
+             UserSignature // UserSignature enum used by aggregator
+        };
+
+        let msg = b"aggregator test";
+        let sk1 = Ed25519PrivateKey::generate(&mut OsRng);
+        let sk2 = Ed25519PrivateKey::generate(&mut OsRng);
+        
+        let m1 = MultisigMember::new(MultisigMemberPublicKey::Ed25519(sk1.public_key()), 1);
+        let m2 = MultisigMember::new(MultisigMemberPublicKey::Ed25519(sk2.public_key()), 1);
+        let committee = MultisigCommittee::new(vec![m1, m2], 2);
+
+        let personal_msg = iota_types::PersonalMessage(msg.into());
+        
+        let mut aggregator = MultisigAggregator::new_with_message(committee, &personal_msg);
+        
+        let digest = personal_msg.signing_digest();
+        let sig1_user: UserSignature = sk1.try_sign(digest.as_ref()).unwrap();
+        let sig2_user: UserSignature = sk2.try_sign(digest.as_ref()).unwrap();
+        
+        aggregator.add_signature(sig1_user).unwrap();
+        assert!(aggregator.finish().is_err()); // Weight 1 < 2
+        
+        aggregator.add_signature(sig2_user).unwrap();
+        let agg_sig = aggregator.finish().unwrap();
+        
+        // Verify 
+        let verifier = MultisigVerifier::new();
+        assert!(verifier.verify(digest.as_ref(), &agg_sig).is_ok());
+    }
+}

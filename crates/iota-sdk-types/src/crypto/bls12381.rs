@@ -222,3 +222,64 @@ impl std::fmt::Debug for Bls12381Signature {
             .finish()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::str::FromStr;
+
+    #[test]
+    fn test_bls12381_public_key_roundtrip() {
+        let bytes = [1u8; 96];
+        let pk = Bls12381PublicKey::new(bytes);
+        
+        assert_eq!(pk.into_inner(), bytes);
+        assert_eq!(pk.inner(), &bytes);
+        assert_eq!(pk.as_bytes(), &bytes);
+        assert_eq!(AsRef::<[u8]>::as_ref(&pk), &bytes);
+    }
+
+    #[test]
+    fn test_bls12381_public_key_display_debug() {
+        let bytes = [1u8; 96];
+        let pk = Bls12381PublicKey::new(bytes);
+        
+        // Display should be base64
+        let s = pk.to_string();
+        assert!(!s.is_empty());
+        let pk_from_str = Bls12381PublicKey::from_str(&s).unwrap();
+        assert_eq!(pk, pk_from_str);
+        
+        // Debug
+        let debug = format!("{:?}", pk);
+        assert!(debug.contains("Bls12381PublicKey"));
+        assert!(debug.contains(&s));
+    }
+
+    #[test]
+    fn test_bls12381_signature_roundtrip() {
+        let bytes = [2u8; 48];
+        let sig = Bls12381Signature::new(bytes);
+        
+        assert_eq!(sig.into_inner(), bytes);
+        assert_eq!(sig.inner(), &bytes);
+        assert_eq!(sig.as_bytes(), &bytes);
+        
+        let sig2 = Bls12381Signature::from_bytes(&bytes).unwrap();
+        assert_eq!(sig, sig2);
+    }
+    
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_bls12381_serde() {
+        let pk = Bls12381PublicKey::new([1u8; 96]);
+        let json = serde_json::to_string(&pk).unwrap();
+        let pk2: Bls12381PublicKey = serde_json::from_str(&json).unwrap();
+        assert_eq!(pk, pk2);
+        
+        let sig = Bls12381Signature::new([2u8; 48]);
+        let json_sig = serde_json::to_string(&sig).unwrap();
+        let sig2: Bls12381Signature = serde_json::from_str(&json_sig).unwrap();
+        assert_eq!(sig, sig2);
+    }
+}

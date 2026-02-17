@@ -983,3 +983,171 @@ mod serialization {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    // --- SignatureScheme from_byte ---
+
+    #[test]
+    fn signature_scheme_from_byte_all_valid() {
+        let expected = [
+            (0x00, SignatureScheme::Ed25519),
+            (0x01, SignatureScheme::Secp256k1),
+            (0x02, SignatureScheme::Secp256r1),
+            (0x03, SignatureScheme::Multisig),
+            (0x04, SignatureScheme::Bls12381),
+            (0x05, SignatureScheme::ZkLoginAuthenticator),
+            (0x06, SignatureScheme::PasskeyAuthenticator),
+            (0x07, SignatureScheme::MoveAuthenticator),
+        ];
+        for (byte, scheme) in expected {
+            assert_eq!(SignatureScheme::from_byte(byte).unwrap(), scheme);
+        }
+    }
+
+    #[test]
+    fn signature_scheme_from_byte_invalid() {
+        assert!(SignatureScheme::from_byte(0x08).is_err());
+        assert!(SignatureScheme::from_byte(0xFF).is_err());
+    }
+
+    #[test]
+    fn signature_scheme_to_u8_roundtrip() {
+        let schemes = [
+            SignatureScheme::Ed25519,
+            SignatureScheme::Secp256k1,
+            SignatureScheme::Secp256r1,
+            SignatureScheme::Multisig,
+            SignatureScheme::Bls12381,
+            SignatureScheme::ZkLoginAuthenticator,
+            SignatureScheme::PasskeyAuthenticator,
+            SignatureScheme::MoveAuthenticator,
+        ];
+        for scheme in schemes {
+            let byte = scheme.to_u8();
+            assert_eq!(SignatureScheme::from_byte(byte).unwrap(), scheme);
+        }
+    }
+
+    #[test]
+    fn signature_scheme_display() {
+        assert_eq!(SignatureScheme::Ed25519.to_string(), "ed25519");
+        assert_eq!(SignatureScheme::Secp256k1.to_string(), "secp256k1");
+        assert_eq!(SignatureScheme::Secp256r1.to_string(), "secp256r1");
+        assert_eq!(SignatureScheme::Multisig.to_string(), "multisig");
+        assert_eq!(SignatureScheme::Bls12381.to_string(), "bls12381");
+    }
+
+    // --- SignatureScheme is_* methods ---
+
+    #[test]
+    fn signature_scheme_is_methods() {
+        assert!(SignatureScheme::Ed25519.is_ed25519());
+        assert!(!SignatureScheme::Ed25519.is_secp256k1());
+        assert!(SignatureScheme::Secp256k1.is_secp256k1());
+        assert!(SignatureScheme::Secp256r1.is_secp256r1());
+        assert!(SignatureScheme::Multisig.is_multisig());
+        assert!(SignatureScheme::Bls12381.is_bls12381());
+        assert!(SignatureScheme::ZkLoginAuthenticator.is_zk_login_authenticator());
+        assert!(SignatureScheme::PasskeyAuthenticator.is_passkey_authenticator());
+        assert!(SignatureScheme::MoveAuthenticator.is_move_authenticator());
+    }
+
+    // --- InvalidSignatureScheme Display ---
+
+    #[test]
+    fn invalid_signature_scheme_display() {
+        let err = InvalidSignatureScheme(0xFF);
+        assert_eq!(err.to_string(), "invalid signature scheme: ff");
+    }
+
+    // --- SimpleSignature ---
+
+    #[test]
+    fn simple_signature_scheme_method() {
+        let ed = SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; Ed25519Signature::LENGTH]),
+            public_key: Ed25519PublicKey::new([0; Ed25519PublicKey::LENGTH]),
+        };
+        assert_eq!(ed.scheme(), SignatureScheme::Ed25519);
+
+        let k1 = SimpleSignature::Secp256k1 {
+            signature: Secp256k1Signature::new([0; Secp256k1Signature::LENGTH]),
+            public_key: Secp256k1PublicKey::new([0; Secp256k1PublicKey::LENGTH]),
+        };
+        assert_eq!(k1.scheme(), SignatureScheme::Secp256k1);
+
+        let r1 = SimpleSignature::Secp256r1 {
+            signature: Secp256r1Signature::new([0; Secp256r1Signature::LENGTH]),
+            public_key: Secp256r1PublicKey::new([0; Secp256r1PublicKey::LENGTH]),
+        };
+        assert_eq!(r1.scheme(), SignatureScheme::Secp256r1);
+    }
+
+    #[test]
+    fn simple_signature_is_methods() {
+        let ed = SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; Ed25519Signature::LENGTH]),
+            public_key: Ed25519PublicKey::new([0; Ed25519PublicKey::LENGTH]),
+        };
+        assert!(ed.is_ed25519());
+        assert!(!ed.is_secp256k1());
+        assert!(!ed.is_secp256r1());
+    }
+
+    #[test]
+    fn simple_signature_ed25519_accessors() {
+        let sig = Ed25519Signature::new([0xAA; Ed25519Signature::LENGTH]);
+        let pk = Ed25519PublicKey::new([0xBB; Ed25519PublicKey::LENGTH]);
+        let ss = SimpleSignature::Ed25519 {
+            signature: sig,
+            public_key: pk,
+        };
+        assert!(ss.as_ed25519_sig_opt().is_some());
+        assert!(ss.as_ed25519_pub_key_opt().is_some());
+        assert!(ss.as_secp256k1_sig_opt().is_none());
+        assert!(ss.as_secp256r1_sig_opt().is_none());
+    }
+
+    #[test]
+    fn simple_signature_into_ed25519() {
+        let sig = Ed25519Signature::new([0xAA; Ed25519Signature::LENGTH]);
+        let pk = Ed25519PublicKey::new([0xBB; Ed25519PublicKey::LENGTH]);
+        let ss = SimpleSignature::Ed25519 {
+            signature: sig,
+            public_key: pk,
+        };
+        let (s, p) = ss.into_ed25519();
+        assert_eq!(s, sig);
+        assert_eq!(p, pk);
+    }
+
+    #[test]
+    fn simple_signature_into_secp256k1_returns_none_for_ed25519() {
+        let ss = SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; Ed25519Signature::LENGTH]),
+            public_key: Ed25519PublicKey::new([0; Ed25519PublicKey::LENGTH]),
+        };
+        assert!(ss.into_secp256k1_opt().is_none());
+    }
+
+    // --- UserSignature scheme dispatching ---
+
+    #[test]
+    fn user_signature_simple_scheme() {
+        let ed = SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; Ed25519Signature::LENGTH]),
+            public_key: Ed25519PublicKey::new([0; Ed25519PublicKey::LENGTH]),
+        };
+        let us = UserSignature::Simple(ed);
+        assert_eq!(us.scheme(), SignatureScheme::Ed25519);
+        assert!(us.is_simple());
+        assert!(!us.is_multisig());
+        assert!(!us.is_zklogin_authenticator());
+    }
+}

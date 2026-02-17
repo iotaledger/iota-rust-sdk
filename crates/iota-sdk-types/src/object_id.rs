@@ -130,3 +130,164 @@ impl std::fmt::Display for ObjectId {
         self.to_canonical_string(true).fmt(f)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use test_strategy::proptest;
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    // --- Construction & Accessors ---
+
+    #[test]
+    fn new_returns_correct_bytes() {
+        let bytes = [42u8; ObjectId::LENGTH];
+        let id = ObjectId::new(bytes);
+        assert_eq!(*id.inner(), bytes, "inner bytes must match input");
+        assert_eq!(id.into_inner(), bytes, "into_inner must match input");
+    }
+
+    #[test]
+    fn as_bytes_returns_full_slice() {
+        let bytes = [7u8; ObjectId::LENGTH];
+        let id = ObjectId::new(bytes);
+        assert_eq!(id.as_bytes(), &bytes[..]);
+    }
+
+    // --- Well-known constants ---
+
+    #[test]
+    fn zero_constant() {
+        assert_eq!(ObjectId::ZERO, ObjectId::new([0u8; 32]));
+    }
+
+    #[test]
+    fn system_constant() {
+        let mut expected = [0u8; 32];
+        expected[31] = 5;
+        assert_eq!(ObjectId::SYSTEM, ObjectId::new(expected));
+    }
+
+    #[test]
+    fn clock_constant() {
+        let mut expected = [0u8; 32];
+        expected[31] = 6;
+        assert_eq!(ObjectId::CLOCK, ObjectId::new(expected));
+    }
+
+    // --- Hex parsing ---
+
+    #[test]
+    fn from_hex_with_prefix() {
+        let hex = "0x0000000000000000000000000000000000000000000000000000000000000005";
+        let id = ObjectId::from_hex(hex).unwrap();
+        assert_eq!(id, ObjectId::SYSTEM);
+    }
+
+    #[test]
+    fn from_hex_short_form() {
+        // Short hex should be left-padded with zeros to 32 bytes
+        let id = ObjectId::from_hex("0x6").unwrap();
+        assert_eq!(id, ObjectId::CLOCK);
+    }
+
+    #[test]
+    fn from_hex_invalid_characters() {
+        let result = ObjectId::from_hex("0xZZZZ");
+        assert!(result.is_err(), "non-hex characters should fail");
+    }
+
+    // --- Display & FromStr roundtrip ---
+
+    #[test]
+    fn display_shows_canonical_hex_with_prefix() {
+        let display = ObjectId::ZERO.to_string();
+        assert!(
+            display.starts_with("0x"),
+            "Display should start with 0x prefix"
+        );
+        assert_eq!(display.len(), 66, "0x + 64 hex chars = 66 chars");
+    }
+
+    #[proptest]
+    fn roundtrip_display_fromstr(id: ObjectId) {
+        let s = id.to_string();
+        let parsed: ObjectId = s.parse().unwrap();
+        assert_eq!(id, parsed);
+    }
+
+    // --- String representations ---
+
+    #[test]
+    fn to_canonical_string_with_and_without_prefix() {
+        let id = ObjectId::SYSTEM;
+        let with_prefix = id.to_canonical_string(true);
+        let without_prefix = id.to_canonical_string(false);
+        assert!(with_prefix.starts_with("0x"));
+        assert!(!without_prefix.starts_with("0x"));
+        assert_eq!(with_prefix[2..], without_prefix);
+    }
+
+    #[test]
+    fn to_short_string_trims_leading_zeros() {
+        let id = ObjectId::SYSTEM;
+        assert_eq!(id.to_short_string(true), "0x5");
+        assert_eq!(id.to_short_string(false), "5");
+    }
+
+    #[test]
+    fn to_short_string_zero_address_shows_zero() {
+        let id = ObjectId::ZERO;
+        assert_eq!(id.to_short_string(true), "0x0");
+        assert_eq!(id.to_short_string(false), "0");
+    }
+
+    // --- Conversions ---
+
+    #[test]
+    fn from_address_roundtrip() {
+        let addr = Address::new([0xAB; 32]);
+        let id = ObjectId::from(addr);
+        assert_eq!(*id.as_address(), addr);
+    }
+
+    #[test]
+    fn into_byte_array() {
+        let bytes = [0xFF; 32];
+        let id = ObjectId::new(bytes);
+        let out: [u8; 32] = id.into();
+        assert_eq!(out, bytes);
+    }
+
+    #[test]
+    fn into_vec_u8() {
+        let bytes = [0xCC; 32];
+        let id = ObjectId::new(bytes);
+        let vec: Vec<u8> = id.into();
+        assert_eq!(&vec[..], &bytes[..]);
+    }
+
+    #[test]
+    fn as_ref_u8_slice() {
+        let bytes = [0x11; 32];
+        let id = ObjectId::new(bytes);
+        let slice: &[u8] = id.as_ref();
+        assert_eq!(slice, &bytes[..]);
+    }
+
+    #[test]
+    fn as_ref_u8_array() {
+        let bytes = [0x22; 32];
+        let id = ObjectId::new(bytes);
+        let arr: &[u8; 32] = id.as_ref();
+        assert_eq!(arr, &bytes);
+    }
+
+    #[test]
+    fn to_hex_matches_display() {
+        let id = ObjectId::CLOCK;
+        assert_eq!(id.to_hex(), id.to_string());
+    }
+}

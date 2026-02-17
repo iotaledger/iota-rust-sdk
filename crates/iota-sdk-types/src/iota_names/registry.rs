@@ -189,4 +189,104 @@ mod tests {
 
         assert!(name.is_node_expired(system_time));
     }
+
+    #[test]
+    fn test_leaf_record() {
+        let record = NameRecord {
+            nft_id: ObjectId::new([1; 32]),
+            expiration_timestamp_ms: IOTA_NAMES_LEAF_EXPIRATION_TIMESTAMP,
+            target_address: Some(Address::new([2; 32])),
+            data: HashMap::new(),
+        };
+
+        assert!(record.is_leaf_record());
+
+        let mut record = record;
+        record.expiration_timestamp_ms = 123456789;
+        assert!(!record.is_leaf_record());
+    }
+
+    #[test]
+    fn test_valid_leaf_parent() {
+        let nft_id = ObjectId::new([1; 32]);
+        let parent = NameRecord {
+            nft_id,
+            expiration_timestamp_ms: 1000,
+            target_address: None,
+            data: HashMap::new(),
+        };
+
+        let valid_child = NameRecord {
+            nft_id,
+            expiration_timestamp_ms: IOTA_NAMES_LEAF_EXPIRATION_TIMESTAMP,
+            target_address: Some(Address::new([2; 32])),
+            data: HashMap::new(),
+        };
+
+        let invalid_child = NameRecord {
+            nft_id: ObjectId::new([3; 32]),
+            expiration_timestamp_ms: IOTA_NAMES_LEAF_EXPIRATION_TIMESTAMP,
+            target_address: Some(Address::new([4; 32])),
+            data: HashMap::new(),
+        };
+
+        assert!(parent.is_valid_leaf_parent(&valid_child));
+        assert!(!parent.is_valid_leaf_parent(&invalid_child));
+    }
+
+    #[test]
+    fn test_expiration_time() {
+        // Need to be careful with timestamp math, so picking a safe small number
+        let timestamp_ms = 1_600_000_000_000;
+        let record = NameRecord {
+            nft_id: ObjectId::ZERO,
+            expiration_timestamp_ms: timestamp_ms,
+            target_address: None,
+            data: HashMap::new(),
+        };
+
+        let expected_time = UNIX_EPOCH + Duration::from_millis(timestamp_ms);
+        assert_eq!(record.expiration_time(), expected_time);
+    }
+
+    #[test]
+    #[cfg(feature = "serde")]
+    fn test_serialization() {
+        let mut data = HashMap::new();
+        data.insert("key1".to_string(), "value1".to_string());
+        data.insert("key2".to_string(), "value2".to_string());
+
+        let record = NameRecord {
+            nft_id: ObjectId::new([1; 32]),
+            expiration_timestamp_ms: 100,
+            target_address: Some(Address::new([2; 32])),
+            data: data.clone(),
+        };
+
+        let json = serde_json::to_string(&record).unwrap();
+        let deserialized: NameRecord = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(record, deserialized);
+        assert_eq!(deserialized.data, data);
+    }
+
+    #[test]
+    #[cfg(feature = "serde")]
+    fn test_registry_types_serialization() {
+        let table = Table {
+            id: ObjectId::new([5; 32]),
+            size: 10,
+        };
+        let table_json = serde_json::to_string(&table).unwrap();
+        let table_de: Table = serde_json::from_str(&table_json).unwrap();
+        assert_eq!(table, table_de);
+
+        let registry = Registry {
+            registry: table.clone(),
+            reverse_registry: table.clone(),
+        };
+        let reg_json = serde_json::to_string(&registry).unwrap();
+        let reg_de: Registry = serde_json::from_str(&reg_json).unwrap();
+        assert_eq!(registry.registry, reg_de.registry);
+    }
 }

@@ -230,3 +230,68 @@ impl std::fmt::Debug for Secp256k1Signature {
             .finish()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::crypto::{PublicKeyExt, SignatureScheme};
+    use std::str::FromStr;
+
+    #[test]
+    fn test_secp256k1_public_key_roundtrip() {
+        let bytes = [1u8; 33];
+        let pk = Secp256k1PublicKey::new(bytes);
+        
+        assert_eq!(pk.into_inner(), bytes);
+        assert_eq!(pk.inner(), &bytes);
+        assert_eq!(pk.as_bytes(), &bytes);
+        assert_eq!(AsRef::<[u8]>::as_ref(&pk), &bytes);
+        
+        // Scheme
+        assert_eq!(pk.scheme(), SignatureScheme::Secp256k1);
+    }
+
+    #[test]
+    fn test_secp256k1_public_key_display_debug() {
+        let bytes = [1u8; 33];
+        let pk = Secp256k1PublicKey::new(bytes);
+        
+        // Display should be base64
+        let s = pk.to_string();
+        assert!(!s.is_empty());
+        let pk_from_str = Secp256k1PublicKey::from_str(&s).unwrap();
+        assert_eq!(pk, pk_from_str);
+        
+        // Debug
+        let debug = format!("{:?}", pk);
+        assert!(debug.contains("Secp256k1PublicKey"));
+        assert!(debug.contains(&s));
+    }
+
+    #[test]
+    fn test_secp256k1_signature_roundtrip() {
+        let bytes = [2u8; 64];
+        let sig = Secp256k1Signature::new(bytes);
+        
+        assert_eq!(sig.into_inner(), bytes);
+        assert_eq!(sig.inner(), &bytes);
+        assert_eq!(sig.as_bytes(), &bytes);
+        
+        let sig2 = Secp256k1Signature::from_bytes(&bytes).unwrap();
+        assert_eq!(sig, sig2);
+    }
+    
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_secp256k1_serde() {
+        let pk = Secp256k1PublicKey::new([1u8; 33]);
+        let json = serde_json::to_string(&pk).unwrap();
+        let pk2: Secp256k1PublicKey = serde_json::from_str(&json).unwrap();
+        assert_eq!(pk, pk2);
+        
+        let sig = Secp256k1Signature::new([2u8; 64]);
+        let json_sig = serde_json::to_string(&sig).unwrap();
+        let sig2: Secp256k1Signature = serde_json::from_str(&json_sig).unwrap();
+        assert_eq!(sig, sig2);
+    }
+}

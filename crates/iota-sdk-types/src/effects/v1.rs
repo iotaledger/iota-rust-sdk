@@ -897,3 +897,126 @@ mod serialization {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Digest;
+    use crate::object::Owner;
+    use crate::Address;
+    
+    // Mock helpers
+    fn mock_digest() -> Digest {
+        Digest::new([1u8; 32])
+    }
+    
+    fn mock_owner() -> Owner {
+        Owner::Address(Address::ZERO)
+    }
+
+    #[test]
+    fn test_object_in_accessors() {
+        let digest = mock_digest();
+        let owner = mock_owner();
+        let version = 10;
+        
+        let obj = ObjectIn::Data { version, digest, owner };
+        
+        assert_eq!(obj.version(), version);
+        assert_eq!(obj.digest(), digest);
+        assert_eq!(obj.owner(), owner);
+        
+        assert_eq!(obj.version_opt(), Some(version));
+        assert_eq!(obj.digest_opt(), Some(digest));
+        assert_eq!(obj.owner_opt(), Some(owner));
+        
+        let missing = ObjectIn::Missing;
+        assert!(missing.version_opt().is_none());
+        assert!(missing.digest_opt().is_none());
+        assert!(missing.owner_opt().is_none());
+    }
+
+    #[test]
+    #[should_panic(expected = "object does not exist")]
+    fn test_object_in_panic_version() {
+        ObjectIn::Missing.version();
+    }
+    
+    #[test]
+    fn test_object_out_accessors() {
+        let digest = mock_digest();
+        let owner = mock_owner();
+        let version = 20;
+        
+        // ObjectWrite
+        let obj = ObjectOut::ObjectWrite { digest, owner };
+        assert_eq!(obj.object_digest(), digest);
+        assert_eq!(obj.object_owner(), owner);
+        assert!(obj.package_version_opt().is_none());
+        
+        // PackageWrite
+        let pkg = ObjectOut::PackageWrite { version, digest };
+        assert_eq!(pkg.package_version(), version);
+        assert_eq!(pkg.package_digest(), digest);
+        assert!(pkg.object_owner_opt().is_none());
+    }
+    
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_serialization_object_in() {
+        let digest = mock_digest();
+        let owner = mock_owner();
+        let version = 10;
+        
+        let obj_in = ObjectIn::Data { version, digest, owner };
+        
+        // JSON (Human Readable)
+        let json = serde_json::to_string(&obj_in).unwrap();
+        // Verify structure (snake_case state)
+        assert!(json.contains("\"state\":\"data\""));
+        let de: ObjectIn = serde_json::from_str(&json).unwrap();
+        assert_eq!(obj_in, de);
+        
+        // BCS (Binary)
+        let bytes = bcs::to_bytes(&obj_in).unwrap();
+        let de_bin: ObjectIn = bcs::from_bytes(&bytes).unwrap();
+        assert_eq!(obj_in, de_bin);
+    }
+    
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_serialization_object_out() {
+        let digest = mock_digest();
+        let owner = mock_owner();
+        // let version = 20;
+        
+        let obj_out = ObjectOut::ObjectWrite { digest, owner };
+        
+        let json = serde_json::to_string(&obj_out).unwrap();
+        assert!(json.contains("\"state\":\"object_write\""));
+        let de: ObjectOut = serde_json::from_str(&json).unwrap();
+        assert_eq!(obj_out, de);
+        
+        let bytes = bcs::to_bytes(&obj_out).unwrap();
+        let de_bin: ObjectOut = bcs::from_bytes(&bytes).unwrap();
+        assert_eq!(obj_out, de_bin);
+    }
+    
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_serialization_unchanged_shared() {
+        let digest = mock_digest();
+        let version = 30;
+        
+        let kind = UnchangedSharedKind::ReadOnlyRoot { version, digest };
+        
+        let json = serde_json::to_string(&kind).unwrap();
+        assert!(json.contains("\"kind\":\"read_only_root\""));
+        let de: UnchangedSharedKind = serde_json::from_str(&json).unwrap();
+        assert_eq!(kind, de);
+        
+        let bytes = bcs::to_bytes(&kind).unwrap();
+        let de_bin: UnchangedSharedKind = bcs::from_bytes(&bytes).unwrap();
+        assert_eq!(kind, de_bin);
+    }
+}

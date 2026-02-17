@@ -1670,3 +1670,319 @@ mod serialization {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    // --- ExecutionStatus ---
+
+    #[test]
+    fn execution_status_success() {
+        let status = ExecutionStatus::Success;
+        assert!(status.is_success());
+        assert!(!status.is_failure());
+        assert!(status.error().is_none());
+        assert!(status.error_command().is_none());
+    }
+
+    #[test]
+    fn execution_status_failure_with_command() {
+        let status = ExecutionStatus::Failure {
+            error: ExecutionError::InsufficientGas,
+            command: Some(3),
+        };
+        assert!(!status.is_success());
+        assert!(status.is_failure());
+        assert_eq!(status.error(), Some(&ExecutionError::InsufficientGas));
+        assert_eq!(status.error_command(), Some(3));
+    }
+
+    #[test]
+    fn execution_status_failure_without_command() {
+        let status = ExecutionStatus::Failure {
+            error: ExecutionError::InvalidGasObject,
+            command: None,
+        };
+        assert!(status.is_failure());
+        assert!(status.error().is_some());
+        assert!(status.error_command().is_none());
+    }
+
+    // --- ExecutionError is_* methods ---
+
+    #[test]
+    fn execution_error_is_methods() {
+        assert!(ExecutionError::InsufficientGas.is_insufficient_gas());
+        assert!(!ExecutionError::InsufficientGas.is_invalid_gas_object());
+
+        assert!(ExecutionError::InvalidGasObject.is_invalid_gas_object());
+        assert!(ExecutionError::InvariantViolation.is_invariant_violation());
+        assert!(ExecutionError::FeatureNotYetSupported.is_feature_not_yet_supported());
+        assert!(ExecutionError::InsufficientCoinBalance.is_insufficient_coin_balance());
+        assert!(ExecutionError::CoinBalanceOverflow.is_coin_balance_overflow());
+        assert!(ExecutionError::PublishErrorNonZeroAddress.is_publish_error_non_zero_address());
+        assert!(ExecutionError::IotaMoveVerificationError.is_iota_move_verification_error());
+        assert!(
+            ExecutionError::VmVerificationOrDeserializationError
+                .is_vm_verification_or_deserialization_error()
+        );
+        assert!(ExecutionError::VmInvariantViolation.is_vm_invariant_violation());
+        assert!(ExecutionError::FunctionNotFound.is_function_not_found());
+        assert!(ExecutionError::ArityMismatch.is_arity_mismatch());
+        assert!(ExecutionError::TypeArityMismatch.is_type_arity_mismatch());
+        assert!(ExecutionError::NonEntryFunctionInvoked.is_non_entry_function_invoked());
+        assert!(ExecutionError::InvalidTransferObject.is_invalid_transfer_object());
+        assert!(ExecutionError::CertificateDenied.is_certificate_denied());
+        assert!(
+            ExecutionError::SharedObjectOperationNotAllowed
+                .is_shared_object_operation_not_allowed()
+        );
+        assert!(ExecutionError::InputObjectDeleted.is_input_object_deleted());
+        assert!(
+            ExecutionError::ExecutionCancelledDueToRandomnessUnavailable
+                .is_execution_cancelled_due_to_randomness_unavailable()
+        );
+    }
+
+    #[test]
+    fn execution_error_with_data_variants() {
+        let err = ExecutionError::ObjectTooBig {
+            object_size: 100,
+            max_object_size: 50,
+        };
+        assert!(err.is_object_too_big());
+        assert!(!err.is_package_too_big());
+
+        let err = ExecutionError::MoveAbort {
+            location: MoveLocation {
+                package: ObjectId::ZERO,
+                module: "test".parse().unwrap(),
+                function: 1,
+                instruction: 2,
+                function_name: None,
+            },
+            code: 42,
+        };
+        assert!(err.is_move_abort());
+    }
+
+    // --- CommandArgumentError is_* methods ---
+
+    #[test]
+    fn command_argument_error_is_methods() {
+        assert!(CommandArgumentError::TypeMismatch.is_type_mismatch());
+        assert!(!CommandArgumentError::TypeMismatch.is_invalid_bcs_bytes());
+        assert!(CommandArgumentError::InvalidBcsBytes.is_invalid_bcs_bytes());
+        assert!(
+            CommandArgumentError::InvalidUsageOfPureArgument.is_invalid_usage_of_pure_argument()
+        );
+        assert!(CommandArgumentError::InvalidGasCoinUsage.is_invalid_gas_coin_usage());
+        assert!(CommandArgumentError::InvalidValueUsage.is_invalid_value_usage());
+        assert!(CommandArgumentError::InvalidObjectByValue.is_invalid_object_by_value());
+        assert!(CommandArgumentError::InvalidObjectByMutRef.is_invalid_object_by_mut_ref());
+        assert!(
+            CommandArgumentError::SharedObjectOperationNotAllowed
+                .is_shared_object_operation_not_allowed()
+        );
+    }
+
+    // --- TypeArgumentError ---
+
+    #[test]
+    fn type_argument_error_is_methods() {
+        assert!(TypeArgumentError::TypeNotFound.is_type_not_found());
+        assert!(!TypeArgumentError::TypeNotFound.is_constraint_not_satisfied());
+        assert!(TypeArgumentError::ConstraintNotSatisfied.is_constraint_not_satisfied());
+    }
+
+    // --- PackageUpgradeError ---
+
+    #[test]
+    fn package_upgrade_error_is_methods() {
+        assert!(PackageUpgradeError::IncompatibleUpgrade.is_incompatible_upgrade());
+        assert!(!PackageUpgradeError::IncompatibleUpgrade.is_not_a_package());
+        let err = PackageUpgradeError::UnknownUpgradePolicy { policy: 99 };
+        assert!(err.is_unknown_upgrade_policy());
+    }
+}
+
+#[cfg(test)]
+#[cfg(test)]
+mod serialization_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn test_execution_status_success_roundtrip() {
+        let status = ExecutionStatus::Success;
+
+        // JSON (Human Readable)
+        let json = serde_json::to_value(&status).unwrap();
+        // Verify the custom serialization format
+        assert_eq!(json, json!({ "success": true }));
+        
+        // Roundtrip back
+        let decoded: ExecutionStatus = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, status);
+
+        // BCS (Binary)
+        let bcs = bcs::to_bytes(&status).unwrap();
+        // BinaryExecutionStatus::Success is variant 0
+        assert_eq!(bcs, vec![0]); 
+        let decoded: ExecutionStatus = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(decoded, status);
+    }
+
+    #[test]
+    fn test_execution_status_failure_roundtrip() {
+        let error = ExecutionError::InsufficientGas;
+        let status = ExecutionStatus::Failure {
+            error: error.clone(),
+            command: Some(1),
+        };
+
+        // JSON (Human Readable)
+        let json = serde_json::to_value(&status).unwrap();
+        // Readable uses "status": { "error": ..., "command": ... } and "success": false
+        assert_eq!(json["success"], false);
+        assert_eq!(json["status"]["error"]["error"], "insufficient_gas");
+        assert_eq!(json["status"]["command"], 1);
+
+        let decoded: ExecutionStatus = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, status);
+
+        // BCS (Binary)
+        let bcs = bcs::to_bytes(&status).unwrap();
+        // BinaryExecutionStatus::Failure is variant 1
+        // Followed by ExecutionError::InsufficientGas (variant 0)
+        // Followed by Option<u64> (1 = 0x01, value 1u64 = 0x0100000000000000)
+        let expected_bcs = vec![
+            1, // Failure variant
+            0, // InsufficientGas variant
+            1, // Option::Some
+            1, 0, 0, 0, 0, 0, 0, 0 // 1u64
+        ];
+        assert_eq!(bcs, expected_bcs);
+        
+        let decoded: ExecutionStatus = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(decoded, status);
+    }
+
+    #[test]
+    fn test_execution_status_failure_no_command() {
+        let error = ExecutionError::InvalidGasObject;
+        let status = ExecutionStatus::Failure {
+            error: error.clone(),
+            command: None,
+        };
+
+        // JSON
+        let json = serde_json::to_value(&status).unwrap();
+        assert_eq!(json["success"], false);
+        assert_eq!(json["status"]["error"]["error"], "invalid_gas_object");
+        assert!(json["status"].get("command").is_none());
+
+        let decoded: ExecutionStatus = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, status);
+
+        // Accessors
+        assert_eq!(status.error(), Some(&error));
+        assert_eq!(status.error_command(), None);
+    }
+
+    #[test]
+    fn test_execution_error_complex_variants() {
+        // Test AddressDeniedForCoin
+        let addr = Address::new([7u8; 32]);
+        let coin_type = "0x2::sui::SUI".to_string();
+        let error = ExecutionError::AddressDeniedForCoin { 
+            address: addr, 
+            coin_type: coin_type.clone() 
+        };
+
+        let json = serde_json::to_value(&error).unwrap();
+        assert_eq!(json["error"], "address_denied_for_coin");
+        assert_eq!(json["address"], addr.to_string());
+        assert_eq!(json["coin_type"], coin_type);
+
+        let decoded: ExecutionError = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, error);
+
+        // Test ObjectTooBig with ReadableDisplay (u64 as string)
+        let error = ExecutionError::ObjectTooBig {
+            object_size: 100,
+            max_object_size: 50,
+        };
+        let json = serde_json::to_value(&error).unwrap();
+        assert_eq!(json["error"], "object_too_big");
+        assert_eq!(json["object_size"], "100");
+        assert_eq!(json["max_object_size"], "50");
+
+        let decoded: ExecutionError = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, error);
+    }
+
+    #[test]
+    fn test_move_location_serialization() {
+        let pkg_id = ObjectId::new([2u8; 32]);
+        let module = Identifier::new("coin").unwrap();
+        let func_name = Identifier::new("transfer").unwrap();
+        
+        let location = MoveLocation {
+            package: pkg_id,
+            module: module.clone(),
+            function: 1,
+            instruction: 42,
+            function_name: Some(func_name.clone()),
+        };
+
+        let json = serde_json::to_value(&location).unwrap();
+        assert_eq!(json["package"], pkg_id.to_string());
+        assert_eq!(json["module"], "coin");
+        assert_eq!(json["function"], 1);
+        assert_eq!(json["instruction"], 42);
+        assert_eq!(json["functionName"], "transfer");
+
+        let decoded: MoveLocation = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, location);
+    }
+
+    #[test]
+    fn test_command_argument_error() {
+        let arg_error = CommandArgumentError::IndexOutOfBounds { index: 5 };
+        let iter_error = ExecutionError::CommandArgumentError { 
+            argument: 2, 
+            kind: arg_error.clone() 
+        };
+
+        let json = serde_json::to_value(&iter_error).unwrap();
+        assert_eq!(json["error"], "command_argument_error");
+        assert_eq!(json["argument"], 2);
+        assert_eq!(json["kind"]["kind"], "index_out_of_bounds");
+        assert_eq!(json["kind"]["index"], 5);
+
+        let decoded: ExecutionError = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, iter_error);
+    }
+
+    #[test]
+    fn test_package_upgrade_error() {
+        let digest = Digest::new([9u8; 32]);
+        let upgrade_error = PackageUpgradeError::DigestDoesNotMatch { digest };
+        let iter_error = ExecutionError::PackageUpgradeError { 
+            kind: upgrade_error.clone() 
+        };
+
+        let json = serde_json::to_value(&iter_error).unwrap();
+        assert_eq!(json["error"], "package_upgrade_error");
+        assert_eq!(json["kind"]["kind"], "digest_does_not_match");
+        assert_eq!(json["kind"]["digest"], digest.to_string());
+
+        let decoded: ExecutionError = serde_json::from_value(json).unwrap();
+        assert_eq!(decoded, iter_error);
+    }
+}

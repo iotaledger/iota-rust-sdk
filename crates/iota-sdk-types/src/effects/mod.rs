@@ -162,3 +162,56 @@ mod serialization {
         }
     }
 }
+
+#[cfg(test)]
+mod tests_accessors {
+    use super::*;
+    use crate::{
+        Digest, GasCostSummary,
+        execution_status::ExecutionStatus,
+    };
+
+    fn create_v1_effects() -> TransactionEffectsV1 {
+        TransactionEffectsV1 {
+            status: ExecutionStatus::Success,
+            epoch: 10,
+            gas_used: GasCostSummary {
+                computation_cost: 100,
+                computation_cost_burned: 50,
+                storage_cost: 200,
+                storage_rebate: 50,
+                non_refundable_storage_fee: 10,
+            },
+            transaction_digest: Digest::new([1; 32]),
+            gas_object_index: Some(0),
+            events_digest: None,
+            dependencies: vec![],
+            lamport_version: 5,
+            changed_objects: vec![],
+            unchanged_shared_objects: vec![],
+            auxiliary_data_digest: None,
+        }
+    }
+
+    #[test]
+    fn test_accessors() {
+        let v1 = create_v1_effects();
+        let effects = TransactionEffects::V1(Box::new(v1.clone()));
+
+        assert_eq!(effects.status(), &ExecutionStatus::Success);
+        assert_eq!(effects.epoch(), 10);
+        
+        let gas = effects.gas_summary();
+        assert_eq!(gas.computation_cost, 100);
+        assert_eq!(gas.storage_cost, 200);
+
+        // Test as_v1
+        let v1_ref = effects.as_v1();
+        assert_eq!(v1_ref.epoch, 10);
+
+        // Test into_v1
+        let v1_owned = effects.into_v1();
+        assert_eq!(v1_owned.epoch, 10);
+        assert_eq!(v1_owned, v1);
+    }
+}

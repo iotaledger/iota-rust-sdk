@@ -127,3 +127,67 @@ impl IotaNamesNft for SubnameRegistration {
         self.id
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_name_registration() {
+        let id_bytes = [1u8; 32];
+        let id = ObjectId::new(id_bytes);
+        let name: Name = "example.iota".parse().unwrap();
+        let name_str = "example.iota".to_string();
+        let timestamp = 1000;
+        
+        let reg = NameRegistration::new(id, name.clone(), name_str.clone(), timestamp);
+        
+        assert_eq!(reg.id(), id);
+        assert_eq!(reg.name(), &name);
+        assert_eq!(reg.name_str(), &name_str);
+        assert_eq!(reg.expiration_timestamp_ms(), timestamp);
+        
+        // Check trait constants
+        let type_tag = <NameRegistration as IotaNamesNft>::type_(Address::ZERO);
+        assert!(type_tag.to_string().contains("::name_registration::NameRegistration"));
+    }
+    
+    #[test]
+    fn test_subname_registration() {
+        let id = ObjectId::new([2u8; 32]);
+        let nft_id = ObjectId::new([3u8; 32]);
+        let name: Name = "sub.example.iota".parse().unwrap();
+        let name_str = "sub.example.iota".to_string();
+        let timestamp = 2000;
+        
+        let nft = NameRegistration::new(nft_id, name.clone(), name_str.clone(), timestamp);
+        let sub = SubnameRegistration::new(id, nft.clone());
+        
+        assert_eq!(sub.id(), id);
+        assert_eq!(sub.into_inner(), nft.clone());
+        
+        // Re-create for trait access
+        let sub = SubnameRegistration::new(id, nft);
+        assert_eq!(sub.name(), &name);
+        assert_eq!(sub.name_str(), &name_str);
+        assert_eq!(sub.expiration_timestamp_ms(), timestamp);
+        
+        let type_tag = <SubnameRegistration as IotaNamesNft>::type_(Address::ZERO);
+        assert!(type_tag.to_string().contains("::subname_registration::SubnameRegistration"));
+    }
+
+    #[test]
+    fn test_expiration() {
+         let id = ObjectId::new([1u8; 32]);
+         let name: Name = "example.iota".parse().unwrap();
+         
+         // Expired timestamp (1000ms after epoch)
+         let expired_reg = NameRegistration::new(id, name.clone(), "example.iota".into(), 1000);
+         assert!(expired_reg.has_expired());
+         
+         // Future timestamp
+         let future_ts = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as u64 + 100000;
+         let active_reg = NameRegistration::new(id, name, "example.iota".into(), future_ts);
+         assert!(!active_reg.has_expired());
+    }
+}

@@ -169,4 +169,56 @@ mod tests {
         let package = MovePackageData::new(json_package.modules, json_package.dependencies);
         assert_eq!(json_package.digest, package.digest);
     }
+
+    // --- UpgradePolicy ---
+
+    #[test]
+    fn upgrade_policy_display() {
+        assert_eq!(UpgradePolicy::Compatible.to_string(), "COMPATIBLE");
+        assert_eq!(UpgradePolicy::Additive.to_string(), "ADDITIVE");
+        assert_eq!(UpgradePolicy::DepOnly.to_string(), "DEP_ONLY");
+    }
+
+    #[test]
+    fn upgrade_policy_u8_constants() {
+        assert_eq!(UpgradePolicy::COMPATIBLE, 0);
+        assert_eq!(UpgradePolicy::ADDITIVE, 128);
+        assert_eq!(UpgradePolicy::DEP_ONLY, 192);
+    }
+
+    #[test]
+    fn upgrade_policy_try_from_valid() {
+        assert_eq!(UpgradePolicy::try_from(0u8).unwrap(), UpgradePolicy::Compatible);
+        assert_eq!(UpgradePolicy::try_from(128u8).unwrap(), UpgradePolicy::Additive);
+        assert_eq!(UpgradePolicy::try_from(192u8).unwrap(), UpgradePolicy::DepOnly);
+    }
+
+    #[test]
+    fn upgrade_policy_try_from_invalid() {
+        assert!(UpgradePolicy::try_from(1u8).is_err());
+        assert!(UpgradePolicy::try_from(127u8).is_err());
+        assert!(UpgradePolicy::try_from(255u8).is_err());
+    }
+
+    #[test]
+    fn upgrade_policy_is_valid_policy() {
+        assert!(UpgradePolicy::is_valid_policy(&0));
+        assert!(UpgradePolicy::is_valid_policy(&128));
+        assert!(UpgradePolicy::is_valid_policy(&192));
+        assert!(!UpgradePolicy::is_valid_policy(&1));
+        assert!(!UpgradePolicy::is_valid_policy(&255));
+    }
+
+    #[test]
+    fn upgrade_policy_to_u8_roundtrip() {
+        let policies = [
+            UpgradePolicy::Compatible,
+            UpgradePolicy::Additive,
+            UpgradePolicy::DepOnly,
+        ];
+        for policy in policies {
+            let byte = policy as u8;
+            assert_eq!(UpgradePolicy::try_from(byte).unwrap(), policy);
+        }
+    }
 }

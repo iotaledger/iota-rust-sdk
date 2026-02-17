@@ -311,3 +311,81 @@ pub enum HashingIntentScope {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_intent_creation_accessors() {
+        let intent = Intent::new(
+            IntentScope::TransactionData,
+            IntentVersion::V0,
+            IntentAppId::Iota,
+        );
+        assert_eq!(intent.scope(), IntentScope::TransactionData);
+        assert_eq!(intent.version(), IntentVersion::V0);
+        assert_eq!(intent.app_id(), IntentAppId::Iota);
+    }
+
+    #[test]
+    fn test_intent_predefined_constructors() {
+        let tx = Intent::iota_transaction();
+        assert_eq!(tx.scope, IntentScope::TransactionData);
+        assert_eq!(tx.app_id, IntentAppId::Iota);
+
+        let pm = Intent::personal_message();
+        assert_eq!(pm.scope, IntentScope::PersonalMessage);
+        
+        // iota_app generic
+        let app = Intent::iota_app(IntentScope::CheckpointSummary);
+        assert_eq!(app.scope, IntentScope::CheckpointSummary);
+        assert_eq!(app.app_id, IntentAppId::Iota);
+        
+        // consensus_app generic
+        let con = Intent::consensus_app(IntentScope::ConsensusBlock);
+        assert_eq!(con.scope, IntentScope::ConsensusBlock);
+        assert_eq!(con.app_id, IntentAppId::Consensus);
+    }
+
+    #[test]
+    fn test_intent_serialization() {
+        let intent = Intent::iota_transaction();
+        // 0, 0, 0
+        let bytes = intent.to_bytes();
+        assert_eq!(bytes, [0, 0, 0]);
+        
+        #[cfg(feature = "serde")]
+        {
+            let decoded = Intent::from_bytes(&bytes).unwrap();
+            assert_eq!(decoded, intent);
+            
+            // From hex string
+            let s = "0x000000";
+            let parsed: Intent = s.parse().unwrap();
+            assert_eq!(parsed, intent);
+            
+            // Without prefix
+            let s = "000000";
+            let parsed: Intent = s.parse().unwrap();
+            assert_eq!(parsed, intent);
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_intent_parsing_errors() {
+        // Wrong length
+        assert!(matches!(Intent::from_bytes(&[0, 0]), Err(IntentError::Bytes)));
+        
+        // Invalid values (if enum check works)
+        // IntentScope is repr(u8), but TryFrom impl uses bcs::from_bytes.
+        // bcs::from_bytes will fail if u8 value is not a valid variant.
+        // Valid variants are 0..9. 
+        // Let's try 255.
+        // We can't construct invalid Intent easily via safe code, but from_bytes takes &[u8].
+        let bytes = [255, 0, 0];
+        // Note: IntentError::Scope is expected
+        assert!(matches!(Intent::from_bytes(&bytes), Err(IntentError::Scope)));
+    }
+}

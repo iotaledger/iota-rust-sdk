@@ -682,3 +682,30 @@ mod serialization {
         }
     }
 }
+
+#[cfg(test)]
+mod coverage_tests {
+    use super::*;
+    use crate::Digest;
+
+    #[test]
+    fn checkpoint_transaction_info_basic() {
+        let tx_digest = Digest::new([1; 32]);
+        let fx_digest = Digest::new([2; 32]);
+        let info = CheckpointTransactionInfo {
+            transaction: tx_digest,
+            effects: fx_digest,
+            signatures: vec![],
+        };
+        
+        assert_eq!(info.transaction, tx_digest);
+        assert_eq!(info.effects, fx_digest);
+        assert_eq!(info.signatures.len(), 0);
+        
+        let clone = info.clone();
+        assert_eq!(info, clone);
+        
+        let debug = format!("{:?}", info);
+        assert!(debug.contains("CheckpointTransactionInfo"));
+    }
+}

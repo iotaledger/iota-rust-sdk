@@ -238,6 +238,132 @@ mod tests {
         assert_eq!(digest, d);
     }
 
+    // --- Construction ---
+
+    #[test]
+    fn new_and_inner_roundtrip() {
+        let bytes = [0xABu8; 32];
+        let digest = Digest::new(bytes);
+        assert_eq!(*digest.inner(), bytes);
+        assert_eq!(digest.into_inner(), bytes);
+    }
+
+    #[test]
+    fn zero_constant_is_all_zeros() {
+        assert_eq!(Digest::ZERO, Digest::new([0u8; 32]));
+        assert_eq!(Digest::ZERO.as_bytes(), &[0u8; 32]);
+    }
+
+    // --- from_bytes ---
+
+    #[test]
+    fn from_bytes_valid_32_bytes() {
+        let bytes = vec![0xFFu8; 32];
+        let digest = Digest::from_bytes(&bytes).unwrap();
+        assert_eq!(digest.as_bytes(), &bytes[..]);
+    }
+
+    #[test]
+    fn from_bytes_invalid_length_too_short() {
+        let bytes = vec![0u8; 31];
+        let result = Digest::from_bytes(&bytes);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn from_bytes_invalid_length_too_long() {
+        let bytes = vec![0u8; 33];
+        let result = Digest::from_bytes(&bytes);
+        assert!(result.is_err());
+    }
+
+    // --- from_base58 ---
+
+    #[test]
+    fn from_base58_invalid_string() {
+        // "0OIl" contains characters invalid in Base58
+        let result = Digest::from_base58("0OIl");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn from_base58_too_long() {
+        // A valid Base58 string that decodes to more than 32 bytes
+        let long_b58 = "1111111111111111111111111111111111111111111111111111111111111111111111";
+        let result = Digest::from_base58(long_b58);
+        assert!(result.is_err());
+    }
+
+    // --- Display, Debug, LowerHex formatting ---
+
+    #[test]
+    fn lower_hex_without_prefix() {
+        let digest = Digest::new([0x01; 32]);
+        let hex = format!("{:x}", digest);
+        assert_eq!(hex.len(), 64, "hex without prefix should be 64 chars");
+        assert!(!hex.starts_with("0x"));
+        assert!(hex.chars().all(|c| c.is_ascii_hexdigit()));
+    }
+
+    #[test]
+    fn lower_hex_with_alternate_prefix() {
+        let digest = Digest::new([0x01; 32]);
+        let hex = format!("{:#x}", digest);
+        assert!(
+            hex.starts_with("0x"),
+            "alternate hex should have 0x prefix"
+        );
+        assert_eq!(hex.len(), 66);
+    }
+
+    #[test]
+    fn debug_format_includes_display() {
+        let digest = Digest::new([0x01; 32]);
+        let debug = format!("{:?}", digest);
+        let display = format!("{}", digest);
+        // Debug format wraps the display inside Digest("...")
+        assert!(
+            debug.contains(&display),
+            "Debug format should contain the Display string"
+        );
+        assert!(debug.starts_with("Digest("));
+    }
+
+    // --- Conversions ---
+
+    #[test]
+    fn from_byte_array() {
+        let bytes = [0xCD; 32];
+        let digest = Digest::from(bytes);
+        assert_eq!(digest, Digest::new(bytes));
+    }
+
+    #[test]
+    fn into_byte_array() {
+        let bytes = [0xEF; 32];
+        let digest = Digest::new(bytes);
+        let out: [u8; 32] = digest.into();
+        assert_eq!(out, bytes);
+    }
+
+    #[test]
+    fn as_ref_returns_slice() {
+        let bytes = [0x99; 32];
+        let digest = Digest::new(bytes);
+        let slice: &[u8] = digest.as_ref();
+        assert_eq!(slice, &bytes[..]);
+    }
+
+    #[test]
+    fn as_ref_returns_array() {
+        let bytes = [0x88; 32];
+        let digest = Digest::new(bytes);
+        let arr: &[u8; 32] = digest.as_ref();
+        assert_eq!(arr, &bytes);
+    }
+
+    // --- Existing tests below ---
+
     #[test]
     fn test_lexical_order() {
         fn digest_from_str(s: &str) -> Digest {

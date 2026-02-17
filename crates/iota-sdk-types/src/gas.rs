@@ -150,4 +150,64 @@ mod tests {
         println!("{}", serde_json::to_string(&actual).unwrap());
         println!("{:?}", bcs::to_bytes(&actual).unwrap());
     }
+
+    #[test]
+    fn constructor_sets_all_fields() {
+        let summary = GasCostSummary::new(100, 80, 50, 30, 10);
+        assert_eq!(summary.computation_cost, 100);
+        assert_eq!(summary.computation_cost_burned, 80);
+        assert_eq!(summary.storage_cost, 50);
+        assert_eq!(summary.storage_rebate, 30);
+        assert_eq!(summary.non_refundable_storage_fee, 10);
+    }
+
+    #[test]
+    fn gas_used_is_sum_of_computation_and_storage() {
+        let summary = GasCostSummary::new(100, 80, 50, 30, 10);
+        assert_eq!(summary.gas_used(), 150, "gas_used = computation + storage");
+    }
+
+    #[test]
+    fn net_gas_usage_positive_when_cost_exceeds_rebate() {
+        let summary = GasCostSummary::new(100, 80, 50, 30, 10);
+        // 150 - 30 = 120
+        assert_eq!(summary.net_gas_usage(), 120);
+    }
+
+    #[test]
+    fn net_gas_usage_negative_when_rebate_exceeds_cost() {
+        let summary = GasCostSummary::new(10, 5, 20, 100, 5);
+        // (10+20) - 100 = -70
+        assert_eq!(summary.net_gas_usage(), -70);
+    }
+
+    #[test]
+    fn net_gas_usage_zero_when_balanced() {
+        let summary = GasCostSummary::new(50, 30, 50, 100, 10);
+        // (50+50) - 100 = 0
+        assert_eq!(summary.net_gas_usage(), 0);
+    }
+
+    #[test]
+    fn default_is_all_zeros() {
+        let summary = GasCostSummary::default();
+        assert_eq!(summary.computation_cost, 0);
+        assert_eq!(summary.computation_cost_burned, 0);
+        assert_eq!(summary.storage_cost, 0);
+        assert_eq!(summary.storage_rebate, 0);
+        assert_eq!(summary.non_refundable_storage_fee, 0);
+        assert_eq!(summary.gas_used(), 0);
+        assert_eq!(summary.net_gas_usage(), 0);
+    }
+
+    #[test]
+    fn display_contains_all_field_names() {
+        let summary = GasCostSummary::new(1, 2, 3, 4, 5);
+        let display = summary.to_string();
+        assert!(display.contains("computation_cost: 1"));
+        assert!(display.contains("computation_cost_burned: 2"));
+        assert!(display.contains("storage_cost: 3"));
+        assert!(display.contains("storage_rebate: 4"));
+        assert!(display.contains("non_refundable_storage_fee: 5"));
+    }
 }

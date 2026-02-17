@@ -228,3 +228,68 @@ impl std::fmt::Debug for Ed25519Signature {
             .finish()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::crypto::{PublicKeyExt, SignatureScheme};
+    use std::str::FromStr;
+
+    #[test]
+    fn test_ed25519_public_key_roundtrip() {
+        let bytes = [1u8; 32];
+        let pk = Ed25519PublicKey::new(bytes);
+        
+        assert_eq!(pk.into_inner(), bytes);
+        assert_eq!(pk.inner(), &bytes);
+        assert_eq!(pk.as_bytes(), &bytes);
+        assert_eq!(AsRef::<[u8]>::as_ref(&pk), &bytes);
+        
+        // Scheme
+        assert_eq!(pk.scheme(), SignatureScheme::Ed25519);
+    }
+
+    #[test]
+    fn test_ed25519_public_key_display_debug() {
+        let bytes = [1u8; 32];
+        let pk = Ed25519PublicKey::new(bytes);
+        
+        // Display should be base64
+        let s = pk.to_string();
+        assert!(!s.is_empty());
+        let pk_from_str = Ed25519PublicKey::from_str(&s).unwrap();
+        assert_eq!(pk, pk_from_str);
+        
+        // Debug
+        let debug = format!("{:?}", pk);
+        assert!(debug.contains("Ed25519PublicKey"));
+        assert!(debug.contains(&s));
+    }
+
+    #[test]
+    fn test_ed25519_signature_roundtrip() {
+        let bytes = [2u8; 64];
+        let sig = Ed25519Signature::new(bytes);
+        
+        assert_eq!(sig.into_inner(), bytes);
+        assert_eq!(sig.inner(), &bytes);
+        assert_eq!(sig.as_bytes(), &bytes);
+        
+        let sig2 = Ed25519Signature::from_bytes(&bytes).unwrap();
+        assert_eq!(sig, sig2);
+    }
+    
+    #[cfg(feature = "serde")]
+    #[test]
+    fn test_ed25519_serde() {
+        let pk = Ed25519PublicKey::new([1u8; 32]);
+        let json = serde_json::to_string(&pk).unwrap();
+        let pk2: Ed25519PublicKey = serde_json::from_str(&json).unwrap();
+        assert_eq!(pk, pk2);
+        
+        let sig = Ed25519Signature::new([2u8; 64]);
+        let json_sig = serde_json::to_string(&sig).unwrap();
+        let sig2: Ed25519Signature = serde_json::from_str(&json_sig).unwrap();
+        assert_eq!(sig, sig2);
+    }
+}

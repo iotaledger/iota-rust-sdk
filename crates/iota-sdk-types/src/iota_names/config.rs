@@ -116,3 +116,76 @@ impl IotaNamesConfig {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::str::FromStr;
+
+    #[test]
+    fn test_config_devnet() {
+        let config = IotaNamesConfig::devnet();
+        assert!(config.package_address.to_string().contains("b9d61"));
+        assert!(config.object_id.to_string().contains("07c59"));
+    }
+
+    #[test]
+    fn test_config_testnet() {
+        let config = IotaNamesConfig::testnet();
+        assert!(config.package_address.to_string().contains("7fff6"));
+        assert!(config.object_id.to_string().contains("7cab4"));
+    }
+
+    #[test]
+    fn test_config_default() {
+        let config = IotaNamesConfig::default();
+        // Default is currently Testnet
+        assert_eq!(config, IotaNamesConfig::testnet());
+    }
+
+    #[test]
+    fn test_config_new() {
+        let addr = Address::ZERO;
+        let id = ObjectId::ZERO;
+        let config = IotaNamesConfig::new(addr, id, addr, id, id);
+        assert_eq!(config.package_address, addr);
+        assert_eq!(config.object_id, id);
+    }
+
+    #[test]
+    // Sequential execution implied as we modify env vars globally
+    fn test_config_from_env() {
+        let vars = [
+            "IOTA_NAMES_PACKAGE_ADDRESS", 
+            "IOTA_NAMES_OBJECT_ID", 
+            "IOTA_NAMES_PAYMENTS_PACKAGE_ADDRESS",
+            "IOTA_NAMES_REGISTRY_ID",
+            "IOTA_NAMES_REVERSE_REGISTRY_ID"
+        ];
+        
+        let old_values: Vec<_> = vars.iter().map(|&k| (k, std::env::var(k))).collect();
+        
+        unsafe {
+            std::env::set_var("IOTA_NAMES_PACKAGE_ADDRESS", "0x1");
+            std::env::set_var("IOTA_NAMES_OBJECT_ID", "0x2");
+            std::env::set_var("IOTA_NAMES_PAYMENTS_PACKAGE_ADDRESS", "0x3");
+            std::env::set_var("IOTA_NAMES_REGISTRY_ID", "0x4");
+            std::env::set_var("IOTA_NAMES_REVERSE_REGISTRY_ID", "0x5");
+        }
+
+        let config = IotaNamesConfig::from_env().unwrap();
+        assert_eq!(config.package_address, Address::from_str("0x1").unwrap());
+        assert_eq!(config.object_id, ObjectId::from_str("0x2").unwrap());
+        
+        // Restore
+        for (k, v) in old_values {
+            unsafe {
+                if let Ok(val) = v {
+                    std::env::set_var(k, val);
+                } else {
+                    std::env::remove_var(k);
+                }
+            }
+        }
+    }
+}

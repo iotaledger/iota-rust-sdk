@@ -678,3 +678,82 @@ impl std::str::FromStr for StructTag {
         parse::parse_struct_tag(s).map_err(|_| TypeParseError { source: s.into() })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::str::FromStr;
+
+    #[test]
+    fn test_primitive_types() {
+        assert_eq!(TypeTag::u8(), TypeTag::U8);
+        assert_eq!(TypeTag::u16(), TypeTag::U16);
+        assert_eq!(TypeTag::u32(), TypeTag::U32);
+        assert_eq!(TypeTag::u64(), TypeTag::U64);
+        assert_eq!(TypeTag::u128(), TypeTag::U128);
+        assert_eq!(TypeTag::u256(), TypeTag::U256);
+        assert_eq!(TypeTag::bool(), TypeTag::Bool);
+        assert_eq!(TypeTag::address(), TypeTag::Address);
+        assert_eq!(TypeTag::signer(), TypeTag::Signer);
+        
+        // String repr
+        assert_eq!(TypeTag::U8.to_string(), "u8");
+        assert_eq!(TypeTag::Address.to_string(), "address");
+    }
+
+    #[test]
+    fn test_vector_type() {
+        let t = TypeTag::Vector(Box::new(TypeTag::U8));
+        assert!(t.is_vector());
+        assert!(!t.is_struct());
+        assert_eq!(t.as_vector_type_tag(), &TypeTag::U8);
+        assert_eq!(t.to_string(), "vector<u8>");
+        
+        let t2 = TypeTag::from_str("vector<u8>").unwrap();
+        assert_eq!(t, t2);
+        
+        let inner = t.into_vector_type_tag();
+        assert_eq!(inner, TypeTag::U8);
+    }
+
+    #[test]
+    fn test_struct_type() {
+        let s = StructTag::new_iota_coin_type();
+        let t = TypeTag::Struct(Box::new(s.clone()));
+        
+        assert!(t.is_struct());
+        assert!(!t.is_vector());
+        assert_eq!(t.as_struct_tag(), &s);
+        
+        // 0x2::iota::IOTA
+        let s_str = s.to_string();
+        assert!(s_str.contains("::iota::IOTA"));
+        
+        let t2 = TypeTag::from_str(&s_str).unwrap();
+        assert_eq!(t, t2);
+    }
+    
+    #[test]
+    fn test_identifier_validation() {
+        assert!(Identifier::is_valid("Coin"));
+        assert!(Identifier::is_valid("my_module"));
+        assert!(Identifier::is_valid("_private"));
+        assert!(Identifier::is_valid("T1"));
+        
+        assert!(!Identifier::is_valid("1StartWithDigit"));
+        assert!(!Identifier::is_valid("Has Spaces"));
+        assert!(!Identifier::is_valid(""));
+    }
+    
+    #[test]
+    fn test_struct_tag_constructors() {
+        let gas = StructTag::new_gas_coin();
+        assert!(gas.coin_type_opt().is_some());
+        
+        let uid = StructTag::new_uid();
+        assert_eq!(uid.name.as_str(), "UID");
+        
+        let id = StructTag::new_id();
+        assert_eq!(id.name.as_str(), "ID");
+    }
+}

@@ -514,8 +514,134 @@ impl crate::ObjectId {
 mod tests {
     use test_strategy::proptest;
 
-    use super::HashingIntent;
-    use crate::SignatureScheme;
+    use super::*;
+    use crate::{
+        Address, Ed25519PublicKey, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
+        PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
+    };
+
+    // --- Hasher Tests ---
+
+    #[test]
+    fn hasher_basic_usage() {
+        let mut hasher = Hasher::new();
+        hasher.update(b"hello");
+        hasher.update(b" world");
+        let digest = hasher.finalize();
+
+        // BLAKE2b-256("hello world")
+        // Calculated via external tool: 256c83b297114d201b30179f3f0ef0cace9783622da5974326b436178aeef610
+        let expected =
+            hex::decode("256c83b297114d201b30179f3f0ef0cace9783622da5974326b436178aeef610")
+                .unwrap();
+        assert_eq!(digest.into_inner().to_vec(), expected);
+    }
+
+    #[test]
+    fn hasher_convenience_digest() {
+        let digest = Hasher::digest(b"hello world");
+        let expected =
+            hex::decode("256c83b297114d201b30179f3f0ef0cace9783622da5974326b436178aeef610")
+                .unwrap();
+        assert_eq!(digest.into_inner().to_vec(), expected);
+    }
+
+    #[test]
+    fn hasher_write_trait() {
+        use std::io::Write;
+        let mut hasher = Hasher::new();
+        hasher.write_all(b"hello world").unwrap();
+        hasher.flush().unwrap();
+        let digest = hasher.finalize();
+        let expected =
+            hex::decode("256c83b297114d201b30179f3f0ef0cace9783622da5974326b436178aeef610")
+                .unwrap();
+        assert_eq!(digest.into_inner().to_vec(), expected);
+    }
+
+    // --- Address Derivation Tests ---
+
+    #[test]
+    fn ed25519_address_derivation() {
+        let pk_bytes = [0xAA; 32];
+        let pk = Ed25519PublicKey::new(pk_bytes);
+
+        // Ed25519 address = Blake2b256(pk_bytes) (No prefix)
+        let mut hasher = Hasher::new();
+        hasher.update(pk_bytes);
+        let expected_addr = Address::new(hasher.finalize().into_inner());
+
+        assert_eq!(pk.derive_address(), expected_addr);
+    }
+
+    #[test]
+    fn secp256k1_address_derivation() {
+        let pk_bytes = [0xBB; 33];
+        let pk = Secp256k1PublicKey::new(pk_bytes);
+
+        // Secp256k1 address = Blake2b256(0x01 || pk_bytes)
+        let mut hasher = Hasher::new();
+        hasher.update([0x01]);
+        hasher.update(pk_bytes);
+        let expected_addr = Address::new(hasher.finalize().into_inner());
+
+        assert_eq!(pk.derive_address(), expected_addr);
+    }
+
+    #[test]
+    fn secp256r1_address_derivation() {
+        let pk_bytes = [0xCC; 33];
+        let pk = Secp256r1PublicKey::new(pk_bytes);
+
+        // Secp256r1 address = Blake2b256(0x02 || pk_bytes)
+        let mut hasher = Hasher::new();
+        hasher.update([0x02]);
+        hasher.update(pk_bytes);
+        let expected_addr = Address::new(hasher.finalize().into_inner());
+
+        assert_eq!(pk.derive_address(), expected_addr);
+    }
+
+    #[test]
+    fn passkey_address_derivation() {
+        let pk_bytes = [0xDD; 33];
+        let inner = Secp256r1PublicKey::new(pk_bytes);
+        let pk = PasskeyPublicKey::new(inner);
+
+        // Passkey address = Blake2b256(0x06 || pk_bytes)
+        let mut hasher = Hasher::new();
+        hasher.update([0x06]);
+        hasher.update(pk_bytes);
+        let expected_addr = Address::new(hasher.finalize().into_inner());
+
+        assert_eq!(pk.derive_address(), expected_addr);
+    }
+
+    #[test]
+    fn multisig_address_derivation() {
+        // Create a simple multisig committee with one member
+        let pk_bytes = [0xAA; 32];
+        let pk = Ed25519PublicKey::new(pk_bytes);
+        let member = MultisigMember::new(MultisigMemberPublicKey::Ed25519(pk), 1);
+        let committee = MultisigCommittee::new(vec![member], 1);
+
+        // Multisig address logic verification
+        let addr = committee.derive_address();
+        
+        // Manual verification
+        let mut hasher = Hasher::new();
+        hasher.update([0x03]); // Multisig Scheme
+        hasher.update(1u16.to_le_bytes()); // Threshold
+        // Member 1: Ed25519 has no prefix in write_into_hasher
+        hasher.update(pk_bytes); 
+        hasher.update(1u8.to_le_bytes()); // Weight
+        
+        let expected = Address::new(hasher.finalize().into_inner());
+        
+        assert_eq!(addr, expected);
+    }
+    
+    // --- HashingIntent Tests (Ported from existing) ---
 
     impl HashingIntent {
         fn from_byte(byte: u8) -> Result<Self, u8> {
@@ -541,4 +667,87 @@ mod tests {
     fn roundtrip_hashing_intent(intent: HashingIntent) {
         assert_eq!(Ok(intent), HashingIntent::from_byte(intent as u8));
     }
+
+    #[test]
+    fn zklogin_address_derivation() {
+        use crate::ZkLoginPublicIdentifier;
+        use crate::crypto::Bn254FieldElement;
+        
+        let iss = "https://accounts.google.com".to_string();
+        let seed_bytes = [1u8; 32];
+        let address_seed = Bn254FieldElement::new(seed_bytes);
+        // Note: New returns Option, but we know inputs are valid
+        let zk_id = ZkLoginPublicIdentifier::new(iss.clone(), address_seed).unwrap();
+        
+        // Manual derivation
+        let mut hasher = Hasher::new();
+        hasher.update([0x05]); // ZkLogin Scheme
+        hasher.update([iss.len() as u8]);
+        hasher.update(iss.as_bytes());
+        hasher.update(seed_bytes); // Padded
+        let expected = Address::new(hasher.finalize().into_inner());
+        
+        assert_eq!(zk_id.derive_address_padded(), expected);
+    }
+    
+    #[test]
+    fn zklogin_address_derivation_unpadded() {
+        use crate::ZkLoginPublicIdentifier;
+        use crate::crypto::Bn254FieldElement;
+        
+        let iss = "https://accounts.google.com".to_string();
+        let mut seed_bytes = [0u8; 32];
+        seed_bytes[31] = 1; // 0x00...01
+        let address_seed = Bn254FieldElement::new(seed_bytes);
+        let zk_id = ZkLoginPublicIdentifier::new(iss.clone(), address_seed).unwrap();
+        
+        // Manual derivation unpadded
+        let mut hasher = Hasher::new();
+        hasher.update([0x05]); // ZkLogin Scheme
+        hasher.update([iss.len() as u8]);
+        hasher.update(iss.as_bytes());
+        hasher.update([1]); // Unpadded 0x01 (last byte of seed)
+        let expected = Address::new(hasher.finalize().into_inner());
+        
+        assert_eq!(zk_id.derive_address_unpadded(), expected);
+    }
+    
+    #[test]
+    fn object_id_derivation() {
+        use crate::ObjectId;
+        let digest = Digest::new([1u8; 32]);
+        let count: u64 = 0;
+        let id = ObjectId::derive_id(digest, count);
+        
+        let mut hasher = Hasher::new();
+        hasher.update([0xf1]); // RegularObjectId (HashingIntent::RegularObjectId)
+        hasher.update(digest);
+        hasher.update(count.to_le_bytes());
+        let expected = ObjectId::new(hasher.finalize().into_inner());
+        
+        assert_eq!(id, expected);
+    }
+
+    #[test]
+    fn object_id_derive_dynamic_child() {
+        use crate::ObjectId;
+        let parent = ObjectId::new([2u8; 32]);
+        // Use parse for TypeTag
+        use crate::TypeTag;
+        let type_tag: TypeTag = "0x0::test::Test".parse().unwrap();
+        let key_bytes = b"verification_key";
+        
+        let child_id = parent.derive_dynamic_child_id(&type_tag, key_bytes);
+        
+        let mut hasher = Hasher::new();
+        hasher.update([0xf0]); // ChildObjectId (HashingIntent::ChildObjectId)
+        hasher.update(parent);
+        hasher.update((key_bytes.len() as u64).to_le_bytes());
+        hasher.update(key_bytes);
+        bcs::serialize_into(&mut hasher, &type_tag).unwrap();
+        let expected = ObjectId::new(hasher.finalize().into_inner());
+        
+        assert_eq!(child_id, expected);
+    }
+
 }
