@@ -1229,7 +1229,7 @@ pub struct Upgrade {
 /// argument-result         = %x02 u16
 /// argument-nested-result  = %x03 u16 u16
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum Argument {
