@@ -103,14 +103,14 @@ jobs:
       - name: Install Swift
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "5.9"
+          swift-version: "6.0"
       - name: Build the bindings
         run: make swift
       - name: Checks for uncommitted changes
         run: git diff --exit-code
       - name: Install swift-format
         run: |
-          git clone --depth 1 --branch 509.0.0 https://github.com/apple/swift-format.git /tmp/swift-format
+          git clone --depth 1 --branch 600.0.0 https://github.com/apple/swift-format.git /tmp/swift-format
           cd /tmp/swift-format && swift build -c release
           sudo cp /tmp/swift-format/.build/release/swift-format /usr/local/bin/
       - name: Check format of the examples
