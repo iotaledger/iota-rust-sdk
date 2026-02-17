@@ -1,0 +1,2 @@
+package iota.sdk.examples
+suspend fun main() { println("=== Replication ===\n1.Sync 2.Async 3.Consistency") }
