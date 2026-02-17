@@ -942,7 +942,7 @@ pub struct ProgrammableTransaction {
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
-    schemars(tag = "type", rename_all = "snake_case")
+    schemars(rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
