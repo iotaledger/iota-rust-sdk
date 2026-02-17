@@ -4,7 +4,10 @@
 use std::str::FromStr;
 
 use eyre::{OptionExt, Result, bail};
-use iota_sdk::{graphql_client::Client, types::ObjectId};
+use iota_sdk::{
+    graphql_client::Client,
+    types::{ObjectId, ObjectType, Owner},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -27,10 +30,10 @@ async fn main() -> Result<()> {
     println!(
         "Owner: {}",
         match obj.owner() {
-            iota_types::Owner::Address(address) => format!("Address({address})"),
-            iota_types::Owner::Object(object_id) => format!("Object({object_id})"),
-            iota_types::Owner::Shared(version) => format!("Shared({version})"),
-            iota_types::Owner::Immutable => "Immutable".to_owned(),
+            Owner::Address(address) => format!("Address({address})"),
+            Owner::Object(object_id) => format!("Object({object_id})"),
+            Owner::Shared(version) => format!("Shared({version})"),
+            Owner::Immutable => "Immutable".to_owned(),
             _ => bail!("unknown owner type"),
         }
     );
@@ -38,8 +41,8 @@ async fn main() -> Result<()> {
     println!(
         "Type: {}",
         match obj.object_type() {
-            iota_types::ObjectType::Package => "Package".to_owned(),
-            iota_types::ObjectType::Struct(tag) => format!("{tag}"),
+            ObjectType::Package => "Package".to_owned(),
+            ObjectType::Struct(tag) => format!("{tag}"),
         }
     );
     println!("BCS bytes: {}", hex::encode(&obj.as_struct().contents));
