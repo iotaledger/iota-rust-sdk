@@ -77,18 +77,21 @@ bindings: ## Build all bindings
 	@$(MAKE) go
 	@$(MAKE) kotlin
 	@$(MAKE) python
+	@$(MAKE) swift
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
 	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
 	@$(MAKE) go-examples
 	@$(MAKE) kotlin-examples
 	@$(MAKE) python-examples
+	@$(MAKE) swift-examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
@@ -138,6 +141,13 @@ python: ## Build Python bindings
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
+
+.PHONY: swift
+swift: ## Build Swift bindings
+	@printf "Building Swift bindings...\n"
+	@$(build_binding) \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language swift --out-dir bindings/swift/lib --no-format -c bindings/swift/uniffi.toml || exit $$?; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/lib/
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example
@@ -213,6 +223,19 @@ python-examples-format-check: ## Check format of all Python bindings examples
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
 	@yapf --style google -i $$(find bindings/python/examples -name "*.py") --recursive
+
+.PHONY: swift-example
+swift-example: ## Show how to run a specific Swift example. Usage: make swift-example example
+%:
+	@true
+swift-example:
+	@printf "\nSwift example scaffold \"$(word 2,$(MAKECMDGOALS))\" is available at bindings/swift/examples/$(word 2,$(MAKECMDGOALS)).swift\n"
+	@printf "Integrate generated bindings into an Xcode or SwiftPM project before execution.\n"
+
+.PHONY: swift-examples
+swift-examples: ## List all Swift bindings example scaffolds
+	@printf "\nSwift example scaffolds:\n"
+	@find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;
 
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
