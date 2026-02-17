@@ -13,10 +13,10 @@ use std::{fs::OpenOptions, io::Write};
 use fastcrypto::encoding::{Base64, Encoding};
 use futures::StreamExt;
 use iota_json_rpc_types::{
-    IotaEndOfEpochTransactionKind, IotaTransactionBlockDataAPI, IotaTransactionBlockKind,
-    IotaTransactionBlockResponseOptions, IotaTransactionBlockResponseQuery,
+    IotaTransactionBlockDataAPI, IotaTransactionBlockKind, IotaTransactionBlockResponseOptions,
+    IotaTransactionBlockResponseQuery,
 };
-use iota_types::transaction::SenderSignedData;
+use iota_types::{EndOfEpochTransactionKind, TransactionKind, transaction::SenderSignedData};
 use test_cluster::TestClusterBuilder;
 
 const BASE_PATH: &str = "../";
@@ -86,46 +86,51 @@ async fn main() -> eyre::Result<()> {
                     got_consensus_commit_prologue_v1 = true;
                 }
             }
-            IotaTransactionBlockKind::EndOfEpochTransaction(end_of_epoch_tx) => {
-                for tx_kind in &end_of_epoch_tx.transactions {
-                    match tx_kind {
-                        IotaEndOfEpochTransactionKind::ChangeEpoch(_change_epoch) => {
-                            if !got_epoch_change {
-                                write_bs64_tx_to_file(
-                                    &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
-                                    "change-epoch",
-                                )?;
-                                got_epoch_change = true;
+            IotaTransactionBlockKind::EndOfEpochTransaction(_end_of_epoch_tx) => {
+                let sender_signed_data: SenderSignedData = bcs::from_bytes(&tx.raw_transaction)?;
+                if let TransactionKind::EndOfEpoch(end_of_epoch_txs) =
+                    sender_signed_data.transaction_data().kind()
+                {
+                    for tx_kind in end_of_epoch_txs {
+                        match tx_kind {
+                            EndOfEpochTransactionKind::ChangeEpoch(_change_epoch) => {
+                                if !got_epoch_change {
+                                    write_bs64_tx_to_file(
+                                        &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
+                                        "change-epoch",
+                                    )?;
+                                    got_epoch_change = true;
+                                }
                             }
-                        }
-                        IotaEndOfEpochTransactionKind::ChangeEpochV2(_change_epoch_v2) => {
-                            if !got_epoch_change {
-                                write_bs64_tx_to_file(
-                                    &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
-                                    "change-epoch-v2",
-                                )?;
-                                got_epoch_change = true;
+                            EndOfEpochTransactionKind::ChangeEpochV2(_change_epoch_v2) => {
+                                if !got_epoch_change {
+                                    write_bs64_tx_to_file(
+                                        &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
+                                        "change-epoch-v2",
+                                    )?;
+                                    got_epoch_change = true;
+                                }
                             }
-                        }
-                        IotaEndOfEpochTransactionKind::ChangeEpochV3(_change_epoch_v3) => {
-                            if !got_epoch_change {
-                                write_bs64_tx_to_file(
-                                    &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
-                                    "change-epoch-v3",
-                                )?;
-                                got_epoch_change = true;
+                            EndOfEpochTransactionKind::ChangeEpochV3(_change_epoch_v3) => {
+                                if !got_epoch_change {
+                                    write_bs64_tx_to_file(
+                                        &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
+                                        "change-epoch-v3",
+                                    )?;
+                                    got_epoch_change = true;
+                                }
                             }
-                        }
-                        IotaEndOfEpochTransactionKind::ChangeEpochV4(_change_epoch_v4) => {
-                            if !got_epoch_change {
-                                write_bs64_tx_to_file(
-                                    &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
-                                    "change-epoch-v4",
-                                )?;
-                                got_epoch_change = true;
+                            EndOfEpochTransactionKind::ChangeEpochV4(_change_epoch_v4) => {
+                                if !got_epoch_change {
+                                    write_bs64_tx_to_file(
+                                        &raw_tx_bytes_to_transaction_data_bytes(&tx.raw_transaction)?,
+                                        "change-epoch-v4",
+                                    )?;
+                                    got_epoch_change = true;
+                                }
                             }
+                            _ => (),
                         }
-                        _ => (),
                     }
                 }
             }
