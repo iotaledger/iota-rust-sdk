@@ -77,30 +77,36 @@ bindings: ## Build all bindings
 	@$(MAKE) go
 	@$(MAKE) kotlin
 	@$(MAKE) python
+	@$(MAKE) csharp
+	@$(MAKE) swift
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
 	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
 	@$(MAKE) go-examples
 	@$(MAKE) kotlin-examples
 	@$(MAKE) python-examples
+	@$(MAKE) swift-examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
 	@$(MAKE) go-examples-format-check
 	@$(MAKE) kotlin-examples-format-check
 	@$(MAKE) python-examples-format-check
+	@$(MAKE) csharp-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) go-examples-format
 	@$(MAKE) kotlin-examples-format
 	@$(MAKE) python-examples-format
+	@$(MAKE) csharp-examples-format
 
 # Build ffi crate and detect platform
 define build_binding
@@ -138,6 +144,20 @@ python: ## Build Python bindings
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language python --out-dir bindings/python/lib --no-format || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/python/lib/
 	@mv bindings/python/lib/iota_sdk_ffi.py bindings/python/lib/iota_sdk.py
+
+.PHONY: csharp
+csharp: ## Build C# bindings scaffold (milestone 1)
+	@printf "Preparing C# bindings scaffold...\n"
+	@test -f bindings/csharp/IotaSdk.Bindings.csproj
+	@test -f bindings/csharp/IotaSdk.Examples.csproj
+	@test -f bindings/csharp/README.md
+
+.PHONY: swift
+swift: ## Build Swift bindings
+	@printf "Building Swift bindings...\n"
+	@$(build_binding) \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language swift --out-dir bindings/swift/lib --no-format -c bindings/swift/uniffi.toml || exit $$?; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/lib/
 
 .PHONY: go-example
 go-example: ## Run a specific Go example. Usage: make go-example example
@@ -213,6 +233,47 @@ python-examples-format-check: ## Check format of all Python bindings examples
 .PHONY: python-examples-format
 python-examples-format: ## Format all Python bindings examples
 	@yapf --style google -i $$(find bindings/python/examples -name "*.py") --recursive
+
+.PHONY: csharp-scaffold-check
+csharp-scaffold-check: ## Check C# bindings scaffold files exist and project builds
+	@test -f bindings/csharp/README.md
+	@test -f bindings/csharp/IotaSdk.Bindings.csproj
+	@test -f bindings/csharp/IotaSdk.Examples.csproj
+	@if command -v dotnet >/dev/null 2>&1; then \
+		dotnet build bindings/csharp/IotaSdk.Examples.csproj -nologo -clp:ErrorsOnly; \
+	else \
+		echo "dotnet not found; skipping local C# build check"; \
+	fi
+
+.PHONY: csharp-examples-format-check
+csharp-examples-format-check: ## Check formatting of C# scaffold examples
+	@if command -v dotnet >/dev/null 2>&1; then \
+		dotnet format bindings/csharp/IotaSdk.Examples.csproj --verify-no-changes --severity warn --verbosity minimal; \
+	else \
+		echo "dotnet not found; skipping local C# format check"; \
+	fi
+
+.PHONY: csharp-examples-format
+csharp-examples-format: ## Format C# scaffold examples
+	@if command -v dotnet >/dev/null 2>&1; then \
+		dotnet format bindings/csharp/IotaSdk.Examples.csproj --severity warn --verbosity minimal; \
+	else \
+		echo "dotnet not found; skipping local C# format"; \
+	fi
+
+.PHONY: swift-example
+swift-example: ## Run a specific Swift example. Usage: make swift-example example
+%:
+	@true
+swift-example:
+	@printf "\nRunning Swift example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@swift bindings/swift/examples/$(word 2,$(MAKECMDGOALS)).swift || exit $$?
+
+.PHONY: swift-examples
+swift-examples: ## Run all Swift bindings examples
+	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;); do \
+		$(MAKE) swift-example "$$example" || exit $$?; \
+	done
 
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example

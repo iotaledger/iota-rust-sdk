@@ -92,3 +92,31 @@ jobs:
         run: make python-examples
       - name: Run the release example
         run: make python-release-example
+
+  csharp:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
+    needs: diff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+      - name: Validate C# scaffold
+        run: make csharp-scaffold-check
+      - name: Check format of C# examples
+        run: make csharp-examples-format-check
+
+  swift:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
+    needs: diff
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Build the bindings
+        run: make swift
+      - name: Swift example scaffold syntax check
+        run: swift -frontend -typecheck bindings/swift/examples/chain_id.swift
