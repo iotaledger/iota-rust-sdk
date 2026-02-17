@@ -206,7 +206,8 @@
 //! [PTBArgument] is implemented for any type implementing
 //! [MoveArg](types::MoveArg) as well as:
 //! - [unresolved::Argument]: Arguments returned by various builder functions.
-//!   Distinct from [iota_types::Argument], which cannot be used.
+//!   Distinct from the resolved SDK type `iota_types::transaction::Argument`,
+//!   which cannot be used as a PTB input placeholder.
 //! - [Input](iota_types::Input): A resolved input.
 //! - [ObjectId](iota_types::ObjectId): An object's ID. Can only be used when a
 //!   client is provided. This will be assumed immutable or owned.

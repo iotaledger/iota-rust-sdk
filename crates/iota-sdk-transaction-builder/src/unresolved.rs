@@ -243,15 +243,17 @@ pub enum Argument {
 }
 
 impl Argument {
-    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::Argument {
+    fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::transaction::Argument {
         match self {
-            Argument::Gas => iota_types::Argument::Gas,
+            Argument::Gas => iota_types::transaction::Argument::Gas,
             Argument::Input(i) => input_map
                 .get(&i)
-                .map(|i| iota_types::Argument::Input(*i))
-                .unwrap_or(iota_types::Argument::Gas),
-            Argument::Result(i) => iota_types::Argument::Result(i),
-            Argument::NestedResult(i1, i2) => iota_types::Argument::NestedResult(i1, i2),
+                .map(|i| iota_types::transaction::Argument::Input(*i))
+                .unwrap_or(iota_types::transaction::Argument::Gas),
+            Argument::Result(i) => iota_types::transaction::Argument::Result(i),
+            Argument::NestedResult(i1, i2) => {
+                iota_types::transaction::Argument::NestedResult(i1, i2)
+            }
         }
     }
 }
