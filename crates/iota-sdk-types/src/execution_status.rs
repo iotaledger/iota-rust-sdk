@@ -82,6 +82,36 @@ impl ExecutionStatus {
     }
 }
 
+fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
+    struct W<'a>(&'a Option<MoveLocation>);
+    impl core::fmt::Display for W<'_> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            match &self.0 {
+                None => write!(f, "UNKNOWN"),
+                Some(l) => write!(f, "{l}"),
+            }
+        }
+    }
+    W(location)
+}
+
+fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + '_ {
+    struct W<'a>(&'a [ObjectId]);
+    impl core::fmt::Display for W<'_> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            let mut iter = self.0.iter();
+            if let Some(first) = iter.next() {
+                write!(f, "{first}")?;
+                for obj in iter {
+                    write!(f, ", {obj}")?;
+                }
+            }
+            Ok(())
+        }
+    }
+    W(objects)
+}
+
 /// An error that can occur during the execution of a transaction
 ///
 /// # BCS
@@ -231,7 +261,8 @@ pub enum ExecutionError {
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
     #[error(
-        "Move Primitive Runtime Error. Location: {location:?}. Arithmetic error, stack overflow, max value depth, etc."
+        "Move Primitive Runtime Error. Location: {}. Arithmetic error, stack overflow, max value depth, etc.",
+        display_move_location_opt(.location)
     )]
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
@@ -343,12 +374,13 @@ pub enum ExecutionError {
     #[error("Certificate cannot be executed due to a dependency on a deleted shared object")]
     InputObjectDeleted,
     /// Certificate is cancelled due to congestion on shared objects
-    #[error("Certificate is cancelled due to congestion on shared objects: {congested_objects:?}.")]
+    #[error("Certificate is cancelled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
     #[error(
-        "Certificate is cancelled due to congestion on shared objects: {congested_objects:?}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}."
+        "Certificate is cancelled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
+        display_congested_objects(.congested_objects)
     )]
     ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
@@ -471,32 +503,6 @@ impl core::fmt::Display for MoveLocation {
         }
     }
 }
-
-// TODO do we want this ?
-// #[derive(Eq, PartialEq, Clone, Debug, Hash)]
-// pub struct MoveLocationOpt(pub Option<MoveLocation>);
-
-// impl core::fmt::Display for MoveLocationOpt {
-//     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-//         match &self.0 {
-//             None => write!(f, "UNKNOWN"),
-//             Some(l) => write!(f, "{l}"),
-//         }
-//     }
-// }
-
-// TODO do we want that?
-// #[derive(Eq, PartialEq, Clone, Debug, Serialize, Deserialize)]
-// pub struct CongestedObjects(pub Vec<ObjectID>);
-
-// impl fmt::Display for CongestedObjects {
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-//         for obj in &self.0 {
-//             write!(f, "{obj}, ")?;
-//         }
-//         Ok(())
-//     }
-// }
 
 /// An error with an argument to a command
 ///
