@@ -59,3 +59,31 @@ impl RandomnessRound {
             .collect()
     }
 }
+
+impl std::ops::Add<u64> for RandomnessRound {
+    type Output = Self;
+
+    fn add(self, rhs: u64) -> Self::Output {
+        Self(self.0 + rhs)
+    }
+}
+
+impl std::ops::Sub<u64> for RandomnessRound {
+    type Output = Self;
+
+    fn sub(self, rhs: u64) -> Self::Output {
+        Self(self.0 - rhs)
+    }
+}
+
+impl std::ops::AddAssign<u64> for RandomnessRound {
+    fn add_assign(&mut self, rhs: u64) {
+        self.0 += rhs;
+    }
+}
+
+impl std::ops::SubAssign<u64> for RandomnessRound {
+    fn sub_assign(&mut self, rhs: u64) {
+        self.0 -= rhs;
+    }
+}
