@@ -41,11 +41,11 @@ struct PrepareTransferObjectsOfflineExample {
     let gasPrice = try await client.referenceGasPrice() ?? 100
 
     let builder = TransactionBuilder(sender: fromAddress)
-    builder.transferObjects(
+    _ = builder.transferObjects(
       recipient: toAddress,
       objects: objsToTransfer
     )
-    builder.gas(objectRefs: [gasCoin.objectRef()]).gasPrice(price: gasPrice).gasBudget(
+    _ = builder.gas(objectRefs: [gasCoin.objectRef()]).gasPrice(price: gasPrice).gasBudget(
       budget: 500_000_000)
 
     let txn = try builder.finish()

@@ -18,7 +18,7 @@ struct TxCommandResultsExample {
     let moduleName = try Identifier(identifier: "u64")
     let functionName = try Identifier(identifier: "max")
 
-    builder.moveCall(
+    _ = builder.moveCall(
       package: packageAddr,
       module: moduleName,
       function: functionName,
@@ -27,7 +27,7 @@ struct TxCommandResultsExample {
       names: ["res0"]
     )
 
-    builder.moveCall(
+    _ = builder.moveCall(
       package: packageAddr,
       module: moduleName,
       function: functionName,
@@ -36,7 +36,7 @@ struct TxCommandResultsExample {
       names: ["res1"]
     )
 
-    builder.splitCoins(
+    _ = builder.splitCoins(
       coin: PtbArgument.gas(),
       // Use the assigned results of previous commands as arguments
       amounts: [PtbArgument.assigned(name: "res0"), PtbArgument.assigned(name: "res1")],
@@ -45,7 +45,7 @@ struct TxCommandResultsExample {
     )
 
     // Use assigned results as arguments
-    builder.transferObjects(
+    _ = builder.transferObjects(
       recipient: sender,
       objects: [PtbArgument.assigned(name: "coin0"), PtbArgument.assigned(name: "coin1")])
 

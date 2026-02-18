@@ -27,7 +27,7 @@ struct AbstractAccountExample {
     }
 
     let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
-    builder.sendIota(
+    _ = builder.sendIota(
       recipient: toAddress, amount: PtbArgument.u64(value: 5_000_000_000))
 
     let moveAuthenticator = try await MoveAuthenticatorBuilder(
@@ -68,9 +68,9 @@ struct AbstractAccountExample {
     // Build the `publish` PTB
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
     // Publish the package and receive the upgrade cap
-    builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
+    _ = builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
     // Transfer the upgrade cap to the sender address
-    builder.transferObjects(
+    _ = builder.transferObjects(
       recipient: sender, objects: [PtbArgument.assigned(name: "upgrade_cap")])
 
     // Sign and execute the transaction (publish the package)

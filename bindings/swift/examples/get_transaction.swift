@@ -10,12 +10,12 @@ struct GetTransactionExample {
     let digest = try Digest.fromBase58(base58: "Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")
 
     let signedTransaction = try await client.transaction(digest: digest)
-    print("Signed Transaction: `\(signedTransaction)`\n")
+    print("Signed Transaction: `\(String(describing: signedTransaction))`\n")
 
     let transactionEffects = try await client.transactionEffects(digest: digest)
-    print("Transaction Effects: `\(transactionEffects)`\n")
+    print("Transaction Effects: `\(String(describing: transactionEffects))`\n")
 
     let transactionDataEffects = try await client.transactionDataEffects(digest: digest)
-    print("Transaction Data Effects: `\(transactionDataEffects)`\n")
+    print("Transaction Data Effects: `\(String(describing: transactionDataEffects))`\n")
   }
 }

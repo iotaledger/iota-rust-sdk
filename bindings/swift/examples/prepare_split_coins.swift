@@ -17,7 +17,7 @@ struct PrepareSplitCoinsExample {
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    builder.splitCoins(
+    _ = builder.splitCoins(
       coin: PtbArgument.objectId(id: coinId),
       amounts: [
         PtbArgument.u64(value: 1000),

@@ -26,7 +26,7 @@ struct PrepareTransferObjectsExample {
     ]
 
     let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
-    builder.transferObjects(
+    _ = builder.transferObjects(
       recipient: toAddress,
       objects: objsToTransfer
     )

@@ -29,10 +29,10 @@ struct PrepareSendIotaMultiExample {
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    builder.splitCoins(
+    _ = builder.splitCoins(
       coin: PtbArgument.objectId(id: coinId), amounts: amounts, names: labels)
     for (i, r) in recipients.enumerated() {
-      builder.transferObjects(
+      _ = builder.transferObjects(
         recipient: try Address.fromHex(hex: r.0),
         objects: [PtbArgument.assigned(name: labels[i])])
     }

@@ -20,7 +20,7 @@ struct PrepareSendCoinsExample {
       hex: "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")
 
     let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
-    builder.sendCoins(
+    _ = builder.sendCoins(
       coins: [coinId],
       recipient: toAddress,
       amount: PtbArgument.u64(value: 50_000_000_000)

@@ -13,7 +13,7 @@ struct DynamicFieldsExample {
     print("Page size:", page.data.count)
     if !page.data.isEmpty {
       print("First field name:\n", page.data[0].name)
-      print("First field value:\n", page.data[0].valueAsJson)
+      print("First field value:\n", page.data[0].valueAsJson as Any)
     }
   }
 }

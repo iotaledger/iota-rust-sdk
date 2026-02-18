@@ -24,7 +24,7 @@ struct SignSendIotaExample {
     _ = try await faucet.requestAndWaitForFinalized(address: senderAddress, client: client)
 
     let builder = TransactionBuilder(sender: senderAddress).withClient(client: client)
-    builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
+    _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
     let txn = try await builder.finish()
 
     let dryRunResult = try await client.dryRunTx(tx: txn)

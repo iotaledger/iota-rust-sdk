@@ -19,7 +19,7 @@ struct PrepareMergeCoinsExample {
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    builder.mergeCoins(primaryCoin: coin0, consumedCoins: [coin1])
+    _ = builder.mergeCoins(primaryCoin: coin0, consumedCoins: [coin1])
 
     let txn = try await builder.finish()
 

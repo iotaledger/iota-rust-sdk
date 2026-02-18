@@ -63,9 +63,9 @@ struct PublishUpgradeExample {
     // Build the `publish` PTB
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
     // Publish the package and receive the upgrade cap in return
-    builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
+    _ = builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
     // Transfer the upgrade cap to the sender address
-    builder.transferObjects(
+    _ = builder.transferObjects(
       recipient: sender, objects: [PtbArgument.assigned(name: "upgrade_cap")])
     let tx = try await builder.finish()
 
@@ -139,7 +139,7 @@ struct PublishUpgradeExample {
     let upgradeBuilder = TransactionBuilder(sender: sender).withClient(client: client)
 
     // Authorize the upgrade
-    try upgradeBuilder.moveCall(
+    _ = try upgradeBuilder.moveCall(
       package: Address.framework(),
       module: Identifier(identifier: "package"),
       function: Identifier(identifier: "authorize_upgrade"),
@@ -152,7 +152,7 @@ struct PublishUpgradeExample {
     )
 
     // Upgrade the package to receive an upgrade receipt
-    upgradeBuilder.upgrade(
+    _ = upgradeBuilder.upgrade(
       packageId: packageId,
       packageData: packageData,
       upgradeTicket: PtbArgument.assigned(name: "upgrade_ticket"),
@@ -160,7 +160,7 @@ struct PublishUpgradeExample {
     )
 
     // Commit the upgrade using the receipt
-    try upgradeBuilder.moveCall(
+    _ = try upgradeBuilder.moveCall(
       package: Address.framework(),
       module: Identifier(identifier: "package"),
       function: Identifier(identifier: "commit_upgrade"),

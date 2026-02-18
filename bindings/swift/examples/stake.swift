@@ -24,7 +24,8 @@ struct StakeExample {
 
     let builder = TransactionBuilder(sender: myAddress).withClient(client: client)
 
-    builder.stake(stake: PtbArgument.u64(value: 1_000_000_000), validatorAddress: validator.address)
+    _ = builder.stake(
+      stake: PtbArgument.u64(value: 1_000_000_000), validatorAddress: validator.address)
 
     let res = try await builder.dryRun()
     if res.error != nil {
