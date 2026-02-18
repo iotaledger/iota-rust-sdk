@@ -174,9 +174,22 @@ kotlin-example:
 	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \
 	cd -
 
+.PHONY: kotlin-android
+kotlin-android: ## Build Android native libraries for all ABIs
+	@printf "Building Android native libraries...\n"
+	@for target_abi in "aarch64-linux-android android-aarch64" "armv7-linux-androideabi android-arm" "x86_64-linux-android android-x86-64" "i686-linux-android android-x86"; do \
+		set -- $$target_abi; \
+		target=$$1; folder=$$2; \
+		printf "Building for $$target...\n"; \
+		cargo ndk -t $$target -p 21 build -p iota-sdk-ffi --lib --release || exit $$?; \
+		mkdir -p bindings/kotlin/lib/$$folder; \
+		cp target/$$target/release/libiota_sdk_ffi.so bindings/kotlin/lib/$$folder/ || exit $$?; \
+	done
+	@printf "Android native libraries built successfully.\n"
+
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
-	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -exec basename {} .kt \;); do \
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
