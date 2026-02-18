@@ -1,7 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Digest, ObjectId};
+use std::collections::BTreeMap;
+
+use crate::{Digest, Identifier, ObjectId, Version};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
@@ -88,6 +90,196 @@ impl MovePackageData {
             digest: Digest::from(hasher.finalize().into_inner()),
         }
     }
+}
+
+// /// Value for the [MovePackage]'s linkage_table.
+// ///
+// /// # Undefined behavior
+// ///
+// /// Directly modifying any field is undefined behavior. The fields are only
+// /// public for read-only access.
+// #[derive(Eq, PartialEq, Debug, Clone, Deserialize, Serialize, Hash,
+// JsonSchema)] pub struct UpgradeInfo {
+//     /// `Storage ID`/`Package ID` of the referred package.
+//     pub upgraded_id: ObjectID,
+//     /// The version of the package at `upgraded_id`.
+//     pub upgraded_version: SequenceNumber,
+// }
+
+/// Upgraded package info for the linkage table
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// upgrade-info = object-id u64
+/// ```
+#[derive(Eq, PartialEq, Debug, Clone, Hash)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct UpgradeInfo {
+    /// Id of the upgraded packages
+    pub upgraded_id: ObjectId,
+    /// Version of the upgraded package
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub upgraded_version: Version,
+}
+
+// /// Store the origin of a data type where it first appeared in the version
+// /// chain.
+// ///
+// /// A data type is identified by the name of the module and the name of the
+// /// struct/enum in combination.
+// ///
+// /// # Undefined behavior
+// ///
+// /// Directly modifying any field is undefined behavior. The fields are only
+// /// public for read-only access.
+// #[derive(
+//     Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Deserialize, Serialize,
+// Hash, JsonSchema, )]
+// pub struct TypeOrigin {
+//     /// The name of the module the data type resides in.
+//     pub module_name: String,
+//     /// The name of the data type.
+//     ///
+//     /// Here this either refers to an enum or a struct identifier.
+//     // `struct_name` alias to support backwards compatibility with the old
+// name     #[serde(alias = "struct_name")]
+//     pub datatype_name: String,
+//     /// `Storage ID` of the package, where the given type first appeared.
+//     pub package: ObjectID,
+// }
+
+/// Identifies a struct and the module it was defined in
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// type-origin = identifier identifier object-id
+/// ```
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct TypeOrigin {
+    pub module_name: Identifier,
+    pub struct_name: Identifier,
+    pub package: ObjectId,
+}
+
+// // serde_bytes::ByteBuf is an analog of Vec<u8> with built-in fast
+// // serialization.
+// #[serde_as]
+// #[derive(Eq, PartialEq, Debug, Clone, Deserialize, Serialize, Hash)]
+// pub struct MovePackage {
+//     /// The `Storage ID` of the package.
+//     pub(crate) id: ObjectID,
+//     /// Most move packages are uniquely identified by their ID (i.e. there is
+//     /// only one version per ID), but the version is still stored because
+//     /// one package may be an upgrade of another (at a different ID), in
+//     /// which case its version will be one greater than the version of the
+//     /// upgraded package.
+//     ///
+//     /// Framework packages are an exception to this rule -- all versions of
+// the     /// framework packages exist at the same ID, at increasing versions.
+//     ///
+//     /// In all cases, packages are referred to by move calls using just their
+//     /// ID, and they are always loaded at their latest version.
+//     pub(crate) version: SequenceNumber,
+//     /// Map module identifiers to their serialized [CompiledModule].
+//     ///
+//     /// All modules within a package share the `Storage ID` of their
+// containing     /// package.
+//     #[serde_as(as = "BTreeMap<_, Bytes>")]
+//     pub(crate) module_map: BTreeMap<String, Vec<u8>>,
+
+//     /// Maps structs and enums in a given module to a package version where
+// they     /// were first defined.
+//     ///
+//     /// Stored as a vector for simple serialization and
+//     /// deserialization.
+//     pub(crate) type_origin_table: Vec<TypeOrigin>,
+
+//     /// For each dependency, it maps the `Runtime ID` (the first package's
+//     /// `Storage ID` in a version chain) of the containing package to the
+//     /// `UpgradeInfo` containing the actually used version.
+//     pub(crate) linkage_table: BTreeMap<ObjectID, UpgradeInfo>,
+// }
+
+/// A move package
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-package = object-id u64 move-modules type-origin-table linkage-table
+///
+/// move-modules = map (identifier bytes)
+/// type-origin-table = vector type-origin
+/// linkage-table = map (object-id upgrade-info)
+/// ```
+#[derive(Eq, PartialEq, Debug, Clone, Hash)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct MovePackage {
+    /// Address or Id of this package
+    pub id: ObjectId,
+    /// Most move packages are uniquely identified by their ID (i.e. there is
+    /// only one version per ID), but the version is still stored because
+    /// one package may be an upgrade of another (at a different ID), in
+    /// which case its version will be one greater than the version of the
+    /// upgraded package.
+    ///
+    /// Framework packages are an exception to this rule -- all versions of the
+    /// framework packages exist at the same ID, at increasing versions.
+    ///
+    /// In all cases, packages are referred to by move calls using just their
+    /// ID, and they are always loaded at their latest version.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    pub version: Version,
+    /// Set of modules defined by this package
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "::serde_with::As::<BTreeMap<::serde_with::Same, ::serde_with::Bytes>>")
+    )]
+    #[cfg_attr(
+        feature = "proptest",
+        strategy(
+            proptest::collection::btree_map(proptest::arbitrary::any::<Identifier>(), proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5)
+        )
+    )]
+    pub modules: BTreeMap<Identifier, Vec<u8>>,
+    /// Maps struct/module to a package version where it was first defined,
+    /// stored as a vector for simple serialization and deserialization.
+    pub type_origin_table: Vec<TypeOrigin>,
+    /// For each dependency, maps original package ID to the info about the
+    /// (upgraded) dependency version that this package is using
+    #[cfg_attr(
+        feature = "proptest",
+        strategy(
+            proptest::collection::btree_map(proptest::arbitrary::any::<ObjectId>(), proptest::arbitrary::any::<UpgradeInfo>(), 0..=5)
+        )
+    )]
+    pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
 #[cfg(feature = "serde")]
