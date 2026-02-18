@@ -5,31 +5,35 @@ import IotaSDK
 
 @main
 struct GasStationExample {
-  static func main() async throws {
-    let client = GraphQlClient.newLocalnet()
-    let gasStationUrl = "http://0.0.0.0:9527"
-    let gasStationAuthToken = "test"
-    let keypair = Ed25519PrivateKey.generate()
-    let sender = keypair.publicKey().deriveAddress()
-    let signer = TransactionSigner.fromEd25519(key: keypair)
+  static func main() async {
+    do {
+      let client = GraphQlClient.newLocalnet()
+      let gasStationUrl = "http://0.0.0.0:9527"
+      let gasStationAuthToken = "test"
+      let keypair = Ed25519PrivateKey.generate()
+      let sender = keypair.publicKey().deriveAddress()
+      let signer = TransactionSigner.fromEd25519(key: keypair)
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+      let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    _ = try builder.moveCall(
-      package: Address.std(),
-      module: Identifier(identifier: "u64"),
-      function: Identifier(identifier: "sqrt"),
-      arguments: [PtbArgument.u64(value: 64)]
-    )
+      _ = try builder.moveCall(
+        package: Address.std(),
+        module: Identifier(identifier: "u64"),
+        function: Identifier(identifier: "sqrt"),
+        arguments: [PtbArgument.u64(value: 64)]
+      )
 
-    builder.gasStationSponsor(
-      url: gasStationUrl,
-      headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
+      builder.gasStationSponsor(
+        url: gasStationUrl,
+        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
 
-    let res = try await builder.execute(signer: signer)
+      let res = try await builder.execute(signer: signer)
 
-    print(res)
+      print(res)
 
-    print("Sponsored transaction was successful!")
+      print("Sponsored transaction was successful!")
+    } catch {
+      print("Error: \(error)")
+    }
   }
 }
