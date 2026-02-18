@@ -481,9 +481,9 @@ impl MovePackage {
             .collect()
     }
 
-    // pub fn linkage_table(&self) -> &BTreeMap<ObjectId, UpgradeInfo> {
-    //     &self.linkage_table
-    // }
+    pub fn linkage_table(&self) -> &BTreeMap<ObjectId, UpgradeInfo> {
+        &self.linkage_table
+    }
 
     // /// The `Package ID` of the first version of this package.
     // ///
