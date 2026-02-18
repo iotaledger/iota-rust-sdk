@@ -19,7 +19,7 @@ struct GenericMoveFunctionExample {
     let addr2 = try Address.fromHex(
       hex: "0xe512234aa4ef6184c52663f09612b68f040dd0c45de037d96190a071ca5525b3")
 
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: Address.framework(),
       module: Identifier(identifier: "vec_map"),
       function: Identifier(identifier: "from_keys_values"),

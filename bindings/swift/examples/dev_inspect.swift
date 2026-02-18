@@ -23,7 +23,7 @@ struct DevInspectExample {
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
     // 1. Get the registry
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: iotaNamesPackageAddress,
       module: Identifier(identifier: "iota_names"),
       function: Identifier(identifier: "registry"),
@@ -40,7 +40,7 @@ struct DevInspectExample {
     )
 
     // 2. Create name from string
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: iotaNamesPackageAddress,
       module: Identifier(identifier: "name"),
       function: Identifier(identifier: "new"),
@@ -49,7 +49,7 @@ struct DevInspectExample {
     )
 
     // 3. Lookup name record
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: iotaNamesPackageAddress,
       module: Identifier(identifier: "registry"),
       function: Identifier(identifier: "lookup"),
@@ -58,7 +58,7 @@ struct DevInspectExample {
     )
 
     // 4. Borrow name record from option
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: stdAddress,
       module: Identifier(identifier: "option"),
       function: Identifier(identifier: "borrow"),
@@ -75,7 +75,7 @@ struct DevInspectExample {
     )
 
     // 5. Get target address from name record
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: iotaNamesPackageAddress,
       module: Identifier(identifier: "name_record"),
       function: Identifier(identifier: "target_address"),
@@ -84,7 +84,7 @@ struct DevInspectExample {
     )
 
     // 6. Borrow address from option
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: stdAddress,
       module: Identifier(identifier: "option"),
       function: Identifier(identifier: "borrow"),

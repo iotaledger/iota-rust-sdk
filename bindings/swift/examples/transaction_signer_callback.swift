@@ -4,7 +4,7 @@
 import Foundation
 import IotaSDK
 
-class AsyncSigner: TransactionSignerFn {
+final class AsyncSigner: TransactionSignerFn, @unchecked Sendable {
   let key: Ed25519PrivateKey
 
   init(key: Ed25519PrivateKey) {
@@ -32,7 +32,7 @@ struct TransactionSignerCallbackExample {
 
     // Request funds from faucet
     let faucet = FaucetClient.newLocalnet()
-    try await faucet.requestAndWaitForFinalized(address: senderAddress, client: client)
+    _ = try await faucet.requestAndWaitForFinalized(address: senderAddress, client: client)
 
     let builder = TransactionBuilder(sender: senderAddress).withClient(client: client)
     builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))

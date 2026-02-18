@@ -16,14 +16,14 @@ struct GasSponsorExample {
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: Address.std(),
       module: Identifier(identifier: "u8"),
       function: Identifier(identifier: "max"),
       arguments: [PtbArgument.u8(value: 0), PtbArgument.u8(value: 1)]
     )
 
-    builder.sponsor(sponsor: sponsor)
+    _ = builder.sponsor(sponsor: sponsor)
 
     let txn = try await builder.finish()
 

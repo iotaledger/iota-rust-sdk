@@ -132,7 +132,7 @@ struct AbstractAccountExample {
 
     // Build the `link_auth` PTB
     let linkBuilder = TransactionBuilder(sender: sender).withClient(client: client)
-    try linkBuilder.moveCall(
+    _ = try linkBuilder.moveCall(
       package: packageId.toAddress(),
       module: Identifier(identifier: "account"),
       function: Identifier(identifier: "link_auth"),

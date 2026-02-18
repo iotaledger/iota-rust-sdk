@@ -15,7 +15,7 @@ struct GasStationExample {
 
     let builder = TransactionBuilder(sender: sender).withClient(client: client)
 
-    try builder.moveCall(
+    _ = try builder.moveCall(
       package: Address.std(),
       module: Identifier(identifier: "u64"),
       function: Identifier(identifier: "sqrt"),
