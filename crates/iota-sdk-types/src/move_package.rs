@@ -352,66 +352,18 @@ impl MovePackage {
     //     digest.finalize().digest
     // }
 
-    // fn from_module_iter_with_type_origin_table<'p>(
-    //     storage_id: ObjectId,
-    //     self_id: ObjectId,
-    //     version: Version,
-    //     modules: &[CompiledModule],
-    //     protocol_config: &ProtocolConfig,
-    //     type_origin_table: Vec<TypeOrigin>,
-    //     transitive_dependencies: impl IntoIterator<Item = &'p MovePackage>,
-    // ) -> Result<Self, ExecutionError> {
-    //     let mut module_map = BTreeMap::new();
-    //     let mut immediate_dependencies = BTreeSet::new();
-
-    //     for module in modules {
-    //         let name = module.name().to_string();
-
-    //         immediate_dependencies.extend(
-    //             module
-    //                 .immediate_dependencies()
-    //                 .into_iter()
-    //                 .map(|dep| ObjectId::new(dep.address().into_bytes())),
-    //         );
-
-    //         let mut bytes = Vec::new();
-    //         let version = if protocol_config.move_binary_format_version() >
-    // VERSION_6 {             module.version
-    //         } else {
-    //             VERSION_6
-    //         };
-    //         module.serialize_with_version(version, &mut bytes).unwrap();
-    //         module_map.insert(name, bytes);
-    //     }
-
-    //     immediate_dependencies.remove(&self_id);
-    //     let linkage_table = build_linkage_table(
-    //         immediate_dependencies,
-    //         transitive_dependencies,
-    //         protocol_config,
-    //     )?;
-    //     Self::new(
-    //         storage_id,
-    //         version,
-    //         module_map,
-    //         protocol_config.max_move_package_size(),
-    //         type_origin_table,
-    //         linkage_table,
-    //     )
-    // }
-
-    // /// Retrieve the module from this package with the given [ModuleId].
-    // ///
-    // /// [ModuleId] is expected to contain the `Storage ID` of this package.
-    // /// In case the `Storage ID` doesn't match or the module name is not
-    // /// present in this package the function returns None.
-    // pub fn get_module(&self, package: &ObjectId, name: &Identifier) ->
-    // Option<&Vec<u8>> {     if &self.id != package {
-    //         None
-    //     } else {
-    //         self.modules.get(name)
-    //     }
-    // }
+    /// Retrieve the module from this package with the given [ModuleId].
+    ///
+    /// [ModuleId] is expected to contain the `Storage ID` of this package.
+    /// In case the `Storage ID` doesn't match or the module name is not
+    /// present in this package the function returns None.
+    pub fn get_module(&self, package: &ObjectId, name: &Identifier) -> Option<&Vec<u8>> {
+        if &self.id != package {
+            None
+        } else {
+            self.modules.get(name)
+        }
+    }
 
     /// Return the size of the package in bytes
     pub fn size(&self) -> usize {
@@ -485,47 +437,6 @@ impl MovePackage {
         &self.linkage_table
     }
 
-    // /// The `Package ID` of the first version of this package.
-    // ///
-    // /// Also referred to as `Runtime ID`.
-    // ///
-    // /// Regardless of which version of the package we are working with, this
-    // /// function will always return the `Package ID`/`Storage ID` of the first
-    // /// package version in the version chain.
-    // pub fn original_package_id(&self) -> ObjectID {
-    //     if self.version == OBJECT_START_VERSION {
-    //         // for a non-upgraded package, original ID is just the package ID
-    //         return self.id;
-    //     }
-
-    //     let bytes = self.module_map.values().next().expect("Empty module map");
-    //     // Remember, that all modules will contain the `Package ID` of the first
-    //     // deployed package. This is why taking any of them will produce the
-    //     // original package id.
-    //     let module = CompiledModule::deserialize_with_defaults(bytes)
-    //         .expect("A Move package contains a module that cannot be
-    // deserialized");     ObjectID::new(module.address().into_bytes())
-    // }
-
-    // pub fn deserialize_module(
-    //     &self,
-    //     module: &Identifier,
-    //     binary_config: &BinaryConfig,
-    // ) -> IotaResult<CompiledModule> {
-    //     // TODO use the session's cache
-    //     let bytes = self
-    //         .serialized_module_map()
-    //         .get(module.as_str())
-    //         .ok_or_else(|| IotaError::ModuleNotFound {
-    //             module_name: module.to_string(),
-    //         })?;
-    //     CompiledModule::deserialize_with_config(bytes,
-    // binary_config).map_err(|error| {
-    //         IotaError::ModuleDeserializationFailure {
-    //             error: error.to_string(),
-    //         }
-    //     })
-    // }
     // /// If `include_code` is set to `false`, the normalized module will skip
     // /// function bodies but still include the signatures.
     // pub fn normalize<S: Hash + Eq + Clone + ToString, Pool:
