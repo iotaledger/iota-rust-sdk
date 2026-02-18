@@ -460,11 +460,6 @@ impl MovePackage {
         self.version.increment().unwrap();
     }
 
-    // /// Approximate size of the package in bytes. This is used for gas metering.
-    // pub fn object_size_for_gas_metering(&self) -> usize {
-    //     self.size()
-    // }
-
     // pub fn serialized_module_map(&self) -> &BTreeMap<String, Vec<u8>> {
     //     &self.module_map
     // }
@@ -473,18 +468,18 @@ impl MovePackage {
     //     &self.type_origin_table
     // }
 
-    // pub fn type_origin_map(&self) -> BTreeMap<(String, String), ObjectId> {
-    //     self.type_origin_table
-    //         .iter()
-    //         .map(
-    //             |TypeOrigin {
-    //                  modules,
-    //                  datatype_name: struct_name,
-    //                  package,
-    //              }| { ((modules.clone(), struct_name.clone()), *package) },
-    //         )
-    //         .collect()
-    // }
+    pub fn type_origin_map(&self) -> BTreeMap<(Identifier, Identifier), ObjectId> {
+        self.type_origin_table
+            .iter()
+            .map(
+                |TypeOrigin {
+                     module_name,
+                     struct_name,
+                     package,
+                 }| { ((module_name.clone(), struct_name.clone()), *package) },
+            )
+            .collect()
+    }
 
     // pub fn linkage_table(&self) -> &BTreeMap<ObjectId, UpgradeInfo> {
     //     &self.linkage_table
