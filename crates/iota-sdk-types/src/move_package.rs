@@ -3,7 +3,7 @@
 
 use std::collections::BTreeMap;
 
-use crate::{Digest,ExecutionError,hash::DefaultHash, Identifier, ObjectId, Version};
+use crate::{Digest, ExecutionError, Identifier, ObjectId, Version, hash::DefaultHash};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
@@ -341,8 +341,8 @@ impl MovePackage {
     //         )
     //         .collect::<Vec<_>>();
 
-    //     // NB: sorting so the order of the modules and the order of the dependencies
-    //     // does not matter.
+    //     // NB: sorting so the order of the modules and the order of the
+    // dependencies     // does not matter.
     //     components.sort();
 
     //     let mut digest = DefaultHash::default();
@@ -366,10 +366,11 @@ impl MovePackage {
     // ) -> Result<Self, ExecutionError> {
     //     let module = modules
     //         .first()
-    //         .expect("Tried to build a Move package from an empty iterator of Compiled modules");
-    //     let runtime_id = ObjectId::new(module.address().into_bytes());
-    //     let storage_id = runtime_id;
-    //     let type_origin_table = build_initial_type_origin_table(modules);
+    //         .expect("Tried to build a Move package from an empty iterator of
+    // Compiled modules");     let runtime_id =
+    // ObjectId::new(module.address().into_bytes());     let storage_id =
+    // runtime_id;     let type_origin_table =
+    // build_initial_type_origin_table(modules);
     //     Self::from_module_iter_with_type_origin_table(
     //         storage_id,
     //         runtime_id,
@@ -397,11 +398,11 @@ impl MovePackage {
     // ) -> Result<Self, ExecutionError> {
     //     let module = modules
     //         .first()
-    //         .expect("Tried to build a Move package from an empty iterator of Compiled modules");
-    //     let runtime_id = ObjectId::new(module.address().into_bytes());
-    //     let type_origin_table = build_upgraded_type_origin_table(self, modules, storage_id)?;
-    //     let mut new_version = self.version();
-    //     new_version.increment().unwrap();
+    //         .expect("Tried to build a Move package from an empty iterator of
+    // Compiled modules");     let runtime_id =
+    // ObjectId::new(module.address().into_bytes());     let type_origin_table =
+    // build_upgraded_type_origin_table(self, modules, storage_id)?;     let mut
+    // new_version = self.version();     new_version.increment().unwrap();
     //     Self::from_module_iter_with_type_origin_table(
     //         storage_id,
     //         runtime_id,
@@ -420,27 +421,29 @@ impl MovePackage {
     // ) -> Self {
     //     let module = modules
     //         .first()
-    //         .expect("Tried to build a Move package from an empty iterator of Compiled modules");
+    //         .expect("Tried to build a Move package from an empty iterator of
+    // Compiled modules");
 
     //     let storage_id = ObjectId::new(module.address().into_bytes());
     //     let type_origin_table = build_initial_type_origin_table(modules);
 
-    //     let linkage_table = BTreeMap::from_iter(dependencies.into_iter().map(|dep| {
-    //         let info = UpgradeInfo {
-    //             upgraded_id: dep,
-    //             // The upgraded version is used by other packages that transitively depend on this
-    //             // system package, to make sure that if they choose a different version to depend on
-    //             // compared to their dependencies, they pick a greater version.
-    //             //
-    //             // However, in the case of system packages, although they can be upgraded, unlike
-    //             // other packages, only one version can be in use on the network at any given time,
-    //             // so it is not possible for a package to require a different system package version
+    //     let linkage_table =
+    // BTreeMap::from_iter(dependencies.into_iter().map(|dep| {         let info
+    // = UpgradeInfo {             upgraded_id: dep,
+    //             // The upgraded version is used by other packages that
+    // transitively depend on this             // system package, to make sure
+    // that if they choose a different version to depend on             //
+    // compared to their dependencies, they pick a greater version.             
+    // //             // However, in the case of system packages, although they
+    // can be upgraded, unlike             // other packages, only one version
+    // can be in use on the network at any given time,             // so it is
+    // not possible for a package to require a different system package version
     //             // compared to its dependencies.
     //             //
-    //             // This reason, coupled with the fact that system packages can only depend on each
-    //             // other, mean that their own linkage tables always report a version of zero.
-    //             upgraded_version: Version::default(),
-    //         };
+    //             // This reason, coupled with the fact that system packages can
+    // only depend on each             // other, mean that their own linkage
+    // tables always report a version of zero.             upgraded_version:
+    // Version::default(),         };
     //         (dep, info)
     //     }));
 
@@ -487,8 +490,8 @@ impl MovePackage {
     //         );
 
     //         let mut bytes = Vec::new();
-    //         let version = if protocol_config.move_binary_format_version() > VERSION_6 {
-    //             module.version
+    //         let version = if protocol_config.move_binary_format_version() >
+    // VERSION_6 {             module.version
     //         } else {
     //             VERSION_6
     //         };
@@ -517,8 +520,8 @@ impl MovePackage {
     // /// [ModuleId] is expected to contain the `Storage ID` of this package.
     // /// In case the `Storage ID` doesn't match or the module name is not
     // /// present in this package the function returns None.
-    // pub fn get_module(&self, package: &ObjectId, name: &Identifier) -> Option<&Vec<u8>> {
-    //     if &self.id != package {
+    // pub fn get_module(&self, package: &ObjectId, name: &Identifier) ->
+    // Option<&Vec<u8>> {     if &self.id != package {
     //         None
     //     } else {
     //         self.modules.get(name)
@@ -546,13 +549,11 @@ impl MovePackage {
 
     //     let linkage_table_size = self.linkage_table.len()
     //         * (ObjectId::LENGTH
-    //             + (
-    //                 ObjectId::LENGTH + 8
-    //                 // SequenceNumber
+    //             + ( ObjectId::LENGTH + 8 // SequenceNumber
     //             ));
 
-    //     8 /* SequenceNumber */ + module_map_size + type_origin_table_size + linkage_table_size
-    // }
+    //     8 /* SequenceNumber */ + module_map_size + type_origin_table_size +
+    // linkage_table_size }
 
     /// `Package ID`/`Storage ID` of this package.
     pub fn id(&self) -> ObjectId {
@@ -619,8 +620,8 @@ impl MovePackage {
     //     // deployed package. This is why taking any of them will produce the
     //     // original package id.
     //     let module = CompiledModule::deserialize_with_defaults(bytes)
-    //         .expect("A Move package contains a module that cannot be deserialized");
-    //     ObjectID::new(module.address().into_bytes())
+    //         .expect("A Move package contains a module that cannot be
+    // deserialized");     ObjectID::new(module.address().into_bytes())
     // }
 
     // pub fn deserialize_module(
@@ -635,7 +636,8 @@ impl MovePackage {
     //         .ok_or_else(|| IotaError::ModuleNotFound {
     //             module_name: module.to_string(),
     //         })?;
-    //     CompiledModule::deserialize_with_config(bytes, binary_config).map_err(|error| {
+    //     CompiledModule::deserialize_with_config(bytes,
+    // binary_config).map_err(|error| {
     //         IotaError::ModuleDeserializationFailure {
     //             error: error.to_string(),
     //         }
@@ -643,14 +645,14 @@ impl MovePackage {
     // }
     // /// If `include_code` is set to `false`, the normalized module will skip
     // /// function bodies but still include the signatures.
-    // pub fn normalize<S: Hash + Eq + Clone + ToString, Pool: normalized::StringPool<String = S>>(
-    //     &self,
+    // pub fn normalize<S: Hash + Eq + Clone + ToString, Pool:
+    // normalized::StringPool<String = S>>(     &self,
     //     pool: &mut Pool,
     //     binary_config: &BinaryConfig,
     //     include_code: bool,
     // ) -> IotaResult<BTreeMap<String, normalized::Module<S>>> {
-    //     normalize_modules(pool, self.module_map.values(), binary_config, include_code)
-    // }
+    //     normalize_modules(pool, self.module_map.values(), binary_config,
+    // include_code) }
 }
 
 #[cfg(feature = "serde")]
