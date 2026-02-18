@@ -342,6 +342,476 @@ impl MultisigMemberSignature {
     );
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- Helper functions ---
+
+    fn ed25519_key(byte: u8) -> MultisigMemberPublicKey {
+        MultisigMemberPublicKey::Ed25519(Ed25519PublicKey::new([byte; 32]))
+    }
+
+    fn secp256k1_key(byte: u8) -> MultisigMemberPublicKey {
+        MultisigMemberPublicKey::Secp256k1(Secp256k1PublicKey::new([byte; 33]))
+    }
+
+    fn secp256r1_key(byte: u8) -> MultisigMemberPublicKey {
+        MultisigMemberPublicKey::Secp256r1(Secp256r1PublicKey::new([byte; 33]))
+    }
+
+    fn member(key: MultisigMemberPublicKey, weight: WeightUnit) -> MultisigMember {
+        MultisigMember::new(key, weight)
+    }
+
+    // --- MultisigMember tests ---
+
+    #[test]
+    fn multisig_member_new_and_accessors() {
+        let key = ed25519_key(1);
+        let m = MultisigMember::new(key.clone(), 5);
+        assert_eq!(*m.public_key(), key);
+        assert_eq!(m.weight(), 5);
+    }
+
+    #[test]
+    fn multisig_member_clone_and_eq() {
+        let m1 = member(ed25519_key(1), 3);
+        let m2 = m1.clone();
+        assert_eq!(m1, m2);
+    }
+
+    #[test]
+    fn multisig_member_not_equal_different_key() {
+        let m1 = member(ed25519_key(1), 3);
+        let m2 = member(ed25519_key(2), 3);
+        assert_ne!(m1, m2);
+    }
+
+    #[test]
+    fn multisig_member_not_equal_different_weight() {
+        let m1 = member(ed25519_key(1), 3);
+        let m2 = member(ed25519_key(1), 4);
+        assert_ne!(m1, m2);
+    }
+
+    // --- MultisigMemberPublicKey tests ---
+
+    #[test]
+    fn multisig_member_public_key_scheme_ed25519() {
+        let key = ed25519_key(0);
+        assert_eq!(key.scheme(), SignatureScheme::Ed25519);
+    }
+
+    #[test]
+    fn multisig_member_public_key_scheme_secp256k1() {
+        let key = secp256k1_key(0);
+        assert_eq!(key.scheme(), SignatureScheme::Secp256k1);
+    }
+
+    #[test]
+    fn multisig_member_public_key_scheme_secp256r1() {
+        let key = secp256r1_key(0);
+        assert_eq!(key.scheme(), SignatureScheme::Secp256r1);
+    }
+
+    #[test]
+    fn multisig_member_public_key_is_ed25519() {
+        let key = ed25519_key(0);
+        assert!(key.is_ed25519());
+        assert!(!key.is_secp256k1());
+        assert!(!key.is_secp256r1());
+    }
+
+    #[test]
+    fn multisig_member_public_key_is_secp256k1() {
+        let key = secp256k1_key(0);
+        assert!(!key.is_ed25519());
+        assert!(key.is_secp256k1());
+        assert!(!key.is_secp256r1());
+    }
+
+    #[test]
+    fn multisig_member_public_key_is_secp256r1() {
+        let key = secp256r1_key(0);
+        assert!(!key.is_ed25519());
+        assert!(!key.is_secp256k1());
+        assert!(key.is_secp256r1());
+    }
+
+    #[test]
+    fn multisig_member_public_key_as_ed25519() {
+        let inner = Ed25519PublicKey::new([42; 32]);
+        let key = MultisigMemberPublicKey::Ed25519(inner);
+        assert_eq!(*key.as_ed25519(), inner);
+        assert!(key.as_secp256k1_opt().is_none());
+    }
+
+    #[test]
+    fn multisig_member_public_key_clone_eq() {
+        let k1 = ed25519_key(7);
+        let k2 = k1.clone();
+        assert_eq!(k1, k2);
+    }
+
+    // --- MultisigCommittee tests ---
+
+    #[test]
+    fn committee_new_and_accessors() {
+        let members = vec![member(ed25519_key(1), 1)];
+        let committee = MultisigCommittee::new(members.clone(), 1);
+        assert_eq!(committee.members().len(), 1);
+        assert_eq!(committee.threshold(), 1);
+    }
+
+    #[test]
+    fn committee_scheme() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        assert_eq!(committee.scheme(), SignatureScheme::Multisig);
+    }
+
+    // --- MultisigCommittee::is_valid() tests ---
+
+    #[test]
+    fn committee_valid_single_member() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn committee_valid_multiple_members() {
+        let committee = MultisigCommittee::new(
+            vec![
+                member(ed25519_key(1), 1),
+                member(ed25519_key(2), 2),
+                member(secp256k1_key(3), 1),
+            ],
+            3,
+        );
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn committee_valid_threshold_less_than_total_weight() {
+        let committee = MultisigCommittee::new(
+            vec![member(ed25519_key(1), 3), member(ed25519_key(2), 3)],
+            4,
+        );
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn committee_invalid_zero_threshold() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 0);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn committee_invalid_empty_members() {
+        let committee = MultisigCommittee::new(vec![], 1);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn committee_invalid_too_many_members() {
+        let members: Vec<MultisigMember> = (0..11)
+            .map(|i| member(ed25519_key(i), 1))
+            .collect();
+        let committee = MultisigCommittee::new(members, 1);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn committee_valid_max_members() {
+        let members: Vec<MultisigMember> = (0..10)
+            .map(|i| member(ed25519_key(i), 1))
+            .collect();
+        let committee = MultisigCommittee::new(members, 1);
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn committee_invalid_zero_weight_member() {
+        let committee = MultisigCommittee::new(
+            vec![member(ed25519_key(1), 1), member(ed25519_key(2), 0)],
+            1,
+        );
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn committee_invalid_weight_sum_less_than_threshold() {
+        let committee = MultisigCommittee::new(
+            vec![member(ed25519_key(1), 1), member(ed25519_key(2), 1)],
+            3,
+        );
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn committee_invalid_duplicate_members() {
+        let committee = MultisigCommittee::new(
+            vec![member(ed25519_key(1), 1), member(ed25519_key(1), 2)],
+            2,
+        );
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn committee_valid_mixed_key_types() {
+        let committee = MultisigCommittee::new(
+            vec![
+                member(ed25519_key(1), 1),
+                member(secp256k1_key(1), 1),
+                member(secp256r1_key(1), 1),
+            ],
+            2,
+        );
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn committee_clone_and_eq() {
+        let c1 = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        let c2 = c1.clone();
+        assert_eq!(c1, c2);
+    }
+
+    // --- MultisigAggregatedSignature tests ---
+
+    #[test]
+    fn aggregated_signature_new_and_accessors() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        let sig = MultisigAggregatedSignature::new(committee.clone(), vec![], 0b0001);
+        assert_eq!(*sig.committee(), committee);
+        assert!(sig.signatures().is_empty());
+        assert_eq!(sig.bitmap(), 0b0001);
+    }
+
+    #[test]
+    fn aggregated_signature_eq() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        let sig1 = MultisigAggregatedSignature::new(committee.clone(), vec![], 0b01);
+        let sig2 = MultisigAggregatedSignature::new(committee, vec![], 0b01);
+        assert_eq!(sig1, sig2);
+    }
+
+    #[test]
+    fn aggregated_signature_ne_different_bitmap() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        let sig1 = MultisigAggregatedSignature::new(committee.clone(), vec![], 0b01);
+        let sig2 = MultisigAggregatedSignature::new(committee, vec![], 0b10);
+        assert_ne!(sig1, sig2);
+    }
+
+    // --- MultisigMemberSignature tests ---
+
+    #[test]
+    fn member_signature_is_ed25519() {
+        let sig = MultisigMemberSignature::Ed25519(Ed25519Signature::new([0u8; 64]));
+        assert!(sig.is_ed25519());
+        assert!(!sig.is_secp256k1());
+        assert!(!sig.is_secp256r1());
+    }
+
+    #[test]
+    fn member_signature_is_secp256k1() {
+        let sig = MultisigMemberSignature::Secp256k1(Secp256k1Signature::new([0u8; 64]));
+        assert!(!sig.is_ed25519());
+        assert!(sig.is_secp256k1());
+        assert!(!sig.is_secp256r1());
+    }
+
+    #[test]
+    fn member_signature_is_secp256r1() {
+        let sig = MultisigMemberSignature::Secp256r1(Secp256r1Signature::new([0u8; 64]));
+        assert!(!sig.is_ed25519());
+        assert!(!sig.is_secp256k1());
+        assert!(sig.is_secp256r1());
+    }
+
+    #[test]
+    fn member_signature_clone_eq() {
+        let sig1 = MultisigMemberSignature::Ed25519(Ed25519Signature::new([0u8; 64]));
+        let sig2 = sig1.clone();
+        assert_eq!(sig1, sig2);
+    }
+
+    // --- MultisigMemberPublicKey as_*/into_* accessor tests ---
+
+    #[test]
+    fn multisig_member_public_key_as_secp256k1() {
+        let inner = Secp256k1PublicKey::new([42; 33]);
+        let key = MultisigMemberPublicKey::Secp256k1(inner);
+        assert_eq!(*key.as_secp256k1(), inner);
+        assert!(key.as_ed25519_opt().is_none());
+        assert!(key.as_secp256r1_opt().is_none());
+    }
+
+    #[test]
+    fn multisig_member_public_key_as_secp256r1() {
+        let inner = Secp256r1PublicKey::new([99; 33]);
+        let key = MultisigMemberPublicKey::Secp256r1(inner);
+        assert_eq!(*key.as_secp256r1(), inner);
+        assert!(key.as_ed25519_opt().is_none());
+        assert!(key.as_secp256k1_opt().is_none());
+    }
+
+    #[test]
+    fn multisig_member_public_key_into_ed25519() {
+        let inner = Ed25519PublicKey::new([1; 32]);
+        let key = MultisigMemberPublicKey::Ed25519(inner);
+        assert_eq!(key.into_ed25519(), inner);
+    }
+
+    #[test]
+    fn multisig_member_public_key_into_ed25519_opt_none() {
+        let key = secp256k1_key(0);
+        assert!(key.into_ed25519_opt().is_none());
+    }
+
+    #[test]
+    fn multisig_member_public_key_into_secp256k1() {
+        let inner = Secp256k1PublicKey::new([2; 33]);
+        let key = MultisigMemberPublicKey::Secp256k1(inner);
+        assert_eq!(key.into_secp256k1(), inner);
+    }
+
+    #[test]
+    fn multisig_member_public_key_into_secp256k1_opt_none() {
+        let key = ed25519_key(0);
+        assert!(key.into_secp256k1_opt().is_none());
+    }
+
+    #[test]
+    fn multisig_member_public_key_into_secp256r1() {
+        let inner = Secp256r1PublicKey::new([3; 33]);
+        let key = MultisigMemberPublicKey::Secp256r1(inner);
+        assert_eq!(key.into_secp256r1(), inner);
+    }
+
+    #[test]
+    fn multisig_member_public_key_into_secp256r1_opt_none() {
+        let key = ed25519_key(0);
+        assert!(key.into_secp256r1_opt().is_none());
+    }
+
+    #[test]
+    fn multisig_member_public_key_is_zklogin() {
+        // ZkLogin requires ZkLoginPublicIdentifier
+        let key = ed25519_key(0);
+        assert!(!key.is_zklogin());
+    }
+
+    // --- MultisigMemberSignature as_*/into_* tests ---
+
+    #[test]
+    fn member_signature_is_zklogin() {
+        let sig = MultisigMemberSignature::Ed25519(Ed25519Signature::new([0u8; 64]));
+        assert!(!sig.is_zklogin());
+    }
+
+    #[test]
+    fn member_signature_as_ed25519() {
+        let inner = Ed25519Signature::new([7u8; 64]);
+        let sig = MultisigMemberSignature::Ed25519(inner);
+        assert_eq!(*sig.as_ed25519(), inner);
+        assert!(sig.as_secp256k1_opt().is_none());
+        assert!(sig.as_secp256r1_opt().is_none());
+    }
+
+    #[test]
+    fn member_signature_as_secp256k1() {
+        let inner = Secp256k1Signature::new([8u8; 64]);
+        let sig = MultisigMemberSignature::Secp256k1(inner);
+        assert_eq!(*sig.as_secp256k1(), inner);
+        assert!(sig.as_ed25519_opt().is_none());
+    }
+
+    #[test]
+    fn member_signature_as_secp256r1() {
+        let inner = Secp256r1Signature::new([9u8; 64]);
+        let sig = MultisigMemberSignature::Secp256r1(inner);
+        assert_eq!(*sig.as_secp256r1(), inner);
+        assert!(sig.as_ed25519_opt().is_none());
+    }
+
+    #[test]
+    fn member_signature_into_ed25519() {
+        let inner = Ed25519Signature::new([10u8; 64]);
+        let sig = MultisigMemberSignature::Ed25519(inner);
+        assert_eq!(sig.into_ed25519(), inner);
+    }
+
+    #[test]
+    fn member_signature_into_ed25519_opt_none_for_secp256k1() {
+        let sig = MultisigMemberSignature::Secp256k1(Secp256k1Signature::new([0u8; 64]));
+        assert!(sig.into_ed25519_opt().is_none());
+    }
+
+    #[test]
+    fn member_signature_into_secp256k1() {
+        let inner = Secp256k1Signature::new([11u8; 64]);
+        let sig = MultisigMemberSignature::Secp256k1(inner);
+        assert_eq!(sig.into_secp256k1(), inner);
+    }
+
+    #[test]
+    fn member_signature_into_secp256r1() {
+        let inner = Secp256r1Signature::new([12u8; 64]);
+        let sig = MultisigMemberSignature::Secp256r1(inner);
+        assert_eq!(sig.into_secp256r1(), inner);
+    }
+
+    // --- MultisigAggregatedSignature with actual signatures ---
+
+    #[test]
+    fn aggregated_signature_with_signatures() {
+        let committee = MultisigCommittee::new(
+            vec![
+                member(ed25519_key(1), 1),
+                member(secp256k1_key(2), 1),
+            ],
+            1,
+        );
+        let sigs = vec![
+            MultisigMemberSignature::Ed25519(Ed25519Signature::new([0u8; 64])),
+        ];
+        let agg = MultisigAggregatedSignature::new(committee, sigs, 0b01);
+        assert_eq!(agg.signatures().len(), 1);
+        assert!(agg.signatures()[0].is_ed25519());
+    }
+
+    #[test]
+    fn aggregated_signature_ne_different_committee() {
+        let c1 = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        let c2 = MultisigCommittee::new(vec![member(ed25519_key(2), 1)], 1);
+        let sig1 = MultisigAggregatedSignature::new(c1, vec![], 0b01);
+        let sig2 = MultisigAggregatedSignature::new(c2, vec![], 0b01);
+        assert_ne!(sig1, sig2);
+    }
+
+    #[test]
+    fn aggregated_signature_clone() {
+        let committee = MultisigCommittee::new(vec![member(ed25519_key(1), 1)], 1);
+        let sig1 = MultisigAggregatedSignature::new(committee, vec![], 0b01);
+        let sig2 = sig1.clone();
+        assert_eq!(sig1, sig2);
+    }
+
+    // --- Type alias tests ---
+
+    #[test]
+    fn type_aliases_sizes() {
+        // WeightUnit is u8
+        let _w: WeightUnit = 255u8;
+        // ThresholdUnit is u16
+        let _t: ThresholdUnit = 65535u16;
+        // BitmapUnit is u16
+        let _b: BitmapUnit = 0b1111111111u16;
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

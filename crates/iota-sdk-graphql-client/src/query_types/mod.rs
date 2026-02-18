@@ -172,3 +172,60 @@ impl TryFrom<BigInt> for u64 {
         Ok(value.0.parse::<u64>()?)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- BigInt to u64 conversion ---
+
+    #[test]
+    fn bigint_to_u64_valid() {
+        let big = BigInt("12345".to_string());
+        let val: u64 = big.try_into().unwrap();
+        assert_eq!(val, 12345);
+    }
+
+    #[test]
+    fn bigint_to_u64_zero() {
+        let big = BigInt("0".to_string());
+        let val: u64 = big.try_into().unwrap();
+        assert_eq!(val, 0);
+    }
+
+    #[test]
+    fn bigint_to_u64_max() {
+        let big = BigInt(u64::MAX.to_string());
+        let val: u64 = big.try_into().unwrap();
+        assert_eq!(val, u64::MAX);
+    }
+
+    #[test]
+    fn bigint_to_u64_overflow() {
+        // u64::MAX + 1
+        let big = BigInt("18446744073709551616".to_string());
+        let result: Result<u64, _> = big.try_into();
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn bigint_to_u64_negative() {
+        let big = BigInt("-1".to_string());
+        let result: Result<u64, _> = big.try_into();
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn bigint_to_u64_non_numeric() {
+        let big = BigInt("not_a_number".to_string());
+        let result: Result<u64, _> = big.try_into();
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn bigint_to_u64_empty_string() {
+        let big = BigInt(String::new());
+        let result: Result<u64, _> = big.try_into();
+        assert!(result.is_err());
+    }
+}

@@ -478,3 +478,256 @@ impl GasStationRequestKind {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+    use std::time::Duration;
+
+    use reqwest::Url;
+    use reqwest::header::{HeaderName, HeaderValue};
+
+    use super::*;
+
+    // --- GasStationVersion parsing tests ---
+
+    #[test]
+    fn parse_valid_version() {
+        let v = GasStationVersion::from_str("0.3.0").unwrap();
+        assert_eq!(v.version_core, [0, 3, 0]);
+        assert_eq!(v.suffix, None);
+    }
+
+    #[test]
+    fn parse_version_with_suffix() {
+        let v = GasStationVersion::from_str("1.2.3-alpha").unwrap();
+        assert_eq!(v.version_core, [1, 2, 3]);
+        assert_eq!(v.suffix.as_deref(), Some("alpha"));
+    }
+
+    #[test]
+    fn parse_version_with_complex_suffix() {
+        let v = GasStationVersion::from_str("0.3.0-beta.1").unwrap();
+        assert_eq!(v.version_core, [0, 3, 0]);
+        assert_eq!(v.suffix.as_deref(), Some("beta.1"));
+    }
+
+    #[test]
+    fn parse_max_version() {
+        let v = GasStationVersion::from_str("255.255.255").unwrap();
+        assert_eq!(v.version_core, [255, 255, 255]);
+    }
+
+    #[test]
+    fn parse_empty_string_fails() {
+        let result = GasStationVersion::from_str("");
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        // The error message is about the empty input string
+        let msg = err.to_string();
+        assert!(msg.contains("SemVer") || msg.contains("empty"));
+    }
+
+    #[test]
+    fn parse_too_few_segments_fails() {
+        let result = GasStationVersion::from_str("1.2");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_too_many_segments_fails() {
+        let result = GasStationVersion::from_str("1.2.3.4");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_non_numeric_fails() {
+        let result = GasStationVersion::from_str("a.b.c");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_overflow_fails() {
+        let result = GasStationVersion::from_str("256.0.0");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_negative_fails() {
+        let result = GasStationVersion::from_str("-1.0.0");
+        assert!(result.is_err());
+    }
+
+    // --- GasStationVersion Display tests ---
+
+    #[test]
+    fn display_version_without_suffix() {
+        let v = GasStationVersion::new(1, 2, 3);
+        assert_eq!(v.to_string(), "1.2.3");
+    }
+
+    #[test]
+    fn display_version_with_suffix() {
+        let v = GasStationVersion::from_str("0.3.0-alpha").unwrap();
+        assert_eq!(v.to_string(), "0.3.0-alpha");
+    }
+
+    #[test]
+    fn display_roundtrip() {
+        let original = "1.2.3-beta.1";
+        let v = GasStationVersion::from_str(original).unwrap();
+        assert_eq!(v.to_string(), original);
+    }
+
+    #[test]
+    fn display_zero_version() {
+        let v = GasStationVersion::new(0, 0, 0);
+        assert_eq!(v.to_string(), "0.0.0");
+    }
+
+    // --- GasStationVersion ordering tests ---
+
+    #[test]
+    fn version_ordering_major() {
+        let v1 = GasStationVersion::new(0, 9, 9);
+        let v2 = GasStationVersion::new(1, 0, 0);
+        assert!(v1 < v2);
+    }
+
+    #[test]
+    fn version_ordering_minor() {
+        let v1 = GasStationVersion::new(0, 2, 9);
+        let v2 = GasStationVersion::new(0, 3, 0);
+        assert!(v1 < v2);
+    }
+
+    #[test]
+    fn version_ordering_patch() {
+        let v1 = GasStationVersion::new(0, 3, 0);
+        let v2 = GasStationVersion::new(0, 3, 1);
+        assert!(v1 < v2);
+    }
+
+    #[test]
+    fn version_ordering_equal() {
+        let v1 = GasStationVersion::new(1, 2, 3);
+        let v2 = GasStationVersion::new(1, 2, 3);
+        assert_eq!(v1, v2);
+        assert_eq!(v1.cmp(&v2), std::cmp::Ordering::Equal);
+    }
+
+    #[test]
+    fn version_ordering_suffix_ignored_for_comparison() {
+        // Suffix should not affect ordering (only version_core matters)
+        let v1 = GasStationVersion::from_str("1.0.0-alpha").unwrap();
+        let v2 = GasStationVersion::from_str("1.0.0-beta").unwrap();
+        assert_eq!(v1.cmp(&v2), std::cmp::Ordering::Equal);
+    }
+
+    #[test]
+    fn version_min_constant() {
+        let min = GasStationVersion::MIN;
+        assert_eq!(min.version_core, [0, 3, 0]);
+        let below = GasStationVersion::new(0, 2, 9);
+        assert!(below < min);
+    }
+
+    // --- GasStationVersion Hash and Eq tests ---
+
+    #[test]
+    fn version_hash_and_eq() {
+        use std::collections::HashSet;
+        let v1 = GasStationVersion::new(1, 0, 0);
+        let v2 = GasStationVersion::new(1, 0, 0);
+        let mut set = HashSet::new();
+        set.insert(v1);
+        assert!(set.contains(&v2));
+    }
+
+    // --- GasStationData tests ---
+
+    #[test]
+    fn gas_station_data_new_default_duration() {
+        let url = Url::parse("http://localhost:8080").unwrap();
+        let data = GasStationData::new(url.clone());
+        assert_eq!(data.url, url);
+        assert_eq!(data.gas_reservation_duration, Duration::from_secs(60));
+        assert!(data.headers.is_empty());
+    }
+
+    #[test]
+    fn gas_station_data_set_duration() {
+        let url = Url::parse("http://localhost:8080").unwrap();
+        let mut data = GasStationData::new(url);
+        data.set_gas_reservation_duration(Duration::from_secs(120));
+        assert_eq!(data.gas_reservation_duration, Duration::from_secs(120));
+    }
+
+    #[test]
+    fn gas_station_data_add_header() {
+        let url = Url::parse("http://localhost:8080").unwrap();
+        let mut data = GasStationData::new(url);
+        data.add_header(
+            HeaderName::from_static("x-api-key"),
+            HeaderValue::from_static("test-key"),
+        );
+        assert_eq!(data.headers.len(), 1);
+        assert_eq!(data.headers.get("x-api-key").unwrap(), "test-key");
+    }
+
+    #[test]
+    fn gas_station_data_add_multiple_headers() {
+        let url = Url::parse("http://localhost:8080").unwrap();
+        let mut data = GasStationData::new(url);
+        data.add_header(
+            HeaderName::from_static("x-api-key"),
+            HeaderValue::from_static("key1"),
+        );
+        data.add_header(
+            HeaderName::from_static("authorization"),
+            HeaderValue::from_static("Bearer token"),
+        );
+        assert_eq!(data.headers.len(), 2);
+    }
+
+    // --- GasStationRequestKind tests ---
+
+    #[test]
+    fn request_kind_paths() {
+        assert_eq!(GasStationRequestKind::ReserveGas.as_path(), "/v1/reserve_gas");
+        assert_eq!(GasStationRequestKind::ExecuteTx.as_path(), "/v1/execute_tx");
+        assert_eq!(GasStationRequestKind::Version.as_path(), "/version");
+    }
+
+    // --- VersionParsingError Display tests ---
+
+    #[test]
+    fn version_parsing_error_display() {
+        let err = GasStationVersion::from_str("bad").unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("bad"));
+        assert!(msg.contains("SemVer"));
+    }
+
+    #[test]
+    fn version_parsing_error_display_with_four_segments() {
+        let err = GasStationVersion::from_str("1.2.3.4").unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("1.2.3.4"));
+    }
+
+    // --- idx_to_segment_name tests ---
+
+    #[test]
+    fn segment_names() {
+        assert_eq!(idx_to_segment_name(0), "major");
+        assert_eq!(idx_to_segment_name(1), "minor");
+        assert_eq!(idx_to_segment_name(2), "patch");
+    }
+
+    #[test]
+    #[should_panic]
+    fn segment_name_out_of_bounds() {
+        idx_to_segment_name(3);
+    }
+}

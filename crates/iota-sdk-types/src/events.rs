@@ -79,3 +79,205 @@ pub struct BalanceChange {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
     pub amount: i128,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- TransactionEvents tests ---
+
+    #[test]
+    fn transaction_events_empty() {
+        let events = TransactionEvents(vec![]);
+        assert!(events.0.is_empty());
+    }
+
+    #[test]
+    fn transaction_events_with_events() {
+        let event = Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("test_module").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag::new(
+                Address::ZERO,
+                Identifier::new("m").unwrap(),
+                Identifier::new("E").unwrap(),
+                Vec::new(),
+            ),
+            contents: vec![1, 2, 3],
+        };
+        let events = TransactionEvents(vec![event]);
+        assert_eq!(events.0.len(), 1);
+    }
+
+    #[test]
+    fn transaction_events_clone_eq() {
+        let events = TransactionEvents(vec![]);
+        let cloned = events.clone();
+        assert_eq!(events, cloned);
+    }
+
+    // --- Event tests ---
+
+    #[test]
+    fn event_field_access() {
+        let event = Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("my_module").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag::new(
+                Address::ZERO,
+                Identifier::new("mod").unwrap(),
+                Identifier::new("MyEvent").unwrap(),
+                Vec::new(),
+            ),
+            contents: vec![0xAB, 0xCD],
+        };
+        assert_eq!(event.package_id, ObjectId::ZERO);
+        assert_eq!(event.module.as_str(), "my_module");
+        assert_eq!(event.sender, Address::ZERO);
+        assert_eq!(event.contents, vec![0xAB, 0xCD]);
+    }
+
+    #[test]
+    fn event_clone_eq() {
+        let event = Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("m").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag::new(
+                Address::ZERO,
+                Identifier::new("m").unwrap(),
+                Identifier::new("E").unwrap(),
+                Vec::new(),
+            ),
+            contents: vec![],
+        };
+        let cloned = event.clone();
+        assert_eq!(event, cloned);
+    }
+
+    #[test]
+    fn event_ne_different_contents() {
+        let e1 = Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("m").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag::new(
+                Address::ZERO,
+                Identifier::new("m").unwrap(),
+                Identifier::new("E").unwrap(),
+                Vec::new(),
+            ),
+            contents: vec![1],
+        };
+        let e2 = Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("m").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag::new(
+                Address::ZERO,
+                Identifier::new("m").unwrap(),
+                Identifier::new("E").unwrap(),
+                Vec::new(),
+            ),
+            contents: vec![2],
+        };
+        assert_ne!(e1, e2);
+    }
+
+    // --- BalanceChange tests ---
+
+    #[test]
+    fn balance_change_positive_amount() {
+        let bc = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: 1000,
+        };
+        assert_eq!(bc.amount, 1000);
+        assert!(bc.amount > 0);
+    }
+
+    #[test]
+    fn balance_change_negative_amount() {
+        let bc = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: -500,
+        };
+        assert_eq!(bc.amount, -500);
+        assert!(bc.amount < 0);
+    }
+
+    #[test]
+    fn balance_change_zero_amount() {
+        let bc = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: 0,
+        };
+        assert_eq!(bc.amount, 0);
+    }
+
+    #[test]
+    fn balance_change_clone_eq() {
+        let bc1 = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: 42,
+        };
+        let bc2 = bc1.clone();
+        assert_eq!(bc1, bc2);
+    }
+
+    #[test]
+    fn balance_change_ordering() {
+        let bc1 = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: -100,
+        };
+        let bc2 = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: 100,
+        };
+        assert!(bc1 < bc2);
+    }
+
+    #[test]
+    fn balance_change_ne_different_amount() {
+        let bc1 = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: 1,
+        };
+        let bc2 = BalanceChange {
+            address: Address::ZERO,
+            coin_type: TypeTag::Bool,
+            amount: 2,
+        };
+        assert_ne!(bc1, bc2);
+    }
+
+    #[test]
+    fn transaction_events_multiple_events() {
+        let mk_event = |contents: Vec<u8>| Event {
+            package_id: ObjectId::ZERO,
+            module: Identifier::new("m").unwrap(),
+            sender: Address::ZERO,
+            type_: StructTag::new(
+                Address::ZERO,
+                Identifier::new("m").unwrap(),
+                Identifier::new("E").unwrap(),
+                Vec::new(),
+            ),
+            contents,
+        };
+        let events = TransactionEvents(vec![mk_event(vec![1]), mk_event(vec![2]), mk_event(vec![3])]);
+        assert_eq!(events.0.len(), 3);
+        assert_eq!(events.0[0].contents, vec![1]);
+        assert_eq!(events.0[2].contents, vec![3]);
+    }
+}

@@ -183,3 +183,163 @@ where
 {
     PageStream::new(query_fn, direction)
 }
+
+#[cfg(test)]
+mod tests {
+    use futures::StreamExt;
+
+    use super::*;
+    use crate::{pagination::Page, query_types::PageInfo};
+
+    // Helper to create a PageInfo
+    fn page_info(has_next: bool, has_prev: bool) -> PageInfo {
+        PageInfo {
+            has_next_page: has_next,
+            has_previous_page: has_prev,
+            start_cursor: Some("start".to_string()),
+            end_cursor: Some("end".to_string()),
+        }
+    }
+
+    // --- stream_paginated_query factory tests ---
+
+    #[tokio::test]
+    async fn stream_empty_returns_no_items() {
+        let stream = stream_paginated_query(
+            |_filter: PaginationFilter| async {
+                Ok::<Page<i32>, error::Error>(Page::<i32>::new_empty())
+            },
+            Direction::Forward,
+        );
+        let results: Vec<Result<i32, _>> = stream.collect().await;
+        assert!(results.is_empty());
+    }
+
+    // --- Forward pagination tests ---
+
+    #[tokio::test]
+    async fn stream_forward_single_page() {
+        let stream = stream_paginated_query(
+            |_filter: PaginationFilter| async {
+                Ok(Page::new(
+                    page_info(false, false), // no more pages
+                    vec![1, 2, 3],
+                ))
+            },
+            Direction::Forward,
+        );
+
+        let results: Vec<Result<i32, _>> = stream.collect().await;
+        let values: Vec<i32> = results.into_iter().map(|r| r.unwrap()).collect();
+        assert_eq!(values, vec![1, 2, 3]);
+    }
+
+    #[tokio::test]
+    async fn stream_forward_multiple_pages() {
+        let call_count = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let counter = call_count.clone();
+
+        let stream = stream_paginated_query(
+            move |_filter: PaginationFilter| {
+                let count = counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                async move {
+                    match count {
+                        0 => Ok(Page::new(page_info(true, false), vec![1, 2])),
+                        1 => Ok(Page::new(page_info(false, false), vec![3, 4])),
+                        _ => Ok(Page::<i32>::new_empty()),
+                    }
+                }
+            },
+            Direction::Forward,
+        );
+
+        let results: Vec<i32> = stream
+            .collect::<Vec<_>>()
+            .await
+            .into_iter()
+            .map(|r| r.unwrap())
+            .collect();
+        assert_eq!(results, vec![1, 2, 3, 4]);
+    }
+
+    #[tokio::test]
+    async fn stream_forward_empty_page_stops() {
+        let stream = stream_paginated_query(
+            |_filter: PaginationFilter| async { Ok(Page::<i32>::new_empty()) },
+            Direction::Forward,
+        );
+
+        let results: Vec<Result<i32, _>> = stream.collect().await;
+        assert!(results.is_empty());
+    }
+
+    // --- Backward pagination tests ---
+
+    #[tokio::test]
+    async fn stream_backward_reverses_items() {
+        let stream = stream_paginated_query(
+            |_filter: PaginationFilter| async {
+                Ok(Page::new(
+                    page_info(false, false),
+                    vec![1, 2, 3], // Server returns in natural order
+                ))
+            },
+            Direction::Backward,
+        );
+
+        let results: Vec<i32> = stream
+            .collect::<Vec<_>>()
+            .await
+            .into_iter()
+            .map(|r| r.unwrap())
+            .collect();
+        // Backward pagination reverses items
+        assert_eq!(results, vec![3, 2, 1]);
+    }
+
+    // --- Error propagation tests ---
+
+    #[tokio::test]
+    async fn stream_error_propagation() {
+        let stream = stream_paginated_query(
+            |_filter: PaginationFilter| async {
+                Err(error::Error::from_message(
+                    error::Kind::Query,
+                    "query failed".to_string(),
+                ))
+            },
+            Direction::Forward,
+        );
+
+        let results: Vec<Result<i32, _>> = stream.collect().await;
+        assert_eq!(results.len(), 1);
+        assert!(results[0].is_err());
+    }
+
+    #[tokio::test]
+    async fn stream_error_stops_iteration() {
+        let call_count = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let counter = call_count.clone();
+
+        let stream = stream_paginated_query(
+            move |_filter: PaginationFilter| {
+                let count = counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                async move {
+                    match count {
+                        0 => Err(error::Error::from_message(
+                            error::Kind::Query,
+                            "fail".to_string(),
+                        )),
+                        _ => Ok(Page::new(page_info(false, false), vec![1])),
+                    }
+                }
+            },
+            Direction::Forward,
+        );
+
+        let results: Vec<Result<i32, _>> = stream.collect().await;
+        // Should only have the error, no further items
+        assert_eq!(results.len(), 1);
+        assert!(results[0].is_err());
+    }
+}
