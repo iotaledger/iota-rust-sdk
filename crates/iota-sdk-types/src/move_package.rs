@@ -283,36 +283,36 @@ pub struct MovePackage {
 }
 
 impl MovePackage {
-    // /// Create a package with all required data (including serialized modules,
-    // /// type origin and linkage tables) already supplied.
-    // ///
-    // /// It does not perform any type of validation. Ensure that the supplied
-    // /// parts are semantically valid.
-    // pub fn new(
-    //     id: ObjectId,
-    //     version: Version,
-    //     modules: BTreeMap<Identifier, Vec<u8>>,
-    //     max_move_package_size: u64,
-    //     type_origin_table: Vec<TypeOrigin>,
-    //     linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
-    // ) -> Result<Self, ExecutionError> {
-    //     let pkg = Self {
-    //         id,
-    //         version,
-    //         modules,
-    //         type_origin_table,
-    //         linkage_table,
-    //     };
-    //     let object_size = pkg.size() as u64;
-    //     if object_size > max_move_package_size {
-    //         return Err(ExecutionError::PackageTooBig {
-    //             object_size,
-    //             max_object_size: max_move_package_size,
-    //         }
-    //         .into());
-    //     }
-    //     Ok(pkg)
-    // }
+    /// Create a package with all required data (including serialized modules,
+    /// type origin and linkage tables) already supplied.
+    ///
+    /// It does not perform any type of validation. Ensure that the supplied
+    /// parts are semantically valid.
+    pub fn new(
+        id: ObjectId,
+        version: Version,
+        modules: BTreeMap<Identifier, Vec<u8>>,
+        max_move_package_size: u64,
+        type_origin_table: Vec<TypeOrigin>,
+        linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
+    ) -> Result<Self, ExecutionError> {
+        let pkg = Self {
+            id,
+            version,
+            modules,
+            type_origin_table,
+            linkage_table,
+        };
+        let object_size = pkg.size() as u64;
+        if object_size > max_move_package_size {
+            return Err(ExecutionError::PackageTooBig {
+                object_size,
+                max_object_size: max_move_package_size,
+            }
+            .into());
+        }
+        Ok(pkg)
+    }
 
     // /// Calculate the digest of the [MovePackage].
     // pub fn digest(&self) -> [u8; 32] {
@@ -350,121 +350,6 @@ impl MovePackage {
     //         digest.update(c);
     //     }
     //     digest.finalize().digest
-    // }
-
-    // /// Create an initial version of the package along with this version's type
-    // /// origin and linkage tables.
-    // ///
-    // /// # Undefined behavior
-    // ///
-    // /// All passed modules must have the same `Runtime ID` or the behavior is
-    // /// undefined.
-    // pub fn new_initial<'p>(
-    //     modules: &[CompiledModule],
-    //     protocol_config: &ProtocolConfig,
-    //     transitive_dependencies: impl IntoIterator<Item = &'p MovePackage>,
-    // ) -> Result<Self, ExecutionError> {
-    //     let module = modules
-    //         .first()
-    //         .expect("Tried to build a Move package from an empty iterator of
-    // Compiled modules");     let runtime_id =
-    // ObjectId::new(module.address().into_bytes());     let storage_id =
-    // runtime_id;     let type_origin_table =
-    // build_initial_type_origin_table(modules);
-    //     Self::from_module_iter_with_type_origin_table(
-    //         storage_id,
-    //         runtime_id,
-    //         OBJECT_START_VERSION,
-    //         modules,
-    //         protocol_config,
-    //         type_origin_table,
-    //         transitive_dependencies,
-    //     )
-    // }
-
-    // /// Create an upgraded version of the package along with this version's type
-    // /// origin and linkage tables.
-    // ///
-    // /// # Undefined behavior
-    // ///
-    // /// All passed modules must have the same `Runtime ID` or the behavior is
-    // /// undefined.
-    // pub fn new_upgraded<'p>(
-    //     &self,
-    //     storage_id: ObjectId,
-    //     modules: &[CompiledModule],
-    //     protocol_config: &ProtocolConfig,
-    //     transitive_dependencies: impl IntoIterator<Item = &'p MovePackage>,
-    // ) -> Result<Self, ExecutionError> {
-    //     let module = modules
-    //         .first()
-    //         .expect("Tried to build a Move package from an empty iterator of
-    // Compiled modules");     let runtime_id =
-    // ObjectId::new(module.address().into_bytes());     let type_origin_table =
-    // build_upgraded_type_origin_table(self, modules, storage_id)?;     let mut
-    // new_version = self.version();     new_version.increment().unwrap();
-    //     Self::from_module_iter_with_type_origin_table(
-    //         storage_id,
-    //         runtime_id,
-    //         new_version,
-    //         modules,
-    //         protocol_config,
-    //         type_origin_table,
-    //         transitive_dependencies,
-    //     )
-    // }
-
-    // pub fn new_system(
-    //     version: Version,
-    //     modules: &[CompiledModule],
-    //     dependencies: impl IntoIterator<Item = ObjectId>,
-    // ) -> Self {
-    //     let module = modules
-    //         .first()
-    //         .expect("Tried to build a Move package from an empty iterator of
-    // Compiled modules");
-
-    //     let storage_id = ObjectId::new(module.address().into_bytes());
-    //     let type_origin_table = build_initial_type_origin_table(modules);
-
-    //     let linkage_table =
-    // BTreeMap::from_iter(dependencies.into_iter().map(|dep| {         let info
-    // = UpgradeInfo {             upgraded_id: dep,
-    //             // The upgraded version is used by other packages that
-    // transitively depend on this             // system package, to make sure
-    // that if they choose a different version to depend on             //
-    // compared to their dependencies, they pick a greater version.             
-    // //             // However, in the case of system packages, although they
-    // can be upgraded, unlike             // other packages, only one version
-    // can be in use on the network at any given time,             // so it is
-    // not possible for a package to require a different system package version
-    //             // compared to its dependencies.
-    //             //
-    //             // This reason, coupled with the fact that system packages can
-    // only depend on each             // other, mean that their own linkage
-    // tables always report a version of zero.             upgraded_version:
-    // Version::default(),         };
-    //         (dep, info)
-    //     }));
-
-    //     let module_map = BTreeMap::from_iter(modules.iter().map(|module| {
-    //         let name = module.name().to_string();
-    //         let mut bytes = Vec::new();
-    //         module
-    //             .serialize_with_version(module.version, &mut bytes)
-    //             .unwrap();
-    //         (name, bytes)
-    //     }));
-
-    //     Self::new(
-    //         storage_id,
-    //         version,
-    //         module_map,
-    //         u64::MAX, // System packages are not subject to the size limit
-    //         type_origin_table,
-    //         linkage_table,
-    //     )
-    //     .expect("System packages are not subject to a size limit")
     // }
 
     // fn from_module_iter_with_type_origin_table<'p>(
@@ -528,32 +413,35 @@ impl MovePackage {
     //     }
     // }
 
-    // /// Return the size of the package in bytes
-    // pub fn size(&self) -> usize {
-    //     let module_map_size = self
-    //         .modules
-    //         .iter()
-    //         .map(|(name, module)| name.len() + module.len())
-    //         .sum::<usize>();
-    //     let type_origin_table_size = self
-    //         .type_origin_table
-    //         .iter()
-    //         .map(
-    //             |TypeOrigin {
-    //                  module_name,
-    //                  datatype_name: struct_name,
-    //                  ..
-    //              }| module_name.len() + struct_name.len() + ObjectId::LENGTH,
-    //         )
-    //         .sum::<usize>();
+    /// Return the size of the package in bytes
+    pub fn size(&self) -> usize {
+        let module_map_size = self
+            .modules
+            .iter()
+            .map(|(name, module)| name.len() + module.len())
+            .sum::<usize>();
+        let type_origin_table_size = self
+            .type_origin_table
+            .iter()
+            .map(
+                |TypeOrigin {
+                     module_name,
+                     struct_name,
+                     ..
+                 }| module_name.len() + struct_name.len() + ObjectId::LENGTH,
+            )
+            .sum::<usize>();
 
-    //     let linkage_table_size = self.linkage_table.len()
-    //         * (ObjectId::LENGTH
-    //             + ( ObjectId::LENGTH + 8 // SequenceNumber
-    //             ));
+        let linkage_table_size = self.linkage_table.len()
+            * (ObjectId::LENGTH
+                + (
+                    ObjectId::LENGTH + 8
+                    // Version
+                ));
 
-    //     8 /* SequenceNumber */ + module_map_size + type_origin_table_size +
-    // linkage_table_size }
+        8 /* Version */ + module_map_size + type_origin_table_size +
+    linkage_table_size
+    }
 
     /// `Package ID`/`Storage ID` of this package.
     pub fn id(&self) -> ObjectId {
@@ -564,9 +452,9 @@ impl MovePackage {
         self.version
     }
 
-    // pub fn decrement_version(&mut self) {
-    //     self.version.decrement().unwrap();
-    // }
+    pub fn decrement_version(&mut self) {
+        self.version.decrement().unwrap();
+    }
 
     pub fn increment_version(&mut self) {
         self.version.increment().unwrap();
