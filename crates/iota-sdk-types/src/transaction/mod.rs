@@ -6,6 +6,7 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
+use crate::crypto::RandomnessRound;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -150,7 +151,7 @@ pub struct GasPayment {
 /// ```text
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -164,9 +165,7 @@ pub struct RandomnessStateUpdate {
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
     /// Randomness round of the update
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub randomness_round: u64,
+    pub randomness_round: RandomnessRound,
     /// Updated random bytes
     #[cfg_attr(
         feature = "serde",
