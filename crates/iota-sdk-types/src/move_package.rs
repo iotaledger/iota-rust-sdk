@@ -3,7 +3,7 @@
 
 use std::collections::BTreeMap;
 
-use crate::{Digest, Identifier, ObjectId, Version};
+use crate::{Digest,ExecutionError,hash::DefaultHash, Identifier, ObjectId, Version};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
@@ -280,6 +280,377 @@ pub struct MovePackage {
         )
     )]
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
+}
+
+impl MovePackage {
+    // /// Create a package with all required data (including serialized modules,
+    // /// type origin and linkage tables) already supplied.
+    // ///
+    // /// It does not perform any type of validation. Ensure that the supplied
+    // /// parts are semantically valid.
+    // pub fn new(
+    //     id: ObjectId,
+    //     version: Version,
+    //     modules: BTreeMap<Identifier, Vec<u8>>,
+    //     max_move_package_size: u64,
+    //     type_origin_table: Vec<TypeOrigin>,
+    //     linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
+    // ) -> Result<Self, ExecutionError> {
+    //     let pkg = Self {
+    //         id,
+    //         version,
+    //         modules,
+    //         type_origin_table,
+    //         linkage_table,
+    //     };
+    //     let object_size = pkg.size() as u64;
+    //     if object_size > max_move_package_size {
+    //         return Err(ExecutionError::PackageTooBig {
+    //             object_size,
+    //             max_object_size: max_move_package_size,
+    //         }
+    //         .into());
+    //     }
+    //     Ok(pkg)
+    // }
+
+    // /// Calculate the digest of the [MovePackage].
+    // pub fn digest(&self) -> [u8; 32] {
+    //     Self::compute_digest_for_modules_and_deps(
+    //         self.modules.values(),
+    //         self.linkage_table
+    //             .values()
+    //             .map(|UpgradeInfo { upgraded_id, .. }| upgraded_id),
+    //     )
+    // }
+
+    // /// It is important that this function is shared across both the calculation
+    // /// of the digest for the package, and the calculation of the digest
+    // /// on-chain.
+    // pub fn compute_digest_for_modules_and_deps<'a>(
+    //     modules: impl IntoIterator<Item = &'a Vec<u8>>,
+    //     object_ids: impl IntoIterator<Item = &'a ObjectId>,
+    // ) -> [u8; 32] {
+    //     let mut components = object_ids
+    //         .into_iter()
+    //         .map(|o| o.into_bytes())
+    //         .chain(
+    //             modules
+    //                 .into_iter()
+    //                 .map(|module| DefaultHash::digest(module).digest),
+    //         )
+    //         .collect::<Vec<_>>();
+
+    //     // NB: sorting so the order of the modules and the order of the dependencies
+    //     // does not matter.
+    //     components.sort();
+
+    //     let mut digest = DefaultHash::default();
+    //     for c in components {
+    //         digest.update(c);
+    //     }
+    //     digest.finalize().digest
+    // }
+
+    // /// Create an initial version of the package along with this version's type
+    // /// origin and linkage tables.
+    // ///
+    // /// # Undefined behavior
+    // ///
+    // /// All passed modules must have the same `Runtime ID` or the behavior is
+    // /// undefined.
+    // pub fn new_initial<'p>(
+    //     modules: &[CompiledModule],
+    //     protocol_config: &ProtocolConfig,
+    //     transitive_dependencies: impl IntoIterator<Item = &'p MovePackage>,
+    // ) -> Result<Self, ExecutionError> {
+    //     let module = modules
+    //         .first()
+    //         .expect("Tried to build a Move package from an empty iterator of Compiled modules");
+    //     let runtime_id = ObjectId::new(module.address().into_bytes());
+    //     let storage_id = runtime_id;
+    //     let type_origin_table = build_initial_type_origin_table(modules);
+    //     Self::from_module_iter_with_type_origin_table(
+    //         storage_id,
+    //         runtime_id,
+    //         OBJECT_START_VERSION,
+    //         modules,
+    //         protocol_config,
+    //         type_origin_table,
+    //         transitive_dependencies,
+    //     )
+    // }
+
+    // /// Create an upgraded version of the package along with this version's type
+    // /// origin and linkage tables.
+    // ///
+    // /// # Undefined behavior
+    // ///
+    // /// All passed modules must have the same `Runtime ID` or the behavior is
+    // /// undefined.
+    // pub fn new_upgraded<'p>(
+    //     &self,
+    //     storage_id: ObjectId,
+    //     modules: &[CompiledModule],
+    //     protocol_config: &ProtocolConfig,
+    //     transitive_dependencies: impl IntoIterator<Item = &'p MovePackage>,
+    // ) -> Result<Self, ExecutionError> {
+    //     let module = modules
+    //         .first()
+    //         .expect("Tried to build a Move package from an empty iterator of Compiled modules");
+    //     let runtime_id = ObjectId::new(module.address().into_bytes());
+    //     let type_origin_table = build_upgraded_type_origin_table(self, modules, storage_id)?;
+    //     let mut new_version = self.version();
+    //     new_version.increment().unwrap();
+    //     Self::from_module_iter_with_type_origin_table(
+    //         storage_id,
+    //         runtime_id,
+    //         new_version,
+    //         modules,
+    //         protocol_config,
+    //         type_origin_table,
+    //         transitive_dependencies,
+    //     )
+    // }
+
+    // pub fn new_system(
+    //     version: Version,
+    //     modules: &[CompiledModule],
+    //     dependencies: impl IntoIterator<Item = ObjectId>,
+    // ) -> Self {
+    //     let module = modules
+    //         .first()
+    //         .expect("Tried to build a Move package from an empty iterator of Compiled modules");
+
+    //     let storage_id = ObjectId::new(module.address().into_bytes());
+    //     let type_origin_table = build_initial_type_origin_table(modules);
+
+    //     let linkage_table = BTreeMap::from_iter(dependencies.into_iter().map(|dep| {
+    //         let info = UpgradeInfo {
+    //             upgraded_id: dep,
+    //             // The upgraded version is used by other packages that transitively depend on this
+    //             // system package, to make sure that if they choose a different version to depend on
+    //             // compared to their dependencies, they pick a greater version.
+    //             //
+    //             // However, in the case of system packages, although they can be upgraded, unlike
+    //             // other packages, only one version can be in use on the network at any given time,
+    //             // so it is not possible for a package to require a different system package version
+    //             // compared to its dependencies.
+    //             //
+    //             // This reason, coupled with the fact that system packages can only depend on each
+    //             // other, mean that their own linkage tables always report a version of zero.
+    //             upgraded_version: Version::default(),
+    //         };
+    //         (dep, info)
+    //     }));
+
+    //     let module_map = BTreeMap::from_iter(modules.iter().map(|module| {
+    //         let name = module.name().to_string();
+    //         let mut bytes = Vec::new();
+    //         module
+    //             .serialize_with_version(module.version, &mut bytes)
+    //             .unwrap();
+    //         (name, bytes)
+    //     }));
+
+    //     Self::new(
+    //         storage_id,
+    //         version,
+    //         module_map,
+    //         u64::MAX, // System packages are not subject to the size limit
+    //         type_origin_table,
+    //         linkage_table,
+    //     )
+    //     .expect("System packages are not subject to a size limit")
+    // }
+
+    // fn from_module_iter_with_type_origin_table<'p>(
+    //     storage_id: ObjectId,
+    //     self_id: ObjectId,
+    //     version: Version,
+    //     modules: &[CompiledModule],
+    //     protocol_config: &ProtocolConfig,
+    //     type_origin_table: Vec<TypeOrigin>,
+    //     transitive_dependencies: impl IntoIterator<Item = &'p MovePackage>,
+    // ) -> Result<Self, ExecutionError> {
+    //     let mut module_map = BTreeMap::new();
+    //     let mut immediate_dependencies = BTreeSet::new();
+
+    //     for module in modules {
+    //         let name = module.name().to_string();
+
+    //         immediate_dependencies.extend(
+    //             module
+    //                 .immediate_dependencies()
+    //                 .into_iter()
+    //                 .map(|dep| ObjectId::new(dep.address().into_bytes())),
+    //         );
+
+    //         let mut bytes = Vec::new();
+    //         let version = if protocol_config.move_binary_format_version() > VERSION_6 {
+    //             module.version
+    //         } else {
+    //             VERSION_6
+    //         };
+    //         module.serialize_with_version(version, &mut bytes).unwrap();
+    //         module_map.insert(name, bytes);
+    //     }
+
+    //     immediate_dependencies.remove(&self_id);
+    //     let linkage_table = build_linkage_table(
+    //         immediate_dependencies,
+    //         transitive_dependencies,
+    //         protocol_config,
+    //     )?;
+    //     Self::new(
+    //         storage_id,
+    //         version,
+    //         module_map,
+    //         protocol_config.max_move_package_size(),
+    //         type_origin_table,
+    //         linkage_table,
+    //     )
+    // }
+
+    // /// Retrieve the module from this package with the given [ModuleId].
+    // ///
+    // /// [ModuleId] is expected to contain the `Storage ID` of this package.
+    // /// In case the `Storage ID` doesn't match or the module name is not
+    // /// present in this package the function returns None.
+    // pub fn get_module(&self, package: &ObjectId, name: &Identifier) -> Option<&Vec<u8>> {
+    //     if &self.id != package {
+    //         None
+    //     } else {
+    //         self.modules.get(name)
+    //     }
+    // }
+
+    // /// Return the size of the package in bytes
+    // pub fn size(&self) -> usize {
+    //     let module_map_size = self
+    //         .modules
+    //         .iter()
+    //         .map(|(name, module)| name.len() + module.len())
+    //         .sum::<usize>();
+    //     let type_origin_table_size = self
+    //         .type_origin_table
+    //         .iter()
+    //         .map(
+    //             |TypeOrigin {
+    //                  module_name,
+    //                  datatype_name: struct_name,
+    //                  ..
+    //              }| module_name.len() + struct_name.len() + ObjectId::LENGTH,
+    //         )
+    //         .sum::<usize>();
+
+    //     let linkage_table_size = self.linkage_table.len()
+    //         * (ObjectId::LENGTH
+    //             + (
+    //                 ObjectId::LENGTH + 8
+    //                 // SequenceNumber
+    //             ));
+
+    //     8 /* SequenceNumber */ + module_map_size + type_origin_table_size + linkage_table_size
+    // }
+
+    /// `Package ID`/`Storage ID` of this package.
+    pub fn id(&self) -> ObjectId {
+        self.id
+    }
+
+    pub fn version(&self) -> Version {
+        self.version
+    }
+
+    // pub fn decrement_version(&mut self) {
+    //     self.version.decrement().unwrap();
+    // }
+
+    pub fn increment_version(&mut self) {
+        self.version.increment().unwrap();
+    }
+
+    // /// Approximate size of the package in bytes. This is used for gas metering.
+    // pub fn object_size_for_gas_metering(&self) -> usize {
+    //     self.size()
+    // }
+
+    // pub fn serialized_module_map(&self) -> &BTreeMap<String, Vec<u8>> {
+    //     &self.module_map
+    // }
+
+    // pub fn type_origin_table(&self) -> &Vec<TypeOrigin> {
+    //     &self.type_origin_table
+    // }
+
+    // pub fn type_origin_map(&self) -> BTreeMap<(String, String), ObjectId> {
+    //     self.type_origin_table
+    //         .iter()
+    //         .map(
+    //             |TypeOrigin {
+    //                  modules,
+    //                  datatype_name: struct_name,
+    //                  package,
+    //              }| { ((modules.clone(), struct_name.clone()), *package) },
+    //         )
+    //         .collect()
+    // }
+
+    // pub fn linkage_table(&self) -> &BTreeMap<ObjectId, UpgradeInfo> {
+    //     &self.linkage_table
+    // }
+
+    // /// The `Package ID` of the first version of this package.
+    // ///
+    // /// Also referred to as `Runtime ID`.
+    // ///
+    // /// Regardless of which version of the package we are working with, this
+    // /// function will always return the `Package ID`/`Storage ID` of the first
+    // /// package version in the version chain.
+    // pub fn original_package_id(&self) -> ObjectID {
+    //     if self.version == OBJECT_START_VERSION {
+    //         // for a non-upgraded package, original ID is just the package ID
+    //         return self.id;
+    //     }
+
+    //     let bytes = self.module_map.values().next().expect("Empty module map");
+    //     // Remember, that all modules will contain the `Package ID` of the first
+    //     // deployed package. This is why taking any of them will produce the
+    //     // original package id.
+    //     let module = CompiledModule::deserialize_with_defaults(bytes)
+    //         .expect("A Move package contains a module that cannot be deserialized");
+    //     ObjectID::new(module.address().into_bytes())
+    // }
+
+    // pub fn deserialize_module(
+    //     &self,
+    //     module: &Identifier,
+    //     binary_config: &BinaryConfig,
+    // ) -> IotaResult<CompiledModule> {
+    //     // TODO use the session's cache
+    //     let bytes = self
+    //         .serialized_module_map()
+    //         .get(module.as_str())
+    //         .ok_or_else(|| IotaError::ModuleNotFound {
+    //             module_name: module.to_string(),
+    //         })?;
+    //     CompiledModule::deserialize_with_config(bytes, binary_config).map_err(|error| {
+    //         IotaError::ModuleDeserializationFailure {
+    //             error: error.to_string(),
+    //         }
+    //     })
+    // }
+    // /// If `include_code` is set to `false`, the normalized module will skip
+    // /// function bodies but still include the signatures.
+    // pub fn normalize<S: Hash + Eq + Clone + ToString, Pool: normalized::StringPool<String = S>>(
+    //     &self,
+    //     pool: &mut Pool,
+    //     binary_config: &BinaryConfig,
+    //     include_code: bool,
+    // ) -> IotaResult<BTreeMap<String, normalized::Module<S>>> {
+    //     normalize_modules(pool, self.module_map.values(), binary_config, include_code)
+    // }
 }
 
 #[cfg(feature = "serde")]
