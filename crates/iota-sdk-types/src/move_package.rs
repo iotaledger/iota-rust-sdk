@@ -460,9 +460,9 @@ impl MovePackage {
         self.version.increment().unwrap();
     }
 
-    // pub fn serialized_module_map(&self) -> &BTreeMap<String, Vec<u8>> {
-    //     &self.module_map
-    // }
+    pub fn serialized_module_map(&self) -> &BTreeMap<Identifier, Vec<u8>> {
+        &self.modules
+    }
 
     // pub fn type_origin_table(&self) -> &Vec<TypeOrigin> {
     //     &self.type_origin_table
