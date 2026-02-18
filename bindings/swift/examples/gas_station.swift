@@ -1,6 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+import Foundation
 import IotaSDK
 
 @main
@@ -23,7 +24,7 @@ struct GasStationExample {
         arguments: [PtbArgument.u64(value: 64)]
       )
 
-      builder.gasStationSponsor(
+      _ = builder.gasStationSponsor(
         url: gasStationUrl,
         headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
 
@@ -34,6 +35,7 @@ struct GasStationExample {
       print("Sponsored transaction was successful!")
     } catch {
       print("Error: \(error)")
+      exit(1)
     }
   }
 }
