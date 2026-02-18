@@ -141,8 +141,8 @@ pub use crypto::{
     IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
     MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKeyExt,
-    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SimpleSignature, UserSignature,
+    RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{Digest, DigestParseError, SigningDigest};
 pub use effects::{
