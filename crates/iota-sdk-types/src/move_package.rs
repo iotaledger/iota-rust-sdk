@@ -464,9 +464,9 @@ impl MovePackage {
         &self.modules
     }
 
-    // pub fn type_origin_table(&self) -> &Vec<TypeOrigin> {
-    //     &self.type_origin_table
-    // }
+    pub fn type_origin_table(&self) -> &Vec<TypeOrigin> {
+        &self.type_origin_table
+    }
 
     pub fn type_origin_map(&self) -> BTreeMap<(Identifier, Identifier), ObjectId> {
         self.type_origin_table
