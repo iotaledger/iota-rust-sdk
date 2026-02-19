@@ -560,10 +560,11 @@ mod serialization {
     use crate::TypeTag;
 
     #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq, Eq)]
+    #[serde(rename = "Owner")]
     #[cfg_attr(
         feature = "schemars",
         derive(schemars::JsonSchema),
-        schemars(rename = "Object")
+        schemars(rename = "Owner")
     )]
     enum ReadableOwner {
         /// Object is exclusively owned by a single address, and is mutable.
