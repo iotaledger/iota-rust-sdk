@@ -85,12 +85,6 @@ impl ObjectReference {
 /// owner-immutable = %x03
 /// ```
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum Owner {
@@ -101,8 +95,6 @@ pub enum Owner {
     /// Object is shared, can be used by any address, and is mutable.
     Shared(
         /// The version at which the object became shared
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         Version,
     ),
     /// Object is immutable, and hence ownership doesn't matter.
@@ -566,6 +558,77 @@ mod serialization {
 
     use super::*;
     use crate::TypeTag;
+
+    #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq, Eq)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "Object")
+    )]
+    enum ReadableOwner {
+        /// Object is exclusively owned by a single address, and is mutable.
+        AddressOwner(Address),
+        /// Object is exclusively owned by a single object, and is mutable.
+        /// The object ID is converted to IotaAddress as IotaAddress is
+        /// universal.
+        ObjectOwner(Address),
+        /// Object is shared, can be used by any address, and is mutable.
+        Shared {
+            /// The version at which the object became shared
+            initial_shared_version: Version,
+        },
+        /// Object is immutable, and hence ownership doesn't matter.
+        Immutable,
+    }
+
+    impl Serialize for Owner {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let readable_owner = match self {
+                Owner::Address(address) => ReadableOwner::AddressOwner(*address),
+                Owner::Object(object_id) => ReadableOwner::ObjectOwner(*object_id.as_address()),
+                Owner::Shared(initial_shared_version) => ReadableOwner::Shared {
+                    initial_shared_version: *initial_shared_version,
+                },
+                Owner::Immutable => ReadableOwner::Immutable,
+            };
+            readable_owner.serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Owner {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let readable_owner = ReadableOwner::deserialize(deserializer)?;
+            Ok(match readable_owner {
+                ReadableOwner::AddressOwner(address) => Owner::Address(address),
+                ReadableOwner::ObjectOwner(address) => {
+                    Owner::Object(ObjectId::from_address(address))
+                }
+                ReadableOwner::Shared {
+                    initial_shared_version,
+                } => Owner::Shared(initial_shared_version),
+                ReadableOwner::Immutable => Owner::Immutable,
+            })
+        }
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for Owner {
+        fn schema_name() -> String {
+            ReadableOwner::schema_name()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableOwner::json_schema(generator)
+        }
+    }
 
     /// Wrapper around StructTag with a space-efficient representation for
     /// common types like coins The StructTag for a gas coin is 84 bytes, so
