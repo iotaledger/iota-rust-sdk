@@ -3,17 +3,19 @@ name = "iota-indexer"
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
-description = "Checkpoint/transaction/event indexer built with the IOTA Rust SDK"
+description = "Checkpoint/transaction/event indexer built with IOTA data ingestion core"
 
 [dependencies]
-base64ct = { workspace = true, features = ["alloc"] }
-bcs.workspace = true
+anyhow = "1.0"
+async-trait = "0.1"
 clap = { version = "4.5", features = ["derive"] }
-iota-sdk = { workspace = true, features = ["graphql", "types", "serde", "hash"] }
+iota-data-ingestion-core = { git = "https://github.com/iotaledger/iota", package = "iota-data-ingestion-core", rev = "1b4c26425ad738bc86f5db3c6993c842c6929163" }
+iota-types = { git = "https://github.com/iotaledger/iota", package = "iota-types", rev = "1b4c26425ad738bc86f5db3c6993c842c6929163" }
+prometheus = "0.14"
 serde = { workspace = true, features = ["derive"] }
 serde_json.workspace = true
-sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres"] }
-thiserror.workspace = true
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "postgres", "json"] }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
+tokio-util = "0.7"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }

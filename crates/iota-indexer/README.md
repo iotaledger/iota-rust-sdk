@@ -1,16 +1,18 @@
 # iota-indexer
 
-A minimal indexer built with the IOTA Rust SDK.
+A Postgres-backed custom indexer built in the standard IOTA way using:
+- `iota-data-ingestion-core`
+- `iota-types`
 
-## Features
-- Checkpoint ingestion.
-- Transaction ingestion per checkpoint.
-- Event ingestion per transaction.
-- Filtered persistence into PostgreSQL.
-- Watermark-based resume support.
+## What it does
+- Ingests network checkpoints.
+- Extracts transactions and events from each checkpoint.
+- Applies filters.
+- Stores filtered data in PostgreSQL.
+- Persists progress with `FileProgressStore` so it can resume.
 
 ## PostgreSQL Setup
-Run a local Postgres container:
+
 ```bash
 docker run --name iota-indexer-pg \
   -e POSTGRES_PASSWORD=postgres \
@@ -21,16 +23,28 @@ docker run --name iota-indexer-pg \
 ```
 
 ## Run
+
 ```bash
 cargo run -p iota-indexer -- \
   --network testnet \
   --db-url postgres://postgres:postgres@localhost:5432/iota_indexer \
-  --start-checkpoint 0
+  --progress-file .iota_indexer_progress.json \
+  --start-checkpoint 0 \
+  --end-checkpoint 20
 ```
 
 Continuous mode:
+
 ```bash
 cargo run -p iota-indexer -- \
   --network testnet \
-  --continuous
+  --db-url postgres://postgres:postgres@localhost:5432/iota_indexer
+```
+
+## Verify
+
+```bash
+psql postgres://postgres:postgres@localhost:5432/iota_indexer -c "SELECT COUNT(*) FROM checkpoints;"
+psql postgres://postgres:postgres@localhost:5432/iota_indexer -c "SELECT COUNT(*) FROM transactions;"
+psql postgres://postgres:postgres@localhost:5432/iota_indexer -c "SELECT COUNT(*) FROM events;"
 ```

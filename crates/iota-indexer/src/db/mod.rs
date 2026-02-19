@@ -5,14 +5,8 @@ use sqlx::{
     postgres::{PgConnectOptions, PgPoolOptions},
 };
 
-use crate::error::{AppError, AppResult};
-
-pub const WATERMARK_KEY: &str = "last_processed_checkpoint";
-
-pub async fn connect(db_url: &str) -> AppResult<PgPool> {
-    let options = PgConnectOptions::from_str(db_url)
-        .map_err(|e| AppError::validation("db_url", format!("invalid postgres url: {e}")))?;
-
+pub async fn connect(db_url: &str) -> anyhow::Result<PgPool> {
+    let options = PgConnectOptions::from_str(db_url)?;
     let pool = PgPoolOptions::new()
         .max_connections(10)
         .connect_with(options)
@@ -20,14 +14,14 @@ pub async fn connect(db_url: &str) -> AppResult<PgPool> {
     Ok(pool)
 }
 
-pub async fn init(pool: &PgPool) -> AppResult<()> {
+pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
     sqlx::query(
         r#"
         CREATE TABLE IF NOT EXISTS checkpoints (
             sequence_number BIGINT PRIMARY KEY,
-            digest TEXT NOT NULL UNIQUE,
             timestamp_ms BIGINT NOT NULL,
-            raw_json TEXT NOT NULL,
+            digest TEXT NOT NULL UNIQUE,
+            raw_data JSONB NOT NULL,
             indexed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
         "#,
@@ -38,23 +32,17 @@ pub async fn init(pool: &PgPool) -> AppResult<()> {
     sqlx::query(
         r#"
         CREATE TABLE IF NOT EXISTS transactions (
-            digest TEXT PRIMARY KEY,
-            checkpoint_sequence BIGINT NOT NULL,
-            sender TEXT NOT NULL,
-            kind TEXT NOT NULL,
+            id BIGSERIAL PRIMARY KEY,
+            checkpoint_seq BIGINT NOT NULL REFERENCES checkpoints(sequence_number),
+            transaction_digest TEXT NOT NULL,
+            sender TEXT,
+            kind TEXT,
             success BOOLEAN NOT NULL,
-            tx_bcs_base64 TEXT NOT NULL,
-            effects_bcs_base64 TEXT NOT NULL,
-            indexed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (checkpoint_sequence) REFERENCES checkpoints(sequence_number)
+            timestamp_ms BIGINT,
+            raw_transaction JSONB NOT NULL,
+            UNIQUE(checkpoint_seq, transaction_digest)
         );
         "#,
-    )
-    .execute(pool)
-    .await?;
-
-    sqlx::query(
-        "CREATE INDEX IF NOT EXISTS idx_transactions_checkpoint ON transactions(checkpoint_sequence);",
     )
     .execute(pool)
     .await?;
@@ -63,91 +51,30 @@ pub async fn init(pool: &PgPool) -> AppResult<()> {
         r#"
         CREATE TABLE IF NOT EXISTS events (
             id BIGSERIAL PRIMARY KEY,
-            tx_digest TEXT NOT NULL,
-            event_index BIGINT NOT NULL,
-            checkpoint_sequence BIGINT NOT NULL,
+            checkpoint_seq BIGINT NOT NULL REFERENCES checkpoints(sequence_number),
+            transaction_digest TEXT NOT NULL,
+            package_id TEXT,
+            module TEXT,
+            event_name TEXT,
             sender TEXT,
-            emitting_module TEXT,
-            package TEXT,
-            event_type TEXT NOT NULL,
-            event_timestamp TEXT,
-            event_json TEXT NOT NULL,
-            event_bcs_base64 TEXT NOT NULL,
-            indexed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE (tx_digest, event_index),
-            FOREIGN KEY (tx_digest) REFERENCES transactions(digest),
-            FOREIGN KEY (checkpoint_sequence) REFERENCES checkpoints(sequence_number)
+            raw_event JSONB NOT NULL
         );
         "#,
     )
     .execute(pool)
     .await?;
 
-    sqlx::query("CREATE INDEX IF NOT EXISTS idx_events_checkpoint ON events(checkpoint_sequence);")
+    sqlx::query("CREATE INDEX IF NOT EXISTS idx_transactions_sender ON transactions(sender);")
         .execute(pool)
         .await?;
-    sqlx::query("CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type);")
-        .execute(pool)
-        .await?;
-
     sqlx::query(
-        r#"
-        CREATE TABLE IF NOT EXISTS indexer_state (
-            key TEXT PRIMARY KEY,
-            value TEXT NOT NULL,
-            updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-        "#,
+        "CREATE INDEX IF NOT EXISTS idx_events_package_module ON events(package_id, module);",
     )
     .execute(pool)
     .await?;
+    sqlx::query("CREATE INDEX IF NOT EXISTS idx_events_checkpoint ON events(checkpoint_seq);")
+        .execute(pool)
+        .await?;
 
     Ok(())
-}
-
-pub async fn get_watermark(pool: &PgPool) -> AppResult<Option<u64>> {
-    let value: Option<String> =
-        sqlx::query_scalar("SELECT value FROM indexer_state WHERE key = $1")
-            .bind(WATERMARK_KEY)
-            .fetch_optional(pool)
-            .await?;
-
-    value
-        .map(|inner| inner.parse::<u64>())
-        .transpose()
-        .map_err(Into::into)
-}
-
-#[cfg(test)]
-mod tests {
-    use sqlx::PgPool;
-
-    use super::{WATERMARK_KEY, get_watermark, init};
-
-    #[tokio::test]
-    async fn watermark_roundtrip() {
-        let Ok(db_url) = std::env::var("TEST_DATABASE_URL") else {
-            return;
-        };
-
-        let pool = PgPool::connect(&db_url)
-            .await
-            .expect("postgres should connect");
-        init(&pool).await.expect("db init should succeed");
-
-        let initial = get_watermark(&pool).await.expect("read watermark");
-        assert!(initial.is_none());
-
-        sqlx::query(
-            "INSERT INTO indexer_state (key, value) VALUES ($1, $2) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-        )
-        .bind(WATERMARK_KEY)
-        .bind("42")
-        .execute(&pool)
-        .await
-        .expect("upsert watermark");
-
-        let updated = get_watermark(&pool).await.expect("read updated watermark");
-        assert_eq!(updated, Some(42));
-    }
 }
