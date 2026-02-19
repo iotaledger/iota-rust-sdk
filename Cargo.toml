@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-  "crates/iota-indexer",
+  "crates/examples/iota-indexer",
   "crates/iota-sdk",
   "crates/iota-sdk-crypto",
   "crates/iota-sdk-ffi",
