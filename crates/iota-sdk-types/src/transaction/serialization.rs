@@ -552,11 +552,12 @@ mod argument {
     //         "GasArgument".to_owned()
     //     }
 
-    //     fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
+    //     fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) ->
+    // schemars::schema::Schema {
     //         schemars::schema::Schema::Object(schemars::schema::SchemaObject {
-    //             instance_type: Some(schemars::schema::InstanceType::String.into()),
-    //             enum_values: Some(vec!["gas".into()]),
-    //             ..Default::default()
+    //             instance_type:
+    // Some(schemars::schema::InstanceType::String.into()),
+    // enum_values: Some(vec!["gas".into()]),             ..Default::default()
     //         })
     //     }
 
@@ -1070,12 +1071,12 @@ mod tests {
     #[test]
     fn argument() {
         let test_cases = [
-            (Argument::Gas, serde_json::json!("gas")),
-            (Argument::Input(1), serde_json::json!({"input": 1})),
-            (Argument::Result(2), serde_json::json!({"result": 2})),
+            (Argument::Gas, serde_json::json!("Gas")),
+            (Argument::Input(1), serde_json::json!({"Input": 1})),
+            (Argument::Result(2), serde_json::json!({"Result": 2})),
             (
                 Argument::NestedResult(3, 4),
-                serde_json::json!({"result": [3, 4]}),
+                serde_json::json!({"NestedResult": [3, 4]}),
             ),
         ];
 
