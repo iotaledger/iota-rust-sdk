@@ -533,7 +533,7 @@ mod argument {
     use super::*;
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(rename = "Argument", untagged, rename_all = "lowercase")]
+    #[serde(rename = "Argument")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableArgument {
         /// # Gas
