@@ -1,3 +1,4 @@
 pub mod config;
 pub mod db;
-pub mod worker;
+pub mod indexer;
+pub mod progress;

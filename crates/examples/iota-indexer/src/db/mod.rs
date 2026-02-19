@@ -21,7 +21,7 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
             sequence_number BIGINT PRIMARY KEY,
             timestamp_ms BIGINT NOT NULL,
             digest TEXT NOT NULL UNIQUE,
-            raw_data JSONB NOT NULL,
+            raw_json JSONB NOT NULL,
             indexed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
         "#,
@@ -39,7 +39,7 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
             kind TEXT,
             success BOOLEAN NOT NULL,
             timestamp_ms BIGINT,
-            raw_transaction JSONB NOT NULL,
+            raw_json JSONB NOT NULL,
             UNIQUE(checkpoint_seq, transaction_digest)
         );
         "#,
@@ -57,7 +57,8 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
             module TEXT,
             event_name TEXT,
             sender TEXT,
-            raw_event JSONB NOT NULL
+            raw_json JSONB NOT NULL,
+            UNIQUE(transaction_digest, raw_json)
         );
         "#,
     )

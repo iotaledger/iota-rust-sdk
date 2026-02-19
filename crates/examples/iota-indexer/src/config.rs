@@ -1,14 +1,17 @@
+use std::str::FromStr;
+
 use clap::{Parser, ValueEnum};
-use iota_data_ingestion_core::reader::v2::RemoteUrl;
+use iota_sdk::types::Address;
 
 #[derive(Debug, Clone, Parser)]
 #[command(name = "iota-indexer")]
-#[command(
-    about = "Index checkpoints, transactions, and events into PostgreSQL using iota-data-ingestion-core"
-)]
+#[command(about = "Custom polling indexer using iota_sdk::graphql_client::Client")]
 pub struct Cli {
     #[arg(long, value_enum, default_value_t = Network::Testnet)]
     pub network: Network,
+
+    #[arg(long)]
+    pub graphql_url: Option<String>,
 
     #[arg(
         long,
@@ -25,41 +28,29 @@ pub struct Cli {
     #[arg(long)]
     pub end_checkpoint: Option<u64>,
 
-    #[arg(long, default_value_t = 1)]
-    pub worker_concurrency: usize,
+    #[arg(long, default_value_t = 50)]
+    pub page_size: i32,
 
-    #[arg(long, default_value_t = 10)]
-    pub batch_size: usize,
-
-    #[arg(long, default_value_t = 100)]
-    pub tick_interval_ms: u64,
-
-    #[arg(long, default_value_t = 10)]
-    pub timeout_secs: u64,
-
-    #[arg(long)]
-    pub remote_fullnode_url: Option<String>,
-
-    #[arg(long)]
-    pub remote_historical_url: Option<String>,
-
-    #[arg(long)]
-    pub remote_live_url: Option<String>,
+    #[arg(long, default_value_t = 2000)]
+    pub poll_interval_ms: u64,
 
     #[arg(long, default_value_t = true, action = clap::ArgAction::Set)]
     pub include_failed_txs: bool,
 
-    #[arg(long)]
+    #[arg(long, help = "Transaction function filter e.g. 0x2::module::function")]
+    pub tx_function: Option<String>,
+
+    #[arg(long, help = "Transaction signer address filter")]
     pub tx_sender: Option<String>,
 
-    #[arg(long)]
-    pub event_package_id: Option<String>,
+    #[arg(long, help = "Event type filter e.g. 0x2::module::EventName")]
+    pub event_type: Option<String>,
 
     #[arg(long)]
     pub event_module: Option<String>,
 
     #[arg(long)]
-    pub event_type: Option<String>,
+    pub event_package_id: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, ValueEnum)]
@@ -67,30 +58,29 @@ pub enum Network {
     Mainnet,
     Testnet,
     Devnet,
+    Localnet,
     Custom,
 }
 
 #[derive(Debug, Clone)]
 pub struct FilterConfig {
     pub include_failed_txs: bool,
-    pub tx_sender: Option<String>,
-    pub event_package_id: Option<String>,
-    pub event_module: Option<String>,
+    pub tx_function: Option<String>,
+    pub tx_sender: Option<Address>,
     pub event_type: Option<String>,
+    pub event_module: Option<String>,
+    pub event_package_id: Option<String>,
 }
 
 #[derive(Debug, Clone)]
 pub struct AppConfig {
+    pub graphql_url: String,
     pub db_url: String,
     pub progress_file: String,
     pub start_checkpoint: Option<u64>,
     pub end_checkpoint: Option<u64>,
-    pub worker_concurrency: usize,
-    pub batch_size: usize,
-    pub tick_interval_ms: u64,
-    pub timeout_secs: u64,
-    pub remote_url: RemoteUrl,
-    pub task_name: String,
+    pub page_size: i32,
+    pub poll_interval_ms: u64,
     pub filters: FilterConfig,
 }
 
@@ -98,63 +88,52 @@ impl TryFrom<Cli> for AppConfig {
     type Error = anyhow::Error;
 
     fn try_from(value: Cli) -> Result<Self, Self::Error> {
-        if value.worker_concurrency == 0 {
-            anyhow::bail!("worker_concurrency must be > 0");
-        }
-        if value.batch_size == 0 {
-            anyhow::bail!("batch_size must be > 0");
+        if value.page_size <= 0 {
+            anyhow::bail!("page_size must be > 0");
         }
 
-        let remote_url = if let Some(fullnode) = value.remote_fullnode_url {
-            RemoteUrl::Fullnode(fullnode)
-        } else if let Some(historical_url) = value.remote_historical_url {
-            RemoteUrl::HybridHistoricalStore {
-                historical_url,
-                live_url: value.remote_live_url,
-            }
-        } else {
-            default_remote_url(value.network)
-        };
+        let tx_sender = value
+            .tx_sender
+            .as_deref()
+            .map(Address::from_str)
+            .transpose()?;
+
+        if let (Some(start), Some(end)) = (value.start_checkpoint, value.end_checkpoint)
+            && start > end
+        {
+            anyhow::bail!("start_checkpoint must be <= end_checkpoint");
+        }
+
+        let graphql_url = value
+            .graphql_url
+            .unwrap_or_else(|| default_graphql_url(value.network).to_owned());
 
         Ok(Self {
+            graphql_url,
             db_url: value.db_url,
             progress_file: value.progress_file,
             start_checkpoint: value.start_checkpoint,
             end_checkpoint: value.end_checkpoint,
-            worker_concurrency: value.worker_concurrency,
-            batch_size: value.batch_size,
-            tick_interval_ms: value.tick_interval_ms,
-            timeout_secs: value.timeout_secs,
-            remote_url,
-            task_name: "iota_pg_indexer".to_owned(),
+            page_size: value.page_size,
+            poll_interval_ms: value.poll_interval_ms,
             filters: FilterConfig {
                 include_failed_txs: value.include_failed_txs,
-                tx_sender: value.tx_sender,
-                event_package_id: value.event_package_id,
-                event_module: value.event_module,
+                tx_function: value.tx_function,
+                tx_sender,
                 event_type: value.event_type,
+                event_module: value.event_module,
+                event_package_id: value.event_package_id,
             },
         })
     }
 }
 
-fn default_remote_url(network: Network) -> RemoteUrl {
+fn default_graphql_url(network: Network) -> &'static str {
     match network {
-        Network::Mainnet => RemoteUrl::HybridHistoricalStore {
-            historical_url: "https://checkpoints.mainnet.iota.cafe/ingestion/historical".into(),
-            live_url: Some("https://checkpoints.mainnet.iota.cafe/ingestion/live".into()),
-        },
-        Network::Testnet => RemoteUrl::HybridHistoricalStore {
-            historical_url: "https://checkpoints.testnet.iota.cafe/ingestion/historical".into(),
-            live_url: Some("https://checkpoints.testnet.iota.cafe/ingestion/live".into()),
-        },
-        Network::Devnet => RemoteUrl::HybridHistoricalStore {
-            historical_url: "https://checkpoints.devnet.iota.cafe/ingestion/historical".into(),
-            live_url: Some("https://checkpoints.devnet.iota.cafe/ingestion/live".into()),
-        },
-        Network::Custom => RemoteUrl::HybridHistoricalStore {
-            historical_url: "https://checkpoints.testnet.iota.cafe/ingestion/historical".into(),
-            live_url: Some("https://checkpoints.testnet.iota.cafe/ingestion/live".into()),
-        },
+        Network::Mainnet => "https://graphql.mainnet.iota.cafe",
+        Network::Testnet => "https://graphql.testnet.iota.cafe",
+        Network::Devnet => "https://graphql.devnet.iota.cafe",
+        Network::Localnet => "http://localhost:9125/graphql",
+        Network::Custom => "https://graphql.testnet.iota.cafe",
     }
 }

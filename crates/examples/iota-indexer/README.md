@@ -1,28 +1,30 @@
 # iota-indexer
 
-A Postgres-backed custom indexer built in the standard IOTA way using:
-- `iota-data-ingestion-core`
-- `iota-types`
+Polling-based custom indexer example built on top of `iota_sdk::graphql_client::Client`.
 
-## What it does
-- Ingests network checkpoints.
-- Extracts transactions and events from each checkpoint.
-- Applies filters.
-- Stores filtered data in PostgreSQL.
-- Persists progress with `FileProgressStore` so it can resume.
+This example demonstrates the bounty-required flow:
+- checkpoint polling with persisted watermark progress,
+- transaction ingestion using `TransactionsFilter::after_checkpoint` / `before_checkpoint`,
+- event ingestion + filtering,
+- storage into PostgreSQL.
 
-## PostgreSQL Setup
+## What It Indexes
+
+- `checkpoints` table: checkpoint summary metadata + raw JSON
+- `transactions` table: tx digest, sender, kind, status + raw JSON
+- `events` table: package/module/type data + raw JSON
+
+## Run PostgreSQL
 
 ```bash
 docker run --name iota-indexer-pg \
   -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_DB=iota_indexer \
-  -p 5432:5432 \
-  -d postgres:16
+  -p 5432:5432 -d postgres:16
 ```
 
-## Run
+## Run the Indexer
 
 ```bash
 cargo run -p iota-indexer -- \
@@ -30,10 +32,10 @@ cargo run -p iota-indexer -- \
   --db-url postgres://postgres:postgres@localhost:5432/iota_indexer \
   --progress-file .iota_indexer_progress.json \
   --start-checkpoint 0 \
-  --end-checkpoint 20
+  --end-checkpoint 50
 ```
 
-Continuous mode:
+Continuous mode (no end checkpoint):
 
 ```bash
 cargo run -p iota-indexer -- \
@@ -41,10 +43,34 @@ cargo run -p iota-indexer -- \
   --db-url postgres://postgres:postgres@localhost:5432/iota_indexer
 ```
 
-## Verify
+## Filters
+
+Transaction-level:
 
 ```bash
-psql postgres://postgres:postgres@localhost:5432/iota_indexer -c "SELECT COUNT(*) FROM checkpoints;"
-psql postgres://postgres:postgres@localhost:5432/iota_indexer -c "SELECT COUNT(*) FROM transactions;"
-psql postgres://postgres:postgres@localhost:5432/iota_indexer -c "SELECT COUNT(*) FROM events;"
+--tx-function 0x2::iota_system::request_add_stake
+--tx-sender 0x...address
+--include-failed-txs false
 ```
+
+Event-level:
+
+```bash
+--event-type 0x...::module::EventName
+--event-module module_name
+--event-package-id 0x...package
+```
+
+## Progress Tracking
+
+A JSON progress file stores the `next_checkpoint` watermark.
+On restart, indexing resumes from the stored value.
+
+## Acceptance-Criteria Mapping
+
+- Uses SDK client from this repo: `iota_sdk::graphql_client::Client`
+- Polling checkpoint ingestion loop implemented
+- Uses transaction range filters with `after_checkpoint` / `before_checkpoint`
+- Filters transactions/events
+- Persists progress and resumes from watermark
+- Stores indexed data in database
