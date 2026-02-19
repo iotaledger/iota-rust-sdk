@@ -341,8 +341,8 @@ impl MovePackage {
     //         )
     //         .collect::<Vec<_>>();
 
-    //     // NB: sorting so the order of the modules and the order of the
-    // dependencies     // does not matter.
+    //     // NB: sorting so the order of the modules and the order of the dependencies
+    //     // does not matter.
     //     components.sort();
 
     //     let mut digest = DefaultHash::default();
