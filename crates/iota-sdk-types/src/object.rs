@@ -87,11 +87,6 @@ impl ObjectReference {
 /// owner-immutable = %d03
 /// ```
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "lowercase")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -103,7 +98,6 @@ pub enum Owner {
     /// Object is shared, can be used by any address, and is mutable.
     Shared(
         /// The version at which the object became shared
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         Version,
     ),
@@ -115,6 +109,28 @@ impl Owner {
     crate::def_is!(Immutable);
 
     crate::def_is_as_into_opt!(Address, Object(ObjectId), Shared(Version));
+
+    /// Returns an address if this object is owned by an address or
+    /// object, and None if it is shared or immutable.
+    pub fn address(&self) -> Option<&Address> {
+        Some(match self {
+            Self::Address(address) => address,
+            Self::Object(object_id) => object_id.as_address(),
+            _ => return None,
+        })
+    }
+}
+
+impl PartialEq<Address> for Owner {
+    fn eq(&self, other: &Address) -> bool {
+        self.as_address_opt() == Some(other)
+    }
+}
+
+impl PartialEq<ObjectId> for Owner {
+    fn eq(&self, other: &ObjectId) -> bool {
+        self.as_object_opt() == Some(other)
+    }
 }
 
 impl std::fmt::Display for Owner {
@@ -536,6 +552,60 @@ mod serialization {
 
     use super::*;
     use crate::TypeTag;
+
+    #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq, Eq)]
+    #[serde(rename = "Owner")]
+    enum ReadableOwner {
+        /// Object is exclusively owned by a single address, and is mutable.
+        AddressOwner(Address),
+        /// Object is exclusively owned by a single object, and is mutable.
+        /// The object ID is converted to IotaAddress as IotaAddress is
+        /// universal.
+        ObjectOwner(Address),
+        /// Object is shared, can be used by any address, and is mutable.
+        Shared {
+            /// The version at which the object became shared
+            initial_shared_version: Version,
+        },
+        /// Object is immutable, and hence ownership doesn't matter.
+        Immutable,
+    }
+
+    impl Serialize for Owner {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let readable_owner = match self {
+                Owner::Address(address) => ReadableOwner::AddressOwner(*address),
+                Owner::Object(object_id) => ReadableOwner::ObjectOwner(*object_id.as_address()),
+                Owner::Shared(initial_shared_version) => ReadableOwner::Shared {
+                    initial_shared_version: *initial_shared_version,
+                },
+                Owner::Immutable => ReadableOwner::Immutable,
+            };
+            readable_owner.serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Owner {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let readable_owner = ReadableOwner::deserialize(deserializer)?;
+            Ok(match readable_owner {
+                ReadableOwner::AddressOwner(address) => Owner::Address(address),
+                ReadableOwner::ObjectOwner(address) => {
+                    Owner::Object(ObjectId::from_address(address))
+                }
+                ReadableOwner::Shared {
+                    initial_shared_version,
+                } => Owner::Shared(initial_shared_version),
+                ReadableOwner::Immutable => Owner::Immutable,
+            })
+        }
+    }
 
     /// Wrapper around StructTag with a space-efficient representation for
     /// common types like coins The StructTag for a gas coin is 84 bytes, so

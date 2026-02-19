@@ -6703,6 +6703,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_owner_address()
+	})
+	if checksum != 46638 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_owner_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_owner_as_address()
 	})
 	if checksum != 19200 {
@@ -27648,6 +27657,9 @@ func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 // owner-immutable = %d03
 // ```
 type OwnerInterface interface {
+	// Returns an address if this object is owned by an address or
+	// object, and None if it is shared or immutable.
+	Address() **Address
 	AsAddress() *Address
 	AsAddressOpt() **Address
 	AsObject() *ObjectId
@@ -27703,6 +27715,19 @@ func OwnerNewShared(version *Version) *Owner {
 }
 
 
+
+// Returns an address if this object is owned by an address or
+// object, and None if it is shared or immutable.
+func (_self *Owner) Address() **Address {
+	_pointer := _self.ffiObject.incrementPointer("*Owner")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_owner_address(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
 
 func (_self *Owner) AsAddress() *Address {
 	_pointer := _self.ffiObject.incrementPointer("*Owner")
