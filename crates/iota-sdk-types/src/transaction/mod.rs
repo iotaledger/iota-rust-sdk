@@ -441,7 +441,7 @@ pub struct AuthenticatorStateExpire {
 ///                              (vector active-jwk)
 ///                              u64 ; initial version of the authenticator object
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -475,7 +475,7 @@ pub struct AuthenticatorStateUpdateV1 {
 /// ```text
 /// active-jwk = jwk-id jwk u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
