@@ -7,7 +7,6 @@ use blake2::Digest as DigestTrait;
 use crate::{Address, Digest, PublicKeyExt};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
-pub type DefaultHash = Blake2b256;
 
 /// A Blake2b256 Hasher
 #[derive(Debug, Default)]

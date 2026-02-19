@@ -3,7 +3,7 @@
 
 use std::collections::BTreeMap;
 
-use crate::{Digest, ExecutionError, Identifier, ObjectId, Version, hash::DefaultHash};
+use crate::{Digest, ExecutionError, Identifier, ObjectId, Version, hash::Hasher};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
@@ -324,33 +324,33 @@ impl MovePackage {
     //     )
     // }
 
-    // /// It is important that this function is shared across both the calculation
-    // /// of the digest for the package, and the calculation of the digest
-    // /// on-chain.
-    // pub fn compute_digest_for_modules_and_deps<'a>(
-    //     modules: impl IntoIterator<Item = &'a Vec<u8>>,
-    //     object_ids: impl IntoIterator<Item = &'a ObjectId>,
-    // ) -> [u8; 32] {
-    //     let mut components = object_ids
-    //         .into_iter()
-    //         .map(|o| o.into_bytes())
-    //         .chain(
-    //             modules
-    //                 .into_iter()
-    //                 .map(|module| DefaultHash::digest(module).digest),
-    //         )
-    //         .collect::<Vec<_>>();
+    /// It is important that this function is shared across both the calculation
+    /// of the digest for the package, and the calculation of the digest
+    /// on-chain.
+    pub fn compute_digest_for_modules_and_deps<'a>(
+        modules: impl IntoIterator<Item = &'a Vec<u8>>,
+        object_ids: impl IntoIterator<Item = &'a ObjectId>,
+    ) -> Digest {
+        let mut components = object_ids
+            .into_iter()
+            .map(|o| o.into_bytes())
+            .chain(
+                modules
+                    .into_iter()
+                    .map(|module| Hasher::digest(module).into_inner()),
+            )
+            .collect::<Vec<_>>();
 
-    //     // NB: sorting so the order of the modules and the order of the dependencies
-    //     // does not matter.
-    //     components.sort();
+        // NB: sorting so the order of the modules and the order of the dependencies
+        // does not matter.
+        components.sort();
 
-    //     let mut digest = DefaultHash::default();
-    //     for c in components {
-    //         digest.update(c);
-    //     }
-    //     digest.finalize().digest
-    // }
+        let mut digest = Hasher::new();
+        for c in components {
+            digest.update(c);
+        }
+        digest.finalize()
+    }
 
     /// Retrieve the module from this package with the given [ModuleId].
     ///
