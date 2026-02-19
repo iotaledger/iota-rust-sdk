@@ -108,11 +108,6 @@ jobs:
         run: make swift
       - name: Checks for uncommitted changes
         run: git diff --exit-code
-      - name: Install swift-format
-        run: |
-          git clone --depth 1 --branch 600.0.0 https://github.com/apple/swift-format.git /tmp/swift-format
-          cd /tmp/swift-format && swift build -c release
-          sudo cp /tmp/swift-format/.build/release/swift-format /usr/local/bin/
       - name: Check format of the examples
         run: make swift-examples-format-check
       - uses: ./.github/actions/start-local-network
