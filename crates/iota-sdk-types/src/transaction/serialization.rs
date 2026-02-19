@@ -585,6 +585,7 @@ mod argument {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "Argument")]
     enum BinaryArgument {
         Gas,
         Input(u16),
