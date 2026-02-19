@@ -19,19 +19,11 @@ use crate::Version;
 /// object-ref = object-id u64 digest
 /// ```
 #[derive(Clone, Copy, Debug, Ord, PartialOrd, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ObjectReference {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -40,7 +32,7 @@ pub struct ObjectReference {
 impl ObjectReference {
     /// Creates a new object reference from the object's id, version, and
     /// digest.
-    pub fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
+    pub const fn new(object_id: ObjectId, version: Version, digest: Digest) -> Self {
         Self {
             object_id,
             version,
@@ -93,12 +85,6 @@ impl ObjectReference {
 /// owner-immutable = %x03
 /// ```
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum Owner {
@@ -109,8 +95,6 @@ pub enum Owner {
     /// Object is shared, can be used by any address, and is mutable.
     Shared(
         /// The version at which the object became shared
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         Version,
     ),
     /// Object is immutable, and hence ownership doesn't matter.
@@ -121,6 +105,28 @@ impl Owner {
     crate::def_is!(Immutable);
 
     crate::def_is_as_into_opt!(Address, Object(ObjectId), Shared(Version));
+
+    /// Returns an address if this object is owned by an address or
+    /// object, and None if it is shared or immutable.
+    pub fn address(&self) -> Option<&Address> {
+        Some(match self {
+            Self::Address(address) => address,
+            Self::Object(object_id) => object_id.as_address(),
+            _ => return None,
+        })
+    }
+}
+
+impl PartialEq<Address> for Owner {
+    fn eq(&self, other: &Address) -> bool {
+        self.as_address_opt() == Some(other)
+    }
+}
+
+impl PartialEq<ObjectId> for Owner {
+    fn eq(&self, other: &ObjectId) -> bool {
+        self.as_object_opt() == Some(other)
+    }
 }
 
 impl std::fmt::Display for Owner {
@@ -552,6 +558,78 @@ mod serialization {
 
     use super::*;
     use crate::TypeTag;
+
+    #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq, Eq)]
+    #[serde(rename = "Owner")]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "Owner")
+    )]
+    enum ReadableOwner {
+        /// Object is exclusively owned by a single address, and is mutable.
+        AddressOwner(Address),
+        /// Object is exclusively owned by a single object, and is mutable.
+        /// The object ID is converted to IotaAddress as IotaAddress is
+        /// universal.
+        ObjectOwner(Address),
+        /// Object is shared, can be used by any address, and is mutable.
+        Shared {
+            /// The version at which the object became shared
+            initial_shared_version: Version,
+        },
+        /// Object is immutable, and hence ownership doesn't matter.
+        Immutable,
+    }
+
+    impl Serialize for Owner {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let readable_owner = match self {
+                Owner::Address(address) => ReadableOwner::AddressOwner(*address),
+                Owner::Object(object_id) => ReadableOwner::ObjectOwner(*object_id.as_address()),
+                Owner::Shared(initial_shared_version) => ReadableOwner::Shared {
+                    initial_shared_version: *initial_shared_version,
+                },
+                Owner::Immutable => ReadableOwner::Immutable,
+            };
+            readable_owner.serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Owner {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let readable_owner = ReadableOwner::deserialize(deserializer)?;
+            Ok(match readable_owner {
+                ReadableOwner::AddressOwner(address) => Owner::Address(address),
+                ReadableOwner::ObjectOwner(address) => {
+                    Owner::Object(ObjectId::from_address(address))
+                }
+                ReadableOwner::Shared {
+                    initial_shared_version,
+                } => Owner::Shared(initial_shared_version),
+                ReadableOwner::Immutable => Owner::Immutable,
+            })
+        }
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for Owner {
+        fn schema_name() -> String {
+            ReadableOwner::schema_name()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableOwner::json_schema(generator)
+        }
+    }
 
     /// Wrapper around StructTag with a space-efficient representation for
     /// common types like coins The StructTag for a gas coin is 84 bytes, so
@@ -1017,6 +1095,53 @@ mod serialization {
         }
     }
 
+    // Custom serialization to be backwards compatible with the JSON RPC
+    #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(
+        feature = "schemars",
+        derive(schemars::JsonSchema),
+        schemars(rename = "ObjectReference")
+    )]
+    struct TupleObjectReference(ObjectId, Version, Digest);
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for ObjectReference {
+        fn schema_name() -> String {
+            TupleObjectReference::schema_name()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            TupleObjectReference::json_schema(generator)
+        }
+    }
+
+    impl Serialize for ObjectReference {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            TupleObjectReference(self.object_id, self.version, self.digest).serialize(serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for ObjectReference {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let TupleObjectReference(object_id, version, digest) =
+                TupleObjectReference::deserialize(deserializer)?;
+
+            Ok(ObjectReference {
+                object_id,
+                version,
+                digest,
+            })
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         #[cfg(target_arch = "wasm32")]
@@ -1058,6 +1183,38 @@ mod serialization {
                 })
                 .unwrap()
             );
+        }
+
+        #[test]
+        fn object_reference_tuple_format() {
+            let json = r#"["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]"#;
+            let obj_ref: ObjectReference = serde_json::from_str(json).unwrap();
+            assert_eq!(obj_ref.object_id, ObjectId::ZERO);
+            assert_eq!(obj_ref.version, Version::from_u64(0));
+            assert_eq!(obj_ref.digest, Digest::ZERO);
+
+            // Roundtrip
+            let serialized = serde_json::to_string(&obj_ref).unwrap();
+            let roundtrip: ObjectReference = serde_json::from_str(&serialized).unwrap();
+            assert_eq!(obj_ref, roundtrip);
+        }
+
+        #[test]
+        fn object_reference_in_map() {
+            use std::collections::BTreeMap;
+
+            let json = r#"{"4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi":[["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]],"8qbHbw2BbbTHBW1sbeqakYXVKRQM8Ne7pLK7m6CVfeR":[["0x0000000000000000000000000000000000000000000000000000000000000000",0,"11111111111111111111111111111111"]]}"#;
+
+            let from_json: BTreeMap<String, Vec<ObjectReference>> =
+                serde_json::from_str(json).unwrap();
+
+            assert_eq!(from_json.len(), 2);
+            for refs in from_json.values() {
+                assert_eq!(refs.len(), 1);
+                assert_eq!(refs[0].object_id, ObjectId::ZERO);
+                assert_eq!(refs[0].version, Version::from_u64(0));
+                assert_eq!(refs[0].digest, Digest::ZERO);
+            }
         }
 
         #[test]
