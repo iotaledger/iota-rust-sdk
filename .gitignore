@@ -1,6 +1,7 @@
 target/
 Cargo.lock
 .idea
+.DS_Store
 *.dylib
 *.so
 *.dll
@@ -8,3 +9,4 @@ __pycache__
 build
 .vscode
 .kotlin
+help/
