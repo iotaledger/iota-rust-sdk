@@ -689,6 +689,12 @@ impl Owner {
             .map(Into::into)
             .map(Arc::new)
     }
+
+    /// Returns an address if this object is owned by an address or
+    /// object, and None if it is shared or immutable.
+    pub fn address(&self) -> Option<Arc<Address>> {
+        self.0.address().copied().map(Into::into).map(Arc::new)
+    }
 }
 
 /// Type of an IOTA object
