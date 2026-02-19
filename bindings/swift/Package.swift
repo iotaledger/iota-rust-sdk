@@ -31,18 +31,18 @@ let package = Package(
     ],
     targets: [
         .systemLibrary(
-            name: "IotaSDKFFI",
-            path: "Sources/IotaSDKFFI"
+            name: "CIotaSDK",
+            path: "Sources/CIotaSDK"
         ),
         .target(
             name: "IotaSDK",
-            dependencies: ["IotaSDKFFI"],
+            dependencies: ["CIotaSDK"],
             path: "Sources/IotaSDK",
             // Link against the pre-built Rust FFI library for local development.
             // The published package at iota-sdk-swift uses a different Package.swift
             // that bundles the library via XCFramework instead.
             linkerSettings: [
-                .unsafeFlags(["-L", "Sources/IotaSDKFFI", "-liota_sdk_ffi"]),
+                .unsafeFlags(["-L", "Sources/CIotaSDK", "-liota_sdk_ffi"]),
             ]
         ),
     ]

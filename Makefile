@@ -224,10 +224,10 @@ swift: ## Build Swift bindings
 	@printf "Building Swift bindings...\n"
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language swift --out-dir bindings/swift/Sources/IotaSDK --no-format -c bindings/swift/uniffi.toml || exit $$?; \
-	mkdir -p bindings/swift/Sources/IotaSDKFFI; \
-	mv bindings/swift/Sources/IotaSDK/IotaSDKFFI.h bindings/swift/Sources/IotaSDKFFI/IotaSDKFFI.h; \
-	mv bindings/swift/Sources/IotaSDK/IotaSDKFFI.modulemap bindings/swift/Sources/IotaSDKFFI/module.modulemap; \
-	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/Sources/IotaSDKFFI/
+	mkdir -p bindings/swift/Sources/CIotaSDK; \
+	mv bindings/swift/Sources/IotaSDK/CIotaSDK.h bindings/swift/Sources/CIotaSDK/CIotaSDK.h; \
+	mv bindings/swift/Sources/IotaSDK/CIotaSDK.modulemap bindings/swift/Sources/CIotaSDK/module.modulemap; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/Sources/CIotaSDK/
 
 .PHONY: swift-example
 swift-example: ## Run a specific Swift example. Usage: make swift-example example
