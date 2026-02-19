@@ -215,7 +215,7 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
-    /// V2 consensus commit update with additional state digest
+    /// V2 consensus commit update with additional state digests
     ConsensusCommitPrologueV2(ConsensusCommitPrologueV2),
 }
 
@@ -615,7 +615,7 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
 }
 
-/// V2 Consensus Commit Prologue with additional state digest
+/// V2 Consensus Commit Prologue with additional state digests
 ///
 /// # BCS
 ///
@@ -624,7 +624,7 @@ pub struct ConsensusCommitPrologueV1 {
 /// ```text
 /// consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
 ///                                consensus-determined-version-assignments
-///                                digest
+///                                vector digest
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -655,8 +655,8 @@ pub struct ConsensusCommitPrologueV2 {
     pub consensus_commit_digest: Digest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
-    /// Digest of any additional state computed by the consensus handler.
-    pub additional_state_digest: Digest,
+    /// Digests of any additional states computed by the consensus handler.
+    pub additional_state_digest: Vec<Digest>,
 }
 
 /// System transaction used to change the epoch
