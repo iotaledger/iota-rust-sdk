@@ -13,10 +13,7 @@ pub struct Cli {
     #[arg(long)]
     pub graphql_url: Option<String>,
 
-    #[arg(
-        long,
-        default_value = "postgres://postgres:postgres@localhost:5432/iota_indexer"
-    )]
+    #[arg(long, default_value = "postgres://localhost:5432/iota_indexer")]
     pub db_url: String,
 
     #[arg(long, default_value = ".iota_indexer_progress.json")]

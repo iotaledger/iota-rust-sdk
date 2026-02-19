@@ -29,7 +29,7 @@ docker run --name iota-indexer-pg \
 ```bash
 cargo run -p iota-indexer -- \
   --network testnet \
-  --db-url postgres://postgres:postgres@localhost:5432/iota_indexer \
+  --db-url postgres://localhost:5432/iota_indexer \
   --progress-file .iota_indexer_progress.json \
   --start-checkpoint 0 \
   --end-checkpoint 50
@@ -40,7 +40,13 @@ Continuous mode (no end checkpoint):
 ```bash
 cargo run -p iota-indexer -- \
   --network testnet \
-  --db-url postgres://postgres:postgres@localhost:5432/iota_indexer
+  --db-url postgres://localhost:5432/iota_indexer
+```
+
+If your local Postgres requires an explicit user, use:
+
+```bash
+--db-url postgres://<your_local_role>@localhost:5432/iota_indexer
 ```
 
 ## Filters

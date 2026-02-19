@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use anyhow::Context;
 use sqlx::{
     PgPool,
     postgres::{PgConnectOptions, PgPoolOptions},
@@ -7,10 +8,25 @@ use sqlx::{
 
 pub async fn connect(db_url: &str) -> anyhow::Result<PgPool> {
     let options = PgConnectOptions::from_str(db_url)?;
-    let pool = PgPoolOptions::new()
+    let connect_result = PgPoolOptions::new()
         .max_connections(10)
         .connect_with(options)
-        .await?;
+        .await;
+
+    let pool = match connect_result {
+        Ok(pool) => pool,
+        Err(err) => {
+            let err_text = err.to_string();
+            if err_text.contains("role") && err_text.contains("does not exist") {
+                return Err(anyhow::anyhow!(
+                    "database role from --db-url does not exist; use an existing local role (example: postgres://<your_user>@localhost:5432/iota_indexer)"
+                ))
+                .context(err_text);
+            }
+            return Err(err).context("failed to connect to PostgreSQL");
+        }
+    };
+
     Ok(pool)
 }
 
