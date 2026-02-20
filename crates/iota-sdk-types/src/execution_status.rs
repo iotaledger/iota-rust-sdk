@@ -196,6 +196,11 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// coin-type-global-pause                              = %x23 string
 /// execution-cancelled-due-to-randomness-unavailable   = %x24
 /// ```
+// WARNING: The variant order of this enum is protocol-significant. Each variant's position
+// determines its BCS discriminant (the integer sent over the wire).
+// Reordering or inserting variants will break protocol compatibility.
+// New variants MUST be added at the end.
+// The `execution_error_bcs_discriminants` snapshot test enforces this.
 #[derive(Eq, PartialEq, Clone, Debug, Error)]
 #[cfg_attr(
     feature = "schemars",
@@ -736,77 +741,268 @@ impl TypeArgumentError {
     crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
 }
 
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
+#[cfg(test)]
+mod tests {
+    use std::fmt::Write;
 
-//     /// Verify that the BCS discriminant of each ExecutionError variant matches the
-//     /// expected on-wire value. If someone reorders variants in the enum or in the
-//     /// BinaryExecutionError helper, this test will catch it.
-//     #[test]
-//     fn execution_error_bcs_discriminants() {
-//         let zero_id = ObjectId::ZERO;
-//         let dummy_location = MoveLocation {
-//             package: zero_id,
-//             module: "m".parse().unwrap(),
-//             function: 0,
-//             instruction: 0,
-//             function_name: None,
-//         };
+    use super::*;
 
-//         // WARNING: DO NOT MODIFY EXISTING ENTRIES, ONLY ADD TO THE END
-//         let cases: &[(ExecutionError, u8)] = &[
-//             (ExecutionError::InsufficientGas, 0),
-//             (ExecutionError::InvalidGasObject, 1),
-//             (ExecutionError::InvariantViolation, 2),
-//             (ExecutionError::FeatureNotYetSupported, 3),
-//             (ExecutionError::ObjectTooBig { object_size: 0, max_object_size: 0 }, 4),
-//             (ExecutionError::PackageTooBig { object_size: 0, max_object_size: 0 }, 5),
-//             (ExecutionError::CircularObjectOwnership { object: zero_id }, 6),
-//             (ExecutionError::InsufficientCoinBalance, 7),
-//             (ExecutionError::CoinBalanceOverflow, 8),
-//             (ExecutionError::PublishErrorNonZeroAddress, 9),
-//             (ExecutionError::IotaMoveVerificationError, 10),
-//             (ExecutionError::MovePrimitiveRuntimeError { location: None }, 11),
-//             (ExecutionError::MoveAbort { location: dummy_location, code: 0 }, 12),
-//             (ExecutionError::VMVerificationOrDeserializationError, 13),
-//             (ExecutionError::VMInvariantViolation, 14),
-//             (ExecutionError::FunctionNotFound, 15),
-//             (ExecutionError::ArityMismatch, 16),
-//             (ExecutionError::TypeArityMismatch, 17),
-//             (ExecutionError::NonEntryFunctionInvoked, 18),
-//             (ExecutionError::CommandArgumentError { argument: 0, kind: CommandArgumentError::TypeMismatch }, 19),
-//             (ExecutionError::TypeArgumentError { type_argument: 0, kind: TypeArgumentError::TypeNotFound }, 20),
-//             (ExecutionError::UnusedValueWithoutDrop { result: 0, subresult: 0 }, 21),
-//             (ExecutionError::InvalidPublicFunctionReturnType { index: 0 }, 22),
-//             (ExecutionError::InvalidTransferObject, 23),
-//             (ExecutionError::EffectsTooLarge { current_size: 0, max_size: 0 }, 24),
-//             (ExecutionError::PublishUpgradeMissingDependency, 25),
-//             (ExecutionError::PublishUpgradeDependencyDowngrade, 26),
-//             (ExecutionError::PackageUpgradeError { kind: PackageUpgradeError::IncompatibleUpgrade }, 27),
-//             (ExecutionError::WrittenObjectsTooLarge { object_size: 0, max_object_size: 0 }, 28),
-//             (ExecutionError::CertificateDenied, 29),
-//             (ExecutionError::IotaMoveVerificationTimeout, 30),
-//             (ExecutionError::SharedObjectOperationNotAllowed, 31),
-//             (ExecutionError::InputObjectDeleted, 32),
-//             (ExecutionError::ExecutionCancelledDueToSharedObjectCongestion { congested_objects: vec![] }, 33),
-//             (ExecutionError::AddressDeniedForCoin { address: Address::ZERO, coin_type: String::new() }, 34),
-//             (ExecutionError::CoinTypeGlobalPause { coin_type: String::new() }, 35),
-//             (ExecutionError::ExecutionCancelledDueToRandomnessUnavailable, 36),
-//             (ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 { congested_objects: vec![], suggested_gas_price: 0 }, 37),
-//             (ExecutionError::InvalidLinkage, 38),
-//         ];
+    /// Build a snapshot string mapping BCS discriminant to variant name.
+    ///
+    /// The snapshot file acts as a guard against accidental reordering.
+    /// When adding a new variant **at the end**, just run:
+    ///
+    /// ```sh
+    /// cargo insta review
+    /// ```
+    ///
+    /// and accept the new snapshot. If a diff shows *existing* lines
+    /// changing, that means variants were reordered -- reject it.
+    fn bcs_discriminant_snapshot(variants: &[(&str, Vec<u8>)]) -> String {
+        let mut out = String::new();
+        for (name, bytes) in variants {
+            writeln!(&mut out, "{} {name}", bytes[0]).unwrap();
+        }
+        out
+    }
 
-//         for (variant, expected) in cases {
-//             let bytes = bcs::to_bytes(variant).expect("BCS serialization failed");
-//             assert_eq!(
-//                 bytes[0], *expected,
-//                 "BCS discriminant mismatch for {variant:?}: expected {expected}, got {}",
-//                 bytes[0]
-//             );
-//         }
-//     }
-// }
+    /// Verify that the BCS discriminant of each [`ExecutionError`] variant
+    /// matches the stored snapshot. Reordering or inserting variants will
+    /// cause this test to fail.
+    #[test]
+    fn execution_error_bcs_discriminants() {
+        let zero_id = ObjectId::ZERO;
+        let dummy_location = MoveLocation {
+            package: zero_id,
+            module: "m".parse().unwrap(),
+            function: 0,
+            instruction: 0,
+            function_name: None,
+        };
+
+        // New variants MUST be appended at the end.
+        let variants: Vec<(&str, Vec<u8>)> = vec![
+            (
+                "InsufficientGas",
+                bcs::to_bytes(&ExecutionError::InsufficientGas).unwrap(),
+            ),
+            (
+                "InvalidGasObject",
+                bcs::to_bytes(&ExecutionError::InvalidGasObject).unwrap(),
+            ),
+            (
+                "InvariantViolation",
+                bcs::to_bytes(&ExecutionError::InvariantViolation).unwrap(),
+            ),
+            (
+                "FeatureNotYetSupported",
+                bcs::to_bytes(&ExecutionError::FeatureNotYetSupported).unwrap(),
+            ),
+            (
+                "ObjectTooBig",
+                bcs::to_bytes(&ExecutionError::ObjectTooBig {
+                    object_size: 0,
+                    max_object_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "PackageTooBig",
+                bcs::to_bytes(&ExecutionError::PackageTooBig {
+                    object_size: 0,
+                    max_object_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "CircularObjectOwnership",
+                bcs::to_bytes(&ExecutionError::CircularObjectOwnership { object: zero_id })
+                    .unwrap(),
+            ),
+            (
+                "InsufficientCoinBalance",
+                bcs::to_bytes(&ExecutionError::InsufficientCoinBalance).unwrap(),
+            ),
+            (
+                "CoinBalanceOverflow",
+                bcs::to_bytes(&ExecutionError::CoinBalanceOverflow).unwrap(),
+            ),
+            (
+                "PublishErrorNonZeroAddress",
+                bcs::to_bytes(&ExecutionError::PublishErrorNonZeroAddress).unwrap(),
+            ),
+            (
+                "IotaMoveVerificationError",
+                bcs::to_bytes(&ExecutionError::IotaMoveVerificationError).unwrap(),
+            ),
+            (
+                "MovePrimitiveRuntimeError",
+                bcs::to_bytes(&ExecutionError::MovePrimitiveRuntimeError { location: None })
+                    .unwrap(),
+            ),
+            (
+                "MoveAbort",
+                bcs::to_bytes(&ExecutionError::MoveAbort {
+                    location: dummy_location,
+                    code: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "VMVerificationOrDeserializationError",
+                bcs::to_bytes(&ExecutionError::VMVerificationOrDeserializationError).unwrap(),
+            ),
+            (
+                "VMInvariantViolation",
+                bcs::to_bytes(&ExecutionError::VMInvariantViolation).unwrap(),
+            ),
+            (
+                "FunctionNotFound",
+                bcs::to_bytes(&ExecutionError::FunctionNotFound).unwrap(),
+            ),
+            (
+                "ArityMismatch",
+                bcs::to_bytes(&ExecutionError::ArityMismatch).unwrap(),
+            ),
+            (
+                "TypeArityMismatch",
+                bcs::to_bytes(&ExecutionError::TypeArityMismatch).unwrap(),
+            ),
+            (
+                "NonEntryFunctionInvoked",
+                bcs::to_bytes(&ExecutionError::NonEntryFunctionInvoked).unwrap(),
+            ),
+            (
+                "CommandArgumentError",
+                bcs::to_bytes(&ExecutionError::CommandArgumentError {
+                    argument: 0,
+                    kind: CommandArgumentError::TypeMismatch,
+                })
+                .unwrap(),
+            ),
+            (
+                "TypeArgumentError",
+                bcs::to_bytes(&ExecutionError::TypeArgumentError {
+                    type_argument: 0,
+                    kind: TypeArgumentError::TypeNotFound,
+                })
+                .unwrap(),
+            ),
+            (
+                "UnusedValueWithoutDrop",
+                bcs::to_bytes(&ExecutionError::UnusedValueWithoutDrop {
+                    result: 0,
+                    subresult: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "InvalidPublicFunctionReturnType",
+                bcs::to_bytes(&ExecutionError::InvalidPublicFunctionReturnType { index: 0 })
+                    .unwrap(),
+            ),
+            (
+                "InvalidTransferObject",
+                bcs::to_bytes(&ExecutionError::InvalidTransferObject).unwrap(),
+            ),
+            (
+                "EffectsTooLarge",
+                bcs::to_bytes(&ExecutionError::EffectsTooLarge {
+                    current_size: 0,
+                    max_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "PublishUpgradeMissingDependency",
+                bcs::to_bytes(&ExecutionError::PublishUpgradeMissingDependency).unwrap(),
+            ),
+            (
+                "PublishUpgradeDependencyDowngrade",
+                bcs::to_bytes(&ExecutionError::PublishUpgradeDependencyDowngrade).unwrap(),
+            ),
+            (
+                "PackageUpgradeError",
+                bcs::to_bytes(&ExecutionError::PackageUpgradeError {
+                    kind: PackageUpgradeError::IncompatibleUpgrade,
+                })
+                .unwrap(),
+            ),
+            (
+                "WrittenObjectsTooLarge",
+                bcs::to_bytes(&ExecutionError::WrittenObjectsTooLarge {
+                    object_size: 0,
+                    max_object_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "CertificateDenied",
+                bcs::to_bytes(&ExecutionError::CertificateDenied).unwrap(),
+            ),
+            (
+                "IotaMoveVerificationTimeout",
+                bcs::to_bytes(&ExecutionError::IotaMoveVerificationTimeout).unwrap(),
+            ),
+            (
+                "SharedObjectOperationNotAllowed",
+                bcs::to_bytes(&ExecutionError::SharedObjectOperationNotAllowed).unwrap(),
+            ),
+            (
+                "InputObjectDeleted",
+                bcs::to_bytes(&ExecutionError::InputObjectDeleted).unwrap(),
+            ),
+            (
+                "ExecutionCancelledDueToSharedObjectCongestion",
+                bcs::to_bytes(
+                    &ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+                        congested_objects: vec![],
+                    },
+                )
+                .unwrap(),
+            ),
+            (
+                "AddressDeniedForCoin",
+                bcs::to_bytes(&ExecutionError::AddressDeniedForCoin {
+                    address: Address::ZERO,
+                    coin_type: String::new(),
+                })
+                .unwrap(),
+            ),
+            (
+                "CoinTypeGlobalPause",
+                bcs::to_bytes(&ExecutionError::CoinTypeGlobalPause {
+                    coin_type: String::new(),
+                })
+                .unwrap(),
+            ),
+            (
+                "ExecutionCancelledDueToRandomnessUnavailable",
+                bcs::to_bytes(&ExecutionError::ExecutionCancelledDueToRandomnessUnavailable)
+                    .unwrap(),
+            ),
+            (
+                "ExecutionCancelledDueToSharedObjectCongestionV2",
+                bcs::to_bytes(
+                    &ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects: vec![],
+                        suggested_gas_price: 0,
+                    },
+                )
+                .unwrap(),
+            ),
+            (
+                "InvalidLinkage",
+                bcs::to_bytes(&ExecutionError::InvalidLinkage).unwrap(),
+            ),
+        ];
+
+        insta::assert_snapshot!(
+            "execution_error_bcs_discriminants",
+            bcs_discriminant_snapshot(&variants)
+        );
+    }
+}
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -918,6 +1114,8 @@ mod serialization {
         }
     }
 
+    // WARNING: Variant order must match `ExecutionError`. Do not reorder.
+    // New variants MUST be added at the end.
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "error", rename_all = "snake_case")]
     enum ReadableExecutionError {
@@ -1013,6 +1211,8 @@ mod serialization {
         InvalidLinkage,
     }
 
+    // WARNING: Variant order is protocol-significant — it determines the BCS wire
+    // format. Do not reorder. New variants MUST be added at the end.
     #[derive(serde::Serialize, serde::Deserialize)]
     enum BinaryExecutionError {
         InsufficientGas,
