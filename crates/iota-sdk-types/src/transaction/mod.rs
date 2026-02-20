@@ -972,29 +972,29 @@ pub enum Input {
 }
 
 impl Input {
-    /// Shared `Input` for the IOTA system state object (mutable).
-    pub const IOTA_SYSTEM_MUT: Self = Self::Shared {
+    /// Shared `Input` for the IOTA system state object.
+    pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared {
         object_id: ObjectId::SYSTEM_STATE,
         initial_shared_version: Version::from_u64(1),
         mutable: true,
     };
 
-    /// Shared `Input` for the clock object (immutable).
-    pub const CLOCK_IMM: Self = Self::Shared {
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_IMMUTABLE: Self = Self::Shared {
         object_id: ObjectId::CLOCK,
         initial_shared_version: Version::from_u64(1),
         mutable: false,
     };
 
-    /// Shared `Input` for the clock object (mutable).
-    pub const CLOCK_MUT: Self = Self::Shared {
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_MUTABLE: Self = Self::Shared {
         object_id: ObjectId::CLOCK,
         initial_shared_version: Version::from_u64(1),
         mutable: true,
     };
 
-    /// Shared `Input` for the authenticator state object (mutable).
-    pub const AUTHENTICATOR_MUT: Self = Self::Shared {
+    /// Shared `Input` for the authenticator state object.
+    pub const AUTHENTICATOR_MUTABLE: Self = Self::Shared {
         object_id: ObjectId::AUTHENTICATOR_STATE,
         initial_shared_version: Version::from_u64(1),
         mutable: true,
