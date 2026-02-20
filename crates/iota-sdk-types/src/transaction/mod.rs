@@ -656,7 +656,7 @@ pub struct ConsensusCommitPrologueV2 {
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
     /// Digests of any additional states computed by the consensus handler.
-    pub additional_state_digest: Vec<Digest>,
+    pub additional_states_digests: Vec<Digest>,
 }
 
 /// System transaction used to change the epoch
