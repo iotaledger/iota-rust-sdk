@@ -58,6 +58,9 @@ impl Version {
     /// is assigned to, does not appear in a cancelled transaction.
     pub const MIN_VALID_INCL: Self = Self(u64::MIN);
 
+    /// The initial shared version for shared system objects.
+    pub const INITIAL_SHARED_VERSION: Self = Self(1);
+
     /// An exclusive upper limit on a valid version: versions
     /// strictly smaller than this limit are valid versions.
     ///
