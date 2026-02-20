@@ -41,14 +41,14 @@ pub enum ExecutionStatus {
 impl ExecutionStatus {
     crate::def_is!(Success, Failure);
 
-    pub fn new_failure(error: ExecutionError, command: Option<u64>) -> ExecutionStatus {
-        ExecutionStatus::Failure { error, command }
+    pub fn new_failure(error: ExecutionError, command: Option<u64>) -> Self {
+        Self::Failure { error, command }
     }
 
     pub fn unwrap(&self) {
         match self {
-            ExecutionStatus::Success => {}
-            ExecutionStatus::Failure { .. } => {
+            Self::Success => {}
+            Self::Failure { .. } => {
                 panic!("Unable to unwrap() on {self:?}");
             }
         }
@@ -56,10 +56,10 @@ impl ExecutionStatus {
 
     pub fn unwrap_err(self) -> (ExecutionError, Option<u64>) {
         match self {
-            ExecutionStatus::Success => {
+            Self::Success => {
                 panic!("Unable to unwrap_err() on {self:?}");
             }
-            ExecutionStatus::Failure { error, command } => (error, command),
+            Self::Failure { error, command } => (error, command),
         }
     }
 
@@ -211,16 +211,16 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
-    #[error("Insufficient Gas.")]
+    #[error("Insufficient Gas")]
     InsufficientGas,
     /// Invalid Gas Object.
-    #[error("Invalid Gas Object. Possibly not address-owned or possibly not an IOTA coin.")]
+    #[error("Invalid Gas Object. Possibly not address-owned or possibly not an IOTA coin")]
     InvalidGasObject,
     /// Invariant Violation
-    #[error("INVARIANT VIOLATION.")]
+    #[error("INVARIANT VIOLATION")]
     InvariantViolation,
-    /// Attempted to used feature that is not supported yet
-    #[error("Attempted to used feature that is not supported yet")]
+    /// Attempted to use feature that is not supported yet
+    #[error("Attempted to use feature that is not supported yet")]
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
     #[error(
@@ -243,10 +243,10 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Circular Object Ownership
-    #[error("Circular Object Ownership, including object {object}.")]
+    #[error("Circular Object Ownership, including object {object}")]
     CircularObjectOwnership { object: ObjectId },
     /// Insufficient coin balance for requested operation
-    #[error("Insufficient coin balance for operation.")]
+    #[error("Insufficient coin balance for operation")]
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
     #[error("The coin balance overflows u64")]
@@ -283,10 +283,10 @@ pub enum ExecutionError {
     )]
     VMVerificationOrDeserializationError,
     /// MoveVm invariant violation
-    #[error("MOVE VM INVARIANT VIOLATION.")]
+    #[error("MOVE VM INVARIANT VIOLATION")]
     VMInvariantViolation,
     /// Function not found
-    #[error("Function Not Found.")]
+    #[error("Function Not Found")]
     FunctionNotFound,
     /// Arity mismatch for Move function.
     /// The number of arguments does not match the number of parameters
@@ -328,7 +328,7 @@ pub enum ExecutionError {
     )]
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
-    #[error("Invalid Transfer Object, object does not have public transfer.")]
+    #[error("Invalid Transfer Object, object does not have public transfer")]
     InvalidTransferObject,
     /// Effects from the transaction are too large
     #[error("Effects of size {current_size} bytes too large. Limit is {max_size} bytes")]
@@ -373,7 +373,7 @@ pub enum ExecutionError {
     )]
     IotaMoveVerificationTimeout,
     /// The requested shared object operation is not allowed
-    #[error("The shared object operation is not allowed.")]
+    #[error("The shared object operation is not allowed")]
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
     #[error("Certificate cannot be executed due to a dependency on a deleted shared object")]
@@ -602,10 +602,10 @@ pub enum CommandArgumentError {
     )]
     InvalidValueUsage,
     /// Immutable objects cannot be passed by-value.
-    #[error("Immutable objects cannot be passed by-value.")]
+    #[error("Immutable objects cannot be passed by-value")]
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
-    #[error("Immutable objects cannot be passed by mutable reference, &mut.")]
+    #[error("Immutable objects cannot be passed by mutable reference, &mut")]
     InvalidObjectByMutRef,
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
@@ -730,10 +730,10 @@ impl PackageUpgradeError {
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
-    #[error("A type was not found in the module specified.")]
+    #[error("A type was not found in the module specified")]
     TypeNotFound,
     /// A type provided did not match the specified constraint
-    #[error("A type provided did not match the specified constraints.")]
+    #[error("A type provided did not match the specified constraints")]
     ConstraintNotSatisfied,
 }
 

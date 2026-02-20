@@ -401,8 +401,8 @@ mod tests {
     #[test]
     fn partial_eq_array_u8() {
         let digest = Digest::new([1u8; 32]);
-        let matching: [u8; 32] = [1u8; 32];
-        let non_matching: [u8; 32] = [2u8; 32];
+        let matching = [1u8; 32];
+        let non_matching = [2u8; 32];
 
         assert_eq!(digest, matching);
         assert_eq!(matching, digest);
@@ -413,9 +413,9 @@ mod tests {
     #[test]
     fn partial_eq_vec_u8() {
         let digest = Digest::new([1u8; 32]);
-        let matching: Vec<u8> = vec![1u8; 32];
-        let non_matching: Vec<u8> = vec![2u8; 32];
-        let wrong_length: Vec<u8> = vec![1u8; 31];
+        let matching = vec![1u8; 32];
+        let non_matching = vec![2u8; 32];
+        let wrong_length = vec![1u8; 31];
 
         assert_eq!(digest, matching);
         assert_eq!(matching, digest);
