@@ -100,14 +100,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - name: Install Swift
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.0"
       - name: Build the bindings
         run: make swift
       - name: Checks for uncommitted changes
         run: git diff --exit-code
+      - name: Install Swift
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.0"
       - name: Check format of the examples
         run: make swift-examples-format-check
       - uses: ./.github/actions/start-local-network
