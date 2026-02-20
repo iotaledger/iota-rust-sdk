@@ -57,7 +57,7 @@ impl ExecutionStatus {
     pub fn unwrap_err(self) -> (ExecutionError, Option<u64>) {
         match self {
             ExecutionStatus::Success => {
-                panic!("Unable to unwrap() on {self:?}");
+                panic!("Unable to unwrap_err() on {self:?}");
             }
             ExecutionStatus::Failure { error, command } => (error, command),
         }
