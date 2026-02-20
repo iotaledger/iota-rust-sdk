@@ -181,7 +181,7 @@ kotlin-android: ## Build Android native libraries for all ABIs
 		set -- $$target_abi; \
 		target=$$1; folder=$$2; \
 		printf "Building for $$target...\n"; \
-		cargo ndk -t $$target -p 21 build -p iota-sdk-ffi --lib --release || exit $$?; \
+		cargo ndk -t $$target -P 21 build -p iota-sdk-ffi --lib --release || exit $$?; \
 		mkdir -p bindings/kotlin/lib/$$folder; \
 		cp target/$$target/release/libiota_sdk_ffi.so bindings/kotlin/lib/$$folder/ || exit $$?; \
 	done

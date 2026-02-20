@@ -88,8 +88,14 @@ Android packages these into the APK's `lib/<abi>/` directory automatically.
 To build the Android native libraries locally, you need the Android NDK and `cargo-ndk`:
 
 ```bash
+# Add Android Rust targets
+rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+
 # Install cargo-ndk
 cargo install cargo-ndk
+
+# Set ANDROID_NDK_HOME if not already set
+export ANDROID_NDK_HOME=/path/to/your/android-ndk
 
 # Build for all Android ABIs
 make kotlin-android

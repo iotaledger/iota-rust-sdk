@@ -99,7 +99,7 @@ jobs:
         if: contains(matrix.target, 'android')
         shell: bash
         run: |
-          cargo ndk -t ${{ matrix.target }} -p 21 build -p iota-sdk-ffi --lib --release
+          cargo ndk -t ${{ matrix.target }} -P 21 build -p iota-sdk-ffi --lib --release
           TARGET_DIR="target/${{ matrix.target }}/release"
           mkdir -p temp/${{ matrix.folder }}
           cp "$TARGET_DIR/${{ matrix.lib_name }}" temp/${{ matrix.folder }}/

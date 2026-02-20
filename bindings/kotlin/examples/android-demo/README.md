@@ -7,6 +7,10 @@ A minimal Android app demonstrating the IOTA Kotlin SDK. It fetches the chain ID
 - Android Studio (or Android SDK command-line tools)
 - Android SDK with API level 35
 - JDK 17+
+- Set `ANDROID_HOME` environment variable or create a `local.properties` file in the `android-demo/` directory:
+  ```
+  sdk.dir=/path/to/your/Android/Sdk
+  ```
 
 ## Build & Run
 
@@ -25,14 +29,18 @@ The APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
 
 If you want to test with locally built `.so` files:
 
-1. Build the native libraries (requires [cargo-ndk](https://github.com/nickelc/cargo-ndk) and Android NDK):
+1. Add Rust Android targets and install cargo-ndk:
    ```bash
-   # From the repository root
+   rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
    cargo install cargo-ndk
+   ```
+
+2. Build the native libraries from the repository root:
+   ```bash
    make kotlin-android
    ```
 
-2. Copy the libraries into the app's `jniLibs`:
+3. Copy the libraries into the app's `jniLibs`:
    ```bash
    mkdir -p app/src/main/jniLibs/arm64-v8a
    mkdir -p app/src/main/jniLibs/armeabi-v7a
@@ -44,7 +52,24 @@ If you want to test with locally built `.so` files:
    cp ../../lib/android-x86/libiota_sdk_ffi.so app/src/main/jniLibs/x86/
    ```
 
-3. Build and install:
+4. Update `app/build.gradle.kts` dependencies to use the local build instead of Maven Central:
+   ```kotlin
+   dependencies {
+       // Local JAR from bindings/kotlin (replaces the Maven Central dependency)
+       implementation(files("../../../build/libs/iota-sdk-0.0.1-alpha.4.jar"))
+       // Transitive dependencies (not resolved automatically from a file dependency)
+       implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+       implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+       implementation("net.java.dev.jna:jna:5.13.0@aar")
+       implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+       implementation("androidx.appcompat:appcompat:1.7.0")
+       implementation("com.google.android.material:material:1.12.0")
+       implementation("androidx.activity:activity-ktx:1.9.3")
+       implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+   }
+   ```
+
+5. Build and install:
    ```bash
    ./gradlew :app:installDebug
    ```
