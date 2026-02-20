@@ -475,7 +475,7 @@ pub struct AuthenticatorStateUpdateV1 {
 /// ```text
 /// active-jwk = jwk-id jwk u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -492,6 +492,54 @@ pub struct ActiveJwk {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
+}
+
+impl PartialOrd for ActiveJwk {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+// This must match the sort order defined by jwk_lt in authenticator_state.move
+impl Ord for ActiveJwk {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        fn string_bytes_ord(a: &str, b: &str) -> std::cmp::Ordering {
+            let a_bytes = a.as_bytes();
+            let b_bytes = b.as_bytes();
+
+            if a_bytes.len() < b_bytes.len() {
+                return std::cmp::Ordering::Less;
+            }
+            if a_bytes.len() > b_bytes.len() {
+                return std::cmp::Ordering::Greater;
+            }
+
+            for (a_byte, b_byte) in a_bytes.iter().zip(b_bytes.iter()) {
+                if a_byte < b_byte {
+                    return std::cmp::Ordering::Less;
+                }
+                if a_byte > b_byte {
+                    return std::cmp::Ordering::Greater;
+                }
+            }
+
+            std::cmp::Ordering::Equal
+        }
+        // note: epoch is ignored
+        if self.jwk_id.iss != other.jwk_id.iss {
+            string_bytes_ord(&self.jwk_id.iss, &other.jwk_id.iss)
+        } else if self.jwk_id.kid != other.jwk_id.kid {
+            string_bytes_ord(&self.jwk_id.kid, &other.jwk_id.kid)
+        } else if self.jwk.kty != other.jwk.kty {
+            string_bytes_ord(&self.jwk.kty, &other.jwk.kty)
+        } else if self.jwk.e != other.jwk.e {
+            string_bytes_ord(&self.jwk.e, &other.jwk.e)
+        } else if self.jwk.n != other.jwk.n {
+            string_bytes_ord(&self.jwk.n, &other.jwk.n)
+        } else {
+            string_bytes_ord(&self.jwk.alg, &other.jwk.alg)
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
