@@ -43,6 +43,14 @@ cargo run -p iota-indexer -- \
   --db-url postgres://localhost:5432/iota_indexer
 ```
 
+Custom GraphQL endpoint via network:
+
+```bash
+cargo run -p iota-indexer -- \
+  --network custom:https://your.graphql.endpoint/graphql \
+  --db-url postgres://localhost:5432/iota_indexer
+```
+
 If your local Postgres requires an explicit user, use:
 
 ```bash

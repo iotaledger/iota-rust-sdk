@@ -1,13 +1,17 @@
-use std::str::FromStr;
+use std::{fmt, str::FromStr};
 
-use clap::{Parser, ValueEnum};
+use clap::Parser;
 use iota_sdk::types::Address;
 
 #[derive(Debug, Clone, Parser)]
 #[command(name = "iota-indexer")]
 #[command(about = "Custom polling indexer using iota_sdk::graphql_client::Client")]
 pub struct Cli {
-    #[arg(long, value_enum, default_value_t = Network::Testnet)]
+    #[arg(
+        long,
+        default_value_t = Network::Testnet,
+        help = "Network name (mainnet|testnet|devnet|localnet) or custom:<graphql_url>"
+    )]
     pub network: Network,
 
     #[arg(long)]
@@ -50,13 +54,69 @@ pub struct Cli {
     pub event_package_id: Option<String>,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq, ValueEnum)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Network {
     Mainnet,
     Testnet,
     Devnet,
     Localnet,
-    Custom,
+    Custom(String),
+}
+
+impl Network {
+    pub fn graphql_url(&self) -> &str {
+        match self {
+            Self::Mainnet => "https://graphql.mainnet.iota.cafe",
+            Self::Testnet => "https://graphql.testnet.iota.cafe",
+            Self::Devnet => "https://graphql.devnet.iota.cafe",
+            Self::Localnet => "http://localhost:9125/graphql",
+            Self::Custom(url) => url,
+        }
+    }
+}
+
+impl fmt::Display for Network {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Mainnet => write!(f, "mainnet"),
+            Self::Testnet => write!(f, "testnet"),
+            Self::Devnet => write!(f, "devnet"),
+            Self::Localnet => write!(f, "localnet"),
+            Self::Custom(url) => write!(f, "custom:{url}"),
+        }
+    }
+}
+
+impl FromStr for Network {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_ascii_lowercase().as_str() {
+            "mainnet" => Ok(Self::Mainnet),
+            "testnet" => Ok(Self::Testnet),
+            "devnet" => Ok(Self::Devnet),
+            "localnet" => Ok(Self::Localnet),
+            _ => {
+                let Some((prefix, url)) = s.split_once(':') else {
+                    anyhow::bail!(
+                        "invalid network '{s}'. Expected one of mainnet|testnet|devnet|localnet or custom:<graphql_url>"
+                    );
+                };
+
+                if !prefix.eq_ignore_ascii_case("custom") {
+                    anyhow::bail!(
+                        "invalid network '{s}'. Expected one of mainnet|testnet|devnet|localnet or custom:<graphql_url>"
+                    );
+                }
+
+                if url.trim().is_empty() {
+                    anyhow::bail!("custom network requires a non-empty GraphQL URL");
+                }
+
+                Ok(Self::Custom(url.to_owned()))
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -103,7 +163,7 @@ impl TryFrom<Cli> for AppConfig {
 
         let graphql_url = value
             .graphql_url
-            .unwrap_or_else(|| default_graphql_url(value.network).to_owned());
+            .unwrap_or_else(|| value.network.graphql_url().to_owned());
 
         Ok(Self {
             graphql_url,
@@ -122,15 +182,5 @@ impl TryFrom<Cli> for AppConfig {
                 event_package_id: value.event_package_id,
             },
         })
-    }
-}
-
-fn default_graphql_url(network: Network) -> &'static str {
-    match network {
-        Network::Mainnet => "https://graphql.mainnet.iota.cafe",
-        Network::Testnet => "https://graphql.testnet.iota.cafe",
-        Network::Devnet => "https://graphql.devnet.iota.cafe",
-        Network::Localnet => "http://localhost:9125/graphql",
-        Network::Custom => "https://graphql.testnet.iota.cafe",
     }
 }
