@@ -997,10 +997,14 @@ mod tests {
             ),
         ];
 
-        insta::assert_snapshot!(
-            "execution_error_bcs_discriminants",
-            bcs_discriminant_snapshot(&variants)
-        );
+        insta::with_settings!({
+            snapshot_path => "../tests/snapshots",
+        }, {
+            insta::assert_snapshot!(
+                "execution_error_bcs_discriminants",
+                bcs_discriminant_snapshot(&variants)
+            );
+        });
     }
 }
 
