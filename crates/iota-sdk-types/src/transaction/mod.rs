@@ -1010,7 +1010,7 @@ impl Input {
     /// Create a `Pure` input from a BCS-serializable value.
     #[cfg(feature = "serde")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-    pub fn pure(value: &impl serde::Serialize) -> Self {
+    pub fn pure<T: serde::Serialize>(value: &T) -> Self {
         Self::Pure {
             value: bcs::to_bytes(value).expect("value should be serializable"),
         }
@@ -1034,7 +1034,7 @@ impl Input {
 
     /// If this is a `Shared` input, returns `(object_id,
     /// initial_shared_version, mutable)`.
-    pub fn as_shared(&self) -> Option<(&ObjectId, Version, bool)> {
+    pub fn as_shared_opt(&self) -> Option<(&ObjectId, Version, bool)> {
         match self {
             Self::Shared {
                 object_id,
