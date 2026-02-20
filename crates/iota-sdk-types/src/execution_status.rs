@@ -381,16 +381,7 @@ pub enum ExecutionError {
     /// Certificate is cancelled due to congestion on shared objects
     #[error("Certificate is cancelled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
-    /// Certificate is cancelled due to congestion on shared objects;
-    /// suggested gas price can be used to give this certificate more priority.
-    #[error(
-        "Certificate is cancelled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
-        display_congested_objects(.congested_objects)
-    )]
-    ExecutionCancelledDueToSharedObjectCongestionV2 {
-        congested_objects: Vec<ObjectId>,
-        suggested_gas_price: u64,
-    },
+
     /// Address is denied for this coin type
     #[error("Address {address:?} is denied for coin {coin_type}")]
     AddressDeniedForCoin { address: Address, coin_type: String },
@@ -401,6 +392,16 @@ pub enum ExecutionError {
     /// epoch
     #[error("Certificate is cancelled because randomness could not be generated this epoch")]
     ExecutionCancelledDueToRandomnessUnavailable,
+    /// Certificate is cancelled due to congestion on shared objects;
+    /// suggested gas price can be used to give this certificate more priority.
+    #[error(
+        "Certificate is cancelled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
+        display_congested_objects(.congested_objects)
+    )]
+    ExecutionCancelledDueToSharedObjectCongestionV2 {
+        congested_objects: Vec<ObjectId>,
+        suggested_gas_price: u64,
+    },
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     #[error("A valid linkage was unable to be determined for the transaction")]
@@ -443,10 +444,10 @@ impl ExecutionError {
         SharedObjectOperationNotAllowed,
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion,
-        ExecutionCancelledDueToSharedObjectCongestionV2,
         AddressDeniedForCoin,
         CoinTypeGlobalPause,
         ExecutionCancelledDueToRandomnessUnavailable,
+        ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
     );
 
