@@ -62,9 +62,7 @@ impl PTBArgument for ObjectReference {
 
 impl<T: MoveArg> PTBArgument for T {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Pure {
-            value: self.pure_bytes().0,
-        })
+        InputKind::Input(iota_types::Input::Pure(self.pure_bytes().0))
     }
 }
 

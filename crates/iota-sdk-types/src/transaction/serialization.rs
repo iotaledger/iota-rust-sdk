@@ -446,7 +446,7 @@ mod input_argument {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    Input::Pure { value } => ReadableInput::Pure { value },
+                    Input::Pure(value) => ReadableInput::Pure { value },
                     Input::ImmutableOrOwned(object_ref) => {
                         ReadableInput::ImmutableOrOwned(object_ref)
                     }
@@ -464,7 +464,7 @@ mod input_argument {
                 readable.serialize(serializer)
             } else {
                 let binary = match self.clone() {
-                    Input::Pure { value } => CallArg::Pure(value),
+                    Input::Pure(value) => CallArg::Pure(value),
                     Input::ImmutableOrOwned(object_ref) => {
                         CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
                     }
@@ -493,7 +493,7 @@ mod input_argument {
         {
             if deserializer.is_human_readable() {
                 ReadableInput::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInput::Pure { value } => Input::Pure { value },
+                    ReadableInput::Pure { value } => Input::Pure(value),
                     ReadableInput::ImmutableOrOwned(object_ref) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -510,7 +510,7 @@ mod input_argument {
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
-                    CallArg::Pure(value) => Input::Pure { value },
+                    CallArg::Pure(value) => Input::Pure(value),
                     CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref)) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -1097,9 +1097,7 @@ mod tests {
     fn input_argument() {
         let test_cases = [
             (
-                Input::Pure {
-                    value: vec![1, 2, 3, 4],
-                },
+                Input::Pure(vec![1, 2, 3, 4]),
                 serde_json::json!({
                   "pure": {
                     "value": "AQIDBA=="

@@ -335,7 +335,7 @@ impl Input {
     /// not contain structs or objects.
     #[uniffi::constructor]
     pub fn new_pure(value: Vec<u8>) -> Self {
-        Self(iota_sdk::types::Input::Pure { value })
+        Self(iota_sdk::types::Input::Pure(value))
     }
 
     /// A move object that is either immutable or address owned

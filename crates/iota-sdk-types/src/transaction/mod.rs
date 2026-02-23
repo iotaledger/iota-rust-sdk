@@ -950,10 +950,7 @@ pub enum Input {
     ///
     /// For normal operations this is required to be a move primitive type and
     /// not contain structs or objects.
-    Pure {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
-        value: Vec<u8>,
-    },
+    Pure(#[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))] Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"
@@ -1033,9 +1030,8 @@ impl Input {
         mutable: true,
     });
 
-    crate::def_is!(Pure);
-
     crate::def_is_as_into_opt!(
+        Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
         Shared(SharedObjectReference),
         Receiving(ObjectReference)
@@ -1045,9 +1041,7 @@ impl Input {
     #[cfg(feature = "serde")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn pure<T: serde::Serialize>(value: &T) -> Self {
-        Self::Pure {
-            value: bcs::to_bytes(value).expect("value should be serializable"),
-        }
+        Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
     }
 
     /// Returns the object id referenced by this input, if any.
@@ -1081,7 +1075,7 @@ impl Input {
     /// Returns the pure value bytes if this is a `Pure` input.
     pub fn as_pure_value(&self) -> Option<&[u8]> {
         match self {
-            Self::Pure { value } => Some(value),
+            Self::Pure(value) => Some(value),
             _ => None,
         }
     }

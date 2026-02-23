@@ -157,10 +157,7 @@ impl TransactionBuildData {
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.set_input(
-            InputKind::Input(iota_types::Input::Pure { value: bytes }),
-            false,
-        )
+        self.set_input(InputKind::Input(iota_types::Input::Pure(bytes)), false)
     }
 
     /// Add a pure input
