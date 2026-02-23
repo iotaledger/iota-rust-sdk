@@ -351,11 +351,13 @@ impl Input {
         initial_shared_version: &Version,
         mutable: bool,
     ) -> Self {
-        Self(iota_sdk::types::Input::Shared {
-            object_id: object_id.0,
-            initial_shared_version: **initial_shared_version,
-            mutable,
-        })
+        Self(iota_sdk::types::Input::Shared(
+            iota_sdk::types::SharedObjectReference {
+                object_id: object_id.0,
+                initial_shared_version: **initial_shared_version,
+                mutable,
+            },
+        ))
     }
 
     #[uniffi::constructor]

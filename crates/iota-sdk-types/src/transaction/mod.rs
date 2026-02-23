@@ -957,53 +957,87 @@ pub enum Input {
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"
-    #[cfg_attr(feature = "schemars", schemars(rename_all = "camelCase"))]
-    Shared {
-        object_id: ObjectId,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        initial_shared_version: Version,
-        /// Controls whether the caller asks for a mutable reference to the
-        /// shared object.
-        mutable: bool,
-    },
+    Shared(SharedObjectReference),
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
 }
 
-impl Input {
-    /// Shared `Input` for the IOTA system state object.
-    pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared {
+/// A shared object input to a programmable transaction
+#[derive(Clone, Hash, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(
+    feature = "schemars",
+    derive(schemars::JsonSchema),
+    schemars(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct SharedObjectReference {
+    pub object_id: ObjectId,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub initial_shared_version: Version,
+    /// Controls whether the caller asks for a mutable reference to the
+    /// shared object.
+    pub mutable: bool,
+}
+
+impl SharedObjectReference {
+    pub const IOTA_SYSTEM_OBJ: Self = Self {
         object_id: ObjectId::SYSTEM_STATE,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: true,
     };
 
+    /// Creates a new shared object reference from the object's id, initial
+    /// shared version, and mutability.
+    pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
+        Self {
+            object_id,
+            initial_shared_version,
+            mutable,
+        }
+    }
+}
+
+impl Input {
+    /// Shared `Input` for the IOTA system state object.
+    pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
+
     /// Shared `Input` for the clock object.
-    pub const CLOCK_IMMUTABLE: Self = Self::Shared {
+    pub const CLOCK_IMMUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::CLOCK,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: false,
-    };
+    });
 
     /// Shared `Input` for the clock object.
-    pub const CLOCK_MUTABLE: Self = Self::Shared {
+    pub const CLOCK_MUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::CLOCK,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: true,
-    };
+    });
 
     /// Shared `Input` for the authenticator state object.
-    pub const AUTHENTICATOR_MUTABLE: Self = Self::Shared {
+    pub const AUTHENTICATOR_MUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::AUTHENTICATOR_STATE,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: true,
-    };
+    });
 
-    crate::def_is!(Pure, Shared);
+    crate::def_is!(Pure);
 
     crate::def_is_as_into_opt!(
         ImmutableOrOwned(ObjectReference),
+        Shared(SharedObjectReference),
         Receiving(ObjectReference)
     );
 
@@ -1023,26 +1057,16 @@ impl Input {
         match self {
             Self::Pure { .. } => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
-            Self::Shared { object_id, .. } => Some(object_id),
+            Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
         }
     }
 
     /// Returns `true` if this input references a shared object.
     pub fn is_mutable_shared(&self) -> bool {
-        matches!(self, Self::Shared { mutable: true, .. })
-    }
-
-    /// If this is a `Shared` input, returns `(object_id,
-    /// initial_shared_version, mutable)`.
-    pub fn as_shared_opt(&self) -> Option<(&ObjectId, Version, bool)> {
-        match self {
-            Self::Shared {
-                object_id,
-                initial_shared_version,
-                mutable,
-            } => Some((object_id, *initial_shared_version, *mutable)),
-            _ => None,
-        }
+        matches!(
+            self,
+            Self::Shared(SharedObjectReference { mutable: true, .. })
+        )
     }
 
     /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or

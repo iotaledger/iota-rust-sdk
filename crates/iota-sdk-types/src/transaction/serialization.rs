@@ -399,7 +399,10 @@ mod version_assignments {
 
 mod input_argument {
     use super::*;
-    use crate::{Version, transaction::Input};
+    use crate::{
+        Version,
+        transaction::{Input, SharedObjectReference},
+    };
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "snake_case")]
@@ -412,7 +415,7 @@ mod input_argument {
         #[serde(rename_all = "camelCase")]
         Shared {
             object_id: ObjectId,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+            #[serde(with = "crate::_serde::ReadableDisplay")]
             initial_shared_version: Version,
             mutable: bool,
         },
@@ -447,11 +450,11 @@ mod input_argument {
                     Input::ImmutableOrOwned(object_ref) => {
                         ReadableInput::ImmutableOrOwned(object_ref)
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => ReadableInput::Shared {
+                    }) => ReadableInput::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -465,11 +468,11 @@ mod input_argument {
                     Input::ImmutableOrOwned(object_ref) => {
                         CallArg::Object(ObjectArg::ImmutableOrOwned(object_ref))
                     }
-                    Input::Shared {
+                    Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => CallArg::Object(ObjectArg::Shared {
+                    }) => CallArg::Object(ObjectArg::Shared {
                         object_id,
                         initial_shared_version,
                         mutable,
@@ -498,11 +501,11 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    } => Input::Shared {
+                    } => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
                 })
             } else {
@@ -515,11 +518,11 @@ mod input_argument {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    }) => Input::Shared {
+                    }) => Input::Shared(SharedObjectReference {
                         object_id,
                         initial_shared_version,
                         mutable,
-                    },
+                    }),
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
                     }
@@ -1065,7 +1068,7 @@ mod tests {
 
     use crate::{
         Digest, ObjectId, ObjectReference, Version,
-        transaction::{Argument, Input, Transaction},
+        transaction::{Argument, Input, SharedObjectReference, Transaction},
     };
 
     #[test]
@@ -1118,11 +1121,11 @@ mod tests {
                 }),
             ),
             (
-                Input::Shared {
+                Input::Shared(SharedObjectReference {
                     object_id: ObjectId::ZERO,
                     initial_shared_version: Version::from_u64(1),
                     mutable: true,
-                },
+                }),
                 serde_json::json!({
                   "shared": {
                     "objectId": "0x0000000000000000000000000000000000000000000000000000000000000000",

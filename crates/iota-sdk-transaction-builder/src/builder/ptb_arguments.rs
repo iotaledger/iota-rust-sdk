@@ -226,11 +226,13 @@ impl PTBArgument for Shared<ObjectReference> {
 
 impl PTBArgument for &Shared<ObjectReference> {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Shared {
-            object_id: self.0.object_id,
-            mutable: false,
-            initial_shared_version: self.0.version,
-        })
+        InputKind::Input(iota_types::Input::Shared(
+            iota_types::SharedObjectReference {
+                object_id: self.0.object_id,
+                mutable: false,
+                initial_shared_version: self.0.version,
+            },
+        ))
     }
 }
 
@@ -278,11 +280,13 @@ impl PTBArgument for SharedMut<ObjectReference> {
 
 impl PTBArgument for &SharedMut<ObjectReference> {
     fn input(self) -> InputKind {
-        InputKind::Input(iota_types::Input::Shared {
-            object_id: self.0.object_id,
-            mutable: true,
-            initial_shared_version: self.0.version,
-        })
+        InputKind::Input(iota_types::Input::Shared(
+            iota_types::SharedObjectReference {
+                object_id: self.0.object_id,
+                mutable: true,
+                initial_shared_version: self.0.version,
+            },
+        ))
     }
 }
 
