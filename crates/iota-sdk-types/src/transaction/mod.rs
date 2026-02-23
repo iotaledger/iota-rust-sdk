@@ -706,7 +706,7 @@ impl Ord for ActiveJwk {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -742,7 +742,7 @@ impl ConsensusDeterminedVersionAssignments {
 /// ```text
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -765,7 +765,7 @@ pub struct CancelledTransaction {
 /// ```text
 /// version-assignment = object-id u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -790,7 +790,7 @@ pub struct VersionAssignment {
 /// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
 ///                                consensus-determined-version-assignments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
