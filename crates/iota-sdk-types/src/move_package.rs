@@ -308,8 +308,7 @@ impl MovePackage {
             return Err(ExecutionError::PackageTooBig {
                 object_size,
                 max_object_size: max_move_package_size,
-            }
-            .into());
+            });
         }
         Ok(pkg)
     }
