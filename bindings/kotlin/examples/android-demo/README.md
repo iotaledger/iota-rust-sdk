@@ -2,6 +2,12 @@
 
 A minimal Android app demonstrating the IOTA Kotlin SDK. It fetches the chain ID from the IOTA devnet using `GraphQlClient`.
 
+## Architecture
+
+<p align="center">
+  <img src="architecture.png" alt="IOTA SDK Android Architecture — Production and Local Development Paths" width="700"/>
+</p>
+
 ## Prerequisites
 
 - Android Studio (or Android SDK command-line tools)
