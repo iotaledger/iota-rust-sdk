@@ -1047,6 +1047,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "ExecutionStatus")]
     enum BinaryExecutionStatus {
         Success,
         Failure {
@@ -1219,6 +1220,7 @@ mod serialization {
     // WARNING: Variant order is protocol-significant — it determines the BCS wire
     // format. Do not reorder. New variants MUST be added at the end.
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "ExecutionFailureStatus")]
     enum BinaryExecutionError {
         InsufficientGas,
         InvalidGasObject,
@@ -1810,6 +1812,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "CommandArgumentError")]
     enum BinaryCommandArgumentError {
         TypeMismatch,
         InvalidBcsBytes,
@@ -2005,6 +2008,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "PackageUpgradeError")]
     enum BinaryPackageUpgradeError {
         UnableToFetchPackage {
             package_id: ObjectId,
