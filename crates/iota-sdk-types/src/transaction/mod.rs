@@ -938,11 +938,6 @@ pub struct ProgrammableTransaction {
 /// input-receiving             = %x04 object-ref
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum Input {
@@ -950,7 +945,7 @@ pub enum Input {
     ///
     /// For normal operations this is required to be a move primitive type and
     /// not contain structs or objects.
-    Pure(#[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))] Vec<u8>),
+    Pure(Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"

@@ -406,9 +406,11 @@ mod input_argument {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "snake_case")]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableInput {
         Pure {
             #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+            #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
             value: Vec<u8>,
         },
         ImmutableOrOwned(ObjectReference),
@@ -416,6 +418,7 @@ mod input_argument {
         Shared {
             object_id: ObjectId,
             #[serde(with = "crate::_serde::ReadableDisplay")]
+            #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
             initial_shared_version: Version,
             mutable: bool,
         },
@@ -528,6 +531,19 @@ mod input_argument {
                     }
                 })
             }
+        }
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for Input {
+        fn schema_name() -> String {
+            ReadableInput::schema_name()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableInput::json_schema(generator)
         }
     }
 }
