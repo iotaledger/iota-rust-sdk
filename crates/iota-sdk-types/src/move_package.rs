@@ -313,15 +313,15 @@ impl MovePackage {
         Ok(pkg)
     }
 
-    // /// Calculate the digest of the [MovePackage].
-    // pub fn digest(&self) -> [u8; 32] {
-    //     Self::compute_digest_for_modules_and_deps(
-    //         self.modules.values(),
-    //         self.linkage_table
-    //             .values()
-    //             .map(|UpgradeInfo { upgraded_id, .. }| upgraded_id),
-    //     )
-    // }
+    /// Calculate the digest of the [MovePackage].
+    pub fn digest(&self) -> Digest {
+        Self::compute_digest_for_modules_and_deps(
+            self.modules.values(),
+            self.linkage_table
+                .values()
+                .map(|UpgradeInfo { upgraded_id, .. }| upgraded_id),
+        )
+    }
 
     /// It is important that this function is shared across both the calculation
     /// of the digest for the package, and the calculation of the digest
