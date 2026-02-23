@@ -271,7 +271,7 @@ pub enum ExecutionError {
     )]
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
-    #[error("Move Runtime Abort. Location: {location:?}, Abort Code: {code}")]
+    #[error("Move Runtime Abort. Location: {location}, Abort Code: {code}")]
     MoveAbort {
         location: MoveLocation,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
