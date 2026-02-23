@@ -94,8 +94,9 @@ rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-and
 # Install cargo-ndk
 cargo install cargo-ndk
 
-# Set ANDROID_NDK_HOME if not already set
-export ANDROID_NDK_HOME=/path/to/your/android-ndk
+# Set ANDROID_NDK_HOME if not already set (replace with your actual NDK path)
+# Example: export ANDROID_NDK_HOME=/home/alice/Android/Sdk/ndk/26.1.10909125
+export ANDROID_NDK_HOME=/path/to/your/Android/Sdk/ndk/<version>
 
 # Build for all Android ABIs
 make kotlin-android
