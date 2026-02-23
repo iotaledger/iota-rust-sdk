@@ -3,7 +3,7 @@
 Swift bindings for the IOTA SDK, enabling Swift developers to interact with the IOTA network.
 
 > [!NOTE]
-> Thanks to [https://github.com/shaibuafeez](Cyber) for adding these bindings.
+> Thanks to [Cyber](https://github.com/shaibuafeez) for adding these bindings.
 ## Installation
 
 To use the IOTA SDK in your Swift project, add it as a dependency in your `Package.swift`:
