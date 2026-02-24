@@ -5304,6 +5304,69 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_states_digests()
+	})
+	if checksum != 58716 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_states_digests: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms()
+	})
+	if checksum != 6757 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest()
+	})
+	if checksum != 35351 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments()
+	})
+	if checksum != 53091 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch()
+	})
+	if checksum != 60890 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round()
+	})
+	if checksum != 24733 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index()
+	})
+	if checksum != 19178 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions()
 	})
 	if checksum != 59888 {
@@ -9822,6 +9885,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new()
+	})
+	if checksum != 6627 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions()
 	})
 	if checksum != 929 {
@@ -12176,6 +12248,15 @@ func uniffiCheckChecksums() {
 	if checksum != 27756 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2()
+	})
+	if checksum != 40966 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -17229,6 +17310,216 @@ func (c FfiConverterConsensusCommitPrologueV1) Write(writer io.Writer, value *Co
 type FfiDestroyerConsensusCommitPrologueV1 struct {}
 
 func (_ FfiDestroyerConsensusCommitPrologueV1) Destroy(value *ConsensusCommitPrologueV1) {
+		value.Destroy()
+}
+
+
+
+// V2 Consensus Commit Prologue with additional state digests
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+// consensus-determined-version-assignments
+// vector digest
+// ```
+type ConsensusCommitPrologueV2Interface interface {
+	// Digests of any additional states computed by the consensus handler.
+	AdditionalStatesDigests() []*Digest
+	// Unix timestamp from consensus
+	CommitTimestampMs() uint64
+	// Digest of consensus output
+	ConsensusCommitDigest() *Digest
+	// Stores consensus handler determined shared object version assignments.
+	ConsensusDeterminedVersionAssignments() *ConsensusDeterminedVersionAssignments
+	// Epoch of the commit prologue transaction
+	Epoch() uint64
+	// Consensus round of the commit
+	Round() uint64
+	// The sub DAG index of the consensus commit. This field will be populated
+	// if there are multiple consensus commits per round.
+	SubDagIndex() *uint64
+}
+// V2 Consensus Commit Prologue with additional state digests
+//
+// # BCS
+//
+// The BCS serialized form for this type is defined by the following ABNF:
+//
+// ```text
+// consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+// consensus-determined-version-assignments
+// vector digest
+// ```
+type ConsensusCommitPrologueV2 struct {
+	ffiObject FfiObject
+}
+func NewConsensusCommitPrologueV2(epoch uint64, round uint64, subDagIndex *uint64, commitTimestampMs uint64, consensusCommitDigest *Digest, consensusDeterminedVersionAssignments *ConsensusDeterminedVersionAssignments, additionalStatesDigests []*Digest) *ConsensusCommitPrologueV2 {
+	return FfiConverterConsensusCommitPrologueV2INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev2_new(FfiConverterUint64INSTANCE.Lower(epoch), FfiConverterUint64INSTANCE.Lower(round), FfiConverterOptionalUint64INSTANCE.Lower(subDagIndex), FfiConverterUint64INSTANCE.Lower(commitTimestampMs), FfiConverterDigestINSTANCE.Lower(consensusCommitDigest), FfiConverterConsensusDeterminedVersionAssignmentsINSTANCE.Lower(consensusDeterminedVersionAssignments), FfiConverterSequenceDigestINSTANCE.Lower(additionalStatesDigests),_uniffiStatus)
+	}))
+}
+
+
+
+
+// Digests of any additional states computed by the consensus handler.
+func (_self *ConsensusCommitPrologueV2) AdditionalStatesDigests() []*Digest {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_additional_states_digests(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+// Unix timestamp from consensus
+func (_self *ConsensusCommitPrologueV2) CommitTimestampMs() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_commit_timestamp_ms(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Digest of consensus output
+func (_self *ConsensusCommitPrologueV2) ConsensusCommitDigest() *Digest {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterDigestINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_commit_digest(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Stores consensus handler determined shared object version assignments.
+func (_self *ConsensusCommitPrologueV2) ConsensusDeterminedVersionAssignments() *ConsensusDeterminedVersionAssignments {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterConsensusDeterminedVersionAssignmentsINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_determined_version_assignments(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Epoch of the commit prologue transaction
+func (_self *ConsensusCommitPrologueV2) Epoch() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_epoch(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// Consensus round of the commit
+func (_self *ConsensusCommitPrologueV2) Round() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_round(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+// The sub DAG index of the consensus commit. This field will be populated
+// if there are multiple consensus commits per round.
+func (_self *ConsensusCommitPrologueV2) SubDagIndex() *uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_sub_dag_index(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *ConsensusCommitPrologueV2) DebugString() string {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *ConsensusCommitPrologueV2) Eq(other *ConsensusCommitPrologueV2) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_eq(
+		_pointer,FfiConverterConsensusCommitPrologueV2INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+func (_self *ConsensusCommitPrologueV2) Ne(other *ConsensusCommitPrologueV2) bool {
+	_pointer := _self.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_ne(
+		_pointer,FfiConverterConsensusCommitPrologueV2INSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+func (object *ConsensusCommitPrologueV2) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterConsensusCommitPrologueV2 struct {}
+
+var FfiConverterConsensusCommitPrologueV2INSTANCE = FfiConverterConsensusCommitPrologueV2{}
+
+
+func (c FfiConverterConsensusCommitPrologueV2) Lift(pointer unsafe.Pointer) *ConsensusCommitPrologueV2 {
+	result := &ConsensusCommitPrologueV2 {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev2(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev2(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ConsensusCommitPrologueV2).Destroy)
+	return result
+}
+
+func (c FfiConverterConsensusCommitPrologueV2) Read(reader io.Reader) *ConsensusCommitPrologueV2 {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterConsensusCommitPrologueV2) Lower(value *ConsensusCommitPrologueV2) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ConsensusCommitPrologueV2")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterConsensusCommitPrologueV2) Write(writer io.Writer, value *ConsensusCommitPrologueV2) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerConsensusCommitPrologueV2 struct {}
+
+func (_ FfiDestroyerConsensusCommitPrologueV2) Destroy(value *ConsensusCommitPrologueV2) {
 		value.Destroy()
 }
 
@@ -33241,14 +33532,12 @@ func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
 //
 // ```text
 // transaction-kind    =  %x00 ptb
-// =/ %x01 change-epoch
-// =/ %x02 genesis-transaction
-// =/ %x03 consensus-commit-prologue
-// =/ %x04 authenticator-state-update
-// =/ %x05 (vector end-of-epoch-transaction-kind)
-// =/ %x06 randomness-state-update
-// =/ %x07 consensus-commit-prologue-v2
-// =/ %x08 consensus-commit-prologue-v3
+// =/ %x01 genesis-transaction
+// =/ %x02 consensus-commit-prologue-v1
+// =/ %x03 authenticator-state-update-v1
+// =/ %x04 (vector end-of-epoch-transaction-kind)
+// =/ %x05 randomness-state-update
+// =/ %x06 consensus-commit-prologue-v2
 // ```
 type TransactionKindInterface interface {
 }
@@ -33260,14 +33549,12 @@ type TransactionKindInterface interface {
 //
 // ```text
 // transaction-kind    =  %x00 ptb
-// =/ %x01 change-epoch
-// =/ %x02 genesis-transaction
-// =/ %x03 consensus-commit-prologue
-// =/ %x04 authenticator-state-update
-// =/ %x05 (vector end-of-epoch-transaction-kind)
-// =/ %x06 randomness-state-update
-// =/ %x07 consensus-commit-prologue-v2
-// =/ %x08 consensus-commit-prologue-v3
+// =/ %x01 genesis-transaction
+// =/ %x02 consensus-commit-prologue-v1
+// =/ %x03 authenticator-state-update-v1
+// =/ %x04 (vector end-of-epoch-transaction-kind)
+// =/ %x05 randomness-state-update
+// =/ %x06 consensus-commit-prologue-v2
 // ```
 type TransactionKind struct {
 	ffiObject FfiObject
@@ -33283,6 +33570,12 @@ func TransactionKindNewAuthenticatorStateUpdateV1(tx AuthenticatorStateUpdateV1)
 func TransactionKindNewConsensusCommitPrologueV1(tx *ConsensusCommitPrologueV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(tx),_uniffiStatus)
+	}))
+}
+
+func TransactionKindNewConsensusCommitPrologueV2(tx *ConsensusCommitPrologueV2) *TransactionKind {
+	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v2(FfiConverterConsensusCommitPrologueV2INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 

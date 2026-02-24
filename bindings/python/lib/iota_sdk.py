@@ -1559,6 +1559,20 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index() != 56426:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_states_digests() != 58716:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms() != 6757:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest() != 35351:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments() != 53091:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch() != 60890:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round() != 24733:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index() != 19178:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions() != 59888:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241:
@@ -2563,6 +2577,8 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new() != 50376:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new() != 6627:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions() != 929:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58() != 41234:
@@ -3086,6 +3102,8 @@ def _uniffi_check_api_checksums(lib):
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() != 29264:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2() != 40966:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 44556:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -4606,6 +4624,79 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev1_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev2.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev2.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev2.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev2.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev2_new.argtypes = (
+    ctypes.c_uint64,
+    ctypes.c_uint64,
+    _UniffiRustBuffer,
+    ctypes.c_uint64,
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev2_new.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_additional_states_digests.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_additional_states_digests.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_commit_timestamp_ms.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_commit_timestamp_ms.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_commit_digest.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_commit_digest.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_determined_version_assignments.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_determined_version_assignments.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_epoch.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_epoch.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_round.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_round.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_sub_dag_index.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_sub_dag_index.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_debug.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_eq.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_eq.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_ne.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_ne.restype = ctypes.c_int8
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensusdeterminedversionassignments.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -9643,6 +9734,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_comm
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v2.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v2.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -14971,6 +15067,27 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_round.r
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev1_sub_dag_index.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_states_digests.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_additional_states_digests.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_commit_timestamp_ms.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_commit_digest.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_consensus_determined_version_assignments.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_epoch.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_round.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensuscommitprologuev2_sub_dag_index.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_as_cancelled_transactions.restype = ctypes.c_uint16
@@ -16477,6 +16594,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_command_new_upgrade.restype 
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev1_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensuscommitprologuev2_new.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_consensusdeterminedversionassignments_new_cancelled_transactions.restype = ctypes.c_uint16
@@ -17263,6 +17383,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenti
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v2.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch.restype = ctypes.c_uint16
@@ -17650,6 +17773,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -36641,6 +36766,266 @@ class _UniffiConverterTypeConsensusCommitPrologueV1:
     @classmethod
     def write(cls, value: ConsensusCommitPrologueV1Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
+class ConsensusCommitPrologueV2Protocol(typing.Protocol):
+    """
+    V2 Consensus Commit Prologue with additional state digests
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+    consensus-determined-version-assignments
+    vector digest
+    ```
+    """
+
+    def additional_states_digests(self, ):
+        """
+        Digests of any additional states computed by the consensus handler.
+        """
+
+        raise NotImplementedError
+    def commit_timestamp_ms(self, ):
+        """
+        Unix timestamp from consensus
+        """
+
+        raise NotImplementedError
+    def consensus_commit_digest(self, ):
+        """
+        Digest of consensus output
+        """
+
+        raise NotImplementedError
+    def consensus_determined_version_assignments(self, ):
+        """
+        Stores consensus handler determined shared object version assignments.
+        """
+
+        raise NotImplementedError
+    def epoch(self, ):
+        """
+        Epoch of the commit prologue transaction
+        """
+
+        raise NotImplementedError
+    def round(self, ):
+        """
+        Consensus round of the commit
+        """
+
+        raise NotImplementedError
+    def sub_dag_index(self, ):
+        """
+        The sub DAG index of the consensus commit. This field will be populated
+        if there are multiple consensus commits per round.
+        """
+
+        raise NotImplementedError
+# ConsensusCommitPrologueV2 is a Rust-only trait - it's a wrapper around a Rust implementation.
+class ConsensusCommitPrologueV2():
+    """
+    V2 Consensus Commit Prologue with additional state digests
+
+    # BCS
+
+    The BCS serialized form for this type is defined by the following ABNF:
+
+    ```text
+    consensus-commit-prologue-v2 = u64 u64 (option u64) u64 digest
+    consensus-determined-version-assignments
+    vector digest
+    ```
+    """
+
+    _pointer: ctypes.c_void_p
+    def __init__(self, epoch: "int",round: "int",sub_dag_index: "typing.Optional[int]",commit_timestamp_ms: "int",consensus_commit_digest: "Digest",consensus_determined_version_assignments: "ConsensusDeterminedVersionAssignments",additional_states_digests: "typing.List[Digest]"):
+        _UniffiConverterUInt64.check_lower(epoch)
+        
+        _UniffiConverterUInt64.check_lower(round)
+        
+        _UniffiConverterOptionalUInt64.check_lower(sub_dag_index)
+        
+        _UniffiConverterUInt64.check_lower(commit_timestamp_ms)
+        
+        _UniffiConverterTypeDigest.check_lower(consensus_commit_digest)
+        
+        _UniffiConverterTypeConsensusDeterminedVersionAssignments.check_lower(consensus_determined_version_assignments)
+        
+        _UniffiConverterSequenceTypeDigest.check_lower(additional_states_digests)
+        
+        self._pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_consensuscommitprologuev2_new,
+        _UniffiConverterUInt64.lower(epoch),
+        _UniffiConverterUInt64.lower(round),
+        _UniffiConverterOptionalUInt64.lower(sub_dag_index),
+        _UniffiConverterUInt64.lower(commit_timestamp_ms),
+        _UniffiConverterTypeDigest.lower(consensus_commit_digest),
+        _UniffiConverterTypeConsensusDeterminedVersionAssignments.lower(consensus_determined_version_assignments),
+        _UniffiConverterSequenceTypeDigest.lower(additional_states_digests))
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_consensuscommitprologuev2, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_consensuscommitprologuev2, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+
+
+    def additional_states_digests(self, ) -> "typing.List[Digest]":
+        """
+        Digests of any additional states computed by the consensus handler.
+        """
+
+        return _UniffiConverterSequenceTypeDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_additional_states_digests,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def commit_timestamp_ms(self, ) -> "int":
+        """
+        Unix timestamp from consensus
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_commit_timestamp_ms,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def consensus_commit_digest(self, ) -> "Digest":
+        """
+        Digest of consensus output
+        """
+
+        return _UniffiConverterTypeDigest.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_commit_digest,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def consensus_determined_version_assignments(self, ) -> "ConsensusDeterminedVersionAssignments":
+        """
+        Stores consensus handler determined shared object version assignments.
+        """
+
+        return _UniffiConverterTypeConsensusDeterminedVersionAssignments.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_consensus_determined_version_assignments,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def epoch(self, ) -> "int":
+        """
+        Epoch of the commit prologue transaction
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_epoch,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def round(self, ) -> "int":
+        """
+        Consensus round of the commit
+        """
+
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_round,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def sub_dag_index(self, ) -> "typing.Optional[int]":
+        """
+        The sub DAG index of the consensus commit. This field will be populated
+        if there are multiple consensus commits per round.
+        """
+
+        return _UniffiConverterOptionalUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_sub_dag_index,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __repr__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, ConsensusCommitPrologueV2):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_eq,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeConsensusCommitPrologueV2.lower(other)))
+
+    def __ne__(self, other: object) -> bool:
+        if not isinstance(other, ConsensusCommitPrologueV2):
+            return NotImplemented
+
+        return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_consensuscommitprologuev2_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
+        _UniffiConverterTypeConsensusCommitPrologueV2.lower(other)))
+
+
+
+class _UniffiConverterTypeConsensusCommitPrologueV2:
+
+    @staticmethod
+    def lift(value: int):
+        return ConsensusCommitPrologueV2._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: ConsensusCommitPrologueV2):
+        if not isinstance(value, ConsensusCommitPrologueV2):
+            raise TypeError("Expected ConsensusCommitPrologueV2 instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: ConsensusCommitPrologueV2Protocol):
+        if not isinstance(value, ConsensusCommitPrologueV2):
+            raise TypeError("Expected ConsensusCommitPrologueV2 instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: ConsensusCommitPrologueV2Protocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
 class ConsensusDeterminedVersionAssignmentsProtocol(typing.Protocol):
     def as_cancelled_transactions(self, ):
         raise NotImplementedError
@@ -53219,14 +53604,12 @@ class TransactionKindProtocol(typing.Protocol):
 
     ```text
     transaction-kind    =  %x00 ptb
-    =/ %x01 change-epoch
-    =/ %x02 genesis-transaction
-    =/ %x03 consensus-commit-prologue
-    =/ %x04 authenticator-state-update
-    =/ %x05 (vector end-of-epoch-transaction-kind)
-    =/ %x06 randomness-state-update
-    =/ %x07 consensus-commit-prologue-v2
-    =/ %x08 consensus-commit-prologue-v3
+    =/ %x01 genesis-transaction
+    =/ %x02 consensus-commit-prologue-v1
+    =/ %x03 authenticator-state-update-v1
+    =/ %x04 (vector end-of-epoch-transaction-kind)
+    =/ %x05 randomness-state-update
+    =/ %x06 consensus-commit-prologue-v2
     ```
     """
 
@@ -53242,14 +53625,12 @@ class TransactionKind():
 
     ```text
     transaction-kind    =  %x00 ptb
-    =/ %x01 change-epoch
-    =/ %x02 genesis-transaction
-    =/ %x03 consensus-commit-prologue
-    =/ %x04 authenticator-state-update
-    =/ %x05 (vector end-of-epoch-transaction-kind)
-    =/ %x06 randomness-state-update
-    =/ %x07 consensus-commit-prologue-v2
-    =/ %x08 consensus-commit-prologue-v3
+    =/ %x01 genesis-transaction
+    =/ %x02 consensus-commit-prologue-v1
+    =/ %x03 authenticator-state-update-v1
+    =/ %x04 (vector end-of-epoch-transaction-kind)
+    =/ %x05 randomness-state-update
+    =/ %x06 consensus-commit-prologue-v2
     ```
     """
 
@@ -53291,6 +53672,15 @@ class TransactionKind():
         # Call the (fallible) function before creating any half-baked object instances.
         pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1,
         _UniffiConverterTypeConsensusCommitPrologueV1.lower(tx))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_consensus_commit_prologue_v2(cls, tx: "ConsensusCommitPrologueV2"):
+        _UniffiConverterTypeConsensusCommitPrologueV2.check_lower(tx)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v2,
+        _UniffiConverterTypeConsensusCommitPrologueV2.lower(tx))
         return cls._make_instance_(pointer)
 
     @classmethod
@@ -62428,6 +62818,7 @@ __all__ = [
     "Coin",
     "Command",
     "ConsensusCommitPrologueV1",
+    "ConsensusCommitPrologueV2",
     "ConsensusDeterminedVersionAssignments",
     "Digest",
     "Ed25519PrivateKey",
