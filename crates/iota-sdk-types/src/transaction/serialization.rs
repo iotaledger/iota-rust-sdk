@@ -437,15 +437,24 @@ mod input_argument {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum CallArg {
-        Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
+        Pure(
+            #[serde(with = "::serde_with::As::<::serde_with::Bytes>")]
+            #[cfg_attr(feature = "schemars", schemars(with = "Vec<u8>"))]
+            Vec<u8>,
+        ),
         Object(ObjectArg),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ObjectArg {
+        #[cfg_attr(feature = "schemars", schemars(rename = "ImmOrOwnedObject"))]
         ImmutableOrOwned(ObjectReference),
+        #[cfg_attr(feature = "schemars", schemars(rename = "SharedObject"))]
         Shared {
+            #[cfg_attr(feature = "schemars", schemars(rename = "id"))]
             object_id: ObjectId,
             initial_shared_version: Version,
             mutable: bool,
@@ -548,13 +557,13 @@ mod input_argument {
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for Input {
         fn schema_name() -> String {
-            "Input".to_owned()
+            "CallArg".to_owned()
         }
 
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            ReadableInput::json_schema(generator)
+            CallArg::json_schema(generator)
         }
     }
 }
