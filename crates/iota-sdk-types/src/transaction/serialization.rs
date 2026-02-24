@@ -405,15 +405,25 @@ mod input_argument {
     };
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+    struct PureInput {
+        #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
+        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
+        value: Vec<u8>,
+    }
+
+    #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename_all = "snake_case")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableInput {
-        Pure {
-            #[serde(with = "::serde_with::As::<crate::_serde::Base64Encoded>")]
-            #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
-            value: Vec<u8>,
-        },
+        /// A move value serialized as BCS.
+        ///
+        /// For normal operations this is required to be a move primitive type
+        /// and not contain structs or objects.
+        Pure(PureInput),
+        /// A move object that is either immutable or address owned
         ImmutableOrOwned(ObjectReference),
+        /// A move object whose owner is "Shared"
         #[serde(rename_all = "camelCase")]
         Shared {
             object_id: ObjectId,
@@ -422,6 +432,7 @@ mod input_argument {
             initial_shared_version: Version,
             mutable: bool,
         },
+        /// A move object that is attempted to be received in this transaction.
         Receiving(ObjectReference),
     }
 
@@ -449,7 +460,7 @@ mod input_argument {
         {
             if serializer.is_human_readable() {
                 let readable = match self.clone() {
-                    Input::Pure(value) => ReadableInput::Pure { value },
+                    Input::Pure(value) => ReadableInput::Pure(PureInput { value }),
                     Input::ImmutableOrOwned(object_ref) => {
                         ReadableInput::ImmutableOrOwned(object_ref)
                     }
@@ -496,7 +507,7 @@ mod input_argument {
         {
             if deserializer.is_human_readable() {
                 ReadableInput::deserialize(deserializer).map(|readable| match readable {
-                    ReadableInput::Pure { value } => Input::Pure(value),
+                    ReadableInput::Pure(PureInput { value }) => Input::Pure(value),
                     ReadableInput::ImmutableOrOwned(object_ref) => {
                         Input::ImmutableOrOwned(object_ref)
                     }
@@ -537,7 +548,7 @@ mod input_argument {
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for Input {
         fn schema_name() -> String {
-            ReadableInput::schema_name()
+            "Input".to_owned()
         }
 
         fn json_schema(
