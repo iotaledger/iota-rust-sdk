@@ -18,13 +18,6 @@ jobs:
   android-native:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    strategy:
-      matrix:
-        include:
-          - target: aarch64-linux-android
-          - target: armv7-linux-androideabi
-          - target: x86_64-linux-android
-          - target: i686-linux-android
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -37,11 +30,11 @@ jobs:
       - name: Install cargo-ndk
         run: cargo install cargo-ndk
 
-      - name: Add Rust Android target
-        run: rustup target add ${{ matrix.target }}
+      - name: Add Rust Android targets
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
 
-      - name: Build native library
-        run: cargo ndk -t ${{ matrix.target }} -P 21 build -p iota-sdk-ffi --lib --release
+      - name: Build native libraries for all Android ABIs
+        run: make kotlin-android
 
   android-demo:
     runs-on: ubuntu-latest
