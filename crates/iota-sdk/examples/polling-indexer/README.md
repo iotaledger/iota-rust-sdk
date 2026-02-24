@@ -3,6 +3,7 @@
 Polling-based custom indexer example built on top of `iota_sdk::graphql_client::Client`.
 
 This example demonstrates the bounty-required flow:
+
 - checkpoint polling with persisted watermark progress,
 - transaction ingestion using `TransactionsFilter::after_checkpoint` / `before_checkpoint`,
 - event ingestion + filtering,

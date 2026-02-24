@@ -21,7 +21,7 @@
 //!
 //! ### Example with Client Resolution
 //!
-//! ```
+//! ```no_run
 //! # use std::str::FromStr;
 //! use iota_graphql_client::Client;
 //! use iota_sdk_transaction_builder::TransactionBuilder;

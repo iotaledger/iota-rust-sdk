@@ -95,3 +95,5 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
 
     Ok(())
 }
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0

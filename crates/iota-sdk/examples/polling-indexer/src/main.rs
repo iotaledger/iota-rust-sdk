@@ -1,6 +1,9 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 use clap::Parser;
-use polling_indexer::{config::AppConfig, db, indexer::Indexer};
 use iota_sdk::graphql_client::Client;
+use polling_indexer::{config::AppConfig, db, indexer::Indexer};
 use tracing::info;
 use tracing_subscriber::{EnvFilter, fmt};
 
