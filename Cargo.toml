@@ -22,6 +22,7 @@ derive_more = "2.0"
 eyre = "0.6"
 futures = "0.3.29"
 hex = "0.4.3"
+insta = "1.42"
 itertools = "0.13.0"
 paste = "1.0.15"
 primitive-types = { version = "0.14", features = ["impl-serde"] }
