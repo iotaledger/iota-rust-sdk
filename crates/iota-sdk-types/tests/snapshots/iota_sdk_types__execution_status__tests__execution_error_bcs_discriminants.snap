@@ -15,8 +15,8 @@ expression: bcs_discriminant_snapshot(&variants)
 10 IotaMoveVerificationError
 11 MovePrimitiveRuntimeError
 12 MoveAbort
-13 VMVerificationOrDeserializationError
-14 VMInvariantViolation
+13 VmVerificationOrDeserializationError
+14 VmInvariantViolation
 15 FunctionNotFound
 16 ArityMismatch
 17 TypeArityMismatch
