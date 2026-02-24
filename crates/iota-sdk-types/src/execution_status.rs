@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use thiserror::Error;
+
 use super::{Address, Digest, Identifier, ObjectId};
 
 /// The status of an executed Transaction
@@ -40,6 +42,28 @@ pub enum ExecutionStatus {
 impl ExecutionStatus {
     crate::def_is!(Success, Failure);
 
+    pub fn new_failure(error: ExecutionError, command: Option<u64>) -> Self {
+        Self::Failure { error, command }
+    }
+
+    pub fn unwrap(&self) {
+        match self {
+            Self::Success => {}
+            Self::Failure { .. } => {
+                panic!("Unable to unwrap() on {self:?}");
+            }
+        }
+    }
+
+    pub fn unwrap_err(self) -> (ExecutionError, Option<u64>) {
+        match self {
+            Self::Success => {
+                panic!("Unable to unwrap_err() on {self:?}");
+            }
+            Self::Failure { error, command } => (error, command),
+        }
+    }
+
     /// The error encountered during execution.
     pub fn error(&self) -> Option<&ExecutionError> {
         if let Self::Failure { error, .. } = self {
@@ -57,6 +81,36 @@ impl ExecutionStatus {
             None
         }
     }
+}
+
+fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
+    struct W<'a>(&'a Option<MoveLocation>);
+    impl core::fmt::Display for W<'_> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            match &self.0 {
+                None => write!(f, "UNKNOWN"),
+                Some(l) => write!(f, "{l}"),
+            }
+        }
+    }
+    W(location)
+}
+
+fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + '_ {
+    struct W<'a>(&'a [ObjectId]);
+    impl core::fmt::Display for W<'_> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            let mut iter = self.0.iter();
+            if let Some(first) = iter.next() {
+                write!(f, "{first}")?;
+                for obj in iter {
+                    write!(f, ", {obj}")?;
+                }
+            }
+            Ok(())
+        }
+    }
+    W(objects)
 }
 
 /// An error that can occur during the execution of a transaction
@@ -147,119 +201,194 @@ impl ExecutionStatus {
 /// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+// WARNING: The variant order of this enum is protocol-significant. Each variant's position
+// determines its BCS discriminant (the integer sent over the wire).
+// Reordering or inserting variants will break protocol compatibility.
+// New variants MUST be added at the end.
+// The `execution_error_bcs_discriminants` snapshot test enforces this.
+#[derive(Eq, PartialEq, Clone, Debug, Error)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
+    #[error("Insufficient Gas")]
     InsufficientGas,
     /// Invalid Gas Object.
+    #[error("Invalid Gas Object. Possibly not address-owned or possibly not an IOTA coin")]
     InvalidGasObject,
     /// Invariant Violation
+    #[error("INVARIANT VIOLATION")]
     InvariantViolation,
-    /// Attempted to used feature that is not supported yet
+    /// Attempted to use feature that is not supported yet
+    #[error("Attempted to use feature that is not supported yet")]
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
+    #[error(
+        "Move object with size {object_size} is larger than the maximum object size {max_object_size}"
+    )]
     ObjectTooBig {
         object_size: u64,
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
+    #[error(
+        "Move package with size {object_size} is larger than the maximum object size {max_object_size}"
+    )]
     PackageTooBig {
         object_size: u64,
         max_object_size: u64,
     },
     /// Circular Object Ownership
+    #[error("Circular Object Ownership, including object {object}")]
     CircularObjectOwnership { object: ObjectId },
     /// Insufficient coin balance for requested operation
+    #[error("Insufficient coin balance for operation")]
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
+    #[error("The coin balance overflows u64")]
     CoinBalanceOverflow,
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
+    #[error(
+        "Publish Error, Non-zero Address. The modules in the package must have their self-addresses set to zero."
+    )]
     PublishErrorNonZeroAddress,
     /// IOTA Move Bytecode Verification Error.
+    #[error(
+        "IOTA Move Bytecode Verification Error. Please run the IOTA Move Verifier for more information."
+    )]
     IotaMoveVerificationError,
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
+    #[error(
+        "Move Primitive Runtime Error. Location: {}. Arithmetic error, stack overflow, max value depth, etc.",
+        display_move_location_opt(.location)
+    )]
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
+    #[error("Move Runtime Abort. Location: {location}, Abort Code: {code}")]
     MoveAbort { location: MoveLocation, code: u64 },
     /// Bytecode verification error.
+    #[error(
+        "Move Bytecode Verification Error. Please run the Bytecode Verifier for more information."
+    )]
     VmVerificationOrDeserializationError,
     /// MoveVm invariant violation
+    #[error("MOVE VM INVARIANT VIOLATION")]
     VmInvariantViolation,
     /// Function not found
+    #[error("Function Not Found")]
     FunctionNotFound,
     /// Arity mismatch for Move function.
     /// The number of arguments does not match the number of parameters
+    #[error(
+        "Arity mismatch for Move function. The number of arguments does not match the number of parameters"
+    )]
     ArityMismatch,
     /// Type arity mismatch for Move function.
     /// Mismatch between the number of actual versus expected type arguments.
+    #[error(
+        "Type arity mismatch for Move function. Mismatch between the number of actual versus expected type arguments."
+    )]
     TypeArityMismatch,
     /// Non Entry Function Invoked. Move Call must start with an entry function.
+    #[error("Non Entry Function Invoked. Move Call must start with an entry function")]
     NonEntryFunctionInvoked,
     /// Invalid command argument
+    #[error("Invalid command argument at {argument}. {kind}")]
     CommandArgumentError {
         argument: u16,
         kind: CommandArgumentError,
     },
     /// Type argument error
+    #[error("Error for type argument at index {type_argument}: {kind}")]
     TypeArgumentError {
         /// Index of the problematic type argument
         type_argument: u16,
         kind: TypeArgumentError,
     },
     /// Unused result without the drop ability.
+    #[error(
+        "Unused result without the drop ability. Command result {result}, return value {subresult}"
+    )]
     UnusedValueWithoutDrop { result: u16, subresult: u16 },
     /// Invalid public Move function signature.
     /// Unsupported return type for return value
+    #[error(
+        "Invalid public Move function signature. Unsupported return type for return value {index}"
+    )]
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
+    #[error("Invalid Transfer Object, object does not have public transfer")]
     InvalidTransferObject,
     /// Effects from the transaction are too large
+    #[error("Effects of size {current_size} bytes too large. Limit is {max_size} bytes")]
     EffectsTooLarge { current_size: u64, max_size: u64 },
     /// Publish or Upgrade is missing dependency
+    #[error(
+        "Publish/Upgrade Error, Missing dependency. A dependency of a published or upgraded package has not been assigned an on-chain address."
+    )]
     PublishUpgradeMissingDependency,
     /// Publish or Upgrade dependency downgrade.
     ///
     /// Indirect (transitive) dependency of published or upgraded package has
     /// been assigned an on-chain version that is less than the version
     /// required by one of the package's transitive dependencies.
+    #[error(
+        "Publish/Upgrade Error, Dependency downgrade. Indirect (transitive) dependency of published or upgraded package has been assigned an on-chain version that is less than the version required by one of the package's transitive dependencies."
+    )]
     PublishUpgradeDependencyDowngrade,
     /// Invalid package upgrade
+    #[error("Invalid package upgrade. {kind}")]
     PackageUpgradeError { kind: PackageUpgradeError },
     /// Indicates the transaction tried to write objects too large to storage
+    #[error("Written objects of {object_size} bytes too large. Limit is {max_object_size} bytes")]
     WrittenObjectsTooLarge {
         object_size: u64,
         max_object_size: u64,
     },
     /// Certificate is on the deny list
+    #[error("Certificate is on the deny list")]
     CertificateDenied,
     /// IOTA Move Bytecode verification timed out.
+    #[error(
+        "IOTA Move Bytecode Verification Timeout. Please run the IOTA Move Verifier for more information."
+    )]
     IotaMoveVerificationTimeout,
     /// The requested shared object operation is not allowed
+    #[error("The shared object operation is not allowed")]
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
+    #[error("Certificate cannot be executed due to a dependency on a deleted shared object")]
     InputObjectDeleted,
     /// Certificate is cancelled due to congestion on shared objects
+    #[error("Certificate is cancelled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
+
+    /// Address is denied for this coin type
+    #[error("Address {address:?} is denied for coin {coin_type}")]
+    AddressDeniedForCoin { address: Address, coin_type: String },
+    /// Coin type is globally paused for use
+    #[error("Coin type is globally paused for use: {coin_type}")]
+    CoinTypeGlobalPause { coin_type: String },
+    /// Certificate is cancelled because randomness could not be generated this
+    /// epoch
+    #[error("Certificate is cancelled because randomness could not be generated this epoch")]
+    ExecutionCancelledDueToRandomnessUnavailable,
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
+    #[error(
+        "Certificate is cancelled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
+        display_congested_objects(.congested_objects)
+    )]
     ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
         suggested_gas_price: u64,
     },
-    /// Address is denied for this coin type
-    AddressDeniedForCoin { address: Address, coin_type: String },
-    /// Coin type is globally paused for use
-    CoinTypeGlobalPause { coin_type: String },
-    /// Certificate is cancelled because randomness could not be generated this
-    /// epoch
-    ExecutionCancelledDueToRandomnessUnavailable,
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
+    #[error("A valid linkage was unable to be determined for the transaction")]
     InvalidLinkage,
 }
 
@@ -299,12 +428,16 @@ impl ExecutionError {
         SharedObjectOperationNotAllowed,
         InputObjectDeleted,
         ExecutionCancelledDueToSharedObjectCongestion,
-        ExecutionCancelledDueToSharedObjectCongestionV2,
         AddressDeniedForCoin,
         CoinTypeGlobalPause,
         ExecutionCancelledDueToRandomnessUnavailable,
+        ExecutionCancelledDueToSharedObjectCongestionV2,
         InvalidLinkage,
     );
+
+    pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
+        Self::CommandArgumentError { argument, kind }
+    }
 }
 
 /// Location in move bytecode where an error occurred
@@ -316,7 +449,7 @@ impl ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -332,6 +465,29 @@ pub struct MoveLocation {
     pub instruction: u16,
     /// The name of the function if available
     pub function_name: Option<Identifier>,
+}
+
+impl core::fmt::Display for MoveLocation {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            package,
+            module,
+            function,
+            instruction,
+            function_name,
+        } = self;
+        if let Some(fname) = function_name {
+            write!(
+                f,
+                "{package}::{module}::{fname} (function index {function}) at offset {instruction}"
+            )
+        } else {
+            write!(
+                f,
+                "{package}::{module} in function definition {function} at offset {instruction}"
+            )
+        }
+    }
 }
 
 /// An error with an argument to a command
@@ -367,44 +523,80 @@ pub struct MoveLocation {
 /// invalid-object-by-mut-ref                   = %d10
 /// shared-object-operation-not-allowed         = %d11
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
+    #[error("The type of the value does not match the expected type")]
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
+    #[error("The argument cannot be deserialized into a value of the specified type")]
     InvalidBcsBytes,
     /// The argument cannot be instantiated from raw bytes
+    #[error("The argument cannot be instantiated from raw bytes")]
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
+    #[error(
+        "Invalid argument to private entry function. \
+        These functions cannot take arguments from other Move functions"
+    )]
     InvalidArgumentToPrivateEntryFunction,
     /// Out of bounds access to input or results
+    #[error("Out of bounds access to input or result vector {index}")]
     IndexOutOfBounds { index: u16 },
     /// Out of bounds access to subresult
+    #[error(
+        "Out of bounds secondary access to result vector \
+        {result} at secondary index {subresult}"
+    )]
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
     /// Invalid usage of result.
     /// Expected a single result but found either no return value or multiple.
+    #[error(
+        "Invalid usage of result {result}, \
+        expected a single result but found either no return values or multiple."
+    )]
     InvalidResultArity { result: u16 },
     /// Invalid usage of Gas coin.
     /// The Gas coin can only be used by-value with a TransferObjects command.
+    #[error(
+        "Invalid taking of the Gas coin. \
+        It can only be used by-value with TransferObjects"
+    )]
     InvalidGasCoinUsage,
     /// Invalid usage of move value.
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
+    #[error(
+        "Invalid usage of value. \
+        Mutably borrowed values require unique usage. \
+        Immutably borrowed values cannot be taken or borrowed mutably. \
+        Taken values cannot be used again."
+    )]
     InvalidValueUsage,
     /// Immutable objects cannot be passed by-value.
+    #[error("Immutable objects cannot be passed by-value")]
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
+    #[error("Immutable objects cannot be passed by mutable reference, &mut")]
     InvalidObjectByMutRef,
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
+    #[error(
+        "Shared object operations such a wrapping, freezing, or converting to owned are not \
+        allowed."
+    )]
     SharedObjectOperationNotAllowed,
     /// Invalid argument arity. Expected a single argument but found a result
     /// that expanded to multiple arguments.
+    #[error(
+        "Invalid argument arity. Expected a single argument but found a result that expanded to \
+        multiple arguments."
+    )]
     InvalidArgumentArity,
 }
 
@@ -446,22 +638,28 @@ impl CommandArgumentError {
 /// unknown-upgrade-policy      = %d04 u8
 /// package-id-does-not-match   = %d05 object-id object-id
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, Hash, Error)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
+    #[error("Unable to fetch package at {package_id}")]
     UnableToFetchPackage { package_id: ObjectId },
     /// Object is not a package
+    #[error("Object {object_id} is not a package")]
     NotAPackage { object_id: ObjectId },
     /// Package upgrade is incompatible with previous version
+    #[error("New package is incompatible with previous version")]
     IncompatibleUpgrade,
     /// Digest in upgrade ticket and computed digest differ
+    #[error("Digest in upgrade ticket and computed digest disagree")]
     DigestDoesNotMatch { digest: Digest },
     /// Upgrade policy is not valid
+    #[error("Upgrade policy {policy} is not a valid upgrade policy")]
     UnknownUpgradePolicy { policy: u8 },
-    /// PackageId does not matach PackageId in upgrade ticket
+    /// PackageId does not match PackageId in upgrade ticket
+    #[error("Package ID {package_id} does not match package ID in upgrade ticket {ticket_id}")]
     PackageIdDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
@@ -490,7 +688,7 @@ impl PackageUpgradeError {
 /// type-not-found = %d00
 /// constraint-not-satisfied = %d01
 /// ```
-#[derive(Eq, PartialEq, Clone, Copy, Debug)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug, Hash, Error)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -501,13 +699,282 @@ impl PackageUpgradeError {
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
+    #[error("A type was not found in the module specified")]
     TypeNotFound,
     /// A type provided did not match the specified constraint
+    #[error("A type provided did not match the specified constraints")]
     ConstraintNotSatisfied,
 }
 
 impl TypeArgumentError {
     crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fmt::Write;
+
+    use super::*;
+
+    /// Build a snapshot string mapping BCS discriminant to variant name.
+    ///
+    /// The snapshot file acts as a guard against accidental reordering.
+    /// When adding a new variant **at the end**, just run:
+    ///
+    /// ```sh
+    /// cargo insta review
+    /// ```
+    ///
+    /// and accept the new snapshot. If a diff shows *existing* lines
+    /// changing, that means variants were reordered -- reject it.
+    fn bcs_discriminant_snapshot(variants: &[(&str, Vec<u8>)]) -> String {
+        let mut out = String::new();
+        for (name, bytes) in variants {
+            writeln!(&mut out, "{} {name}", bytes[0]).unwrap();
+        }
+        out
+    }
+
+    /// Verify that the BCS discriminant of each [`ExecutionError`] variant
+    /// matches the stored snapshot. Reordering or inserting variants will
+    /// cause this test to fail.
+    #[test]
+    fn execution_error_bcs_discriminants() {
+        let zero_id = ObjectId::ZERO;
+        let dummy_location = MoveLocation {
+            package: zero_id,
+            module: "m".parse().unwrap(),
+            function: 0,
+            instruction: 0,
+            function_name: None,
+        };
+
+        // New variants MUST be appended at the end.
+        let variants: Vec<(&str, Vec<u8>)> = vec![
+            (
+                "InsufficientGas",
+                bcs::to_bytes(&ExecutionError::InsufficientGas).unwrap(),
+            ),
+            (
+                "InvalidGasObject",
+                bcs::to_bytes(&ExecutionError::InvalidGasObject).unwrap(),
+            ),
+            (
+                "InvariantViolation",
+                bcs::to_bytes(&ExecutionError::InvariantViolation).unwrap(),
+            ),
+            (
+                "FeatureNotYetSupported",
+                bcs::to_bytes(&ExecutionError::FeatureNotYetSupported).unwrap(),
+            ),
+            (
+                "ObjectTooBig",
+                bcs::to_bytes(&ExecutionError::ObjectTooBig {
+                    object_size: 0,
+                    max_object_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "PackageTooBig",
+                bcs::to_bytes(&ExecutionError::PackageTooBig {
+                    object_size: 0,
+                    max_object_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "CircularObjectOwnership",
+                bcs::to_bytes(&ExecutionError::CircularObjectOwnership { object: zero_id })
+                    .unwrap(),
+            ),
+            (
+                "InsufficientCoinBalance",
+                bcs::to_bytes(&ExecutionError::InsufficientCoinBalance).unwrap(),
+            ),
+            (
+                "CoinBalanceOverflow",
+                bcs::to_bytes(&ExecutionError::CoinBalanceOverflow).unwrap(),
+            ),
+            (
+                "PublishErrorNonZeroAddress",
+                bcs::to_bytes(&ExecutionError::PublishErrorNonZeroAddress).unwrap(),
+            ),
+            (
+                "IotaMoveVerificationError",
+                bcs::to_bytes(&ExecutionError::IotaMoveVerificationError).unwrap(),
+            ),
+            (
+                "MovePrimitiveRuntimeError",
+                bcs::to_bytes(&ExecutionError::MovePrimitiveRuntimeError { location: None })
+                    .unwrap(),
+            ),
+            (
+                "MoveAbort",
+                bcs::to_bytes(&ExecutionError::MoveAbort {
+                    location: dummy_location,
+                    code: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "VmVerificationOrDeserializationError",
+                bcs::to_bytes(&ExecutionError::VmVerificationOrDeserializationError).unwrap(),
+            ),
+            (
+                "VmInvariantViolation",
+                bcs::to_bytes(&ExecutionError::VmInvariantViolation).unwrap(),
+            ),
+            (
+                "FunctionNotFound",
+                bcs::to_bytes(&ExecutionError::FunctionNotFound).unwrap(),
+            ),
+            (
+                "ArityMismatch",
+                bcs::to_bytes(&ExecutionError::ArityMismatch).unwrap(),
+            ),
+            (
+                "TypeArityMismatch",
+                bcs::to_bytes(&ExecutionError::TypeArityMismatch).unwrap(),
+            ),
+            (
+                "NonEntryFunctionInvoked",
+                bcs::to_bytes(&ExecutionError::NonEntryFunctionInvoked).unwrap(),
+            ),
+            (
+                "CommandArgumentError",
+                bcs::to_bytes(&ExecutionError::CommandArgumentError {
+                    argument: 0,
+                    kind: CommandArgumentError::TypeMismatch,
+                })
+                .unwrap(),
+            ),
+            (
+                "TypeArgumentError",
+                bcs::to_bytes(&ExecutionError::TypeArgumentError {
+                    type_argument: 0,
+                    kind: TypeArgumentError::TypeNotFound,
+                })
+                .unwrap(),
+            ),
+            (
+                "UnusedValueWithoutDrop",
+                bcs::to_bytes(&ExecutionError::UnusedValueWithoutDrop {
+                    result: 0,
+                    subresult: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "InvalidPublicFunctionReturnType",
+                bcs::to_bytes(&ExecutionError::InvalidPublicFunctionReturnType { index: 0 })
+                    .unwrap(),
+            ),
+            (
+                "InvalidTransferObject",
+                bcs::to_bytes(&ExecutionError::InvalidTransferObject).unwrap(),
+            ),
+            (
+                "EffectsTooLarge",
+                bcs::to_bytes(&ExecutionError::EffectsTooLarge {
+                    current_size: 0,
+                    max_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "PublishUpgradeMissingDependency",
+                bcs::to_bytes(&ExecutionError::PublishUpgradeMissingDependency).unwrap(),
+            ),
+            (
+                "PublishUpgradeDependencyDowngrade",
+                bcs::to_bytes(&ExecutionError::PublishUpgradeDependencyDowngrade).unwrap(),
+            ),
+            (
+                "PackageUpgradeError",
+                bcs::to_bytes(&ExecutionError::PackageUpgradeError {
+                    kind: PackageUpgradeError::IncompatibleUpgrade,
+                })
+                .unwrap(),
+            ),
+            (
+                "WrittenObjectsTooLarge",
+                bcs::to_bytes(&ExecutionError::WrittenObjectsTooLarge {
+                    object_size: 0,
+                    max_object_size: 0,
+                })
+                .unwrap(),
+            ),
+            (
+                "CertificateDenied",
+                bcs::to_bytes(&ExecutionError::CertificateDenied).unwrap(),
+            ),
+            (
+                "IotaMoveVerificationTimeout",
+                bcs::to_bytes(&ExecutionError::IotaMoveVerificationTimeout).unwrap(),
+            ),
+            (
+                "SharedObjectOperationNotAllowed",
+                bcs::to_bytes(&ExecutionError::SharedObjectOperationNotAllowed).unwrap(),
+            ),
+            (
+                "InputObjectDeleted",
+                bcs::to_bytes(&ExecutionError::InputObjectDeleted).unwrap(),
+            ),
+            (
+                "ExecutionCancelledDueToSharedObjectCongestion",
+                bcs::to_bytes(
+                    &ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+                        congested_objects: vec![],
+                    },
+                )
+                .unwrap(),
+            ),
+            (
+                "AddressDeniedForCoin",
+                bcs::to_bytes(&ExecutionError::AddressDeniedForCoin {
+                    address: Address::ZERO,
+                    coin_type: String::new(),
+                })
+                .unwrap(),
+            ),
+            (
+                "CoinTypeGlobalPause",
+                bcs::to_bytes(&ExecutionError::CoinTypeGlobalPause {
+                    coin_type: String::new(),
+                })
+                .unwrap(),
+            ),
+            (
+                "ExecutionCancelledDueToRandomnessUnavailable",
+                bcs::to_bytes(&ExecutionError::ExecutionCancelledDueToRandomnessUnavailable)
+                    .unwrap(),
+            ),
+            (
+                "ExecutionCancelledDueToSharedObjectCongestionV2",
+                bcs::to_bytes(
+                    &ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                        congested_objects: vec![],
+                        suggested_gas_price: 0,
+                    },
+                )
+                .unwrap(),
+            ),
+            (
+                "InvalidLinkage",
+                bcs::to_bytes(&ExecutionError::InvalidLinkage).unwrap(),
+            ),
+        ];
+
+        insta::with_settings!({
+            snapshot_path => "../tests/snapshots",
+        }, {
+            insta::assert_snapshot!(
+                "execution_error_bcs_discriminants",
+                bcs_discriminant_snapshot(&variants)
+            );
+        });
+    }
 }
 
 #[cfg(feature = "serde")]
@@ -533,6 +1000,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "ExecutionStatus")]
     enum BinaryExecutionStatus {
         Success,
         Failure {
@@ -605,6 +1073,8 @@ mod serialization {
         }
     }
 
+    // WARNING: Variant order must match `ExecutionError`. Do not reorder.
+    // New variants MUST be added at the end.
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "error", rename_all = "snake_case")]
     enum ReadableExecutionError {
@@ -700,12 +1170,15 @@ mod serialization {
         InvalidLinkage,
     }
 
+    // WARNING: Variant order is protocol-significant — it determines the BCS wire
+    // format. Do not reorder. New variants MUST be added at the end.
     #[derive(serde::Serialize, serde::Deserialize)]
     #[cfg_attr(
         feature = "bcs-schema",
         derive(iota_bcs_schema::BcsSchema),
         bcs_schema(name = "execution-error")
     )]
+    #[serde(rename = "ExecutionFailureStatus")]
     enum BinaryExecutionError {
         InsufficientGas,
         InvalidGasObject,
@@ -1297,6 +1770,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "CommandArgumentError")]
     enum BinaryCommandArgumentError {
         TypeMismatch,
         InvalidBcsBytes,
@@ -1492,6 +1966,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "PackageUpgradeError")]
     enum BinaryPackageUpgradeError {
         UnableToFetchPackage {
             package_id: ObjectId,
