@@ -390,8 +390,7 @@ impl MovePackage {
                     // Version
                 ));
 
-        8 /* Version */ + module_map_size + type_origin_table_size +
-    linkage_table_size
+        8 /* Version */ + module_map_size + type_origin_table_size + linkage_table_size
     }
 
     /// `Package ID`/`Storage ID` of this package.
@@ -435,17 +434,6 @@ impl MovePackage {
     pub fn linkage_table(&self) -> &BTreeMap<ObjectId, UpgradeInfo> {
         &self.linkage_table
     }
-
-    // /// If `include_code` is set to `false`, the normalized module will skip
-    // /// function bodies but still include the signatures.
-    // pub fn normalize<S: Hash + Eq + Clone + ToString, Pool:
-    // normalized::StringPool<String = S>>(     &self,
-    //     pool: &mut Pool,
-    //     binary_config: &BinaryConfig,
-    //     include_code: bool,
-    // ) -> IotaResult<BTreeMap<String, normalized::Module<S>>> {
-    //     normalize_modules(pool, self.module_map.values(), binary_config,
-    // include_code) }
 }
 
 #[cfg(feature = "serde")]
