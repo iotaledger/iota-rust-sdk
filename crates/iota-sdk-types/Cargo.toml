@@ -78,6 +78,7 @@ test-strategy = { workspace = true, optional = true }
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
+insta.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste.workspace = true
