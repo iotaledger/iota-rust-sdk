@@ -77,30 +77,35 @@ bindings: ## Build all bindings
 	@$(MAKE) go
 	@$(MAKE) kotlin
 	@$(MAKE) python
+	@$(MAKE) swift
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
 	@$(MAKE) go-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) kotlin-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
 	@$(MAKE) go-examples
 	@$(MAKE) kotlin-examples
 	@$(MAKE) python-examples
+	@$(MAKE) swift-examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
 	@$(MAKE) go-examples-format-check
 	@$(MAKE) kotlin-examples-format-check
 	@$(MAKE) python-examples-format-check
+	@$(MAKE) swift-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) go-examples-format
 	@$(MAKE) kotlin-examples-format
 	@$(MAKE) python-examples-format
+	@$(MAKE) swift-examples-format
 
 # Build ffi crate and detect platform
 define build_binding
@@ -227,6 +232,40 @@ python-examples-format-check: ## Check format of all Python bindings examples
 python-examples-format: ## Format all Python bindings examples
 	@yapf --style google -i $$(find bindings/python/examples -name "*.py") --recursive
 
+.PHONY: swift
+swift: ## Build Swift bindings
+	@printf "Building Swift bindings...\n"
+	@$(build_binding) \
+	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language swift --out-dir bindings/swift/Sources/IotaSDK --no-format -c bindings/swift/uniffi.toml || exit $$?; \
+	mkdir -p bindings/swift/Sources/CIotaSDK; \
+	mv bindings/swift/Sources/IotaSDK/CIotaSDK.h bindings/swift/Sources/CIotaSDK/CIotaSDK.h; \
+	mv bindings/swift/Sources/IotaSDK/CIotaSDK.modulemap bindings/swift/Sources/CIotaSDK/module.modulemap; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/swift/Sources/CIotaSDK/
+
+.PHONY: swift-example
+swift-example: ## Run a specific Swift example. Usage: make swift-example example
+%:
+	@true
+swift-example:
+	@printf "\nRunning Swift example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cd bindings/swift; \
+	LD_LIBRARY_PATH="../../target/release" DYLD_LIBRARY_PATH="../../target/release" LIBRARY_PATH="../../target/release" swift run $(word 2,$(MAKECMDGOALS)) || exit $$?; \
+	cd -
+
+.PHONY: swift-examples
+swift-examples: ## Run all Swift bindings examples
+	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;); do \
+		$(MAKE) swift-example "$$example" || exit $$?; \
+	done
+
+.PHONY: swift-examples-format-check
+swift-examples-format-check: ## Check format of all Swift bindings examples
+	@swift-format lint --recursive bindings/swift/examples --strict 2>&1 | grep -v "^$$" && exit 1 || true
+
+.PHONY: swift-examples-format
+swift-examples-format: ## Format all Swift bindings examples
+	@swift-format format --recursive bindings/swift/examples --in-place
+
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
 %:
@@ -261,12 +300,18 @@ python-release-example: ## Run the Python release example
 	@printf "\nRunning Python release example\n"
 	@cd bindings/python/examples/release && python3 -m venv .venv && . .venv/bin/activate && pip install --pre --upgrade -r requirements.txt && python example.py || exit $$?;
 
+.PHONY: swift-release-example
+swift-release-example: ## Run the Swift release example
+	@printf "\nRunning Swift release example\n"
+	@cd bindings/swift/examples/release && swift run || exit $$?
+
 .PHONY: release-examples
 release-examples: ## Run all release examples
 	@$(MAKE) rust-release-example
 	@$(MAKE) go-release-example
 	@$(MAKE) kotlin-release-example
 	@$(MAKE) python-release-example
+	@$(MAKE) swift-release-example
 
 .PHONY: help
 help: ## Show this help

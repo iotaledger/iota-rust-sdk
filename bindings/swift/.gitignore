@@ -1,0 +1,5 @@
+# Swift Package Manager build directory
+.build
+
+# Swift Package Manager package resolution
+.swiftpm
