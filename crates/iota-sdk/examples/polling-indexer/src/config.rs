@@ -4,7 +4,7 @@ use clap::Parser;
 use iota_sdk::types::Address;
 
 #[derive(Debug, Clone, Parser)]
-#[command(name = "iota-indexer")]
+#[command(name = "polling-indexer")]
 #[command(about = "Custom polling indexer using iota_sdk::graphql_client::Client")]
 pub struct Cli {
     #[arg(
@@ -17,10 +17,10 @@ pub struct Cli {
     #[arg(long)]
     pub graphql_url: Option<String>,
 
-    #[arg(long, default_value = "postgres://localhost:5432/iota_indexer")]
+    #[arg(long, default_value = "postgres://localhost:5432/polling_indexer")]
     pub db_url: String,
 
-    #[arg(long, default_value = ".iota_indexer_progress.json")]
+    #[arg(long, default_value = ".polling_indexer_progress.json")]
     pub progress_file: String,
 
     #[arg(long)]

@@ -1,9 +1,9 @@
 [package]
-name = "iota-indexer"
+name = "polling-indexer"
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
-description = "Polling-based custom indexer using iota_sdk::graphql_client::Client"
+description = "Polling-based custom indexer example using iota_sdk::graphql_client::Client"
 
 [dependencies]
 anyhow = "1.0"

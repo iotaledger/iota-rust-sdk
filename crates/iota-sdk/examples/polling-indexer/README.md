@@ -1,4 +1,4 @@
-# iota-indexer
+# polling-indexer
 
 Polling-based custom indexer example built on top of `iota_sdk::graphql_client::Client`.
 
@@ -17,20 +17,20 @@ This example demonstrates the bounty-required flow:
 ## Run PostgreSQL
 
 ```bash
-docker run --name iota-indexer-pg \
+docker run --name polling-indexer-pg \
   -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_USER=postgres \
-  -e POSTGRES_DB=iota_indexer \
+  -e POSTGRES_DB=polling_indexer \
   -p 5432:5432 -d postgres:16
 ```
 
 ## Run the Indexer
 
 ```bash
-cargo run -p iota-indexer -- \
+cargo run -p polling-indexer -- \
   --network testnet \
-  --db-url postgres://localhost:5432/iota_indexer \
-  --progress-file .iota_indexer_progress.json \
+  --db-url postgres://localhost:5432/polling_indexer \
+  --progress-file .polling_indexer_progress.json \
   --start-checkpoint 0 \
   --end-checkpoint 50
 ```
@@ -38,23 +38,23 @@ cargo run -p iota-indexer -- \
 Continuous mode (no end checkpoint):
 
 ```bash
-cargo run -p iota-indexer -- \
+cargo run -p polling-indexer -- \
   --network testnet \
-  --db-url postgres://localhost:5432/iota_indexer
+  --db-url postgres://localhost:5432/polling_indexer
 ```
 
 Custom GraphQL endpoint via network:
 
 ```bash
-cargo run -p iota-indexer -- \
+cargo run -p polling-indexer -- \
   --network custom:https://your.graphql.endpoint/graphql \
-  --db-url postgres://localhost:5432/iota_indexer
+  --db-url postgres://localhost:5432/polling_indexer
 ```
 
 If your local Postgres requires an explicit user, use:
 
 ```bash
---db-url postgres://<your_local_role>@localhost:5432/iota_indexer
+--db-url postgres://<your_local_role>@localhost:5432/polling_indexer
 ```
 
 ## Filters

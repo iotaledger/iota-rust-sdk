@@ -101,7 +101,7 @@ impl Indexer {
     }
 
     async fn process_checkpoint(&self, sequence: u64) -> anyhow::Result<bool> {
-        let Some(checkpoint) = self.client.checkpoint(None, Some(sequence)).await? else {
+        let Some(checkpoint) = self.client.checkpoint(None, sequence).await? else {
             return Ok(false);
         };
 

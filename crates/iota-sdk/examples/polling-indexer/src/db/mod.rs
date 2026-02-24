@@ -19,7 +19,7 @@ pub async fn connect(db_url: &str) -> anyhow::Result<PgPool> {
             let err_text = err.to_string();
             if err_text.contains("role") && err_text.contains("does not exist") {
                 return Err(anyhow::anyhow!(
-                    "database role from --db-url does not exist; use an existing local role (example: postgres://<your_user>@localhost:5432/iota_indexer)"
+                    "database role from --db-url does not exist; use an existing local role (example: postgres://<your_user>@localhost:5432/polling_indexer)"
                 ))
                 .context(err_text);
             }

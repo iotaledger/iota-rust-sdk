@@ -1,5 +1,5 @@
 use clap::Parser;
-use iota_indexer::{config::AppConfig, db, indexer::Indexer};
+use polling_indexer::{config::AppConfig, db, indexer::Indexer};
 use iota_sdk::graphql_client::Client;
 use tracing::info;
 use tracing_subscriber::{EnvFilter, fmt};
@@ -8,7 +8,7 @@ use tracing_subscriber::{EnvFilter, fmt};
 async fn main() -> anyhow::Result<()> {
     init_tracing();
 
-    let cli = iota_indexer::config::Cli::parse();
+    let cli = polling_indexer::config::Cli::parse();
     let config = AppConfig::try_from(cli)?;
 
     let client = Client::new(&config.graphql_url)?;
