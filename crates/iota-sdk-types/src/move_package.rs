@@ -92,7 +92,7 @@ impl MovePackageData {
     }
 }
 
-/// Upgraded package info for the linkage table
+/// Upgraded package info for [MovePackage]'s linkage_table.
 ///
 /// # BCS
 ///
@@ -139,45 +139,6 @@ pub struct TypeOrigin {
     pub package: ObjectId,
 }
 
-// // serde_bytes::ByteBuf is an analog of Vec<u8> with built-in fast
-// // serialization.
-// #[serde_as]
-// #[derive(Eq, PartialEq, Debug, Clone, Deserialize, Serialize, Hash)]
-// pub struct MovePackage {
-//     /// The `Storage ID` of the package.
-//     pub(crate) id: ObjectID,
-//     /// Most move packages are uniquely identified by their ID (i.e. there is
-//     /// only one version per ID), but the version is still stored because
-//     /// one package may be an upgrade of another (at a different ID), in
-//     /// which case its version will be one greater than the version of the
-//     /// upgraded package.
-//     ///
-//     /// Framework packages are an exception to this rule -- all versions of
-// the     /// framework packages exist at the same ID, at increasing versions.
-//     ///
-//     /// In all cases, packages are referred to by move calls using just their
-//     /// ID, and they are always loaded at their latest version.
-//     pub(crate) version: SequenceNumber,
-//     /// Map module identifiers to their serialized [CompiledModule].
-//     ///
-//     /// All modules within a package share the `Storage ID` of their
-// containing     /// package.
-//     #[serde_as(as = "BTreeMap<_, Bytes>")]
-//     pub(crate) module_map: BTreeMap<String, Vec<u8>>,
-
-//     /// Maps structs and enums in a given module to a package version where
-// they     /// were first defined.
-//     ///
-//     /// Stored as a vector for simple serialization and
-//     /// deserialization.
-//     pub(crate) type_origin_table: Vec<TypeOrigin>,
-
-//     /// For each dependency, it maps the `Runtime ID` (the first package's
-//     /// `Storage ID` in a version chain) of the containing package to the
-//     /// `UpgradeInfo` containing the actually used version.
-//     pub(crate) linkage_table: BTreeMap<ObjectID, UpgradeInfo>,
-// }
-
 /// A move package
 ///
 /// # BCS
@@ -199,7 +160,7 @@ pub struct TypeOrigin {
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackage {
-    /// Address or Id of this package
+    /// The ID of this package
     pub id: ObjectId,
     /// Most move packages are uniquely identified by their ID (i.e. there is
     /// only one version per ID), but the version is still stored because
@@ -225,11 +186,12 @@ pub struct MovePackage {
         )
     )]
     pub modules: BTreeMap<Identifier, Vec<u8>>,
-    /// Maps struct/module to a package version where it was first defined,
-    /// stored as a vector for simple serialization and deserialization.
+    /// Maps structs and enums in a given module to a package version where it
+    /// was first defined, stored as a vector for simple serialization and
+    /// deserialization.
     pub type_origin_table: Vec<TypeOrigin>,
     /// For each dependency, maps original package ID to the info about the
-    /// (upgraded) dependency version that this package is using
+    /// (upgraded) dependency version that this package is using.
     #[cfg_attr(
         feature = "proptest",
         strategy(
