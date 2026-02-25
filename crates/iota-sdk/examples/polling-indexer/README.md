@@ -80,12 +80,3 @@ Event-level:
 
 A JSON progress file stores the `next_checkpoint` watermark.
 On restart, indexing resumes from the stored value.
-
-## Acceptance-Criteria Mapping
-
-- Uses SDK client from this repo: `iota_sdk::graphql_client::Client`
-- Polling checkpoint ingestion loop implemented
-- Uses transaction range filters with `after_checkpoint` / `before_checkpoint`
-- Filters transactions/events
-- Persists progress and resumes from watermark
-- Stores indexed data in database
