@@ -45,6 +45,8 @@ jobs:
             PACKAGE_ROOT="bindings/kotlin"
           elif [[ "$PACKAGE" == "iota-python-sdk" ]]; then
             PACKAGE_ROOT="bindings/python"
+          elif [[ "$PACKAGE" == "iota-csharp-sdk" ]]; then
+            PACKAGE_ROOT="bindings/csharp"
           elif [[ "$PACKAGE" == "iota-swift-sdk" ]]; then
             PACKAGE_ROOT="bindings/swift"
           fi

@@ -93,6 +93,38 @@ jobs:
       - name: Run the release example
         run: make python-release-example
 
+  csharp:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
+    needs: diff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install uniffi-bindgen-cs
+        run: cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@16c7b3c2fa55a0e394467d22512b84fda46adf63 # v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build the bindings
+        run: make csharp
+      - name: Checks for uncommitted changes
+        run: git diff --exit-code
+      - name: Verify Examples.sln is up-to-date
+        run: |
+          cd bindings/csharp/examples
+          rm Examples.sln
+          dotnet new sln -n Examples
+          find . -name "*.csproj" -not -path "*/release/*" | xargs dotnet sln Examples.sln add
+          git diff --exit-code Examples.sln
+      - name: Check format of the examples
+        run: make csharp-examples-format-check
+      - uses: ./.github/actions/start-local-network
+      - name: Run the examples
+        run: make csharp-examples
+      - name: Run the release example
+        run: make csharp-release-example
+
   swift:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
     needs: diff

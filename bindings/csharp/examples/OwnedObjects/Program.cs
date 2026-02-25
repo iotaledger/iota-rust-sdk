@@ -1,0 +1,23 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+using System;
+using System.Threading.Tasks;
+using IotaSdk;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var client = GraphQlClient.NewDevnet();
+        var address = Address.Zero();
+        var filter = new ObjectFilter(owner: address);
+
+        var objectsPage = await client.Objects(filter: filter);
+        Console.WriteLine($"Owned objects({objectsPage.@data.Length}):");
+        foreach (var obj in objectsPage.@data)
+        {
+            Console.WriteLine(obj.ObjectId().ToHex());
+        }
+    }
+}

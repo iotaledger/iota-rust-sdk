@@ -40,6 +40,7 @@ on:
           - iota-kotlin-sdk
           - iota-python-sdk
           - iota-swift-sdk
+          - iota-csharp-sdk
 
 jobs:
   publish:
@@ -156,6 +157,22 @@ jobs:
           # Generate changelog for Swift
           ./.github/gen_changelog.sh iota-swift-sdk bindings/swift ${{ github.sha }} "$NEW_VERSION" true
 
+      - name: Bump C# version
+        if: inputs.package == 'iota-csharp-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-csharp-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-csharp-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Generate changelog for C#
+          ./.github/gen_changelog.sh iota-csharp-sdk bindings/csharp ${{ github.sha }} "$NEW_VERSION" true
+
       - name: Set COMMIT_TO environment variable
         if: startsWith(inputs.package, 'iota-sdk')
         run: echo "COMMIT_TO=${{ github.sha }}" >> $GITHUB_ENV
@@ -174,7 +191,7 @@ jobs:
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Create Pull Request
-        if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk'
+        if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk' || inputs.package == 'iota-csharp-sdk'
         id: pr-create-bindings
         uses: peter-evans/create-pull-request@v7
         with:
@@ -217,6 +234,13 @@ jobs:
         run: |
           echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "PKG_ROOT=bindings/swift" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (C#)
+        if: inputs.package == 'iota-csharp-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/csharp" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Add release notes
