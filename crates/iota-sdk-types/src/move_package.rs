@@ -109,8 +109,6 @@ pub struct UpgradeInfo {
     /// ID of the upgraded package
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub upgraded_version: Version,
 }
 
@@ -214,7 +212,6 @@ pub struct MovePackage {
     ///
     /// In all cases, packages are referred to by move calls using just their
     /// ID, and they are always loaded at their latest version.
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub version: Version,
     /// Set of modules defined by this package
     #[cfg_attr(
