@@ -351,9 +351,9 @@ impl MovePackage {
         digest.finalize()
     }
 
-    /// Retrieve the module from this package with the given [ModuleId].
+    /// Retrieve the module from this package with the given [ObjectId] and [Identifier].
     ///
-    /// [ModuleId] is expected to contain the `Storage ID` of this package.
+    /// [ObjectId] is expected to contain the `Storage ID` of this package.
     /// In case the `Storage ID` doesn't match or the module name is not
     /// present in this package the function returns None.
     pub fn get_module(&self, package: &ObjectId, name: &Identifier) -> Option<&Vec<u8>> {
