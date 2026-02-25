@@ -92,20 +92,6 @@ impl MovePackageData {
     }
 }
 
-// /// Value for the [MovePackage]'s linkage_table.
-// ///
-// /// # Undefined behavior
-// ///
-// /// Directly modifying any field is undefined behavior. The fields are only
-// /// public for read-only access.
-// #[derive(Eq, PartialEq, Debug, Clone, Deserialize, Serialize, Hash,
-// JsonSchema)] pub struct UpgradeInfo {
-//     /// `Storage ID`/`Package ID` of the referred package.
-//     pub upgraded_id: ObjectID,
-//     /// The version of the package at `upgraded_id`.
-//     pub upgraded_version: SequenceNumber,
-// }
-
 /// Upgraded package info for the linkage table
 ///
 /// # BCS
@@ -124,7 +110,7 @@ impl MovePackageData {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct UpgradeInfo {
-    /// Id of the upgraded packages
+    /// ID of the upgraded package
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -132,33 +118,9 @@ pub struct UpgradeInfo {
     pub upgraded_version: Version,
 }
 
-// /// Store the origin of a data type where it first appeared in the version
-// /// chain.
-// ///
-// /// A data type is identified by the name of the module and the name of the
-// /// struct/enum in combination.
-// ///
-// /// # Undefined behavior
-// ///
-// /// Directly modifying any field is undefined behavior. The fields are only
-// /// public for read-only access.
-// #[derive(
-//     Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Deserialize, Serialize,
-// Hash, JsonSchema, )]
-// pub struct TypeOrigin {
-//     /// The name of the module the data type resides in.
-//     pub module_name: String,
-//     /// The name of the data type.
-//     ///
-//     /// Here this either refers to an enum or a struct identifier.
-//     // `struct_name` alias to support backwards compatibility with the old
-// name     #[serde(alias = "struct_name")]
-//     pub datatype_name: String,
-//     /// `Storage ID` of the package, where the given type first appeared.
-//     pub package: ObjectID,
-// }
-
-/// Identifies a struct and the module it was defined in
+/// Stores the origin of a data type where it first appeared in the version
+/// chain. A data type is identified by the name of the module and the name of
+/// the struct/enum in combination.
 ///
 /// # BCS
 ///
@@ -176,8 +138,14 @@ pub struct UpgradeInfo {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TypeOrigin {
+    /// The name of the module the data type resides in.
     pub module_name: Identifier,
-    pub struct_name: Identifier,
+    /// The name of the data type. Either refers to an enum or a struct
+    /// identifier.
+    // `struct_name` alias to support backwards compatibility with the old name
+    // #[serde(alias = "struct_name")]
+    pub datatype_name: Identifier,
+    /// ID of the package, where the given type first appeared.
     pub package: ObjectId,
 }
 
@@ -378,9 +346,9 @@ impl MovePackage {
             .map(
                 |TypeOrigin {
                      module_name,
-                     struct_name,
+                     datatype_name,
                      ..
-                 }| module_name.len() + struct_name.len() + ObjectId::LENGTH,
+                 }| module_name.len() + datatype_name.len() + ObjectId::LENGTH,
             )
             .sum::<usize>();
 
@@ -425,9 +393,9 @@ impl MovePackage {
             .map(
                 |TypeOrigin {
                      module_name,
-                     struct_name,
+                     datatype_name,
                      package,
-                 }| { ((module_name.clone(), struct_name.clone()), *package) },
+                 }| { ((module_name.clone(), datatype_name.clone()), *package) },
             )
             .collect()
     }
