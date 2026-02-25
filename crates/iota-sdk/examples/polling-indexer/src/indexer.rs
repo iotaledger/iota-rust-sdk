@@ -309,7 +309,7 @@ fn event_matches(
     event: &iota_sdk::graphql_client::query_types::Event,
     filters: &FilterConfig,
 ) -> bool {
-    if let Some(expected_module) = &filters.event_module {
+    if let Some(expected_module) = &filters.event_sending_module {
         let module = event.sending_module.as_ref().map(|m| m.name.as_str());
         if module != Some(expected_module.as_str()) {
             return false;

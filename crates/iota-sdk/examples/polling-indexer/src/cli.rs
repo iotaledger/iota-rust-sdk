@@ -60,8 +60,12 @@ pub struct Cli {
     #[arg(long, help = "Event type filter e.g. 0x2::module::EventName")]
     pub event_type: Option<String>,
 
-    #[arg(long)]
-    pub event_module: Option<String>,
+    #[arg(
+        long,
+        visible_alias = "event-module",
+        help = "Event sending module filter (module where the event was emitted, not necessarily where the event type was defined)"
+    )]
+    pub event_sending_module: Option<String>,
 
     #[arg(long)]
     pub event_package_id: Option<String>,

@@ -105,9 +105,11 @@ Event-level:
 
 ```bash
 --event-type 0x...::module::EventName
---event-module module_name
+--event-sending-module module_name
 --event-package-id 0x...package
 ```
+
+`--event-sending-module` matches the module where the event was emitted (`sending_module`), not necessarily the module where the event type was defined.
 
 ## Config File (JSON)
 
@@ -123,7 +125,9 @@ CLI flags take precedence over file values.
   "end_checkpoint": 50,
   "page_size": 50,
   "poll_interval_ms": 2000,
-  "include_failed_txs": true
+  "include_failed_txs": true,
+  "tx_function": "0x2::iota_system::request_add_stake",
+  "event_sending_module": "iota_system"
 }
 ```
 

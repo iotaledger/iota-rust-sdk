@@ -17,19 +17,43 @@ const DEFAULT_INCLUDE_FAILED_TXS: bool = true;
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 struct FileConfig {
+    /// Network name or custom endpoint selector.
+    /// Examples: "testnet", "mainnet", "custom:https://your.graphql.endpoint/graphql"
     network: Option<String>,
+    /// Explicit GraphQL URL override.
+    /// Example: "https://graphql.testnet.iota.cafe"
     graphql_url: Option<String>,
+    /// PostgreSQL connection string.
+    /// Example: "postgres://postgres:postgres@localhost:5432/polling_indexer"
     db_url: Option<String>,
+    /// Path to the progress/watermark file.
+    /// Example: ".polling_indexer_progress.json"
     progress_file: Option<String>,
+    /// First checkpoint to index (inclusive).
     start_checkpoint: Option<u64>,
+    /// Last checkpoint to index (inclusive). Omit for continuous mode.
     end_checkpoint: Option<u64>,
+    /// GraphQL page size per request (must be > 0).
     page_size: Option<i32>,
+    /// Polling interval in milliseconds when waiting for new checkpoints.
     poll_interval_ms: Option<u64>,
+    /// Whether failed transactions should be indexed.
     include_failed_txs: Option<bool>,
+    /// Transaction function filter.
+    /// Example: "0x2::iota_system::request_add_stake"
     tx_function: Option<String>,
+    /// Transaction signer address filter.
+    /// Example: "0xabc123..."
     tx_sender: Option<String>,
+    /// Event type filter.
+    /// Example: "0x2::some_module::SomeEvent"
     event_type: Option<String>,
-    event_module: Option<String>,
+    /// Event sending module filter (where the event was emitted).
+    /// Example: "iota_system"
+    #[serde(alias = "event_module")]
+    event_sending_module: Option<String>,
+    /// Event sending package address filter.
+    /// Example: "0x2"
     event_package_id: Option<String>,
 }
 
@@ -39,7 +63,7 @@ pub struct FilterConfig {
     pub tx_function: Option<String>,
     pub tx_sender: Option<Address>,
     pub event_type: Option<String>,
-    pub event_module: Option<String>,
+    pub event_sending_module: Option<String>,
     pub event_package_id: Option<String>,
 }
 
@@ -129,7 +153,9 @@ impl TryFrom<Cli> for AppConfig {
                 tx_function: value.tx_function.or(file_config.tx_function),
                 tx_sender,
                 event_type: value.event_type.or(file_config.event_type),
-                event_module: value.event_module.or(file_config.event_module),
+                event_sending_module: value
+                    .event_sending_module
+                    .or(file_config.event_sending_module),
                 event_package_id: value.event_package_id.or(file_config.event_package_id),
             },
         })
