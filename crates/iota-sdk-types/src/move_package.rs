@@ -351,7 +351,8 @@ impl MovePackage {
         digest.finalize()
     }
 
-    /// Retrieve the module from this package with the given [ObjectId] and [Identifier].
+    /// Retrieve the module from this package with the given [ObjectId] and
+    /// [Identifier].
     ///
     /// [ObjectId] is expected to contain the `Storage ID` of this package.
     /// In case the `Storage ID` doesn't match or the module name is not
