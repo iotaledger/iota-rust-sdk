@@ -2,7 +2,7 @@
 
 Polling-based custom indexer example built on top of `iota_sdk::graphql_client::Client`.
 
-This example demonstrates the bounty-required flow:
+This example demonstrates a polling indexer flow with:
 
 - checkpoint polling with persisted watermark progress,
 - transaction ingestion using `TransactionsFilter::after_checkpoint` / `before_checkpoint`,
@@ -30,7 +30,7 @@ docker run --name polling-indexer-pg \
 ```bash
 cargo run -p polling-indexer -- \
   --network testnet \
-  --db-url postgres://localhost:5432/polling_indexer \
+  --db-url postgres://postgres:postgres@localhost:5432/polling_indexer \
   --progress-file .polling_indexer_progress.json \
   --start-checkpoint 0 \
   --end-checkpoint 50
@@ -41,7 +41,7 @@ Continuous mode (no end checkpoint):
 ```bash
 cargo run -p polling-indexer -- \
   --network testnet \
-  --db-url postgres://localhost:5432/polling_indexer
+  --db-url postgres://postgres:postgres@localhost:5432/polling_indexer
 ```
 
 Custom GraphQL endpoint via network:
@@ -49,7 +49,7 @@ Custom GraphQL endpoint via network:
 ```bash
 cargo run -p polling-indexer -- \
   --network custom:https://your.graphql.endpoint/graphql \
-  --db-url postgres://localhost:5432/polling_indexer
+  --db-url postgres://postgres:postgres@localhost:5432/polling_indexer
 ```
 
 If your local Postgres requires an explicit user, use:
