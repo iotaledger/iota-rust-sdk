@@ -955,47 +955,6 @@ pub enum Input {
     Receiving(ObjectReference),
 }
 
-/// A shared object input to a programmable transaction
-#[derive(Clone, Hash, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-pub struct SharedObjectReference {
-    pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-    pub initial_shared_version: Version,
-    /// Controls whether the caller asks for a mutable reference to the
-    /// shared object.
-    pub mutable: bool,
-}
-
-impl SharedObjectReference {
-    pub const IOTA_SYSTEM_OBJ: Self = Self {
-        object_id: ObjectId::SYSTEM_STATE,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
-        mutable: true,
-    };
-
-    /// Creates a new shared object reference from the object's id, initial
-    /// shared version, and mutability.
-    pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
-        Self {
-            object_id,
-            initial_shared_version,
-            mutable,
-        }
-    }
-}
-
 impl Input {
     /// Shared `Input` for the IOTA system state object.
     pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared(SharedObjectReference {
@@ -1083,6 +1042,47 @@ impl Input {
         match self {
             Self::Receiving(obj_ref) => Some(obj_ref),
             _ => None,
+        }
+    }
+}
+
+/// A shared object input to a programmable transaction
+#[derive(Clone, Hash, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(
+    feature = "schemars",
+    derive(schemars::JsonSchema),
+    schemars(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct SharedObjectReference {
+    pub object_id: ObjectId,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    pub initial_shared_version: Version,
+    /// Controls whether the caller asks for a mutable reference to the
+    /// shared object.
+    pub mutable: bool,
+}
+
+impl SharedObjectReference {
+    pub const IOTA_SYSTEM_OBJ: Self = Self {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    };
+
+    /// Creates a new shared object reference from the object's id, initial
+    /// shared version, and mutability.
+    pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
+        Self {
+            object_id,
+            initial_shared_version,
+            mutable,
         }
     }
 }

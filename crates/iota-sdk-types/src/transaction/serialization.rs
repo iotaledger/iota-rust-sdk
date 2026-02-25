@@ -563,7 +563,7 @@ mod input_argument {
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            CallArg::json_schema(generator)
+            ReadableInput::json_schema(generator)
         }
     }
 }
