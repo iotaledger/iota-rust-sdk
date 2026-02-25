@@ -1,0 +1,20 @@
+# Build artifacts
+build/
+app/build/
+.gradle/
+
+# Android SDK components (downloaded by Gradle)
+build-tools/
+platforms/
+platform-tools/
+emulator/
+system-images/
+licenses/
+
+# IDE
+.idea/
+*.iml
+local.properties
+
+# Gradle
+.knownPackages

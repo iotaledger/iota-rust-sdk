@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 IOTA Stiftung -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="app_name">IOTA SDK Demo</string>
+    <string name="press_to_fetch">Press the button to fetch the chain ID from IOTA devnet.</string>
+    <string name="fetch_chain_id">Fetch Chain ID</string>
+    <string name="fetching">Fetching chain ID…</string>
+    <string name="chain_id_result">Chain ID: %1$s</string>
+    <string name="error_result">Error: %1$s</string>
+</resources>
