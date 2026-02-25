@@ -342,6 +342,56 @@ impl MultisigMemberSignature {
     );
 }
 
+impl std::fmt::Display for MultisigMemberPublicKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MultisigMemberPublicKey::Ed25519(key) => write!(f, "Ed25519({})", key),
+            MultisigMemberPublicKey::Secp256k1(key) => write!(f, "Secp256k1({})", key),
+            MultisigMemberPublicKey::Secp256r1(key) => write!(f, "Secp256r1({})", key),
+            MultisigMemberPublicKey::ZkLogin(id) => write!(f, "ZkLogin({})", id),
+        }
+    }
+}
+
+impl std::fmt::Display for MultisigMember {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Public Key", &self.public_key),
+            ("Weight", &self.weight),
+        ])
+    }
+}
+
+impl std::fmt::Display for MultisigCommittee {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Members", &crate::display_vec_count(&self.members)),
+            ("Threshold", &self.threshold),
+        ])
+    }
+}
+
+impl std::fmt::Display for MultisigAggregatedSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Committee", &self.committee),
+            ("Signatures", &crate::display_vec_count(&self.signatures)),
+            ("Bitmap", &self.bitmap),
+        ])
+    }
+}
+
+impl std::fmt::Display for MultisigMemberSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MultisigMemberSignature::Ed25519(sig) => write!(f, "Ed25519({})", sig),
+            MultisigMemberSignature::Secp256k1(sig) => write!(f, "Secp256k1({})", sig),
+            MultisigMemberSignature::Secp256r1(sig) => write!(f, "Secp256r1({})", sig),
+            MultisigMemberSignature::ZkLogin(auth) => write!(f, "ZkLogin({})", auth),
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

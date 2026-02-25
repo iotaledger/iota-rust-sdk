@@ -368,6 +368,43 @@ impl UserSignature {
     }
 }
 
+impl std::fmt::Display for SimpleSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SimpleSignature::Ed25519 {
+                public_key,
+                ..
+            } => write!(f, "Ed25519(key: {})", public_key),
+            SimpleSignature::Secp256k1 {
+                public_key,
+                ..
+            } => write!(f, "Secp256k1(key: {})", public_key),
+            SimpleSignature::Secp256r1 {
+                public_key,
+                ..
+            } => write!(f, "Secp256r1(key: {})", public_key),
+        }
+    }
+}
+
+impl std::fmt::Display for UserSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UserSignature::Simple(sig) => write!(f, "Simple({})", sig),
+            UserSignature::Multisig(multisig) => write!(f, "Multisig({})", multisig),
+            UserSignature::ZkLoginAuthenticator(zklogin) => {
+                write!(f, "ZkLogin({})", zklogin)
+            }
+            UserSignature::PasskeyAuthenticator(passkey) => {
+                write!(f, "Passkey({})", passkey)
+            }
+            UserSignature::MoveAuthenticator(move_auth) => {
+                write!(f, "MoveAuthenticator({})", move_auth)
+            }
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

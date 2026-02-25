@@ -406,6 +406,108 @@ impl IdOperation {
     crate::def_is!(None, Created, Deleted);
 }
 
+
+impl std::fmt::Display for TransactionEffectsV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let status = format!("{:?}", self.status);
+        let gas_object_index = crate::display_option(&self.gas_object_index);
+        let events_digest = crate::display_option(&self.events_digest);
+        let dependencies = crate::display_vec_count(&self.dependencies);
+        let changed_objects = crate::display_vec_count(&self.changed_objects);
+        let unchanged_shared_objects = crate::display_vec_count(&self.unchanged_shared_objects);
+        let auxiliary_data_digest = crate::display_option(&self.auxiliary_data_digest);
+        crate::display_table(f, &[
+            ("Status", &status),
+            ("Epoch", &self.epoch),
+            ("Gas Used", &self.gas_used),
+            ("Transaction Digest", &self.transaction_digest),
+            ("Gas Object Index", &gas_object_index),
+            ("Events Digest", &events_digest),
+            ("Dependencies", &dependencies),
+            ("Lamport Version", &self.lamport_version),
+            ("Changed Objects", &changed_objects),
+            ("Unchanged Shared Objects", &unchanged_shared_objects),
+            ("Auxiliary Data Digest", &auxiliary_data_digest),
+        ])
+    }
+}
+
+impl std::fmt::Display for ChangedObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Object ID", &self.object_id),
+            ("Input State", &self.input_state),
+            ("Output State", &self.output_state),
+            ("ID Operation", &self.id_operation),
+        ])
+    }
+}
+
+impl std::fmt::Display for UnchangedSharedObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Object ID", &self.object_id),
+            ("Kind", &self.kind),
+        ])
+    }
+}
+
+impl std::fmt::Display for UnchangedSharedKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                write!(f, "ReadOnlyRoot(version: {version}, digest: {digest})")
+            }
+            UnchangedSharedKind::MutateDeleted { version } => {
+                write!(f, "MutateDeleted(version: {version})")
+            }
+            UnchangedSharedKind::ReadDeleted { version } => {
+                write!(f, "ReadDeleted(version: {version})")
+            }
+            UnchangedSharedKind::Cancelled { version } => {
+                write!(f, "Cancelled(version: {version})")
+            }
+            UnchangedSharedKind::PerEpochConfig => {
+                write!(f, "PerEpochConfig")
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for ObjectIn {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectIn::Missing => write!(f, "Missing"),
+            ObjectIn::Data { version, digest, owner } => {
+                write!(f, "Data(version: {version}, digest: {digest}, owner: {owner})")
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for ObjectOut {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectOut::Missing => write!(f, "Missing"),
+            ObjectOut::ObjectWrite { digest, owner } => {
+                write!(f, "ObjectWrite(digest: {digest}, owner: {owner})")
+            }
+            ObjectOut::PackageWrite { version, digest } => {
+                write!(f, "PackageWrite(version: {version}, digest: {digest})")
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for IdOperation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            IdOperation::None => write!(f, "None"),
+            IdOperation::Created => write!(f, "Created"),
+            IdOperation::Deleted => write!(f, "Deleted"),
+        }
+    }
+}
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

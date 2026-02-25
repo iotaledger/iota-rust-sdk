@@ -542,6 +542,265 @@ impl TypeArgumentError {
     crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
 }
 
+
+impl std::fmt::Display for ExecutionStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExecutionStatus::Success => write!(f, "Success"),
+            ExecutionStatus::Failure { error, command } => {
+                write!(f, "Failure: {error}")?;
+                if let Some(cmd) = command {
+                    write!(f, " (command {cmd})")?;
+                }
+                Ok(())
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for ExecutionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExecutionError::InsufficientGas => write!(f, "Insufficient gas"),
+            ExecutionError::InvalidGasObject => write!(f, "Invalid gas object"),
+            ExecutionError::InvariantViolation => write!(f, "Invariant violation"),
+            ExecutionError::FeatureNotYetSupported => write!(f, "Feature not yet supported"),
+            ExecutionError::ObjectTooBig {
+                object_size,
+                max_object_size,
+            } => write!(
+                f,
+                "Object too big: size {object_size} exceeds max {max_object_size}"
+            ),
+            ExecutionError::PackageTooBig {
+                object_size,
+                max_object_size,
+            } => write!(
+                f,
+                "Package too big: size {object_size} exceeds max {max_object_size}"
+            ),
+            ExecutionError::CircularObjectOwnership { object } => {
+                write!(f, "Circular object ownership detected for {object}")
+            }
+            ExecutionError::InsufficientCoinBalance => {
+                write!(f, "Insufficient coin balance")
+            }
+            ExecutionError::CoinBalanceOverflow => write!(f, "Coin balance overflow"),
+            ExecutionError::PublishErrorNonZeroAddress => {
+                write!(f, "Publish error: non-zero address in module")
+            }
+            ExecutionError::IotaMoveVerificationError => {
+                write!(f, "IOTA Move bytecode verification error")
+            }
+            ExecutionError::MovePrimitiveRuntimeError { location } => {
+                write!(f, "Move primitive runtime error")?;
+                if let Some(loc) = location {
+                    write!(f, " at {loc}")?;
+                }
+                Ok(())
+            }
+            ExecutionError::MoveAbort { location, code } => {
+                write!(f, "Move abort {code} at {location}")
+            }
+            ExecutionError::VmVerificationOrDeserializationError => {
+                write!(f, "VM verification or deserialization error")
+            }
+            ExecutionError::VmInvariantViolation => write!(f, "VM invariant violation"),
+            ExecutionError::FunctionNotFound => write!(f, "Function not found"),
+            ExecutionError::ArityMismatch => write!(f, "Arity mismatch"),
+            ExecutionError::TypeArityMismatch => write!(f, "Type arity mismatch"),
+            ExecutionError::NonEntryFunctionInvoked => {
+                write!(f, "Non-entry function invoked")
+            }
+            ExecutionError::CommandArgumentError { argument, kind } => {
+                write!(f, "Command argument error at argument {argument}: {kind}")
+            }
+            ExecutionError::TypeArgumentError {
+                type_argument,
+                kind,
+            } => write!(
+                f,
+                "Type argument error at type argument {type_argument}: {kind}"
+            ),
+            ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
+                write!(
+                    f,
+                    "Unused value without drop: result {result}, subresult {subresult}"
+                )
+            }
+            ExecutionError::InvalidPublicFunctionReturnType { index } => {
+                write!(f, "Invalid public function return type at index {index}")
+            }
+            ExecutionError::InvalidTransferObject => {
+                write!(f, "Invalid transfer object: missing public transfer")
+            }
+            ExecutionError::EffectsTooLarge {
+                current_size,
+                max_size,
+            } => write!(
+                f,
+                "Effects too large: size {current_size} exceeds max {max_size}"
+            ),
+            ExecutionError::PublishUpgradeMissingDependency => {
+                write!(f, "Publish or upgrade is missing dependency")
+            }
+            ExecutionError::PublishUpgradeDependencyDowngrade => {
+                write!(f, "Publish or upgrade dependency downgrade")
+            }
+            ExecutionError::PackageUpgradeError { kind } => {
+                write!(f, "Package upgrade error: {kind}")
+            }
+            ExecutionError::WrittenObjectsTooLarge {
+                object_size,
+                max_object_size,
+            } => write!(
+                f,
+                "Written objects too large: size {object_size} exceeds max {max_object_size}"
+            ),
+            ExecutionError::CertificateDenied => write!(f, "Certificate denied"),
+            ExecutionError::IotaMoveVerificationTimeout => {
+                write!(f, "IOTA Move bytecode verification timed out")
+            }
+            ExecutionError::SharedObjectOperationNotAllowed => {
+                write!(f, "Shared object operation not allowed")
+            }
+            ExecutionError::InputObjectDeleted => write!(f, "Input object deleted"),
+            ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+                congested_objects,
+            } => {
+                write!(
+                    f,
+                    "Execution cancelled due to shared object congestion on {}",
+                    crate::display_vec_count(congested_objects)
+                )
+            }
+            ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+                congested_objects,
+                suggested_gas_price,
+            } => {
+                write!(
+                    f,
+                    "Execution cancelled due to shared object congestion on {} (suggested gas price: {suggested_gas_price})",
+                    crate::display_vec_count(congested_objects)
+                )
+            }
+            ExecutionError::AddressDeniedForCoin { address, coin_type } => {
+                write!(f, "Address {address} denied for coin type {coin_type}")
+            }
+            ExecutionError::CoinTypeGlobalPause { coin_type } => {
+                write!(f, "Coin type globally paused: {coin_type}")
+            }
+            ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
+                write!(f, "Execution cancelled due to randomness unavailable")
+            }
+            ExecutionError::InvalidLinkage => write!(f, "Invalid linkage"),
+        }
+    }
+}
+
+impl std::fmt::Display for MoveLocation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let function_name = crate::display_option(&self.function_name);
+        crate::display_table(
+            f,
+            &[
+                ("Package", &self.package),
+                ("Module", &self.module),
+                ("Function", &self.function),
+                ("Instruction", &self.instruction),
+                ("Function Name", &function_name),
+            ],
+        )
+    }
+}
+
+impl std::fmt::Display for CommandArgumentError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CommandArgumentError::TypeMismatch => write!(f, "Type mismatch"),
+            CommandArgumentError::InvalidBcsBytes => {
+                write!(f, "Invalid BCS bytes")
+            }
+            CommandArgumentError::InvalidUsageOfPureArgument => {
+                write!(f, "Invalid usage of pure argument")
+            }
+            CommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
+                write!(f, "Invalid argument to private entry function")
+            }
+            CommandArgumentError::IndexOutOfBounds { index } => {
+                write!(f, "Index out of bounds: {index}")
+            }
+            CommandArgumentError::SecondaryIndexOutOfBounds { result, subresult } => {
+                write!(
+                    f,
+                    "Secondary index out of bounds: result {result}, subresult {subresult}"
+                )
+            }
+            CommandArgumentError::InvalidResultArity { result } => {
+                write!(f, "Invalid result arity at result {result}")
+            }
+            CommandArgumentError::InvalidGasCoinUsage => {
+                write!(f, "Invalid gas coin usage")
+            }
+            CommandArgumentError::InvalidValueUsage => {
+                write!(f, "Invalid value usage")
+            }
+            CommandArgumentError::InvalidObjectByValue => {
+                write!(f, "Invalid object by value: immutable objects cannot be passed by value")
+            }
+            CommandArgumentError::InvalidObjectByMutRef => {
+                write!(f, "Invalid object by mutable reference: immutable objects cannot be passed by &mut")
+            }
+            CommandArgumentError::SharedObjectOperationNotAllowed => {
+                write!(f, "Shared object operation not allowed")
+            }
+            CommandArgumentError::InvalidArgumentArity => {
+                write!(f, "Invalid argument arity")
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for TypeArgumentError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TypeArgumentError::TypeNotFound => write!(f, "Type not found"),
+            TypeArgumentError::ConstraintNotSatisfied => {
+                write!(f, "Constraint not satisfied")
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for PackageUpgradeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PackageUpgradeError::UnableToFetchPackage { package_id } => {
+                write!(f, "Unable to fetch package {package_id}")
+            }
+            PackageUpgradeError::NotAPackage { object_id } => {
+                write!(f, "Object {object_id} is not a package")
+            }
+            PackageUpgradeError::IncompatibleUpgrade => {
+                write!(f, "Incompatible upgrade")
+            }
+            PackageUpgradeError::DigestDoesNotMatch { digest } => {
+                write!(f, "Digest does not match: {digest}")
+            }
+            PackageUpgradeError::UnknownUpgradePolicy { policy } => {
+                write!(f, "Unknown upgrade policy: {policy}")
+            }
+            PackageUpgradeError::PackageIdDoesNotMatch {
+                package_id,
+                ticket_id,
+            } => write!(
+                f,
+                "Package ID {package_id} does not match ticket ID {ticket_id}"
+            ),
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

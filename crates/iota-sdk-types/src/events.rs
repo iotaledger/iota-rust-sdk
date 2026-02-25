@@ -58,6 +58,25 @@ pub struct Event {
     pub contents: Vec<u8>,
 }
 
+impl std::fmt::Display for TransactionEvents {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "TransactionEvents({} events)", self.0.len())
+    }
+}
+
+impl std::fmt::Display for Event {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let contents_display = format!("[{} bytes]", self.contents.len());
+        crate::display_table(f, &[
+            ("Package ID", &self.package_id),
+            ("Module", &self.module),
+            ("Sender", &self.sender),
+            ("Type", &self.type_),
+            ("Contents", &contents_display),
+        ])
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(
     feature = "serde",
@@ -78,4 +97,14 @@ pub struct BalanceChange {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::I128"))]
     pub amount: i128,
+}
+
+impl std::fmt::Display for BalanceChange {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Address", &self.address),
+            ("Coin Type", &self.coin_type),
+            ("Amount", &self.amount),
+        ])
+    }
 }

@@ -86,6 +86,26 @@ pub trait IotaNamesNft {
     fn id(&self) -> ObjectId;
 }
 
+impl std::fmt::Display for NameRegistration {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("ID", &self.id),
+            ("Name", &self.name),
+            ("Name String", &self.name_str),
+            ("Expiration (ms)", &self.expiration_timestamp_ms),
+        ])
+    }
+}
+
+impl std::fmt::Display for SubnameRegistration {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("ID", &self.id),
+            ("NFT", &self.nft),
+        ])
+    }
+}
+
 impl IotaNamesNft for NameRegistration {
     const MODULE: &IdentifierRef = IdentifierRef::const_new("name_registration");
     const TYPE_NAME: &IdentifierRef = IdentifierRef::const_new("NameRegistration");

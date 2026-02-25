@@ -276,6 +276,111 @@ pub struct CheckpointTransaction {
     pub output_objects: Vec<Object>,
 }
 
+impl std::fmt::Display for CheckpointCommitment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CheckpointCommitment::EcmhLiveObjectSet { digest } => {
+                write!(f, "EcmhLiveObjectSet({})", digest)
+            }
+        }
+    }
+}
+
+impl std::fmt::Display for EndOfEpochData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let committee_display = crate::display_vec_count(&self.next_epoch_committee);
+        let commitments_display = crate::display_vec_count(&self.epoch_commitments);
+        crate::display_table(f, &[
+            ("Next Epoch Committee", &committee_display),
+            (
+                "Next Epoch Protocol Version",
+                &self.next_epoch_protocol_version,
+            ),
+            ("Epoch Commitments", &commitments_display),
+            ("Epoch Supply Change", &self.epoch_supply_change),
+        ])
+    }
+}
+
+impl std::fmt::Display for CheckpointSummary {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let previous_digest = crate::display_option(&self.previous_digest);
+        let commitments_display = crate::display_vec_count(&self.checkpoint_commitments);
+        let end_of_epoch = if self.end_of_epoch_data.is_some() {
+            "Yes".to_string()
+        } else {
+            "-".to_string()
+        };
+        crate::display_table(f, &[
+            ("Epoch", &self.epoch),
+            ("Sequence Number", &self.sequence_number),
+            ("Network Total Transactions", &self.network_total_transactions),
+            ("Content Digest", &self.content_digest),
+            ("Previous Digest", &previous_digest),
+            (
+                "Epoch Rolling Gas Cost",
+                &self.epoch_rolling_gas_cost_summary,
+            ),
+            ("Timestamp (ms)", &self.timestamp_ms),
+            ("Checkpoint Commitments", &commitments_display),
+            ("End of Epoch Data", &end_of_epoch),
+        ])
+    }
+}
+
+impl std::fmt::Display for SignedCheckpointSummary {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.checkpoint)
+    }
+}
+
+impl std::fmt::Display for CheckpointContents {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CheckpointContents({} transactions)", self.0.len())
+    }
+}
+
+impl std::fmt::Display for CheckpointTransactionInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let sigs_display = crate::display_vec_count(&self.signatures);
+        crate::display_table(f, &[
+            ("Transaction", &self.transaction),
+            ("Effects", &self.effects),
+            ("Signatures", &sigs_display),
+        ])
+    }
+}
+
+impl std::fmt::Display for CheckpointData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let txns_display = crate::display_vec_count(&self.transactions);
+        crate::display_table(f, &[
+            ("Checkpoint", &self.checkpoint_summary.checkpoint),
+            ("Contents", &self.checkpoint_contents),
+            ("Transactions", &txns_display),
+        ])
+    }
+}
+
+impl std::fmt::Display for CheckpointTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let events_display = if self.events.is_some() {
+            "Yes".to_string()
+        } else {
+            "-".to_string()
+        };
+        let input_display = crate::display_vec_count(&self.input_objects);
+        let output_display = crate::display_vec_count(&self.output_objects);
+        crate::display_table(f, &[
+            ("Transaction", &self.transaction),
+            ("Effects", &self.effects),
+            ("Events", &events_display),
+            ("Input Objects", &input_display),
+            ("Output Objects", &output_display),
+        ])
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

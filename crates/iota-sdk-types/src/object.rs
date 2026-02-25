@@ -542,6 +542,92 @@ impl GenesisObject {
     }
 }
 
+impl std::fmt::Display for ObjectReference {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Object ID", &self.object_id),
+            ("Version", &self.version),
+            ("Digest", &self.digest),
+        ])
+    }
+}
+
+impl std::fmt::Display for ObjectData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectData::Struct(s) => write!(f, "Struct({})", s),
+            ObjectData::Package(p) => write!(f, "Package({})", p),
+        }
+    }
+}
+
+impl std::fmt::Display for MoveStruct {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let contents_display = format!("[{} bytes]", self.contents.len());
+        crate::display_table(f, &[
+            ("Type", &self.type_),
+            ("Version", &self.version),
+            ("Contents", &contents_display),
+        ])
+    }
+}
+
+impl std::fmt::Display for MovePackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let modules_display = format!("[{} modules]", self.modules.len());
+        crate::display_table(f, &[
+            ("ID", &self.id),
+            ("Version", &self.version),
+            ("Modules", &modules_display),
+        ])
+    }
+}
+
+impl std::fmt::Display for Object {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let object_type = self.object_type();
+        crate::display_table(f, &[
+            ("Object ID", &self.object_id()),
+            ("Version", &self.version()),
+            ("Owner", &self.owner),
+            ("Type", &object_type),
+            ("Previous Tx", &self.previous_transaction),
+            ("Storage Rebate", &self.storage_rebate),
+        ])
+    }
+}
+
+impl std::fmt::Display for GenesisObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let object_type = self.object_type();
+        crate::display_table(f, &[
+            ("Object ID", &self.object_id()),
+            ("Version", &self.version()),
+            ("Owner", &self.owner),
+            ("Type", &object_type),
+        ])
+    }
+}
+
+impl std::fmt::Display for TypeOrigin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Module", &self.module_name),
+            ("Struct", &self.struct_name),
+            ("Package", &self.package),
+        ])
+    }
+}
+
+impl std::fmt::Display for UpgradeInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Upgraded ID", &self.upgraded_id),
+            ("Upgraded Version", &self.upgraded_version),
+        ])
+    }
+}
+
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -609,13 +695,14 @@ mod serialization {
     impl<'a> MoveStructTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
             if let Some(coin_type) = s.coin_type_opt() {
-                if let TypeTag::Struct(s_inner) = coin_type
-                    && s_inner.address() == Address::FRAMEWORK
-                    && s_inner.module() == "iota"
-                    && s_inner.name() == "IOTA"
-                    && s_inner.type_params().is_empty()
-                {
-                    return Self::GasCoin;
+                if let TypeTag::Struct(s_inner) = coin_type {
+                    if s_inner.address() == Address::FRAMEWORK
+                        && s_inner.module() == "iota"
+                        && s_inner.name() == "IOTA"
+                        && s_inner.type_params().is_empty()
+                    {
+                        return Self::GasCoin;
+                    }
                 }
 
                 Self::Coin(coin_type)

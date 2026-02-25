@@ -391,6 +391,12 @@ impl IdentifierRef {
     }
 }
 
+impl std::fmt::Display for IdentifierRef {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
 impl From<&IdentifierRef> for Identifier {
     fn from(value: &IdentifierRef) -> Self {
         value.to_owned()

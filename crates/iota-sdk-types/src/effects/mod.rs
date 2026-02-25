@@ -69,6 +69,14 @@ impl TransactionEffects {
     }
 }
 
+impl std::fmt::Display for TransactionEffects {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TransactionEffects::V1(v1) => write!(f, "{v1}"),
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

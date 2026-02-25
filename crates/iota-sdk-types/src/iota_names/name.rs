@@ -174,6 +174,15 @@ pub enum NameFormat {
     Dot,
 }
 
+impl std::fmt::Display for NameFormat {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            NameFormat::At => write!(f, "At"),
+            NameFormat::Dot => write!(f, "Dot"),
+        }
+    }
+}
+
 /// Converts @label ending to label{separator}iota ending.
 ///
 /// E.g. `@example` -> `example.iota` | `test@example` -> `test.example.iota`

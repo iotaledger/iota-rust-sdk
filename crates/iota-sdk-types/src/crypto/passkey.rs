@@ -116,6 +116,23 @@ impl PasskeyPublicKey {
     }
 }
 
+impl std::fmt::Display for PasskeyAuthenticator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[
+            ("Authenticator Data", &format!("[{} bytes]", self.authenticator_data.len())),
+            ("Client Data JSON", &self.client_data_json),
+            ("Public Key", &self.public_key),
+            ("Signature", &self.signature),
+        ])
+    }
+}
+
+impl std::fmt::Display for PasskeyPublicKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
