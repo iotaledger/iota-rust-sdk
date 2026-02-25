@@ -42,6 +42,14 @@ impl Indexer {
         let mut next_checkpoint = state.next_checkpoint;
 
         if let Some(start) = self.config.start_checkpoint {
+            if start > state.next_checkpoint.saturating_add(1) {
+                warn!(
+                    configured_start_checkpoint = start,
+                    stored_next_checkpoint = state.next_checkpoint,
+                    skipped_checkpoints = start - state.next_checkpoint,
+                    "configured start_checkpoint skips checkpoints after stored progress"
+                );
+            }
             next_checkpoint = next_checkpoint.max(start);
         }
 

@@ -11,19 +11,30 @@ use clap::Parser;
 pub struct Cli {
     #[arg(
         long,
-        default_value_t = Network::Testnet,
-        help = "Network name (mainnet|testnet|devnet|localnet) or custom:<graphql_url>"
+        help = "Path to a JSON config file. CLI flags override file values"
     )]
-    pub network: Network,
+    pub config: Option<String>,
+
+    #[arg(
+        long,
+        help = "Network name (mainnet|testnet|devnet|localnet) or custom:<graphql_url> (default: testnet)"
+    )]
+    pub network: Option<Network>,
 
     #[arg(long)]
     pub graphql_url: Option<String>,
 
-    #[arg(long, default_value = "postgres://localhost:5432/polling_indexer")]
-    pub db_url: String,
+    #[arg(
+        long,
+        help = "PostgreSQL connection URL (default: postgres://localhost:5432/polling_indexer)"
+    )]
+    pub db_url: Option<String>,
 
-    #[arg(long, default_value = ".polling_indexer_progress.json")]
-    pub progress_file: String,
+    #[arg(
+        long,
+        help = "Progress watermark file (default: .polling_indexer_progress.json)"
+    )]
+    pub progress_file: Option<String>,
 
     #[arg(long)]
     pub start_checkpoint: Option<u64>,
@@ -31,14 +42,14 @@ pub struct Cli {
     #[arg(long)]
     pub end_checkpoint: Option<u64>,
 
-    #[arg(long, default_value_t = 50)]
-    pub page_size: i32,
+    #[arg(long, help = "Page size for GraphQL polling (default: 50)")]
+    pub page_size: Option<i32>,
 
-    #[arg(long, default_value_t = 2000)]
-    pub poll_interval_ms: u64,
+    #[arg(long, help = "Polling interval in milliseconds (default: 2000)")]
+    pub poll_interval_ms: Option<u64>,
 
-    #[arg(long, default_value_t = true, action = clap::ArgAction::Set)]
-    pub include_failed_txs: bool,
+    #[arg(long, action = clap::ArgAction::Set)]
+    pub include_failed_txs: Option<bool>,
 
     #[arg(long, help = "Transaction function filter e.g. 0x2::module::function")]
     pub tx_function: Option<String>,

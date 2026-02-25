@@ -15,6 +15,39 @@ This example demonstrates a polling indexer flow with:
 - `transactions` table: tx digest, sender, kind, status + raw JSON
 - `events` table: package/module/type data + raw JSON
 
+## Read Indexed Data (Examples)
+
+```bash
+psql "postgres://postgres:postgres@localhost:5432/polling_indexer"
+```
+
+Latest checkpoints:
+
+```sql
+SELECT sequence_number, epoch, network_total_transactions
+FROM checkpoints
+ORDER BY sequence_number DESC
+LIMIT 10;
+```
+
+Recent transactions:
+
+```sql
+SELECT checkpoint_sequence_number, digest, sender, success, kind
+FROM transactions
+ORDER BY checkpoint_sequence_number DESC, id DESC
+LIMIT 20;
+```
+
+Recent events:
+
+```sql
+SELECT checkpoint_sequence_number, tx_digest, package_id, module, event_type
+FROM events
+ORDER BY checkpoint_sequence_number DESC, id DESC
+LIMIT 20;
+```
+
 ## Run PostgreSQL
 
 ```bash
@@ -76,7 +109,29 @@ Event-level:
 --event-package-id 0x...package
 ```
 
+## Config File (JSON)
+
+You can store settings in a JSON file and override individual values via CLI flags.
+CLI flags take precedence over file values.
+
+```json
+{
+  "network": "testnet",
+  "db_url": "postgres://postgres:postgres@localhost:5432/polling_indexer",
+  "progress_file": ".polling_indexer_progress.json",
+  "start_checkpoint": 0,
+  "end_checkpoint": 50,
+  "page_size": 50,
+  "poll_interval_ms": 2000,
+  "include_failed_txs": true
+}
+```
+
+```bash
+cargo run -p polling-indexer -- --config polling-indexer.config.json
+```
+
 ## Progress Tracking
 
-A JSON progress file stores the `next_checkpoint` watermark.
+A JSON progress file (default: `.polling_indexer_progress.json`) stores the `next_checkpoint` watermark.
 On restart, indexing resumes from the stored value.
