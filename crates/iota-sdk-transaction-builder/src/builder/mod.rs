@@ -344,7 +344,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -414,7 +414,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use iota_graphql_client::Client;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::Address;
@@ -469,7 +469,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use iota_graphql_client::Client;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -545,7 +545,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use iota_graphql_client::Client;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -585,7 +585,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use iota_graphql_client::Client;
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
     /// use iota_types::{Address, ObjectId};
@@ -654,7 +654,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use iota_graphql_client::Client;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -695,7 +695,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
+    /// ```rust
     /// use iota_graphql_client::Client;
     /// use iota_sdk_transaction_builder::TransactionBuilder;
     /// use iota_types::{Address, ObjectId};
@@ -733,7 +733,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned};
@@ -782,7 +782,7 @@ impl<L> TransactionBuilder<(), L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
@@ -923,7 +923,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
     ///
     /// # Example
     ///
-    /// ```no_run
+    /// ```
     /// use std::str::FromStr;
     ///
     /// use iota_sdk_transaction_builder::{TransactionBuilder, assigned, unresolved};
