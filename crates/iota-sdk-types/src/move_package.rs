@@ -102,11 +102,7 @@ impl MovePackageData {
 /// upgrade-info = object-id u64
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct UpgradeInfo {
@@ -130,11 +126,7 @@ pub struct UpgradeInfo {
 /// type-origin = identifier identifier object-id
 /// ```
 #[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TypeOrigin {
@@ -143,7 +135,7 @@ pub struct TypeOrigin {
     /// The name of the data type. Either refers to an enum or a struct
     /// identifier.
     // `struct_name` alias to support backwards compatibility with the old name
-    // #[serde(alias = "struct_name")]
+    #[serde(alias = "struct_name")]
     pub datatype_name: Identifier,
     /// ID of the package, where the given type first appeared.
     pub package: ObjectId,
