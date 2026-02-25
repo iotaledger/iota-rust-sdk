@@ -10,8 +10,12 @@
 //! 4. **Check existence**: verify if a name is registered
 //!
 //! All operations use `dev_inspect` (dry run) so no gas or signing is needed.
+//!
+//! Usage:
+//!   cargo run --example iota_names                          # devnet, "name.iota"
+//!   cargo run --example iota_names -- giverep.iota mainnet  # mainnet, "giverep.iota"
 
-use std::str::FromStr;
+use std::{env, str::FromStr};
 
 use eyre::Result;
 use iota_sdk::{
@@ -20,13 +24,35 @@ use iota_sdk::{
     types::{Address, Identifier, ObjectId, StructTag, TypeTag},
 };
 
-/// IOTA Names package address on devnet.
-const IOTA_NAMES_PACKAGE: &str =
-    "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba";
+/// IOTA Names configuration per network.
+struct IotaNamesConfig {
+    package: Address,
+    object_id: ObjectId,
+}
 
-/// IOTA Names shared object ID on devnet.
-const IOTA_NAMES_OBJECT: &str =
-    "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342";
+impl IotaNamesConfig {
+    fn devnet() -> Result<Self> {
+        Ok(Self {
+            package: Address::from_str(
+                "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba",
+            )?,
+            object_id: ObjectId::from_str(
+                "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342",
+            )?,
+        })
+    }
+
+    fn mainnet() -> Result<Self> {
+        Ok(Self {
+            package: Address::from_str(
+                "0x6d2c743607ef275bd6934fe5c2a7e5179cca6fbd2049cfa79de2310b74f3cf83",
+            )?,
+            object_id: ObjectId::from_str(
+                "0xa14e5d0481a7aa346157078e6facba3cd895d97038cd87b9f2cc24b0c6102d75",
+            )?,
+        })
+    }
+}
 
 /// Helper to create the Registry type tag.
 fn registry_type_tag(pkg: Address) -> TypeTag {
@@ -52,9 +78,13 @@ fn name_record_type_tag(pkg: Address) -> TypeTag {
 ///
 /// Gets the registry from the IotaNames object, creates a Name from
 /// a string, looks up the NameRecord, and extracts the target address.
-async fn lookup_name(client: &Client, name: &str) -> Result<Option<Address>> {
-    let pkg = Address::from_str(IOTA_NAMES_PACKAGE)?;
-    let obj = ObjectId::from_str(IOTA_NAMES_OBJECT)?;
+async fn lookup_name(
+    client: &Client,
+    config: &IotaNamesConfig,
+    name: &str,
+) -> Result<Option<Address>> {
+    let pkg = config.package;
+    let obj = config.object_id;
     let sender = Address::from_str("0x0")?;
 
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -101,7 +131,8 @@ async fn lookup_name(client: &Client, name: &str) -> Result<Option<Address>> {
     let res = builder.dry_run(true).await?;
 
     if let Some(err) = &res.error {
-        if err.contains("None") || err.contains("option") {
+        // option::borrow abort means the name doesn't exist
+        if err.contains("option") && err.contains("borrow") {
             return Ok(None);
         }
         eyre::bail!("Name lookup failed: {err}");
@@ -120,9 +151,13 @@ async fn lookup_name(client: &Client, name: &str) -> Result<Option<Address>> {
 ///
 /// Gets the registry from the IotaNames object and calls
 /// `reverse_lookup` to find the name associated with a given address.
-async fn reverse_lookup(client: &Client, address: Address) -> Result<()> {
-    let pkg = Address::from_str(IOTA_NAMES_PACKAGE)?;
-    let obj = ObjectId::from_str(IOTA_NAMES_OBJECT)?;
+async fn reverse_lookup(
+    client: &Client,
+    config: &IotaNamesConfig,
+    address: Address,
+) -> Result<()> {
+    let pkg = config.package;
+    let obj = config.object_id;
     let sender = Address::from_str("0x0")?;
 
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -168,9 +203,13 @@ async fn reverse_lookup(client: &Client, address: Address) -> Result<()> {
 /// Retrieves the full NameRecord for a given name, including:
 /// - Target address
 /// - Expiration timestamp (milliseconds since epoch)
-async fn name_record_details(client: &Client, name: &str) -> Result<()> {
-    let pkg = Address::from_str(IOTA_NAMES_PACKAGE)?;
-    let obj = ObjectId::from_str(IOTA_NAMES_OBJECT)?;
+async fn name_record_details(
+    client: &Client,
+    config: &IotaNamesConfig,
+    name: &str,
+) -> Result<()> {
+    let pkg = config.package;
+    let obj = config.object_id;
     let sender = Address::from_str("0x0")?;
 
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -255,9 +294,13 @@ async fn name_record_details(client: &Client, name: &str) -> Result<()> {
 }
 
 /// Example 4: Check if a name exists in the registry.
-async fn check_name_exists(client: &Client, name: &str) -> Result<bool> {
-    let pkg = Address::from_str(IOTA_NAMES_PACKAGE)?;
-    let obj = ObjectId::from_str(IOTA_NAMES_OBJECT)?;
+async fn check_name_exists(
+    client: &Client,
+    config: &IotaNamesConfig,
+    name: &str,
+) -> Result<bool> {
+    let pkg = config.package;
+    let obj = config.object_id;
     let sender = Address::from_str("0x0")?;
 
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -298,20 +341,26 @@ async fn check_name_exists(client: &Client, name: &str) -> Result<bool> {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
-    let name = "name.iota";
+    let args: Vec<String> = env::args().collect();
+    let name = args.get(1).map(|s| s.as_str()).unwrap_or("name.iota");
+    let network = args.get(2).map(|s| s.as_str()).unwrap_or("devnet");
 
-    println!("=== IOTA Names Examples ===\n");
+    let (client, config) = match network {
+        "mainnet" => (Client::new_mainnet(), IotaNamesConfig::mainnet()?),
+        _ => (Client::new_devnet(), IotaNamesConfig::devnet()?),
+    };
+
+    println!("=== IOTA Names Examples ({network}) ===\n");
 
     // Example 1: Name lookup (name -> address)
     println!("1. Looking up '{name}'...");
-    match lookup_name(&client, name).await? {
+    match lookup_name(&client, &config, name).await? {
         Some(address) => {
             println!("   Resolved to: {address}\n");
 
             // Example 2: Reverse lookup (address -> name)
             println!("2. Reverse lookup for {address}...");
-            reverse_lookup(&client, address).await?;
+            reverse_lookup(&client, &config, address).await?;
             println!();
         }
         None => {
@@ -322,16 +371,19 @@ async fn main() -> Result<()> {
 
     // Example 3: Name record details
     println!("3. Querying name record details for '{name}'...");
-    name_record_details(&client, name).await?;
+    match name_record_details(&client, &config, name).await {
+        Ok(()) => {}
+        Err(e) => println!("   {e}"),
+    }
     println!();
 
     // Example 4: Check if names exist
     println!("4. Checking name existence...");
-    let exists = check_name_exists(&client, name).await?;
+    let exists = check_name_exists(&client, &config, name).await?;
     println!("   '{name}' exists: {exists}");
 
     let fake_name = "this-name-probably-does-not-exist-12345.iota";
-    let exists = check_name_exists(&client, fake_name).await?;
+    let exists = check_name_exists(&client, &config, fake_name).await?;
     println!("   '{fake_name}' exists: {exists}");
 
     Ok(())
