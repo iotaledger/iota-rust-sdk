@@ -1,13 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    path::Path,
-    time::{SystemTime, UNIX_EPOCH},
-};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde::{Deserialize, Serialize};
-use tokio::fs;
+use sqlx::{PgPool, Row};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProgressState {
@@ -24,32 +21,52 @@ impl Default for ProgressState {
     }
 }
 
-pub async fn load(path: &Path) -> anyhow::Result<ProgressState> {
-    if !path.exists() {
-        return Ok(ProgressState::default());
-    }
+pub async fn load(pool: &PgPool, progress_key: &str) -> anyhow::Result<ProgressState> {
+    let row = sqlx::query(
+        r#"
+        SELECT next_checkpoint, updated_at_ms
+        FROM indexer_progress
+        WHERE progress_key = $1
+        "#,
+    )
+    .bind(progress_key)
+    .fetch_optional(pool)
+    .await?;
 
-    let content = fs::read_to_string(path).await?;
-    let state = serde_json::from_str::<ProgressState>(&content)?;
-    Ok(state)
+    let Some(row) = row else {
+        return Ok(ProgressState::default());
+    };
+
+    let next_checkpoint_i64: i64 = row.try_get("next_checkpoint")?;
+    let updated_at_ms_i64: i64 = row.try_get("updated_at_ms")?;
+    Ok(ProgressState {
+        next_checkpoint: u64::try_from(next_checkpoint_i64)?,
+        updated_at_ms: u128::try_from(updated_at_ms_i64)?,
+    })
 }
 
-pub async fn store(path: &Path, next_checkpoint: u64) -> anyhow::Result<()> {
+pub async fn store(pool: &PgPool, progress_key: &str, next_checkpoint: u64) -> anyhow::Result<()> {
     let state = ProgressState {
         next_checkpoint,
         updated_at_ms: now_ms(),
     };
 
-    let tmp_path = path.with_extension("tmp");
-    fs::write(&tmp_path, serde_json::to_vec_pretty(&state)?).await?;
-    // `rename` does not replace an existing file on all platforms (notably
-    // Windows).
-    if let Err(err) = fs::remove_file(path).await {
-        if err.kind() != std::io::ErrorKind::NotFound {
-            return Err(err.into());
-        }
-    }
-    fs::rename(&tmp_path, path).await?;
+    sqlx::query(
+        r#"
+        INSERT INTO indexer_progress (progress_key, next_checkpoint, updated_at_ms)
+        VALUES ($1, $2, $3)
+        ON CONFLICT(progress_key)
+        DO UPDATE SET
+            next_checkpoint = excluded.next_checkpoint,
+            updated_at_ms = excluded.updated_at_ms
+        "#,
+    )
+    .bind(progress_key)
+    .bind(i64::try_from(state.next_checkpoint)?)
+    .bind(i64::try_from(state.updated_at_ms)?)
+    .execute(pool)
+    .await?;
+
     Ok(())
 }
 

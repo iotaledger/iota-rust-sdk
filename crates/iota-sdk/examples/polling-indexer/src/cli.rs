@@ -32,9 +32,10 @@ pub struct Cli {
 
     #[arg(
         long,
-        help = "Progress watermark file (default: .polling_indexer_progress.json)"
+        alias = "progress-file",
+        help = "Progress row key in PostgreSQL table indexer_progress (default: polling-indexer)"
     )]
-    pub progress_file: Option<String>,
+    pub progress_key: Option<String>,
 
     #[arg(long)]
     pub start_checkpoint: Option<u64>,

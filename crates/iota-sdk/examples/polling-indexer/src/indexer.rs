@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{path::PathBuf, time::Duration};
+use std::time::Duration;
 
 use iota_sdk::{
     graphql_client::{
@@ -23,22 +23,19 @@ pub struct Indexer {
     client: Client,
     pool: PgPool,
     config: AppConfig,
-    progress_path: PathBuf,
 }
 
 impl Indexer {
     pub fn new(client: Client, pool: PgPool, config: AppConfig) -> Self {
-        let progress_path = PathBuf::from(config.progress_file.clone());
         Self {
             client,
             pool,
             config,
-            progress_path,
         }
     }
 
     pub async fn run(&self) -> anyhow::Result<()> {
-        let state = progress::load(&self.progress_path).await?;
+        let state = progress::load(&self.pool, &self.config.progress_key).await?;
         let mut next_checkpoint = state.next_checkpoint;
 
         if let Some(start) = self.config.start_checkpoint {
@@ -93,7 +90,7 @@ impl Indexer {
             match self.process_checkpoint(next_checkpoint).await {
                 Ok(true) => {
                     next_checkpoint = next_checkpoint.saturating_add(1);
-                    progress::store(&self.progress_path, next_checkpoint).await?;
+                    progress::store(&self.pool, &self.config.progress_key, next_checkpoint).await?;
                 }
                 Ok(false) => {
                     warn!(

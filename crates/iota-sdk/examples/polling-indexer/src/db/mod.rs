@@ -84,6 +84,18 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
     .await?;
 
     sqlx::query(
+        r#"
+        CREATE TABLE IF NOT EXISTS indexer_progress (
+            progress_key TEXT PRIMARY KEY,
+            next_checkpoint BIGINT NOT NULL,
+            updated_at_ms BIGINT NOT NULL
+        );
+        "#,
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
         "ALTER TABLE events DROP CONSTRAINT IF EXISTS events_transaction_digest_raw_json_key;",
     )
     .execute(pool)

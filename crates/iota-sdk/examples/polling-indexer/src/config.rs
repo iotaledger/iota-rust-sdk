@@ -9,7 +9,7 @@ use serde::Deserialize;
 use crate::cli::{Cli, Network};
 
 const DEFAULT_DB_URL: &str = "postgres://localhost:5432/polling_indexer";
-const DEFAULT_PROGRESS_FILE: &str = ".polling_indexer_progress.json";
+const DEFAULT_PROGRESS_KEY: &str = "polling-indexer";
 const DEFAULT_PAGE_SIZE: i32 = 50;
 const DEFAULT_POLL_INTERVAL_MS: u64 = 2000;
 const DEFAULT_INCLUDE_FAILED_TXS: bool = true;
@@ -26,9 +26,10 @@ struct FileConfig {
     /// PostgreSQL connection string.
     /// Example: "postgres://postgres:postgres@localhost:5432/polling_indexer"
     db_url: Option<String>,
-    /// Path to the progress/watermark file.
-    /// Example: ".polling_indexer_progress.json"
-    progress_file: Option<String>,
+    /// Progress row key in the indexer_progress table.
+    /// Example: "polling-indexer"
+    #[serde(alias = "progress_file")]
+    progress_key: Option<String>,
     /// First checkpoint to index (inclusive).
     start_checkpoint: Option<u64>,
     /// Last checkpoint to index (inclusive). Omit for continuous mode.
@@ -71,7 +72,7 @@ pub struct FilterConfig {
 pub struct AppConfig {
     pub graphql_url: String,
     pub db_url: String,
-    pub progress_file: String,
+    pub progress_key: String,
     pub start_checkpoint: Option<u64>,
     pub end_checkpoint: Option<u64>,
     pub page_size: i32,
@@ -134,10 +135,10 @@ impl TryFrom<Cli> for AppConfig {
                 .db_url
                 .or(file_config.db_url)
                 .unwrap_or_else(|| DEFAULT_DB_URL.to_owned()),
-            progress_file: value
-                .progress_file
-                .or(file_config.progress_file)
-                .unwrap_or_else(|| DEFAULT_PROGRESS_FILE.to_owned()),
+            progress_key: value
+                .progress_key
+                .or(file_config.progress_key)
+                .unwrap_or_else(|| DEFAULT_PROGRESS_KEY.to_owned()),
             start_checkpoint,
             end_checkpoint,
             page_size,

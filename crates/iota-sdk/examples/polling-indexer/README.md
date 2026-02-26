@@ -4,7 +4,7 @@ Polling-based custom indexer example built on top of `iota_sdk::graphql_client::
 
 This example demonstrates a polling indexer flow with:
 
-- checkpoint polling with persisted watermark progress,
+- checkpoint polling with persisted watermark progress in PostgreSQL,
 - transaction ingestion using `TransactionsFilter::after_checkpoint` / `before_checkpoint`,
 - event ingestion + filtering,
 - storage into PostgreSQL.
@@ -14,6 +14,7 @@ This example demonstrates a polling indexer flow with:
 - `checkpoints` table: checkpoint summary metadata + raw JSON
 - `transactions` table: tx digest, sender, kind, status + raw JSON
 - `events` table: package/module/type data + raw JSON
+- `indexer_progress` table: resume watermark (`next_checkpoint`) by progress key
 
 ## Read Indexed Data (Examples)
 
@@ -64,7 +65,7 @@ docker run --name polling-indexer-pg \
 cargo run -p polling-indexer -- \
   --network testnet \
   --db-url postgres://postgres:postgres@localhost:5432/polling_indexer \
-  --progress-file .polling_indexer_progress.json \
+  --progress-key polling-indexer \
   --start-checkpoint 0 \
   --end-checkpoint 50
 ```
@@ -120,7 +121,7 @@ CLI flags take precedence over file values.
 {
   "network": "testnet",
   "db_url": "postgres://postgres:postgres@localhost:5432/polling_indexer",
-  "progress_file": ".polling_indexer_progress.json",
+  "progress_key": "polling-indexer",
   "start_checkpoint": 0,
   "end_checkpoint": 50,
   "page_size": 50,
@@ -137,5 +138,10 @@ cargo run -p polling-indexer -- --config polling-indexer.config.json
 
 ## Progress Tracking
 
-A JSON progress file (default: `.polling_indexer_progress.json`) stores the `next_checkpoint` watermark.
-On restart, indexing resumes from the stored value.
+Progress is stored in PostgreSQL (`indexer_progress`) keyed by `progress_key` (default: `polling-indexer`).
+On restart, indexing resumes from the stored `next_checkpoint` value.
+
+```sql
+SELECT progress_key, next_checkpoint, updated_at_ms
+FROM indexer_progress;
+```
