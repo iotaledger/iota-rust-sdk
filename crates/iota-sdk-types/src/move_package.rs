@@ -274,18 +274,9 @@ impl MovePackage {
         digest.finalize()
     }
 
-    /// Retrieve the module from this package with the given [ObjectId] and
-    /// [Identifier].
-    ///
-    /// [ObjectId] is expected to contain the `Storage ID` of this package.
-    /// In case the `Storage ID` doesn't match or the module name is not
-    /// present in this package the function returns None.
-    pub fn get_module(&self, package: &ObjectId, name: &Identifier) -> Option<&Vec<u8>> {
-        if &self.id != package {
-            None
-        } else {
-            self.modules.get(name)
-        }
+    /// Retrieve the module from this package with the given [Identifier].
+    pub fn get_module(&self, name: &Identifier) -> Option<&Vec<u8>> {
+        self.modules.get(name)
     }
 
     /// Return the size of the package in bytes
@@ -308,12 +299,12 @@ impl MovePackage {
             .sum::<usize>();
 
         let linkage_table_size = self.linkage_table.len()
-            * (ObjectId::LENGTH
-                + (
-                    ObjectId::LENGTH + std::mem::size_of::<Version>()
-                ));
+            * (ObjectId::LENGTH + (ObjectId::LENGTH + std::mem::size_of::<Version>()));
 
-        std::mem::size_of::<Version>() + module_map_size + type_origin_table_size + linkage_table_size
+        std::mem::size_of::<Version>()
+            + module_map_size
+            + type_origin_table_size
+            + linkage_table_size
     }
 
     /// `Package ID`/`Storage ID` of this package.
