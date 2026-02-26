@@ -42,6 +42,13 @@ pub async fn store(path: &Path, next_checkpoint: u64) -> anyhow::Result<()> {
 
     let tmp_path = path.with_extension("tmp");
     fs::write(&tmp_path, serde_json::to_vec_pretty(&state)?).await?;
+    // `rename` does not replace an existing file on all platforms (notably
+    // Windows).
+    if let Err(err) = fs::remove_file(path).await {
+        if err.kind() != std::io::ErrorKind::NotFound {
+            return Err(err.into());
+        }
+    }
     fs::rename(&tmp_path, path).await?;
     Ok(())
 }

@@ -24,7 +24,7 @@ psql "postgres://postgres:postgres@localhost:5432/polling_indexer"
 Latest checkpoints:
 
 ```sql
-SELECT sequence_number, epoch, network_total_transactions
+SELECT sequence_number, timestamp_ms, digest
 FROM checkpoints
 ORDER BY sequence_number DESC
 LIMIT 10;
@@ -33,18 +33,18 @@ LIMIT 10;
 Recent transactions:
 
 ```sql
-SELECT checkpoint_sequence_number, digest, sender, success, kind
+SELECT checkpoint_seq, transaction_digest, sender, success, kind
 FROM transactions
-ORDER BY checkpoint_sequence_number DESC, id DESC
+ORDER BY checkpoint_seq DESC, id DESC
 LIMIT 20;
 ```
 
 Recent events:
 
 ```sql
-SELECT checkpoint_sequence_number, tx_digest, package_id, module, event_type
+SELECT checkpoint_seq, transaction_digest, package_id, module, event_name
 FROM events
-ORDER BY checkpoint_sequence_number DESC, id DESC
+ORDER BY checkpoint_seq DESC, id DESC
 LIMIT 20;
 ```
 

@@ -42,7 +42,7 @@ impl Indexer {
         let mut next_checkpoint = state.next_checkpoint;
 
         if let Some(start) = self.config.start_checkpoint {
-            if start > state.next_checkpoint.saturating_add(1) {
+            if start > state.next_checkpoint {
                 warn!(
                     configured_start_checkpoint = start,
                     stored_next_checkpoint = state.next_checkpoint,
@@ -55,7 +55,6 @@ impl Indexer {
 
         info!(
             graphql_url = %self.config.graphql_url,
-            db_url = %self.config.db_url,
             next_checkpoint,
             "starting SDK polling indexer"
         );
@@ -112,11 +111,9 @@ impl Indexer {
     }
 
     async fn process_checkpoint(&self, sequence: u64) -> anyhow::Result<bool> {
-        let Some(checkpoint) = self.client.checkpoint(None, sequence).await? else {
+        let Some(checkpoint) = self.client.checkpoint(None, Some(sequence)).await? else {
             return Ok(false);
         };
-
-        let mut db_tx = self.pool.begin().await?;
 
         sqlx::query(
             r#"
@@ -133,7 +130,7 @@ impl Indexer {
         .bind(checkpoint.content_digest.to_string())
         .bind(checkpoint.timestamp_ms as i64)
         .bind(serde_json::to_value(&checkpoint)?)
-        .execute(&mut *db_tx)
+        .execute(&self.pool)
         .await?;
 
         let tx_filter = TransactionsFilter {
@@ -191,10 +188,10 @@ impl Indexer {
                 .bind(success)
                 .bind(checkpoint.timestamp_ms as i64)
                 .bind(serde_json::to_value(tx_data)?)
-                .execute(&mut *db_tx)
+                .execute(&self.pool)
                 .await?;
 
-                self.store_events_for_transaction(&mut db_tx, sequence, &tx_digest)
+                self.store_events_for_transaction(sequence, &tx_digest)
                     .await?;
             }
 
@@ -204,14 +201,12 @@ impl Indexer {
             tx_cursor = tx_page.page_info.end_cursor.clone();
         }
 
-        db_tx.commit().await?;
         info!(sequence, "stored checkpoint");
         Ok(true)
     }
 
     async fn store_events_for_transaction(
         &self,
-        db_tx: &mut sqlx::Transaction<'_, sqlx::Postgres>,
         checkpoint: u64,
         transaction_digest: &str,
     ) -> anyhow::Result<()> {
@@ -266,8 +261,7 @@ impl Indexer {
                     INSERT INTO events
                         (checkpoint_seq, transaction_digest, package_id, module, event_name, sender, raw_json)
                     VALUES ($1, $2, $3, $4, $5, $6, $7)
-                    ON CONFLICT(transaction_digest, raw_json)
-                    DO NOTHING
+                    ON CONFLICT DO NOTHING
                     "#,
                 )
                 .bind(checkpoint as i64)
@@ -277,7 +271,7 @@ impl Indexer {
                 .bind(event_name)
                 .bind(sender)
                 .bind(raw_json)
-                .execute(&mut **db_tx)
+                .execute(&self.pool)
                 .await?;
             }
 

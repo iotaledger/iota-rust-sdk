@@ -76,10 +76,15 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
             module TEXT,
             event_name TEXT,
             sender TEXT,
-            raw_json JSONB NOT NULL,
-            UNIQUE(transaction_digest, raw_json)
+            raw_json JSONB NOT NULL
         );
         "#,
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
+        "ALTER TABLE events DROP CONSTRAINT IF EXISTS events_transaction_digest_raw_json_key;",
     )
     .execute(pool)
     .await?;
@@ -95,6 +100,11 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
     sqlx::query("CREATE INDEX IF NOT EXISTS idx_events_checkpoint ON events(checkpoint_seq);")
         .execute(pool)
         .await?;
+    sqlx::query(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_events_tx_raw_json_md5 ON events(transaction_digest, md5(raw_json::text));",
+    )
+    .execute(pool)
+    .await?;
 
     Ok(())
 }
