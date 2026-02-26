@@ -78,11 +78,11 @@ cargo run -p polling-indexer -- \
   --db-url postgres://postgres:postgres@localhost:5432/polling_indexer
 ```
 
-Custom GraphQL endpoint via network:
+Custom GraphQL endpoint override:
 
 ```bash
 cargo run -p polling-indexer -- \
-  --network custom:https://your.graphql.endpoint/graphql \
+  --graphql-url https://your.graphql.endpoint/graphql \
   --db-url postgres://postgres:postgres@localhost:5432/polling_indexer
 ```
 

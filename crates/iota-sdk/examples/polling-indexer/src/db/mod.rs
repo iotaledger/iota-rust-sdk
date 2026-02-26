@@ -95,12 +95,6 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
     .execute(pool)
     .await?;
 
-    sqlx::query(
-        "ALTER TABLE events DROP CONSTRAINT IF EXISTS events_transaction_digest_raw_json_key;",
-    )
-    .execute(pool)
-    .await?;
-
     sqlx::query("CREATE INDEX IF NOT EXISTS idx_transactions_sender ON transactions(sender);")
         .execute(pool)
         .await?;

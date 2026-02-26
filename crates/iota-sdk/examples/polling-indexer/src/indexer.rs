@@ -1,8 +1,6 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::time::Duration;
-
 use iota_sdk::{
     graphql_client::{
         Client, PaginationFilter,
@@ -80,10 +78,10 @@ impl Indexer {
                 debug!(
                     next_checkpoint,
                     latest,
-                    poll_interval_ms = self.config.poll_interval_ms,
+                    poll_interval_ms = self.config.poll_interval.as_millis(),
                     "no new checkpoints yet"
                 );
-                tokio::time::sleep(Duration::from_millis(self.config.poll_interval_ms)).await;
+                tokio::time::sleep(self.config.poll_interval).await;
                 continue;
             }
 
@@ -97,11 +95,11 @@ impl Indexer {
                         checkpoint = next_checkpoint,
                         "checkpoint not indexed yet; retrying"
                     );
-                    tokio::time::sleep(Duration::from_millis(self.config.poll_interval_ms)).await;
+                    tokio::time::sleep(self.config.poll_interval).await;
                 }
                 Err(err) => {
                     warn!(checkpoint = next_checkpoint, error = %err, "checkpoint processing failed; retrying");
-                    tokio::time::sleep(Duration::from_millis(self.config.poll_interval_ms)).await;
+                    tokio::time::sleep(self.config.poll_interval).await;
                 }
             }
         }

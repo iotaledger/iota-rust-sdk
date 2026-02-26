@@ -17,7 +17,7 @@ pub struct Cli {
 
     #[arg(
         long,
-        help = "Network name (mainnet|testnet|devnet|localnet) or custom:<graphql_url> (default: testnet)"
+        help = "Network name (mainnet|testnet|devnet|localnet) (default: testnet)"
     )]
     pub network: Option<Network>,
 
@@ -78,7 +78,6 @@ pub enum Network {
     Testnet,
     Devnet,
     Localnet,
-    Custom(String),
 }
 
 impl Network {
@@ -88,7 +87,6 @@ impl Network {
             Self::Testnet => "https://graphql.testnet.iota.cafe",
             Self::Devnet => "https://graphql.devnet.iota.cafe",
             Self::Localnet => "http://localhost:9125/graphql",
-            Self::Custom(url) => url,
         }
     }
 }
@@ -100,7 +98,6 @@ impl fmt::Display for Network {
             Self::Testnet => write!(f, "testnet"),
             Self::Devnet => write!(f, "devnet"),
             Self::Localnet => write!(f, "localnet"),
-            Self::Custom(url) => write!(f, "custom:{url}"),
         }
     }
 }
@@ -114,25 +111,9 @@ impl FromStr for Network {
             "testnet" => Ok(Self::Testnet),
             "devnet" => Ok(Self::Devnet),
             "localnet" => Ok(Self::Localnet),
-            _ => {
-                let Some((prefix, url)) = s.split_once(':') else {
-                    anyhow::bail!(
-                        "invalid network '{s}'. Expected one of mainnet|testnet|devnet|localnet or custom:<graphql_url>"
-                    );
-                };
-
-                if !prefix.eq_ignore_ascii_case("custom") {
-                    anyhow::bail!(
-                        "invalid network '{s}'. Expected one of mainnet|testnet|devnet|localnet or custom:<graphql_url>"
-                    );
-                }
-
-                if url.trim().is_empty() {
-                    anyhow::bail!("custom network requires a non-empty GraphQL URL");
-                }
-
-                Ok(Self::Custom(url.to_owned()))
-            }
+            _ => anyhow::bail!(
+                "invalid network '{s}'. Expected one of mainnet|testnet|devnet|localnet"
+            ),
         }
     }
 }

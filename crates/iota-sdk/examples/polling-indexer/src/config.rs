@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
+use std::{str::FromStr, time::Duration};
 
 use iota_sdk::types::Address;
 use serde::Deserialize;
@@ -17,8 +17,8 @@ const DEFAULT_INCLUDE_FAILED_TXS: bool = true;
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 struct FileConfig {
-    /// Network name or custom endpoint selector.
-    /// Examples: "testnet", "mainnet", "custom:https://your.graphql.endpoint/graphql"
+    /// Network preset name.
+    /// Examples: "testnet", "mainnet", "localnet"
     network: Option<String>,
     /// Explicit GraphQL URL override.
     /// Example: "https://graphql.testnet.iota.cafe"
@@ -76,7 +76,7 @@ pub struct AppConfig {
     pub start_checkpoint: Option<u64>,
     pub end_checkpoint: Option<u64>,
     pub page_size: i32,
-    pub poll_interval_ms: u64,
+    pub poll_interval: Duration,
     pub filters: FilterConfig,
 }
 
@@ -129,6 +129,11 @@ impl TryFrom<Cli> for AppConfig {
             .or(file_config.graphql_url)
             .unwrap_or_else(|| network.graphql_url().to_owned());
 
+        let poll_interval_ms = value
+            .poll_interval_ms
+            .or(file_config.poll_interval_ms)
+            .unwrap_or(DEFAULT_POLL_INTERVAL_MS);
+
         Ok(Self {
             graphql_url,
             db_url: value
@@ -142,10 +147,7 @@ impl TryFrom<Cli> for AppConfig {
             start_checkpoint,
             end_checkpoint,
             page_size,
-            poll_interval_ms: value
-                .poll_interval_ms
-                .or(file_config.poll_interval_ms)
-                .unwrap_or(DEFAULT_POLL_INTERVAL_MS),
+            poll_interval: Duration::from_millis(poll_interval_ms),
             filters: FilterConfig {
                 include_failed_txs: value
                     .include_failed_txs
