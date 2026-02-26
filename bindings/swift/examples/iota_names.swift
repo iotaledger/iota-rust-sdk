@@ -19,21 +19,21 @@ let iotaNamesPackageHex =
 let iotaNamesObjectHex =
   "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
 
-func registryTypeTag(_ pkg: Address) -> TypeTag {
+func registryTypeTag(_ pkg: Address) throws -> TypeTag {
   return TypeTag.newStruct(
     structTag: StructTag(
       address: pkg,
-      module: Identifier(identifier: "registry"),
-      name: Identifier(identifier: "Registry")
+      module: try Identifier(identifier: "registry"),
+      name: try Identifier(identifier: "Registry")
     ))
 }
 
-func nameRecordTypeTag(_ pkg: Address) -> TypeTag {
+func nameRecordTypeTag(_ pkg: Address) throws -> TypeTag {
   return TypeTag.newStruct(
     structTag: StructTag(
       address: pkg,
-      module: Identifier(identifier: "name_record"),
-      name: Identifier(identifier: "NameRecord")
+      module: try Identifier(identifier: "name_record"),
+      name: try Identifier(identifier: "NameRecord")
     ))
 }
 
@@ -52,7 +52,7 @@ func lookupName(client: GraphQlClient, name: String) async throws -> Address? {
     module: Identifier(identifier: "iota_names"),
     function: Identifier(identifier: "registry"),
     arguments: [PtbArgument.sharedMut(id: obj)],
-    typeArgs: [registryTypeTag(pkg)],
+    typeArgs: [try registryTypeTag(pkg)],
     names: ["iota_names"]
   )
 
@@ -80,7 +80,7 @@ func lookupName(client: GraphQlClient, name: String) async throws -> Address? {
     module: Identifier(identifier: "option"),
     function: Identifier(identifier: "borrow"),
     arguments: [PtbArgument.assigned(name: "name_record_opt")],
-    typeArgs: [nameRecordTypeTag(pkg)],
+    typeArgs: [try nameRecordTypeTag(pkg)],
     names: ["name_record"]
   )
 
@@ -137,7 +137,7 @@ func reverseLookup(client: GraphQlClient, address: Address) async throws {
     module: Identifier(identifier: "iota_names"),
     function: Identifier(identifier: "registry"),
     arguments: [PtbArgument.sharedMut(id: obj)],
-    typeArgs: [registryTypeTag(pkg)],
+    typeArgs: [try registryTypeTag(pkg)],
     names: ["registry"]
   )
 
@@ -186,7 +186,7 @@ func nameRecordDetails(client: GraphQlClient, name: String) async throws {
     module: Identifier(identifier: "iota_names"),
     function: Identifier(identifier: "registry"),
     arguments: [PtbArgument.sharedMut(id: obj)],
-    typeArgs: [registryTypeTag(pkg)],
+    typeArgs: [try registryTypeTag(pkg)],
     names: ["registry"]
   )
 
@@ -216,7 +216,7 @@ func nameRecordDetails(client: GraphQlClient, name: String) async throws {
     module: Identifier(identifier: "option"),
     function: Identifier(identifier: "borrow"),
     arguments: [PtbArgument.assigned(name: "name_record_opt")],
-    typeArgs: [nameRecordTypeTag(pkg)],
+    typeArgs: [try nameRecordTypeTag(pkg)],
     names: ["name_record"]
   )
 
@@ -263,7 +263,7 @@ func nameRecordDetails(client: GraphQlClient, name: String) async throws {
     let effect = res.results[4]
     if let rv = effect.returnValues.first {
       if rv.bcs.count == 33 && rv.bcs[0] == 1 {
-        let addrBytes = Array(rv.bcs[1...32])
+        let addrBytes = Data(rv.bcs[1...32])
         let addr = try Address.fromBytes(bytes: addrBytes)
         print("  Target address: \(addr.toHex())")
       } else {
@@ -287,7 +287,7 @@ func checkNameExists(client: GraphQlClient, name: String) async throws -> Bool {
     module: Identifier(identifier: "iota_names"),
     function: Identifier(identifier: "registry"),
     arguments: [PtbArgument.sharedMut(id: obj)],
-    typeArgs: [registryTypeTag(pkg)],
+    typeArgs: [try registryTypeTag(pkg)],
     names: ["registry"]
   )
 
