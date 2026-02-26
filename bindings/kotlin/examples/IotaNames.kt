@@ -14,9 +14,21 @@ import iota_sdk.*
 import kotlin.collections.emptyList
 import kotlinx.coroutines.runBlocking
 
-// IOTA Names package address and shared object ID on devnet
-const val IOTA_NAMES_PACKAGE = "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
-const val IOTA_NAMES_OBJECT = "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+// IOTA Names configuration per network
+val CONFIGS = mapOf(
+    "devnet" to Pair(
+        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba",
+        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+    ),
+    "mainnet" to Pair(
+        "0x6d2c743607ef275bd6934fe5c2a7e5179cca6fbd2049cfa79de2310b74f3cf83",
+        "0xa14e5d0481a7aa346157078e6facba3cd895d97038cd87b9f2cc24b0c6102d75"
+    )
+)
+
+// Default (overridden in main based on CLI args)
+var IOTA_NAMES_PACKAGE = CONFIGS["devnet"]!!.first
+var IOTA_NAMES_OBJECT = CONFIGS["devnet"]!!.second
 
 fun registryTypeTag(pkg: Address): TypeTag {
     return TypeTag.newStruct(
@@ -154,6 +166,12 @@ suspend fun reverseLookup(client: GraphQlClient, address: Address) {
 
 /** Example 3: Query name record details (target address, expiration). */
 suspend fun nameRecordDetails(client: GraphQlClient, name: String) {
+    // First check if the name exists to avoid option::borrow abort
+    if (!checkNameExists(client, name)) {
+        println("  Name '$name' is not registered, no record to query.")
+        return
+    }
+
     val pkg = Address.fromHex(IOTA_NAMES_PACKAGE)
     val obj = ObjectId.fromHex(IOTA_NAMES_OBJECT)
     val std = Address.std()
@@ -296,12 +314,18 @@ suspend fun checkNameExists(client: GraphQlClient, name: String): Boolean {
     return false
 }
 
-fun main() = runBlocking {
+fun main(args: Array<String>) = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
-        val name = "name.iota"
+        val name = if (args.isNotEmpty()) args[0] else "name.iota"
+        val network = if (args.size > 1) args[1] else "devnet"
 
-        println("=== IOTA Names Examples ===\n")
+        val config = CONFIGS[network] ?: CONFIGS["devnet"]!!
+        IOTA_NAMES_PACKAGE = config.first
+        IOTA_NAMES_OBJECT = config.second
+
+        val client = if (network == "mainnet") GraphQlClient.newMainnet() else GraphQlClient.newDevnet()
+
+        println("=== IOTA Names Examples ($network) ===\n")
 
         // Example 1: Name lookup (name -> address)
         println("1. Looking up '$name'...")

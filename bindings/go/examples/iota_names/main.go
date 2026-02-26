@@ -16,13 +16,31 @@ import (
 	"encoding/binary"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-// IOTA Names package address and shared object ID on devnet
-const iotaNamesPackageHex = "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
-const iotaNamesObjectHex = "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+// IOTA Names configuration per network
+type iotaNamesConfig struct {
+	packageHex string
+	objectHex  string
+}
+
+var configs = map[string]iotaNamesConfig{
+	"devnet": {
+		packageHex: "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba",
+		objectHex:  "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342",
+	},
+	"mainnet": {
+		packageHex: "0x6d2c743607ef275bd6934fe5c2a7e5179cca6fbd2049cfa79de2310b74f3cf83",
+		objectHex:  "0xa14e5d0481a7aa346157078e6facba3cd895d97038cd87b9f2cc24b0c6102d75",
+	},
+}
+
+// Active config (set in main based on CLI args)
+var iotaNamesPackageHex = configs["devnet"].packageHex
+var iotaNamesObjectHex = configs["devnet"].objectHex
 
 func mustAddr(hex string) *iota_sdk.Address {
 	addr, err := iota_sdk.AddressFromHex(hex)
@@ -196,6 +214,12 @@ func reverseLookup(client *iota_sdk.GraphQlClient, address *iota_sdk.Address) {
 
 // Example 3: Query name record details (target address, expiration).
 func nameRecordDetails(client *iota_sdk.GraphQlClient, name string) {
+	// First check if the name exists to avoid option::borrow abort
+	if !checkNameExists(client, name) {
+		fmt.Printf("  Name '%s' is not registered, no record to query.\n", name)
+		return
+	}
+
 	pkg := mustAddr(iotaNamesPackageHex)
 	obj := mustObjId(iotaNamesObjectHex)
 	std := iota_sdk.AddressStd()
@@ -349,10 +373,29 @@ func checkNameExists(client *iota_sdk.GraphQlClient, name string) bool {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
 	name := "name.iota"
+	network := "devnet"
 
-	fmt.Println("=== IOTA Names Examples ===")
+	if len(os.Args) > 1 {
+		name = os.Args[1]
+	}
+	if len(os.Args) > 2 {
+		network = os.Args[2]
+	}
+
+	if cfg, ok := configs[network]; ok {
+		iotaNamesPackageHex = cfg.packageHex
+		iotaNamesObjectHex = cfg.objectHex
+	}
+
+	var client *iota_sdk.GraphQlClient
+	if network == "mainnet" {
+		client = iota_sdk.GraphQlClientNewMainnet()
+	} else {
+		client = iota_sdk.GraphQlClientNewDevnet()
+	}
+
+	fmt.Printf("=== IOTA Names Examples (%s) ===\n", network)
 	fmt.Println()
 
 	// Example 1: Name lookup (name -> address)

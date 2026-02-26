@@ -13,11 +13,24 @@
 from lib.iota_sdk import *
 
 import asyncio
+import sys
 
 
-# IOTA Names package address and shared object ID on devnet
-IOTA_NAMES_PACKAGE = "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
-IOTA_NAMES_OBJECT = "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+# IOTA Names configuration per network
+CONFIGS = {
+    "devnet": {
+        "package": "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba",
+        "object": "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342",
+    },
+    "mainnet": {
+        "package": "0x6d2c743607ef275bd6934fe5c2a7e5179cca6fbd2049cfa79de2310b74f3cf83",
+        "object": "0xa14e5d0481a7aa346157078e6facba3cd895d97038cd87b9f2cc24b0c6102d75",
+    },
+}
+
+# Default (overridden in main based on CLI args)
+IOTA_NAMES_PACKAGE = CONFIGS["devnet"]["package"]
+IOTA_NAMES_OBJECT = CONFIGS["devnet"]["object"]
 
 
 def registry_type_tag(pkg):
@@ -142,6 +155,11 @@ async def reverse_lookup(client, address):
 
 async def name_record_details(client, name):
     """Example 3: Query name record details (target address, expiration)."""
+    # First check if the name exists to avoid option::borrow abort
+    if not await check_name_exists(client, name):
+        print(f"  Name '{name}' is not registered, no record to query.")
+        return
+
     pkg = Address.from_hex(IOTA_NAMES_PACKAGE)
     obj = ObjectId.from_hex(IOTA_NAMES_OBJECT)
     std = Address.std()
@@ -262,10 +280,16 @@ async def check_name_exists(client, name):
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
-    name = "name.iota"
+    args = sys.argv[1:]
+    name = args[0] if len(args) > 0 else "name.iota"
+    network = args[1] if len(args) > 1 else "devnet"
 
-    print("=== IOTA Names Examples ===\n")
+    if network == "mainnet":
+        client = GraphQlClient.new_mainnet()
+    else:
+        client = GraphQlClient.new_devnet()
+
+    print(f"=== IOTA Names Examples ({network}) ===\n")
 
     # Example 1: Name lookup (name -> address)
     print(f"1. Looking up '{name}'...")
@@ -297,4 +321,13 @@ async def main():
 
 
 if __name__ == "__main__":
+    # Parse CLI args: python iota_names.py [name] [network]
+    args = sys.argv[1:]
+    name_arg = args[0] if len(args) > 0 else "name.iota"
+    network_arg = args[1] if len(args) > 1 else "devnet"
+
+    if network_arg in CONFIGS:
+        IOTA_NAMES_PACKAGE = CONFIGS[network_arg]["package"]
+        IOTA_NAMES_OBJECT = CONFIGS[network_arg]["object"]
+
     asyncio.run(main())

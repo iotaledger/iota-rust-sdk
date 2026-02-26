@@ -208,6 +208,12 @@ async fn name_record_details(
     config: &IotaNamesConfig,
     name: &str,
 ) -> Result<()> {
+    // First check if the name exists to avoid option::borrow abort
+    if !check_name_exists(client, config, name).await? {
+        println!("  Name '{name}' is not registered, no record to query.");
+        return Ok(());
+    }
+
     let pkg = config.package;
     let obj = config.object_id;
     let sender = Address::from_str("0x0")?;

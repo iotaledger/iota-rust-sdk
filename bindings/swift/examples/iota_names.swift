@@ -13,11 +13,26 @@
 import Foundation
 import IotaSDK
 
-// IOTA Names package address and shared object ID on devnet
-let iotaNamesPackageHex =
-  "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba"
-let iotaNamesObjectHex =
-  "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+// IOTA Names configuration per network
+struct IotaNamesConfig {
+  let packageHex: String
+  let objectHex: String
+}
+
+let iotaNamesConfigs: [String: IotaNamesConfig] = [
+  "devnet": IotaNamesConfig(
+    packageHex: "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba",
+    objectHex: "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+  ),
+  "mainnet": IotaNamesConfig(
+    packageHex: "0x6d2c743607ef275bd6934fe5c2a7e5179cca6fbd2049cfa79de2310b74f3cf83",
+    objectHex: "0xa14e5d0481a7aa346157078e6facba3cd895d97038cd87b9f2cc24b0c6102d75"
+  ),
+]
+
+// Active config (set in main based on CLI args)
+var iotaNamesPackageHex = iotaNamesConfigs["devnet"]!.packageHex
+var iotaNamesObjectHex = iotaNamesConfigs["devnet"]!.objectHex
 
 func registryTypeTag(_ pkg: Address) throws -> TypeTag {
   return TypeTag.newStruct(
@@ -173,6 +188,12 @@ func reverseLookup(client: GraphQlClient, address: Address) async throws {
 
 /// Example 3: Query name record details (target address, expiration).
 func nameRecordDetails(client: GraphQlClient, name: String) async throws {
+  // First check if the name exists to avoid option::borrow abort
+  if try await !checkNameExists(client: client, name: name) {
+    print("  Name '\(name)' is not registered, no record to query.")
+    return
+  }
+
   let pkg = try Address.fromHex(hex: iotaNamesPackageHex)
   let obj = try ObjectId.fromHex(hex: iotaNamesObjectHex)
   let std = Address.std()
@@ -331,10 +352,18 @@ func checkNameExists(client: GraphQlClient, name: String) async throws -> Bool {
 @main
 struct IotaNamesExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
-    let name = "name.iota"
+    let args = CommandLine.arguments
+    let name = args.count > 1 ? args[1] : "name.iota"
+    let network = args.count > 2 ? args[2] : "devnet"
 
-    print("=== IOTA Names Examples ===\n")
+    if let config = iotaNamesConfigs[network] {
+      iotaNamesPackageHex = config.packageHex
+      iotaNamesObjectHex = config.objectHex
+    }
+
+    let client = network == "mainnet" ? GraphQlClient.newMainnet() : GraphQlClient.newDevnet()
+
+    print("=== IOTA Names Examples (\(network)) ===\n")
 
     // Example 1: Name lookup (name -> address)
     print("1. Looking up '\(name)'...")
