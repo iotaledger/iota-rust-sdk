@@ -8,7 +8,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Release'">
     <ProjectReference Include="..\..\src\IotaSdk\IotaSdk.csproj" />
   </ItemGroup>
 </Project>
