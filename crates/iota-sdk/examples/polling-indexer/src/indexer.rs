@@ -1,6 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::{cmp, time::Duration};
+
 use iota_sdk::{
     graphql_client::{
         Client, PaginationFilter,
@@ -14,7 +16,7 @@ use tracing::{debug, info, warn};
 
 use crate::{
     config::{AppConfig, FilterConfig},
-    progress,
+    db::progress,
 };
 
 pub struct Indexer {
@@ -35,6 +37,7 @@ impl Indexer {
     pub async fn run(&self) -> anyhow::Result<()> {
         let state = progress::load(&self.pool, &self.config.progress_key).await?;
         let mut next_checkpoint = state.next_checkpoint;
+        let mut consecutive_failures = 0_u32;
 
         if let Some(start) = self.config.start_checkpoint {
             if start > state.next_checkpoint {
@@ -87,10 +90,12 @@ impl Indexer {
 
             match self.process_checkpoint(next_checkpoint).await {
                 Ok(true) => {
+                    consecutive_failures = 0;
                     next_checkpoint = next_checkpoint.saturating_add(1);
                     progress::store(&self.pool, &self.config.progress_key, next_checkpoint).await?;
                 }
                 Ok(false) => {
+                    consecutive_failures = 0;
                     warn!(
                         checkpoint = next_checkpoint,
                         "checkpoint not indexed yet; retrying"
@@ -98,8 +103,16 @@ impl Indexer {
                     tokio::time::sleep(self.config.poll_interval).await;
                 }
                 Err(err) => {
-                    warn!(checkpoint = next_checkpoint, error = %err, "checkpoint processing failed; retrying");
-                    tokio::time::sleep(self.config.poll_interval).await;
+                    consecutive_failures = consecutive_failures.saturating_add(1);
+                    let retry_delay = retry_delay(self.config.poll_interval, consecutive_failures);
+                    warn!(
+                        checkpoint = next_checkpoint,
+                        error = %err,
+                        consecutive_failures,
+                        retry_in_ms = retry_delay.as_millis(),
+                        "checkpoint processing failed; retrying with backoff"
+                    );
+                    tokio::time::sleep(retry_delay).await;
                 }
             }
         }
@@ -289,9 +302,34 @@ fn sender_str(tx: &SignedTransaction) -> Option<String> {
 
 fn tx_kind_str(tx: &SignedTransaction) -> String {
     match &tx.transaction {
-        Transaction::V1(v1) => format!("{:?}", v1.kind),
+        Transaction::V1(v1) => match &v1.kind {
+            iota_sdk::types::transaction::TransactionKind::ProgrammableTransaction(_) => {
+                "programmable_transaction".to_owned()
+            }
+            iota_sdk::types::transaction::TransactionKind::Genesis(_) => "genesis".to_owned(),
+            iota_sdk::types::transaction::TransactionKind::ConsensusCommitPrologueV1(_) => {
+                "consensus_commit_prologue_v1".to_owned()
+            }
+            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1(_) => {
+                "authenticator_state_update_v1".to_owned()
+            }
+            iota_sdk::types::transaction::TransactionKind::EndOfEpoch(_) => {
+                "end_of_epoch".to_owned()
+            }
+            iota_sdk::types::transaction::TransactionKind::RandomnessStateUpdate(_) => {
+                "randomness_state_update".to_owned()
+            }
+            _ => "unknown".to_owned(),
+        },
         _ => "unknown".to_owned(),
     }
+}
+
+fn retry_delay(base: Duration, consecutive_failures: u32) -> Duration {
+    const MAX_RETRY_DELAY: Duration = Duration::from_secs(30);
+    let exponent = consecutive_failures.saturating_sub(1).min(5);
+    let factor = 1_u32 << exponent;
+    cmp::min(base.saturating_mul(factor), MAX_RETRY_DELAY)
 }
 
 fn event_matches(

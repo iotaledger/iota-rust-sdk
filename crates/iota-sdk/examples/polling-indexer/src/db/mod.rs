@@ -1,6 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod progress;
+
 use std::str::FromStr;
 
 use anyhow::Context;
