@@ -310,11 +310,10 @@ impl MovePackage {
         let linkage_table_size = self.linkage_table.len()
             * (ObjectId::LENGTH
                 + (
-                    ObjectId::LENGTH + 8
-                    // Version
+                    ObjectId::LENGTH + std::mem::size_of::<Version>()
                 ));
 
-        8 /* Version */ + module_map_size + type_origin_table_size + linkage_table_size
+        std::mem::size_of::<Version>() + module_map_size + type_origin_table_size + linkage_table_size
     }
 
     /// `Package ID`/`Storage ID` of this package.
