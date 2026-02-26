@@ -18,7 +18,7 @@ class Program
 
         builder.MergeCoins(coin0, new[] { coin1 });
 
-        var txn = await builder.Build();
+        var txn = await builder.Finish();
 
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");

@@ -15,7 +15,7 @@ class Program
         var builder = new TransactionBuilder(fromAddress).WithClient(client);
         builder.SendIota(toAddress, PtbArgument.U64(5000000000));
 
-        var txn = await builder.Build();
+        var txn = await builder.Finish();
 
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");

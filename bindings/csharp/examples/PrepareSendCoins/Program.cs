@@ -18,7 +18,7 @@ class Program
 
         builder.SendCoins(new[] { coinId }, toAddress, PtbArgument.U64(50000000000));
 
-        var txn = await builder.Build();
+        var txn = await builder.Finish();
 
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");

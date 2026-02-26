@@ -35,7 +35,7 @@ class Program
             builder.TransferObjects(Address.FromHex(recipients[i].Item1), new[] { PtbArgument.Assigned(labels[i]) });
         }
 
-        var txn = builder.Finish();
+        var txn = await builder.Finish();
 
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");
