@@ -4,6 +4,7 @@
 use std::{fmt, str::FromStr};
 
 use clap::Parser;
+use serde::Deserialize;
 
 #[derive(Debug, Clone, Parser)]
 #[command(name = "polling-indexer")]
@@ -72,7 +73,8 @@ pub struct Cli {
     pub event_package_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum Network {
     Mainnet,
     Testnet,

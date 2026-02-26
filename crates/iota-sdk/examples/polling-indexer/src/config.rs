@@ -19,7 +19,7 @@ const DEFAULT_INCLUDE_FAILED_TXS: bool = true;
 struct FileConfig {
     /// Network preset name.
     /// Examples: "testnet", "mainnet", "localnet"
-    network: Option<String>,
+    network: Option<Network>,
     /// Explicit GraphQL URL override.
     /// Example: "https://graphql.testnet.iota.cafe"
     graphql_url: Option<String>,
@@ -94,9 +94,9 @@ impl TryFrom<Cli> for AppConfig {
             None => FileConfig::default(),
         };
 
-        let network = match (value.network, file_config.network.as_deref()) {
+        let network = match (value.network, file_config.network) {
             (Some(network), _) => network,
-            (None, Some(network)) => Network::from_str(network)?,
+            (None, Some(network)) => network,
             (None, None) => Network::Testnet,
         };
 
