@@ -21960,7 +21960,9 @@ class _UniffiConverterTypeTransactionsFilter(_UniffiConverterRustBuffer):
 
 class TypeOrigin:
     """
-    Identifies a struct and the module it was defined in
+    Stores the origin of a data type where it first appeared in the version
+    chain. A data type is identified by the name of the module and the name of
+    the struct/enum in combination.
 
     # BCS
 
@@ -21972,20 +21974,32 @@ class TypeOrigin:
     """
 
     module_name: "Identifier"
-    struct_name: "Identifier"
+    """
+    The name of the module the data type resides in.
+    """
+
+    datatype_name: "Identifier"
+    """
+    identifier.
+    """
+
     package: "ObjectId"
-    def __init__(self, *, module_name: "Identifier", struct_name: "Identifier", package: "ObjectId"):
+    """
+    ID of the package, where the given type first appeared.
+    """
+
+    def __init__(self, *, module_name: "Identifier", datatype_name: "Identifier", package: "ObjectId"):
         self.module_name = module_name
-        self.struct_name = struct_name
+        self.datatype_name = datatype_name
         self.package = package
 
     def __str__(self):
-        return "TypeOrigin(module_name={}, struct_name={}, package={})".format(self.module_name, self.struct_name, self.package)
+        return "TypeOrigin(module_name={}, datatype_name={}, package={})".format(self.module_name, self.datatype_name, self.package)
 
     def __eq__(self, other):
         if self.module_name != other.module_name:
             return False
-        if self.struct_name != other.struct_name:
+        if self.datatype_name != other.datatype_name:
             return False
         if self.package != other.package:
             return False
@@ -21996,20 +22010,20 @@ class _UniffiConverterTypeTypeOrigin(_UniffiConverterRustBuffer):
     def read(buf):
         return TypeOrigin(
             module_name=_UniffiConverterTypeIdentifier.read(buf),
-            struct_name=_UniffiConverterTypeIdentifier.read(buf),
+            datatype_name=_UniffiConverterTypeIdentifier.read(buf),
             package=_UniffiConverterTypeObjectId.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterTypeIdentifier.check_lower(value.module_name)
-        _UniffiConverterTypeIdentifier.check_lower(value.struct_name)
+        _UniffiConverterTypeIdentifier.check_lower(value.datatype_name)
         _UniffiConverterTypeObjectId.check_lower(value.package)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypeIdentifier.write(value.module_name, buf)
-        _UniffiConverterTypeIdentifier.write(value.struct_name, buf)
+        _UniffiConverterTypeIdentifier.write(value.datatype_name, buf)
         _UniffiConverterTypeObjectId.write(value.package, buf)
 
 
@@ -22076,7 +22090,7 @@ class UpgradeInfo:
 
     upgraded_id: "ObjectId"
     """
-    Id of the upgraded packages
+    ID of the upgraded package
     """
 
     upgraded_version: "Version"

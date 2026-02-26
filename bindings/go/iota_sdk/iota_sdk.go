@@ -40820,14 +40820,17 @@ func (_ FfiDestroyerTransactionsFilter) Destroy(value TransactionsFilter) {
 // type-origin = identifier identifier object-id
 // ```
 type TypeOrigin struct {
+	// The name of the module the data type resides in.
 	ModuleName *Identifier
-	StructName *Identifier
+	// identifier.
+	DatatypeName *Identifier
+	// ID of the package, where the given type first appeared.
 	Package *ObjectId
 }
 
 func (r *TypeOrigin) Destroy() {
 		FfiDestroyerIdentifier{}.Destroy(r.ModuleName);
-		FfiDestroyerIdentifier{}.Destroy(r.StructName);
+		FfiDestroyerIdentifier{}.Destroy(r.DatatypeName);
 		FfiDestroyerObjectId{}.Destroy(r.Package);
 }
 
@@ -40857,7 +40860,7 @@ func (c FfiConverterTypeOrigin) LowerExternal(value TypeOrigin) ExternalCRustBuf
 
 func (c FfiConverterTypeOrigin) Write(writer io.Writer, value TypeOrigin) {
 		FfiConverterIdentifierINSTANCE.Write(writer, value.ModuleName);
-		FfiConverterIdentifierINSTANCE.Write(writer, value.StructName);
+		FfiConverterIdentifierINSTANCE.Write(writer, value.DatatypeName);
 		FfiConverterObjectIdINSTANCE.Write(writer, value.Package);
 }
 
@@ -40930,7 +40933,7 @@ func (_ FfiDestroyerUnchangedSharedObject) Destroy(value UnchangedSharedObject) 
 // upgrade-info = object-id u64
 // ```
 type UpgradeInfo struct {
-	// Id of the upgraded packages
+	// ID of the upgraded package
 	UpgradedId *ObjectId
 	// Version of the upgraded package
 	UpgradedVersion *Version
