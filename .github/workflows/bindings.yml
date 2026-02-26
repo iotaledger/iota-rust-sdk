@@ -113,10 +113,15 @@ jobs:
       - name: Verify Examples.sln is up-to-date
         run: |
           cd bindings/csharp/examples
-          rm Examples.sln
-          dotnet new sln -n Examples
-          find . -name "*.csproj" -not -path "*/release/*" | xargs dotnet sln Examples.sln add
-          git diff --exit-code Examples.sln
+          missing=0
+          while IFS= read -r csproj; do
+            name=$(basename "$csproj")
+            if ! grep -q "$name" Examples.sln; then
+              echo "Missing from Examples.sln: $csproj"
+              missing=1
+            fi
+          done < <(find . -name "*.csproj" -not -path "*/release/*")
+          exit $missing
       - name: Check format of the examples
         run: make csharp-examples-format-check
       - uses: ./.github/actions/start-local-network

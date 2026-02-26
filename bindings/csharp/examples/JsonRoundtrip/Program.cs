@@ -4,7 +4,6 @@
 // This example demonstrates how to convert a Transaction to and from JSON.
 // A similar roundtrip can be done for other types as well.
 
-using System;
 using IotaSdk;
 
 class Program

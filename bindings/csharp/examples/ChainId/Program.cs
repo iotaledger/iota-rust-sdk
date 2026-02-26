@@ -1,12 +1,11 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-using System;
 using IotaSdk;
 
-class chain_id
+class Program
 {
-    static async System.Threading.Tasks.Task Main(string[] args)
+    static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewDevnet();
 

@@ -122,23 +122,7 @@ bindings/csharp/
 
 ## Supported Frameworks
 
-- .NET 8.0 and higher (recommended)
-- .NET Framework 4.6.1 and higher (with additional packages)
-
-For .NET Framework 4.6.1, ensure your project includes:
-
-```xml
-<PropertyGroup>
-  <TargetFramework>net461</TargetFramework>
-  <LangVersion>10.0</LangVersion>
-  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-</PropertyGroup>
-
-<ItemGroup>
-  <PackageReference Include="IsExternalInit" Version="1.0.3"/>
-  <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-</ItemGroup>
-```
+- .NET 8.0 and higher
 
 ## License
 

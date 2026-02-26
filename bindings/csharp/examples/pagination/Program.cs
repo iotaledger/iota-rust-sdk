@@ -1,9 +1,6 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using IotaSdk;
 
 class Program

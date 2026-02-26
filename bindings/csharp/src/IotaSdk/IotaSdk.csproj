@@ -7,7 +7,7 @@
     <NoWarn>$(NoWarn);CS0659</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>IotaSdk</PackageId>
-    <PackageVersion>1.0.0-alpha</PackageVersion>
+    <PackageVersion>0.0.1-alpha.1</PackageVersion>
     <Authors>IOTA Foundation</Authors>
     <Description>C# bindings for the IOTA SDK</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

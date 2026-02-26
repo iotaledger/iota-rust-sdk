@@ -351,8 +351,9 @@ csharp-release-example: ## Run the C# release example
 	@printf "\nRunning C# release example\n"
 	@dotnet build bindings/csharp/src/IotaSdk/IotaSdk.csproj -c Release > /dev/null
 	@dotnet pack bindings/csharp/src/IotaSdk/IotaSdk.csproj -c Release -o bindings/csharp/packages > /dev/null
-	@cd bindings/csharp/examples/release && \
-	dotnet add package IotaSdk -v 1.0.0-alpha -s ../../packages && \
+	@PACKAGE_VERSION=$$(grep -oP '(?<=<PackageVersion>)[^<]+' bindings/csharp/src/IotaSdk/IotaSdk.csproj); \
+	cd bindings/csharp/examples/release && \
+	dotnet add package IotaSdk -v $$PACKAGE_VERSION -s ../../packages && \
 	dotnet run || { rm -rf ../../packages; exit 1; }
 	@rm -rf bindings/csharp/packages;
 
