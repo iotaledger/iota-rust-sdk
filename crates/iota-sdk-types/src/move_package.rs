@@ -3,7 +3,11 @@
 
 use std::collections::BTreeMap;
 
-use crate::{Digest, ExecutionError, Identifier, ObjectId, Version, hash::Hasher};
+use crate::{
+    Digest, ExecutionError, Identifier, ObjectId,
+    hash::Hasher,
+    version::{Version, VersionError},
+};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
@@ -322,12 +326,12 @@ impl MovePackage {
         self.version
     }
 
-    pub fn decrement_version(&mut self) {
-        self.version.decrement().unwrap();
+    pub fn increment_version(&mut self) -> Result<(), VersionError> {
+        self.version.increment()
     }
 
-    pub fn increment_version(&mut self) {
-        self.version.increment().unwrap();
+    pub fn decrement_version(&mut self) -> Result<(), VersionError> {
+        self.version.decrement()
     }
 
     pub fn serialized_module_map(&self) -> &BTreeMap<Identifier, Vec<u8>> {
