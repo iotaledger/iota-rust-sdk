@@ -27,7 +27,7 @@ func main() {
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWaitForFinalized(fromAddress, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
 
@@ -42,14 +42,14 @@ func main() {
 		},
 		[]*iota_sdk.TypeTag{},
 	).Finish(client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to finish move authenticator: %v", err)
 	}
 
 	signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
 	waitFor := iota_sdk.WaitForTxFinalized
 	effects, err := builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to execute transaction: %v", err)
 	}
 
@@ -70,7 +70,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWaitForFinalized(sender, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to request coins from faucet: %w", err)
 	}
 
@@ -85,7 +85,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	signer := iota_sdk.TransactionSignerFromEd25519(privateKey)
 	waitFor := iota_sdk.WaitForTxFinalized
 	effects, err := builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
 
@@ -105,7 +105,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 		} else if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
-			if err.(*iota_sdk.SdkFfiError) != nil {
+			if err != nil {
 				return nil, fmt.Errorf("failed to get object: %w", err)
 			}
 
@@ -159,7 +159,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 	// Sign and execute the transaction (link the authenticator)
 	effects, err = builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
 

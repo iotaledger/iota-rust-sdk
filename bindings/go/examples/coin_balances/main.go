@@ -19,7 +19,7 @@ func main() {
 	}
 
 	coins, err := client.Coins(address, nil, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get coins: %v", err)
 	}
 
@@ -28,7 +28,7 @@ func main() {
 	}
 
 	balance, err := client.Balance(address, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get balance: %v", err)
 	}
 	fmt.Printf("Total Balance = %d\n", *balance)

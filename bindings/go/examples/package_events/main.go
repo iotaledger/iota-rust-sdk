@@ -27,7 +27,7 @@ func main() {
 		&eventFilter,
 		&paginationFilter,
 	)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get events: %v", err)
 	}
 

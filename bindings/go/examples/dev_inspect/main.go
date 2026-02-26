@@ -128,7 +128,7 @@ func main() {
 	)
 
 	res, err := builder.DryRun(true)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to dry run transaction: %v", err)
 	}
 

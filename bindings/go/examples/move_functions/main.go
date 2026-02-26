@@ -19,7 +19,7 @@ func main() {
 	}
 
 	packageOpt, err := client.Package(packageAddress, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get package: %v", err)
 	}
 	if packageOpt == nil {
@@ -37,7 +37,7 @@ func main() {
 			nil,
 			nil,
 		)
-		if err.(*iota_sdk.SdkFfiError) != nil {
+		if err != nil {
 			log.Fatalf("Failed to get module: %v", err)
 		}
 		if moduleOpt == nil {

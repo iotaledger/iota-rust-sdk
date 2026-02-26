@@ -23,7 +23,7 @@ func main() {
 	myAddress := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
 
 	validators, err := client.ActiveValidators(nil, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get active validators: %v", err)
 	}
 
@@ -45,7 +45,7 @@ func main() {
 	builder.Stake(iota_sdk.PtbArgumentU64(1000000000), validator.Address)
 
 	res, err := builder.DryRun(false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 
