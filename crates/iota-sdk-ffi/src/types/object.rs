@@ -377,7 +377,9 @@ impl ObjectData {
     }
 }
 
-/// Identifies a struct and the module it was defined in
+/// Stores the origin of a data type where it first appeared in the version
+/// chain. A data type is identified by the name of the module and the name of
+/// the struct/enum in combination.
 ///
 /// # BCS
 ///
@@ -388,8 +390,12 @@ impl ObjectData {
 /// ```
 #[derive(uniffi::Record)]
 pub struct TypeOrigin {
+    /// The name of the module the data type resides in.
     pub module_name: Arc<Identifier>,
-    pub struct_name: Arc<Identifier>,
+    // The name of the data type. Either refers to an enum or a struct
+    /// identifier.
+    pub datatype_name: Arc<Identifier>,
+    /// ID of the package, where the given type first appeared.
     pub package: Arc<ObjectId>,
 }
 
@@ -397,7 +403,7 @@ impl From<iota_sdk::types::TypeOrigin> for TypeOrigin {
     fn from(value: iota_sdk::types::TypeOrigin) -> Self {
         Self {
             module_name: Arc::new(value.module_name.into()),
-            struct_name: Arc::new(value.struct_name.into()),
+            datatype_name: Arc::new(value.datatype_name.into()),
             package: Arc::new(value.package.into()),
         }
     }
@@ -407,7 +413,7 @@ impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
     fn from(value: TypeOrigin) -> Self {
         Self {
             module_name: value.module_name.0.clone(),
-            struct_name: value.struct_name.0.clone(),
+            datatype_name: value.datatype_name.0.clone(),
             package: **value.package,
         }
     }
@@ -424,7 +430,7 @@ impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
 /// ```
 #[derive(uniffi::Record)]
 pub struct UpgradeInfo {
-    /// Id of the upgraded packages
+    /// ID of the upgraded package
     pub upgraded_id: Arc<ObjectId>,
     /// Version of the upgraded package
     pub upgraded_version: Arc<Version>,

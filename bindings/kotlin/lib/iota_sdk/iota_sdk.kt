@@ -67221,7 +67221,9 @@ public object FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<Transac
 
 
 /**
- * Identifies a struct and the module it was defined in
+ * Stores the origin of a data type where it first appeared in the version
+ * chain. A data type is identified by the name of the module and the name of
+ * the struct/enum in combination.
  *
  * # BCS
  *
@@ -67232,8 +67234,17 @@ public object FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<Transac
  * ```
  */
 data class TypeOrigin (
+    /**
+     * The name of the module the data type resides in.
+     */
     var `moduleName`: Identifier, 
-    var `structName`: Identifier, 
+    /**
+     * identifier.
+     */
+    var `datatypeName`: Identifier, 
+    /**
+     * ID of the package, where the given type first appeared.
+     */
     var `package`: ObjectId
 ) : Disposable {
     
@@ -67242,7 +67253,7 @@ data class TypeOrigin (
         
     Disposable.destroy(
         this.`moduleName`,
-        this.`structName`,
+        this.`datatypeName`,
         this.`package`
     )
     }
@@ -67264,13 +67275,13 @@ public object FfiConverterTypeTypeOrigin: FfiConverterRustBuffer<TypeOrigin> {
 
     override fun allocationSize(value: TypeOrigin) = (
             FfiConverterTypeIdentifier.allocationSize(value.`moduleName`) +
-            FfiConverterTypeIdentifier.allocationSize(value.`structName`) +
+            FfiConverterTypeIdentifier.allocationSize(value.`datatypeName`) +
             FfiConverterTypeObjectId.allocationSize(value.`package`)
     )
 
     override fun write(value: TypeOrigin, buf: ByteBuffer) {
             FfiConverterTypeIdentifier.write(value.`moduleName`, buf)
-            FfiConverterTypeIdentifier.write(value.`structName`, buf)
+            FfiConverterTypeIdentifier.write(value.`datatypeName`, buf)
             FfiConverterTypeObjectId.write(value.`package`, buf)
     }
 }
@@ -67342,7 +67353,7 @@ public object FfiConverterTypeUnchangedSharedObject: FfiConverterRustBuffer<Unch
  */
 data class UpgradeInfo (
     /**
-     * Id of the upgraded packages
+     * ID of the upgraded package
      */
     var `upgradedId`: ObjectId, 
     /**
