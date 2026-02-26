@@ -494,6 +494,7 @@ pub struct ActiveJwk {
     pub epoch: u64,
 }
 
+// This must match the sort order defined by jwk_lt in authenticator_state.move
 impl PartialOrd for ActiveJwk {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
