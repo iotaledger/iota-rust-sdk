@@ -266,7 +266,7 @@ csharp-example:
 
 .PHONY: csharp-examples
 csharp-examples: ## Run all C# bindings examples
-	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/release/*" -exec dirname {} \; | xargs -n 1 basename); do \
+	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -exec dirname {} \; | xargs -n 1 basename); do \
 		$(MAKE) csharp-example "$$example" || exit $$?; \
 	done
 
@@ -352,7 +352,7 @@ csharp-release-example: ## Run the C# release example
 	@dotnet build bindings/csharp/src/IotaSdk/IotaSdk.csproj -c Release > /dev/null
 	@dotnet pack bindings/csharp/src/IotaSdk/IotaSdk.csproj -c Release -o bindings/csharp/packages > /dev/null
 	@PACKAGE_VERSION=$$(grep -oP '(?<=<PackageVersion>)[^<]+' bindings/csharp/src/IotaSdk/IotaSdk.csproj); \
-	cd bindings/csharp/examples/release && \
+	cd bindings/csharp/examples/Release && \
 	dotnet add package IotaSdk -v $$PACKAGE_VERSION -s ../../packages && \
 	dotnet run || { rm -rf ../../packages; exit 1; }
 	@rm -rf bindings/csharp/packages;

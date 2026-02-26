@@ -120,7 +120,7 @@ jobs:
               echo "Missing from Examples.sln: $csproj"
               missing=1
             fi
-          done < <(find . -name "*.csproj" -not -path "*/release/*")
+          done < <(find . -name "*.csproj" -not -path "*/Release/*")
           exit $missing
       - name: Check format of the examples
         run: make csharp-examples-format-check
