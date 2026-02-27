@@ -1083,11 +1083,11 @@ impl Input {
         }
     }
 
-    /// Returns the [`ObjectReference`]s for objects being received in this
+    /// Returns the `ObjectReference` for the object being received in this
     /// input.
     ///
-    /// Returns an empty slice for non-`Receiving` variants.
-    pub fn receiving_objects(&self) -> Option<&ObjectReference> {
+    /// Returns `None` for non-`Receiving` variants.
+    pub fn receiving_object(&self) -> Option<&ObjectReference> {
         match self {
             Self::Receiving(obj_ref) => Some(obj_ref),
             _ => None,
