@@ -6,8 +6,5 @@
 *.nupkg
 *.snupkg
 
-# Visual Studio
-.vs/
-
 # C# generated bindings
 libiota_sdk_ffi.*

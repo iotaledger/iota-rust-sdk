@@ -155,15 +155,18 @@ csharp: ## Build C# bindings
 	@$(build_binding) \
 	uniffi-bindgen-cs --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/csharp/src/IotaSdk --no-format --config bindings/csharp/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/csharp/src/IotaSdk/; \
-	mv bindings/csharp/src/IotaSdk/iota_sdk_ffi.cs bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	# Fix common compilation issues in generated bindings
-	sed -i.bak 's/new byte\[\]\[(length)\]/new byte[(length)][]/' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	sed -i.bak '/class Validator.*: IDisposable/,/^}/ { s/FFIObjectUtil\.DisposeAll(/\/\/ FFIObjectUtil.DisposeAll(/; }' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	sed -i.bak 's/params Object?\[\]/params object?[]/' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	sed -i.bak 's/void Dispose(Object?/void Dispose(object?/' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	sed -i.bak 's/Object lock_ = new Object();/object lock_ = new object();/' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	sed -i.bak 's/String\.Format/string.Format/g' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
-	sed -i.bak 's/IotaSdkFfiMethods/Iota/g' bindings/csharp/src/IotaSdk/IotaSdk.cs; \
+	mv bindings/csharp/src/IotaSdk/iota_sdk_ffi.cs bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# Fix common compilation issues in generated bindings
+	@# byte[][length] -> byte[length][]: NordSecurity/uniffi-bindgen-cs#147
+	sed -i.bak 's/new byte\[\]\[(length)\]/new byte[(length)][]/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak '/class Validator.*: IDisposable/,/^}/ { s/FFIObjectUtil\.DisposeAll(/\/\/ FFIObjectUtil.DisposeAll(/; }' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# Object? / Object -> object? / object: NordSecurity/uniffi-bindgen-cs#169
+	sed -i.bak 's/params Object?\[\]/params object?[]/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/void Dispose(Object?/void Dispose(object?/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/Object lock_ = new Object();/object lock_ = new object();/' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	@# String.Format -> string.Format: NordSecurity/uniffi-bindgen-cs#170
+	sed -i.bak 's/String\.Format/string.Format/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
+	sed -i.bak 's/IotaSdkFfiMethods/Iota/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	rm bindings/csharp/src/IotaSdk/IotaSdk.cs.bak
 
 .PHONY: go-example
