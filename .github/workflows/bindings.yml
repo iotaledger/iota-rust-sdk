@@ -127,8 +127,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make csharp-examples
-      - name: Run the release example
-        run: make csharp-release-example
+      # Release example requires IotaSdk package to be published first
+      # - name: Run the release example
+      #   run: make csharp-release-example
 
   swift:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')

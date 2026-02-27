@@ -352,13 +352,7 @@ python-release-example: ## Run the Python release example
 .PHONY: csharp-release-example
 csharp-release-example: ## Run the C# release example
 	@printf "\nRunning C# release example\n"
-	@dotnet build bindings/csharp/src/IotaSdk/IotaSdk.csproj -c Release > /dev/null
-	@dotnet pack bindings/csharp/src/IotaSdk/IotaSdk.csproj -c Release -o bindings/csharp/packages > /dev/null
-	@PACKAGE_VERSION=$$(sed -n 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/p' bindings/csharp/src/IotaSdk/IotaSdk.csproj); \
-	cd bindings/csharp/examples/Release && \
-	dotnet add package IotaSdk -v $$PACKAGE_VERSION -s ../../packages && \
-	dotnet run || { rm -rf ../../packages; exit 1; }
-	@rm -rf bindings/csharp/packages;
+	@cd bindings/csharp/examples/Release && dotnet run
 
 .PHONY: swift-release-example
 swift-release-example: ## Run the Swift release example
