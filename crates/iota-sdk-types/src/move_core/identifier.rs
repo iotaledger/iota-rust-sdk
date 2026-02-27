@@ -229,6 +229,24 @@ impl PartialEq<str> for Identifier {
     }
 }
 
+impl PartialEq<&str> for Identifier {
+    fn eq(&self, other: &&str) -> bool {
+        self.as_str() == *other
+    }
+}
+
+impl PartialEq<Identifier> for str {
+    fn eq(&self, other: &Identifier) -> bool {
+        self == other.as_str()
+    }
+}
+
+impl PartialEq<String> for Identifier {
+    fn eq(&self, other: &String) -> bool {
+        self.as_str() == other
+    }
+}
+
 impl std::ops::Deref for Identifier {
     type Target = str;
 
