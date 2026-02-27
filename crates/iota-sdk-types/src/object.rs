@@ -563,11 +563,11 @@ impl std::fmt::Display for ObjectData {
 
 impl std::fmt::Display for MoveStruct {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let contents_display = format!("[{} bytes]", self.contents.len());
+        let contents_hex = hex::encode(&self.contents);
         crate::display_table(f, &[
             ("Type", &self.type_),
             ("Version", &self.version),
-            ("Contents", &contents_display),
+            ("Contents", &contents_hex),
         ])
     }
 }

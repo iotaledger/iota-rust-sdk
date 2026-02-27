@@ -376,6 +376,6 @@ impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
 
 impl std::fmt::Display for PersonalMessage<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "PersonalMessage([{} bytes])", self.0.len())
+        write!(f, "PersonalMessage({})", hex::encode(&self.0))
     }
 }

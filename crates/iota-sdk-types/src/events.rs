@@ -60,19 +60,23 @@ pub struct Event {
 
 impl std::fmt::Display for TransactionEvents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "TransactionEvents({} events)", self.0.len())
+        writeln!(f, "TransactionEvents ({} events):", self.0.len())?;
+        for (i, event) in self.0.iter().enumerate() {
+            write!(f, "\n--- Event {} ---\n{event}", i + 1)?;
+        }
+        Ok(())
     }
 }
 
 impl std::fmt::Display for Event {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let contents_display = format!("[{} bytes]", self.contents.len());
+        let contents_hex = hex::encode(&self.contents);
         crate::display_table(f, &[
             ("Package ID", &self.package_id),
             ("Module", &self.module),
             ("Sender", &self.sender),
             ("Type", &self.type_),
-            ("Contents", &contents_display),
+            ("Contents", &contents_hex),
         ])
     }
 }

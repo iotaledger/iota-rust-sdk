@@ -142,7 +142,7 @@ impl ExecutionStatus {
 /// coin-type-global-pause                              = %x23 string
 /// execution-cancelled-due-to-randomness-unavailable   = %x24
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, thiserror::Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -152,14 +152,19 @@ impl ExecutionStatus {
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
+    #[error("Insufficient gas")]
     InsufficientGas,
     /// Invalid Gas Object.
+    #[error("Invalid gas object")]
     InvalidGasObject,
     /// Invariant Violation
+    #[error("Invariant violation")]
     InvariantViolation,
     /// Attempted to used feature that is not supported yet
+    #[error("Feature not yet supported")]
     FeatureNotYetSupported,
     /// Move object is larger than the maximum allowed size
+    #[error("Object too big: size {object_size} exceeds max {max_object_size}")]
     ObjectTooBig {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
@@ -167,6 +172,7 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Package is larger than the maximum allowed size
+    #[error("Package too big: size {object_size} exceeds max {max_object_size}")]
     PackageTooBig {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
@@ -174,59 +180,78 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Circular Object Ownership
+    #[error("Circular object ownership detected for {object}")]
     CircularObjectOwnership { object: ObjectId },
     /// Insufficient coin balance for requested operation
+    #[error("Insufficient coin balance")]
     InsufficientCoinBalance,
     /// Coin balance overflowed an u64
+    #[error("Coin balance overflow")]
     CoinBalanceOverflow,
     /// Publish Error, Non-zero Address.
     /// The modules in the package must have their self-addresses set to zero.
+    #[error("Publish error: non-zero address in module")]
     PublishErrorNonZeroAddress,
     /// IOTA Move Bytecode Verification Error.
+    #[error("IOTA Move bytecode verification error")]
     IotaMoveVerificationError,
     /// Error from a non-abort instruction.
     /// Possible causes:
     ///     Arithmetic error, stack overflow, max value depth, etc."
+    #[error("Move primitive runtime error{}", .location.as_ref().map(|l| format!(" at {l}")).unwrap_or_default())]
     MovePrimitiveRuntimeError { location: Option<MoveLocation> },
     /// Move runtime abort
+    #[error("Move abort {code} at {location}")]
     MoveAbort {
         location: MoveLocation,
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         code: u64,
     },
     /// Bytecode verification error.
+    #[error("VM verification or deserialization error")]
     VmVerificationOrDeserializationError,
     /// MoveVm invariant violation
+    #[error("VM invariant violation")]
     VmInvariantViolation,
     /// Function not found
+    #[error("Function not found")]
     FunctionNotFound,
     /// Arity mismatch for Move function.
     /// The number of arguments does not match the number of parameters
+    #[error("Arity mismatch")]
     ArityMismatch,
     /// Type arity mismatch for Move function.
     /// Mismatch between the number of actual versus expected type arguments.
+    #[error("Type arity mismatch")]
     TypeArityMismatch,
     /// Non Entry Function Invoked. Move Call must start with an entry function.
+    #[error("Non-entry function invoked")]
     NonEntryFunctionInvoked,
     /// Invalid command argument
+    #[error("Command argument error at argument {argument}: {kind}")]
     CommandArgumentError {
         argument: u16,
         kind: CommandArgumentError,
     },
     /// Type argument error
+    #[error("Type argument error at type argument {type_argument}: {kind}")]
     TypeArgumentError {
         /// Index of the problematic type argument
         type_argument: u16,
         kind: TypeArgumentError,
     },
     /// Unused result without the drop ability.
+    #[error("Unused value without drop: result {result}, subresult {subresult}")]
     UnusedValueWithoutDrop { result: u16, subresult: u16 },
     /// Invalid public Move function signature.
     /// Unsupported return type for return value
+    #[error("Invalid public function return type at index {index}")]
     InvalidPublicFunctionReturnType { index: u16 },
     /// Invalid Transfer Object, object does not have public transfer.
+    #[error("Invalid transfer object: missing public transfer")]
     InvalidTransferObject,
     /// Effects from the transaction are too large
+    #[error("Effects too large: size {current_size} exceeds max {max_size}")]
     EffectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         current_size: u64,
@@ -234,17 +259,21 @@ pub enum ExecutionError {
         max_size: u64,
     },
     /// Publish or Upgrade is missing dependency
+    #[error("Publish or upgrade is missing dependency")]
     PublishUpgradeMissingDependency,
     /// Publish or Upgrade dependency downgrade.
     ///
     /// Indirect (transitive) dependency of published or upgraded package has
     /// been assigned an on-chain version that is less than the version
     /// required by one of the package's transitive dependencies.
+    #[error("Publish or upgrade dependency downgrade")]
     PublishUpgradeDependencyDowngrade,
     /// Invalid package upgrade
+    #[error("Package upgrade error: {kind}")]
     #[cfg_attr(feature = "schemars", schemars(title = "PackageUpgradeError"))]
     PackageUpgradeError { kind: PackageUpgradeError },
     /// Indicates the transaction tried to write objects too large to storage
+    #[error("Written objects too large: size {object_size} exceeds max {max_object_size}")]
     WrittenObjectsTooLarge {
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
         object_size: u64,
@@ -252,30 +281,40 @@ pub enum ExecutionError {
         max_object_size: u64,
     },
     /// Certificate is on the deny list
+    #[error("Certificate denied")]
     CertificateDenied,
     /// IOTA Move Bytecode verification timed out.
+    #[error("IOTA Move bytecode verification timed out")]
     IotaMoveVerificationTimeout,
     /// The requested shared object operation is not allowed
+    #[error("Shared object operation not allowed")]
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
+    #[error("Input object deleted")]
     InputObjectDeleted,
     /// Certificate is cancelled due to congestion on shared objects
+    #[error("Execution cancelled due to shared object congestion on {} objects", congested_objects.len())]
     ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
     /// Certificate is cancelled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
+    #[error("Execution cancelled due to shared object congestion on {} objects (suggested gas price: {suggested_gas_price})", congested_objects.len())]
     ExecutionCancelledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
         suggested_gas_price: u64,
     },
     /// Address is denied for this coin type
+    #[error("Address {address} denied for coin type {coin_type}")]
     AddressDeniedForCoin { address: Address, coin_type: String },
     /// Coin type is globally paused for use
+    #[error("Coin type globally paused: {coin_type}")]
     CoinTypeGlobalPause { coin_type: String },
     /// Certificate is cancelled because randomness could not be generated this
     /// epoch
+    #[error("Execution cancelled due to randomness unavailable")]
     ExecutionCancelledDueToRandomnessUnavailable,
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
+    #[error("Invalid linkage")]
     InvalidLinkage,
 }
 
@@ -387,7 +426,7 @@ pub struct MoveLocation {
 /// invalid-object-by-mut-ref                   = %x0a
 /// shared-object-operation-not-allowed         = %x0b
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, thiserror::Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -397,38 +436,51 @@ pub struct MoveLocation {
 #[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
+    #[error("Type mismatch")]
     TypeMismatch,
     /// The argument cannot be deserialized into a value of the specified type
+    #[error("Invalid BCS bytes")]
     InvalidBcsBytes,
     /// The argument cannot be instantiated from raw bytes
+    #[error("Invalid usage of pure argument")]
     InvalidUsageOfPureArgument,
     /// Invalid argument to private entry function.
     /// Private entry functions cannot take arguments from other Move functions.
+    #[error("Invalid argument to private entry function")]
     InvalidArgumentToPrivateEntryFunction,
     /// Out of bounds access to input or results
+    #[error("Index out of bounds: {index}")]
     IndexOutOfBounds { index: u16 },
     /// Out of bounds access to subresult
+    #[error("Secondary index out of bounds: result {result}, subresult {subresult}")]
     SecondaryIndexOutOfBounds { result: u16, subresult: u16 },
     /// Invalid usage of result.
     /// Expected a single result but found either no return value or multiple.
+    #[error("Invalid result arity at result {result}")]
     InvalidResultArity { result: u16 },
     /// Invalid usage of Gas coin.
     /// The Gas coin can only be used by-value with a TransferObjects command.
+    #[error("Invalid gas coin usage")]
     InvalidGasCoinUsage,
     /// Invalid usage of move value.
     //     Mutably borrowed values require unique usage.
     //     Immutably borrowed values cannot be taken or borrowed mutably.
     //     Taken values cannot be used again.
+    #[error("Invalid value usage")]
     InvalidValueUsage,
     /// Immutable objects cannot be passed by-value.
+    #[error("Invalid object by value: immutable objects cannot be passed by value")]
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
+    #[error("Invalid object by mutable reference: immutable objects cannot be passed by &mut")]
     InvalidObjectByMutRef,
     /// Shared object operations such a wrapping, freezing, or converting to
     /// owned are not allowed.
+    #[error("Shared object operation not allowed")]
     SharedObjectOperationNotAllowed,
     /// Invalid argument arity. Expected a single argument but found a result
     /// that expanded to multiple arguments.
+    #[error("Invalid argument arity")]
     InvalidArgumentArity,
 }
 
@@ -470,7 +522,7 @@ impl CommandArgumentError {
 /// unknown-upgrade-policy      = %x04 u8
 /// package-id-does-not-match   = %x05 object-id object-id
 /// ```
-#[derive(Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug, thiserror::Error)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -480,16 +532,22 @@ impl CommandArgumentError {
 #[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
+    #[error("Unable to fetch package {package_id}")]
     UnableToFetchPackage { package_id: ObjectId },
     /// Object is not a package
+    #[error("Object {object_id} is not a package")]
     NotAPackage { object_id: ObjectId },
     /// Package upgrade is incompatible with previous version
+    #[error("Incompatible upgrade")]
     IncompatibleUpgrade,
     /// Digest in upgrade ticket and computed digest differ
+    #[error("Digest does not match: {digest}")]
     DigestDoesNotMatch { digest: Digest },
     /// Upgrade policy is not valid
+    #[error("Unknown upgrade policy: {policy}")]
     UnknownUpgradePolicy { policy: u8 },
     /// PackageId does not matach PackageId in upgrade ticket
+    #[error("Package ID {package_id} does not match ticket ID {ticket_id}")]
     PackageIdDoesNotMatch {
         package_id: ObjectId,
         ticket_id: ObjectId,
@@ -518,7 +576,7 @@ impl PackageUpgradeError {
 /// type-not-found = %x00
 /// constraint-not-satisfied = %x01
 /// ```
-#[derive(Eq, PartialEq, Clone, Copy, Debug)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug, thiserror::Error)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -533,8 +591,10 @@ impl PackageUpgradeError {
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
+    #[error("Type not found")]
     TypeNotFound,
     /// A type provided did not match the specified constraint
+    #[error("Constraint not satisfied")]
     ConstraintNotSatisfied,
 }
 
@@ -558,146 +618,6 @@ impl std::fmt::Display for ExecutionStatus {
     }
 }
 
-impl std::fmt::Display for ExecutionError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ExecutionError::InsufficientGas => write!(f, "Insufficient gas"),
-            ExecutionError::InvalidGasObject => write!(f, "Invalid gas object"),
-            ExecutionError::InvariantViolation => write!(f, "Invariant violation"),
-            ExecutionError::FeatureNotYetSupported => write!(f, "Feature not yet supported"),
-            ExecutionError::ObjectTooBig {
-                object_size,
-                max_object_size,
-            } => write!(
-                f,
-                "Object too big: size {object_size} exceeds max {max_object_size}"
-            ),
-            ExecutionError::PackageTooBig {
-                object_size,
-                max_object_size,
-            } => write!(
-                f,
-                "Package too big: size {object_size} exceeds max {max_object_size}"
-            ),
-            ExecutionError::CircularObjectOwnership { object } => {
-                write!(f, "Circular object ownership detected for {object}")
-            }
-            ExecutionError::InsufficientCoinBalance => {
-                write!(f, "Insufficient coin balance")
-            }
-            ExecutionError::CoinBalanceOverflow => write!(f, "Coin balance overflow"),
-            ExecutionError::PublishErrorNonZeroAddress => {
-                write!(f, "Publish error: non-zero address in module")
-            }
-            ExecutionError::IotaMoveVerificationError => {
-                write!(f, "IOTA Move bytecode verification error")
-            }
-            ExecutionError::MovePrimitiveRuntimeError { location } => {
-                write!(f, "Move primitive runtime error")?;
-                if let Some(loc) = location {
-                    write!(f, " at {loc}")?;
-                }
-                Ok(())
-            }
-            ExecutionError::MoveAbort { location, code } => {
-                write!(f, "Move abort {code} at {location}")
-            }
-            ExecutionError::VmVerificationOrDeserializationError => {
-                write!(f, "VM verification or deserialization error")
-            }
-            ExecutionError::VmInvariantViolation => write!(f, "VM invariant violation"),
-            ExecutionError::FunctionNotFound => write!(f, "Function not found"),
-            ExecutionError::ArityMismatch => write!(f, "Arity mismatch"),
-            ExecutionError::TypeArityMismatch => write!(f, "Type arity mismatch"),
-            ExecutionError::NonEntryFunctionInvoked => {
-                write!(f, "Non-entry function invoked")
-            }
-            ExecutionError::CommandArgumentError { argument, kind } => {
-                write!(f, "Command argument error at argument {argument}: {kind}")
-            }
-            ExecutionError::TypeArgumentError {
-                type_argument,
-                kind,
-            } => write!(
-                f,
-                "Type argument error at type argument {type_argument}: {kind}"
-            ),
-            ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
-                write!(
-                    f,
-                    "Unused value without drop: result {result}, subresult {subresult}"
-                )
-            }
-            ExecutionError::InvalidPublicFunctionReturnType { index } => {
-                write!(f, "Invalid public function return type at index {index}")
-            }
-            ExecutionError::InvalidTransferObject => {
-                write!(f, "Invalid transfer object: missing public transfer")
-            }
-            ExecutionError::EffectsTooLarge {
-                current_size,
-                max_size,
-            } => write!(
-                f,
-                "Effects too large: size {current_size} exceeds max {max_size}"
-            ),
-            ExecutionError::PublishUpgradeMissingDependency => {
-                write!(f, "Publish or upgrade is missing dependency")
-            }
-            ExecutionError::PublishUpgradeDependencyDowngrade => {
-                write!(f, "Publish or upgrade dependency downgrade")
-            }
-            ExecutionError::PackageUpgradeError { kind } => {
-                write!(f, "Package upgrade error: {kind}")
-            }
-            ExecutionError::WrittenObjectsTooLarge {
-                object_size,
-                max_object_size,
-            } => write!(
-                f,
-                "Written objects too large: size {object_size} exceeds max {max_object_size}"
-            ),
-            ExecutionError::CertificateDenied => write!(f, "Certificate denied"),
-            ExecutionError::IotaMoveVerificationTimeout => {
-                write!(f, "IOTA Move bytecode verification timed out")
-            }
-            ExecutionError::SharedObjectOperationNotAllowed => {
-                write!(f, "Shared object operation not allowed")
-            }
-            ExecutionError::InputObjectDeleted => write!(f, "Input object deleted"),
-            ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
-                congested_objects,
-            } => {
-                write!(
-                    f,
-                    "Execution cancelled due to shared object congestion on {}",
-                    crate::display_vec_count(congested_objects)
-                )
-            }
-            ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
-                congested_objects,
-                suggested_gas_price,
-            } => {
-                write!(
-                    f,
-                    "Execution cancelled due to shared object congestion on {} (suggested gas price: {suggested_gas_price})",
-                    crate::display_vec_count(congested_objects)
-                )
-            }
-            ExecutionError::AddressDeniedForCoin { address, coin_type } => {
-                write!(f, "Address {address} denied for coin type {coin_type}")
-            }
-            ExecutionError::CoinTypeGlobalPause { coin_type } => {
-                write!(f, "Coin type globally paused: {coin_type}")
-            }
-            ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                write!(f, "Execution cancelled due to randomness unavailable")
-            }
-            ExecutionError::InvalidLinkage => write!(f, "Invalid linkage"),
-        }
-    }
-}
-
 impl std::fmt::Display for MoveLocation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let function_name = crate::display_option(&self.function_name);
@@ -714,92 +634,6 @@ impl std::fmt::Display for MoveLocation {
     }
 }
 
-impl std::fmt::Display for CommandArgumentError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            CommandArgumentError::TypeMismatch => write!(f, "Type mismatch"),
-            CommandArgumentError::InvalidBcsBytes => {
-                write!(f, "Invalid BCS bytes")
-            }
-            CommandArgumentError::InvalidUsageOfPureArgument => {
-                write!(f, "Invalid usage of pure argument")
-            }
-            CommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
-                write!(f, "Invalid argument to private entry function")
-            }
-            CommandArgumentError::IndexOutOfBounds { index } => {
-                write!(f, "Index out of bounds: {index}")
-            }
-            CommandArgumentError::SecondaryIndexOutOfBounds { result, subresult } => {
-                write!(
-                    f,
-                    "Secondary index out of bounds: result {result}, subresult {subresult}"
-                )
-            }
-            CommandArgumentError::InvalidResultArity { result } => {
-                write!(f, "Invalid result arity at result {result}")
-            }
-            CommandArgumentError::InvalidGasCoinUsage => {
-                write!(f, "Invalid gas coin usage")
-            }
-            CommandArgumentError::InvalidValueUsage => {
-                write!(f, "Invalid value usage")
-            }
-            CommandArgumentError::InvalidObjectByValue => {
-                write!(f, "Invalid object by value: immutable objects cannot be passed by value")
-            }
-            CommandArgumentError::InvalidObjectByMutRef => {
-                write!(f, "Invalid object by mutable reference: immutable objects cannot be passed by &mut")
-            }
-            CommandArgumentError::SharedObjectOperationNotAllowed => {
-                write!(f, "Shared object operation not allowed")
-            }
-            CommandArgumentError::InvalidArgumentArity => {
-                write!(f, "Invalid argument arity")
-            }
-        }
-    }
-}
-
-impl std::fmt::Display for TypeArgumentError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TypeArgumentError::TypeNotFound => write!(f, "Type not found"),
-            TypeArgumentError::ConstraintNotSatisfied => {
-                write!(f, "Constraint not satisfied")
-            }
-        }
-    }
-}
-
-impl std::fmt::Display for PackageUpgradeError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PackageUpgradeError::UnableToFetchPackage { package_id } => {
-                write!(f, "Unable to fetch package {package_id}")
-            }
-            PackageUpgradeError::NotAPackage { object_id } => {
-                write!(f, "Object {object_id} is not a package")
-            }
-            PackageUpgradeError::IncompatibleUpgrade => {
-                write!(f, "Incompatible upgrade")
-            }
-            PackageUpgradeError::DigestDoesNotMatch { digest } => {
-                write!(f, "Digest does not match: {digest}")
-            }
-            PackageUpgradeError::UnknownUpgradePolicy { policy } => {
-                write!(f, "Unknown upgrade policy: {policy}")
-            }
-            PackageUpgradeError::PackageIdDoesNotMatch {
-                package_id,
-                ticket_id,
-            } => write!(
-                f,
-                "Package ID {package_id} does not match ticket ID {ticket_id}"
-            ),
-        }
-    }
-}
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

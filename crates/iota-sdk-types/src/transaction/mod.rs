@@ -1683,7 +1683,7 @@ impl std::fmt::Display for ProgrammableTransaction {
 impl std::fmt::Display for Input {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Input::Pure { value } => write!(f, "Pure([{} bytes])", value.len()),
+            Input::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
             Input::ImmutableOrOwned(obj_ref) => write!(f, "ImmutableOrOwned({obj_ref})"),
             Input::Shared {
                 object_id,
