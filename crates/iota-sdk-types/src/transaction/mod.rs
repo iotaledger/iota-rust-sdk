@@ -1027,7 +1027,7 @@ impl Input {
     });
 
     /// Shared `Input` for the authenticator state object.
-    pub const AUTHENTICATOR_MUTABLE: Self = Self::Shared(SharedObjectReference {
+    pub const AUTHENTICATOR_STATE_MUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::AUTHENTICATOR_STATE,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: true,
@@ -1050,7 +1050,7 @@ impl Input {
     /// Returns the object id referenced by this input, if any.
     ///
     /// Returns `None` for `Pure` inputs.
-    pub fn object_id(&self) -> Option<&ObjectId> {
+    pub fn object_id_opt(&self) -> Option<&ObjectId> {
         match self {
             Self::Pure { .. } => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
@@ -1068,7 +1068,7 @@ impl Input {
 
     /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
     /// `Receiving` input.
-    pub fn as_object_ref(&self) -> Option<&ObjectReference> {
+    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
         match self {
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
             _ => None,
@@ -1076,7 +1076,7 @@ impl Input {
     }
 
     /// Returns the pure value bytes if this is a `Pure` input.
-    pub fn as_pure_value(&self) -> Option<&[u8]> {
+    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
         match self {
             Self::Pure(value) => Some(value),
             _ => None,
@@ -1091,16 +1091,10 @@ impl Input {
     derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "camelCase")
 )]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(rename_all = "camelCase")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SharedObjectReference {
     pub object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub initial_shared_version: Version,
     /// Controls whether the caller asks for a mutable reference to the
     /// shared object.
@@ -1108,7 +1102,7 @@ pub struct SharedObjectReference {
 }
 
 impl SharedObjectReference {
-    pub const IOTA_SYSTEM_OBJ: Self = Self {
+    pub const IOTA_SYSTEM_STATE_OBJ_MUTABLE: Self = Self {
         object_id: ObjectId::SYSTEM_STATE,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: true,
