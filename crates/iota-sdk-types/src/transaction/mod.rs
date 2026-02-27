@@ -1085,7 +1085,7 @@ impl Input {
 }
 
 /// A shared object input to a programmable transaction
-#[derive(Clone, Hash, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Hash, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
