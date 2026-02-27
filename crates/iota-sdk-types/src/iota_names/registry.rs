@@ -81,39 +81,45 @@ pub struct NameRecord {
 
 impl std::fmt::Display for Table {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ID", &self.id),
-            ("Size", &self.size),
-        ])
+        crate::display_table(f, &[("ID", &self.id), ("Size", &self.size)])
     }
 }
 
 impl std::fmt::Display for Registry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Registry", &self.registry),
-            ("Reverse Registry", &self.reverse_registry),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Registry", &self.registry),
+                ("Reverse Registry", &self.reverse_registry),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for RegistryEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ID", &self.id),
-            ("Name", &self.name),
-            ("Name Record", &self.name_record),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("ID", &self.id),
+                ("Name", &self.name),
+                ("Name Record", &self.name_record),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ReverseRegistryEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ID", &self.id),
-            ("Address", &self.address),
-            ("Name", &self.name),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("ID", &self.id),
+                ("Address", &self.address),
+                ("Name", &self.name),
+            ],
+        )
     }
 }
 
@@ -121,12 +127,15 @@ impl std::fmt::Display for NameRecord {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let target_display = crate::display_option(&self.target_address);
         let data_display = format!("[{} entries]", self.data.len());
-        crate::display_table(f, &[
-            ("NFT ID", &self.nft_id),
-            ("Expiration (ms)", &self.expiration_timestamp_ms),
-            ("Target Address", &target_display),
-            ("Data", &data_display),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("NFT ID", &self.nft_id),
+                ("Expiration (ms)", &self.expiration_timestamp_ms),
+                ("Target Address", &target_display),
+                ("Data", &data_display),
+            ],
+        )
     }
 }
 

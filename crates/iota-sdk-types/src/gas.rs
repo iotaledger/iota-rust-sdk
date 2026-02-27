@@ -113,13 +113,19 @@ impl GasCostSummary {
 
 impl std::fmt::Display for GasCostSummary {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Computation Cost", &self.computation_cost),
-            ("Computation Cost Burned", &self.computation_cost_burned),
-            ("Storage Cost", &self.storage_cost),
-            ("Storage Rebate", &self.storage_rebate),
-            ("Non-Refundable Storage Fee", &self.non_refundable_storage_fee),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Computation Cost", &self.computation_cost),
+                ("Computation Cost Burned", &self.computation_cost_burned),
+                ("Storage Cost", &self.storage_cost),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+            ],
+        )
     }
 }
 

@@ -71,13 +71,16 @@ impl std::fmt::Display for TransactionEvents {
 impl std::fmt::Display for Event {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let contents_hex = hex::encode(&self.contents);
-        crate::display_table(f, &[
-            ("Package ID", &self.package_id),
-            ("Module", &self.module),
-            ("Sender", &self.sender),
-            ("Type", &self.type_),
-            ("Contents", &contents_hex),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Package ID", &self.package_id),
+                ("Module", &self.module),
+                ("Sender", &self.sender),
+                ("Type", &self.type_),
+                ("Contents", &contents_hex),
+            ],
+        )
     }
 }
 
@@ -105,10 +108,13 @@ pub struct BalanceChange {
 
 impl std::fmt::Display for BalanceChange {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Address", &self.address),
-            ("Coin Type", &self.coin_type),
-            ("Amount", &self.amount),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Address", &self.address),
+                ("Coin Type", &self.coin_type),
+                ("Amount", &self.amount),
+            ],
+        )
     }
 }

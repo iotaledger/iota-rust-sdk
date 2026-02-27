@@ -1351,12 +1351,15 @@ impl std::fmt::Display for Transaction {
 
 impl std::fmt::Display for TransactionV1 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Kind", &self.kind),
-            ("Sender", &self.sender),
-            ("Gas Payment", &self.gas_payment),
-            ("Expiration", &self.expiration),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Kind", &self.kind),
+                ("Sender", &self.sender),
+                ("Gas Payment", &self.gas_payment),
+                ("Expiration", &self.expiration),
+            ],
+        )
     }
 }
 
@@ -1369,10 +1372,13 @@ impl std::fmt::Display for SenderSignedTransaction {
 impl std::fmt::Display for SignedTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let sig_count = crate::display_vec_count(&self.signatures);
-        crate::display_table(f, &[
-            ("Transaction", &self.transaction),
-            ("Signatures", &sig_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Transaction", &self.transaction),
+                ("Signatures", &sig_count),
+            ],
+        )
     }
 }
 
@@ -1388,24 +1394,33 @@ impl std::fmt::Display for TransactionExpiration {
 impl std::fmt::Display for GasPayment {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let objects_count = crate::display_vec_count(&self.objects);
-        crate::display_table(f, &[
-            ("Objects", &objects_count),
-            ("Owner", &self.owner),
-            ("Price", &self.price),
-            ("Budget", &self.budget),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Objects", &objects_count),
+                ("Owner", &self.owner),
+                ("Price", &self.price),
+                ("Budget", &self.budget),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for RandomnessStateUpdate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let bytes_size = self.random_bytes.len();
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Randomness Round", &self.randomness_round),
-            ("Random Bytes Size", &bytes_size),
-            ("Randomness Obj Initial Shared Version", &self.randomness_obj_initial_shared_version),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Randomness Round", &self.randomness_round),
+                ("Random Bytes Size", &bytes_size),
+                (
+                    "Randomness Obj Initial Shared Version",
+                    &self.randomness_obj_initial_shared_version,
+                ),
+            ],
+        )
     }
 }
 
@@ -1454,20 +1469,17 @@ impl std::fmt::Display for ExecutionTimeObservations {
 impl std::fmt::Display for ExecutionTimeObservation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let obs_count = crate::display_vec_count(&self.observations);
-        crate::display_table(f, &[
-            ("Key", &self.key),
-            ("Observations", &obs_count),
-        ])
+        crate::display_table(f, &[("Key", &self.key), ("Observations", &obs_count)])
     }
 }
 
 impl std::fmt::Display for ValidatorExecutionTimeObservation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let duration_str = format!("{:?}", self.duration);
-        crate::display_table(f, &[
-            ("Validator", &self.validator),
-            ("Duration", &duration_str),
-        ])
+        crate::display_table(
+            f,
+            &[("Validator", &self.validator), ("Duration", &duration_str)],
+        )
     }
 }
 
@@ -1498,32 +1510,47 @@ impl std::fmt::Display for ExecutionTimeObservationKey {
 
 impl std::fmt::Display for AuthenticatorStateExpire {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Min Epoch", &self.min_epoch),
-            ("Authenticator Obj Initial Shared Version", &self.authenticator_obj_initial_shared_version),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Min Epoch", &self.min_epoch),
+                (
+                    "Authenticator Obj Initial Shared Version",
+                    &self.authenticator_obj_initial_shared_version,
+                ),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for AuthenticatorStateUpdateV1 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let jwks_count = crate::display_vec_count(&self.new_active_jwks);
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Round", &self.round),
-            ("New Active JWKs", &jwks_count),
-            ("Authenticator Obj Initial Shared Version", &self.authenticator_obj_initial_shared_version),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Round", &self.round),
+                ("New Active JWKs", &jwks_count),
+                (
+                    "Authenticator Obj Initial Shared Version",
+                    &self.authenticator_obj_initial_shared_version,
+                ),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ActiveJwk {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("JWK ID", &self.jwk_id),
-            ("JWK", &self.jwk),
-            ("Epoch", &self.epoch),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("JWK ID", &self.jwk_id),
+                ("JWK", &self.jwk),
+                ("Epoch", &self.epoch),
+            ],
+        )
     }
 }
 
@@ -1543,65 +1570,83 @@ impl std::fmt::Display for ConsensusDeterminedVersionAssignments {
 impl std::fmt::Display for CancelledTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let assignments_count = crate::display_vec_count(&self.version_assignments);
-        crate::display_table(f, &[
-            ("Digest", &self.digest),
-            ("Version Assignments", &assignments_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Digest", &self.digest),
+                ("Version Assignments", &assignments_count),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for VersionAssignment {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Object ID", &self.object_id),
-            ("Version", &self.version),
-        ])
+        crate::display_table(
+            f,
+            &[("Object ID", &self.object_id), ("Version", &self.version)],
+        )
     }
 }
 
 impl std::fmt::Display for ConsensusCommitPrologueV1 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let sub_dag = crate::display_option(&self.sub_dag_index);
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Round", &self.round),
-            ("Sub DAG Index", &sub_dag),
-            ("Commit Timestamp Ms", &self.commit_timestamp_ms),
-            ("Consensus Commit Digest", &self.consensus_commit_digest),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Round", &self.round),
+                ("Sub DAG Index", &sub_dag),
+                ("Commit Timestamp Ms", &self.commit_timestamp_ms),
+                ("Consensus Commit Digest", &self.consensus_commit_digest),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ChangeEpoch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let pkgs_count = crate::display_vec_count(&self.system_packages);
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Protocol Version", &self.protocol_version),
-            ("Storage Charge", &self.storage_charge),
-            ("Computation Charge", &self.computation_charge),
-            ("Storage Rebate", &self.storage_rebate),
-            ("Non-Refundable Storage Fee", &self.non_refundable_storage_fee),
-            ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-            ("System Packages", &pkgs_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ChangeEpochV2 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let pkgs_count = crate::display_vec_count(&self.system_packages);
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Protocol Version", &self.protocol_version),
-            ("Storage Charge", &self.storage_charge),
-            ("Computation Charge", &self.computation_charge),
-            ("Computation Charge Burned", &self.computation_charge_burned),
-            ("Storage Rebate", &self.storage_rebate),
-            ("Non-Refundable Storage Fee", &self.non_refundable_storage_fee),
-            ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-            ("System Packages", &pkgs_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Computation Charge Burned", &self.computation_charge_burned),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+            ],
+        )
     }
 }
 
@@ -1609,18 +1654,24 @@ impl std::fmt::Display for ChangeEpochV3 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let pkgs_count = crate::display_vec_count(&self.system_packages);
         let validators_count = crate::display_vec_count(&self.eligible_active_validators);
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Protocol Version", &self.protocol_version),
-            ("Storage Charge", &self.storage_charge),
-            ("Computation Charge", &self.computation_charge),
-            ("Computation Charge Burned", &self.computation_charge_burned),
-            ("Storage Rebate", &self.storage_rebate),
-            ("Non-Refundable Storage Fee", &self.non_refundable_storage_fee),
-            ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-            ("System Packages", &pkgs_count),
-            ("Eligible Active Validators", &validators_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Computation Charge Burned", &self.computation_charge_burned),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+                ("Eligible Active Validators", &validators_count),
+            ],
+        )
     }
 }
 
@@ -1629,20 +1680,26 @@ impl std::fmt::Display for ChangeEpochV4 {
         let pkgs_count = crate::display_vec_count(&self.system_packages);
         let validators_count = crate::display_vec_count(&self.eligible_active_validators);
         let scores_count = crate::display_vec_count(&self.scores);
-        crate::display_table(f, &[
-            ("Epoch", &self.epoch),
-            ("Protocol Version", &self.protocol_version),
-            ("Storage Charge", &self.storage_charge),
-            ("Computation Charge", &self.computation_charge),
-            ("Computation Charge Burned", &self.computation_charge_burned),
-            ("Storage Rebate", &self.storage_rebate),
-            ("Non-Refundable Storage Fee", &self.non_refundable_storage_fee),
-            ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-            ("System Packages", &pkgs_count),
-            ("Eligible Active Validators", &validators_count),
-            ("Scores", &scores_count),
-            ("Adjust Rewards By Score", &self.adjust_rewards_by_score),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Computation Charge Burned", &self.computation_charge_burned),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+                ("Eligible Active Validators", &validators_count),
+                ("Scores", &scores_count),
+                ("Adjust Rewards By Score", &self.adjust_rewards_by_score),
+            ],
+        )
     }
 }
 
@@ -1650,11 +1707,14 @@ impl std::fmt::Display for SystemPackage {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let modules_count = crate::display_vec_count(&self.modules);
         let deps_count = crate::display_vec_count(&self.dependencies);
-        crate::display_table(f, &[
-            ("Version", &self.version),
-            ("Modules", &modules_count),
-            ("Dependencies", &deps_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Version", &self.version),
+                ("Modules", &modules_count),
+                ("Dependencies", &deps_count),
+            ],
+        )
     }
 }
 
@@ -1662,10 +1722,7 @@ impl std::fmt::Display for GenesisTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let objects_count = crate::display_vec_count(&self.objects);
         let events_count = crate::display_vec_count(&self.events);
-        crate::display_table(f, &[
-            ("Objects", &objects_count),
-            ("Events", &events_count),
-        ])
+        crate::display_table(f, &[("Objects", &objects_count), ("Events", &events_count)])
     }
 }
 
@@ -1673,10 +1730,10 @@ impl std::fmt::Display for ProgrammableTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let inputs_count = crate::display_vec_count(&self.inputs);
         let commands_count = crate::display_vec_count(&self.commands);
-        crate::display_table(f, &[
-            ("Inputs", &inputs_count),
-            ("Commands", &commands_count),
-        ])
+        crate::display_table(
+            f,
+            &[("Inputs", &inputs_count), ("Commands", &commands_count)],
+        )
     }
 }
 
@@ -1715,30 +1772,24 @@ impl std::fmt::Display for Command {
 impl std::fmt::Display for TransferObjects {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let objects_count = crate::display_vec_count(&self.objects);
-        crate::display_table(f, &[
-            ("Objects", &objects_count),
-            ("Address", &self.address),
-        ])
+        crate::display_table(
+            f,
+            &[("Objects", &objects_count), ("Address", &self.address)],
+        )
     }
 }
 
 impl std::fmt::Display for SplitCoins {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let amounts_count = crate::display_vec_count(&self.amounts);
-        crate::display_table(f, &[
-            ("Coin", &self.coin),
-            ("Amounts", &amounts_count),
-        ])
+        crate::display_table(f, &[("Coin", &self.coin), ("Amounts", &amounts_count)])
     }
 }
 
 impl std::fmt::Display for MergeCoins {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let merge_count = crate::display_vec_count(&self.coins_to_merge);
-        crate::display_table(f, &[
-            ("Coin", &self.coin),
-            ("Coins To Merge", &merge_count),
-        ])
+        crate::display_table(f, &[("Coin", &self.coin), ("Coins To Merge", &merge_count)])
     }
 }
 
@@ -1746,10 +1797,10 @@ impl std::fmt::Display for Publish {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let modules_count = crate::display_vec_count(&self.modules);
         let deps_count = crate::display_vec_count(&self.dependencies);
-        crate::display_table(f, &[
-            ("Modules", &modules_count),
-            ("Dependencies", &deps_count),
-        ])
+        crate::display_table(
+            f,
+            &[("Modules", &modules_count), ("Dependencies", &deps_count)],
+        )
     }
 }
 
@@ -1757,10 +1808,7 @@ impl std::fmt::Display for MakeMoveVector {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let type_str = crate::display_option(&self.type_);
         let elements_count = crate::display_vec_count(&self.elements);
-        crate::display_table(f, &[
-            ("Type", &type_str),
-            ("Elements", &elements_count),
-        ])
+        crate::display_table(f, &[("Type", &type_str), ("Elements", &elements_count)])
     }
 }
 
@@ -1768,12 +1816,15 @@ impl std::fmt::Display for Upgrade {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let modules_count = crate::display_vec_count(&self.modules);
         let deps_count = crate::display_vec_count(&self.dependencies);
-        crate::display_table(f, &[
-            ("Modules", &modules_count),
-            ("Dependencies", &deps_count),
-            ("Package", &self.package),
-            ("Ticket", &self.ticket),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Modules", &modules_count),
+                ("Dependencies", &deps_count),
+                ("Package", &self.package),
+                ("Ticket", &self.ticket),
+            ],
+        )
     }
 }
 
@@ -1792,12 +1843,15 @@ impl std::fmt::Display for MoveCall {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let type_args_count = crate::display_vec_count(&self.type_arguments);
         let args_count = crate::display_vec_count(&self.arguments);
-        crate::display_table(f, &[
-            ("Package", &self.package),
-            ("Module", &self.module),
-            ("Function", &self.function),
-            ("Type Arguments", &type_args_count),
-            ("Arguments", &args_count),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Package", &self.package),
+                ("Module", &self.module),
+                ("Function", &self.function),
+                ("Type Arguments", &type_args_count),
+                ("Arguments", &args_count),
+            ],
+        )
     }
 }

@@ -74,11 +74,14 @@ impl MoveAuthenticator {
 
 impl std::fmt::Display for MoveAuthenticator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Call Args", &crate::display_vec_count(&self.call_args)),
-            ("Type Args", &crate::display_vec_count(&self.type_args)),
-            ("Object to Authenticate", &self.object_to_authenticate),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Call Args", &crate::display_vec_count(&self.call_args)),
+                ("Type Args", &crate::display_vec_count(&self.type_args)),
+                ("Object to Authenticate", &self.object_to_authenticate),
+            ],
+        )
     }
 }
 

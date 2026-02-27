@@ -602,7 +602,6 @@ impl TypeArgumentError {
     crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
 }
 
-
 impl std::fmt::Display for ExecutionStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -633,7 +632,6 @@ impl std::fmt::Display for MoveLocation {
         )
     }
 }
-
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

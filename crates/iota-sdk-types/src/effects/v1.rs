@@ -406,7 +406,6 @@ impl IdOperation {
     crate::def_is!(None, Created, Deleted);
 }
 
-
 impl std::fmt::Display for TransactionEffectsV1 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let status = format!("{:?}", self.status);
@@ -416,39 +415,42 @@ impl std::fmt::Display for TransactionEffectsV1 {
         let changed_objects = crate::display_vec_count(&self.changed_objects);
         let unchanged_shared_objects = crate::display_vec_count(&self.unchanged_shared_objects);
         let auxiliary_data_digest = crate::display_option(&self.auxiliary_data_digest);
-        crate::display_table(f, &[
-            ("Status", &status),
-            ("Epoch", &self.epoch),
-            ("Gas Used", &self.gas_used),
-            ("Transaction Digest", &self.transaction_digest),
-            ("Gas Object Index", &gas_object_index),
-            ("Events Digest", &events_digest),
-            ("Dependencies", &dependencies),
-            ("Lamport Version", &self.lamport_version),
-            ("Changed Objects", &changed_objects),
-            ("Unchanged Shared Objects", &unchanged_shared_objects),
-            ("Auxiliary Data Digest", &auxiliary_data_digest),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Status", &status),
+                ("Epoch", &self.epoch),
+                ("Gas Used", &self.gas_used),
+                ("Transaction Digest", &self.transaction_digest),
+                ("Gas Object Index", &gas_object_index),
+                ("Events Digest", &events_digest),
+                ("Dependencies", &dependencies),
+                ("Lamport Version", &self.lamport_version),
+                ("Changed Objects", &changed_objects),
+                ("Unchanged Shared Objects", &unchanged_shared_objects),
+                ("Auxiliary Data Digest", &auxiliary_data_digest),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ChangedObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Object ID", &self.object_id),
-            ("Input State", &self.input_state),
-            ("Output State", &self.output_state),
-            ("ID Operation", &self.id_operation),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Object ID", &self.object_id),
+                ("Input State", &self.input_state),
+                ("Output State", &self.output_state),
+                ("ID Operation", &self.id_operation),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for UnchangedSharedObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Object ID", &self.object_id),
-            ("Kind", &self.kind),
-        ])
+        crate::display_table(f, &[("Object ID", &self.object_id), ("Kind", &self.kind)])
     }
 }
 
@@ -478,8 +480,15 @@ impl std::fmt::Display for ObjectIn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             ObjectIn::Missing => write!(f, "Missing"),
-            ObjectIn::Data { version, digest, owner } => {
-                write!(f, "Data(version: {version}, digest: {digest}, owner: {owner})")
+            ObjectIn::Data {
+                version,
+                digest,
+                owner,
+            } => {
+                write!(
+                    f,
+                    "Data(version: {version}, digest: {digest}, owner: {owner})"
+                )
             }
         }
     }

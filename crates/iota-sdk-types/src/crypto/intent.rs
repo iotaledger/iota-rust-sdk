@@ -314,11 +314,14 @@ pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
 
 impl std::fmt::Display for Intent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Scope", &self.scope),
-            ("Version", &self.version),
-            ("App ID", &self.app_id),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Scope", &self.scope),
+                ("Version", &self.version),
+                ("App ID", &self.app_id),
+            ],
+        )
     }
 }
 
@@ -367,10 +370,7 @@ impl std::fmt::Display for HashingIntentScope {
 
 impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Intent", &self.intent),
-            ("Value", &self.value),
-        ])
+        crate::display_table(f, &[("Intent", &self.intent), ("Value", &self.value)])
     }
 }
 

@@ -118,12 +118,15 @@ impl PasskeyPublicKey {
 
 impl std::fmt::Display for PasskeyAuthenticator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Authenticator Data", &hex::encode(&self.authenticator_data)),
-            ("Client Data JSON", &self.client_data_json),
-            ("Public Key", &self.public_key),
-            ("Signature", &self.signature),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Authenticator Data", &hex::encode(&self.authenticator_data)),
+                ("Client Data JSON", &self.client_data_json),
+                ("Public Key", &self.public_key),
+                ("Signature", &self.signature),
+            ],
+        )
     }
 }
 

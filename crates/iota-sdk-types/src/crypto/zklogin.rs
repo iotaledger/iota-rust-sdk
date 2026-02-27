@@ -645,39 +645,48 @@ impl std::str::FromStr for Bn254FieldElement {
 
 impl std::fmt::Display for ZkLoginAuthenticator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Max Epoch", &self.max_epoch),
-            ("Inputs", &self.inputs),
-            ("Signature", &self.signature),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Max Epoch", &self.max_epoch),
+                ("Inputs", &self.inputs),
+                ("Signature", &self.signature),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ZkLoginInputs {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Header Base64", &self.header_base64),
-            ("ISS Base64 Details", &self.iss_base64_details),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Header Base64", &self.header_base64),
+                ("ISS Base64 Details", &self.iss_base64_details),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for ZkLoginClaim {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Value", &self.value),
-            ("Index Mod 4", &self.index_mod_4),
-        ])
+        crate::display_table(
+            f,
+            &[("Value", &self.value), ("Index Mod 4", &self.index_mod_4)],
+        )
     }
 }
 
 impl std::fmt::Display for ZkLoginProof {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("A (G1)", &self.a),
-            ("B (G2)", &self.b),
-            ("C (G1)", &self.c),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("A (G1)", &self.a),
+                ("B (G2)", &self.b),
+                ("C (G1)", &self.c),
+            ],
+        )
     }
 }
 
@@ -692,39 +701,37 @@ impl std::fmt::Display for CircomG2 {
         write!(
             f,
             "G2([{}, {}], [{}, {}], [{}, {}])",
-            self.0[0][0], self.0[0][1],
-            self.0[1][0], self.0[1][1],
-            self.0[2][0], self.0[2][1],
+            self.0[0][0], self.0[0][1], self.0[1][0], self.0[1][1], self.0[2][0], self.0[2][1],
         )
     }
 }
 
 impl std::fmt::Display for ZkLoginPublicIdentifier {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ISS", &self.iss),
-            ("Address Seed", &self.address_seed),
-        ])
+        crate::display_table(
+            f,
+            &[("ISS", &self.iss), ("Address Seed", &self.address_seed)],
+        )
     }
 }
 
 impl std::fmt::Display for Jwk {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("kty", &self.kty),
-            ("e", &self.e),
-            ("n", &self.n),
-            ("alg", &self.alg),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("kty", &self.kty),
+                ("e", &self.e),
+                ("n", &self.n),
+                ("alg", &self.alg),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for JwkId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ISS", &self.iss),
-            ("KID", &self.kid),
-        ])
+        crate::display_table(f, &[("ISS", &self.iss), ("KID", &self.kid)])
     }
 }
 

@@ -56,11 +56,14 @@ impl Coin {
 
 impl std::fmt::Display for Coin {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("Coin Type", &self.coin_type),
-            ("ID", &self.id),
-            ("Balance", &self.balance),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("Coin Type", &self.coin_type),
+                ("ID", &self.id),
+                ("Balance", &self.balance),
+            ],
+        )
     }
 }
 

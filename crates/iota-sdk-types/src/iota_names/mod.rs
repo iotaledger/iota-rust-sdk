@@ -88,21 +88,21 @@ pub trait IotaNamesNft {
 
 impl std::fmt::Display for NameRegistration {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ID", &self.id),
-            ("Name", &self.name),
-            ("Name String", &self.name_str),
-            ("Expiration (ms)", &self.expiration_timestamp_ms),
-        ])
+        crate::display_table(
+            f,
+            &[
+                ("ID", &self.id),
+                ("Name", &self.name),
+                ("Name String", &self.name_str),
+                ("Expiration (ms)", &self.expiration_timestamp_ms),
+            ],
+        )
     }
 }
 
 impl std::fmt::Display for SubnameRegistration {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[
-            ("ID", &self.id),
-            ("NFT", &self.nft),
-        ])
+        crate::display_table(f, &[("ID", &self.id), ("NFT", &self.nft)])
     }
 }
 
