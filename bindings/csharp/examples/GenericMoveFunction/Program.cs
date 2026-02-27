@@ -30,7 +30,7 @@ class Program
                 TypeTag.NewAddress(),
                 TypeTag.NewU64()
             },
-            null
+            []
         );
 
         var res = await builder.DryRun(true);

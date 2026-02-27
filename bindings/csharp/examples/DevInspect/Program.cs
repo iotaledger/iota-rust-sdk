@@ -34,7 +34,7 @@ class Program
             new Identifier("name"),
             new Identifier("new"),
             new[] { PtbArgument.String(name) },
-            null,
+            [],
             new[] { "name" }
         );
 
@@ -43,7 +43,7 @@ class Program
             new Identifier("registry"),
             new Identifier("lookup"),
             new[] { PtbArgument.Assigned("iota_names"), PtbArgument.Assigned("name") },
-            null,
+            [],
             new[] { "name_record_opt" }
         );
 
@@ -61,7 +61,7 @@ class Program
             new Identifier("name_record"),
             new Identifier("target_address"),
             new[] { PtbArgument.Assigned("name_record") },
-            null,
+            [],
             new[] { "target_address_opt" }
         );
 

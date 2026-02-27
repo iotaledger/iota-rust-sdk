@@ -22,7 +22,7 @@ class Program
             moduleName,
             functionName,
             new[] { PtbArgument.U64(0), PtbArgument.U64(1000) },
-            null,
+            [],
             new[] { "res0" }
         );
 
@@ -31,7 +31,7 @@ class Program
             moduleName,
             functionName,
             new[] { PtbArgument.U64(1000), PtbArgument.U64(2000) },
-            null,
+            [],
             new[] { "res1" }
         );
 

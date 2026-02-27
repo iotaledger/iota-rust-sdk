@@ -93,7 +93,7 @@ class Program
                 PtbArgument.U8(UpgradePolicy.Compatible().AsU8()),
                 PtbArgument.U8Vec(packageData.Digest().ToBytes())
             },
-            null,
+            [],
             new[] { "upgrade_ticket" }
         );
 
