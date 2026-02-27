@@ -1082,17 +1082,6 @@ impl Input {
             _ => None,
         }
     }
-
-    /// Returns the `ObjectReference` for the object being received in this
-    /// input.
-    ///
-    /// Returns `None` for non-`Receiving` variants.
-    pub fn receiving_object(&self) -> Option<&ObjectReference> {
-        match self {
-            Self::Receiving(obj_ref) => Some(obj_ref),
-            _ => None,
-        }
-    }
 }
 
 /// A shared object input to a programmable transaction
