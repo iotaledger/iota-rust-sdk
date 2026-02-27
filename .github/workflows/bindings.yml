@@ -103,7 +103,7 @@ jobs:
       - name: Install uniffi-bindgen-cs
         run: cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.10.0+v0.29.4
       - name: Setup .NET
-        uses: actions/setup-dotnet@16c7b3c2fa55a0e394467d22512b84fda46adf63 # v4
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
       - name: Build the bindings
