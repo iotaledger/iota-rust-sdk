@@ -1058,7 +1058,7 @@ impl Input {
         }
     }
 
-    /// Returns `true` if this input references a shared object.
+    /// Returns `true` if this input references a mutable shared object.
     pub fn is_mutable_shared(&self) -> bool {
         matches!(
             self,
