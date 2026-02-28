@@ -4,7 +4,8 @@
 import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
-const val MULTISIG_MNEMONIC = "round attack kitchen wink winter music trip tiny nephew hire orange what"
+const val MULTISIG_MNEMONIC =
+    "round attack kitchen wink winter music trip tiny nephew hire orange what"
 
 fun main() = runBlocking {
     try {
@@ -23,14 +24,15 @@ fun main() = runBlocking {
         val kp2 = SimpleKeypair.fromEd25519(key2)
 
         // 3. Build multisig committee: threshold=2, each member weight=1
-        val committee = MultisigCommittee(
-            listOf(
-                MultisigMember(kp0.publicKey(), 1u),
-                MultisigMember(kp1.publicKey(), 1u),
-                MultisigMember(kp2.publicKey(), 1u),
-            ),
-            2u,
-        )
+        val committee =
+            MultisigCommittee(
+                listOf(
+                    MultisigMember(kp0.publicKey(), 1u),
+                    MultisigMember(kp1.publicKey(), 1u),
+                    MultisigMember(kp2.publicKey(), 1u),
+                ),
+                2u,
+            )
         require(committee.isValid()) { "committee must be valid" }
 
         // 4. Derive multisig address
