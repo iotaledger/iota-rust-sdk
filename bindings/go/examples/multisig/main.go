@@ -80,26 +80,26 @@ func main() {
 
 	// 7. Sign with key0 and key1 (2-of-3 threshold)
 	sig0, err := kp0.SignTransaction(txn)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to sign with key0: %v", err)
 	}
 	sig1, err := kp1.SignTransaction(txn)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to sign with key1: %v", err)
 	}
 
 	// 8. Aggregate signatures
 	aggregator := iota_sdk.MultisigAggregatorNewWithTransaction(committee, txn)
 	aggregator, err = aggregator.WithSignature(sig0)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to add sig0: %v", err)
 	}
 	aggregator, err = aggregator.WithSignature(sig1)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to add sig1: %v", err)
 	}
 	aggSig, err := aggregator.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to finish aggregation: %v", err)
 	}
 
