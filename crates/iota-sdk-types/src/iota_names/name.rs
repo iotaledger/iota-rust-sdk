@@ -336,4 +336,47 @@ mod tests {
         assert!(name.format(NameFormat::Dot) == "test.test.test.test.iota");
         assert!(name.format(NameFormat::At) == "test.test.test@test");
     }
+
+    #[test]
+    fn validate_label_min_length() {
+        assert!(validate_label("a").is_ok());
+    }
+
+    #[test]
+    fn validate_label_max_length() {
+        let label = "a".repeat(63);
+        assert!(validate_label(&label).is_ok());
+    }
+
+    #[test]
+    fn validate_label_over_max() {
+        let label = "a".repeat(64);
+        assert!(validate_label(&label).is_err());
+    }
+
+    #[test]
+    fn validate_label_empty() {
+        assert!(validate_label("").is_err());
+    }
+
+    #[test]
+    fn validate_label_uppercase_rejected() {
+        assert!(validate_label("ABC").is_err());
+    }
+
+    #[test]
+    fn validate_label_valid_chars() {
+        assert!(validate_label("abc123").is_ok());
+        assert!(validate_label("a-b").is_ok());
+    }
+
+    #[test]
+    fn validate_label_hyphen_at_start() {
+        assert!(validate_label("-abc").is_err());
+    }
+
+    #[test]
+    fn validate_label_hyphen_at_end() {
+        assert!(validate_label("abc-").is_err());
+    }
 }

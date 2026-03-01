@@ -678,3 +678,138 @@ impl std::str::FromStr for StructTag {
         parse::parse_struct_tag(s).map_err(|_| TypeParseError { source: s.into() })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn identifier_new_valid_alpha_start() {
+        assert!(Identifier::new("abc").is_ok());
+    }
+
+    #[test]
+    fn identifier_new_valid_underscore_then_char() {
+        assert!(Identifier::new("_abc").is_ok());
+    }
+
+    #[test]
+    fn identifier_new_invalid_empty() {
+        assert!(Identifier::new("").is_err());
+    }
+
+    #[test]
+    fn identifier_new_invalid_digit_start() {
+        assert!(Identifier::new("1abc").is_err());
+    }
+
+    #[test]
+    fn identifier_new_invalid_underscore_only() {
+        assert!(Identifier::new("_").is_err());
+    }
+
+    #[test]
+    fn identifier_new_invalid_special_chars() {
+        assert!(Identifier::new("abc!").is_err());
+    }
+
+    #[test]
+    fn identifier_max_length_boundary() {
+        let valid = "a".repeat(128);
+        assert!(Identifier::new(&valid).is_ok());
+
+        let invalid = "a".repeat(129);
+        assert!(Identifier::new(&invalid).is_err());
+    }
+
+    #[test]
+    fn identifier_is_valid_self() {
+        assert!(Identifier::is_valid("<SELF>"));
+    }
+
+    #[test]
+    fn identifier_display_fromstr_roundtrip() {
+        let ident = Identifier::new("hello_world").unwrap();
+        let s = ident.to_string();
+        let parsed: Identifier = s.parse().unwrap();
+        assert_eq!(ident, parsed);
+    }
+
+    #[test]
+    fn struct_tag_coin_type_opt_positive() {
+        let coin = StructTag::new_coin(TypeTag::Struct(Box::new(StructTag::new_iota_coin_type())));
+        assert!(coin.coin_type_opt().is_some());
+    }
+
+    #[test]
+    fn struct_tag_coin_type_opt_wrong_module() {
+        let tag = StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::new("not_coin").unwrap(),
+            Identifier::new("Coin").unwrap(),
+            vec![TypeTag::U8],
+        );
+        assert!(tag.coin_type_opt().is_none());
+    }
+
+    #[test]
+    fn struct_tag_coin_type_opt_wrong_name() {
+        let tag = StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::new("coin").unwrap(),
+            Identifier::new("NotCoin").unwrap(),
+            vec![TypeTag::U8],
+        );
+        assert!(tag.coin_type_opt().is_none());
+    }
+
+    #[test]
+    fn struct_tag_coin_type_opt_no_params() {
+        let tag = StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::new("coin").unwrap(),
+            Identifier::new("Coin").unwrap(),
+            vec![],
+        );
+        assert!(tag.coin_type_opt().is_none());
+    }
+
+    #[test]
+    fn type_tag_canonical_string_primitives() {
+        assert_eq!(TypeTag::U8.to_canonical_string(true), "u8");
+        assert_eq!(TypeTag::U64.to_canonical_string(true), "u64");
+        assert_eq!(TypeTag::Bool.to_canonical_string(true), "bool");
+        assert_eq!(TypeTag::Address.to_canonical_string(true), "address");
+    }
+
+    #[test]
+    fn type_tag_canonical_string_vector() {
+        let vt = TypeTag::Vector(Box::new(TypeTag::U8));
+        assert_eq!(vt.to_canonical_string(true), "vector<u8>");
+    }
+
+    #[test]
+    fn type_tag_canonical_string_struct() {
+        let st = StructTag::new_iota_coin_type();
+        let tt = TypeTag::Struct(Box::new(st));
+        let s = tt.to_canonical_string(true);
+        assert!(s.contains("0x"));
+        assert!(s.contains("::iota::IOTA"));
+    }
+
+    #[test]
+    fn struct_tag_display_fromstr_roundtrip() {
+        let tag = StructTag::new_gas_coin();
+        let s = tag.to_string();
+        let parsed: StructTag = s.parse().unwrap();
+        assert_eq!(tag, parsed);
+    }
+
+    #[test]
+    fn struct_tag_canonical_string_without_prefix() {
+        let tag = StructTag::new_iota_coin_type();
+        let s = tag.to_canonical_string(false);
+        assert!(!s.starts_with("0x"));
+        assert!(s.contains("::iota::IOTA"));
+    }
+}

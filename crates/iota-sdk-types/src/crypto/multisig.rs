@@ -674,3 +674,131 @@ mod serialization {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_member(byte: u8, weight: WeightUnit) -> MultisigMember {
+        MultisigMember::new(
+            MultisigMemberPublicKey::Ed25519(Ed25519PublicKey::new([byte; 32])),
+            weight,
+        )
+    }
+
+    #[test]
+    fn is_valid_single_member() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 1)], 1);
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_max_members() {
+        let members: Vec<MultisigMember> = (1..=10).map(|i| make_member(i, 1)).collect();
+        let committee = MultisigCommittee::new(members, 5);
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_threshold_equals_weight_sum() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 3), make_member(2, 2)], 5);
+        assert!(committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_zero_threshold() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 1)], 0);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_empty_members() {
+        let committee = MultisigCommittee::new(vec![], 1);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_too_many_members() {
+        let members: Vec<MultisigMember> = (1..=11).map(|i| make_member(i, 1)).collect();
+        let committee = MultisigCommittee::new(members, 1);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_zero_weight() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 0)], 1);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_threshold_exceeds_sum() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 1), make_member(2, 1)], 3);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn is_valid_duplicate_members() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 1), make_member(1, 1)], 1);
+        assert!(!committee.is_valid());
+    }
+
+    #[test]
+    fn member_public_key_scheme() {
+        let ed = MultisigMemberPublicKey::Ed25519(Ed25519PublicKey::new([0; 32]));
+        assert_eq!(ed.scheme(), SignatureScheme::Ed25519);
+
+        let k1 = MultisigMemberPublicKey::Secp256k1(Secp256k1PublicKey::new([0; 33]));
+        assert_eq!(k1.scheme(), SignatureScheme::Secp256k1);
+
+        let r1 = MultisigMemberPublicKey::Secp256r1(Secp256r1PublicKey::new([0; 33]));
+        assert_eq!(r1.scheme(), SignatureScheme::Secp256r1);
+    }
+
+    #[test]
+    fn committee_accessors() {
+        let members = vec![make_member(1, 3), make_member(2, 2)];
+        let committee = MultisigCommittee::new(members, 4);
+        assert_eq!(committee.threshold(), 4);
+        assert_eq!(committee.members().len(), 2);
+        assert_eq!(committee.scheme(), SignatureScheme::Multisig);
+    }
+
+    #[test]
+    fn aggregated_signature_construction() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 1)], 1);
+        let sig = MultisigAggregatedSignature::new(committee.clone(), vec![], 0);
+        assert_eq!(sig.bitmap(), 0);
+        assert!(sig.signatures().is_empty());
+        assert_eq!(*sig.committee(), committee);
+    }
+
+    #[test]
+    fn aggregated_signature_equality() {
+        let committee = MultisigCommittee::new(vec![make_member(1, 1)], 1);
+        let sig1 = MultisigAggregatedSignature::new(committee.clone(), vec![], 0);
+        let sig2 = MultisigAggregatedSignature::new(committee, vec![], 0);
+        assert_eq!(sig1, sig2);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_serialized_bytes_empty() {
+        assert!(MultisigAggregatedSignature::from_serialized_bytes(Vec::<u8>::new()).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_serialized_bytes_wrong_flag() {
+        // 0x00 is Ed25519 flag, not Multisig
+        assert!(MultisigAggregatedSignature::from_serialized_bytes(vec![0x00]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_serialized_bytes_invalid_bcs() {
+        // 0x03 is the Multisig flag, but the rest is garbage
+        assert!(
+            MultisigAggregatedSignature::from_serialized_bytes(vec![0x03, 0xff, 0xff]).is_err()
+        );
+    }
+}

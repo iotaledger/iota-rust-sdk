@@ -449,4 +449,80 @@ mod tests {
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
     }
+
+    #[test]
+    fn flagged_bytes_roundtrip_ed25519() {
+        use crate::ToFromFlaggedBytes;
+        let key = Ed25519PrivateKey::new([42u8; 32]);
+        let flagged = key.to_flagged_bytes();
+        assert_eq!(flagged[0], iota_types::SignatureScheme::Ed25519.to_u8());
+        assert_eq!(flagged.len(), 33); // 1 flag + 32 key bytes
+        let restored = Ed25519PrivateKey::from_flagged_bytes(&flagged).unwrap();
+        assert_eq!(key, restored);
+    }
+
+    #[test]
+    fn flagged_bytes_empty_input() {
+        use crate::ToFromFlaggedBytes;
+        let result = Ed25519PrivateKey::from_flagged_bytes(&[]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn flagged_bytes_invalid_scheme_flag() {
+        use crate::ToFromFlaggedBytes;
+        let mut bytes = vec![0xFF]; // invalid scheme
+        bytes.extend_from_slice(&[0u8; 32]);
+        let result = Ed25519PrivateKey::from_flagged_bytes(&bytes);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn flagged_bytes_wrong_scheme_secp256k1_as_ed25519() {
+        use crate::ToFromFlaggedBytes;
+        // Use secp256k1 flag (0x01) but try to parse as Ed25519
+        let mut bytes = vec![iota_types::SignatureScheme::Secp256k1.to_u8()];
+        bytes.extend_from_slice(&[0u8; 32]);
+        let result = Ed25519PrivateKey::from_flagged_bytes(&bytes);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn flagged_bytes_secp256k1_roundtrip() {
+        use crate::ToFromFlaggedBytes;
+        let key = Secp256k1PrivateKey::new([42u8; 32]).unwrap();
+        let flagged = key.to_flagged_bytes();
+        assert_eq!(flagged[0], iota_types::SignatureScheme::Secp256k1.to_u8());
+        let restored = Secp256k1PrivateKey::from_flagged_bytes(&flagged).unwrap();
+        assert_eq!(key, restored);
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn bech32_roundtrip_ed25519() {
+        use crate::ToFromBech32;
+        let key = Ed25519PrivateKey::new([42u8; 32]);
+        let encoded = key.to_bech32().unwrap();
+        assert!(encoded.starts_with("iotaprivkey"));
+        let decoded = Ed25519PrivateKey::from_bech32(&encoded).unwrap();
+        assert_eq!(key, decoded);
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn bech32_wrong_hrp() {
+        use crate::ToFromBech32;
+        // Create a valid bech32 string but with wrong HRP
+        let result =
+            Ed25519PrivateKey::from_bech32("wronghrp1qpzry9x8gf2tvdw0s3jn54khce6mua7lmqqqxw");
+        assert!(result.is_err());
+    }
+
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn bech32_invalid_encoding() {
+        use crate::ToFromBech32;
+        let result = Ed25519PrivateKey::from_bech32("not-a-valid-bech32-string!!!");
+        assert!(result.is_err());
+    }
 }

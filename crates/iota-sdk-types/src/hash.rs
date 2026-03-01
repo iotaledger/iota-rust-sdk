@@ -541,4 +541,59 @@ mod tests {
     fn roundtrip_hashing_intent(intent: HashingIntent) {
         assert_eq!(Ok(intent), HashingIntent::from_byte(intent as u8));
     }
+
+    #[test]
+    fn derive_id_deterministic() {
+        let digest = crate::Digest::new([1u8; 32]);
+        let id1 = crate::ObjectId::derive_id(digest, 0);
+        let id2 = crate::ObjectId::derive_id(digest, 0);
+        assert_eq!(id1, id2);
+    }
+
+    #[test]
+    fn derive_id_different_counts_differ() {
+        let digest = crate::Digest::new([1u8; 32]);
+        let id0 = crate::ObjectId::derive_id(digest, 0);
+        let id1 = crate::ObjectId::derive_id(digest, 1);
+        assert_ne!(id0, id1);
+    }
+
+    #[test]
+    fn derive_id_different_digests_differ() {
+        let d1 = crate::Digest::new([1u8; 32]);
+        let d2 = crate::Digest::new([2u8; 32]);
+        let id1 = crate::ObjectId::derive_id(d1, 0);
+        let id2 = crate::ObjectId::derive_id(d2, 0);
+        assert_ne!(id1, id2);
+    }
+
+    #[cfg(feature = "serde")]
+    #[proptest]
+    fn transaction_bcs_roundtrip(transaction: crate::Transaction) {
+        let bytes = transaction.to_bcs();
+        let parsed = crate::Transaction::from_bcs(&bytes).unwrap();
+        assert_eq!(transaction, parsed);
+    }
+
+    #[cfg(feature = "serde")]
+    #[proptest]
+    fn transaction_base64_roundtrip(transaction: crate::Transaction) {
+        let b64 = transaction.to_base64();
+        let parsed = crate::Transaction::from_base64(&b64).unwrap();
+        assert_eq!(transaction, parsed);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn transaction_from_base64_invalid() {
+        assert!(crate::Transaction::from_base64("not-valid-base64!!!").is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[proptest]
+    fn transaction_digest_deterministic(transaction: crate::Transaction) {
+        let d1 = transaction.digest();
+        let d2 = transaction.digest();
+        assert_eq!(d1, d2);
+    }
 }

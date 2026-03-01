@@ -264,4 +264,79 @@ mod tests {
             digest_from_str("0000000000000000000000000000000000000000000000000000000000000000"),
         );
     }
+
+    #[test]
+    fn from_base58_invalid_chars() {
+        // '0', 'O', 'I', 'l' are not valid base58 characters
+        assert!(Digest::from_base58("0OIl0OIl0OIl0OIl0OIl0OIl0OIl0OIl0OIl0OIl0OIl").is_err());
+    }
+
+    #[test]
+    fn from_base58_wrong_length() {
+        // Too long - valid base58 but decodes to more than 32 bytes
+        let too_long = "z".repeat(50);
+        assert!(Digest::from_base58(&too_long).is_err());
+    }
+
+    #[test]
+    fn from_bytes_valid_roundtrip() {
+        let bytes = [42u8; 32];
+        let digest = Digest::from_bytes(bytes).unwrap();
+        assert_eq!(digest.into_inner(), bytes);
+    }
+
+    #[test]
+    fn from_bytes_too_short() {
+        assert!(Digest::from_bytes([0u8; 31]).is_err());
+    }
+
+    #[test]
+    fn from_bytes_too_long() {
+        assert!(Digest::from_bytes([0u8; 33]).is_err());
+    }
+
+    #[test]
+    fn from_bytes_empty() {
+        assert!(Digest::from_bytes(Vec::<u8>::new()).is_err());
+    }
+
+    #[test]
+    fn lower_hex_no_prefix() {
+        let digest = Digest::new([0u8; 32]);
+        let hex = format!("{digest:x}");
+        assert_eq!(hex, "0".repeat(64));
+        assert!(!hex.starts_with("0x"));
+    }
+
+    #[test]
+    fn lower_hex_with_alternate_prefix() {
+        let digest = Digest::new([0u8; 32]);
+        let hex = format!("{digest:#x}");
+        assert!(hex.starts_with("0x"));
+        assert_eq!(hex.len(), 66); // "0x" + 64
+    }
+
+    #[test]
+    fn lower_hex_nonzero() {
+        let mut bytes = [0u8; 32];
+        bytes[0] = 0xab;
+        bytes[31] = 0xcd;
+        let digest = Digest::new(bytes);
+        let hex = format!("{digest:x}");
+        assert!(hex.starts_with("ab"));
+        assert!(hex.ends_with("cd"));
+    }
+
+    #[test]
+    fn zero_constant() {
+        assert_eq!(Digest::ZERO.into_inner(), [0u8; 32]);
+    }
+
+    #[test]
+    fn from_into_array() {
+        let bytes = [7u8; 32];
+        let digest = Digest::from(bytes);
+        let back: [u8; 32] = digest.into();
+        assert_eq!(bytes, back);
+    }
 }

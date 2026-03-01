@@ -367,4 +367,93 @@ mod tests {
             .verify_personal_message(&message, &signature)
             .unwrap();
     }
+
+    #[test]
+    fn from_bytes_wrong_length_short() {
+        use crate::ToFromBytes;
+        assert!(Ed25519PrivateKey::from_bytes(&[0u8; 31]).is_err());
+    }
+
+    #[test]
+    fn from_bytes_wrong_length_long() {
+        use crate::ToFromBytes;
+        assert!(Ed25519PrivateKey::from_bytes(&[0u8; 33]).is_err());
+    }
+
+    #[test]
+    fn from_bytes_valid_roundtrip() {
+        use crate::ToFromBytes;
+        let key = Ed25519PrivateKey::new([42u8; 32]);
+        let bytes = key.to_bytes();
+        let restored = Ed25519PrivateKey::from_bytes(&bytes).unwrap();
+        assert_eq!(key, restored);
+    }
+
+    #[test]
+    fn verifying_key_from_invalid_bytes() {
+        // All zeros is not a valid ed25519 public key point
+        let pk = iota_types::Ed25519PublicKey::new([0u8; 32]);
+        // This may or may not be an error depending on the ed25519 implementation;
+        // the important thing is it doesn't panic
+        let _ = Ed25519VerifyingKey::new(&pk);
+    }
+
+    #[test]
+    fn verifier_rejects_non_ed25519_user_signature() {
+        let verifier = Ed25519Verifier::new();
+        // Create a Secp256k1 UserSignature
+        let fake_sig = UserSignature::Simple(SimpleSignature::Secp256k1 {
+            signature: iota_types::Secp256k1Signature::new([0; 64]),
+            public_key: iota_types::Secp256k1PublicKey::new([0; 33]),
+        });
+        assert!(verifier.verify(b"msg", &fake_sig).is_err());
+    }
+
+    #[test]
+    fn verifying_key_rejects_wrong_public_key() {
+        use crate::Signer;
+
+        let key1 = Ed25519PrivateKey::new([1u8; 32]);
+        let key2 = Ed25519PrivateKey::new([2u8; 32]);
+
+        let msg = b"test message";
+        let signature: SimpleSignature = key1.try_sign(msg).unwrap();
+
+        // Verify with key2's verifying key should fail
+        let verifier2 = key2.verifying_key();
+        assert!(verifier2.verify(msg, &signature).is_err());
+    }
+
+    #[test]
+    fn private_key_scheme() {
+        let key = Ed25519PrivateKey::new([0u8; 32]);
+        assert_eq!(key.scheme(), SignatureScheme::Ed25519);
+    }
+
+    #[cfg(feature = "pem")]
+    #[test]
+    fn pem_der_roundtrip_private_key() {
+        let key = Ed25519PrivateKey::new([42u8; 32]);
+        let der = key.to_der().unwrap();
+        let restored = Ed25519PrivateKey::from_der(&der).unwrap();
+        assert_eq!(key, restored);
+
+        let pem = key.to_pem().unwrap();
+        let restored_pem = Ed25519PrivateKey::from_pem(&pem).unwrap();
+        assert_eq!(key, restored_pem);
+    }
+
+    #[cfg(feature = "pem")]
+    #[test]
+    fn pem_der_roundtrip_verifying_key() {
+        let key = Ed25519PrivateKey::new([42u8; 32]);
+        let vk = key.verifying_key();
+        let der = vk.to_der().unwrap();
+        let restored = Ed25519VerifyingKey::from_der(&der).unwrap();
+        assert_eq!(vk, restored);
+
+        let pem = vk.to_pem().unwrap();
+        let restored_pem = Ed25519VerifyingKey::from_pem(&pem).unwrap();
+        assert_eq!(vk, restored_pem);
+    }
 }

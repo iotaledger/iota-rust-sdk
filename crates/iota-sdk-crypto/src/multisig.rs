@@ -404,3 +404,192 @@ fn multisig_pubkey_and_signature_from_user_signature(
         _ => Err(SignatureError::from_source("unknown signature scheme")),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use iota_types::{Ed25519PublicKey, MultisigMember, MultisigMemberPublicKey, PersonalMessage};
+
+    use super::*;
+
+    fn make_member(byte: u8, weight: u8) -> MultisigMember {
+        MultisigMember::new(
+            MultisigMemberPublicKey::Ed25519(Ed25519PublicKey::new([byte; 32])),
+            weight,
+        )
+    }
+
+    #[test]
+    fn bitmap_indices_empty() {
+        let indices: Vec<u8> = BitmapIndices::new(0).collect();
+        assert!(indices.is_empty());
+    }
+
+    #[test]
+    fn bitmap_indices_single_bit() {
+        let indices: Vec<u8> = BitmapIndices::new(0b0001).collect();
+        assert_eq!(indices, vec![0]);
+    }
+
+    #[test]
+    fn bitmap_indices_multiple_bits() {
+        // 0b10110 = 22, bits 1, 2, 4 are set
+        let indices: Vec<u8> = BitmapIndices::new(0b10110).collect();
+        assert_eq!(indices, vec![1, 2, 4]);
+    }
+
+    #[test]
+    fn bitmap_indices_10_bits() {
+        let bitmap: u16 = 0b1111111111; // first 10 bits
+        let indices: Vec<u8> = BitmapIndices::new(bitmap).collect();
+        assert_eq!(indices, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    }
+
+    #[test]
+    fn verify_invalid_committee() {
+        let verifier = MultisigVerifier::new();
+        // Empty committee is invalid
+        let committee = MultisigCommittee::new(vec![], 1);
+        let sig = MultisigAggregatedSignature::new(committee, vec![], 0);
+        let result = verifier.verify(b"msg", &sig);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn verify_bitmap_sig_count_mismatch() {
+        let verifier = MultisigVerifier::new();
+        let committee = MultisigCommittee::new(vec![make_member(1, 1)], 1);
+        // bitmap has bit 0 set (1 signature expected) but no signatures provided
+        let sig = MultisigAggregatedSignature::new(committee, vec![], 0b1);
+        let result = verifier.verify(b"msg", &sig);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn verify_more_sigs_than_members() {
+        let verifier = MultisigVerifier::new();
+        let committee = MultisigCommittee::new(vec![make_member(1, 1)], 1);
+        // Create fake ed25519 signatures
+        let fake_sigs = vec![
+            MultisigMemberSignature::Ed25519(iota_types::Ed25519Signature::new([0; 64])),
+            MultisigMemberSignature::Ed25519(iota_types::Ed25519Signature::new([0; 64])),
+        ];
+        let sig = MultisigAggregatedSignature::new(committee, fake_sigs, 0b11);
+        let result = verifier.verify(b"msg", &sig);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn verifier_rejects_non_multisig_user_signature() {
+        let verifier = MultisigVerifier::new();
+        let fake_simple = iota_types::UserSignature::Simple(iota_types::SimpleSignature::Ed25519 {
+            signature: iota_types::Ed25519Signature::new([0; 64]),
+            public_key: Ed25519PublicKey::new([0; 32]),
+        });
+        let result: Result<(), _> =
+            <MultisigVerifier as Verifier<UserSignature>>::verify(&verifier, b"msg", &fake_simple);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn aggregator_sign_and_verify_roundtrip() {
+        use crate::{IotaSigner, ed25519::Ed25519PrivateKey};
+
+        let key1 = Ed25519PrivateKey::new([1u8; 32]);
+        let key2 = Ed25519PrivateKey::new([2u8; 32]);
+
+        let committee = MultisigCommittee::new(
+            vec![
+                MultisigMember::new(MultisigMemberPublicKey::Ed25519(key1.public_key()), 1),
+                MultisigMember::new(MultisigMemberPublicKey::Ed25519(key2.public_key()), 1),
+            ],
+            2,
+        );
+
+        let message = PersonalMessage(b"hello".to_vec().into());
+        let mut aggregator = MultisigAggregator::new_with_message(committee.clone(), &message);
+
+        let sig1 = key1.sign_personal_message(&message).unwrap();
+        let sig2 = key2.sign_personal_message(&message).unwrap();
+
+        aggregator.add_signature(sig1).unwrap();
+        aggregator.add_signature(sig2).unwrap();
+
+        let multisig = aggregator.finish().unwrap();
+
+        let verifier = MultisigVerifier::new();
+        verifier
+            .verify(&message.signing_digest(), &multisig)
+            .unwrap();
+    }
+
+    #[test]
+    fn aggregator_non_member_rejected() {
+        use crate::{IotaSigner, ed25519::Ed25519PrivateKey};
+
+        let member_key = Ed25519PrivateKey::new([1u8; 32]);
+        let non_member_key = Ed25519PrivateKey::new([99u8; 32]);
+
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                MultisigMemberPublicKey::Ed25519(member_key.public_key()),
+                1,
+            )],
+            1,
+        );
+
+        let message = PersonalMessage(b"hello".to_vec().into());
+        let mut aggregator = MultisigAggregator::new_with_message(committee, &message);
+
+        let sig = non_member_key.sign_personal_message(&message).unwrap();
+        assert!(aggregator.add_signature(sig).is_err());
+    }
+
+    #[test]
+    fn aggregator_duplicate_signature_rejected() {
+        use crate::{IotaSigner, ed25519::Ed25519PrivateKey};
+
+        let key = Ed25519PrivateKey::new([1u8; 32]);
+
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                MultisigMemberPublicKey::Ed25519(key.public_key()),
+                1,
+            )],
+            1,
+        );
+
+        let message = PersonalMessage(b"hello".to_vec().into());
+        let mut aggregator = MultisigAggregator::new_with_message(committee, &message);
+
+        let sig1 = key.sign_personal_message(&message).unwrap();
+        let sig2 = key.sign_personal_message(&message).unwrap();
+
+        aggregator.add_signature(sig1).unwrap();
+        assert!(aggregator.add_signature(sig2).is_err());
+    }
+
+    #[test]
+    fn aggregator_insufficient_weight() {
+        use crate::{IotaSigner, ed25519::Ed25519PrivateKey};
+
+        let key1 = Ed25519PrivateKey::new([1u8; 32]);
+        let key2 = Ed25519PrivateKey::new([2u8; 32]);
+
+        let committee = MultisigCommittee::new(
+            vec![
+                MultisigMember::new(MultisigMemberPublicKey::Ed25519(key1.public_key()), 1),
+                MultisigMember::new(MultisigMemberPublicKey::Ed25519(key2.public_key()), 1),
+            ],
+            2,
+        );
+
+        let message = PersonalMessage(b"hello".to_vec().into());
+        let mut aggregator = MultisigAggregator::new_with_message(committee, &message);
+
+        let sig = key1.sign_personal_message(&message).unwrap();
+        aggregator.add_signature(sig).unwrap();
+
+        // Only weight=1, but threshold=2
+        assert!(aggregator.finish().is_err());
+    }
+}

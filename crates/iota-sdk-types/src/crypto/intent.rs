@@ -311,3 +311,236 @@ pub enum HashingIntentScope {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn iota_transaction_intent() {
+        let intent = Intent::iota_transaction();
+        assert_eq!(intent.scope(), IntentScope::TransactionData);
+        assert_eq!(intent.version(), IntentVersion::V0);
+        assert_eq!(intent.app_id(), IntentAppId::Iota);
+    }
+
+    #[test]
+    fn personal_message_intent() {
+        let intent = Intent::personal_message();
+        assert_eq!(intent.scope(), IntentScope::PersonalMessage);
+        assert_eq!(intent.version(), IntentVersion::V0);
+        assert_eq!(intent.app_id(), IntentAppId::Iota);
+    }
+
+    #[test]
+    fn iota_app_intent() {
+        let intent = Intent::iota_app(IntentScope::CheckpointSummary);
+        assert_eq!(intent.scope(), IntentScope::CheckpointSummary);
+        assert_eq!(intent.version(), IntentVersion::V0);
+        assert_eq!(intent.app_id(), IntentAppId::Iota);
+    }
+
+    #[test]
+    fn consensus_app_intent() {
+        let intent = Intent::consensus_app(IntentScope::ConsensusBlock);
+        assert_eq!(intent.scope(), IntentScope::ConsensusBlock);
+        assert_eq!(intent.version(), IntentVersion::V0);
+        assert_eq!(intent.app_id(), IntentAppId::Consensus);
+    }
+
+    #[test]
+    fn intent_new_and_accessors() {
+        let intent = Intent::new(
+            IntentScope::ProofOfPossession,
+            IntentVersion::V0,
+            IntentAppId::Consensus,
+        );
+        assert_eq!(intent.scope(), IntentScope::ProofOfPossession);
+        assert_eq!(intent.version(), IntentVersion::V0);
+        assert_eq!(intent.app_id(), IntentAppId::Consensus);
+    }
+
+    #[test]
+    fn to_bytes_iota_transaction() {
+        let intent = Intent::iota_transaction();
+        assert_eq!(intent.to_bytes(), [0, 0, 0]);
+    }
+
+    #[test]
+    fn to_bytes_personal_message() {
+        let intent = Intent::personal_message();
+        assert_eq!(intent.to_bytes(), [3, 0, 0]);
+    }
+
+    #[test]
+    fn to_bytes_consensus_block() {
+        let intent = Intent::consensus_app(IntentScope::ConsensusBlock);
+        assert_eq!(intent.to_bytes(), [7, 0, 1]);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_roundtrip_iota_transaction() {
+        let intent = Intent::iota_transaction();
+        let bytes = intent.to_bytes();
+        let parsed = Intent::from_bytes(&bytes).unwrap();
+        assert_eq!(intent, parsed);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_roundtrip_personal_message() {
+        let intent = Intent::personal_message();
+        let bytes = intent.to_bytes();
+        let parsed = Intent::from_bytes(&bytes).unwrap();
+        assert_eq!(intent, parsed);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_roundtrip_consensus() {
+        let intent = Intent::consensus_app(IntentScope::ConsensusBlock);
+        let bytes = intent.to_bytes();
+        let parsed = Intent::from_bytes(&bytes).unwrap();
+        assert_eq!(intent, parsed);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_error_too_short() {
+        assert!(Intent::from_bytes(&[0, 0]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_error_too_long() {
+        assert!(Intent::from_bytes(&[0, 0, 0, 0]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_error_empty() {
+        assert!(Intent::from_bytes(&[]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_error_invalid_scope() {
+        assert!(Intent::from_bytes(&[255, 0, 0]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_error_invalid_version() {
+        assert!(Intent::from_bytes(&[0, 255, 0]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_bytes_error_invalid_app_id() {
+        assert!(Intent::from_bytes(&[0, 0, 255]).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_str_with_0x_prefix() {
+        let intent: Intent = "0x000000".parse().unwrap();
+        assert_eq!(intent, Intent::iota_transaction());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_str_without_prefix() {
+        let intent: Intent = "030000".parse().unwrap();
+        assert_eq!(intent, Intent::personal_message());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_str_invalid_hex() {
+        assert!("0xZZZZZZ".parse::<Intent>().is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_str_wrong_length() {
+        assert!("0x00".parse::<Intent>().is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn from_str_empty() {
+        assert!("".parse::<Intent>().is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn try_from_u8_intent_scope_valid() {
+        assert_eq!(
+            IntentScope::try_from(0u8).unwrap(),
+            IntentScope::TransactionData
+        );
+        assert_eq!(
+            IntentScope::try_from(3u8).unwrap(),
+            IntentScope::PersonalMessage
+        );
+        assert_eq!(
+            IntentScope::try_from(9u8).unwrap(),
+            IntentScope::AuthorityCapabilities
+        );
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn try_from_u8_intent_scope_invalid() {
+        assert!(IntentScope::try_from(10u8).is_err());
+        assert!(IntentScope::try_from(255u8).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn try_from_u8_intent_version_valid() {
+        assert_eq!(IntentVersion::try_from(0u8).unwrap(), IntentVersion::V0);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn try_from_u8_intent_version_invalid() {
+        assert!(IntentVersion::try_from(1u8).is_err());
+        assert!(IntentVersion::try_from(255u8).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn try_from_u8_intent_app_id_valid() {
+        assert_eq!(IntentAppId::try_from(0u8).unwrap(), IntentAppId::Iota);
+        assert_eq!(IntentAppId::try_from(1u8).unwrap(), IntentAppId::Consensus);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn try_from_u8_intent_app_id_invalid() {
+        assert!(IntentAppId::try_from(2u8).is_err());
+        assert!(IntentAppId::try_from(255u8).is_err());
+    }
+
+    #[test]
+    fn intent_scope_is_accessors() {
+        assert!(IntentScope::TransactionData.is_transaction_data());
+        assert!(!IntentScope::TransactionData.is_personal_message());
+        assert!(IntentScope::PersonalMessage.is_personal_message());
+        assert!(IntentScope::ConsensusBlock.is_consensus_block());
+    }
+
+    #[test]
+    fn intent_version_is_accessor() {
+        assert!(IntentVersion::V0.is_v0());
+    }
+
+    #[test]
+    fn intent_app_id_is_accessors() {
+        assert!(IntentAppId::Iota.is_iota());
+        assert!(!IntentAppId::Iota.is_consensus());
+        assert!(IntentAppId::Consensus.is_consensus());
+    }
+}

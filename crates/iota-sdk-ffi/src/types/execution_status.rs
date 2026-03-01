@@ -68,7 +68,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// 
+///
 /// execution-error =  insufficient-gas
 ///                 =/ invalid-gas-object
 ///                 =/ invariant-violation

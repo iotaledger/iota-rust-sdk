@@ -130,3 +130,111 @@ impl std::fmt::Display for ObjectId {
         self.to_canonical_string(true).fmt(f)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+
+    use super::*;
+
+    #[test]
+    fn zero_constant() {
+        assert_eq!(ObjectId::ZERO.into_inner(), [0u8; 32]);
+    }
+
+    #[test]
+    fn system_constant() {
+        let mut expected = [0u8; 32];
+        expected[31] = 5;
+        assert_eq!(ObjectId::SYSTEM.into_inner(), expected);
+    }
+
+    #[test]
+    fn clock_constant() {
+        let mut expected = [0u8; 32];
+        expected[31] = 6;
+        assert_eq!(ObjectId::CLOCK.into_inner(), expected);
+    }
+
+    #[test]
+    fn from_hex_with_prefix() {
+        let id = ObjectId::from_hex("0x5").unwrap();
+        assert_eq!(id, ObjectId::SYSTEM);
+    }
+
+    #[test]
+    fn from_hex_without_prefix() {
+        let id = ObjectId::from_hex("6").unwrap();
+        assert_eq!(id, ObjectId::CLOCK);
+    }
+
+    #[test]
+    fn from_hex_full_length() {
+        let hex = "0x0000000000000000000000000000000000000000000000000000000000000005";
+        let id = ObjectId::from_hex(hex).unwrap();
+        assert_eq!(id, ObjectId::SYSTEM);
+    }
+
+    #[test]
+    fn from_hex_invalid() {
+        assert!(ObjectId::from_hex("0xGGGG").is_err());
+    }
+
+    #[test]
+    fn display_fromstr_roundtrip() {
+        let id = ObjectId::SYSTEM;
+        let s = id.to_string();
+        let parsed = ObjectId::from_str(&s).unwrap();
+        assert_eq!(id, parsed);
+    }
+
+    #[test]
+    fn from_address() {
+        let address = Address::from_hex("0x5").unwrap();
+        let id = ObjectId::from(address);
+        assert_eq!(id, ObjectId::SYSTEM);
+    }
+
+    #[test]
+    fn from_byte_array() {
+        let mut bytes = [0u8; 32];
+        bytes[31] = 6;
+        let id = ObjectId::from(bytes);
+        assert_eq!(id, ObjectId::CLOCK);
+    }
+
+    #[test]
+    fn into_vec_u8() {
+        let id = ObjectId::ZERO;
+        let v: Vec<u8> = id.into();
+        assert_eq!(v, vec![0u8; 32]);
+    }
+
+    #[test]
+    fn to_canonical_string_with_prefix() {
+        let id = ObjectId::SYSTEM;
+        let s = id.to_canonical_string(true);
+        assert!(s.starts_with("0x"));
+        assert_eq!(s.len(), 66); // "0x" + 64 hex chars
+    }
+
+    #[test]
+    fn to_canonical_string_without_prefix() {
+        let id = ObjectId::SYSTEM;
+        let s = id.to_canonical_string(false);
+        assert!(!s.starts_with("0x"));
+        assert_eq!(s.len(), 64);
+    }
+
+    #[test]
+    fn to_short_string_with_prefix() {
+        let id = ObjectId::SYSTEM;
+        assert_eq!(id.to_short_string(true), "0x5");
+    }
+
+    #[test]
+    fn to_short_string_without_prefix() {
+        let id = ObjectId::SYSTEM;
+        assert_eq!(id.to_short_string(false), "5");
+    }
+}
