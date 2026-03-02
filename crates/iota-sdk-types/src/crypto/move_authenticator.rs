@@ -77,8 +77,8 @@ impl std::fmt::Display for MoveAuthenticator {
         crate::display_table(
             f,
             &[
-                ("Call Args", &crate::display_vec_count(&self.call_args)),
-                ("Type Args", &crate::display_vec_count(&self.type_args)),
+                ("Call Args", &crate::display_vec(&self.call_args)),
+                ("Type Args", &crate::display_vec(&self.type_args)),
                 ("Object to Authenticate", &self.object_to_authenticate),
             ],
         )

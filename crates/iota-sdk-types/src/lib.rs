@@ -132,6 +132,16 @@ pub(crate) fn display_vec_count<T>(v: &[T]) -> String {
     format!("[{} items]", v.len())
 }
 
+/// Display a `Vec` by showing each element.
+pub(crate) fn display_vec(v: &[impl std::fmt::Display]) -> String {
+    if v.is_empty() {
+        "[]".to_string()
+    } else {
+        let items: Vec<String> = v.iter().map(|item| item.to_string()).collect();
+        format!("[{}]", items.join(", "))
+    }
+}
+
 #[cfg(feature = "hash")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;

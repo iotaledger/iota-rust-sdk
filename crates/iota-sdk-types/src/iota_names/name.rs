@@ -168,19 +168,10 @@ impl Name {
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[derive(Clone, Eq, PartialEq, Debug)]
+#[derive(Clone, Eq, PartialEq, Debug, strum::Display)]
 pub enum NameFormat {
     At,
     Dot,
-}
-
-impl std::fmt::Display for NameFormat {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            NameFormat::At => write!(f, "At"),
-            NameFormat::Dot => write!(f, "Dot"),
-        }
-    }
 }
 
 /// Converts @label ending to label{separator}iota ending.

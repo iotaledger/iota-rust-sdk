@@ -43,6 +43,7 @@ proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
 base64ct = { workspace = true, features = ["alloc"] }
+derive_more = { workspace = true, features = ["display"] }
 bnum.workspace = true
 bs58 = "0.5.1"
 hex.workspace = true

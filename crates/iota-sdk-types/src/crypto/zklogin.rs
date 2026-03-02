@@ -37,6 +37,19 @@ pub struct ZkLoginAuthenticator {
     pub signature: SimpleSignature,
 }
 
+impl std::fmt::Display for ZkLoginAuthenticator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Max Epoch", &self.max_epoch),
+                ("Inputs", &self.inputs),
+                ("Signature", &self.signature),
+            ],
+        )
+    }
+}
+
 /// A zklogin groth16 proof and the required inputs to perform proof
 /// verification.
 ///
@@ -179,6 +192,18 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
     }
 }
 
+impl std::fmt::Display for ZkLoginInputs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Header Base64", &self.header_base64),
+                ("ISS Base64 Details", &self.iss_base64_details),
+            ],
+        )
+    }
+}
+
 /// A claim of the iss in a zklogin proof
 ///
 /// # BCS
@@ -199,6 +224,15 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
 pub struct ZkLoginClaim {
     pub value: String,
     pub index_mod_4: u8,
+}
+
+impl std::fmt::Display for ZkLoginClaim {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[("Value", &self.value), ("Index Mod 4", &self.index_mod_4)],
+        )
+    }
 }
 
 #[derive(Debug)]
@@ -404,6 +438,19 @@ pub struct ZkLoginProof {
     pub c: CircomG1,
 }
 
+impl std::fmt::Display for ZkLoginProof {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("A (G1)", &self.a),
+                ("B (G2)", &self.b),
+                ("C (G1)", &self.c),
+            ],
+        )
+    }
+}
+
 /// A G1 point
 ///
 /// This represents the canonical decimal representation of the projective
@@ -421,6 +468,12 @@ pub struct ZkLoginProof {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG1(pub [Bn254FieldElement; 3]);
 
+impl std::fmt::Display for CircomG1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "G1({}, {}, {})", self.0[0], self.0[1], self.0[2])
+    }
+}
+
 /// A G2 point
 ///
 /// This represents the canonical decimal representation of the coefficients of
@@ -437,6 +490,16 @@ pub struct CircomG1(pub [Bn254FieldElement; 3]);
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
+
+impl std::fmt::Display for CircomG2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "G2([{}, {}], [{}, {}], [{}, {}])",
+            self.0[0][0], self.0[0][1], self.0[1][0], self.0[1][1], self.0[2][0], self.0[2][1],
+        )
+    }
+}
 
 /// Public Key equivalent for Zklogin authenticators
 ///
@@ -516,6 +579,15 @@ impl ZkLoginPublicIdentifier {
     }
 }
 
+impl std::fmt::Display for ZkLoginPublicIdentifier {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[("ISS", &self.iss), ("Address Seed", &self.address_seed)],
+        )
+    }
+}
+
 /// A JSON Web Key
 ///
 /// Struct that contains info for a JWK. A list of them for different kids can
@@ -544,6 +616,20 @@ pub struct Jwk {
     pub alg: String,
 }
 
+impl std::fmt::Display for Jwk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("kty", &self.kty),
+                ("e", &self.e),
+                ("n", &self.n),
+                ("alg", &self.alg),
+            ],
+        )
+    }
+}
+
 /// Key to uniquely identify a JWK
 ///
 /// # BCS
@@ -562,6 +648,12 @@ pub struct JwkId {
     pub iss: String,
     /// A key id use to uniquely identify a key from an OIDC provider.
     pub kid: String,
+}
+
+impl std::fmt::Display for JwkId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[("ISS", &self.iss), ("KID", &self.kid)])
+    }
 }
 
 /// A point on the BN254 elliptic curve.
@@ -640,98 +732,6 @@ impl std::str::FromStr for Bn254FieldElement {
         let u256 = U256::from_str_radix(s, 10).map_err(Bn254FieldElementParseError)?;
         let be = u256.to_be();
         Ok(Self(*be.digits()))
-    }
-}
-
-impl std::fmt::Display for ZkLoginAuthenticator {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Max Epoch", &self.max_epoch),
-                ("Inputs", &self.inputs),
-                ("Signature", &self.signature),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ZkLoginInputs {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Header Base64", &self.header_base64),
-                ("ISS Base64 Details", &self.iss_base64_details),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ZkLoginClaim {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Value", &self.value), ("Index Mod 4", &self.index_mod_4)],
-        )
-    }
-}
-
-impl std::fmt::Display for ZkLoginProof {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("A (G1)", &self.a),
-                ("B (G2)", &self.b),
-                ("C (G1)", &self.c),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for CircomG1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "G1({}, {}, {})", self.0[0], self.0[1], self.0[2])
-    }
-}
-
-impl std::fmt::Display for CircomG2 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "G2([{}, {}], [{}, {}], [{}, {}])",
-            self.0[0][0], self.0[0][1], self.0[1][0], self.0[1][1], self.0[2][0], self.0[2][1],
-        )
-    }
-}
-
-impl std::fmt::Display for ZkLoginPublicIdentifier {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("ISS", &self.iss), ("Address Seed", &self.address_seed)],
-        )
-    }
-}
-
-impl std::fmt::Display for Jwk {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("kty", &self.kty),
-                ("e", &self.e),
-                ("n", &self.n),
-                ("alg", &self.alg),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for JwkId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("ISS", &self.iss), ("KID", &self.kid)])
     }
 }
 

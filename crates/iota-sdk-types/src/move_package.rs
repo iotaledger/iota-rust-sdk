@@ -93,7 +93,7 @@ impl MovePackageData {
 impl std::fmt::Display for MovePackageData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let modules_display = crate::display_vec_count(&self.modules);
-        let deps_display = crate::display_vec_count(&self.dependencies);
+        let deps_display = crate::display_vec(&self.dependencies);
         crate::display_table(
             f,
             &[

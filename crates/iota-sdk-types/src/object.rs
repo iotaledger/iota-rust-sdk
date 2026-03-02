@@ -79,6 +79,19 @@ impl ObjectReference {
     }
 }
 
+impl std::fmt::Display for ObjectReference {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Object ID", &self.object_id),
+                ("Version", &self.version),
+                ("Digest", &self.digest),
+            ],
+        )
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
@@ -164,6 +177,15 @@ impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 }
 
+impl std::fmt::Display for ObjectData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ObjectData::Struct(s) => write!(f, "Struct({s})"),
+            ObjectData::Package(p) => write!(f, "Package({p})"),
+        }
+    }
+}
+
 /// A move package
 ///
 /// # BCS
@@ -226,6 +248,20 @@ pub struct MovePackage {
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
+impl std::fmt::Display for MovePackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let modules_display = format!("[{} modules]", self.modules.len());
+        crate::display_table(
+            f,
+            &[
+                ("ID", &self.id),
+                ("Version", &self.version),
+                ("Modules", &modules_display),
+            ],
+        )
+    }
+}
+
 /// Identifies a struct and the module it was defined in
 ///
 /// # BCS
@@ -247,6 +283,19 @@ pub struct TypeOrigin {
     pub module_name: Identifier,
     pub struct_name: Identifier,
     pub package: ObjectId,
+}
+
+impl std::fmt::Display for TypeOrigin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Module", &self.module_name),
+                ("Struct", &self.struct_name),
+                ("Package", &self.package),
+            ],
+        )
+    }
 }
 
 /// Upgraded package info for the linkage table
@@ -273,6 +322,18 @@ pub struct UpgradeInfo {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub upgraded_version: Version,
+}
+
+impl std::fmt::Display for UpgradeInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Upgraded ID", &self.upgraded_id),
+                ("Upgraded Version", &self.upgraded_version),
+            ],
+        )
+    }
 }
 
 /// A move struct
@@ -320,6 +381,20 @@ pub struct MoveStruct {
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
     pub contents: Vec<u8>,
+}
+
+impl std::fmt::Display for MoveStruct {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let contents_hex = hex::encode(&self.contents);
+        crate::display_table(
+            f,
+            &[
+                ("Type", &self.type_),
+                ("Version", &self.version),
+                ("Contents", &contents_hex),
+            ],
+        )
+    }
 }
 
 /// Type of an IOTA object
@@ -478,6 +553,23 @@ impl Object {
     }
 }
 
+impl std::fmt::Display for Object {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let object_type = self.object_type();
+        crate::display_table(
+            f,
+            &[
+                ("Object ID", &self.object_id()),
+                ("Version", &self.version()),
+                ("Owner", &self.owner),
+                ("Type", &object_type),
+                ("Previous Tx", &self.previous_transaction),
+                ("Storage Rebate", &self.storage_rebate),
+            ],
+        )
+    }
+}
+
 fn id_opt(contents: &[u8]) -> Option<ObjectId> {
     if ObjectId::LENGTH > contents.len() {
         return None;
@@ -542,73 +634,6 @@ impl GenesisObject {
     }
 }
 
-impl std::fmt::Display for ObjectReference {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Object ID", &self.object_id),
-                ("Version", &self.version),
-                ("Digest", &self.digest),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ObjectData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ObjectData::Struct(s) => write!(f, "Struct({s})"),
-            ObjectData::Package(p) => write!(f, "Package({p})"),
-        }
-    }
-}
-
-impl std::fmt::Display for MoveStruct {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let contents_hex = hex::encode(&self.contents);
-        crate::display_table(
-            f,
-            &[
-                ("Type", &self.type_),
-                ("Version", &self.version),
-                ("Contents", &contents_hex),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for MovePackage {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_display = format!("[{} modules]", self.modules.len());
-        crate::display_table(
-            f,
-            &[
-                ("ID", &self.id),
-                ("Version", &self.version),
-                ("Modules", &modules_display),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for Object {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let object_type = self.object_type();
-        crate::display_table(
-            f,
-            &[
-                ("Object ID", &self.object_id()),
-                ("Version", &self.version()),
-                ("Owner", &self.owner),
-                ("Type", &object_type),
-                ("Previous Tx", &self.previous_transaction),
-                ("Storage Rebate", &self.storage_rebate),
-            ],
-        )
-    }
-}
-
 impl std::fmt::Display for GenesisObject {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let object_type = self.object_type();
@@ -619,31 +644,6 @@ impl std::fmt::Display for GenesisObject {
                 ("Version", &self.version()),
                 ("Owner", &self.owner),
                 ("Type", &object_type),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for TypeOrigin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Module", &self.module_name),
-                ("Struct", &self.struct_name),
-                ("Package", &self.package),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for UpgradeInfo {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Upgraded ID", &self.upgraded_id),
-                ("Upgraded Version", &self.upgraded_version),
             ],
         )
     }
@@ -716,14 +716,13 @@ mod serialization {
     impl<'a> MoveStructTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
             if let Some(coin_type) = s.coin_type_opt() {
-                if let TypeTag::Struct(s_inner) = coin_type {
-                    if s_inner.address() == Address::FRAMEWORK
-                        && s_inner.module() == "iota"
-                        && s_inner.name() == "IOTA"
-                        && s_inner.type_params().is_empty()
-                    {
-                        return Self::GasCoin;
-                    }
+                if let TypeTag::Struct(s_inner) = coin_type
+                    && s_inner.address() == Address::FRAMEWORK
+                    && s_inner.module() == "iota"
+                    && s_inner.name() == "IOTA"
+                    && s_inner.type_params().is_empty()
+                {
+                    return Self::GasCoin;
                 }
 
                 Self::Coin(coin_type)

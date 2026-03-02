@@ -197,6 +197,22 @@ impl SimpleSignature {
     }
 }
 
+impl std::fmt::Display for SimpleSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SimpleSignature::Ed25519 { public_key, .. } => {
+                write!(f, "Ed25519(key: {public_key})")
+            }
+            SimpleSignature::Secp256k1 { public_key, .. } => {
+                write!(f, "Secp256k1(key: {public_key})")
+            }
+            SimpleSignature::Secp256r1 { public_key, .. } => {
+                write!(f, "Secp256r1(key: {public_key})")
+            }
+        }
+    }
+}
+
 /// Flag use to disambiguate the signature schemes supported by IOTA.
 ///
 /// # BCS
@@ -307,14 +323,19 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::Display)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum UserSignature {
+    #[display("Simple({_0})")]
     Simple(SimpleSignature),
+    #[display("Multisig({_0})")]
     Multisig(MultisigAggregatedSignature),
+    #[display("ZkLogin({_0})")]
     ZkLoginAuthenticator(Box<ZkLoginAuthenticator>),
+    #[display("Passkey({_0})")]
     PasskeyAuthenticator(PasskeyAuthenticator),
+    #[display("MoveAuthenticator({_0})")]
     MoveAuthenticator(MoveAuthenticator),
 }
 
@@ -364,40 +385,6 @@ impl UserSignature {
             UserSignature::ZkLoginAuthenticator(_) => SignatureScheme::ZkLoginAuthenticator,
             UserSignature::PasskeyAuthenticator(_) => SignatureScheme::PasskeyAuthenticator,
             UserSignature::MoveAuthenticator(_) => SignatureScheme::MoveAuthenticator,
-        }
-    }
-}
-
-impl std::fmt::Display for SimpleSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SimpleSignature::Ed25519 { public_key, .. } => {
-                write!(f, "Ed25519(key: {})", public_key)
-            }
-            SimpleSignature::Secp256k1 { public_key, .. } => {
-                write!(f, "Secp256k1(key: {})", public_key)
-            }
-            SimpleSignature::Secp256r1 { public_key, .. } => {
-                write!(f, "Secp256r1(key: {})", public_key)
-            }
-        }
-    }
-}
-
-impl std::fmt::Display for UserSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            UserSignature::Simple(sig) => write!(f, "Simple({sig})"),
-            UserSignature::Multisig(multisig) => write!(f, "Multisig({multisig})"),
-            UserSignature::ZkLoginAuthenticator(zklogin) => {
-                write!(f, "ZkLogin({zklogin})")
-            }
-            UserSignature::PasskeyAuthenticator(passkey) => {
-                write!(f, "Passkey({passkey})")
-            }
-            UserSignature::MoveAuthenticator(move_auth) => {
-                write!(f, "MoveAuthenticator({move_auth})")
-            }
         }
     }
 }

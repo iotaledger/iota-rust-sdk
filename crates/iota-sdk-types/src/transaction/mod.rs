@@ -47,6 +47,14 @@ impl From<TransactionV1> for Transaction {
     }
 }
 
+impl std::fmt::Display for Transaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Transaction::V1(v1) => write!(f, "{v1}"),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -62,6 +70,20 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
+impl std::fmt::Display for TransactionV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Kind", &self.kind),
+                ("Sender", &self.sender),
+                ("Gas Payment", &self.gas_payment),
+                ("Expiration", &self.expiration),
+            ],
+        )
+    }
+}
+
 #[cfg_attr(feature = "serde", derive(serde::Deserialize))]
 pub struct SenderSignedTransaction(
     #[cfg_attr(
@@ -71,6 +93,12 @@ pub struct SenderSignedTransaction(
     pub SignedTransaction,
 );
 
+impl std::fmt::Display for SenderSignedTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -78,6 +106,16 @@ pub struct SenderSignedTransaction(
 pub struct SignedTransaction {
     pub transaction: Transaction,
     pub signatures: Vec<UserSignature>,
+}
+
+impl std::fmt::Display for SignedTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let sigs = crate::display_vec(&self.signatures);
+        crate::display_table(
+            f,
+            &[("Transaction", &self.transaction), ("Signatures", &sigs)],
+        )
+    }
 }
 
 /// A TTL for a transaction
@@ -106,6 +144,15 @@ impl TransactionExpiration {
     crate::def_is!(None);
 
     crate::def_is_as_into_opt!(Epoch(EpochId));
+}
+
+impl std::fmt::Display for TransactionExpiration {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TransactionExpiration::None => write!(f, "None"),
+            TransactionExpiration::Epoch(id) => write!(f, "Epoch({id})"),
+        }
+    }
 }
 
 /// Payment information for executing a transaction
@@ -139,6 +186,21 @@ pub struct GasPayment {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub budget: u64,
+}
+
+impl std::fmt::Display for GasPayment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let objects = crate::display_vec(&self.objects);
+        crate::display_table(
+            f,
+            &[
+                ("Objects", &objects),
+                ("Owner", &self.owner),
+                ("Price", &self.price),
+                ("Budget", &self.budget),
+            ],
+        )
+    }
 }
 
 /// Randomness update
@@ -178,6 +240,24 @@ pub struct RandomnessStateUpdate {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub randomness_obj_initial_shared_version: u64,
+}
+
+impl std::fmt::Display for RandomnessStateUpdate {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let bytes_size = self.random_bytes.len();
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Randomness Round", &self.randomness_round),
+                ("Random Bytes Size", &bytes_size),
+                (
+                    "Randomness Obj Initial Shared Version",
+                    &self.randomness_obj_initial_shared_version,
+                ),
+            ],
+        )
+    }
 }
 
 /// Transaction type
@@ -230,6 +310,22 @@ impl TransactionKind {
     crate::def_is_as_into_opt! {
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+    }
+}
+
+impl std::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TransactionKind::ProgrammableTransaction(ptb) => write!(f, "{ptb}"),
+            TransactionKind::Genesis(genesis) => write!(f, "{genesis}"),
+            TransactionKind::ConsensusCommitPrologueV1(ccp) => write!(f, "{ccp}"),
+            TransactionKind::AuthenticatorStateUpdateV1(asu) => write!(f, "{asu}"),
+            TransactionKind::EndOfEpoch(kinds) => {
+                let items = crate::display_vec(kinds);
+                write!(f, "EndOfEpoch({items})")
+            }
+            TransactionKind::RandomnessStateUpdate(rsu) => write!(f, "{rsu}"),
+        }
     }
 }
 
@@ -287,6 +383,21 @@ impl EndOfEpochTransactionKind {
     crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
 }
 
+impl std::fmt::Display for EndOfEpochTransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EndOfEpochTransactionKind::ChangeEpoch(ce) => write!(f, "{ce}"),
+            EndOfEpochTransactionKind::ChangeEpochV2(ce) => write!(f, "{ce}"),
+            EndOfEpochTransactionKind::ChangeEpochV3(ce) => write!(f, "{ce}"),
+            EndOfEpochTransactionKind::ChangeEpochV4(ce) => write!(f, "{ce}"),
+            EndOfEpochTransactionKind::AuthenticatorStateCreate => {
+                write!(f, "AuthenticatorStateCreate")
+            }
+            EndOfEpochTransactionKind::AuthenticatorStateExpire(ase) => write!(f, "{ase}"),
+        }
+    }
+}
+
 /// Set of Execution Time Observations from the committee.
 ///
 /// # BCS
@@ -314,6 +425,17 @@ impl ExecutionTimeObservations {
     crate::def_is_as_into_opt!(V1(Vec<ExecutionTimeObservation>));
 }
 
+impl std::fmt::Display for ExecutionTimeObservations {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExecutionTimeObservations::V1(observations) => {
+                let obs = crate::display_vec(observations);
+                write!(f, "V1({obs})")
+            }
+        }
+    }
+}
+
 #[derive(Debug, Hash, PartialEq, Eq, Clone)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -321,6 +443,13 @@ impl ExecutionTimeObservations {
 pub struct ExecutionTimeObservation {
     pub key: ExecutionTimeObservationKey,
     pub observations: Vec<ValidatorExecutionTimeObservation>,
+}
+
+impl std::fmt::Display for ExecutionTimeObservation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let obs = crate::display_vec(&self.observations);
+        crate::display_table(f, &[("Key", &self.key), ("Observations", &obs)])
+    }
 }
 
 /// An execution time observation from a particular validator
@@ -341,6 +470,16 @@ pub struct ExecutionTimeObservation {
 pub struct ValidatorExecutionTimeObservation {
     pub validator: crate::Bls12381PublicKey,
     pub duration: std::time::Duration,
+}
+
+impl std::fmt::Display for ValidatorExecutionTimeObservation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let duration_str = format!("{:?}", self.duration);
+        crate::display_table(
+            f,
+            &[("Validator", &self.validator), ("Duration", &duration_str)],
+        )
+    }
 }
 
 /// Key for an execution time observation
@@ -402,6 +541,31 @@ impl ExecutionTimeObservationKey {
     );
 }
 
+impl std::fmt::Display for ExecutionTimeObservationKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExecutionTimeObservationKey::MoveEntryPoint {
+                package,
+                module,
+                function,
+                type_arguments,
+            } => {
+                let type_args = crate::display_vec(type_arguments);
+                write!(
+                    f,
+                    "MoveEntryPoint({package}::{module}::{function}, type_arguments: {type_args})"
+                )
+            }
+            ExecutionTimeObservationKey::TransferObjects => write!(f, "TransferObjects"),
+            ExecutionTimeObservationKey::SplitCoins => write!(f, "SplitCoins"),
+            ExecutionTimeObservationKey::MergeCoins => write!(f, "MergeCoins"),
+            ExecutionTimeObservationKey::Publish => write!(f, "Publish"),
+            ExecutionTimeObservationKey::MakeMoveVec => write!(f, "MakeMoveVec"),
+            ExecutionTimeObservationKey::Upgrade => write!(f, "Upgrade"),
+        }
+    }
+}
+
 /// Expire old JWKs
 ///
 /// # BCS
@@ -428,6 +592,21 @@ pub struct AuthenticatorStateExpire {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub authenticator_obj_initial_shared_version: u64,
+}
+
+impl std::fmt::Display for AuthenticatorStateExpire {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Min Epoch", &self.min_epoch),
+                (
+                    "Authenticator Obj Initial Shared Version",
+                    &self.authenticator_obj_initial_shared_version,
+                ),
+            ],
+        )
+    }
 }
 
 /// Update the set of valid JWKs
@@ -467,6 +646,24 @@ pub struct AuthenticatorStateUpdateV1 {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
+impl std::fmt::Display for AuthenticatorStateUpdateV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let jwks_count = crate::display_vec(&self.new_active_jwks);
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Round", &self.round),
+                ("New Active JWKs", &jwks_count),
+                (
+                    "Authenticator Obj Initial Shared Version",
+                    &self.authenticator_obj_initial_shared_version,
+                ),
+            ],
+        )
+    }
+}
+
 /// A new Jwk
 ///
 /// # BCS
@@ -493,6 +690,19 @@ pub struct ActiveJwk {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub epoch: u64,
+}
+
+impl std::fmt::Display for ActiveJwk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("JWK ID", &self.jwk_id),
+                ("JWK", &self.jwk),
+                ("Epoch", &self.epoch),
+            ],
+        )
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -522,6 +732,19 @@ impl ConsensusDeterminedVersionAssignments {
     }
 }
 
+impl std::fmt::Display for ConsensusDeterminedVersionAssignments {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ConsensusDeterminedVersionAssignments::CancelledTransactions {
+                cancelled_transactions,
+            } => {
+                let txns = crate::display_vec(cancelled_transactions);
+                write!(f, "CancelledTransactions({txns})")
+            }
+        }
+    }
+}
+
 /// A transaction that was cancelled
 ///
 /// # BCS
@@ -543,6 +766,19 @@ pub struct CancelledTransaction {
     pub digest: Digest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
+}
+
+impl std::fmt::Display for CancelledTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let assignments = crate::display_vec(&self.version_assignments);
+        crate::display_table(
+            f,
+            &[
+                ("Digest", &self.digest),
+                ("Version Assignments", &assignments),
+            ],
+        )
+    }
 }
 
 /// Object version assignment from consensus
@@ -567,6 +803,15 @@ pub struct VersionAssignment {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
+}
+
+impl std::fmt::Display for VersionAssignment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[("Object ID", &self.object_id), ("Version", &self.version)],
+        )
+    }
 }
 
 /// V1 of the consensus commit prologue system transaction
@@ -612,6 +857,22 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_commit_digest: Digest,
     /// Stores consensus handler determined shared object version assignments.
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
+}
+
+impl std::fmt::Display for ConsensusCommitPrologueV1 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let sub_dag = crate::display_option(&self.sub_dag_index);
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Round", &self.round),
+                ("Sub DAG Index", &sub_dag),
+                ("Commit Timestamp Ms", &self.commit_timestamp_ms),
+                ("Consensus Commit Digest", &self.consensus_commit_digest),
+            ],
+        )
+    }
 }
 
 /// System transaction used to change the epoch
@@ -675,6 +936,28 @@ pub struct ChangeEpoch {
     /// their package ID), and a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
+}
+
+impl std::fmt::Display for ChangeEpoch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec(&self.system_packages);
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+            ],
+        )
+    }
 }
 
 /// System transaction used to change the epoch
@@ -745,6 +1028,29 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
+impl std::fmt::Display for ChangeEpochV2 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec(&self.system_packages);
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Computation Charge Burned", &self.computation_charge_burned),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+            ],
+        )
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
@@ -797,6 +1103,31 @@ pub struct ChangeEpochV3 {
     /// Vector of active validator indices eligible to take part in committee
     /// selection because they support the new, target protocol version.
     pub eligible_active_validators: Vec<u64>,
+}
+
+impl std::fmt::Display for ChangeEpochV3 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec(&self.system_packages);
+        let validators_count = crate::display_vec(&self.eligible_active_validators);
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Computation Charge Burned", &self.computation_charge_burned),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+                ("Eligible Active Validators", &validators_count),
+            ],
+        )
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -858,6 +1189,34 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
+impl std::fmt::Display for ChangeEpochV4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec(&self.system_packages);
+        let validators_count = crate::display_vec(&self.eligible_active_validators);
+        let scores_count = crate::display_vec(&self.scores);
+        crate::display_table(
+            f,
+            &[
+                ("Epoch", &self.epoch),
+                ("Protocol Version", &self.protocol_version),
+                ("Storage Charge", &self.storage_charge),
+                ("Computation Charge", &self.computation_charge),
+                ("Computation Charge Burned", &self.computation_charge_burned),
+                ("Storage Rebate", &self.storage_rebate),
+                (
+                    "Non-Refundable Storage Fee",
+                    &self.non_refundable_storage_fee,
+                ),
+                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
+                ("System Packages", &pkgs_count),
+                ("Eligible Active Validators", &validators_count),
+                ("Scores", &scores_count),
+                ("Adjust Rewards By Score", &self.adjust_rewards_by_score),
+            ],
+        )
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -878,6 +1237,21 @@ pub struct SystemPackage {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl std::fmt::Display for SystemPackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let modules_count = crate::display_vec_count(&self.modules);
+        let deps = crate::display_vec(&self.dependencies);
+        crate::display_table(
+            f,
+            &[
+                ("Version", &self.version),
+                ("Modules", &modules_count),
+                ("Dependencies", &deps),
+            ],
+        )
+    }
+}
+
 /// The genesis transaction
 ///
 /// # BCS
@@ -896,6 +1270,14 @@ pub struct GenesisTransaction {
     pub objects: Vec<GenesisObject>,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub events: Vec<Event>,
+}
+
+impl std::fmt::Display for GenesisTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let objects = crate::display_vec(&self.objects);
+        let events = crate::display_vec(&self.events);
+        crate::display_table(f, &[("Objects", &objects), ("Events", &events)])
+    }
 }
 
 /// A user transaction
@@ -922,6 +1304,14 @@ pub struct ProgrammableTransaction {
     /// result in the failure of the entire transaction.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub commands: Vec<Command>,
+}
+
+impl std::fmt::Display for ProgrammableTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let inputs = crate::display_vec(&self.inputs);
+        let commands = crate::display_vec(&self.commands);
+        crate::display_table(f, &[("Inputs", &inputs), ("Commands", &commands)])
+    }
 }
 
 /// An input to a user transaction
@@ -979,6 +1369,24 @@ impl Input {
         ImmutableOrOwned(ObjectReference),
         Receiving(ObjectReference)
     );
+}
+
+impl std::fmt::Display for Input {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Input::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
+            Input::ImmutableOrOwned(obj_ref) => write!(f, "ImmutableOrOwned({obj_ref})"),
+            Input::Shared {
+                object_id,
+                initial_shared_version,
+                mutable,
+            } => write!(
+                f,
+                "Shared(object_id: {object_id}, initial_shared_version: {initial_shared_version}, mutable: {mutable})"
+            ),
+            Input::Receiving(obj_ref) => write!(f, "Receiving({obj_ref})"),
+        }
+    }
 }
 
 /// A single command in a programmable transaction.
@@ -1056,6 +1464,20 @@ impl Command {
     );
 }
 
+impl std::fmt::Display for Command {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Command::MoveCall(mc) => write!(f, "{mc}"),
+            Command::TransferObjects(to) => write!(f, "{to}"),
+            Command::SplitCoins(sc) => write!(f, "{sc}"),
+            Command::MergeCoins(mc) => write!(f, "{mc}"),
+            Command::Publish(p) => write!(f, "{p}"),
+            Command::MakeMoveVector(mmv) => write!(f, "{mmv}"),
+            Command::Upgrade(u) => write!(f, "{u}"),
+        }
+    }
+}
+
 /// Command to transfer ownership of a set of objects to an address
 ///
 /// # BCS
@@ -1077,6 +1499,13 @@ pub struct TransferObjects {
     pub address: Argument,
 }
 
+impl std::fmt::Display for TransferObjects {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let objects = crate::display_vec(&self.objects);
+        crate::display_table(f, &[("Objects", &objects), ("Address", &self.address)])
+    }
+}
+
 /// Command to split a single coin object into multiple coins
 ///
 /// # BCS
@@ -1096,6 +1525,13 @@ pub struct SplitCoins {
     /// The amounts to split off
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub amounts: Vec<Argument>,
+}
+
+impl std::fmt::Display for SplitCoins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let amounts = crate::display_vec(&self.amounts);
+        crate::display_table(f, &[("Coin", &self.coin), ("Amounts", &amounts)])
+    }
 }
 
 /// Command to merge multiple coins of the same type into a single coin
@@ -1123,6 +1559,13 @@ pub struct MergeCoins {
     /// All listed coins must be of the same type and be the same type as `coin`
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub coins_to_merge: Vec<Argument>,
+}
+
+impl std::fmt::Display for MergeCoins {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let coins = crate::display_vec(&self.coins_to_merge);
+        crate::display_table(f, &[("Coin", &self.coin), ("Coins To Merge", &coins)])
+    }
 }
 
 /// Command to publish a new move package
@@ -1153,6 +1596,14 @@ pub struct Publish {
     pub dependencies: Vec<ObjectId>,
 }
 
+impl std::fmt::Display for Publish {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let modules_count = crate::display_vec_count(&self.modules);
+        let deps = crate::display_vec(&self.dependencies);
+        crate::display_table(f, &[("Modules", &modules_count), ("Dependencies", &deps)])
+    }
+}
+
 /// Command to build a move vector out of a set of individual elements
 ///
 /// # BCS
@@ -1176,6 +1627,14 @@ pub struct MakeMoveVector {
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
+}
+
+impl std::fmt::Display for MakeMoveVector {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let type_str = crate::display_option(&self.type_);
+        let elements = crate::display_vec(&self.elements);
+        crate::display_table(f, &[("Type", &type_str), ("Elements", &elements)])
+    }
 }
 
 /// Command to upgrade an already published package
@@ -1210,6 +1669,22 @@ pub struct Upgrade {
     pub package: ObjectId,
     /// Ticket authorizing the upgrade
     pub ticket: Argument,
+}
+
+impl std::fmt::Display for Upgrade {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let modules_count = crate::display_vec_count(&self.modules);
+        let deps = crate::display_vec(&self.dependencies);
+        crate::display_table(
+            f,
+            &[
+                ("Modules", &modules_count),
+                ("Dependencies", &deps),
+                ("Package", &self.package),
+                ("Ticket", &self.ticket),
+            ],
+        )
+    }
 }
 
 /// An argument to a programmable transaction command
@@ -1297,6 +1772,17 @@ impl Argument {
     }
 }
 
+impl std::fmt::Display for Argument {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Argument::Gas => write!(f, "GasCoin"),
+            Argument::Input(i) => write!(f, "Input({i})"),
+            Argument::Result(i) => write!(f, "Result({i})"),
+            Argument::NestedResult(i, j) => write!(f, "NestedResult({i}, {j})"),
+        }
+    }
+}
+
 /// Command to call a move function
 ///
 /// Functions that can be called by a `MoveCall` command are those that have a
@@ -1337,520 +1823,18 @@ pub struct MoveCall {
     pub arguments: Vec<Argument>,
 }
 
-// ---------------------------------------------------------------------------
-// Display implementations
-// ---------------------------------------------------------------------------
-
-impl std::fmt::Display for Transaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Transaction::V1(v1) => write!(f, "{v1}"),
-        }
-    }
-}
-
-impl std::fmt::Display for TransactionV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Kind", &self.kind),
-                ("Sender", &self.sender),
-                ("Gas Payment", &self.gas_payment),
-                ("Expiration", &self.expiration),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for SenderSignedTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl std::fmt::Display for SignedTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let sig_count = crate::display_vec_count(&self.signatures);
-        crate::display_table(
-            f,
-            &[
-                ("Transaction", &self.transaction),
-                ("Signatures", &sig_count),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for TransactionExpiration {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TransactionExpiration::None => write!(f, "None"),
-            TransactionExpiration::Epoch(id) => write!(f, "Epoch({id})"),
-        }
-    }
-}
-
-impl std::fmt::Display for GasPayment {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let objects_count = crate::display_vec_count(&self.objects);
-        crate::display_table(
-            f,
-            &[
-                ("Objects", &objects_count),
-                ("Owner", &self.owner),
-                ("Price", &self.price),
-                ("Budget", &self.budget),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for RandomnessStateUpdate {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let bytes_size = self.random_bytes.len();
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Randomness Round", &self.randomness_round),
-                ("Random Bytes Size", &bytes_size),
-                (
-                    "Randomness Obj Initial Shared Version",
-                    &self.randomness_obj_initial_shared_version,
-                ),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for TransactionKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TransactionKind::ProgrammableTransaction(ptb) => write!(f, "{ptb}"),
-            TransactionKind::Genesis(genesis) => write!(f, "{genesis}"),
-            TransactionKind::ConsensusCommitPrologueV1(ccp) => write!(f, "{ccp}"),
-            TransactionKind::AuthenticatorStateUpdateV1(asu) => write!(f, "{asu}"),
-            TransactionKind::EndOfEpoch(kinds) => {
-                let count = crate::display_vec_count(kinds);
-                write!(f, "EndOfEpoch({count})")
-            }
-            TransactionKind::RandomnessStateUpdate(rsu) => write!(f, "{rsu}"),
-        }
-    }
-}
-
-impl std::fmt::Display for EndOfEpochTransactionKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EndOfEpochTransactionKind::ChangeEpoch(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::ChangeEpochV2(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::ChangeEpochV3(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::ChangeEpochV4(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                write!(f, "AuthenticatorStateCreate")
-            }
-            EndOfEpochTransactionKind::AuthenticatorStateExpire(ase) => write!(f, "{ase}"),
-        }
-    }
-}
-
-impl std::fmt::Display for ExecutionTimeObservations {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ExecutionTimeObservations::V1(observations) => {
-                let count = crate::display_vec_count(observations);
-                write!(f, "V1({count})")
-            }
-        }
-    }
-}
-
-impl std::fmt::Display for ExecutionTimeObservation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let obs_count = crate::display_vec_count(&self.observations);
-        crate::display_table(f, &[("Key", &self.key), ("Observations", &obs_count)])
-    }
-}
-
-impl std::fmt::Display for ValidatorExecutionTimeObservation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let duration_str = format!("{:?}", self.duration);
-        crate::display_table(
-            f,
-            &[("Validator", &self.validator), ("Duration", &duration_str)],
-        )
-    }
-}
-
-impl std::fmt::Display for ExecutionTimeObservationKey {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ExecutionTimeObservationKey::MoveEntryPoint {
-                package,
-                module,
-                function,
-                type_arguments,
-            } => {
-                let type_args_count = crate::display_vec_count(type_arguments);
-                write!(
-                    f,
-                    "MoveEntryPoint({package}::{module}::{function}, type_arguments: {type_args_count})"
-                )
-            }
-            ExecutionTimeObservationKey::TransferObjects => write!(f, "TransferObjects"),
-            ExecutionTimeObservationKey::SplitCoins => write!(f, "SplitCoins"),
-            ExecutionTimeObservationKey::MergeCoins => write!(f, "MergeCoins"),
-            ExecutionTimeObservationKey::Publish => write!(f, "Publish"),
-            ExecutionTimeObservationKey::MakeMoveVec => write!(f, "MakeMoveVec"),
-            ExecutionTimeObservationKey::Upgrade => write!(f, "Upgrade"),
-        }
-    }
-}
-
-impl std::fmt::Display for AuthenticatorStateExpire {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Min Epoch", &self.min_epoch),
-                (
-                    "Authenticator Obj Initial Shared Version",
-                    &self.authenticator_obj_initial_shared_version,
-                ),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for AuthenticatorStateUpdateV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let jwks_count = crate::display_vec_count(&self.new_active_jwks);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Round", &self.round),
-                ("New Active JWKs", &jwks_count),
-                (
-                    "Authenticator Obj Initial Shared Version",
-                    &self.authenticator_obj_initial_shared_version,
-                ),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ActiveJwk {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("JWK ID", &self.jwk_id),
-                ("JWK", &self.jwk),
-                ("Epoch", &self.epoch),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ConsensusDeterminedVersionAssignments {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ConsensusDeterminedVersionAssignments::CancelledTransactions {
-                cancelled_transactions,
-            } => {
-                let count = crate::display_vec_count(cancelled_transactions);
-                write!(f, "CancelledTransactions({count})")
-            }
-        }
-    }
-}
-
-impl std::fmt::Display for CancelledTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let assignments_count = crate::display_vec_count(&self.version_assignments);
-        crate::display_table(
-            f,
-            &[
-                ("Digest", &self.digest),
-                ("Version Assignments", &assignments_count),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for VersionAssignment {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Object ID", &self.object_id), ("Version", &self.version)],
-        )
-    }
-}
-
-impl std::fmt::Display for ConsensusCommitPrologueV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let sub_dag = crate::display_option(&self.sub_dag_index);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Round", &self.round),
-                ("Sub DAG Index", &sub_dag),
-                ("Commit Timestamp Ms", &self.commit_timestamp_ms),
-                ("Consensus Commit Digest", &self.consensus_commit_digest),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ChangeEpoch {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_count(&self.system_packages);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ChangeEpochV2 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_count(&self.system_packages);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Computation Charge Burned", &self.computation_charge_burned),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ChangeEpochV3 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_count(&self.system_packages);
-        let validators_count = crate::display_vec_count(&self.eligible_active_validators);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Computation Charge Burned", &self.computation_charge_burned),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-                ("Eligible Active Validators", &validators_count),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ChangeEpochV4 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_count(&self.system_packages);
-        let validators_count = crate::display_vec_count(&self.eligible_active_validators);
-        let scores_count = crate::display_vec_count(&self.scores);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Computation Charge Burned", &self.computation_charge_burned),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-                ("Eligible Active Validators", &validators_count),
-                ("Scores", &scores_count),
-                ("Adjust Rewards By Score", &self.adjust_rewards_by_score),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for SystemPackage {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_count = crate::display_vec_count(&self.modules);
-        let deps_count = crate::display_vec_count(&self.dependencies);
-        crate::display_table(
-            f,
-            &[
-                ("Version", &self.version),
-                ("Modules", &modules_count),
-                ("Dependencies", &deps_count),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for GenesisTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let objects_count = crate::display_vec_count(&self.objects);
-        let events_count = crate::display_vec_count(&self.events);
-        crate::display_table(f, &[("Objects", &objects_count), ("Events", &events_count)])
-    }
-}
-
-impl std::fmt::Display for ProgrammableTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let inputs_count = crate::display_vec_count(&self.inputs);
-        let commands_count = crate::display_vec_count(&self.commands);
-        crate::display_table(
-            f,
-            &[("Inputs", &inputs_count), ("Commands", &commands_count)],
-        )
-    }
-}
-
-impl std::fmt::Display for Input {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Input::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
-            Input::ImmutableOrOwned(obj_ref) => write!(f, "ImmutableOrOwned({obj_ref})"),
-            Input::Shared {
-                object_id,
-                initial_shared_version,
-                mutable,
-            } => write!(
-                f,
-                "Shared(object_id: {object_id}, initial_shared_version: {initial_shared_version}, mutable: {mutable})"
-            ),
-            Input::Receiving(obj_ref) => write!(f, "Receiving({obj_ref})"),
-        }
-    }
-}
-
-impl std::fmt::Display for Command {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Command::MoveCall(mc) => write!(f, "{mc}"),
-            Command::TransferObjects(to) => write!(f, "{to}"),
-            Command::SplitCoins(sc) => write!(f, "{sc}"),
-            Command::MergeCoins(mc) => write!(f, "{mc}"),
-            Command::Publish(p) => write!(f, "{p}"),
-            Command::MakeMoveVector(mmv) => write!(f, "{mmv}"),
-            Command::Upgrade(u) => write!(f, "{u}"),
-        }
-    }
-}
-
-impl std::fmt::Display for TransferObjects {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let objects_count = crate::display_vec_count(&self.objects);
-        crate::display_table(
-            f,
-            &[("Objects", &objects_count), ("Address", &self.address)],
-        )
-    }
-}
-
-impl std::fmt::Display for SplitCoins {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let amounts_count = crate::display_vec_count(&self.amounts);
-        crate::display_table(f, &[("Coin", &self.coin), ("Amounts", &amounts_count)])
-    }
-}
-
-impl std::fmt::Display for MergeCoins {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let merge_count = crate::display_vec_count(&self.coins_to_merge);
-        crate::display_table(f, &[("Coin", &self.coin), ("Coins To Merge", &merge_count)])
-    }
-}
-
-impl std::fmt::Display for Publish {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_count = crate::display_vec_count(&self.modules);
-        let deps_count = crate::display_vec_count(&self.dependencies);
-        crate::display_table(
-            f,
-            &[("Modules", &modules_count), ("Dependencies", &deps_count)],
-        )
-    }
-}
-
-impl std::fmt::Display for MakeMoveVector {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let type_str = crate::display_option(&self.type_);
-        let elements_count = crate::display_vec_count(&self.elements);
-        crate::display_table(f, &[("Type", &type_str), ("Elements", &elements_count)])
-    }
-}
-
-impl std::fmt::Display for Upgrade {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_count = crate::display_vec_count(&self.modules);
-        let deps_count = crate::display_vec_count(&self.dependencies);
-        crate::display_table(
-            f,
-            &[
-                ("Modules", &modules_count),
-                ("Dependencies", &deps_count),
-                ("Package", &self.package),
-                ("Ticket", &self.ticket),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for Argument {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Argument::Gas => write!(f, "GasCoin"),
-            Argument::Input(i) => write!(f, "Input({i})"),
-            Argument::Result(i) => write!(f, "Result({i})"),
-            Argument::NestedResult(i, j) => write!(f, "NestedResult({i}, {j})"),
-        }
-    }
-}
-
 impl std::fmt::Display for MoveCall {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let type_args_count = crate::display_vec_count(&self.type_arguments);
-        let args_count = crate::display_vec_count(&self.arguments);
+        let type_args = crate::display_vec(&self.type_arguments);
+        let args = crate::display_vec(&self.arguments);
         crate::display_table(
             f,
             &[
                 ("Package", &self.package),
                 ("Module", &self.module),
                 ("Function", &self.function),
-                ("Type Arguments", &type_args_count),
-                ("Arguments", &args_count),
+                ("Type Arguments", &type_args),
+                ("Arguments", &args),
             ],
         )
     }

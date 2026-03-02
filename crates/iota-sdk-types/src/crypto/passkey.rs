@@ -91,6 +91,20 @@ impl PasskeyAuthenticator {
     }
 }
 
+impl std::fmt::Display for PasskeyAuthenticator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Authenticator Data", &hex::encode(&self.authenticator_data)),
+                ("Client Data JSON", &self.client_data_json),
+                ("Public Key", &self.public_key),
+                ("Signature", &self.signature),
+            ],
+        )
+    }
+}
+
 /// Public key of a `PasskeyAuthenticator`.
 ///
 /// This is used to derive the onchain `Address` for a `PasskeyAuthenticator`.
@@ -113,20 +127,6 @@ impl PasskeyPublicKey {
     /// The underlying `Secp256r1PublicKey` for this passkey.
     pub fn inner(&self) -> &Secp256r1PublicKey {
         &self.0
-    }
-}
-
-impl std::fmt::Display for PasskeyAuthenticator {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Authenticator Data", &hex::encode(&self.authenticator_data)),
-                ("Client Data JSON", &self.client_data_json),
-                ("Public Key", &self.public_key),
-                ("Signature", &self.signature),
-            ],
-        )
     }
 }
 

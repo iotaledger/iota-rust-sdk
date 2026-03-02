@@ -90,7 +90,7 @@ pub struct ValidatorAggregatedSignature {
 
 impl std::fmt::Display for ValidatorCommittee {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let members_display = crate::display_vec_count(&self.members);
+        let members_display = crate::display_vec(&self.members);
         crate::display_table(f, &[("Epoch", &self.epoch), ("Members", &members_display)])
     }
 }

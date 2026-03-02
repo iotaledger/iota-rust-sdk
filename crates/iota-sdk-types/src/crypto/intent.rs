@@ -147,7 +147,7 @@ impl FromStr for Intent {
 /// ```text
 /// intent-scope = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
@@ -206,7 +206,7 @@ impl TryFrom<u8> for IntentScope {
 /// ```text
 /// intent-version = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
@@ -245,7 +245,7 @@ impl TryFrom<u8> for IntentVersion {
 /// ```text
 /// intent-app-id = u8
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
@@ -295,7 +295,7 @@ impl<T> IntentMessage<T> {
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`. See
 /// `iota_types::crypto::SignatureScheme::flag()`.
-#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash, strum::Display)]
 #[cfg_attr(
     feature = "serde",
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
@@ -322,49 +322,6 @@ impl std::fmt::Display for Intent {
                 ("App ID", &self.app_id),
             ],
         )
-    }
-}
-
-impl std::fmt::Display for IntentScope {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            IntentScope::TransactionData => write!(f, "TransactionData"),
-            IntentScope::TransactionEffects => write!(f, "TransactionEffects"),
-            IntentScope::CheckpointSummary => write!(f, "CheckpointSummary"),
-            IntentScope::PersonalMessage => write!(f, "PersonalMessage"),
-            IntentScope::SenderSignedTransaction => write!(f, "SenderSignedTransaction"),
-            IntentScope::ProofOfPossession => write!(f, "ProofOfPossession"),
-            IntentScope::BridgeEventDeprecated => write!(f, "BridgeEventDeprecated"),
-            IntentScope::ConsensusBlock => write!(f, "ConsensusBlock"),
-            IntentScope::DiscoveryPeers => write!(f, "DiscoveryPeers"),
-            IntentScope::AuthorityCapabilities => write!(f, "AuthorityCapabilities"),
-        }
-    }
-}
-
-impl std::fmt::Display for IntentVersion {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            IntentVersion::V0 => write!(f, "V0"),
-        }
-    }
-}
-
-impl std::fmt::Display for IntentAppId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            IntentAppId::Iota => write!(f, "Iota"),
-            IntentAppId::Consensus => write!(f, "Consensus"),
-        }
-    }
-}
-
-impl std::fmt::Display for HashingIntentScope {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            HashingIntentScope::ChildObjectId => write!(f, "ChildObjectId"),
-            HashingIntentScope::RegularObjectId => write!(f, "RegularObjectId"),
-        }
     }
 }
 
