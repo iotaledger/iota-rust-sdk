@@ -85,9 +85,11 @@ impl MoveAuthenticatorBuilder {
                     iota_types::Input::ImmutableOrOwned(obj.object_ref())
                 }
                 InputKind::Shared { object_id, mutable }
-                | InputKind::Input(iota_types::Input::Shared {
-                    object_id, mutable, ..
-                }) => {
+                | InputKind::Input(iota_types::Input::Shared(
+                    iota_types::SharedObjectReference {
+                        object_id, mutable, ..
+                    },
+                )) => {
                     let obj = client
                         .object(object_id, None)
                         .await
@@ -102,11 +104,11 @@ impl MoveAuthenticatorBuilder {
                         )));
                     };
 
-                    iota_types::Input::Shared {
+                    iota_types::Input::Shared(iota_types::SharedObjectReference {
                         object_id,
                         initial_shared_version: *version,
                         mutable,
-                    }
+                    })
                 }
                 InputKind::Receiving(_) | InputKind::Input(iota_types::Input::Receiving(_)) => {
                     return Err(Error::InvalidMoveAuthArg(
