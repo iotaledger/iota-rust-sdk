@@ -39,14 +39,14 @@ jobs:
         run: |
           if [[ "$PACKAGE" == iota-sdk* ]]; then
             PACKAGE_ROOT="crates/$PACKAGE"
+          elif [[ "$PACKAGE" == "iota-csharp-sdk" ]]; then
+            PACKAGE_ROOT="bindings/csharp"
           elif [[ "$PACKAGE" == "iota-go-sdk" ]]; then
             PACKAGE_ROOT="bindings/go"
           elif [[ "$PACKAGE" == "iota-kotlin-sdk" ]]; then
             PACKAGE_ROOT="bindings/kotlin"
           elif [[ "$PACKAGE" == "iota-python-sdk" ]]; then
             PACKAGE_ROOT="bindings/python"
-          elif [[ "$PACKAGE" == "iota-csharp-sdk" ]]; then
-            PACKAGE_ROOT="bindings/csharp"
           elif [[ "$PACKAGE" == "iota-swift-sdk" ]]; then
             PACKAGE_ROOT="bindings/swift"
           fi
