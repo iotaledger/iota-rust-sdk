@@ -43,18 +43,20 @@ impl MoveAuthenticator {
         Self {
             call_args,
             type_args,
-            object_to_authenticate: Input::Shared {
+            object_to_authenticate: Input::Shared(crate::transaction::SharedObjectReference {
                 object_id: object_to_authenticate,
                 initial_shared_version,
                 mutable: false,
-            },
+            }),
         }
     }
 
     pub fn address(&self) -> Address {
         match self.object_to_authenticate {
             Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-            | Input::Shared { object_id, .. } => object_id.into(),
+            | Input::Shared(crate::transaction::SharedObjectReference { object_id, .. }) => {
+                object_id.into()
+            }
             _ => unreachable!(),
         }
     }

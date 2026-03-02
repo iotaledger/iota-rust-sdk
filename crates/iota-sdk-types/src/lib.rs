@@ -173,9 +173,10 @@ pub use transaction::{
     ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
     ExecutionTimeObservation, ExecutionTimeObservationKey, ExecutionTimeObservations, GasPayment,
     GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
-    Publish, RandomnessStateUpdate, SenderSignedTransaction, SignedTransaction, SplitCoins,
-    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
-    TransferObjects, Upgrade, ValidatorExecutionTimeObservation, VersionAssignment,
+    Publish, RandomnessStateUpdate, SenderSignedTransaction, SharedObjectReference,
+    SignedTransaction, SplitCoins, SystemPackage, Transaction, TransactionExpiration,
+    TransactionKind, TransactionV1, TransferObjects, Upgrade, ValidatorExecutionTimeObservation,
+    VersionAssignment,
 };
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,

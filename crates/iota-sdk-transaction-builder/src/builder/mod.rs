@@ -157,10 +157,7 @@ impl TransactionBuildData {
 
     /// Add a pure input using the BCS serialized bytes
     pub fn pure_bytes(&mut self, bytes: Vec<u8>) -> Argument {
-        self.set_input(
-            InputKind::Input(iota_types::Input::Pure { value: bytes }),
-            false,
-        )
+        self.set_input(InputKind::Input(iota_types::Input::Pure(bytes)), false)
     }
 
     /// Add a pure input
@@ -1038,11 +1035,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                                     obj.digest(),
                                 ))
                             }
-                            Owner::Shared(v) => iota_types::Input::Shared {
-                                object_id,
-                                initial_shared_version: *v,
-                                mutable: false,
-                            },
+                            Owner::Shared(v) => {
+                                iota_types::Input::Shared(iota_types::SharedObjectReference {
+                                    object_id,
+                                    initial_shared_version: *v,
+                                    mutable: false,
+                                })
+                            }
                             _ => unimplemented!(
                                 "a new enum variant was added and needs to be handled"
                             ),
@@ -1061,11 +1060,13 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                         .ok_or_else(|| Error::Input(format!("missing object {object_id}")))?;
 
                     let input = match obj.owner() {
-                        Owner::Shared(version) => iota_types::Input::Shared {
-                            object_id,
-                            initial_shared_version: *version,
-                            mutable,
-                        },
+                        Owner::Shared(version) => {
+                            iota_types::Input::Shared(iota_types::SharedObjectReference {
+                                object_id,
+                                initial_shared_version: *version,
+                                mutable,
+                            })
+                        }
                         _ => {
                             return Err(Error::Input(format!(
                                 "object {object_id} was passed as shared, but is not"
