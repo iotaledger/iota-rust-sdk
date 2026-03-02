@@ -56,7 +56,7 @@ impl GraphQLClient {
     /// {DEVNET_HOST}.
     #[uniffi::constructor]
     pub fn new_devnet() -> Self {
-        Self(RwLock::new(iota_sdk::graphql_client::Client::new_testnet()))
+        Self(RwLock::new(iota_sdk::graphql_client::Client::new_devnet()))
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
