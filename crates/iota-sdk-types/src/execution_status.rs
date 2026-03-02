@@ -58,6 +58,21 @@ impl ExecutionStatus {
     }
 }
 
+impl std::fmt::Display for ExecutionStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExecutionStatus::Success => write!(f, "Success"),
+            ExecutionStatus::Failure { error, command } => {
+                write!(f, "Failure: {error}")?;
+                if let Some(cmd) = command {
+                    write!(f, " (command {cmd})")?;
+                }
+                Ok(())
+            }
+        }
+    }
+}
+
 /// An error that can occur during the execution of a transaction
 ///
 /// # BCS
@@ -393,6 +408,22 @@ pub struct MoveLocation {
     pub function_name: Option<Identifier>,
 }
 
+impl std::fmt::Display for MoveLocation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let function_name = crate::display_option(&self.function_name);
+        crate::display_table(
+            f,
+            &[
+                ("Package", &self.package),
+                ("Module", &self.module),
+                ("Function", &self.function),
+                ("Instruction", &self.instruction),
+                ("Function Name", &function_name),
+            ],
+        )
+    }
+}
+
 /// An error with an argument to a command
 ///
 /// # BCS
@@ -600,37 +631,6 @@ pub enum TypeArgumentError {
 
 impl TypeArgumentError {
     crate::def_is!(TypeNotFound, ConstraintNotSatisfied);
-}
-
-impl std::fmt::Display for ExecutionStatus {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ExecutionStatus::Success => write!(f, "Success"),
-            ExecutionStatus::Failure { error, command } => {
-                write!(f, "Failure: {error}")?;
-                if let Some(cmd) = command {
-                    write!(f, " (command {cmd})")?;
-                }
-                Ok(())
-            }
-        }
-    }
-}
-
-impl std::fmt::Display for MoveLocation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let function_name = crate::display_option(&self.function_name);
-        crate::display_table(
-            f,
-            &[
-                ("Package", &self.package),
-                ("Module", &self.module),
-                ("Function", &self.function),
-                ("Instruction", &self.instruction),
-                ("Function Name", &function_name),
-            ],
-        )
-    }
 }
 
 #[cfg(feature = "serde")]
