@@ -40,15 +40,14 @@ impl Indexer {
         let mut consecutive_failures = 0_u32;
 
         if let Some(start) = self.config.start_checkpoint {
-            if start > state.next_checkpoint {
+            if start != state.next_checkpoint && state.next_checkpoint > 0 {
                 warn!(
                     configured_start_checkpoint = start,
                     stored_next_checkpoint = state.next_checkpoint,
-                    skipped_checkpoints = start - state.next_checkpoint,
-                    "configured start_checkpoint skips checkpoints after stored progress"
+                    "configured start_checkpoint differs from stored progress; using configured value"
                 );
             }
-            next_checkpoint = next_checkpoint.max(start);
+            next_checkpoint = start;
         }
 
         info!(
