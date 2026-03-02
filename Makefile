@@ -276,9 +276,16 @@ example:
 
 .PHONY: examples
 examples: ## Run all Rust examples
+	@# NOTE: -maxdepth 1 -type f excludes multi-crate examples like polling-indexer
+	@# that require external services (e.g. PostgreSQL). Run those separately.
 	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
+
+.PHONY: polling-indexer
+polling-indexer: ## Run the polling-indexer example (requires PostgreSQL)
+	@printf "\nRunning polling-indexer example\n"
+	@cargo run -p polling-indexer -- $(ARGS)
 
 .PHONY: rust-release-example
 rust-release-example: ## Run the Rust release example
