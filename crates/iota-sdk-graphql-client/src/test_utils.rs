@@ -15,7 +15,7 @@ pub fn test_client() -> Client {
     match network.as_str() {
         "mainnet" => Client::new_mainnet(),
         "testnet" => Client::new_testnet(),
-        "devnet" => Client::new_testnet(),
+        "devnet" => Client::new_devnet(),
         "local" => Client::new_localnet(),
         _ => Client::new(&network).expect("Invalid network URL: {network}"),
     }
