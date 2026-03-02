@@ -12,9 +12,9 @@ async def main():
     sender = Address.zero()
 
     iota_names_package_address = Address.from_hex(
-        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
+        "0x7aec8176867a0c8d2803d758ebf98226d301ef0f00393879ea718f6bd1554f16")
     iota_names_object_id = ObjectId.from_hex(
-        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
+        "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
     std_address = Address.std()
 
     name = "name.iota"

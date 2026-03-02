@@ -149,7 +149,7 @@ mod tests {
         let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::new_localnet(),
             TESTNET_HOST => FaucetClient::new_testnet(),
-            DEVNET_HOST => FaucetClient::new_devnet(),
+            DEVNET_HOST => FaucetClient::new_testnet(),
             _ => return,
         };
         let key = Ed25519PublicKey::generate(rand::thread_rng());

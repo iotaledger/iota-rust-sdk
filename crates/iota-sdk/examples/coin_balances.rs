@@ -5,7 +5,7 @@ use iota_sdk::graphql_client::{Client, error::Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
     let address = "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f".parse()?;
 
     for coin in client

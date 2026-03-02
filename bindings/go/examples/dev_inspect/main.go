@@ -39,9 +39,9 @@ func main() {
 
 	sender := iota_sdk.AddressZero()
 
-	iotaNamesPackageAddress := addrFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
+	iotaNamesPackageAddress := addrFromHex("0x7aec8176867a0c8d2803d758ebf98226d301ef0f00393879ea718f6bd1554f16")
 
-	iotaNamesObjectId := objIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
+	iotaNamesObjectId := objIdFromHex("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
 
 	stdAddress := iota_sdk.AddressStd()
 

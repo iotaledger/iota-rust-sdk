@@ -8,7 +8,7 @@ import asyncio
 
 async def main():
     client = GraphQlClient.new_devnet()
-    digest = Digest.from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")
+    digest = Digest.from_base58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8")
 
     signed_transaction = await client.transaction(digest)
     print(f"Signed Transaction: `{signed_transaction}`\n")

@@ -10,7 +10,7 @@ struct GetObjectExample {
     let client = GraphQlClient.newDevnet()
 
     let objectId = try ObjectId.fromHex(
-      hex: "0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
+      hex: "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
     guard let obj = try await client.object(objectId: objectId) else {
       throw NSError(

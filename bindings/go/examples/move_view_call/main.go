@@ -81,7 +81,7 @@ func main() {
 	fmt.Println("=== Example 3: MoveViewCall() with typed arguments (auction) ===")
 	fmt.Println()
 
-	objectId, err := iota_sdk.ObjectIdFromHex("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")
+	objectId, err := iota_sdk.ObjectIdFromHex("0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
 	if err != nil {
 		log.Fatalf("Failed to parse object id: %v", err)
 	}
@@ -92,7 +92,7 @@ func main() {
 	}
 
 	auctionResult, err := client.MoveViewCall(
-		"0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+		"0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
 		nil,
 		&auctionArgs,
 	)
@@ -119,12 +119,12 @@ func main() {
 
 	// JSON values are passed as strings (object IDs and strings are valid JSON)
 	auctionJsonArgs := []iota_sdk.Value{
-		"\"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b\"",
+		"\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
 		"\"auc.iota\"",
 	}
 
 	auctionJsonResult, err := client.MoveViewCallJson(
-		"0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+		"0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
 		nil,
 		&auctionJsonArgs,
 	)

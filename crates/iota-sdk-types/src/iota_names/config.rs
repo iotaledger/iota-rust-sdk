@@ -116,9 +116,9 @@ impl IotaNamesConfig {
     // Create a config based on the package and object ids published on devnet.
     pub fn devnet() -> Self {
         const PACKAGE_ADDRESS: &str =
-            "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba";
+            "0x7aec8176867a0c8d2803d758ebf98226d301ef0f00393879ea718f6bd1554f16";
         const OBJECT_ID: &str =
-            "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342";
+            "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec";
         const PAYMENTS_PACKAGE_ADDRESS: &str =
             "0x98b9b33b7c2347a8f4e8b8716fb4c7e6e1af846ec2ea063a47bba81ffe03b440";
         const REGISTRY_ID: &str =

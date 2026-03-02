@@ -9,7 +9,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newDevnet()
         val parentObjectId =
             iota_sdk.Address.fromHex(
-                "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342"
+                "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec"
             )
         val page = client.dynamicFields(parentObjectId)
         println("Page size: ${page.data.size}")

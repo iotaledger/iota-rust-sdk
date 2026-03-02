@@ -37,7 +37,7 @@ impl FaucetClient {
     /// Create a new Faucet client connected to the `devnet` faucet.
     #[uniffi::constructor]
     pub fn new_devnet() -> Self {
-        Self(iota_sdk::graphql_client::faucet::FaucetClient::new_devnet())
+        Self(iota_sdk::graphql_client::faucet::FaucetClient::new_testnet())
     }
 
     /// Create a new Faucet client connected to a `localnet` faucet.

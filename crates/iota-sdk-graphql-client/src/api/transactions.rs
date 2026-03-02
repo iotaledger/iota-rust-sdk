@@ -388,11 +388,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_transaction_data_effects() {
-        let client = Client::new_devnet();
+        let client = Client::new_testnet();
 
         client
             .transaction_data_effects(
-                Digest::from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf").unwrap(),
+                Digest::from_base58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8").unwrap(),
             )
             .await
             .unwrap()
@@ -401,13 +401,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_transactions_data_effects() {
-        let client = Client::new_devnet();
+        let client = Client::new_testnet();
 
         client
             .transactions_data_effects(
                 TransactionsFilter {
                     transaction_ids: Some(vec![
-                        "Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf".to_string(),
+                        "CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8".to_string(),
                     ]),
                     ..Default::default()
                 },

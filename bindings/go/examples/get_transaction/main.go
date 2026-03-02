@@ -12,7 +12,7 @@ import (
 
 func main() {
 	client := iota_sdk.GraphQlClientNewDevnet()
-	digest, err := iota_sdk.DigestFromBase58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")
+	digest, err := iota_sdk.DigestFromBase58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8")
 	if err != nil {
 		log.Fatalf("Failed to parse digest: %v", err)
 	}

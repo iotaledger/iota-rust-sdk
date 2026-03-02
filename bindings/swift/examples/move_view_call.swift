@@ -55,7 +55,7 @@ struct MoveViewCallExample {
     print()
 
     let objectId = try ObjectId.fromHex(
-      hex: "0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")
+      hex: "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
 
     let auctionArgs = [
       MoveViewArg.objectId(value: objectId),
@@ -64,7 +64,7 @@ struct MoveViewCallExample {
 
     let auctionResult = try await client.moveViewCall(
       functionName:
-        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+        "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
       typeArguments: nil, arguments: auctionArgs)
 
     if auctionResult.error != nil {
@@ -84,10 +84,10 @@ struct MoveViewCallExample {
 
     let auctionJsonResult = try await client.moveViewCallJson(
       functionName:
-        "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
+        "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
       typeArguments: nil,
       arguments: [
-        "\"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b\"",
+        "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
         "\"auc.iota\"",
       ])
 
