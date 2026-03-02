@@ -10,10 +10,6 @@ on:
         required: false
         default: true
         type: boolean
-      version:
-        description: "Version of IotaSdk to publish"
-        required: false
-        type: string
 
 permissions:
   contents: read
@@ -123,20 +119,6 @@ jobs:
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           merge-multiple: true
-
-      - name: Set version to input or release tag
-        id: set-version
-        run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-csharp-sdk-v(.*)|\1|p')
-            echo "version=$version" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Update version in project file
-        run: |
-          sed -i "s/<PackageVersion>.*<\/PackageVersion>/<PackageVersion>${{ steps.set-version.outputs.version }}<\/PackageVersion>/" src/IotaSdk/IotaSdk.csproj
 
       - name: Pack NuGet package
         run: dotnet pack src/IotaSdk/IotaSdk.csproj --configuration Release --output ./packages
