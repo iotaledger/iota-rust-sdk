@@ -19,6 +19,12 @@ pub struct Table {
     pub size: u64,
 }
 
+impl std::fmt::Display for Table {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[("ID", &self.id), ("Size", &self.size)])
+    }
+}
+
 #[derive(Debug, Clone)]
 #[cfg_attr(
     feature = "serde",
@@ -34,6 +40,18 @@ pub struct Registry {
     pub reverse_registry: Table,
 }
 
+impl std::fmt::Display for Registry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Registry", &self.registry),
+                ("Reverse Registry", &self.reverse_registry),
+            ],
+        )
+    }
+}
+
 #[derive(Debug)]
 #[cfg_attr(
     feature = "serde",
@@ -46,12 +64,38 @@ pub struct RegistryEntry {
     pub name_record: NameRecord,
 }
 
+impl std::fmt::Display for RegistryEntry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("ID", &self.id),
+                ("Name", &self.name),
+                ("Name Record", &self.name_record),
+            ],
+        )
+    }
+}
+
 #[derive(Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ReverseRegistryEntry {
     pub id: ObjectId,
     pub address: Address,
     pub name: Name,
+}
+
+impl std::fmt::Display for ReverseRegistryEntry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("ID", &self.id),
+                ("Address", &self.address),
+                ("Name", &self.name),
+            ],
+        )
+    }
 }
 
 /// A single record in the registry.
@@ -77,50 +121,6 @@ pub struct NameRecord {
     /// Additional data which may be stored in a record.
     #[cfg_attr(feature = "serde", serde(with = "serde_vecmap"))]
     pub data: HashMap<String, String>,
-}
-
-impl std::fmt::Display for Table {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("ID", &self.id), ("Size", &self.size)])
-    }
-}
-
-impl std::fmt::Display for Registry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Registry", &self.registry),
-                ("Reverse Registry", &self.reverse_registry),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for RegistryEntry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("ID", &self.id),
-                ("Name", &self.name),
-                ("Name Record", &self.name_record),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for ReverseRegistryEntry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("ID", &self.id),
-                ("Address", &self.address),
-                ("Name", &self.name),
-            ],
-        )
-    }
 }
 
 impl std::fmt::Display for NameRecord {

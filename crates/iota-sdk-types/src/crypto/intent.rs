@@ -123,6 +123,19 @@ impl Intent {
     }
 }
 
+impl std::fmt::Display for Intent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Scope", &self.scope),
+                ("Version", &self.version),
+                ("App ID", &self.app_id),
+            ],
+        )
+    }
+}
+
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
     type Err = IntentError;
@@ -291,6 +304,12 @@ impl<T> IntentMessage<T> {
     }
 }
 
+impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(f, &[("Intent", &self.intent), ("Value", &self.value)])
+    }
+}
+
 /// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`. See
@@ -311,25 +330,6 @@ pub enum HashingIntentScope {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct PersonalMessage<'a>(pub std::borrow::Cow<'a, [u8]>);
-
-impl std::fmt::Display for Intent {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Scope", &self.scope),
-                ("Version", &self.version),
-                ("App ID", &self.app_id),
-            ],
-        )
-    }
-}
-
-impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("Intent", &self.intent), ("Value", &self.value)])
-    }
-}
 
 impl std::fmt::Display for PersonalMessage<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

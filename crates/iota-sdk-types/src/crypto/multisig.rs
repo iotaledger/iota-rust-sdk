@@ -130,6 +130,15 @@ impl MultisigMember {
     }
 }
 
+impl std::fmt::Display for MultisigMember {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[("Public Key", &self.public_key), ("Weight", &self.weight)],
+        )
+    }
+}
+
 /// A multisig committee
 ///
 /// A `MultisigCommittee` is a set of members who collectively control a single
@@ -218,6 +227,18 @@ impl MultisigCommittee {
                     .skip(i + 1)
                     .any(|m| member.public_key == m.public_key)
             })
+    }
+}
+
+impl std::fmt::Display for MultisigCommittee {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Members", &crate::display_vec(&self.members)),
+                ("Threshold", &self.threshold),
+            ],
+        )
     }
 }
 
@@ -310,6 +331,19 @@ impl PartialEq for MultisigAggregatedSignature {
 
 impl Eq for MultisigAggregatedSignature {}
 
+impl std::fmt::Display for MultisigAggregatedSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[
+                ("Committee", &self.committee),
+                ("Signatures", &crate::display_vec(&self.signatures)),
+                ("Bitmap", &self.bitmap),
+            ],
+        )
+    }
+}
+
 /// A signature from a member of a multisig committee.
 ///
 /// # BCS
@@ -348,40 +382,6 @@ impl MultisigMemberSignature {
         Secp256r1(Secp256r1Signature),
         ZkLogin as zklogin(Box<ZkLoginAuthenticator>)
     );
-}
-
-impl std::fmt::Display for MultisigMember {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Public Key", &self.public_key), ("Weight", &self.weight)],
-        )
-    }
-}
-
-impl std::fmt::Display for MultisigCommittee {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Members", &crate::display_vec(&self.members)),
-                ("Threshold", &self.threshold),
-            ],
-        )
-    }
-}
-
-impl std::fmt::Display for MultisigAggregatedSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Committee", &self.committee),
-                ("Signatures", &crate::display_vec(&self.signatures)),
-                ("Bitmap", &self.bitmap),
-            ],
-        )
-    }
 }
 
 #[cfg(feature = "serde")]

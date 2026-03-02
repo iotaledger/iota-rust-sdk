@@ -19,6 +19,16 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransactionEvents(pub Vec<Event>);
 
+impl std::fmt::Display for TransactionEvents {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "TransactionEvents ({} events):", self.0.len())?;
+        for (i, event) in self.0.iter().enumerate() {
+            write!(f, "\n--- Event {} ---\n{event}", i + 1)?;
+        }
+        Ok(())
+    }
+}
+
 /// An event
 ///
 /// # BCS
@@ -56,16 +66,6 @@ pub struct Event {
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
     pub contents: Vec<u8>,
-}
-
-impl std::fmt::Display for TransactionEvents {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "TransactionEvents ({} events):", self.0.len())?;
-        for (i, event) in self.0.iter().enumerate() {
-            write!(f, "\n--- Event {} ---\n{event}", i + 1)?;
-        }
-        Ok(())
-    }
 }
 
 impl std::fmt::Display for Event {
