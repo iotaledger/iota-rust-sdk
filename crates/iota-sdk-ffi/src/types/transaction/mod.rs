@@ -335,7 +335,7 @@ impl Input {
     /// not contain structs or objects.
     #[uniffi::constructor]
     pub fn new_pure(value: Vec<u8>) -> Self {
-        Self(iota_sdk::types::Input::Pure { value })
+        Self(iota_sdk::types::Input::Pure(value))
     }
 
     /// A move object that is either immutable or address owned
@@ -351,11 +351,13 @@ impl Input {
         initial_shared_version: &Version,
         mutable: bool,
     ) -> Self {
-        Self(iota_sdk::types::Input::Shared {
-            object_id: object_id.0,
-            initial_shared_version: **initial_shared_version,
-            mutable,
-        })
+        Self(iota_sdk::types::Input::Shared(
+            iota_sdk::types::SharedObjectReference {
+                object_id: object_id.0,
+                initial_shared_version: **initial_shared_version,
+                mutable,
+            },
+        ))
     }
 
     #[uniffi::constructor]

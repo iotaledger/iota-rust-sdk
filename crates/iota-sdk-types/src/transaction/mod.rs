@@ -987,11 +987,6 @@ pub struct ProgrammableTransaction {
 /// input-receiving             = %x04 object-ref
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(rename_all = "snake_case")
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum Input {
@@ -999,34 +994,129 @@ pub enum Input {
     ///
     /// For normal operations this is required to be a move primitive type and
     /// not contain structs or objects.
-    Pure {
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base64"))]
-        value: Vec<u8>,
-    },
+    Pure(Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
     /// A move object whose owner is "Shared"
-    #[cfg_attr(feature = "schemars", schemars(rename_all = "camelCase"))]
-    Shared {
-        object_id: ObjectId,
-        #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
-        initial_shared_version: Version,
-        /// Controls whether the caller asks for a mutable reference to the
-        /// shared object.
-        mutable: bool,
-    },
+    Shared(SharedObjectReference),
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
 }
 
 impl Input {
-    crate::def_is!(Pure, Shared);
+    /// Shared `Input` for the IOTA system state object.
+    pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
+
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_IMMUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: false,
+    });
+
+    /// Shared `Input` for the clock object.
+    pub const CLOCK_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::CLOCK,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
+
+    /// Shared `Input` for the authenticator state object.
+    pub const AUTHENTICATOR_STATE_MUTABLE: Self = Self::Shared(SharedObjectReference {
+        object_id: ObjectId::AUTHENTICATOR_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    });
 
     crate::def_is_as_into_opt!(
+        Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
+        Shared(SharedObjectReference),
         Receiving(ObjectReference)
     );
+
+    /// Create a `Pure` input from a BCS-serializable value.
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn pure<T: serde::Serialize>(value: &T) -> Self {
+        Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
+    }
+
+    /// Returns the object id referenced by this input, if any.
+    ///
+    /// Returns `None` for `Pure` inputs.
+    pub fn object_id_opt(&self) -> Option<&ObjectId> {
+        match self {
+            Self::Pure { .. } => None,
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
+            Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
+        }
+    }
+
+    /// Returns `true` if this input references a mutable shared object.
+    pub fn is_mutable_shared(&self) -> bool {
+        matches!(
+            self,
+            Self::Shared(SharedObjectReference { mutable: true, .. })
+        )
+    }
+
+    /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
+    /// `Receiving` input.
+    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
+        match self {
+            Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
+            _ => None,
+        }
+    }
+
+    /// Returns the pure value bytes if this is a `Pure` input.
+    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
+        match self {
+            Self::Pure(value) => Some(value),
+            _ => None,
+        }
+    }
+}
+
+/// A shared object input to a programmable transaction
+#[derive(Copy, Clone, Hash, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct SharedObjectReference {
+    pub object_id: ObjectId,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    pub initial_shared_version: Version,
+    /// Controls whether the caller asks for a mutable reference to the
+    /// shared object.
+    pub mutable: bool,
+}
+
+impl SharedObjectReference {
+    pub const IOTA_SYSTEM_STATE_OBJ_MUTABLE: Self = Self {
+        object_id: ObjectId::SYSTEM_STATE,
+        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        mutable: true,
+    };
+
+    /// Creates a new shared object reference from the object's id, initial
+    /// shared version, and mutability.
+    pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
+        Self {
+            object_id,
+            initial_shared_version,
+            mutable,
+        }
+    }
 }
 
 /// A single command in a programmable transaction.
