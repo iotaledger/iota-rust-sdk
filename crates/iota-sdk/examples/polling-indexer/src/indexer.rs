@@ -117,7 +117,20 @@ impl Indexer {
         }
     }
 
+    async fn checkpoint_exists(&self, sequence: u64) -> anyhow::Result<bool> {
+        let row = sqlx::query("SELECT 1 FROM checkpoints WHERE sequence_number = $1")
+            .bind(sequence as i64)
+            .fetch_optional(&self.pool)
+            .await?;
+        Ok(row.is_some())
+    }
+
     async fn process_checkpoint(&self, sequence: u64) -> anyhow::Result<bool> {
+        if self.checkpoint_exists(sequence).await? {
+            debug!(sequence, "checkpoint already indexed; skipping");
+            return Ok(true);
+        }
+
         let Some(checkpoint) = self.client.checkpoint(None, Some(sequence)).await? else {
             return Ok(false);
         };
