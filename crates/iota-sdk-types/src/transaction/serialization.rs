@@ -976,7 +976,6 @@ mod transaction_expiration {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
-    #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
         /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
