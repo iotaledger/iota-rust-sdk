@@ -704,10 +704,10 @@ impl<C, L> TransactionBuilder<C, L> {
     /// # async fn main() -> eyre::Result<()> {
     /// let client = Client::new_testnet();
     /// let sender =
-    ///     Address::from_hex("0x6f0202b12cd398166bdd3716c9aa3f0b6218ba125491f7ea2bc660fdd5e57ff8")?;
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
     /// // This is a 0x3::staking_pool::StakedIota owned by the sender
     /// let staked_iota =
-    ///     ObjectId::from_hex("0x00030af99878926cd11f8bdf4d2f67c4aa753a4afc249d776c8ed2cc88d7b8d5")?;
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// builder.unstake(staked_iota);
