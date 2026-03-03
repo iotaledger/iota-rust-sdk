@@ -19,10 +19,6 @@ use crate::{
     db::progress,
 };
 
-/// Default number of checkpoints to cover in a single batch query when filters
-/// are active. Large ranges let the GraphQL server do the heavy lifting.
-const DEFAULT_BATCH_RANGE: u64 = 100_000;
-
 pub struct Indexer {
     client: Client,
     pool: PgPool,
@@ -91,7 +87,7 @@ impl Indexer {
                 continue;
             }
 
-            let range_end = (range_start + DEFAULT_BATCH_RANGE).min(global_upper);
+            let range_end = (range_start + self.config.batch_range).min(global_upper);
 
             match self.process_batch(range_start, range_end).await {
                 Ok(()) => {
@@ -118,8 +114,15 @@ impl Indexer {
 
     /// Query transactions across `[range_start, range_end]` in one paginated
     /// stream, storing matching transactions and their events.
+    ///
+    /// When event filters are active but no transaction filters are set, a
+    /// transaction is only stored if it has at least one matching event. This
+    /// avoids storing unrelated system transactions (e.g. consensus commits).
     async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
         info!(range_start, range_end, "processing batch");
+
+        let require_matching_events =
+            self.config.filters.has_event_filters() && !self.config.filters.has_tx_filters();
 
         let tx_filter = TransactionsFilter {
             function: self.config.filters.tx_function.clone(),
@@ -153,6 +156,13 @@ impl Indexer {
                 }
 
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
+
+                let event_count = self.store_events_for_transaction(None, &tx_digest).await?;
+
+                if require_matching_events && event_count == 0 {
+                    continue;
+                }
+
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
                 let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
@@ -173,7 +183,6 @@ impl Indexer {
                 .execute(&self.pool)
                 .await?;
 
-                self.store_events_for_transaction(None, &tx_digest).await?;
                 tx_count += 1;
             }
 
@@ -387,12 +396,15 @@ impl Indexer {
     // Shared: event storage
     // ------------------------------------------------------------------
 
+    /// Store events for a transaction. Returns the number of matching events
+    /// stored.
     async fn store_events_for_transaction(
         &self,
         checkpoint: Option<u64>,
         transaction_digest: &str,
-    ) -> anyhow::Result<()> {
+    ) -> anyhow::Result<u64> {
         let mut cursor: Option<String> = None;
+        let mut stored = 0_u64;
 
         loop {
             let event_page = self
@@ -455,6 +467,8 @@ impl Indexer {
                 .bind(raw_json)
                 .execute(&self.pool)
                 .await?;
+
+                stored += 1;
             }
 
             if !event_page.page_info.has_next_page {
@@ -463,7 +477,7 @@ impl Indexer {
             cursor = event_page.page_info.end_cursor.clone();
         }
 
-        Ok(())
+        Ok(stored)
     }
 }
 

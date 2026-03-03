@@ -11,6 +11,7 @@ use crate::cli::{Cli, Network};
 const DEFAULT_DB_URL: &str = "postgres://localhost:5432/polling_indexer";
 const DEFAULT_PROGRESS_KEY: &str = "polling-indexer";
 const DEFAULT_PAGE_SIZE: i32 = 50;
+const DEFAULT_BATCH_RANGE: u64 = 100_000;
 const DEFAULT_POLL_INTERVAL_MS: u64 = 2000;
 const DEFAULT_INCLUDE_FAILED_TXS: bool = true;
 
@@ -36,6 +37,8 @@ struct FileConfig {
     end_checkpoint: Option<u64>,
     /// GraphQL page size per request (must be > 0).
     page_size: Option<i32>,
+    /// Number of checkpoints per batch in filtered mode.
+    batch_range: Option<u64>,
     /// Polling interval in milliseconds when waiting for new checkpoints.
     poll_interval_ms: Option<u64>,
     /// Whether failed transactions should be indexed.
@@ -73,9 +76,15 @@ impl FilterConfig {
     /// batch query mode which queries across large checkpoint ranges instead
     /// of processing checkpoints one by one.
     pub fn has_filters(&self) -> bool {
-        self.tx_function.is_some()
-            || self.tx_sender.is_some()
-            || self.event_type.is_some()
+        self.has_tx_filters() || self.has_event_filters()
+    }
+
+    pub fn has_tx_filters(&self) -> bool {
+        self.tx_function.is_some() || self.tx_sender.is_some()
+    }
+
+    pub fn has_event_filters(&self) -> bool {
+        self.event_type.is_some()
             || self.event_sending_module.is_some()
             || self.event_package_id.is_some()
     }
@@ -89,6 +98,7 @@ pub struct AppConfig {
     pub start_checkpoint: Option<u64>,
     pub end_checkpoint: Option<u64>,
     pub page_size: i32,
+    pub batch_range: u64,
     pub poll_interval: Duration,
     pub filters: FilterConfig,
 }
@@ -142,6 +152,11 @@ impl TryFrom<Cli> for AppConfig {
             .or(file_config.graphql_url)
             .unwrap_or_else(|| network.graphql_url().to_owned());
 
+        let batch_range = value
+            .batch_range
+            .or(file_config.batch_range)
+            .unwrap_or(DEFAULT_BATCH_RANGE);
+
         let poll_interval_ms = value
             .poll_interval_ms
             .or(file_config.poll_interval_ms)
@@ -160,6 +175,7 @@ impl TryFrom<Cli> for AppConfig {
             start_checkpoint,
             end_checkpoint,
             page_size,
+            batch_range,
             poll_interval: Duration::from_millis(poll_interval_ms),
             filters: FilterConfig {
                 include_failed_txs: value

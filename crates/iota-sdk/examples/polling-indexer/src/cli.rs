@@ -47,6 +47,12 @@ pub struct Cli {
     #[arg(long, help = "Page size for GraphQL polling (default: 50)")]
     pub page_size: Option<i32>,
 
+    #[arg(
+        long,
+        help = "Number of checkpoints per batch in filtered mode (default: 100000)"
+    )]
+    pub batch_range: Option<u64>,
+
     #[arg(long, help = "Polling interval in milliseconds (default: 2000)")]
     pub poll_interval_ms: Option<u64>,
 
