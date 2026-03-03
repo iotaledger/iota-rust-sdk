@@ -3,9 +3,9 @@
 
 // TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
 
+// import iota_sdk.ObjectId
 import iota_sdk.GraphQlClient
 import iota_sdk.MoveViewArg
-import iota_sdk.ObjectId
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -57,13 +57,15 @@ fun main() = runBlocking {
         // println()
 
         // val objectId =
-        //     ObjectId.fromHex("0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
+        //
+        // ObjectId.fromHex("0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
 
         // val auctionArgs = listOf(MoveViewArg.objectId(objectId), MoveViewArg.string("auc.iota"))
 
         // val auctionResult =
         //     client.moveViewCall(
-        //         "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+        //
+        // "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
         //         null,
         //         auctionArgs,
         //     )
@@ -85,7 +87,8 @@ fun main() = runBlocking {
 
         // val auctionJsonResult =
         //     client.moveViewCallJson(
-        //         "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+        //
+        // "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
         //         null,
         //         listOf(
         //             "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",

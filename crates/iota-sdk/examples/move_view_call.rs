@@ -3,11 +3,11 @@
 
 // TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
 
-use std::str::FromStr;
+// use std::str::FromStr;
 
 use iota_sdk::{
     graphql_client::{Client, error::Result},
-    types::ObjectId,
+    // types::ObjectId,
 };
 
 #[tokio::main]
