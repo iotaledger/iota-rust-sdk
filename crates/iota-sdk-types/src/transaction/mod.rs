@@ -257,7 +257,7 @@ impl TransactionKind {
 /// eoe-bridge-committee-init       = %x06 u64
 /// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
@@ -283,7 +283,133 @@ pub enum EndOfEpochTransactionKind {
 impl EndOfEpochTransactionKind {
     crate::def_is!(AuthenticatorStateCreate);
 
-    crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
+    crate::def_is_as_into_opt!(
+        ChangeEpoch,
+        ChangeEpochV2,
+        ChangeEpochV3,
+        ChangeEpochV4,
+        AuthenticatorStateExpire
+    );
+
+    pub fn new_authenticator_state_create() -> Self {
+        Self::AuthenticatorStateCreate
+    }
+
+    pub fn new_authenticator_state_expire(
+        min_epoch: u64,
+        authenticator_obj_initial_shared_version: Version,
+    ) -> Self {
+        Self::AuthenticatorStateExpire(AuthenticatorStateExpire {
+            min_epoch,
+            authenticator_obj_initial_shared_version,
+        })
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_change_epoch(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+    ) -> Self {
+        Self::ChangeEpoch(ChangeEpoch {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+        })
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v2(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+    ) -> Self {
+        Self::ChangeEpochV2(ChangeEpochV2 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+        })
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v3(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+        eligible_active_validators: Vec<u64>,
+    ) -> Self {
+        Self::ChangeEpochV3(ChangeEpochV3 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+            eligible_active_validators,
+        })
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_change_epoch_v4(
+        next_epoch: EpochId,
+        protocol_version: ProtocolVersion,
+        storage_charge: u64,
+        computation_charge: u64,
+        computation_charge_burned: u64,
+        storage_rebate: u64,
+        non_refundable_storage_fee: u64,
+        epoch_start_timestamp_ms: u64,
+        system_packages: Vec<SystemPackage>,
+        eligible_active_validators: Vec<u64>,
+        scores: Vec<u64>,
+        adjust_rewards_by_score: bool,
+    ) -> Self {
+        Self::ChangeEpochV4(ChangeEpochV4 {
+            epoch: next_epoch,
+            protocol_version,
+            storage_charge,
+            computation_charge,
+            computation_charge_burned,
+            storage_rebate,
+            non_refundable_storage_fee,
+            epoch_start_timestamp_ms,
+            system_packages,
+            eligible_active_validators,
+            scores,
+            adjust_rewards_by_score,
+        })
+    }
 }
 
 /// Set of Execution Time Observations from the committee.
@@ -410,7 +536,7 @@ impl ExecutionTimeObservationKey {
 /// ```text
 /// authenticator-state-expire = u64 u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -678,7 +804,7 @@ pub struct ConsensusCommitPrologueV1 {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -742,7 +868,7 @@ pub struct ChangeEpoch {
 ///                u64  ; epoch start timestamp
 ///                (vector system-package)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -793,7 +919,7 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -847,7 +973,7 @@ pub struct ChangeEpochV3 {
     pub eligible_active_validators: Vec<u64>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -906,7 +1032,7 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
