@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct GetObjectExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let objectId = try ObjectId.fromHex(
       hex: "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")

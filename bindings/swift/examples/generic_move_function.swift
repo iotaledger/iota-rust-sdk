@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct GenericMoveFunctionExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let sender = try Address.fromHex(
       hex: "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")

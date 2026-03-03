@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     # ===========================================================================
     # Example 1: Using move_view_call() with typed arguments (blake2b256)

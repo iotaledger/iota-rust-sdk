@@ -19,7 +19,7 @@ func objIdFromHex(hex string) *iota_sdk.ObjectId {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	objectID := objIdFromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 

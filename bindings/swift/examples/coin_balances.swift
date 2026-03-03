@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct CoinBalancesExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let address = try Address.fromHex(
       hex: "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f")

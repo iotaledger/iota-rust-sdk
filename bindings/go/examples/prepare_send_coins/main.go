@@ -26,14 +26,14 @@ func addrFromHex(hex string) *iota_sdk.Address {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	fromAddress := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
 	// This is a coin of type
 	// 0xfce9c14e5f0c2b65787debb8145a33a4a2fc83152e8939000b862e174bc86bb8::cert::CERT
-	coinObjId := objIdFromHex("0x139302eb86aab7558905e4be035dcf2845cfbb2bcfb8348e81849e888ad5acf3")
+	coinObjId := objIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")
 	amount := iota_sdk.PtbArgumentU64(50000000000)
 
 	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)

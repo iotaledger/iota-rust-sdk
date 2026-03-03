@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct DevInspectExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let sender = Address.zero()
 

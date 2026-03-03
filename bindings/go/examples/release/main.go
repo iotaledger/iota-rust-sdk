@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/iotaledger/iota-sdk-go"
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	chainID, err := client.ChainId()
 	if err.(*iota_sdk.SdkFfiError) != nil {

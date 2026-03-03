@@ -8,7 +8,7 @@ import json
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     query_epoch_data_str = """
     query MyQuery($id: UInt53) {

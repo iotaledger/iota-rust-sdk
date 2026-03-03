@@ -26,7 +26,7 @@ func addrFromHex(hex string) *iota_sdk.Address {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	fromAddress := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
@@ -35,7 +35,7 @@ func main() {
 	objsToTransfer := []*iota_sdk.PtbArgument{
 		objIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"),
 		objIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"),
-		objIdFromHex("0x139302eb86aab7558905e4be035dcf2845cfbb2bcfb8348e81849e888ad5acf3"),
+		objIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"),
 	}
 
 	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)

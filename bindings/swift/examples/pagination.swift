@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct PaginationExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
     let address = try Address.fromHex(
       hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 

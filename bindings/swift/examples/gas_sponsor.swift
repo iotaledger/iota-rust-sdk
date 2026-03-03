@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct GasSponsorExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let sender = try Address.fromHex(
       hex: "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
