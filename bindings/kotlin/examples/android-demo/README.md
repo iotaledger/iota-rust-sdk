@@ -82,7 +82,7 @@ If you want to test with locally built `.so` files:
 
 ## What It Does
 
-The app displays a button that, when pressed, calls `GraphQlClient.newDevnet().chainId()` and shows the result (or error) on screen.
+The app displays a button that, when pressed, calls `GraphQlClient.newTestnet().chainId()` and shows the result (or error) on screen.
 
 ### Expected Result
 

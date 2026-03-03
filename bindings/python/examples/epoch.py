@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     # Get current epoch
     current_epoch = await client.epoch()

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
 	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)

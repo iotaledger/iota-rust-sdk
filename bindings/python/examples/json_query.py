@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     query_str = """
         query getLatestIotaSystemState {

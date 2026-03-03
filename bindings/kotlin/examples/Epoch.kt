@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
+        val client = GraphQlClient.newTestnet()
 
         // Get current epoch
         val currentEpoch = client.epoch(null)
