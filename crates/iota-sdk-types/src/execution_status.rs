@@ -420,6 +420,7 @@ impl std::fmt::Display for MoveLocation {
                 ("Instruction", &self.instruction),
                 ("Function Name", &function_name),
             ],
+            true,
         )
     }
 }

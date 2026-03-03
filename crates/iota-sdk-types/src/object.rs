@@ -79,8 +79,8 @@ impl ObjectReference {
     }
 }
 
-impl std::fmt::Display for ObjectReference {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ObjectReference {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -88,6 +88,7 @@ impl std::fmt::Display for ObjectReference {
                 ("Version", &self.version),
                 ("Digest", &self.digest),
             ],
+            standalone,
         )
     }
 }
@@ -248,8 +249,8 @@ pub struct MovePackage {
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
-impl std::fmt::Display for MovePackage {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for MovePackage {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let modules_display = format!("[{} modules]", self.modules.len());
         crate::display_table(
             f,
@@ -258,6 +259,7 @@ impl std::fmt::Display for MovePackage {
                 ("Version", &self.version),
                 ("Modules", &modules_display),
             ],
+            standalone,
         )
     }
 }
@@ -285,8 +287,8 @@ pub struct TypeOrigin {
     pub package: ObjectId,
 }
 
-impl std::fmt::Display for TypeOrigin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for TypeOrigin {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -294,6 +296,7 @@ impl std::fmt::Display for TypeOrigin {
                 ("Struct", &self.struct_name),
                 ("Package", &self.package),
             ],
+            standalone,
         )
     }
 }
@@ -324,14 +327,15 @@ pub struct UpgradeInfo {
     pub upgraded_version: Version,
 }
 
-impl std::fmt::Display for UpgradeInfo {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for UpgradeInfo {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
                 ("Upgraded ID", &self.upgraded_id),
                 ("Upgraded Version", &self.upgraded_version),
             ],
+            standalone,
         )
     }
 }
@@ -383,8 +387,8 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
-impl std::fmt::Display for MoveStruct {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for MoveStruct {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let contents_hex = hex::encode(&self.contents);
         crate::display_table(
             f,
@@ -393,6 +397,7 @@ impl std::fmt::Display for MoveStruct {
                 ("Version", &self.version),
                 ("Contents", &contents_hex),
             ],
+            standalone,
         )
     }
 }
@@ -553,8 +558,8 @@ impl Object {
     }
 }
 
-impl std::fmt::Display for Object {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Object {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let object_type = self.object_type();
         crate::display_table(
             f,
@@ -566,6 +571,7 @@ impl std::fmt::Display for Object {
                 ("Previous Tx", &self.previous_transaction),
                 ("Storage Rebate", &self.storage_rebate),
             ],
+            standalone,
         )
     }
 }
@@ -634,8 +640,8 @@ impl GenesisObject {
     }
 }
 
-impl std::fmt::Display for GenesisObject {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for GenesisObject {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let object_type = self.object_type();
         crate::display_table(
             f,
@@ -645,6 +651,7 @@ impl std::fmt::Display for GenesisObject {
                 ("Owner", &self.owner),
                 ("Type", &object_type),
             ],
+            standalone,
         )
     }
 }

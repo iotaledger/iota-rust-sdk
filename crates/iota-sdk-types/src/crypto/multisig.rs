@@ -135,6 +135,7 @@ impl std::fmt::Display for MultisigMember {
         crate::display_table(
             f,
             &[("Public Key", &self.public_key), ("Weight", &self.weight)],
+            true,
         )
     }
 }
@@ -238,6 +239,7 @@ impl std::fmt::Display for MultisigCommittee {
                 ("Members", &crate::display_vec(&self.members)),
                 ("Threshold", &self.threshold),
             ],
+            true,
         )
     }
 }
@@ -340,6 +342,7 @@ impl std::fmt::Display for MultisigAggregatedSignature {
                 ("Signatures", &crate::display_vec(&self.signatures)),
                 ("Bitmap", &self.bitmap),
             ],
+            true,
         )
     }
 }

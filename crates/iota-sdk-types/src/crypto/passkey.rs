@@ -101,6 +101,7 @@ impl std::fmt::Display for PasskeyAuthenticator {
                 ("Public Key", &self.public_key),
                 ("Signature", &self.signature),
             ],
+            true,
         )
     }
 }

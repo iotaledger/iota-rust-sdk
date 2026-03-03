@@ -70,16 +70,18 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
-impl std::fmt::Display for TransactionV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for TransactionV1 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let gas_payment = crate::Nested(&self.gas_payment).to_string();
         crate::display_table(
             f,
             &[
                 ("Kind", &self.kind),
                 ("Sender", &self.sender),
-                ("Gas Payment", &self.gas_payment),
+                ("Gas Payment", &gas_payment),
                 ("Expiration", &self.expiration),
             ],
+            standalone,
         )
     }
 }
@@ -114,6 +116,7 @@ impl std::fmt::Display for SignedTransaction {
         crate::display_table(
             f,
             &[("Transaction", &self.transaction), ("Signatures", &sigs)],
+            true,
         )
     }
 }
@@ -188,9 +191,9 @@ pub struct GasPayment {
     pub budget: u64,
 }
 
-impl std::fmt::Display for GasPayment {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let objects = crate::display_vec(&self.objects);
+impl crate::TableDisplay for GasPayment {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let objects = crate::display_vec_compact(&self.objects);
         crate::display_table(
             f,
             &[
@@ -199,6 +202,7 @@ impl std::fmt::Display for GasPayment {
                 ("Price", &self.price),
                 ("Budget", &self.budget),
             ],
+            standalone,
         )
     }
 }
@@ -242,8 +246,8 @@ pub struct RandomnessStateUpdate {
     pub randomness_obj_initial_shared_version: u64,
 }
 
-impl std::fmt::Display for RandomnessStateUpdate {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for RandomnessStateUpdate {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let bytes_size = self.random_bytes.len();
         crate::display_table(
             f,
@@ -256,6 +260,7 @@ impl std::fmt::Display for RandomnessStateUpdate {
                     &self.randomness_obj_initial_shared_version,
                 ),
             ],
+            standalone,
         )
     }
 }
@@ -445,10 +450,10 @@ pub struct ExecutionTimeObservation {
     pub observations: Vec<ValidatorExecutionTimeObservation>,
 }
 
-impl std::fmt::Display for ExecutionTimeObservation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let obs = crate::display_vec(&self.observations);
-        crate::display_table(f, &[("Key", &self.key), ("Observations", &obs)])
+impl crate::TableDisplay for ExecutionTimeObservation {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let obs = crate::display_vec_compact(&self.observations);
+        crate::display_table(f, &[("Key", &self.key), ("Observations", &obs)], standalone)
     }
 }
 
@@ -472,12 +477,13 @@ pub struct ValidatorExecutionTimeObservation {
     pub duration: std::time::Duration,
 }
 
-impl std::fmt::Display for ValidatorExecutionTimeObservation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ValidatorExecutionTimeObservation {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let duration_str = format!("{:?}", self.duration);
         crate::display_table(
             f,
             &[("Validator", &self.validator), ("Duration", &duration_str)],
+            standalone,
         )
     }
 }
@@ -594,8 +600,8 @@ pub struct AuthenticatorStateExpire {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
-impl std::fmt::Display for AuthenticatorStateExpire {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for AuthenticatorStateExpire {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -605,6 +611,7 @@ impl std::fmt::Display for AuthenticatorStateExpire {
                     &self.authenticator_obj_initial_shared_version,
                 ),
             ],
+            standalone,
         )
     }
 }
@@ -646,9 +653,9 @@ pub struct AuthenticatorStateUpdateV1 {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
-impl std::fmt::Display for AuthenticatorStateUpdateV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let jwks_count = crate::display_vec(&self.new_active_jwks);
+impl crate::TableDisplay for AuthenticatorStateUpdateV1 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let jwks_count = crate::display_vec_compact(&self.new_active_jwks);
         crate::display_table(
             f,
             &[
@@ -660,6 +667,7 @@ impl std::fmt::Display for AuthenticatorStateUpdateV1 {
                     &self.authenticator_obj_initial_shared_version,
                 ),
             ],
+            standalone,
         )
     }
 }
@@ -692,8 +700,8 @@ pub struct ActiveJwk {
     pub epoch: u64,
 }
 
-impl std::fmt::Display for ActiveJwk {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ActiveJwk {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -701,6 +709,7 @@ impl std::fmt::Display for ActiveJwk {
                 ("JWK", &self.jwk),
                 ("Epoch", &self.epoch),
             ],
+            standalone,
         )
     }
 }
@@ -768,15 +777,16 @@ pub struct CancelledTransaction {
     pub version_assignments: Vec<VersionAssignment>,
 }
 
-impl std::fmt::Display for CancelledTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let assignments = crate::display_vec(&self.version_assignments);
+impl crate::TableDisplay for CancelledTransaction {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let assignments = crate::display_vec_compact(&self.version_assignments);
         crate::display_table(
             f,
             &[
                 ("Digest", &self.digest),
                 ("Version Assignments", &assignments),
             ],
+            standalone,
         )
     }
 }
@@ -805,11 +815,12 @@ pub struct VersionAssignment {
     pub version: Version,
 }
 
-impl std::fmt::Display for VersionAssignment {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for VersionAssignment {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[("Object ID", &self.object_id), ("Version", &self.version)],
+            standalone,
         )
     }
 }
@@ -859,8 +870,8 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
 }
 
-impl std::fmt::Display for ConsensusCommitPrologueV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ConsensusCommitPrologueV1 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let sub_dag = crate::display_option(&self.sub_dag_index);
         crate::display_table(
             f,
@@ -871,6 +882,7 @@ impl std::fmt::Display for ConsensusCommitPrologueV1 {
                 ("Commit Timestamp Ms", &self.commit_timestamp_ms),
                 ("Consensus Commit Digest", &self.consensus_commit_digest),
             ],
+            standalone,
         )
     }
 }
@@ -938,9 +950,9 @@ pub struct ChangeEpoch {
     pub system_packages: Vec<SystemPackage>,
 }
 
-impl std::fmt::Display for ChangeEpoch {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec(&self.system_packages);
+impl crate::TableDisplay for ChangeEpoch {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec_compact(&self.system_packages);
         crate::display_table(
             f,
             &[
@@ -956,6 +968,7 @@ impl std::fmt::Display for ChangeEpoch {
                 ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
                 ("System Packages", &pkgs_count),
             ],
+            standalone,
         )
     }
 }
@@ -1028,9 +1041,9 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
-impl std::fmt::Display for ChangeEpochV2 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec(&self.system_packages);
+impl crate::TableDisplay for ChangeEpochV2 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec_compact(&self.system_packages);
         crate::display_table(
             f,
             &[
@@ -1047,6 +1060,7 @@ impl std::fmt::Display for ChangeEpochV2 {
                 ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
                 ("System Packages", &pkgs_count),
             ],
+            standalone,
         )
     }
 }
@@ -1105,9 +1119,9 @@ pub struct ChangeEpochV3 {
     pub eligible_active_validators: Vec<u64>,
 }
 
-impl std::fmt::Display for ChangeEpochV3 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec(&self.system_packages);
+impl crate::TableDisplay for ChangeEpochV3 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec_compact(&self.system_packages);
         let validators_count = crate::display_vec(&self.eligible_active_validators);
         crate::display_table(
             f,
@@ -1126,6 +1140,7 @@ impl std::fmt::Display for ChangeEpochV3 {
                 ("System Packages", &pkgs_count),
                 ("Eligible Active Validators", &validators_count),
             ],
+            standalone,
         )
     }
 }
@@ -1189,9 +1204,9 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-impl std::fmt::Display for ChangeEpochV4 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec(&self.system_packages);
+impl crate::TableDisplay for ChangeEpochV4 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let pkgs_count = crate::display_vec_compact(&self.system_packages);
         let validators_count = crate::display_vec(&self.eligible_active_validators);
         let scores_count = crate::display_vec(&self.scores);
         crate::display_table(
@@ -1213,6 +1228,7 @@ impl std::fmt::Display for ChangeEpochV4 {
                 ("Scores", &scores_count),
                 ("Adjust Rewards By Score", &self.adjust_rewards_by_score),
             ],
+            standalone,
         )
     }
 }
@@ -1237,8 +1253,8 @@ pub struct SystemPackage {
     pub dependencies: Vec<ObjectId>,
 }
 
-impl std::fmt::Display for SystemPackage {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for SystemPackage {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let modules_count = crate::display_bytes_vec(&self.modules);
         let deps = crate::display_vec(&self.dependencies);
         crate::display_table(
@@ -1248,6 +1264,7 @@ impl std::fmt::Display for SystemPackage {
                 ("Modules", &modules_count),
                 ("Dependencies", &deps),
             ],
+            standalone,
         )
     }
 }
@@ -1272,11 +1289,11 @@ pub struct GenesisTransaction {
     pub events: Vec<Event>,
 }
 
-impl std::fmt::Display for GenesisTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let objects = crate::display_vec(&self.objects);
-        let events = crate::display_vec(&self.events);
-        crate::display_table(f, &[("Objects", &objects), ("Events", &events)])
+impl crate::TableDisplay for GenesisTransaction {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let objects = crate::display_vec_compact(&self.objects);
+        let events = crate::display_vec_compact(&self.events);
+        crate::display_table(f, &[("Objects", &objects), ("Events", &events)], standalone)
     }
 }
 
@@ -1306,11 +1323,15 @@ pub struct ProgrammableTransaction {
     pub commands: Vec<Command>,
 }
 
-impl std::fmt::Display for ProgrammableTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ProgrammableTransaction {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let inputs = crate::display_vec(&self.inputs);
         let commands = crate::display_vec(&self.commands);
-        crate::display_table(f, &[("Inputs", &inputs), ("Commands", &commands)])
+        crate::display_table(
+            f,
+            &[("Inputs", &inputs), ("Commands", &commands)],
+            standalone,
+        )
     }
 }
 
@@ -1499,10 +1520,14 @@ pub struct TransferObjects {
     pub address: Argument,
 }
 
-impl std::fmt::Display for TransferObjects {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for TransferObjects {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let objects = crate::display_vec(&self.objects);
-        crate::display_table(f, &[("Objects", &objects), ("Address", &self.address)])
+        crate::display_table(
+            f,
+            &[("Objects", &objects), ("Address", &self.address)],
+            standalone,
+        )
     }
 }
 
@@ -1527,10 +1552,14 @@ pub struct SplitCoins {
     pub amounts: Vec<Argument>,
 }
 
-impl std::fmt::Display for SplitCoins {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for SplitCoins {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let amounts = crate::display_vec(&self.amounts);
-        crate::display_table(f, &[("Coin", &self.coin), ("Amounts", &amounts)])
+        crate::display_table(
+            f,
+            &[("Coin", &self.coin), ("Amounts", &amounts)],
+            standalone,
+        )
     }
 }
 
@@ -1561,10 +1590,14 @@ pub struct MergeCoins {
     pub coins_to_merge: Vec<Argument>,
 }
 
-impl std::fmt::Display for MergeCoins {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for MergeCoins {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let coins = crate::display_vec(&self.coins_to_merge);
-        crate::display_table(f, &[("Coin", &self.coin), ("Coins To Merge", &coins)])
+        crate::display_table(
+            f,
+            &[("Coin", &self.coin), ("Coins To Merge", &coins)],
+            standalone,
+        )
     }
 }
 
@@ -1596,11 +1629,15 @@ pub struct Publish {
     pub dependencies: Vec<ObjectId>,
 }
 
-impl std::fmt::Display for Publish {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Publish {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let modules_count = crate::display_bytes_vec(&self.modules);
         let deps = crate::display_vec(&self.dependencies);
-        crate::display_table(f, &[("Modules", &modules_count), ("Dependencies", &deps)])
+        crate::display_table(
+            f,
+            &[("Modules", &modules_count), ("Dependencies", &deps)],
+            standalone,
+        )
     }
 }
 
@@ -1629,11 +1666,15 @@ pub struct MakeMoveVector {
     pub elements: Vec<Argument>,
 }
 
-impl std::fmt::Display for MakeMoveVector {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for MakeMoveVector {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let type_str = crate::display_option(&self.type_);
         let elements = crate::display_vec(&self.elements);
-        crate::display_table(f, &[("Type", &type_str), ("Elements", &elements)])
+        crate::display_table(
+            f,
+            &[("Type", &type_str), ("Elements", &elements)],
+            standalone,
+        )
     }
 }
 
@@ -1671,8 +1712,8 @@ pub struct Upgrade {
     pub ticket: Argument,
 }
 
-impl std::fmt::Display for Upgrade {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Upgrade {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let modules_count = crate::display_bytes_vec(&self.modules);
         let deps = crate::display_vec(&self.dependencies);
         crate::display_table(
@@ -1683,6 +1724,7 @@ impl std::fmt::Display for Upgrade {
                 ("Package", &self.package),
                 ("Ticket", &self.ticket),
             ],
+            standalone,
         )
     }
 }
@@ -1823,8 +1865,8 @@ pub struct MoveCall {
     pub arguments: Vec<Argument>,
 }
 
-impl std::fmt::Display for MoveCall {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for MoveCall {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let type_args = crate::display_vec(&self.type_arguments);
         let args = crate::display_vec(&self.arguments);
         crate::display_table(
@@ -1836,6 +1878,7 @@ impl std::fmt::Display for MoveCall {
                 ("Type Arguments", &type_args),
                 ("Arguments", &args),
             ],
+            standalone,
         )
     }
 }

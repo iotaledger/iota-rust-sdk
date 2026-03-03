@@ -81,6 +81,7 @@ impl std::fmt::Display for MoveAuthenticator {
                 ("Type Args", &crate::display_vec(&self.type_args)),
                 ("Object to Authenticate", &self.object_to_authenticate),
             ],
+            true,
         )
     }
 }

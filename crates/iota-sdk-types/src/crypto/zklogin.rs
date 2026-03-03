@@ -46,6 +46,7 @@ impl std::fmt::Display for ZkLoginAuthenticator {
                 ("Inputs", &self.inputs),
                 ("Signature", &self.signature),
             ],
+            true,
         )
     }
 }
@@ -200,6 +201,7 @@ impl std::fmt::Display for ZkLoginInputs {
                 ("Header Base64", &self.header_base64),
                 ("ISS Base64 Details", &self.iss_base64_details),
             ],
+            true,
         )
     }
 }
@@ -231,6 +233,7 @@ impl std::fmt::Display for ZkLoginClaim {
         crate::display_table(
             f,
             &[("Value", &self.value), ("Index Mod 4", &self.index_mod_4)],
+            true,
         )
     }
 }
@@ -447,6 +450,7 @@ impl std::fmt::Display for ZkLoginProof {
                 ("B (G2)", &self.b),
                 ("C (G1)", &self.c),
             ],
+            true,
         )
     }
 }
@@ -584,6 +588,7 @@ impl std::fmt::Display for ZkLoginPublicIdentifier {
         crate::display_table(
             f,
             &[("ISS", &self.iss), ("Address Seed", &self.address_seed)],
+            true,
         )
     }
 }
@@ -626,6 +631,7 @@ impl std::fmt::Display for Jwk {
                 ("n", &self.n),
                 ("alg", &self.alg),
             ],
+            true,
         )
     }
 }
@@ -652,7 +658,7 @@ pub struct JwkId {
 
 impl std::fmt::Display for JwkId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("ISS", &self.iss), ("KID", &self.kid)])
+        crate::display_table(f, &[("ISS", &self.iss), ("KID", &self.kid)], true)
     }
 }
 

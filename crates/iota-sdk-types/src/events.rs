@@ -68,8 +68,8 @@ pub struct Event {
     pub contents: Vec<u8>,
 }
 
-impl std::fmt::Display for Event {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Event {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let contents_hex = hex::encode(&self.contents);
         crate::display_table(
             f,
@@ -80,6 +80,7 @@ impl std::fmt::Display for Event {
                 ("Type", &self.type_),
                 ("Contents", &contents_hex),
             ],
+            standalone,
         )
     }
 }
@@ -106,8 +107,8 @@ pub struct BalanceChange {
     pub amount: i128,
 }
 
-impl std::fmt::Display for BalanceChange {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for BalanceChange {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -115,6 +116,7 @@ impl std::fmt::Display for BalanceChange {
                 ("Coin Type", &self.coin_type),
                 ("Amount", &self.amount),
             ],
+            standalone,
         )
     }
 }

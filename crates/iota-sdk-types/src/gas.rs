@@ -111,8 +111,8 @@ impl GasCostSummary {
     }
 }
 
-impl std::fmt::Display for GasCostSummary {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for GasCostSummary {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -125,6 +125,7 @@ impl std::fmt::Display for GasCostSummary {
                     &self.non_refundable_storage_fee,
                 ),
             ],
+            standalone,
         )
     }
 }

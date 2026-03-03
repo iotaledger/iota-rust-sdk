@@ -35,6 +35,7 @@ impl std::fmt::Display for IotaNamesConfig {
                 ("Registry ID", &self.registry_id),
                 ("Reverse Registry ID", &self.reverse_registry_id),
             ],
+            true,
         )
     }
 }

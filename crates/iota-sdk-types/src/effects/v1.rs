@@ -88,21 +88,22 @@ impl TransactionEffectsV1 {
     }
 }
 
-impl std::fmt::Display for TransactionEffectsV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for TransactionEffectsV1 {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let status = format!("{:?}", self.status);
         let gas_object_index = crate::display_option(&self.gas_object_index);
         let events_digest = crate::display_option(&self.events_digest);
         let dependencies = crate::display_vec(&self.dependencies);
-        let changed_objects = crate::display_vec(&self.changed_objects);
-        let unchanged_shared_objects = crate::display_vec(&self.unchanged_shared_objects);
+        let gas_used = crate::Nested(&self.gas_used).to_string();
+        let changed_objects = crate::display_vec_compact(&self.changed_objects);
+        let unchanged_shared_objects = crate::display_vec_compact(&self.unchanged_shared_objects);
         let auxiliary_data_digest = crate::display_option(&self.auxiliary_data_digest);
         crate::display_table(
             f,
             &[
                 ("Status", &status),
                 ("Epoch", &self.epoch),
-                ("Gas Used", &self.gas_used),
+                ("Gas Used", &gas_used),
                 ("Transaction Digest", &self.transaction_digest),
                 ("Gas Object Index", &gas_object_index),
                 ("Events Digest", &events_digest),
@@ -112,6 +113,7 @@ impl std::fmt::Display for TransactionEffectsV1 {
                 ("Unchanged Shared Objects", &unchanged_shared_objects),
                 ("Auxiliary Data Digest", &auxiliary_data_digest),
             ],
+            standalone,
         )
     }
 }
@@ -146,8 +148,8 @@ pub struct ChangedObject {
     pub id_operation: IdOperation,
 }
 
-impl std::fmt::Display for ChangedObject {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ChangedObject {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -156,6 +158,7 @@ impl std::fmt::Display for ChangedObject {
                 ("Output State", &self.output_state),
                 ("ID Operation", &self.id_operation),
             ],
+            standalone,
         )
     }
 }
@@ -182,9 +185,13 @@ pub struct UnchangedSharedObject {
     pub kind: UnchangedSharedKind,
 }
 
-impl std::fmt::Display for UnchangedSharedObject {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("Object ID", &self.object_id), ("Kind", &self.kind)])
+impl crate::TableDisplay for UnchangedSharedObject {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        crate::display_table(
+            f,
+            &[("Object ID", &self.object_id), ("Kind", &self.kind)],
+            standalone,
+        )
     }
 }
 

@@ -26,10 +26,14 @@ pub struct ValidatorCommittee {
     pub members: Vec<ValidatorCommitteeMember>,
 }
 
-impl std::fmt::Display for ValidatorCommittee {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let members_display = crate::display_vec(&self.members);
-        crate::display_table(f, &[("Epoch", &self.epoch), ("Members", &members_display)])
+impl crate::TableDisplay for ValidatorCommittee {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let members_display = crate::display_vec_compact(&self.members);
+        crate::display_table(
+            f,
+            &[("Epoch", &self.epoch), ("Members", &members_display)],
+            standalone,
+        )
     }
 }
 
@@ -60,11 +64,12 @@ pub struct ValidatorCommitteeMember {
     pub stake: StakeUnit,
 }
 
-impl std::fmt::Display for ValidatorCommitteeMember {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ValidatorCommitteeMember {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[("Public Key", &self.public_key), ("Stake", &self.stake)],
+            standalone,
         )
     }
 }
@@ -104,8 +109,8 @@ pub struct ValidatorAggregatedSignature {
     pub bitmap: roaring::RoaringBitmap,
 }
 
-impl std::fmt::Display for ValidatorAggregatedSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ValidatorAggregatedSignature {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -113,6 +118,7 @@ impl std::fmt::Display for ValidatorAggregatedSignature {
                 ("Signature", &self.signature),
                 ("Bitmap", &format!("{:?}", self.bitmap)),
             ],
+            standalone,
         )
     }
 }
@@ -186,8 +192,8 @@ pub struct ValidatorSignature {
     pub signature: Bls12381Signature,
 }
 
-impl std::fmt::Display for ValidatorSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for ValidatorSignature {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -195,6 +201,7 @@ impl std::fmt::Display for ValidatorSignature {
                 ("Public Key", &self.public_key),
                 ("Signature", &self.signature),
             ],
+            standalone,
         )
     }
 }

@@ -123,8 +123,8 @@ impl Intent {
     }
 }
 
-impl std::fmt::Display for Intent {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Intent {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -132,6 +132,7 @@ impl std::fmt::Display for Intent {
                 ("Version", &self.version),
                 ("App ID", &self.app_id),
             ],
+            standalone,
         )
     }
 }
@@ -306,7 +307,8 @@ impl<T> IntentMessage<T> {
 
 impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("Intent", &self.intent), ("Value", &self.value)])
+        let intent = crate::Nested(&self.intent).to_string();
+        crate::display_table(f, &[("Intent", &intent), ("Value", &self.value)], true)
     }
 }
 

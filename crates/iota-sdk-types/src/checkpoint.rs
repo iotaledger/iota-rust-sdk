@@ -93,9 +93,9 @@ pub struct EndOfEpochData {
     pub epoch_supply_change: i64,
 }
 
-impl std::fmt::Display for EndOfEpochData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let committee_display = crate::display_vec(&self.next_epoch_committee);
+impl crate::TableDisplay for EndOfEpochData {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let committee_display = crate::display_vec_compact(&self.next_epoch_committee);
         let commitments_display = crate::display_vec(&self.epoch_commitments);
         crate::display_table(
             f,
@@ -108,6 +108,7 @@ impl std::fmt::Display for EndOfEpochData {
                 ("Epoch Commitments", &commitments_display),
                 ("Epoch Supply Change", &self.epoch_supply_change),
             ],
+            standalone,
         )
     }
 }
@@ -200,15 +201,12 @@ pub struct CheckpointSummary {
     pub version_specific_data: Vec<u8>,
 }
 
-impl std::fmt::Display for CheckpointSummary {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for CheckpointSummary {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let previous_digest = crate::display_option(&self.previous_digest);
         let commitments_display = crate::display_vec(&self.checkpoint_commitments);
-        let end_of_epoch = if self.end_of_epoch_data.is_some() {
-            "Yes".to_string()
-        } else {
-            "-".to_string()
-        };
+        let gas_cost = crate::Nested(&self.epoch_rolling_gas_cost_summary).to_string();
+        let end_of_epoch = crate::display_option_compact(&self.end_of_epoch_data);
         crate::display_table(
             f,
             &[
@@ -220,14 +218,12 @@ impl std::fmt::Display for CheckpointSummary {
                 ),
                 ("Content Digest", &self.content_digest),
                 ("Previous Digest", &previous_digest),
-                (
-                    "Epoch Rolling Gas Cost",
-                    &self.epoch_rolling_gas_cost_summary,
-                ),
+                ("Epoch Rolling Gas Cost", &gas_cost),
                 ("Timestamp (ms)", &self.timestamp_ms),
                 ("Checkpoint Commitments", &commitments_display),
                 ("End of Epoch Data", &end_of_epoch),
             ],
+            standalone,
         )
     }
 }
@@ -305,8 +301,8 @@ pub struct CheckpointTransactionInfo {
     pub signatures: Vec<UserSignature>,
 }
 
-impl std::fmt::Display for CheckpointTransactionInfo {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for CheckpointTransactionInfo {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let sigs_display = crate::display_vec(&self.signatures);
         crate::display_table(
             f,
@@ -315,6 +311,7 @@ impl std::fmt::Display for CheckpointTransactionInfo {
                 ("Effects", &self.effects),
                 ("Signatures", &sigs_display),
             ],
+            standalone,
         )
     }
 }
@@ -334,16 +331,18 @@ pub struct CheckpointData {
     pub transactions: Vec<CheckpointTransaction>,
 }
 
-impl std::fmt::Display for CheckpointData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let txns_display = crate::display_vec(&self.transactions);
+impl crate::TableDisplay for CheckpointData {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let checkpoint = crate::Nested(&self.checkpoint_summary.checkpoint).to_string();
+        let txns_display = crate::display_vec_compact(&self.transactions);
         crate::display_table(
             f,
             &[
-                ("Checkpoint", &self.checkpoint_summary.checkpoint),
+                ("Checkpoint", &checkpoint),
                 ("Contents", &self.checkpoint_contents),
                 ("Transactions", &txns_display),
             ],
+            standalone,
         )
     }
 }
@@ -377,15 +376,15 @@ pub struct CheckpointTransaction {
     pub output_objects: Vec<Object>,
 }
 
-impl std::fmt::Display for CheckpointTransaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for CheckpointTransaction {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let events_display = if self.events.is_some() {
             "Yes".to_string()
         } else {
             "-".to_string()
         };
-        let input_display = crate::display_vec(&self.input_objects);
-        let output_display = crate::display_vec(&self.output_objects);
+        let input_display = crate::display_vec_compact(&self.input_objects);
+        let output_display = crate::display_vec_compact(&self.output_objects);
         crate::display_table(
             f,
             &[
@@ -395,6 +394,7 @@ impl std::fmt::Display for CheckpointTransaction {
                 ("Input Objects", &input_display),
                 ("Output Objects", &output_display),
             ],
+            standalone,
         )
     }
 }

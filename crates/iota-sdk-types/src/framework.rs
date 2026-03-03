@@ -63,6 +63,7 @@ impl std::fmt::Display for Coin {
                 ("ID", &self.id),
                 ("Balance", &self.balance),
             ],
+            true,
         )
     }
 }

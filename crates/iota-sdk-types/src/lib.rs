@@ -106,23 +106,69 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
+/// Context-aware table display trait.
+///
+/// Types implementing this trait can render themselves with borders
+/// (standalone) or without borders (nested inside another table cell) to avoid
+/// visual bloat.
+pub(crate) trait TableDisplay {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result;
+}
+
+/// Wrapper that renders a [`TableDisplay`] value in non-standalone (compact)
+/// mode.
+pub(crate) struct Nested<'a, T: TableDisplay + ?Sized>(pub &'a T);
+
+impl<T: TableDisplay + ?Sized> std::fmt::Display for Nested<'_, T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt_table(f, false)
+    }
+}
+
+/// Macro to generate `Display` impl that delegates to [`TableDisplay`].
+macro_rules! impl_table_display {
+    ($($ty:ty),* $(,)?) => {
+        $(
+        impl std::fmt::Display for $ty {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                TableDisplay::fmt_table(self, f, true)
+            }
+        }
+        )*
+    };
+}
+
 /// Build a key-value table for Display implementations using `tabled`.
 pub(crate) fn display_table(
     f: &mut std::fmt::Formatter<'_>,
     rows: &[(&str, &dyn std::fmt::Display)],
+    standalone: bool,
 ) -> std::fmt::Result {
-    use tabled::builder::Builder;
+    use tabled::{builder::Builder, settings::Style};
     let mut builder = Builder::new();
     for (key, value) in rows {
         builder.push_record([*key, &value.to_string()]);
     }
-    write!(f, "{}", builder.build())
+    let mut table = builder.build();
+    if !standalone {
+        table.with(Style::empty());
+    }
+    write!(f, "{}", table)
 }
 
 /// Display an `Option` field, showing "-" for `None`.
 pub(crate) fn display_option(opt: &Option<impl std::fmt::Display>) -> String {
     match opt {
         Some(v) => v.to_string(),
+        None => "-".to_string(),
+    }
+}
+
+/// Display an `Option<T>` where `T: TableDisplay`, rendering compactly (no
+/// borders).
+pub(crate) fn display_option_compact<T: TableDisplay>(opt: &Option<T>) -> String {
+    match opt {
+        Some(v) => Nested(v).to_string(),
         None => "-".to_string(),
     }
 }
@@ -138,6 +184,23 @@ pub(crate) fn display_vec(v: &[impl std::fmt::Display]) -> String {
             builder.push_record([&i.to_string(), &item.to_string()]);
         }
         builder.build().to_string()
+    }
+}
+
+/// Display a vec of [`TableDisplay`] items, rendering each item compactly (no
+/// inner borders).
+pub(crate) fn display_vec_compact<T: TableDisplay>(v: &[T]) -> String {
+    if v.is_empty() {
+        "[]".to_string()
+    } else {
+        use tabled::{builder::Builder, settings::Style};
+        let mut builder = Builder::new();
+        for (i, item) in v.iter().enumerate() {
+            builder.push_record([&i.to_string(), &Nested(item).to_string()]);
+        }
+        let mut table = builder.build();
+        table.with(Style::empty());
+        table.to_string()
     }
 }
 
@@ -230,6 +293,75 @@ pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
+
+impl_table_display!(
+    // gas.rs
+    GasCostSummary,
+    // object.rs
+    object::ObjectReference,
+    object::MovePackage,
+    object::TypeOrigin,
+    object::UpgradeInfo,
+    object::MoveStruct,
+    object::Object,
+    object::GenesisObject,
+    // effects/v1.rs
+    effects::TransactionEffectsV1,
+    effects::ChangedObject,
+    effects::UnchangedSharedObject,
+    // events.rs
+    events::Event,
+    events::BalanceChange,
+    // checkpoint.rs
+    checkpoint::EndOfEpochData,
+    checkpoint::CheckpointSummary,
+    checkpoint::CheckpointTransactionInfo,
+    checkpoint::CheckpointData,
+    checkpoint::CheckpointTransaction,
+    // validator.rs
+    validator::ValidatorCommitteeMember,
+    validator::ValidatorCommittee,
+    validator::ValidatorAggregatedSignature,
+    validator::ValidatorSignature,
+    // crypto/intent.rs
+    crypto::Intent,
+    // move_package.rs
+    move_package::MovePackageData,
+    // transaction/mod.rs
+    transaction::TransactionV1,
+    transaction::GasPayment,
+    transaction::RandomnessStateUpdate,
+    transaction::AuthenticatorStateExpire,
+    transaction::AuthenticatorStateUpdateV1,
+    transaction::ActiveJwk,
+    transaction::VersionAssignment,
+    transaction::CancelledTransaction,
+    transaction::ConsensusCommitPrologueV1,
+    transaction::ChangeEpoch,
+    transaction::ChangeEpochV2,
+    transaction::ChangeEpochV3,
+    transaction::ChangeEpochV4,
+    transaction::SystemPackage,
+    transaction::GenesisTransaction,
+    transaction::ProgrammableTransaction,
+    transaction::TransferObjects,
+    transaction::SplitCoins,
+    transaction::MergeCoins,
+    transaction::Publish,
+    transaction::MakeMoveVector,
+    transaction::Upgrade,
+    transaction::MoveCall,
+    transaction::ExecutionTimeObservation,
+    transaction::ValidatorExecutionTimeObservation,
+    // iota_names
+    iota_names::NameRegistration,
+    iota_names::SubnameRegistration,
+    iota_names::registry::Table,
+    iota_names::registry::Registry,
+    iota_names::registry::RegistryEntry,
+    iota_names::registry::ReverseRegistryEntry,
+    iota_names::registry::NameRecord,
+);
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;

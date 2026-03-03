@@ -90,8 +90,8 @@ impl MovePackageData {
     }
 }
 
-impl std::fmt::Display for MovePackageData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for MovePackageData {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         let modules_display = crate::display_bytes_vec(&self.modules);
         let deps_display = crate::display_vec(&self.dependencies);
         crate::display_table(
@@ -101,6 +101,7 @@ impl std::fmt::Display for MovePackageData {
                 ("Dependencies", &deps_display),
                 ("Digest", &self.digest),
             ],
+            standalone,
         )
     }
 }

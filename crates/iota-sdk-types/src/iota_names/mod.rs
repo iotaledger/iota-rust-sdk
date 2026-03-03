@@ -37,8 +37,8 @@ impl NameRegistration {
     }
 }
 
-impl std::fmt::Display for NameRegistration {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for NameRegistration {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         crate::display_table(
             f,
             &[
@@ -47,6 +47,7 @@ impl std::fmt::Display for NameRegistration {
                 ("Name String", &self.name_str),
                 ("Expiration (ms)", &self.expiration_timestamp_ms),
             ],
+            standalone,
         )
     }
 }
@@ -69,9 +70,10 @@ impl SubnameRegistration {
     }
 }
 
-impl std::fmt::Display for SubnameRegistration {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("ID", &self.id), ("NFT", &self.nft)])
+impl crate::TableDisplay for SubnameRegistration {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let nft = crate::Nested(&self.nft).to_string();
+        crate::display_table(f, &[("ID", &self.id), ("NFT", &nft)], standalone)
     }
 }
 
