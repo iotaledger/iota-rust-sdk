@@ -986,6 +986,7 @@ mod transaction_expiration {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "TransactionExpiration")]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,
