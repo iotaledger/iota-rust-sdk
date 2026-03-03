@@ -46,7 +46,7 @@ func main() {
 	objIds := []*iota_sdk.ObjectId{
 		objIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"),
 		objIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc"),
-		objIdFromHex("0x139302eb86aab7558905e4be035dcf2845cfbb2bcfb8348e81849e888ad5acf3"),
+		objIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"),
 	}
 	objsToTransfer := []*iota_sdk.PtbArgument{}
 	for _, objId := range objIds {
