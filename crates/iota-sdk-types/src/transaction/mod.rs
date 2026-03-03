@@ -1239,7 +1239,7 @@ pub struct SystemPackage {
 
 impl std::fmt::Display for SystemPackage {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_count = crate::display_vec_count(&self.modules);
+        let modules_count = crate::display_bytes_vec(&self.modules);
         let deps = crate::display_vec(&self.dependencies);
         crate::display_table(
             f,
@@ -1598,7 +1598,7 @@ pub struct Publish {
 
 impl std::fmt::Display for Publish {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_count = crate::display_vec_count(&self.modules);
+        let modules_count = crate::display_bytes_vec(&self.modules);
         let deps = crate::display_vec(&self.dependencies);
         crate::display_table(f, &[("Modules", &modules_count), ("Dependencies", &deps)])
     }
@@ -1673,7 +1673,7 @@ pub struct Upgrade {
 
 impl std::fmt::Display for Upgrade {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let modules_count = crate::display_vec_count(&self.modules);
+        let modules_count = crate::display_bytes_vec(&self.modules);
         let deps = crate::display_vec(&self.dependencies);
         crate::display_table(
             f,

@@ -127,18 +127,32 @@ pub(crate) fn display_option(opt: &Option<impl std::fmt::Display>) -> String {
     }
 }
 
-/// Display a `Vec` as a count summary.
-pub(crate) fn display_vec_count<T>(v: &[T]) -> String {
-    format!("[{} items]", v.len())
-}
-
-/// Display a `Vec` by showing each element.
+/// Display a `Vec` by showing each element as a sub-table row.
 pub(crate) fn display_vec(v: &[impl std::fmt::Display]) -> String {
     if v.is_empty() {
         "[]".to_string()
     } else {
-        let items: Vec<String> = v.iter().map(|item| item.to_string()).collect();
-        format!("[{}]", items.join(", "))
+        use tabled::builder::Builder;
+        let mut builder = Builder::new();
+        for (i, item) in v.iter().enumerate() {
+            builder.push_record([&i.to_string(), &item.to_string()]);
+        }
+        builder.build().to_string()
+    }
+}
+
+/// Display a `Vec<Vec<u8>>` by showing each element as Base64.
+pub(crate) fn display_bytes_vec(v: &[Vec<u8>]) -> String {
+    if v.is_empty() {
+        "[]".to_string()
+    } else {
+        use base64ct::Encoding;
+        use tabled::builder::Builder;
+        let mut builder = Builder::new();
+        for (i, bytes) in v.iter().enumerate() {
+            builder.push_record([&i.to_string(), &base64ct::Base64::encode_string(bytes)]);
+        }
+        builder.build().to_string()
     }
 }
 
