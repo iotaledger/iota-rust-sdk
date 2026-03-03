@@ -1,13 +1,15 @@
 # Copyright (c) 2026 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
+# TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
+
 from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_devnet()
 
     # ===========================================================================
     # Example 1: Using move_view_call() with typed arguments (blake2b256)
@@ -51,49 +53,49 @@ async def main():
     # ===========================================================================
     # Example 3: Using move_view_call() with typed arguments (auction)
     # ===========================================================================
-    print()
-    print("=== Example 3: move_view_call() with typed arguments (auction) ===")
-    print()
+    # print()
+    # print("=== Example 3: move_view_call() with typed arguments (auction) ===")
+    # print()
 
-    object_id = ObjectId.from_hex(
-        "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
+    # object_id = ObjectId.from_hex(
+    #     "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
 
-    auction_args = [
-        MoveViewArg.object_id(object_id),
-        MoveViewArg.string("auc.iota")
-    ]
+    # auction_args = [
+    #     MoveViewArg.object_id(object_id),
+    #     MoveViewArg.string("auc.iota")
+    # ]
 
-    auction_result = await client.move_view_call(
-        "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-        None, auction_args)
+    # auction_result = await client.move_view_call(
+    #     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+    #     None, auction_args)
 
-    if auction_result.error is not None:
-        print("Auction Error:", auction_result.error)
-    elif auction_result.results is not None:
-        print("Auction Results:", auction_result.results)
-    else:
-        print("No auction results")
+    # if auction_result.error is not None:
+    #     print("Auction Error:", auction_result.error)
+    # elif auction_result.results is not None:
+    #     print("Auction Results:", auction_result.results)
+    # else:
+    #     print("No auction results")
 
     # ===========================================================================
     # Example 4: Using move_view_call_json() with JSON values (auction)
     # ===========================================================================
-    print()
-    print("=== Example 4: move_view_call_json() with JSON values (auction) ===")
-    print()
+    # print()
+    # print("=== Example 4: move_view_call_json() with JSON values (auction) ===")
+    # print()
 
-    auction_json_result = await client.move_view_call_json(
-        "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-        None, [
-            '"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050"',
-            '"auc.iota"'
-        ])
+    # auction_json_result = await client.move_view_call_json(
+    #     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+    #     None, [
+    #         '"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050"',
+    #         '"auc.iota"'
+    #     ])
 
-    if auction_json_result.error is not None:
-        print("Auction JSON Error:", auction_json_result.error)
-    elif auction_json_result.results is not None:
-        print("Auction JSON Results:", auction_json_result.results)
-    else:
-        print("No auction JSON results")
+    # if auction_json_result.error is not None:
+    #     print("Auction JSON Error:", auction_json_result.error)
+    # elif auction_json_result.results is not None:
+    #     print("Auction JSON Results:", auction_json_result.results)
+    # else:
+    #     print("No auction JSON results")
 
 
 if __name__ == "__main__":

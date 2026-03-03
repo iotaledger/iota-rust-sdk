@@ -1,13 +1,15 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
+
 import Foundation
 import IotaSDK
 
 @main
 struct MoveViewCallExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newDevnet()
 
     // ===========================================================================
     // Example 1: Using moveViewCall() with typed arguments (blake2b256)
@@ -50,53 +52,53 @@ struct MoveViewCallExample {
     // ===========================================================================
     // Example 3: Using moveViewCall() with typed arguments (auction)
     // ===========================================================================
-    print()
-    print("=== Example 3: moveViewCall() with typed arguments (auction) ===")
-    print()
+    // print()
+    // print("=== Example 3: moveViewCall() with typed arguments (auction) ===")
+    // print()
 
-    let objectId = try ObjectId.fromHex(
-      hex: "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
+    // let objectId = try ObjectId.fromHex(
+    //   hex: "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
 
-    let auctionArgs = [
-      MoveViewArg.objectId(value: objectId),
-      MoveViewArg.string(value: "auc.iota"),
-    ]
+    // let auctionArgs = [
+    //   MoveViewArg.objectId(value: objectId),
+    //   MoveViewArg.string(value: "auc.iota"),
+    // ]
 
-    let auctionResult = try await client.moveViewCall(
-      functionName:
-        "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-      typeArguments: nil, arguments: auctionArgs)
+    // let auctionResult = try await client.moveViewCall(
+    //   functionName:
+    //     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+    //   typeArguments: nil, arguments: auctionArgs)
 
-    if auctionResult.error != nil {
-      print("Auction Error:", auctionResult.error!)
-    } else if auctionResult.results != nil {
-      print("Auction Results:", auctionResult.results!)
-    } else {
-      print("No auction results")
-    }
+    // if auctionResult.error != nil {
+    //   print("Auction Error:", auctionResult.error!)
+    // } else if auctionResult.results != nil {
+    //   print("Auction Results:", auctionResult.results!)
+    // } else {
+    //   print("No auction results")
+    // }
 
     // ===========================================================================
     // Example 4: Using moveViewCallJson() with JSON values (auction)
     // ===========================================================================
-    print()
-    print("=== Example 4: moveViewCallJson() with JSON values (auction) ===")
-    print()
+    // print()
+    // print("=== Example 4: moveViewCallJson() with JSON values (auction) ===")
+    // print()
 
-    let auctionJsonResult = try await client.moveViewCallJson(
-      functionName:
-        "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-      typeArguments: nil,
-      arguments: [
-        "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
-        "\"auc.iota\"",
-      ])
+    // let auctionJsonResult = try await client.moveViewCallJson(
+    //   functionName:
+    //     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+    //   typeArguments: nil,
+    //   arguments: [
+    //     "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
+    //     "\"auc.iota\"",
+    //   ])
 
-    if auctionJsonResult.error != nil {
-      print("Auction JSON Error:", auctionJsonResult.error!)
-    } else if auctionJsonResult.results != nil {
-      print("Auction JSON Results:", auctionJsonResult.results!)
-    } else {
-      print("No auction JSON results")
-    }
+    // if auctionJsonResult.error != nil {
+    //   print("Auction JSON Error:", auctionJsonResult.error!)
+    // } else if auctionJsonResult.results != nil {
+    //   print("Auction JSON Results:", auctionJsonResult.results!)
+    // } else {
+    //   print("No auction JSON results")
+    // }
   }
 }
