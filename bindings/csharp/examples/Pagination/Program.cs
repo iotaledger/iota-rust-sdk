@@ -7,8 +7,8 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewDevnet();
-        var address = Address.FromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c");
+        var client = GraphQlClient.NewTestnet();
+        var address = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
 
         var allObjects = new List<IotaSdk.Object>();
         string? nextCursor = null;

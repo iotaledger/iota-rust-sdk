@@ -7,7 +7,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewDevnet();
+        var client = GraphQlClient.NewTestnet();
 
         // Get current epoch
         var currentEpoch = await client.Epoch(null);

@@ -1,6 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
+
 using IotaSdk;
 
 class Program
@@ -49,62 +51,62 @@ class Program
             Console.WriteLine("No JSON results");
         }
 
-        Console.WriteLine();
-        Console.WriteLine("=== Example 3: move_view_call() with typed arguments (auction) ===");
-        Console.WriteLine();
+        // Console.WriteLine();
+        // Console.WriteLine("=== Example 3: move_view_call() with typed arguments (auction) ===");
+        // Console.WriteLine();
 
-        var objectId = ObjectId.FromHex("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b");
-        var auctionArgs = new[]
-        {
-            MoveViewArg.ObjectId(objectId),
-            MoveViewArg.String("auc.iota")
-        };
+        // var objectId = ObjectId.FromHex("0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050");
+        // var auctionArgs = new[]
+        // {
+        //     MoveViewArg.ObjectId(objectId),
+        //     MoveViewArg.String("auc.iota")
+        // };
 
-        var auctionResult = await client.MoveViewCall(
-            "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-            null,
-            auctionArgs
-        );
+        // var auctionResult = await client.MoveViewCall(
+        //     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+        //     null,
+        //     auctionArgs
+        // );
 
-        if (auctionResult.error != null)
-        {
-            Console.WriteLine($"Auction Error: {auctionResult.error}");
-        }
-        else if (auctionResult.results != null)
-        {
-            Console.WriteLine($"Auction Results: {auctionResult.results}");
-        }
-        else
-        {
-            Console.WriteLine("No auction results");
-        }
+        // if (auctionResult.error != null)
+        // {
+        //     Console.WriteLine($"Auction Error: {auctionResult.error}");
+        // }
+        // else if (auctionResult.results != null)
+        // {
+        //     Console.WriteLine($"Auction Results: {auctionResult.results}");
+        // }
+        // else
+        // {
+        //     Console.WriteLine("No auction results");
+        // }
 
-        Console.WriteLine();
-        Console.WriteLine("=== Example 4: move_view_call_json() with JSON values (auction) ===");
-        Console.WriteLine();
+        // Console.WriteLine();
+        // Console.WriteLine("=== Example 4: move_view_call_json() with JSON values (auction) ===");
+        // Console.WriteLine();
 
-        var auctionJsonArgs = new[]
-        {
-            "\"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b\"",
-            "\"auc.iota\""
-        };
-        var auctionJsonResult = await client.MoveViewCallJson(
-            "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-            null,
-            auctionJsonArgs
-        );
+        // var auctionJsonArgs = new[]
+        // {
+        //     "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
+        //     "\"auc.iota\""
+        // };
+        // var auctionJsonResult = await client.MoveViewCallJson(
+        //     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+        //     null,
+        //     auctionJsonArgs
+        // );
 
-        if (auctionJsonResult.error != null)
-        {
-            Console.WriteLine($"Auction JSON Error: {auctionJsonResult.error}");
-        }
-        else if (auctionJsonResult.results != null)
-        {
-            Console.WriteLine($"Auction JSON Results: {auctionJsonResult.results}");
-        }
-        else
-        {
-            Console.WriteLine("No auction JSON results");
-        }
+        // if (auctionJsonResult.error != null)
+        // {
+        //     Console.WriteLine($"Auction JSON Error: {auctionJsonResult.error}");
+        // }
+        // else if (auctionJsonResult.results != null)
+        // {
+        //     Console.WriteLine($"Auction JSON Results: {auctionJsonResult.results}");
+        // }
+        // else
+        // {
+        //     Console.WriteLine("No auction JSON results");
+        // }
     }
 }

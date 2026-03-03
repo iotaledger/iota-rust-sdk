@@ -7,9 +7,9 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewDevnet();
+        var client = GraphQlClient.NewTestnet();
 
-        var objectId = ObjectId.FromHex("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e");
+        var objectId = ObjectId.FromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755");
 
         var obj = await client.Object(objectId, null);
         if (obj == null)

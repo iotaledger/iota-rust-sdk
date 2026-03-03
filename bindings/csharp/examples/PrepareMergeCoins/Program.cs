@@ -7,12 +7,12 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewDevnet();
+        var client = GraphQlClient.NewTestnet();
 
-        var sender = Address.FromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c");
+        var sender = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
 
-        var coin0 = PtbArgument.ObjectIdFromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab");
-        var coin1 = PtbArgument.ObjectIdFromHex("0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699");
+        var coin0 = PtbArgument.ObjectIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc");
+        var coin1 = PtbArgument.ObjectIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db");
 
         var builder = new TransactionBuilder(sender).WithClient(client);
 

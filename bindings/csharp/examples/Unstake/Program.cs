@@ -7,7 +7,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewDevnet();
+        var client = GraphQlClient.NewTestnet();
 
         var stakedIotas = await client.Objects(new ObjectFilter(typeTag: StructTag.NewStakedIota().ToString()));
         if (stakedIotas.data.Length == 0)

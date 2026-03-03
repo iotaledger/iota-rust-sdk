@@ -8,7 +8,7 @@ class Program
 {
     static async System.Threading.Tasks.Task Main(string[] args)
     {
-        var client = GraphQlClient.NewDevnet();
+        var client = GraphQlClient.NewTestnet();
 
         try
         {
