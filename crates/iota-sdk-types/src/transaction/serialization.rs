@@ -977,6 +977,7 @@ mod transaction_expiration {
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(rename = "TransactionExpiration")]
     enum ReadableTransactionExpiration {
+        None,
         /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
         Epoch(
@@ -1001,8 +1002,8 @@ mod transaction_expiration {
         {
             if serializer.is_human_readable() {
                 match *self {
-                    Self::None => None,
-                    Self::Epoch(epoch) => Some(ReadableTransactionExpiration::Epoch(epoch)),
+                    Self::None => ReadableTransactionExpiration::None,
+                    Self::Epoch(epoch) => ReadableTransactionExpiration::Epoch(epoch),
                 }
                 .serialize(serializer)
             } else {
@@ -1021,10 +1022,10 @@ mod transaction_expiration {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                Option::<ReadableTransactionExpiration>::deserialize(deserializer).map(|readable| {
+                ReadableTransactionExpiration::deserialize(deserializer).map(|readable| {
                     match readable {
-                        None => Self::None,
-                        Some(ReadableTransactionExpiration::Epoch(epoch)) => Self::Epoch(epoch),
+                        ReadableTransactionExpiration::None => Self::None,
+                        ReadableTransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
                     }
                 })
             } else {
