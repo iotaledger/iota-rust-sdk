@@ -7,8 +7,8 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
-        val digest = Digest.fromBase58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")
+        val client = GraphQlClient.newTestnet()
+        val digest = Digest.fromBase58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8")
 
         val signedTransaction = client.transaction(digest)
         println("Signed Transaction: ${signedTransaction?.toString()}\n")
