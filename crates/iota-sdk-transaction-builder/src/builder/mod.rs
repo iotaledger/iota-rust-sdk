@@ -380,8 +380,8 @@ impl<C, L> TransactionBuilder<C, L> {
     ///             object_id: ObjectId::from_str(
     ///                 "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
     ///             )?,
-    ///             digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-    ///             version: 435090179,
+    ///             digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+    ///             version: 545110774,
     ///         },
     ///         // The result of a previous command can also be used
     ///         assigned("coin"),
