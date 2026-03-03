@@ -19,6 +19,10 @@ use crate::{
     db::progress,
 };
 
+/// Default number of checkpoints to cover in a single batch query when filters
+/// are active. Large ranges let the GraphQL server do the heavy lifting.
+const DEFAULT_BATCH_RANGE: u64 = 100_000;
+
 pub struct Indexer {
     client: Client,
     pool: PgPool,
@@ -35,6 +39,159 @@ impl Indexer {
     }
 
     pub async fn run(&self) -> anyhow::Result<()> {
+        if self.config.filters.has_filters() {
+            info!("filters active — using batch query mode");
+            self.run_filtered().await
+        } else {
+            self.run_per_checkpoint().await
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Batch filtered mode: query transactions across large checkpoint ranges
+    // ------------------------------------------------------------------
+
+    async fn run_filtered(&self) -> anyhow::Result<()> {
+        let state = progress::load(&self.pool, &self.config.progress_key).await?;
+        let mut range_start = self
+            .config
+            .start_checkpoint
+            .unwrap_or(state.next_checkpoint);
+
+        let mut consecutive_failures = 0_u32;
+
+        info!(
+            graphql_url = %self.config.graphql_url,
+            range_start,
+            "starting SDK polling indexer (batch filtered mode)"
+        );
+
+        loop {
+            let latest = self
+                .client
+                .latest_checkpoint_sequence_number()
+                .await?
+                .unwrap_or(0);
+
+            let global_upper = self
+                .config
+                .end_checkpoint
+                .map_or(latest, |end| end.min(latest));
+
+            if range_start > global_upper {
+                if self.config.end_checkpoint.is_some() {
+                    info!(
+                        range_start,
+                        global_upper, "reached configured end checkpoint"
+                    );
+                    return Ok(());
+                }
+                debug!(range_start, latest, "no new checkpoints yet");
+                tokio::time::sleep(self.config.poll_interval).await;
+                continue;
+            }
+
+            let range_end = (range_start + DEFAULT_BATCH_RANGE).min(global_upper);
+
+            match self.process_batch(range_start, range_end).await {
+                Ok(()) => {
+                    consecutive_failures = 0;
+                    range_start = range_end.saturating_add(1);
+                    progress::store(&self.pool, &self.config.progress_key, range_start).await?;
+                }
+                Err(err) => {
+                    consecutive_failures = consecutive_failures.saturating_add(1);
+                    let delay = retry_delay(self.config.poll_interval, consecutive_failures);
+                    warn!(
+                        range_start,
+                        range_end,
+                        error = %err,
+                        consecutive_failures,
+                        retry_in_ms = delay.as_millis(),
+                        "batch processing failed; retrying with backoff"
+                    );
+                    tokio::time::sleep(delay).await;
+                }
+            }
+        }
+    }
+
+    /// Query transactions across `[range_start, range_end]` in one paginated
+    /// stream, storing matching transactions and their events.
+    async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
+        info!(range_start, range_end, "processing batch");
+
+        let tx_filter = TransactionsFilter {
+            function: self.config.filters.tx_function.clone(),
+            sign_address: self.config.filters.tx_sender,
+            after_checkpoint: range_start.checked_sub(1),
+            before_checkpoint: Some(range_end.saturating_add(1)),
+            ..Default::default()
+        };
+
+        let mut tx_cursor: Option<String> = None;
+        let mut tx_count = 0_u64;
+
+        loop {
+            let tx_page = self
+                .client
+                .transactions_data_effects(
+                    tx_filter.clone(),
+                    PaginationFilter {
+                        limit: Some(self.config.page_size),
+                        cursor: tx_cursor.clone(),
+                        ..Default::default()
+                    },
+                )
+                .await?;
+
+            for tx_data in tx_page.data() {
+                if !self.config.filters.include_failed_txs
+                    && !matches!(tx_data.effects.status(), ExecutionStatus::Success)
+                {
+                    continue;
+                }
+
+                let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
+                let sender = sender_str(&tx_data.tx);
+                let kind = tx_kind_str(&tx_data.tx);
+                let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
+
+                sqlx::query(
+                    r#"
+                    INSERT INTO transactions
+                        (transaction_digest, sender, kind, success, raw_json)
+                    VALUES ($1, $2, $3, $4, $5)
+                    ON CONFLICT(transaction_digest) DO NOTHING
+                    "#,
+                )
+                .bind(&tx_digest)
+                .bind(sender)
+                .bind(kind)
+                .bind(success)
+                .bind(serde_json::to_value(tx_data)?)
+                .execute(&self.pool)
+                .await?;
+
+                self.store_events_for_transaction(None, &tx_digest).await?;
+                tx_count += 1;
+            }
+
+            if !tx_page.page_info.has_next_page {
+                break;
+            }
+            tx_cursor = tx_page.page_info.end_cursor.clone();
+        }
+
+        info!(range_start, range_end, tx_count, "batch complete");
+        Ok(())
+    }
+
+    // ------------------------------------------------------------------
+    // Per-checkpoint mode: full indexing without filters
+    // ------------------------------------------------------------------
+
+    async fn run_per_checkpoint(&self) -> anyhow::Result<()> {
         let state = progress::load(&self.pool, &self.config.progress_key).await?;
         let mut next_checkpoint = state.next_checkpoint;
         let mut consecutive_failures = 0_u32;
@@ -53,7 +210,7 @@ impl Indexer {
         info!(
             graphql_url = %self.config.graphql_url,
             next_checkpoint,
-            "starting SDK polling indexer"
+            "starting SDK polling indexer (per-checkpoint mode)"
         );
 
         loop {
@@ -192,8 +349,9 @@ impl Indexer {
                     INSERT INTO transactions
                         (checkpoint_seq, transaction_digest, sender, kind, success, timestamp_ms, raw_json)
                     VALUES ($1, $2, $3, $4, $5, $6, $7)
-                    ON CONFLICT(checkpoint_seq, transaction_digest)
+                    ON CONFLICT(transaction_digest)
                     DO UPDATE SET
+                        checkpoint_seq = excluded.checkpoint_seq,
                         sender = excluded.sender,
                         kind = excluded.kind,
                         success = excluded.success,
@@ -211,7 +369,7 @@ impl Indexer {
                 .execute(&self.pool)
                 .await?;
 
-                self.store_events_for_transaction(sequence, &tx_digest)
+                self.store_events_for_transaction(Some(sequence), &tx_digest)
                     .await?;
             }
 
@@ -225,9 +383,13 @@ impl Indexer {
         Ok(true)
     }
 
+    // ------------------------------------------------------------------
+    // Shared: event storage
+    // ------------------------------------------------------------------
+
     async fn store_events_for_transaction(
         &self,
-        checkpoint: u64,
+        checkpoint: Option<u64>,
         transaction_digest: &str,
     ) -> anyhow::Result<()> {
         let mut cursor: Option<String> = None;
@@ -284,7 +446,7 @@ impl Indexer {
                     ON CONFLICT DO NOTHING
                     "#,
                 )
-                .bind(checkpoint as i64)
+                .bind(checkpoint.map(|c| c as i64))
                 .bind(transaction_digest)
                 .bind(package_id)
                 .bind(module)

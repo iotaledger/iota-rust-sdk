@@ -68,6 +68,19 @@ pub struct FilterConfig {
     pub event_package_id: Option<String>,
 }
 
+impl FilterConfig {
+    /// Returns `true` when any transaction or event filter is set, enabling
+    /// batch query mode which queries across large checkpoint ranges instead
+    /// of processing checkpoints one by one.
+    pub fn has_filters(&self) -> bool {
+        self.tx_function.is_some()
+            || self.tx_sender.is_some()
+            || self.event_type.is_some()
+            || self.event_sending_module.is_some()
+            || self.event_package_id.is_some()
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct AppConfig {
     pub graphql_url: String,

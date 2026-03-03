@@ -54,14 +54,13 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
         r#"
         CREATE TABLE IF NOT EXISTS transactions (
             id BIGSERIAL PRIMARY KEY,
-            checkpoint_seq BIGINT NOT NULL REFERENCES checkpoints(sequence_number),
-            transaction_digest TEXT NOT NULL,
+            checkpoint_seq BIGINT,
+            transaction_digest TEXT NOT NULL UNIQUE,
             sender TEXT,
             kind TEXT,
             success BOOLEAN NOT NULL,
             timestamp_ms BIGINT,
-            raw_json JSONB NOT NULL,
-            UNIQUE(checkpoint_seq, transaction_digest)
+            raw_json JSONB NOT NULL
         );
         "#,
     )
@@ -72,7 +71,7 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
         r#"
         CREATE TABLE IF NOT EXISTS events (
             id BIGSERIAL PRIMARY KEY,
-            checkpoint_seq BIGINT NOT NULL REFERENCES checkpoints(sequence_number),
+            checkpoint_seq BIGINT,
             transaction_digest TEXT NOT NULL,
             package_id TEXT,
             module TEXT,
