@@ -6,6 +6,7 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
+use crate::TreeDisplay;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -47,10 +48,18 @@ impl From<TransactionV1> for Transaction {
     }
 }
 
-impl crate::TableDisplay for Transaction {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl std::fmt::Display for Transaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Transaction::V1(v1) => v1.fmt_table(f, standalone),
+            Self::V1(v1) => v1.fmt(f),
+        }
+    }
+}
+
+impl crate::TreeDisplay for Transaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
         }
     }
 }
@@ -70,20 +79,12 @@ pub struct TransactionV1 {
     pub expiration: TransactionExpiration,
 }
 
-impl crate::TableDisplay for TransactionV1 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let kind = crate::Nested(&self.kind).to_string();
-        let gas_payment = crate::Nested(&self.gas_payment).to_string();
-        crate::display_table(
-            f,
-            &[
-                ("Kind", &kind),
-                ("Sender", &self.sender),
-                ("Gas Payment", &gas_payment),
-                ("Expiration", &self.expiration),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for TransactionV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.child("Kind", &self.kind, false)?;
+        w.leaf("Sender", &self.sender, false)?;
+        w.child("Gas Payment", &self.gas_payment, false)?;
+        w.leaf("Expiration", &self.expiration, true)
     }
 }
 
@@ -113,13 +114,10 @@ pub struct SignedTransaction {
 
 impl std::fmt::Display for SignedTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let transaction = crate::Nested(&self.transaction).to_string();
-        let sigs = crate::display_vec(&self.signatures);
-        crate::display_table(
-            f,
-            &[("Transaction", &transaction), ("Signatures", &sigs)],
-            true,
-        )
+        write!(f, "Signed Transaction")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.child("Transaction", &self.transaction, false)?;
+        crate::tree_vec_inline(&mut w, "Signatures", &self.signatures, true)
     }
 }
 
@@ -193,19 +191,12 @@ pub struct GasPayment {
     pub budget: u64,
 }
 
-impl crate::TableDisplay for GasPayment {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let objects = crate::display_vec_compact(&self.objects);
-        crate::display_table(
-            f,
-            &[
-                ("Objects", &objects),
-                ("Owner", &self.owner),
-                ("Price", &self.price),
-                ("Budget", &self.budget),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for GasPayment {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_vec_children(w, "Objects", &self.objects, false)?;
+        w.leaf("Owner", &self.owner, false)?;
+        w.leaf("Price", &self.price, false)?;
+        w.leaf("Budget", &self.budget, true)
     }
 }
 
@@ -248,21 +239,16 @@ pub struct RandomnessStateUpdate {
     pub randomness_obj_initial_shared_version: u64,
 }
 
-impl crate::TableDisplay for RandomnessStateUpdate {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl crate::TreeDisplay for RandomnessStateUpdate {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         let bytes_size = self.random_bytes.len();
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Randomness Round", &self.randomness_round),
-                ("Random Bytes Size", &bytes_size),
-                (
-                    "Randomness Obj Initial Shared Version",
-                    &self.randomness_obj_initial_shared_version,
-                ),
-            ],
-            standalone,
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Randomness Round", &self.randomness_round, false)?;
+        w.leaf("Random Bytes Size", &bytes_size, false)?;
+        w.leaf(
+            "Randomness Obj Initial Shared Version",
+            &self.randomness_obj_initial_shared_version,
+            true,
         )
     }
 }
@@ -320,18 +306,32 @@ impl TransactionKind {
     }
 }
 
-impl crate::TableDisplay for TransactionKind {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl std::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            TransactionKind::ProgrammableTransaction(ptb) => ptb.fmt_table(f, standalone),
-            TransactionKind::Genesis(genesis) => genesis.fmt_table(f, standalone),
-            TransactionKind::ConsensusCommitPrologueV1(ccp) => ccp.fmt_table(f, standalone),
-            TransactionKind::AuthenticatorStateUpdateV1(asu) => asu.fmt_table(f, standalone),
-            TransactionKind::EndOfEpoch(kinds) => {
-                let items = crate::display_vec(kinds);
-                write!(f, "EndOfEpoch({items})")
+            Self::ProgrammableTransaction(pt) => pt.fmt(f),
+            Self::Genesis(v) => v.fmt(f),
+            Self::ConsensusCommitPrologueV1(v) => v.fmt(f),
+            Self::AuthenticatorStateUpdateV1(v) => v.fmt(f),
+            Self::EndOfEpoch(items) => {
+                write!(f, "End of Epoch")?;
+                let mut w = crate::TreeWriter::new(f);
+                crate::tree_vec_children(&mut w, "Transactions", items, true)
             }
-            TransactionKind::RandomnessStateUpdate(rsu) => rsu.fmt_table(f, standalone),
+            Self::RandomnessStateUpdate(v) => v.fmt(f),
+        }
+    }
+}
+
+impl crate::TreeDisplay for TransactionKind {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::ProgrammableTransaction(pt) => pt.fmt_tree(w),
+            Self::Genesis(v) => v.fmt_tree(w),
+            Self::ConsensusCommitPrologueV1(v) => v.fmt_tree(w),
+            Self::AuthenticatorStateUpdateV1(v) => v.fmt_tree(w),
+            Self::EndOfEpoch(items) => crate::tree_vec_children(w, "Transactions", items, true),
+            Self::RandomnessStateUpdate(v) => v.fmt_tree(w),
         }
     }
 }
@@ -390,19 +390,28 @@ impl EndOfEpochTransactionKind {
     crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
 }
 
-impl crate::TableDisplay for EndOfEpochTransactionKind {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl std::fmt::Display for EndOfEpochTransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            EndOfEpochTransactionKind::ChangeEpoch(ce) => ce.fmt_table(f, standalone),
-            EndOfEpochTransactionKind::ChangeEpochV2(ce) => ce.fmt_table(f, standalone),
-            EndOfEpochTransactionKind::ChangeEpochV3(ce) => ce.fmt_table(f, standalone),
-            EndOfEpochTransactionKind::ChangeEpochV4(ce) => ce.fmt_table(f, standalone),
-            EndOfEpochTransactionKind::AuthenticatorStateCreate => {
-                write!(f, "AuthenticatorStateCreate")
-            }
-            EndOfEpochTransactionKind::AuthenticatorStateExpire(ase) => {
-                ase.fmt_table(f, standalone)
-            }
+            Self::ChangeEpoch(v) => v.fmt(f),
+            Self::ChangeEpochV2(v) => v.fmt(f),
+            Self::ChangeEpochV3(v) => v.fmt(f),
+            Self::ChangeEpochV4(v) => v.fmt(f),
+            Self::AuthenticatorStateCreate => write!(f, "AuthenticatorStateCreate"),
+            Self::AuthenticatorStateExpire(v) => v.fmt(f),
+        }
+    }
+}
+
+impl crate::TreeDisplay for EndOfEpochTransactionKind {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::ChangeEpoch(v) => v.fmt_tree(w),
+            Self::ChangeEpochV2(v) => v.fmt_tree(w),
+            Self::ChangeEpochV3(v) => v.fmt_tree(w),
+            Self::ChangeEpochV4(v) => v.fmt_tree(w),
+            Self::AuthenticatorStateCreate => w.leaf("Kind", &"AuthenticatorStateCreate", true),
+            Self::AuthenticatorStateExpire(v) => v.fmt_tree(w),
         }
     }
 }
@@ -438,8 +447,9 @@ impl std::fmt::Display for ExecutionTimeObservations {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             ExecutionTimeObservations::V1(observations) => {
-                let obs = crate::display_vec(observations);
-                write!(f, "V1({obs})")
+                write!(f, "Execution Time Observations V1")?;
+                let mut w = crate::TreeWriter::new(f);
+                crate::tree_vec_children(&mut w, "Observations", observations, true)
             }
         }
     }
@@ -454,10 +464,10 @@ pub struct ExecutionTimeObservation {
     pub observations: Vec<ValidatorExecutionTimeObservation>,
 }
 
-impl crate::TableDisplay for ExecutionTimeObservation {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let obs = crate::display_vec_compact(&self.observations);
-        crate::display_table(f, &[("Key", &self.key), ("Observations", &obs)], standalone)
+impl crate::TreeDisplay for ExecutionTimeObservation {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Key", &self.key, false)?;
+        crate::tree_vec_children(w, "Observations", &self.observations, true)
     }
 }
 
@@ -481,14 +491,11 @@ pub struct ValidatorExecutionTimeObservation {
     pub duration: std::time::Duration,
 }
 
-impl crate::TableDisplay for ValidatorExecutionTimeObservation {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl crate::TreeDisplay for ValidatorExecutionTimeObservation {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         let duration_str = format!("{:?}", self.duration);
-        crate::display_table(
-            f,
-            &[("Validator", &self.validator), ("Duration", &duration_str)],
-            standalone,
-        )
+        w.leaf("Validator", &self.validator, false)?;
+        w.leaf("Duration", &duration_str, true)
     }
 }
 
@@ -560,11 +567,9 @@ impl std::fmt::Display for ExecutionTimeObservationKey {
                 function,
                 type_arguments,
             } => {
-                let type_args = crate::display_vec(type_arguments);
-                write!(
-                    f,
-                    "MoveEntryPoint({package}::{module}::{function}, type_arguments: {type_args})"
-                )
+                write!(f, "MoveEntryPoint({package}::{module}::{function})")?;
+                let mut w = crate::TreeWriter::new(f);
+                crate::tree_vec_inline(&mut w, "Type Arguments", type_arguments, true)
             }
             ExecutionTimeObservationKey::TransferObjects => write!(f, "TransferObjects"),
             ExecutionTimeObservationKey::SplitCoins => write!(f, "SplitCoins"),
@@ -604,18 +609,13 @@ pub struct AuthenticatorStateExpire {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
-impl crate::TableDisplay for AuthenticatorStateExpire {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Min Epoch", &self.min_epoch),
-                (
-                    "Authenticator Obj Initial Shared Version",
-                    &self.authenticator_obj_initial_shared_version,
-                ),
-            ],
-            standalone,
+impl crate::TreeDisplay for AuthenticatorStateExpire {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Min Epoch", &self.min_epoch, false)?;
+        w.leaf(
+            "Authenticator Obj Initial Shared Version",
+            &self.authenticator_obj_initial_shared_version,
+            true,
         )
     }
 }
@@ -657,21 +657,15 @@ pub struct AuthenticatorStateUpdateV1 {
     pub authenticator_obj_initial_shared_version: u64,
 }
 
-impl crate::TableDisplay for AuthenticatorStateUpdateV1 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let jwks_count = crate::display_vec_compact(&self.new_active_jwks);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Round", &self.round),
-                ("New Active JWKs", &jwks_count),
-                (
-                    "Authenticator Obj Initial Shared Version",
-                    &self.authenticator_obj_initial_shared_version,
-                ),
-            ],
-            standalone,
+impl crate::TreeDisplay for AuthenticatorStateUpdateV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Round", &self.round, false)?;
+        crate::tree_vec_children(w, "New Active JWKs", &self.new_active_jwks, false)?;
+        w.leaf(
+            "Authenticator Obj Initial Shared Version",
+            &self.authenticator_obj_initial_shared_version,
+            true,
         )
     }
 }
@@ -704,17 +698,11 @@ pub struct ActiveJwk {
     pub epoch: u64,
 }
 
-impl crate::TableDisplay for ActiveJwk {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("JWK ID", &self.jwk_id),
-                ("JWK", &self.jwk),
-                ("Epoch", &self.epoch),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ActiveJwk {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("JWK ID", &self.jwk_id, false)?;
+        w.leaf("JWK", &self.jwk, false)?;
+        w.leaf("Epoch", &self.epoch, true)
     }
 }
 
@@ -751,8 +739,9 @@ impl std::fmt::Display for ConsensusDeterminedVersionAssignments {
             ConsensusDeterminedVersionAssignments::CancelledTransactions {
                 cancelled_transactions,
             } => {
-                let txns = crate::display_vec(cancelled_transactions);
-                write!(f, "CancelledTransactions({txns})")
+                write!(f, "Cancelled Transactions")?;
+                let mut w = crate::TreeWriter::new(f);
+                crate::tree_vec_children(&mut w, "Transactions", cancelled_transactions, true)
             }
         }
     }
@@ -781,17 +770,10 @@ pub struct CancelledTransaction {
     pub version_assignments: Vec<VersionAssignment>,
 }
 
-impl crate::TableDisplay for CancelledTransaction {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let assignments = crate::display_vec_compact(&self.version_assignments);
-        crate::display_table(
-            f,
-            &[
-                ("Digest", &self.digest),
-                ("Version Assignments", &assignments),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for CancelledTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Digest", &self.digest, false)?;
+        crate::tree_vec_children(w, "Version Assignments", &self.version_assignments, true)
     }
 }
 
@@ -819,13 +801,10 @@ pub struct VersionAssignment {
     pub version: Version,
 }
 
-impl crate::TableDisplay for VersionAssignment {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Object ID", &self.object_id), ("Version", &self.version)],
-            standalone,
-        )
+impl crate::TreeDisplay for VersionAssignment {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, true)
     }
 }
 
@@ -874,19 +853,16 @@ pub struct ConsensusCommitPrologueV1 {
     pub consensus_determined_version_assignments: ConsensusDeterminedVersionAssignments,
 }
 
-impl crate::TableDisplay for ConsensusCommitPrologueV1 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let sub_dag = crate::display_option(&self.sub_dag_index);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Round", &self.round),
-                ("Sub DAG Index", &sub_dag),
-                ("Commit Timestamp Ms", &self.commit_timestamp_ms),
-                ("Consensus Commit Digest", &self.consensus_commit_digest),
-            ],
-            standalone,
+impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Round", &self.round, false)?;
+        crate::tree_option(w, "Sub DAG Index", &self.sub_dag_index, false)?;
+        w.leaf("Commit Timestamp Ms", &self.commit_timestamp_ms, false)?;
+        w.leaf(
+            "Consensus Commit Digest",
+            &self.consensus_commit_digest,
+            true,
         )
     }
 }
@@ -954,26 +930,24 @@ pub struct ChangeEpoch {
     pub system_packages: Vec<SystemPackage>,
 }
 
-impl crate::TableDisplay for ChangeEpoch {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_compact(&self.system_packages);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ChangeEpoch {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        crate::tree_vec_children(w, "System Packages", &self.system_packages, true)
     }
 }
 
@@ -1045,27 +1019,29 @@ pub struct ChangeEpochV2 {
     pub system_packages: Vec<SystemPackage>,
 }
 
-impl crate::TableDisplay for ChangeEpochV2 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_compact(&self.system_packages);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Computation Charge Burned", &self.computation_charge_burned),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ChangeEpochV2 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf(
+            "Computation Charge Burned",
+            &self.computation_charge_burned,
+            false,
+        )?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        crate::tree_vec_children(w, "System Packages", &self.system_packages, true)
     }
 }
 
@@ -1123,28 +1099,34 @@ pub struct ChangeEpochV3 {
     pub eligible_active_validators: Vec<u64>,
 }
 
-impl crate::TableDisplay for ChangeEpochV3 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_compact(&self.system_packages);
-        let validators_count = crate::display_vec(&self.eligible_active_validators);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Computation Charge Burned", &self.computation_charge_burned),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-                ("Eligible Active Validators", &validators_count),
-            ],
-            standalone,
+impl crate::TreeDisplay for ChangeEpochV3 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf(
+            "Computation Charge Burned",
+            &self.computation_charge_burned,
+            false,
+        )?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        crate::tree_vec_children(w, "System Packages", &self.system_packages, false)?;
+        crate::tree_vec_inline(
+            w,
+            "Eligible Active Validators",
+            &self.eligible_active_validators,
+            true,
         )
     }
 }
@@ -1208,31 +1190,40 @@ pub struct ChangeEpochV4 {
     pub adjust_rewards_by_score: bool,
 }
 
-impl crate::TableDisplay for ChangeEpochV4 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let pkgs_count = crate::display_vec_compact(&self.system_packages);
-        let validators_count = crate::display_vec(&self.eligible_active_validators);
-        let scores_count = crate::display_vec(&self.scores);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Protocol Version", &self.protocol_version),
-                ("Storage Charge", &self.storage_charge),
-                ("Computation Charge", &self.computation_charge),
-                ("Computation Charge Burned", &self.computation_charge_burned),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-                ("Epoch Start Timestamp Ms", &self.epoch_start_timestamp_ms),
-                ("System Packages", &pkgs_count),
-                ("Eligible Active Validators", &validators_count),
-                ("Scores", &scores_count),
-                ("Adjust Rewards By Score", &self.adjust_rewards_by_score),
-            ],
-            standalone,
+impl crate::TreeDisplay for ChangeEpochV4 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Protocol Version", &self.protocol_version, false)?;
+        w.leaf("Storage Charge", &self.storage_charge, false)?;
+        w.leaf("Computation Charge", &self.computation_charge, false)?;
+        w.leaf(
+            "Computation Charge Burned",
+            &self.computation_charge_burned,
+            false,
+        )?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            false,
+        )?;
+        w.leaf(
+            "Epoch Start Timestamp Ms",
+            &self.epoch_start_timestamp_ms,
+            false,
+        )?;
+        crate::tree_vec_children(w, "System Packages", &self.system_packages, false)?;
+        crate::tree_vec_inline(
+            w,
+            "Eligible Active Validators",
+            &self.eligible_active_validators,
+            false,
+        )?;
+        crate::tree_vec_inline(w, "Scores", &self.scores, false)?;
+        w.leaf(
+            "Adjust Rewards By Score",
+            &self.adjust_rewards_by_score,
+            true,
         )
     }
 }
@@ -1257,19 +1248,11 @@ pub struct SystemPackage {
     pub dependencies: Vec<ObjectId>,
 }
 
-impl crate::TableDisplay for SystemPackage {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let modules_count = crate::display_bytes_vec(&self.modules);
-        let deps = crate::display_vec(&self.dependencies);
-        crate::display_table(
-            f,
-            &[
-                ("Version", &self.version),
-                ("Modules", &modules_count),
-                ("Dependencies", &deps),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for SystemPackage {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Version", &self.version, false)?;
+        crate::tree_bytes_vec(w, "Modules", &self.modules, false)?;
+        crate::tree_vec_inline(w, "Dependencies", &self.dependencies, true)
     }
 }
 
@@ -1293,11 +1276,10 @@ pub struct GenesisTransaction {
     pub events: Vec<Event>,
 }
 
-impl crate::TableDisplay for GenesisTransaction {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let objects = crate::display_vec_compact(&self.objects);
-        let events = crate::display_vec_compact(&self.events);
-        crate::display_table(f, &[("Objects", &objects), ("Events", &events)], standalone)
+impl crate::TreeDisplay for GenesisTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_vec_children(w, "Objects", &self.objects, false)?;
+        crate::tree_vec_children(w, "Events", &self.events, true)
     }
 }
 
@@ -1327,15 +1309,10 @@ pub struct ProgrammableTransaction {
     pub commands: Vec<Command>,
 }
 
-impl crate::TableDisplay for ProgrammableTransaction {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let inputs = crate::display_vec_compact(&self.inputs);
-        let commands = crate::display_vec_compact(&self.commands);
-        crate::display_table(
-            f,
-            &[("Inputs", &inputs), ("Commands", &commands)],
-            standalone,
-        )
+impl crate::TreeDisplay for ProgrammableTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_vec_children(w, "Inputs", &self.inputs, false)?;
+        crate::tree_vec_children(w, "Commands", &self.commands, true)
     }
 }
 
@@ -1396,40 +1373,50 @@ impl Input {
     );
 }
 
-impl crate::TableDisplay for Input {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl std::fmt::Display for Input {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Input::Pure { value } => crate::display_table(
-                f,
-                &[("Type", &"Pure"), ("Value", &hex::encode(value))],
-                standalone,
-            ),
-            Input::ImmutableOrOwned(obj_ref) => {
-                let obj = crate::Nested(obj_ref).to_string();
-                crate::display_table(
-                    f,
-                    &[("Type", &"ImmutableOrOwned"), ("Object", &obj)],
-                    standalone,
-                )
+            Self::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
+            Self::ImmutableOrOwned(obj_ref) => {
+                write!(f, "ImmutableOrOwned")?;
+                let mut w = crate::TreeWriter::new(f);
+                obj_ref.fmt_tree(&mut w)
             }
-            Input::Shared {
+            Self::Shared {
                 object_id,
                 initial_shared_version,
                 mutable,
-            } => crate::display_table(
-                f,
-                &[
-                    ("Type", &"Shared"),
-                    ("Object ID", object_id),
-                    ("Initial Shared Version", initial_shared_version),
-                    ("Mutable", mutable),
-                ],
-                standalone,
-            ),
-            Input::Receiving(obj_ref) => {
-                let obj = crate::Nested(obj_ref).to_string();
-                crate::display_table(f, &[("Type", &"Receiving"), ("Object", &obj)], standalone)
+            } => {
+                write!(f, "Shared")?;
+                let mut w = crate::TreeWriter::new(f);
+                w.leaf("Object ID", object_id, false)?;
+                w.leaf("Initial Shared Version", initial_shared_version, false)?;
+                w.leaf("Mutable", mutable, true)
             }
+            Self::Receiving(obj_ref) => {
+                write!(f, "Receiving")?;
+                let mut w = crate::TreeWriter::new(f);
+                obj_ref.fmt_tree(&mut w)
+            }
+        }
+    }
+}
+
+impl crate::TreeDisplay for Input {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::Pure { value } => w.leaf("Value", &hex::encode(value), true),
+            Self::ImmutableOrOwned(obj_ref) => obj_ref.fmt_tree(w),
+            Self::Shared {
+                object_id,
+                initial_shared_version,
+                mutable,
+            } => {
+                w.leaf("Object ID", object_id, false)?;
+                w.leaf("Initial Shared Version", initial_shared_version, false)?;
+                w.leaf("Mutable", mutable, true)
+            }
+            Self::Receiving(obj_ref) => obj_ref.fmt_tree(w),
         }
     }
 }
@@ -1509,16 +1496,30 @@ impl Command {
     );
 }
 
-impl crate::TableDisplay for Command {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+impl std::fmt::Display for Command {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Command::MoveCall(mc) => mc.fmt_table(f, standalone),
-            Command::TransferObjects(to) => to.fmt_table(f, standalone),
-            Command::SplitCoins(sc) => sc.fmt_table(f, standalone),
-            Command::MergeCoins(mc) => mc.fmt_table(f, standalone),
-            Command::Publish(p) => p.fmt_table(f, standalone),
-            Command::MakeMoveVector(mmv) => mmv.fmt_table(f, standalone),
-            Command::Upgrade(u) => u.fmt_table(f, standalone),
+            Self::MoveCall(v) => v.fmt(f),
+            Self::TransferObjects(v) => v.fmt(f),
+            Self::SplitCoins(v) => v.fmt(f),
+            Self::MergeCoins(v) => v.fmt(f),
+            Self::Publish(v) => v.fmt(f),
+            Self::MakeMoveVector(v) => v.fmt(f),
+            Self::Upgrade(v) => v.fmt(f),
+        }
+    }
+}
+
+impl crate::TreeDisplay for Command {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        match self {
+            Self::MoveCall(v) => v.fmt_tree(w),
+            Self::TransferObjects(v) => v.fmt_tree(w),
+            Self::SplitCoins(v) => v.fmt_tree(w),
+            Self::MergeCoins(v) => v.fmt_tree(w),
+            Self::Publish(v) => v.fmt_tree(w),
+            Self::MakeMoveVector(v) => v.fmt_tree(w),
+            Self::Upgrade(v) => v.fmt_tree(w),
         }
     }
 }
@@ -1544,14 +1545,10 @@ pub struct TransferObjects {
     pub address: Argument,
 }
 
-impl crate::TableDisplay for TransferObjects {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let objects = crate::display_vec(&self.objects);
-        crate::display_table(
-            f,
-            &[("Objects", &objects), ("Address", &self.address)],
-            standalone,
-        )
+impl crate::TreeDisplay for TransferObjects {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_vec_inline(w, "Objects", &self.objects, false)?;
+        w.leaf("Address", &self.address, true)
     }
 }
 
@@ -1576,14 +1573,10 @@ pub struct SplitCoins {
     pub amounts: Vec<Argument>,
 }
 
-impl crate::TableDisplay for SplitCoins {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let amounts = crate::display_vec(&self.amounts);
-        crate::display_table(
-            f,
-            &[("Coin", &self.coin), ("Amounts", &amounts)],
-            standalone,
-        )
+impl crate::TreeDisplay for SplitCoins {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Coin", &self.coin, false)?;
+        crate::tree_vec_inline(w, "Amounts", &self.amounts, true)
     }
 }
 
@@ -1614,14 +1607,10 @@ pub struct MergeCoins {
     pub coins_to_merge: Vec<Argument>,
 }
 
-impl crate::TableDisplay for MergeCoins {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let coins = crate::display_vec(&self.coins_to_merge);
-        crate::display_table(
-            f,
-            &[("Coin", &self.coin), ("Coins To Merge", &coins)],
-            standalone,
-        )
+impl crate::TreeDisplay for MergeCoins {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Coin", &self.coin, false)?;
+        crate::tree_vec_inline(w, "Coins To Merge", &self.coins_to_merge, true)
     }
 }
 
@@ -1653,15 +1642,10 @@ pub struct Publish {
     pub dependencies: Vec<ObjectId>,
 }
 
-impl crate::TableDisplay for Publish {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let modules_count = crate::display_bytes_vec(&self.modules);
-        let deps = crate::display_vec(&self.dependencies);
-        crate::display_table(
-            f,
-            &[("Modules", &modules_count), ("Dependencies", &deps)],
-            standalone,
-        )
+impl crate::TreeDisplay for Publish {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_bytes_vec(w, "Modules", &self.modules, false)?;
+        crate::tree_vec_inline(w, "Dependencies", &self.dependencies, true)
     }
 }
 
@@ -1690,15 +1674,10 @@ pub struct MakeMoveVector {
     pub elements: Vec<Argument>,
 }
 
-impl crate::TableDisplay for MakeMoveVector {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let type_str = crate::display_option(&self.type_);
-        let elements = crate::display_vec(&self.elements);
-        crate::display_table(
-            f,
-            &[("Type", &type_str), ("Elements", &elements)],
-            standalone,
-        )
+impl crate::TreeDisplay for MakeMoveVector {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_option(w, "Type", &self.type_, false)?;
+        crate::tree_vec_inline(w, "Elements", &self.elements, true)
     }
 }
 
@@ -1736,20 +1715,12 @@ pub struct Upgrade {
     pub ticket: Argument,
 }
 
-impl crate::TableDisplay for Upgrade {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let modules_count = crate::display_bytes_vec(&self.modules);
-        let deps = crate::display_vec(&self.dependencies);
-        crate::display_table(
-            f,
-            &[
-                ("Modules", &modules_count),
-                ("Dependencies", &deps),
-                ("Package", &self.package),
-                ("Ticket", &self.ticket),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for Upgrade {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_bytes_vec(w, "Modules", &self.modules, false)?;
+        crate::tree_vec_inline(w, "Dependencies", &self.dependencies, false)?;
+        w.leaf("Package", &self.package, false)?;
+        w.leaf("Ticket", &self.ticket, true)
     }
 }
 
@@ -1889,20 +1860,12 @@ pub struct MoveCall {
     pub arguments: Vec<Argument>,
 }
 
-impl crate::TableDisplay for MoveCall {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let type_args = crate::display_vec(&self.type_arguments);
-        let args = crate::display_vec(&self.arguments);
-        crate::display_table(
-            f,
-            &[
-                ("Package", &self.package),
-                ("Module", &self.module),
-                ("Function", &self.function),
-                ("Type Arguments", &type_args),
-                ("Arguments", &args),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for MoveCall {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Package", &self.package, false)?;
+        w.leaf("Module", &self.module, false)?;
+        w.leaf("Function", &self.function, false)?;
+        crate::tree_vec_inline(w, "Type Arguments", &self.type_arguments, false)?;
+        crate::tree_vec_inline(w, "Arguments", &self.arguments, true)
     }
 }

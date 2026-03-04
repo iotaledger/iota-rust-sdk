@@ -56,15 +56,11 @@ impl Coin {
 
 impl std::fmt::Display for Coin {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Coin Type", &self.coin_type),
-                ("ID", &self.id),
-                ("Balance", &self.balance),
-            ],
-            true,
-        )
+        write!(f, "Coin")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("Coin Type", &self.coin_type, false)?;
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Balance", &self.balance, true)
     }
 }
 

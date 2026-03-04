@@ -88,32 +88,28 @@ impl TransactionEffectsV1 {
     }
 }
 
-impl crate::TableDisplay for TransactionEffectsV1 {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let status = format!("{:?}", self.status);
-        let gas_object_index = crate::display_option(&self.gas_object_index);
-        let events_digest = crate::display_option(&self.events_digest);
-        let dependencies = crate::display_vec(&self.dependencies);
-        let gas_used = crate::Nested(&self.gas_used).to_string();
-        let changed_objects = crate::display_vec_compact(&self.changed_objects);
-        let unchanged_shared_objects = crate::display_vec_compact(&self.unchanged_shared_objects);
-        let auxiliary_data_digest = crate::display_option(&self.auxiliary_data_digest);
-        crate::display_table(
-            f,
-            &[
-                ("Status", &status),
-                ("Epoch", &self.epoch),
-                ("Gas Used", &gas_used),
-                ("Transaction Digest", &self.transaction_digest),
-                ("Gas Object Index", &gas_object_index),
-                ("Events Digest", &events_digest),
-                ("Dependencies", &dependencies),
-                ("Lamport Version", &self.lamport_version),
-                ("Changed Objects", &changed_objects),
-                ("Unchanged Shared Objects", &unchanged_shared_objects),
-                ("Auxiliary Data Digest", &auxiliary_data_digest),
-            ],
-            standalone,
+impl crate::TreeDisplay for TransactionEffectsV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Status", &format!("{:?}", self.status), false)?;
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.child("Gas Used", &self.gas_used, false)?;
+        w.leaf("Transaction Digest", &self.transaction_digest, false)?;
+        crate::tree_option(w, "Gas Object Index", &self.gas_object_index, false)?;
+        crate::tree_option(w, "Events Digest", &self.events_digest, false)?;
+        crate::tree_vec_inline(w, "Dependencies", &self.dependencies, false)?;
+        w.leaf("Lamport Version", &self.lamport_version, false)?;
+        crate::tree_vec_children(w, "Changed Objects", &self.changed_objects, false)?;
+        crate::tree_vec_children(
+            w,
+            "Unchanged Shared Objects",
+            &self.unchanged_shared_objects,
+            false,
+        )?;
+        crate::tree_option(
+            w,
+            "Auxiliary Data Digest",
+            &self.auxiliary_data_digest,
+            true,
         )
     }
 }
@@ -148,18 +144,12 @@ pub struct ChangedObject {
     pub id_operation: IdOperation,
 }
 
-impl crate::TableDisplay for ChangedObject {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Object ID", &self.object_id),
-                ("Input State", &self.input_state),
-                ("Output State", &self.output_state),
-                ("ID Operation", &self.id_operation),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ChangedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Input State", &self.input_state, false)?;
+        w.leaf("Output State", &self.output_state, false)?;
+        w.leaf("ID Operation", &self.id_operation, true)
     }
 }
 
@@ -185,13 +175,10 @@ pub struct UnchangedSharedObject {
     pub kind: UnchangedSharedKind,
 }
 
-impl crate::TableDisplay for UnchangedSharedObject {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Object ID", &self.object_id), ("Kind", &self.kind)],
-            standalone,
-        )
+impl crate::TreeDisplay for UnchangedSharedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Kind", &self.kind, true)
     }
 }
 

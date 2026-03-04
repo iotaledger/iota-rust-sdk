@@ -410,18 +410,13 @@ pub struct MoveLocation {
 
 impl std::fmt::Display for MoveLocation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let function_name = crate::display_option(&self.function_name);
-        crate::display_table(
-            f,
-            &[
-                ("Package", &self.package),
-                ("Module", &self.module),
-                ("Function", &self.function),
-                ("Instruction", &self.instruction),
-                ("Function Name", &function_name),
-            ],
-            true,
-        )
+        write!(f, "Move Location")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("Package", &self.package, false)?;
+        w.leaf("Module", &self.module, false)?;
+        w.leaf("Function", &self.function, false)?;
+        w.leaf("Instruction", &self.instruction, false)?;
+        crate::tree_option(&mut w, "Function Name", &self.function_name, true)
     }
 }
 

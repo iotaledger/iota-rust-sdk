@@ -93,23 +93,16 @@ pub struct EndOfEpochData {
     pub epoch_supply_change: i64,
 }
 
-impl crate::TableDisplay for EndOfEpochData {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let committee_display = crate::display_vec_compact(&self.next_epoch_committee);
-        let commitments_display = crate::display_vec(&self.epoch_commitments);
-        crate::display_table(
-            f,
-            &[
-                ("Next Epoch Committee", &committee_display),
-                (
-                    "Next Epoch Protocol Version",
-                    &self.next_epoch_protocol_version,
-                ),
-                ("Epoch Commitments", &commitments_display),
-                ("Epoch Supply Change", &self.epoch_supply_change),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for EndOfEpochData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_vec_children(w, "Next Epoch Committee", &self.next_epoch_committee, false)?;
+        w.leaf(
+            "Next Epoch Protocol Version",
+            &self.next_epoch_protocol_version,
+            false,
+        )?;
+        crate::tree_vec_inline(w, "Epoch Commitments", &self.epoch_commitments, false)?;
+        w.leaf("Epoch Supply Change", &self.epoch_supply_change, true)
     }
 }
 
@@ -201,30 +194,30 @@ pub struct CheckpointSummary {
     pub version_specific_data: Vec<u8>,
 }
 
-impl crate::TableDisplay for CheckpointSummary {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let previous_digest = crate::display_option(&self.previous_digest);
-        let commitments_display = crate::display_vec(&self.checkpoint_commitments);
-        let gas_cost = crate::Nested(&self.epoch_rolling_gas_cost_summary).to_string();
-        let end_of_epoch = crate::display_option_compact(&self.end_of_epoch_data);
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Sequence Number", &self.sequence_number),
-                (
-                    "Network Total Transactions",
-                    &self.network_total_transactions,
-                ),
-                ("Content Digest", &self.content_digest),
-                ("Previous Digest", &previous_digest),
-                ("Epoch Rolling Gas Cost", &gas_cost),
-                ("Timestamp (ms)", &self.timestamp_ms),
-                ("Checkpoint Commitments", &commitments_display),
-                ("End of Epoch Data", &end_of_epoch),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for CheckpointSummary {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Sequence Number", &self.sequence_number, false)?;
+        w.leaf(
+            "Network Total Transactions",
+            &self.network_total_transactions,
+            false,
+        )?;
+        w.leaf("Content Digest", &self.content_digest, false)?;
+        crate::tree_option(w, "Previous Digest", &self.previous_digest, false)?;
+        w.child(
+            "Epoch Rolling Gas Cost",
+            &self.epoch_rolling_gas_cost_summary,
+            false,
+        )?;
+        w.leaf("Timestamp (ms)", &self.timestamp_ms, false)?;
+        crate::tree_vec_inline(
+            w,
+            "Checkpoint Commitments",
+            &self.checkpoint_commitments,
+            false,
+        )?;
+        crate::tree_option_child(w, "End of Epoch Data", &self.end_of_epoch_data, true)
     }
 }
 
@@ -301,18 +294,11 @@ pub struct CheckpointTransactionInfo {
     pub signatures: Vec<UserSignature>,
 }
 
-impl crate::TableDisplay for CheckpointTransactionInfo {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let sigs_display = crate::display_vec(&self.signatures);
-        crate::display_table(
-            f,
-            &[
-                ("Transaction", &self.transaction),
-                ("Effects", &self.effects),
-                ("Signatures", &sigs_display),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for CheckpointTransactionInfo {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Transaction", &self.transaction, false)?;
+        w.leaf("Effects", &self.effects, false)?;
+        crate::tree_vec_inline(w, "Signatures", &self.signatures, true)
     }
 }
 
@@ -331,19 +317,11 @@ pub struct CheckpointData {
     pub transactions: Vec<CheckpointTransaction>,
 }
 
-impl crate::TableDisplay for CheckpointData {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let checkpoint = crate::Nested(&self.checkpoint_summary.checkpoint).to_string();
-        let txns_display = crate::display_vec_compact(&self.transactions);
-        crate::display_table(
-            f,
-            &[
-                ("Checkpoint", &checkpoint),
-                ("Contents", &self.checkpoint_contents),
-                ("Transactions", &txns_display),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for CheckpointData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.child("Checkpoint", &self.checkpoint_summary.checkpoint, false)?;
+        w.leaf("Contents", &self.checkpoint_contents, false)?;
+        crate::tree_vec_children(w, "Transactions", &self.transactions, true)
     }
 }
 
@@ -376,26 +354,14 @@ pub struct CheckpointTransaction {
     pub output_objects: Vec<Object>,
 }
 
-impl crate::TableDisplay for CheckpointTransaction {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let events_display = if self.events.is_some() {
-            "Yes".to_string()
-        } else {
-            "-".to_string()
-        };
-        let input_display = crate::display_vec_compact(&self.input_objects);
-        let output_display = crate::display_vec_compact(&self.output_objects);
-        crate::display_table(
-            f,
-            &[
-                ("Transaction", &self.transaction),
-                ("Effects", &self.effects),
-                ("Events", &events_display),
-                ("Input Objects", &input_display),
-                ("Output Objects", &output_display),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for CheckpointTransaction {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Transaction", &self.transaction, false)?;
+        w.leaf("Effects", &self.effects, false)?;
+        let events_display = if self.events.is_some() { "Yes" } else { "None" };
+        w.leaf("Events", &events_display, false)?;
+        crate::tree_vec_children(w, "Input Objects", &self.input_objects, false)?;
+        crate::tree_vec_children(w, "Output Objects", &self.output_objects, true)
     }
 }
 

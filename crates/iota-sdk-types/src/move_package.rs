@@ -90,19 +90,11 @@ impl MovePackageData {
     }
 }
 
-impl crate::TableDisplay for MovePackageData {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let modules_display = crate::display_bytes_vec(&self.modules);
-        let deps_display = crate::display_vec(&self.dependencies);
-        crate::display_table(
-            f,
-            &[
-                ("Modules", &modules_display),
-                ("Dependencies", &deps_display),
-                ("Digest", &self.digest),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for MovePackageData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        crate::tree_bytes_vec(w, "Modules", &self.modules, false)?;
+        crate::tree_vec_inline(w, "Dependencies", &self.dependencies, false)?;
+        w.leaf("Digest", &self.digest, true)
     }
 }
 

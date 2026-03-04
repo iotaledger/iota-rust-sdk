@@ -106,152 +106,185 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
-/// Context-aware table display trait.
+/// Trait for types that render as tree sub-trees.
 ///
-/// Types implementing this trait can render themselves with borders
-/// (standalone) or without borders (nested inside another table cell) to avoid
-/// visual bloat.
-pub(crate) trait TableDisplay {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result;
+/// Types implementing this trait can render their fields as a tree structure
+/// with box-drawing characters (`├──`, `└──`, `│`).
+pub(crate) trait TreeDisplay {
+    fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result;
 }
 
-/// Wrapper that renders a [`TableDisplay`] value in non-standalone (compact)
-/// mode.
-pub(crate) struct Nested<'a, T: TableDisplay + ?Sized>(pub &'a T);
+/// A tree node writer that tracks depth and sibling position for rendering
+/// tree-structured output with box-drawing characters.
+pub(crate) struct TreeWriter<'f, 'a> {
+    f: &'f mut std::fmt::Formatter<'a>,
+    prefix: String,
+    needs_newline: bool,
+}
 
-impl<T: TableDisplay + ?Sized> std::fmt::Display for Nested<'_, T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.fmt_table(f, false)
+impl<'f, 'a> TreeWriter<'f, 'a> {
+    pub fn new(f: &'f mut std::fmt::Formatter<'a>) -> Self {
+        Self {
+            f,
+            prefix: String::new(),
+            needs_newline: true,
+        }
+    }
+
+    fn write_line(&mut self, connector: &str, text: &str) -> std::fmt::Result {
+        if self.needs_newline {
+            writeln!(self.f)?;
+        }
+        write!(self.f, "{}{}{}", self.prefix, connector, text)?;
+        self.needs_newline = true;
+        Ok(())
+    }
+
+    /// Write a leaf node: `├── Label: value` or `└── Label: value`
+    pub fn leaf(
+        &mut self,
+        label: &str,
+        value: &dyn std::fmt::Display,
+        is_last: bool,
+    ) -> std::fmt::Result {
+        let connector = if is_last { "└── " } else { "├── " };
+        self.write_line(connector, &format!("{label}: {value}"))
+    }
+
+    /// Write a branch with children rendered by a closure.
+    pub fn branch(
+        &mut self,
+        label: &str,
+        is_last: bool,
+        children: impl FnOnce(&mut Self) -> std::fmt::Result,
+    ) -> std::fmt::Result {
+        let connector = if is_last { "└── " } else { "├── " };
+        self.write_line(connector, label)?;
+        let extension = if is_last { "    " } else { "│   " };
+        let old_len = self.prefix.len();
+        self.prefix.push_str(extension);
+        children(self)?;
+        self.prefix.truncate(old_len);
+        Ok(())
+    }
+
+    /// Write a [`TreeDisplay`] child as a sub-tree.
+    pub fn child(
+        &mut self,
+        label: &str,
+        child: &dyn TreeDisplay,
+        is_last: bool,
+    ) -> std::fmt::Result {
+        self.branch(label, is_last, |w| child.fmt_tree(w))
     }
 }
 
-/// Macro to generate `Display` impl that delegates to [`TableDisplay`].
-macro_rules! impl_table_display {
-    ($($ty:ty),* $(,)?) => {
+/// Display a `Vec` of `Display` items as indexed leaf nodes.
+pub(crate) fn tree_vec_inline(
+    w: &mut TreeWriter<'_, '_>,
+    label: &str,
+    items: &[impl std::fmt::Display],
+    is_last: bool,
+) -> std::fmt::Result {
+    if items.is_empty() {
+        w.leaf(label, &"[]", is_last)
+    } else {
+        w.branch(label, is_last, |w| {
+            let last_idx = items.len() - 1;
+            for (i, item) in items.iter().enumerate() {
+                w.leaf(&i.to_string(), &item, i == last_idx)?;
+            }
+            Ok(())
+        })
+    }
+}
+
+/// Display a `Vec` of [`TreeDisplay`] items as indexed sub-trees.
+pub(crate) fn tree_vec_children(
+    w: &mut TreeWriter<'_, '_>,
+    label: &str,
+    items: &[impl TreeDisplay],
+    is_last: bool,
+) -> std::fmt::Result {
+    if items.is_empty() {
+        w.leaf(label, &"[]", is_last)
+    } else {
+        w.branch(label, is_last, |w| {
+            let last_idx = items.len() - 1;
+            for (i, item) in items.iter().enumerate() {
+                w.child(&i.to_string(), item, i == last_idx)?;
+            }
+            Ok(())
+        })
+    }
+}
+
+/// Display an `Option<impl Display>`, showing "None" for `None`.
+pub(crate) fn tree_option(
+    w: &mut TreeWriter<'_, '_>,
+    label: &str,
+    opt: &Option<impl std::fmt::Display>,
+    is_last: bool,
+) -> std::fmt::Result {
+    match opt {
+        Some(v) => w.leaf(label, v, is_last),
+        None => w.leaf(label, &"None", is_last),
+    }
+}
+
+/// Display an `Option<impl TreeDisplay>` as a sub-tree, showing "None" for
+/// `None`.
+pub(crate) fn tree_option_child(
+    w: &mut TreeWriter<'_, '_>,
+    label: &str,
+    opt: &Option<impl TreeDisplay>,
+    is_last: bool,
+) -> std::fmt::Result {
+    match opt {
+        Some(v) => w.child(label, v, is_last),
+        None => w.leaf(label, &"None", is_last),
+    }
+}
+
+/// Display a `Vec<Vec<u8>>` as Base64-encoded indexed leaves.
+pub(crate) fn tree_bytes_vec(
+    w: &mut TreeWriter<'_, '_>,
+    label: &str,
+    items: &[Vec<u8>],
+    is_last: bool,
+) -> std::fmt::Result {
+    if items.is_empty() {
+        w.leaf(label, &"[]", is_last)
+    } else {
+        use base64ct::Encoding;
+        w.branch(label, is_last, |w| {
+            let last_idx = items.len() - 1;
+            for (i, bytes) in items.iter().enumerate() {
+                w.leaf(
+                    &i.to_string(),
+                    &base64ct::Base64::encode_string(bytes),
+                    i == last_idx,
+                )?;
+            }
+            Ok(())
+        })
+    }
+}
+
+/// Macro to generate `Display` impl that writes a root label then delegates to
+/// [`TreeDisplay`].
+macro_rules! impl_tree_display {
+    ($($ty:ty => $label:expr),* $(,)?) => {
         $(
         impl std::fmt::Display for $ty {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                TableDisplay::fmt_table(self, f, true)
+                write!(f, "{}", $label)?;
+                let mut w = TreeWriter::new(f);
+                TreeDisplay::fmt_tree(self, &mut w)
             }
         }
         )*
     };
-}
-
-/// Build a key-value table for Display implementations using `tabled`.
-///
-/// When `standalone` is `true`, the table is rendered with full borders.
-/// When `standalone` is `false` (nested inside another table cell), the outer
-/// frame is removed but inner borders are kept.
-pub(crate) fn display_table(
-    f: &mut std::fmt::Formatter<'_>,
-    rows: &[(&str, &dyn std::fmt::Display)],
-    standalone: bool,
-) -> std::fmt::Result {
-    use tabled::{builder::Builder, settings::Style};
-    let mut builder = Builder::new();
-    for (key, value) in rows {
-        builder.push_record([*key, &value.to_string()]);
-    }
-    let mut table = builder.build();
-    if !standalone {
-        table.with(
-            Style::ascii()
-                .remove_top()
-                .remove_bottom()
-                .remove_left()
-                .remove_right(),
-        );
-    }
-    write!(f, "{}", table)
-}
-
-/// Display an `Option` field, showing "-" for `None`.
-pub(crate) fn display_option(opt: &Option<impl std::fmt::Display>) -> String {
-    match opt {
-        Some(v) => v.to_string(),
-        None => "-".to_string(),
-    }
-}
-
-/// Display an `Option<T>` where `T: TableDisplay`, rendering compactly (no
-/// borders).
-pub(crate) fn display_option_compact<T: TableDisplay>(opt: &Option<T>) -> String {
-    match opt {
-        Some(v) => Nested(v).to_string(),
-        None => "-".to_string(),
-    }
-}
-
-/// Display a `Vec` by showing each element as a sub-table row.
-///
-/// The outer frame is removed so lists render cleanly when embedded in another
-/// table cell, but inner borders between rows are kept.
-pub(crate) fn display_vec(v: &[impl std::fmt::Display]) -> String {
-    if v.is_empty() {
-        "[]".to_string()
-    } else {
-        use tabled::{builder::Builder, settings::Style};
-        let mut builder = Builder::new();
-        for (i, item) in v.iter().enumerate() {
-            builder.push_record([&i.to_string(), &item.to_string()]);
-        }
-        let mut table = builder.build();
-        table.with(
-            Style::ascii()
-                .remove_top()
-                .remove_bottom()
-                .remove_left()
-                .remove_right(),
-        );
-        table.to_string()
-    }
-}
-
-/// Display a vec of [`TableDisplay`] items, rendering each item without outer
-/// borders but keeping inner borders between rows.
-pub(crate) fn display_vec_compact<T: TableDisplay>(v: &[T]) -> String {
-    if v.is_empty() {
-        "[]".to_string()
-    } else {
-        use tabled::{builder::Builder, settings::Style};
-        let mut builder = Builder::new();
-        for (i, item) in v.iter().enumerate() {
-            builder.push_record([&i.to_string(), &Nested(item).to_string()]);
-        }
-        let mut table = builder.build();
-        table.with(
-            Style::ascii()
-                .remove_top()
-                .remove_bottom()
-                .remove_left()
-                .remove_right(),
-        );
-        table.to_string()
-    }
-}
-
-/// Display a `Vec<Vec<u8>>` by showing each element as Base64.
-pub(crate) fn display_bytes_vec(v: &[Vec<u8>]) -> String {
-    if v.is_empty() {
-        "[]".to_string()
-    } else {
-        use base64ct::Encoding;
-        use tabled::{builder::Builder, settings::Style};
-        let mut builder = Builder::new();
-        for (i, bytes) in v.iter().enumerate() {
-            builder.push_record([&i.to_string(), &base64ct::Base64::encode_string(bytes)]);
-        }
-        let mut table = builder.build();
-        table.with(
-            Style::ascii()
-                .remove_top()
-                .remove_bottom()
-                .remove_left()
-                .remove_right(),
-        );
-        table.to_string()
-    }
 }
 
 #[cfg(feature = "hash")]
@@ -329,78 +362,73 @@ pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
 
-impl_table_display!(
+impl_tree_display!(
     // gas.rs
-    GasCostSummary,
+    GasCostSummary => "Gas Cost Summary",
     // object.rs
-    object::ObjectReference,
-    object::MovePackage,
-    object::TypeOrigin,
-    object::UpgradeInfo,
-    object::MoveStruct,
-    object::Object,
-    object::GenesisObject,
+    object::ObjectReference => "Object Reference",
+    object::MovePackage => "Move Package",
+    object::TypeOrigin => "Type Origin",
+    object::UpgradeInfo => "Upgrade Info",
+    object::MoveStruct => "Move Struct",
+    object::Object => "Object",
+    object::GenesisObject => "Genesis Object",
     // effects/v1.rs
-    effects::TransactionEffectsV1,
-    effects::ChangedObject,
-    effects::UnchangedSharedObject,
+    effects::TransactionEffectsV1 => "Transaction Effects",
+    effects::ChangedObject => "Changed Object",
+    effects::UnchangedSharedObject => "Unchanged Shared Object",
     // events.rs
-    events::Event,
-    events::BalanceChange,
+    events::Event => "Event",
+    events::BalanceChange => "Balance Change",
     // checkpoint.rs
-    checkpoint::EndOfEpochData,
-    checkpoint::CheckpointSummary,
-    checkpoint::CheckpointTransactionInfo,
-    checkpoint::CheckpointData,
-    checkpoint::CheckpointTransaction,
+    checkpoint::EndOfEpochData => "End of Epoch Data",
+    checkpoint::CheckpointSummary => "Checkpoint Summary",
+    checkpoint::CheckpointTransactionInfo => "Checkpoint Transaction Info",
+    checkpoint::CheckpointData => "Checkpoint Data",
+    checkpoint::CheckpointTransaction => "Checkpoint Transaction",
     // validator.rs
-    validator::ValidatorCommitteeMember,
-    validator::ValidatorCommittee,
-    validator::ValidatorAggregatedSignature,
-    validator::ValidatorSignature,
+    validator::ValidatorCommitteeMember => "Validator Committee Member",
+    validator::ValidatorCommittee => "Validator Committee",
+    validator::ValidatorAggregatedSignature => "Validator Aggregated Signature",
+    validator::ValidatorSignature => "Validator Signature",
     // crypto/intent.rs
-    crypto::Intent,
+    crypto::Intent => "Intent",
     // move_package.rs
-    move_package::MovePackageData,
+    move_package::MovePackageData => "Move Package Data",
     // transaction/mod.rs
-    transaction::Transaction,
-    transaction::TransactionKind,
-    transaction::EndOfEpochTransactionKind,
-    transaction::TransactionV1,
-    transaction::GasPayment,
-    transaction::RandomnessStateUpdate,
-    transaction::AuthenticatorStateExpire,
-    transaction::AuthenticatorStateUpdateV1,
-    transaction::ActiveJwk,
-    transaction::VersionAssignment,
-    transaction::CancelledTransaction,
-    transaction::ConsensusCommitPrologueV1,
-    transaction::ChangeEpoch,
-    transaction::ChangeEpochV2,
-    transaction::ChangeEpochV3,
-    transaction::ChangeEpochV4,
-    transaction::SystemPackage,
-    transaction::GenesisTransaction,
-    transaction::ProgrammableTransaction,
-    transaction::TransferObjects,
-    transaction::SplitCoins,
-    transaction::MergeCoins,
-    transaction::Publish,
-    transaction::MakeMoveVector,
-    transaction::Upgrade,
-    transaction::MoveCall,
-    transaction::Command,
-    transaction::Input,
-    transaction::ExecutionTimeObservation,
-    transaction::ValidatorExecutionTimeObservation,
+    transaction::TransactionV1 => "Transaction",
+    transaction::GasPayment => "Gas Payment",
+    transaction::RandomnessStateUpdate => "Randomness State Update",
+    transaction::AuthenticatorStateExpire => "Authenticator State Expire",
+    transaction::AuthenticatorStateUpdateV1 => "Authenticator State Update",
+    transaction::ActiveJwk => "Active JWK",
+    transaction::VersionAssignment => "Version Assignment",
+    transaction::CancelledTransaction => "Cancelled Transaction",
+    transaction::ConsensusCommitPrologueV1 => "Consensus Commit Prologue",
+    transaction::ChangeEpoch => "Change Epoch",
+    transaction::ChangeEpochV2 => "Change Epoch V2",
+    transaction::ChangeEpochV3 => "Change Epoch V3",
+    transaction::ChangeEpochV4 => "Change Epoch V4",
+    transaction::SystemPackage => "System Package",
+    transaction::GenesisTransaction => "Genesis Transaction",
+    transaction::ProgrammableTransaction => "Programmable Transaction",
+    transaction::TransferObjects => "Transfer Objects",
+    transaction::SplitCoins => "Split Coins",
+    transaction::MergeCoins => "Merge Coins",
+    transaction::Publish => "Publish",
+    transaction::MakeMoveVector => "Make Move Vector",
+    transaction::Upgrade => "Upgrade",
+    transaction::MoveCall => "Move Call",
+    transaction::ExecutionTimeObservation => "Execution Time Observation",
+    transaction::ValidatorExecutionTimeObservation => "Validator Execution Time Observation",
     // iota_names
-    iota_names::NameRegistration,
-    iota_names::SubnameRegistration,
-    iota_names::registry::Table,
-    iota_names::registry::Registry,
-    iota_names::registry::RegistryEntry,
-    iota_names::registry::ReverseRegistryEntry,
-    iota_names::registry::NameRecord,
+    iota_names::NameRegistration => "Name Registration",
+    iota_names::SubnameRegistration => "Subname Registration",
+    iota_names::registry::Table => "Table",
+    iota_names::registry::Registry => "Registry",
+    iota_names::registry::RegistryEntry => "Registry Entry",
+    iota_names::registry::ReverseRegistryEntry => "Reverse Registry Entry",
+    iota_names::registry::NameRecord => "Name Record",
 );
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]

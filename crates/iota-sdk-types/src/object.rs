@@ -79,17 +79,11 @@ impl ObjectReference {
     }
 }
 
-impl crate::TableDisplay for ObjectReference {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Object ID", &self.object_id),
-                ("Version", &self.version),
-                ("Digest", &self.digest),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf("Digest", &self.digest, true)
     }
 }
 
@@ -249,17 +243,14 @@ pub struct MovePackage {
     pub linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
 }
 
-impl crate::TableDisplay for MovePackage {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let modules_display = format!("[{} modules]", self.modules.len());
-        crate::display_table(
-            f,
-            &[
-                ("ID", &self.id),
-                ("Version", &self.version),
-                ("Modules", &modules_display),
-            ],
-            standalone,
+impl crate::TreeDisplay for MovePackage {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf(
+            "Modules",
+            &format!("[{} modules]", self.modules.len()),
+            true,
         )
     }
 }
@@ -287,17 +278,11 @@ pub struct TypeOrigin {
     pub package: ObjectId,
 }
 
-impl crate::TableDisplay for TypeOrigin {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Module", &self.module_name),
-                ("Struct", &self.struct_name),
-                ("Package", &self.package),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for TypeOrigin {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Module", &self.module_name, false)?;
+        w.leaf("Struct", &self.struct_name, false)?;
+        w.leaf("Package", &self.package, true)
     }
 }
 
@@ -327,16 +312,10 @@ pub struct UpgradeInfo {
     pub upgraded_version: Version,
 }
 
-impl crate::TableDisplay for UpgradeInfo {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Upgraded ID", &self.upgraded_id),
-                ("Upgraded Version", &self.upgraded_version),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for UpgradeInfo {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Upgraded ID", &self.upgraded_id, false)?;
+        w.leaf("Upgraded Version", &self.upgraded_version, true)
     }
 }
 
@@ -387,18 +366,11 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
-impl crate::TableDisplay for MoveStruct {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let contents_hex = hex::encode(&self.contents);
-        crate::display_table(
-            f,
-            &[
-                ("Type", &self.type_),
-                ("Version", &self.version),
-                ("Contents", &contents_hex),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for MoveStruct {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Type", &self.type_, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf("Contents", &hex::encode(&self.contents), true)
     }
 }
 
@@ -558,21 +530,14 @@ impl Object {
     }
 }
 
-impl crate::TableDisplay for Object {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let object_type = self.object_type();
-        crate::display_table(
-            f,
-            &[
-                ("Object ID", &self.object_id()),
-                ("Version", &self.version()),
-                ("Owner", &self.owner),
-                ("Type", &object_type),
-                ("Previous Tx", &self.previous_transaction),
-                ("Storage Rebate", &self.storage_rebate),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for Object {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Object ID", &self.object_id(), false)?;
+        w.leaf("Version", &self.version(), false)?;
+        w.leaf("Owner", &self.owner, false)?;
+        w.leaf("Type", &self.object_type(), false)?;
+        w.leaf("Previous Tx", &self.previous_transaction, false)?;
+        w.leaf("Storage Rebate", &self.storage_rebate, true)
     }
 }
 
@@ -640,19 +605,12 @@ impl GenesisObject {
     }
 }
 
-impl crate::TableDisplay for GenesisObject {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let object_type = self.object_type();
-        crate::display_table(
-            f,
-            &[
-                ("Object ID", &self.object_id()),
-                ("Version", &self.version()),
-                ("Owner", &self.owner),
-                ("Type", &object_type),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for GenesisObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Object ID", &self.object_id(), false)?;
+        w.leaf("Version", &self.version(), false)?;
+        w.leaf("Owner", &self.owner, false)?;
+        w.leaf("Type", &self.object_type(), true)
     }
 }
 

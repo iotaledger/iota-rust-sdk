@@ -39,15 +39,11 @@ pub struct ZkLoginAuthenticator {
 
 impl std::fmt::Display for ZkLoginAuthenticator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Max Epoch", &self.max_epoch),
-                ("Inputs", &self.inputs),
-                ("Signature", &self.signature),
-            ],
-            true,
-        )
+        write!(f, "ZkLogin Authenticator")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("Max Epoch", &self.max_epoch, false)?;
+        w.leaf("Inputs", &self.inputs, false)?;
+        w.leaf("Signature", &self.signature, true)
     }
 }
 
@@ -195,14 +191,10 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
 
 impl std::fmt::Display for ZkLoginInputs {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Header Base64", &self.header_base64),
-                ("ISS Base64 Details", &self.iss_base64_details),
-            ],
-            true,
-        )
+        write!(f, "ZkLogin Inputs")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("Header Base64", &self.header_base64, false)?;
+        w.leaf("ISS Base64 Details", &self.iss_base64_details, true)
     }
 }
 
@@ -230,11 +222,10 @@ pub struct ZkLoginClaim {
 
 impl std::fmt::Display for ZkLoginClaim {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Value", &self.value), ("Index Mod 4", &self.index_mod_4)],
-            true,
-        )
+        write!(f, "ZkLogin Claim")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("Value", &self.value, false)?;
+        w.leaf("Index Mod 4", &self.index_mod_4, true)
     }
 }
 
@@ -443,15 +434,11 @@ pub struct ZkLoginProof {
 
 impl std::fmt::Display for ZkLoginProof {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("A (G1)", &self.a),
-                ("B (G2)", &self.b),
-                ("C (G1)", &self.c),
-            ],
-            true,
-        )
+        write!(f, "ZkLogin Proof")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("A (G1)", &self.a, false)?;
+        w.leaf("B (G2)", &self.b, false)?;
+        w.leaf("C (G1)", &self.c, true)
     }
 }
 
@@ -585,11 +572,10 @@ impl ZkLoginPublicIdentifier {
 
 impl std::fmt::Display for ZkLoginPublicIdentifier {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("ISS", &self.iss), ("Address Seed", &self.address_seed)],
-            true,
-        )
+        write!(f, "ZkLogin Public Identifier")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("ISS", &self.iss, false)?;
+        w.leaf("Address Seed", &self.address_seed, true)
     }
 }
 
@@ -623,16 +609,12 @@ pub struct Jwk {
 
 impl std::fmt::Display for Jwk {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("kty", &self.kty),
-                ("e", &self.e),
-                ("n", &self.n),
-                ("alg", &self.alg),
-            ],
-            true,
-        )
+        write!(f, "JWK")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("kty", &self.kty, false)?;
+        w.leaf("e", &self.e, false)?;
+        w.leaf("n", &self.n, false)?;
+        w.leaf("alg", &self.alg, true)
     }
 }
 
@@ -658,7 +640,10 @@ pub struct JwkId {
 
 impl std::fmt::Display for JwkId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(f, &[("ISS", &self.iss), ("KID", &self.kid)], true)
+        write!(f, "JWK ID")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("ISS", &self.iss, false)?;
+        w.leaf("KID", &self.kid, true)
     }
 }
 

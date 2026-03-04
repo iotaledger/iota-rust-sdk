@@ -50,7 +50,6 @@ hex.workspace = true
 paste.workspace = true
 roaring.workspace = true
 strum = { workspace = true, features = ["derive"] }
-tabled = { version = "0.20", default-features = false, features = ["std"] }
 thiserror.workspace = true
 winnow = "0.7"
 

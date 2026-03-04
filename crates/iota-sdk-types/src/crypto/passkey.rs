@@ -93,16 +93,16 @@ impl PasskeyAuthenticator {
 
 impl std::fmt::Display for PasskeyAuthenticator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Authenticator Data", &hex::encode(&self.authenticator_data)),
-                ("Client Data JSON", &self.client_data_json),
-                ("Public Key", &self.public_key),
-                ("Signature", &self.signature),
-            ],
-            true,
-        )
+        write!(f, "Passkey Authenticator")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf(
+            "Authenticator Data",
+            &hex::encode(&self.authenticator_data),
+            false,
+        )?;
+        w.leaf("Client Data JSON", &self.client_data_json, false)?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Signature", &self.signature, true)
     }
 }
 

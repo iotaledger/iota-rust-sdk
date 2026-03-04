@@ -26,17 +26,17 @@ pub struct IotaNamesConfig {
 
 impl std::fmt::Display for IotaNamesConfig {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Package Address", &self.package_address),
-                ("Object ID", &self.object_id),
-                ("Payments Package Address", &self.payments_package_address),
-                ("Registry ID", &self.registry_id),
-                ("Reverse Registry ID", &self.reverse_registry_id),
-            ],
-            true,
-        )
+        write!(f, "IOTA Names Config")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.leaf("Package Address", &self.package_address, false)?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf(
+            "Payments Package Address",
+            &self.payments_package_address,
+            false,
+        )?;
+        w.leaf("Registry ID", &self.registry_id, false)?;
+        w.leaf("Reverse Registry ID", &self.reverse_registry_id, true)
     }
 }
 

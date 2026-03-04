@@ -123,17 +123,11 @@ impl Intent {
     }
 }
 
-impl crate::TableDisplay for Intent {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Scope", &self.scope),
-                ("Version", &self.version),
-                ("App ID", &self.app_id),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for Intent {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Scope", &self.scope, false)?;
+        w.leaf("Version", &self.version, false)?;
+        w.leaf("App ID", &self.app_id, true)
     }
 }
 
@@ -307,8 +301,10 @@ impl<T> IntentMessage<T> {
 
 impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let intent = crate::Nested(&self.intent).to_string();
-        crate::display_table(f, &[("Intent", &intent), ("Value", &self.value)], true)
+        write!(f, "Intent Message")?;
+        let mut w = crate::TreeWriter::new(f);
+        w.child("Intent", &self.intent, false)?;
+        w.leaf("Value", &self.value, true)
     }
 }
 

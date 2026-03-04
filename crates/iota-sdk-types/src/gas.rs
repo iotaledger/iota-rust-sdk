@@ -111,21 +111,20 @@ impl GasCostSummary {
     }
 }
 
-impl crate::TableDisplay for GasCostSummary {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Computation Cost", &self.computation_cost),
-                ("Computation Cost Burned", &self.computation_cost_burned),
-                ("Storage Cost", &self.storage_cost),
-                ("Storage Rebate", &self.storage_rebate),
-                (
-                    "Non-Refundable Storage Fee",
-                    &self.non_refundable_storage_fee,
-                ),
-            ],
-            standalone,
+impl crate::TreeDisplay for GasCostSummary {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Computation Cost", &self.computation_cost, false)?;
+        w.leaf(
+            "Computation Cost Burned",
+            &self.computation_cost_burned,
+            false,
+        )?;
+        w.leaf("Storage Cost", &self.storage_cost, false)?;
+        w.leaf("Storage Rebate", &self.storage_rebate, false)?;
+        w.leaf(
+            "Non-Refundable Storage Fee",
+            &self.non_refundable_storage_fee,
+            true,
         )
     }
 }
@@ -151,4 +150,5 @@ mod tests {
         println!("{}", serde_json::to_string(&actual).unwrap());
         println!("{:?}", bcs::to_bytes(&actual).unwrap());
     }
+
 }

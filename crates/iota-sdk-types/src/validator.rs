@@ -26,14 +26,10 @@ pub struct ValidatorCommittee {
     pub members: Vec<ValidatorCommitteeMember>,
 }
 
-impl crate::TableDisplay for ValidatorCommittee {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let members_display = crate::display_vec_compact(&self.members);
-        crate::display_table(
-            f,
-            &[("Epoch", &self.epoch), ("Members", &members_display)],
-            standalone,
-        )
+impl crate::TreeDisplay for ValidatorCommittee {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        crate::tree_vec_children(w, "Members", &self.members, true)
     }
 }
 
@@ -64,13 +60,10 @@ pub struct ValidatorCommitteeMember {
     pub stake: StakeUnit,
 }
 
-impl crate::TableDisplay for ValidatorCommitteeMember {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[("Public Key", &self.public_key), ("Stake", &self.stake)],
-            standalone,
-        )
+impl crate::TreeDisplay for ValidatorCommitteeMember {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Stake", &self.stake, true)
     }
 }
 
@@ -109,17 +102,11 @@ pub struct ValidatorAggregatedSignature {
     pub bitmap: roaring::RoaringBitmap,
 }
 
-impl crate::TableDisplay for ValidatorAggregatedSignature {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Signature", &self.signature),
-                ("Bitmap", &format!("{:?}", self.bitmap)),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ValidatorAggregatedSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Signature", &self.signature, false)?;
+        w.leaf("Bitmap", &format!("{:?}", self.bitmap), true)
     }
 }
 
@@ -192,17 +179,11 @@ pub struct ValidatorSignature {
     pub signature: Bls12381Signature,
 }
 
-impl crate::TableDisplay for ValidatorSignature {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Epoch", &self.epoch),
-                ("Public Key", &self.public_key),
-                ("Signature", &self.signature),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for ValidatorSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Epoch", &self.epoch, false)?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Signature", &self.signature, true)
     }
 }
 

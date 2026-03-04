@@ -37,18 +37,12 @@ impl NameRegistration {
     }
 }
 
-impl crate::TableDisplay for NameRegistration {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("ID", &self.id),
-                ("Name", &self.name),
-                ("Name String", &self.name_str),
-                ("Expiration (ms)", &self.expiration_timestamp_ms),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for NameRegistration {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("ID", &self.id, false)?;
+        w.leaf("Name", &self.name, false)?;
+        w.leaf("Name String", &self.name_str, false)?;
+        w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, true)
     }
 }
 
@@ -70,10 +64,10 @@ impl SubnameRegistration {
     }
 }
 
-impl crate::TableDisplay for SubnameRegistration {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let nft = crate::Nested(&self.nft).to_string();
-        crate::display_table(f, &[("ID", &self.id), ("NFT", &nft)], standalone)
+impl crate::TreeDisplay for SubnameRegistration {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("ID", &self.id, false)?;
+        w.child("NFT", &self.nft, true)
     }
 }
 

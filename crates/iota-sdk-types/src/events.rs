@@ -21,11 +21,9 @@ pub struct TransactionEvents(pub Vec<Event>);
 
 impl std::fmt::Display for TransactionEvents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "TransactionEvents ({} events):", self.0.len())?;
-        for (i, event) in self.0.iter().enumerate() {
-            write!(f, "\n--- Event {} ---\n{event}", i + 1)?;
-        }
-        Ok(())
+        write!(f, "Transaction Events")?;
+        let mut w = crate::TreeWriter::new(f);
+        crate::tree_vec_children(&mut w, "Events", &self.0, true)
     }
 }
 
@@ -68,20 +66,13 @@ pub struct Event {
     pub contents: Vec<u8>,
 }
 
-impl crate::TableDisplay for Event {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let contents_hex = hex::encode(&self.contents);
-        crate::display_table(
-            f,
-            &[
-                ("Package ID", &self.package_id),
-                ("Module", &self.module),
-                ("Sender", &self.sender),
-                ("Type", &self.type_),
-                ("Contents", &contents_hex),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for Event {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Package ID", &self.package_id, false)?;
+        w.leaf("Module", &self.module, false)?;
+        w.leaf("Sender", &self.sender, false)?;
+        w.leaf("Type", &self.type_, false)?;
+        w.leaf("Contents", &hex::encode(&self.contents), true)
     }
 }
 
@@ -107,16 +98,10 @@ pub struct BalanceChange {
     pub amount: i128,
 }
 
-impl crate::TableDisplay for BalanceChange {
-    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        crate::display_table(
-            f,
-            &[
-                ("Address", &self.address),
-                ("Coin Type", &self.coin_type),
-                ("Amount", &self.amount),
-            ],
-            standalone,
-        )
+impl crate::TreeDisplay for BalanceChange {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.leaf("Address", &self.address, false)?;
+        w.leaf("Coin Type", &self.coin_type, false)?;
+        w.leaf("Amount", &self.amount, true)
     }
 }
