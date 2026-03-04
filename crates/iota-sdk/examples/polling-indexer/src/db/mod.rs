@@ -72,7 +72,7 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
         CREATE TABLE IF NOT EXISTS events (
             id BIGSERIAL PRIMARY KEY,
             checkpoint_seq BIGINT,
-            transaction_digest TEXT NOT NULL,
+            transaction_digest TEXT,
             package_id TEXT,
             module TEXT,
             event_name TEXT,
@@ -89,6 +89,7 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
         CREATE TABLE IF NOT EXISTS indexer_progress (
             progress_key TEXT PRIMARY KEY,
             next_checkpoint BIGINT NOT NULL,
+            last_cursor TEXT,
             updated_at_ms BIGINT NOT NULL
         );
         "#,
