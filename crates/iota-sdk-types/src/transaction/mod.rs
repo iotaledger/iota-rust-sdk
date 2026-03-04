@@ -291,20 +291,6 @@ impl EndOfEpochTransactionKind {
         AuthenticatorStateExpire
     );
 
-    pub fn new_authenticator_state_create() -> Self {
-        Self::AuthenticatorStateCreate
-    }
-
-    pub fn new_authenticator_state_expire(
-        min_epoch: u64,
-        authenticator_obj_initial_shared_version: Version,
-    ) -> Self {
-        Self::AuthenticatorStateExpire(AuthenticatorStateExpire {
-            min_epoch,
-            authenticator_obj_initial_shared_version,
-        })
-    }
-
     #[allow(clippy::too_many_arguments)]
     pub fn new_change_epoch(
         next_epoch: EpochId,
@@ -408,6 +394,20 @@ impl EndOfEpochTransactionKind {
             eligible_active_validators,
             scores,
             adjust_rewards_by_score,
+        })
+    }
+
+    pub fn new_authenticator_state_create() -> Self {
+        Self::AuthenticatorStateCreate
+    }
+
+    pub fn new_authenticator_state_expire(
+        min_epoch: u64,
+        authenticator_obj_initial_shared_version: Version,
+    ) -> Self {
+        Self::AuthenticatorStateExpire(AuthenticatorStateExpire {
+            min_epoch,
+            authenticator_obj_initial_shared_version,
         })
     }
 }
