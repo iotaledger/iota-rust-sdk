@@ -47,10 +47,10 @@ impl From<TransactionV1> for Transaction {
     }
 }
 
-impl std::fmt::Display for Transaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Transaction {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         match self {
-            Transaction::V1(v1) => write!(f, "{v1}"),
+            Transaction::V1(v1) => v1.fmt_table(f, standalone),
         }
     }
 }
@@ -72,11 +72,12 @@ pub struct TransactionV1 {
 
 impl crate::TableDisplay for TransactionV1 {
     fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
+        let kind = crate::Nested(&self.kind).to_string();
         let gas_payment = crate::Nested(&self.gas_payment).to_string();
         crate::display_table(
             f,
             &[
-                ("Kind", &self.kind),
+                ("Kind", &kind),
                 ("Sender", &self.sender),
                 ("Gas Payment", &gas_payment),
                 ("Expiration", &self.expiration),
@@ -112,10 +113,11 @@ pub struct SignedTransaction {
 
 impl std::fmt::Display for SignedTransaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let transaction = crate::Nested(&self.transaction).to_string();
         let sigs = crate::display_vec(&self.signatures);
         crate::display_table(
             f,
-            &[("Transaction", &self.transaction), ("Signatures", &sigs)],
+            &[("Transaction", &transaction), ("Signatures", &sigs)],
             true,
         )
     }
@@ -318,18 +320,18 @@ impl TransactionKind {
     }
 }
 
-impl std::fmt::Display for TransactionKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for TransactionKind {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         match self {
-            TransactionKind::ProgrammableTransaction(ptb) => write!(f, "{ptb}"),
-            TransactionKind::Genesis(genesis) => write!(f, "{genesis}"),
-            TransactionKind::ConsensusCommitPrologueV1(ccp) => write!(f, "{ccp}"),
-            TransactionKind::AuthenticatorStateUpdateV1(asu) => write!(f, "{asu}"),
+            TransactionKind::ProgrammableTransaction(ptb) => ptb.fmt_table(f, standalone),
+            TransactionKind::Genesis(genesis) => genesis.fmt_table(f, standalone),
+            TransactionKind::ConsensusCommitPrologueV1(ccp) => ccp.fmt_table(f, standalone),
+            TransactionKind::AuthenticatorStateUpdateV1(asu) => asu.fmt_table(f, standalone),
             TransactionKind::EndOfEpoch(kinds) => {
                 let items = crate::display_vec(kinds);
                 write!(f, "EndOfEpoch({items})")
             }
-            TransactionKind::RandomnessStateUpdate(rsu) => write!(f, "{rsu}"),
+            TransactionKind::RandomnessStateUpdate(rsu) => rsu.fmt_table(f, standalone),
         }
     }
 }
@@ -388,17 +390,19 @@ impl EndOfEpochTransactionKind {
     crate::def_is_as_into_opt!(ChangeEpoch, ChangeEpochV2, AuthenticatorStateExpire);
 }
 
-impl std::fmt::Display for EndOfEpochTransactionKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for EndOfEpochTransactionKind {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         match self {
-            EndOfEpochTransactionKind::ChangeEpoch(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::ChangeEpochV2(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::ChangeEpochV3(ce) => write!(f, "{ce}"),
-            EndOfEpochTransactionKind::ChangeEpochV4(ce) => write!(f, "{ce}"),
+            EndOfEpochTransactionKind::ChangeEpoch(ce) => ce.fmt_table(f, standalone),
+            EndOfEpochTransactionKind::ChangeEpochV2(ce) => ce.fmt_table(f, standalone),
+            EndOfEpochTransactionKind::ChangeEpochV3(ce) => ce.fmt_table(f, standalone),
+            EndOfEpochTransactionKind::ChangeEpochV4(ce) => ce.fmt_table(f, standalone),
             EndOfEpochTransactionKind::AuthenticatorStateCreate => {
                 write!(f, "AuthenticatorStateCreate")
             }
-            EndOfEpochTransactionKind::AuthenticatorStateExpire(ase) => write!(f, "{ase}"),
+            EndOfEpochTransactionKind::AuthenticatorStateExpire(ase) => {
+                ase.fmt_table(f, standalone)
+            }
         }
     }
 }
@@ -1325,8 +1329,8 @@ pub struct ProgrammableTransaction {
 
 impl crate::TableDisplay for ProgrammableTransaction {
     fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
-        let inputs = crate::display_vec(&self.inputs);
-        let commands = crate::display_vec(&self.commands);
+        let inputs = crate::display_vec_compact(&self.inputs);
+        let commands = crate::display_vec_compact(&self.commands);
         crate::display_table(
             f,
             &[("Inputs", &inputs), ("Commands", &commands)],
@@ -1392,20 +1396,40 @@ impl Input {
     );
 }
 
-impl std::fmt::Display for Input {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Input {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         match self {
-            Input::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
-            Input::ImmutableOrOwned(obj_ref) => write!(f, "ImmutableOrOwned({obj_ref})"),
+            Input::Pure { value } => crate::display_table(
+                f,
+                &[("Type", &"Pure"), ("Value", &hex::encode(value))],
+                standalone,
+            ),
+            Input::ImmutableOrOwned(obj_ref) => {
+                let obj = crate::Nested(obj_ref).to_string();
+                crate::display_table(
+                    f,
+                    &[("Type", &"ImmutableOrOwned"), ("Object", &obj)],
+                    standalone,
+                )
+            }
             Input::Shared {
                 object_id,
                 initial_shared_version,
                 mutable,
-            } => write!(
+            } => crate::display_table(
                 f,
-                "Shared(object_id: {object_id}, initial_shared_version: {initial_shared_version}, mutable: {mutable})"
+                &[
+                    ("Type", &"Shared"),
+                    ("Object ID", object_id),
+                    ("Initial Shared Version", initial_shared_version),
+                    ("Mutable", mutable),
+                ],
+                standalone,
             ),
-            Input::Receiving(obj_ref) => write!(f, "Receiving({obj_ref})"),
+            Input::Receiving(obj_ref) => {
+                let obj = crate::Nested(obj_ref).to_string();
+                crate::display_table(f, &[("Type", &"Receiving"), ("Object", &obj)], standalone)
+            }
         }
     }
 }
@@ -1485,16 +1509,16 @@ impl Command {
     );
 }
 
-impl std::fmt::Display for Command {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TableDisplay for Command {
+    fn fmt_table(&self, f: &mut std::fmt::Formatter<'_>, standalone: bool) -> std::fmt::Result {
         match self {
-            Command::MoveCall(mc) => write!(f, "{mc}"),
-            Command::TransferObjects(to) => write!(f, "{to}"),
-            Command::SplitCoins(sc) => write!(f, "{sc}"),
-            Command::MergeCoins(mc) => write!(f, "{mc}"),
-            Command::Publish(p) => write!(f, "{p}"),
-            Command::MakeMoveVector(mmv) => write!(f, "{mmv}"),
-            Command::Upgrade(u) => write!(f, "{u}"),
+            Command::MoveCall(mc) => mc.fmt_table(f, standalone),
+            Command::TransferObjects(to) => to.fmt_table(f, standalone),
+            Command::SplitCoins(sc) => sc.fmt_table(f, standalone),
+            Command::MergeCoins(mc) => mc.fmt_table(f, standalone),
+            Command::Publish(p) => p.fmt_table(f, standalone),
+            Command::MakeMoveVector(mmv) => mmv.fmt_table(f, standalone),
+            Command::Upgrade(u) => u.fmt_table(f, standalone),
         }
     }
 }

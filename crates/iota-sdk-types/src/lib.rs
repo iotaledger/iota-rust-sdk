@@ -139,6 +139,10 @@ macro_rules! impl_table_display {
 }
 
 /// Build a key-value table for Display implementations using `tabled`.
+///
+/// When `standalone` is `true`, the table is rendered with full borders.
+/// When `standalone` is `false` (nested inside another table cell), the outer
+/// frame is removed but inner borders are kept.
 pub(crate) fn display_table(
     f: &mut std::fmt::Formatter<'_>,
     rows: &[(&str, &dyn std::fmt::Display)],
@@ -151,7 +155,13 @@ pub(crate) fn display_table(
     }
     let mut table = builder.build();
     if !standalone {
-        table.with(Style::empty());
+        table.with(
+            Style::ascii()
+                .remove_top()
+                .remove_bottom()
+                .remove_left()
+                .remove_right(),
+        );
     }
     write!(f, "{}", table)
 }
@@ -174,21 +184,32 @@ pub(crate) fn display_option_compact<T: TableDisplay>(opt: &Option<T>) -> String
 }
 
 /// Display a `Vec` by showing each element as a sub-table row.
+///
+/// The outer frame is removed so lists render cleanly when embedded in another
+/// table cell, but inner borders between rows are kept.
 pub(crate) fn display_vec(v: &[impl std::fmt::Display]) -> String {
     if v.is_empty() {
         "[]".to_string()
     } else {
-        use tabled::builder::Builder;
+        use tabled::{builder::Builder, settings::Style};
         let mut builder = Builder::new();
         for (i, item) in v.iter().enumerate() {
             builder.push_record([&i.to_string(), &item.to_string()]);
         }
-        builder.build().to_string()
+        let mut table = builder.build();
+        table.with(
+            Style::ascii()
+                .remove_top()
+                .remove_bottom()
+                .remove_left()
+                .remove_right(),
+        );
+        table.to_string()
     }
 }
 
-/// Display a vec of [`TableDisplay`] items, rendering each item compactly (no
-/// inner borders).
+/// Display a vec of [`TableDisplay`] items, rendering each item without outer
+/// borders but keeping inner borders between rows.
 pub(crate) fn display_vec_compact<T: TableDisplay>(v: &[T]) -> String {
     if v.is_empty() {
         "[]".to_string()
@@ -199,7 +220,13 @@ pub(crate) fn display_vec_compact<T: TableDisplay>(v: &[T]) -> String {
             builder.push_record([&i.to_string(), &Nested(item).to_string()]);
         }
         let mut table = builder.build();
-        table.with(Style::empty());
+        table.with(
+            Style::ascii()
+                .remove_top()
+                .remove_bottom()
+                .remove_left()
+                .remove_right(),
+        );
         table.to_string()
     }
 }
@@ -210,12 +237,20 @@ pub(crate) fn display_bytes_vec(v: &[Vec<u8>]) -> String {
         "[]".to_string()
     } else {
         use base64ct::Encoding;
-        use tabled::builder::Builder;
+        use tabled::{builder::Builder, settings::Style};
         let mut builder = Builder::new();
         for (i, bytes) in v.iter().enumerate() {
             builder.push_record([&i.to_string(), &base64ct::Base64::encode_string(bytes)]);
         }
-        builder.build().to_string()
+        let mut table = builder.build();
+        table.with(
+            Style::ascii()
+                .remove_top()
+                .remove_bottom()
+                .remove_left()
+                .remove_right(),
+        );
+        table.to_string()
     }
 }
 
@@ -328,6 +363,9 @@ impl_table_display!(
     // move_package.rs
     move_package::MovePackageData,
     // transaction/mod.rs
+    transaction::Transaction,
+    transaction::TransactionKind,
+    transaction::EndOfEpochTransactionKind,
     transaction::TransactionV1,
     transaction::GasPayment,
     transaction::RandomnessStateUpdate,
@@ -351,6 +389,8 @@ impl_table_display!(
     transaction::MakeMoveVector,
     transaction::Upgrade,
     transaction::MoveCall,
+    transaction::Command,
+    transaction::Input,
     transaction::ExecutionTimeObservation,
     transaction::ValidatorExecutionTimeObservation,
     // iota_names
