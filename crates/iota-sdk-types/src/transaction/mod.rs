@@ -1195,8 +1195,6 @@ impl Command {
         Upgrade,
     );
 
-    // TODO add ctors
-
     pub fn move_call(
         package: ObjectId,
         module: Identifier,
@@ -1213,8 +1211,44 @@ impl Command {
         })
     }
 
+    pub fn transfer_objects(objects: Vec<Argument>, address: Argument) -> Self {
+        Command::TransferObjects(TransferObjects { objects, address })
+    }
+
+    pub fn split_coins(coin: Argument, amounts: Vec<Argument>) -> Self {
+        Command::SplitCoins(SplitCoins { coin, amounts })
+    }
+
+    pub fn merge_coins(coin: Argument, coins_to_merge: Vec<Argument>) -> Self {
+        Command::MergeCoins(MergeCoins {
+            coin,
+            coins_to_merge,
+        })
+    }
+
+    pub fn publish(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
+        Command::Publish(Publish {
+            modules,
+            dependencies,
+        })
+    }
+
     pub fn make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
         Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    }
+
+    pub fn upgrade(
+        modules: Vec<Vec<u8>>,
+        dependencies: Vec<ObjectId>,
+        package: ObjectId,
+        ticket: Argument,
+    ) -> Self {
+        Command::Upgrade(Upgrade {
+            modules,
+            dependencies,
+            package,
+            ticket,
+        })
     }
 
     pub fn non_system_packages_to_be_published(&self) -> Option<&Vec<Vec<u8>>> {
