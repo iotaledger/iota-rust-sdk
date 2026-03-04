@@ -274,6 +274,10 @@ pub enum EndOfEpochTransactionKind {
     ChangeEpochV3(ChangeEpochV3),
     /// End the epoch and start the next one
     ChangeEpochV4(ChangeEpochV4),
+    // IMPORTANT: new enum variants should be added at the end to preserve serialization
+    // compatibility. DO NOT CHANGE THE ORDER OF EXISTING ENTRIES!
+    // AuthenticatorStateCreate and AuthenticatorStateExpire can be left at the end as long as
+    // `enable_jwk_consensus_updates` is not enabled in the protocol config.
     /// Create and initialize the authenticator object used for zklogin
     AuthenticatorStateCreate,
     /// Expire JWKs used for zklogin
