@@ -409,7 +409,8 @@ impl EndOfEpochTransactionKind {
         })
     }
 
-    /// Creates an AuthenticatorStateCreate end-of-epoch transaction kind.
+    /// Creates an [`AuthenticatorStateCreate`][Self::AuthenticatorStateCreate]
+    /// end-of-epoch transaction kind.
     pub fn new_authenticator_state_create() -> Self {
         Self::AuthenticatorStateCreate
     }
