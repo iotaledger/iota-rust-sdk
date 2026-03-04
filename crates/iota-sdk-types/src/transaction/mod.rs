@@ -1292,6 +1292,106 @@ impl Command {
     }
 }
 
+pub fn write_sep<T: core::fmt::Display>(
+    f: &mut core::fmt::Formatter<'_>,
+    items: impl IntoIterator<Item = T>,
+    sep: &str,
+) -> std::fmt::Result {
+    let mut xs = items.into_iter();
+    let Some(x) = xs.next() else {
+        return Ok(());
+    };
+    write!(f, "{x}")?;
+    for x in xs {
+        write!(f, "{sep}{x}")?;
+    }
+    Ok(())
+}
+
+// TODO split into cmds Display
+
+impl core::fmt::Display for MoveCall {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        } = self;
+        write!(f, "{package}::{module}::{function}")?;
+        if !type_arguments.is_empty() {
+            write!(f, "<")?;
+            write_sep(f, type_arguments, ",")?;
+            write!(f, ">")?;
+        }
+        write!(f, "(")?;
+        write_sep(f, arguments, ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Command {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Command::MoveCall(MoveCall {
+                package,
+                module,
+                function,
+                ..
+            }) => {
+                write!(f, "MoveCall({package}::{module}::{function})")
+            }
+            Command::TransferObjects(TransferObjects { objects, address }) => {
+                write!(f, "TransferObjects([")?;
+                write_sep(f, objects, ",")?;
+                write!(f, "],{address})")
+            }
+            Command::SplitCoins(SplitCoins { coin, amounts }) => {
+                write!(f, "SplitCoins({coin},")?;
+                write_sep(f, amounts, ",")?;
+                write!(f, ")")
+            }
+            Command::MergeCoins(MergeCoins {
+                coin,
+                coins_to_merge,
+            }) => {
+                write!(f, "MergeCoins({coin},")?;
+                write_sep(f, coins_to_merge, ",")?;
+                write!(f, ")")
+            }
+            Command::Publish(Publish { dependencies, .. }) => {
+                write!(f, "Publish(_,")?;
+                write_sep(f, dependencies, ",")?;
+                write!(f, ")")
+            }
+            Command::MakeMoveVector(MakeMoveVector { type_, elements }) => {
+                write!(f, "MakeMoveVector(")?;
+                if let Some(ty) = type_ {
+                    write!(f, "Some{ty}")?;
+                } else {
+                    write!(f, "None")?;
+                }
+                write!(f, ",[")?;
+                write_sep(f, elements, ",")?;
+                write!(f, "])")
+            }
+            Command::Upgrade(Upgrade {
+                dependencies,
+                package,
+                ticket,
+                ..
+            }) => {
+                write!(f, "Upgrade(_,")?;
+                write_sep(f, dependencies, ",")?;
+                write!(f, ", {package}")?;
+                write!(f, ", {ticket}")?;
+                write!(f, ")")
+            }
+        }
+    }
+}
+
 /// Command to transfer ownership of a set of objects to an address
 ///
 /// # BCS
