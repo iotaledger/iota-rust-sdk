@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::iter;
+
 use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
@@ -1192,6 +1194,68 @@ impl Command {
         MakeMoveVector,
         Upgrade,
     );
+
+    // TODO add ctors
+
+    pub fn move_call(
+        package: ObjectId,
+        module: Identifier,
+        function: Identifier,
+        type_arguments: Vec<TypeTag>,
+        arguments: Vec<Argument>,
+    ) -> Self {
+        Command::MoveCall(MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        })
+    }
+
+    pub fn make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    }
+
+    pub fn non_system_packages_to_be_published(&self) -> Option<&Vec<Vec<u8>>> {
+        match self {
+            Command::Publish(cmd) => Some(&cmd.modules),
+            Command::Upgrade(cmd) => Some(&cmd.modules),
+            Command::MoveCall(_)
+            | Command::TransferObjects(_)
+            | Command::SplitCoins(_)
+            | Command::MergeCoins(_)
+            | Command::MakeMoveVector(_) => None,
+        }
+    }
+
+    pub fn is_input_arg_used(&self, input_arg: u16) -> bool {
+        match self {
+            Command::MoveCall(c) => c.is_input_arg_used(input_arg),
+            Command::TransferObjects(TransferObjects {
+                objects: args,
+                address: arg,
+            })
+            | Command::MergeCoins(MergeCoins {
+                coins_to_merge: args,
+                coin: arg,
+            })
+            | Command::SplitCoins(SplitCoins {
+                amounts: args,
+                coin: arg,
+            }) => args
+                .iter()
+                .chain(iter::once(arg))
+                .any(|arg| matches!(arg, Argument::Input(input) if *input == input_arg)),
+            Command::MakeMoveVector(MakeMoveVector { elements, .. }) => elements
+                .iter()
+                .any(|arg| matches!(arg, Argument::Input(input) if *input == input_arg)),
+            Command::Upgrade(Upgrade { ticket, .. }) => {
+                matches!(ticket, Argument::Input(input) if *input == input_arg)
+            }
+            Command::Publish(_) => false,
+        }
+    }
 }
 
 /// Command to transfer ownership of a set of objects to an address
@@ -1484,4 +1548,12 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
+}
+
+impl MoveCall {
+    fn is_input_arg_used(&self, arg: u16) -> bool {
+        self.arguments
+            .iter()
+            .any(|a| matches!(a, Argument::Input(inp) if *inp == arg))
+    }
 }
