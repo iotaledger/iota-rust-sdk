@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::iter;
+
 use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
@@ -11,6 +13,7 @@ use crate::crypto::RandomnessRound;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
+use itertools::Either;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
@@ -295,6 +298,7 @@ impl EndOfEpochTransactionKind {
         AuthenticatorStateExpire
     );
 
+    /// Creates a [`ChangeEpoch`] end-of-epoch transaction kind.
     #[allow(clippy::too_many_arguments)]
     pub fn new_change_epoch(
         next_epoch: EpochId,
@@ -318,6 +322,7 @@ impl EndOfEpochTransactionKind {
         })
     }
 
+    /// Creates a [`ChangeEpochV2`] end-of-epoch transaction kind.
     #[allow(clippy::too_many_arguments)]
     pub fn new_change_epoch_v2(
         next_epoch: EpochId,
@@ -343,6 +348,7 @@ impl EndOfEpochTransactionKind {
         })
     }
 
+    /// Creates a [`ChangeEpochV3`] end-of-epoch transaction kind.
     #[allow(clippy::too_many_arguments)]
     pub fn new_change_epoch_v3(
         next_epoch: EpochId,
@@ -370,6 +376,7 @@ impl EndOfEpochTransactionKind {
         })
     }
 
+    /// Creates a [`ChangeEpochV4`] end-of-epoch transaction kind.
     #[allow(clippy::too_many_arguments)]
     pub fn new_change_epoch_v4(
         next_epoch: EpochId,
@@ -401,10 +408,12 @@ impl EndOfEpochTransactionKind {
         })
     }
 
+    /// Creates an AuthenticatorStateCreate end-of-epoch transaction kind.
     pub fn new_authenticator_state_create() -> Self {
         Self::AuthenticatorStateCreate
     }
 
+    /// Creates an [`AuthenticatorStateExpire`] end-of-epoch transaction kind.
     pub fn new_authenticator_state_expire(
         min_epoch: u64,
         authenticator_obj_initial_shared_version: Version,
@@ -413,6 +422,28 @@ impl EndOfEpochTransactionKind {
             min_epoch,
             authenticator_obj_initial_shared_version,
         })
+    }
+
+    /// Returns an iterator over the shared input objects required by this
+    /// transaction kind.
+    pub fn shared_input_objects(&self) -> impl Iterator<Item = SharedObjectReference> + '_ {
+        match self {
+            Self::ChangeEpoch(_)
+            | Self::ChangeEpochV2(_)
+            | Self::ChangeEpochV3(_)
+            | Self::ChangeEpochV4(_) => {
+                Either::Left(vec![SharedObjectReference::IOTA_SYSTEM_STATE_OBJ_MUTABLE].into_iter())
+            }
+            Self::AuthenticatorStateCreate => Either::Right(iter::empty()),
+            Self::AuthenticatorStateExpire(expire) => Either::Left(
+                vec![SharedObjectReference {
+                    object_id: ObjectId::AUTHENTICATOR_STATE,
+                    initial_shared_version: expire.authenticator_obj_initial_shared_version,
+                    mutable: true,
+                }]
+                .into_iter(),
+            ),
+        }
     }
 }
 
