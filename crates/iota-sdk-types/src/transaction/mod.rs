@@ -4,6 +4,8 @@
 
 use std::iter;
 
+use itertools::Either;
+
 use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
@@ -13,7 +15,6 @@ use crate::crypto::RandomnessRound;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
-use itertools::Either;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
