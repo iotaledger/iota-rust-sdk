@@ -5,6 +5,7 @@
 use std::collections::BTreeMap;
 
 use super::{Address, Digest, Identifier, ObjectId, StructTag};
+use crate::TreeDisplay;
 
 pub type Version = u64;
 
@@ -80,14 +81,18 @@ impl ObjectReference {
 }
 
 impl crate::TreeDisplay for ObjectReference {
-    fn label() -> &'static str {
-        "Object Reference"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf("Version", &self.version, false)?;
         w.leaf("Digest", &self.digest, true)
+    }
+}
+
+impl std::fmt::Display for ObjectReference {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Object Reference")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -248,10 +253,6 @@ pub struct MovePackage {
 }
 
 impl crate::TreeDisplay for MovePackage {
-    fn label() -> &'static str {
-        "Move Package"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("ID", &self.id, false)?;
         w.leaf("Version", &self.version, false)?;
@@ -260,6 +261,14 @@ impl crate::TreeDisplay for MovePackage {
             &format!("[{} modules]", self.modules.len()),
             true,
         )
+    }
+}
+
+impl std::fmt::Display for MovePackage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Move Package")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -287,14 +296,18 @@ pub struct TypeOrigin {
 }
 
 impl crate::TreeDisplay for TypeOrigin {
-    fn label() -> &'static str {
-        "Type Origin"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Module", &self.module_name, false)?;
         w.leaf("Struct", &self.struct_name, false)?;
         w.leaf("Package", &self.package, true)
+    }
+}
+
+impl std::fmt::Display for TypeOrigin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Type Origin")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -325,13 +338,17 @@ pub struct UpgradeInfo {
 }
 
 impl crate::TreeDisplay for UpgradeInfo {
-    fn label() -> &'static str {
-        "Upgrade Info"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Upgraded ID", &self.upgraded_id, false)?;
         w.leaf("Upgraded Version", &self.upgraded_version, true)
+    }
+}
+
+impl std::fmt::Display for UpgradeInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Upgrade Info")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -383,14 +400,18 @@ pub struct MoveStruct {
 }
 
 impl crate::TreeDisplay for MoveStruct {
-    fn label() -> &'static str {
-        "Move Struct"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Type", &self.type_, false)?;
         w.leaf("Version", &self.version, false)?;
         w.leaf("Contents", &hex::encode(&self.contents), true)
+    }
+}
+
+impl std::fmt::Display for MoveStruct {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Move Struct")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -551,10 +572,6 @@ impl Object {
 }
 
 impl crate::TreeDisplay for Object {
-    fn label() -> &'static str {
-        "Object"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Object ID", &self.object_id(), false)?;
         w.leaf("Version", &self.version(), false)?;
@@ -562,6 +579,14 @@ impl crate::TreeDisplay for Object {
         w.leaf("Type", &self.object_type(), false)?;
         w.leaf("Previous Tx", &self.previous_transaction, false)?;
         w.leaf("Storage Rebate", &self.storage_rebate, true)
+    }
+}
+
+impl std::fmt::Display for Object {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Object")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -630,10 +655,6 @@ impl GenesisObject {
 }
 
 impl crate::TreeDisplay for GenesisObject {
-    fn label() -> &'static str {
-        "Genesis Object"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Object ID", &self.object_id(), false)?;
         w.leaf("Version", &self.version(), false)?;
@@ -642,15 +663,13 @@ impl crate::TreeDisplay for GenesisObject {
     }
 }
 
-impl_tree_display!(
-    ObjectReference,
-    MovePackage,
-    TypeOrigin,
-    UpgradeInfo,
-    MoveStruct,
-    Object,
-    GenesisObject,
-);
+impl std::fmt::Display for GenesisObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Genesis Object")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
+    }
+}
 
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]

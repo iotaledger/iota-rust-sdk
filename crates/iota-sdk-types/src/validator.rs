@@ -3,7 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{Bls12381PublicKey, Bls12381Signature};
-use crate::checkpoint::{EpochId, StakeUnit};
+use crate::{
+    TreeDisplay,
+    checkpoint::{EpochId, StakeUnit},
+};
 
 /// The Validator Set for a particular epoch.
 ///
@@ -27,13 +30,17 @@ pub struct ValidatorCommittee {
 }
 
 impl crate::TreeDisplay for ValidatorCommittee {
-    fn label() -> &'static str {
-        "Validator Committee"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.vec_children("Members", &self.members, true)
+    }
+}
+
+impl std::fmt::Display for ValidatorCommittee {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Validator Committee")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -65,13 +72,17 @@ pub struct ValidatorCommitteeMember {
 }
 
 impl crate::TreeDisplay for ValidatorCommitteeMember {
-    fn label() -> &'static str {
-        "Validator Committee Member"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Public Key", &self.public_key, false)?;
         w.leaf("Stake", &self.stake, true)
+    }
+}
+
+impl std::fmt::Display for ValidatorCommitteeMember {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Validator Committee Member")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -111,14 +122,18 @@ pub struct ValidatorAggregatedSignature {
 }
 
 impl crate::TreeDisplay for ValidatorAggregatedSignature {
-    fn label() -> &'static str {
-        "Validator Aggregated Signature"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Signature", &self.signature, false)?;
         w.leaf("Bitmap", &format!("{:?}", self.bitmap), true)
+    }
+}
+
+impl std::fmt::Display for ValidatorAggregatedSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Validator Aggregated Signature")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -192,10 +207,6 @@ pub struct ValidatorSignature {
 }
 
 impl crate::TreeDisplay for ValidatorSignature {
-    fn label() -> &'static str {
-        "Validator Signature"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Public Key", &self.public_key, false)?;
@@ -203,12 +214,13 @@ impl crate::TreeDisplay for ValidatorSignature {
     }
 }
 
-impl_tree_display!(
-    ValidatorCommitteeMember,
-    ValidatorCommittee,
-    ValidatorAggregatedSignature,
-    ValidatorSignature,
-);
+impl std::fmt::Display for ValidatorSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Validator Signature")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
+    }
+}
 
 #[cfg(test)]
 mod tests {

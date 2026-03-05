@@ -111,29 +111,10 @@
 /// Types implementing this trait can render their fields as a tree structure
 /// with box-drawing characters (`├──`, `└──`, `│`).
 ///
-/// The [`label`](TreeDisplay::label) method provides the root label written by
-/// the generated `Display` impl (via [`impl_tree_display`]).
+/// Implementors should also provide a `Display` impl that writes the root
+/// label then delegates to `fmt_tree`.
 pub(crate) trait TreeDisplay {
-    fn label() -> &'static str
-    where
-        Self: Sized;
     fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result;
-}
-
-/// Generates a `Display` impl that writes
-/// [`TreeDisplay::label`] then delegates to [`TreeDisplay::fmt_tree`].
-macro_rules! impl_tree_display {
-    ($($ty:ty),* $(,)?) => {
-        $(
-        impl std::fmt::Display for $ty {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}", <Self as crate::TreeDisplay>::label())?;
-                let mut w = crate::TreeWriter::new(f);
-                crate::TreeDisplay::fmt_tree(self, &mut w)
-            }
-        }
-        )*
-    };
 }
 
 /// A tree node writer that tracks depth and sibling position for rendering

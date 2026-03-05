@@ -6,6 +6,7 @@ use super::{
     Digest, GasCostSummary, Object, SignedTransaction, TransactionEffects, TransactionEvents,
     UserSignature, ValidatorAggregatedSignature, ValidatorCommitteeMember,
 };
+use crate::TreeDisplay;
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -94,10 +95,6 @@ pub struct EndOfEpochData {
 }
 
 impl crate::TreeDisplay for EndOfEpochData {
-    fn label() -> &'static str {
-        "End of Epoch Data"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.vec_children("Next Epoch Committee", &self.next_epoch_committee, false)?;
         w.leaf(
@@ -107,6 +104,14 @@ impl crate::TreeDisplay for EndOfEpochData {
         )?;
         w.vec_inline("Epoch Commitments", &self.epoch_commitments, false)?;
         w.leaf("Epoch Supply Change", &self.epoch_supply_change, true)
+    }
+}
+
+impl std::fmt::Display for EndOfEpochData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "End of Epoch Data")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -199,10 +204,6 @@ pub struct CheckpointSummary {
 }
 
 impl crate::TreeDisplay for CheckpointSummary {
-    fn label() -> &'static str {
-        "Checkpoint Summary"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Sequence Number", &self.sequence_number, false)?;
@@ -225,6 +226,14 @@ impl crate::TreeDisplay for CheckpointSummary {
             false,
         )?;
         w.option_child("End of Epoch Data", &self.end_of_epoch_data, true)
+    }
+}
+
+impl std::fmt::Display for CheckpointSummary {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Checkpoint Summary")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -302,14 +311,18 @@ pub struct CheckpointTransactionInfo {
 }
 
 impl crate::TreeDisplay for CheckpointTransactionInfo {
-    fn label() -> &'static str {
-        "Checkpoint Transaction Info"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
         w.vec_inline("Signatures", &self.signatures, true)
+    }
+}
+
+impl std::fmt::Display for CheckpointTransactionInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Checkpoint Transaction Info")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -329,14 +342,18 @@ pub struct CheckpointData {
 }
 
 impl crate::TreeDisplay for CheckpointData {
-    fn label() -> &'static str {
-        "Checkpoint Data"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.child("Checkpoint", &self.checkpoint_summary.checkpoint, false)?;
         w.leaf("Contents", &self.checkpoint_contents, false)?;
         w.vec_children("Transactions", &self.transactions, true)
+    }
+}
+
+impl std::fmt::Display for CheckpointData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Checkpoint Data")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 
@@ -370,10 +387,6 @@ pub struct CheckpointTransaction {
 }
 
 impl crate::TreeDisplay for CheckpointTransaction {
-    fn label() -> &'static str {
-        "Checkpoint Transaction"
-    }
-
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
@@ -384,13 +397,13 @@ impl crate::TreeDisplay for CheckpointTransaction {
     }
 }
 
-impl_tree_display!(
-    EndOfEpochData,
-    CheckpointSummary,
-    CheckpointTransactionInfo,
-    CheckpointData,
-    CheckpointTransaction,
-);
+impl std::fmt::Display for CheckpointTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Checkpoint Transaction")?;
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
+    }
+}
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
