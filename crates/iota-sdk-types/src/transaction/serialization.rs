@@ -975,17 +975,21 @@ mod transaction_expiration {
     use crate::{EpochId, TransactionExpiration};
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     #[serde(rename = "TransactionExpiration")]
-    #[serde(rename_all = "lowercase")]
     enum ReadableTransactionExpiration {
+        None,
         /// Validators won't sign a transaction unless the expiration Epoch
         /// is greater than or equal to the current epoch
         Epoch(
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))] EpochId,
+            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+            #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+            EpochId,
         ),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "TransactionExpiration")]
     pub enum BinaryTransactionExpiration {
         /// The transaction has no expiration
         None,
@@ -1001,8 +1005,8 @@ mod transaction_expiration {
         {
             if serializer.is_human_readable() {
                 match *self {
-                    Self::None => None,
-                    Self::Epoch(epoch) => Some(ReadableTransactionExpiration::Epoch(epoch)),
+                    Self::None => ReadableTransactionExpiration::None,
+                    Self::Epoch(epoch) => ReadableTransactionExpiration::Epoch(epoch),
                 }
                 .serialize(serializer)
             } else {
@@ -1021,10 +1025,10 @@ mod transaction_expiration {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                Option::<ReadableTransactionExpiration>::deserialize(deserializer).map(|readable| {
+                ReadableTransactionExpiration::deserialize(deserializer).map(|readable| {
                     match readable {
-                        None => Self::None,
-                        Some(ReadableTransactionExpiration::Epoch(epoch)) => Self::Epoch(epoch),
+                        ReadableTransactionExpiration::None => Self::None,
+                        ReadableTransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
                     }
                 })
             } else {
@@ -1039,60 +1043,13 @@ mod transaction_expiration {
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for TransactionExpiration {
         fn schema_name() -> String {
-            "TransactionExpiration".into()
+            ReadableTransactionExpiration::schema_name()
         }
 
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            use schemars::{
-                Map, Set,
-                schema::{
-                    InstanceType, ObjectValidation, Schema, SchemaObject, SubschemaValidation,
-                },
-            };
-            let mut object = SchemaObject {
-                instance_type: Some(InstanceType::Object.into()),
-                object: Some(Box::new(ObjectValidation {
-                    properties: {
-                        let mut props = Map::new();
-                        props.insert(
-                            "epoch".to_owned(),
-                            generator.subschema_for::<crate::_schemars::U64>(),
-                        );
-                        props
-                    },
-                    required: {
-                        let mut required = Set::new();
-                        required.insert("epoch".to_owned());
-                        required
-                    },
-                    // Externally tagged variants must prohibit additional
-                    // properties irrespective of the disposition of
-                    // `deny_unknown_fields`. If additional properties were allowed
-                    // one could easily construct an object that validated against
-                    // multiple variants since here it's the properties rather than
-                    // the values of a property that distinguish between variants.
-                    additional_properties: Some(Box::new(false.into())),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            };
-            object.metadata().description = Some("Validators won't sign a transaction unless the expiration Epoch is greater than or equal to the current epoch".to_owned());
-            let schema = Schema::Object(object);
-            Schema::Object(SchemaObject {
-                subschemas: Some(Box::new(SubschemaValidation {
-                    one_of: Some(vec![
-                        schema,
-                        Schema::Object(SchemaObject {
-                            instance_type: Some(InstanceType::Null.into()),
-                            ..SchemaObject::default()
-                        }),
-                    ]),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            })
+            ReadableTransactionExpiration::json_schema(generator)
         }
     }
 }
