@@ -7,6 +7,7 @@ use std::collections::BTreeMap;
 use super::{
     Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, UpgradeInfo, Version,
 };
+use crate::TypeParseError;
 
 /// Reference to an object
 ///
@@ -219,10 +220,11 @@ pub struct MoveStruct {
 
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
-    /// A Move struct of the given type
+    /// A Move struct of the given type v
     Struct(StructTag),
 }
 
@@ -235,8 +237,19 @@ impl ObjectType {
 impl std::fmt::Display for ObjectType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ObjectType::Package => write!(f, "Package"),
-            ObjectType::Struct(struct_tag) => write!(f, "Struct({struct_tag})"),
+            ObjectType::Package => write!(f, "package"),
+            ObjectType::Struct(struct_tag) => write!(f, "{struct_tag}"),
+        }
+    }
+}
+
+impl std::str::FromStr for ObjectType {
+    type Err = TypeParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "package" => Ok(Self::Package),
+            _ => Ok(Self::Struct(s.parse()?)),
         }
     }
 }
