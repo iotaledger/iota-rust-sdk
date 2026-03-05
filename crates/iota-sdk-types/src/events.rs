@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
-use crate::TreeDisplay;
 
 /// Events emitted during the successful execution of a transaction
 ///
@@ -69,19 +68,12 @@ pub struct Event {
 
 impl crate::TreeDisplay for Event {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Event")?;
         w.leaf("Package ID", &self.package_id, false)?;
         w.leaf("Module", &self.module, false)?;
         w.leaf("Sender", &self.sender, false)?;
         w.leaf("Type", &self.type_, false)?;
         w.leaf("Contents", &hex::encode(&self.contents), true)
-    }
-}
-
-impl std::fmt::Display for Event {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Event")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -109,16 +101,11 @@ pub struct BalanceChange {
 
 impl crate::TreeDisplay for BalanceChange {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Balance Change")?;
         w.leaf("Address", &self.address, false)?;
         w.leaf("Coin Type", &self.coin_type, false)?;
         w.leaf("Amount", &self.amount, true)
     }
 }
 
-impl std::fmt::Display for BalanceChange {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Balance Change")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
-    }
-}
+crate::impl_tree_display!(Event, BalanceChange);

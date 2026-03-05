@@ -91,10 +91,9 @@ impl PasskeyAuthenticator {
     }
 }
 
-impl std::fmt::Display for PasskeyAuthenticator {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Passkey Authenticator")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for PasskeyAuthenticator {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Passkey Authenticator")?;
         w.leaf(
             "Authenticator Data",
             &hex::encode(&self.authenticator_data),
@@ -429,6 +428,8 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
             .boxed()
     }
 }
+
+crate::impl_tree_display!(PasskeyAuthenticator);
 
 #[cfg(test)]
 mod tests {

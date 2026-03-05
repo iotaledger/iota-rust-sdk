@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    Digest, EpochId, GasCostSummary, ObjectId, TreeDisplay,
+    Digest, EpochId, GasCostSummary, ObjectId,
     execution_status::ExecutionStatus,
     object::{Owner, Version},
 };
@@ -90,6 +90,7 @@ impl TransactionEffectsV1 {
 
 impl crate::TreeDisplay for TransactionEffectsV1 {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Effects")?;
         w.leaf("Status", &format!("{:?}", self.status), false)?;
         w.leaf("Epoch", &self.epoch, false)?;
         w.child("Gas Used", &self.gas_used, false)?;
@@ -105,14 +106,6 @@ impl crate::TreeDisplay for TransactionEffectsV1 {
             false,
         )?;
         w.option("Auxiliary Data Digest", &self.auxiliary_data_digest, true)
-    }
-}
-
-impl std::fmt::Display for TransactionEffectsV1 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Transaction Effects")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -148,18 +141,11 @@ pub struct ChangedObject {
 
 impl crate::TreeDisplay for ChangedObject {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Changed Object")?;
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf("Input State", &self.input_state, false)?;
         w.leaf("Output State", &self.output_state, false)?;
         w.leaf("ID Operation", &self.id_operation, true)
-    }
-}
-
-impl std::fmt::Display for ChangedObject {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Changed Object")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -187,18 +173,13 @@ pub struct UnchangedSharedObject {
 
 impl crate::TreeDisplay for UnchangedSharedObject {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Unchanged Shared Object")?;
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf("Kind", &self.kind, true)
     }
 }
 
-impl std::fmt::Display for UnchangedSharedObject {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Unchanged Shared Object")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
-    }
-}
+crate::impl_tree_display!(TransactionEffectsV1, ChangedObject, UnchangedSharedObject);
 
 /// Type of unchanged shared object
 ///

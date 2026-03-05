@@ -54,15 +54,16 @@ impl Coin {
     }
 }
 
-impl std::fmt::Display for Coin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Coin")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for Coin {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Coin")?;
         w.leaf("Coin Type", &self.coin_type, false)?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Balance", &self.balance, true)
     }
 }
+
+crate::impl_tree_display!(Coin);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[non_exhaustive]

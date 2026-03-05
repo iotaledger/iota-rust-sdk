@@ -7,7 +7,7 @@ use std::{
 };
 
 use crate::{
-    Address, ObjectId, TreeDisplay,
+    Address, ObjectId,
     iota_names::{constants::IOTA_NAMES_LEAF_EXPIRATION_TIMESTAMP, name::Name},
 };
 
@@ -21,16 +21,9 @@ pub struct Table {
 
 impl crate::TreeDisplay for Table {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Table")?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Size", &self.size, true)
-    }
-}
-
-impl std::fmt::Display for Table {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Table")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -51,16 +44,9 @@ pub struct Registry {
 
 impl crate::TreeDisplay for Registry {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Registry")?;
         w.child("Registry", &self.registry, false)?;
         w.child("Reverse Registry", &self.reverse_registry, true)
-    }
-}
-
-impl std::fmt::Display for Registry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Registry")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -78,17 +64,10 @@ pub struct RegistryEntry {
 
 impl crate::TreeDisplay for RegistryEntry {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Registry Entry")?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Name", &self.name, false)?;
         w.child("Name Record", &self.name_record, true)
-    }
-}
-
-impl std::fmt::Display for RegistryEntry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Registry Entry")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -102,17 +81,10 @@ pub struct ReverseRegistryEntry {
 
 impl crate::TreeDisplay for ReverseRegistryEntry {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Reverse Registry Entry")?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Address", &self.address, false)?;
         w.leaf("Name", &self.name, true)
-    }
-}
-
-impl std::fmt::Display for ReverseRegistryEntry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Reverse Registry Entry")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -143,6 +115,7 @@ pub struct NameRecord {
 
 impl crate::TreeDisplay for NameRecord {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Name Record")?;
         w.leaf("NFT ID", &self.nft_id, false)?;
         w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, false)?;
         w.option("Target Address", &self.target_address, false)?;
@@ -150,13 +123,13 @@ impl crate::TreeDisplay for NameRecord {
     }
 }
 
-impl std::fmt::Display for NameRecord {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Name Record")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
-    }
-}
+crate::impl_tree_display!(
+    Table,
+    Registry,
+    RegistryEntry,
+    ReverseRegistryEntry,
+    NameRecord
+);
 
 #[cfg(feature = "serde")]
 mod serde_vecmap {

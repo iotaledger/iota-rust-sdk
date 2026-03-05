@@ -10,7 +10,7 @@ pub mod registry;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 pub use self::name::{Name, NameFormat};
-use crate::{Address, ObjectId, StructTag, TreeDisplay, type_tag::IdentifierRef};
+use crate::{Address, ObjectId, StructTag, type_tag::IdentifierRef};
 
 /// An object to manage a second-level name (SLN).
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -39,18 +39,11 @@ impl NameRegistration {
 
 impl crate::TreeDisplay for NameRegistration {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Name Registration")?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Name", &self.name, false)?;
         w.leaf("Name String", &self.name_str, false)?;
         w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, true)
-    }
-}
-
-impl std::fmt::Display for NameRegistration {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Name Registration")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
     }
 }
 
@@ -74,18 +67,13 @@ impl SubnameRegistration {
 
 impl crate::TreeDisplay for SubnameRegistration {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Subname Registration")?;
         w.leaf("ID", &self.id, false)?;
         w.child("NFT", &self.nft, true)
     }
 }
 
-impl std::fmt::Display for SubnameRegistration {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Subname Registration")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
-    }
-}
+crate::impl_tree_display!(NameRegistration, SubnameRegistration);
 
 /// Unifying trait for [`NameRegistration`] and [`SubnameRegistration`]
 pub trait IotaNamesNft {

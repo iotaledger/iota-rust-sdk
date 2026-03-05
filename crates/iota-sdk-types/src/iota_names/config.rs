@@ -24,10 +24,9 @@ pub struct IotaNamesConfig {
     pub reverse_registry_id: ObjectId,
 }
 
-impl std::fmt::Display for IotaNamesConfig {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "IOTA Names Config")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for IotaNamesConfig {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("IOTA Names Config")?;
         w.leaf("Package Address", &self.package_address, false)?;
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf(
@@ -39,6 +38,8 @@ impl std::fmt::Display for IotaNamesConfig {
         w.leaf("Reverse Registry ID", &self.reverse_registry_id, true)
     }
 }
+
+crate::impl_tree_display!(IotaNamesConfig);
 
 impl Default for IotaNamesConfig {
     fn default() -> Self {

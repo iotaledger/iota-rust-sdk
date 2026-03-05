@@ -37,10 +37,9 @@ pub struct ZkLoginAuthenticator {
     pub signature: SimpleSignature,
 }
 
-impl std::fmt::Display for ZkLoginAuthenticator {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ZkLogin Authenticator")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for ZkLoginAuthenticator {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("ZkLogin Authenticator")?;
         w.leaf("Max Epoch", &self.max_epoch, false)?;
         w.leaf("Inputs", &self.inputs, false)?;
         w.leaf("Signature", &self.signature, true)
@@ -189,10 +188,9 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
     }
 }
 
-impl std::fmt::Display for ZkLoginInputs {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ZkLogin Inputs")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for ZkLoginInputs {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("ZkLogin Inputs")?;
         w.leaf("Header Base64", &self.header_base64, false)?;
         w.leaf("ISS Base64 Details", &self.iss_base64_details, true)
     }
@@ -220,10 +218,9 @@ pub struct ZkLoginClaim {
     pub index_mod_4: u8,
 }
 
-impl std::fmt::Display for ZkLoginClaim {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ZkLogin Claim")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for ZkLoginClaim {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("ZkLogin Claim")?;
         w.leaf("Value", &self.value, false)?;
         w.leaf("Index Mod 4", &self.index_mod_4, true)
     }
@@ -432,10 +429,9 @@ pub struct ZkLoginProof {
     pub c: CircomG1,
 }
 
-impl std::fmt::Display for ZkLoginProof {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ZkLogin Proof")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for ZkLoginProof {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("ZkLogin Proof")?;
         w.leaf("A (G1)", &self.a, false)?;
         w.leaf("B (G2)", &self.b, false)?;
         w.leaf("C (G1)", &self.c, true)
@@ -570,10 +566,9 @@ impl ZkLoginPublicIdentifier {
     }
 }
 
-impl std::fmt::Display for ZkLoginPublicIdentifier {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ZkLogin Public Identifier")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for ZkLoginPublicIdentifier {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("ZkLogin Public Identifier")?;
         w.leaf("ISS", &self.iss, false)?;
         w.leaf("Address Seed", &self.address_seed, true)
     }
@@ -607,10 +602,9 @@ pub struct Jwk {
     pub alg: String,
 }
 
-impl std::fmt::Display for Jwk {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "JWK")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for Jwk {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("JWK")?;
         w.leaf("kty", &self.kty, false)?;
         w.leaf("e", &self.e, false)?;
         w.leaf("n", &self.n, false)?;
@@ -638,14 +632,23 @@ pub struct JwkId {
     pub kid: String,
 }
 
-impl std::fmt::Display for JwkId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "JWK ID")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for JwkId {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("JWK ID")?;
         w.leaf("ISS", &self.iss, false)?;
         w.leaf("KID", &self.kid, true)
     }
 }
+
+crate::impl_tree_display!(
+    ZkLoginAuthenticator,
+    ZkLoginInputs,
+    ZkLoginClaim,
+    ZkLoginProof,
+    ZkLoginPublicIdentifier,
+    Jwk,
+    JwkId
+);
 
 /// A point on the BN254 elliptic curve.
 ///

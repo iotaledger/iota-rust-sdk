@@ -127,19 +127,14 @@ impl Intent {
 
 impl crate::TreeDisplay for Intent {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Intent")?;
         w.leaf("Scope", &self.scope, false)?;
         w.leaf("Version", &self.version, false)?;
         w.leaf("App ID", &self.app_id, true)
     }
 }
 
-impl std::fmt::Display for Intent {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Intent")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
-    }
-}
+crate::impl_tree_display!(Intent);
 
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
@@ -309,12 +304,18 @@ impl<T> IntentMessage<T> {
     }
 }
 
-impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Intent Message")?;
-        let mut w = crate::TreeWriter::new(f);
+impl<T: std::fmt::Display> crate::TreeDisplay for IntentMessage<T> {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Intent Message")?;
         w.child("Intent", &self.intent, false)?;
         w.leaf("Value", &self.value, true)
+    }
+}
+
+impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut w = crate::TreeWriter::new(f);
+        self.fmt_tree(&mut w)
     }
 }
 

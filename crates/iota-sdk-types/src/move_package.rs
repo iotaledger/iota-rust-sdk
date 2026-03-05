@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Digest, ObjectId, TreeDisplay};
+use crate::{Digest, ObjectId};
 
 /// Rust representation of upgrade policy constants in `iota::package`.
 #[repr(u8)]
@@ -92,19 +92,14 @@ impl MovePackageData {
 
 impl crate::TreeDisplay for MovePackageData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Package Data")?;
         w.bytes_vec("Modules", &self.modules, false)?;
         w.vec_inline("Dependencies", &self.dependencies, false)?;
         w.leaf("Digest", &self.digest, true)
     }
 }
 
-impl std::fmt::Display for MovePackageData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Move Package Data")?;
-        let mut w = crate::TreeWriter::new(f);
-        self.fmt_tree(&mut w)
-    }
-}
+crate::impl_tree_display!(MovePackageData);
 
 #[cfg(feature = "serde")]
 mod serialization {

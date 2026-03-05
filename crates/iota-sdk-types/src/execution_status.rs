@@ -408,10 +408,9 @@ pub struct MoveLocation {
     pub function_name: Option<Identifier>,
 }
 
-impl std::fmt::Display for MoveLocation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Move Location")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for MoveLocation {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Location")?;
         w.leaf("Package", &self.package, false)?;
         w.leaf("Module", &self.module, false)?;
         w.leaf("Function", &self.function, false)?;
@@ -419,6 +418,8 @@ impl std::fmt::Display for MoveLocation {
         w.option("Function Name", &self.function_name, true)
     }
 }
+
+crate::impl_tree_display!(MoveLocation);
 
 /// An error with an argument to a command
 ///

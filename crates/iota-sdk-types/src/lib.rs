@@ -111,11 +111,26 @@
 /// Types implementing this trait can render their fields as a tree structure
 /// with box-drawing characters (`├──`, `└──`, `│`).
 ///
-/// Implementors should also provide a `Display` impl that writes the root
-/// label then delegates to `fmt_tree`.
+/// Each `fmt_tree` impl should start with `w.header("TypeName")` to define
+/// the root label. Use [`impl_tree_display`] to generate the `Display` impl.
 pub(crate) trait TreeDisplay {
     fn fmt_tree(&self, w: &mut TreeWriter<'_, '_>) -> std::fmt::Result;
 }
+
+/// Generates `Display` impls that delegate to [`TreeDisplay::fmt_tree`].
+macro_rules! impl_tree_display {
+    ($($ty:ty),* $(,)?) => {
+        $(
+        impl std::fmt::Display for $ty {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let mut w = crate::TreeWriter::new(f);
+                crate::TreeDisplay::fmt_tree(self, &mut w)
+            }
+        }
+        )*
+    };
+}
+pub(crate) use impl_tree_display;
 
 /// A tree node writer that tracks depth and sibling position for rendering
 /// tree-structured output with box-drawing characters.
@@ -123,6 +138,7 @@ pub(crate) struct TreeWriter<'f, 'a> {
     f: &'f mut std::fmt::Formatter<'a>,
     prefix: String,
     needs_newline: bool,
+    skip_header: bool,
 }
 
 impl<'f, 'a> TreeWriter<'f, 'a> {
@@ -130,8 +146,25 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         Self {
             f,
             prefix: String::new(),
-            needs_newline: true,
+            needs_newline: false,
+            skip_header: false,
         }
+    }
+
+    /// Write the root label without connectors. When called as a child
+    /// (via [`child`](Self::child)), this is a no-op because the parent
+    /// already wrote the label.
+    pub fn header(&mut self, text: &str) -> std::fmt::Result {
+        if self.skip_header {
+            self.skip_header = false;
+            return Ok(());
+        }
+        if self.needs_newline {
+            writeln!(self.f)?;
+        }
+        write!(self.f, "{}{}", self.prefix, text)?;
+        self.needs_newline = true;
+        Ok(())
     }
 
     fn write_line(&mut self, connector: &str, text: &str) -> std::fmt::Result {
@@ -178,7 +211,10 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         child: &dyn TreeDisplay,
         is_last: bool,
     ) -> std::fmt::Result {
-        self.branch(label, is_last, |w| child.fmt_tree(w))
+        self.branch(label, is_last, |w| {
+            w.skip_header = true;
+            child.fmt_tree(w)
+        })
     }
 
     /// Display a `Vec` of `Display` items as indexed leaf nodes.

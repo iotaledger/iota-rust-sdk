@@ -130,10 +130,9 @@ impl MultisigMember {
     }
 }
 
-impl std::fmt::Display for MultisigMember {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Multisig Member")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for MultisigMember {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Member")?;
         w.leaf("Public Key", &self.public_key, false)?;
         w.leaf("Weight", &self.weight, true)
     }
@@ -230,10 +229,9 @@ impl MultisigCommittee {
     }
 }
 
-impl std::fmt::Display for MultisigCommittee {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Multisig Committee")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for MultisigCommittee {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Committee")?;
         w.vec_inline("Members", &self.members, false)?;
         w.leaf("Threshold", &self.threshold, true)
     }
@@ -328,15 +326,20 @@ impl PartialEq for MultisigAggregatedSignature {
 
 impl Eq for MultisigAggregatedSignature {}
 
-impl std::fmt::Display for MultisigAggregatedSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Multisig Aggregated Signature")?;
-        let mut w = crate::TreeWriter::new(f);
+impl crate::TreeDisplay for MultisigAggregatedSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Aggregated Signature")?;
         w.leaf("Committee", &self.committee, false)?;
         w.vec_inline("Signatures", &self.signatures, false)?;
         w.leaf("Bitmap", &self.bitmap, true)
     }
 }
+
+crate::impl_tree_display!(
+    MultisigMember,
+    MultisigCommittee,
+    MultisigAggregatedSignature
+);
 
 /// A signature from a member of a multisig committee.
 ///
