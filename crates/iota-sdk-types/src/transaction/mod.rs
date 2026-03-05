@@ -780,6 +780,13 @@ pub struct VersionAssignment {
     pub version: Version,
 }
 
+impl VersionAssignment {
+    /// Creates a [`VersionAssignment`].
+    pub fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
+}
+
 /// V1 of the consensus commit prologue system transaction
 ///
 /// # BCS
