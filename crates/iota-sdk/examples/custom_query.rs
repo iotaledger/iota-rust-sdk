@@ -45,7 +45,7 @@ pub struct ChainIdQuery {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     // Query the data for the last known epoch. Note that id variable is None, so
     // last epoch data will be returned.

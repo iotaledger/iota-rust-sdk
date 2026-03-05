@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct EpochExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     // Get current epoch
     guard let currentEpoch = try await client.epoch() else {
