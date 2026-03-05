@@ -303,6 +303,7 @@ impl Indexer {
                 }
 
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
+                let checkpoint_seq = lookup_tx_checkpoint(&self.client, &tx_digest).await?;
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
                 let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
@@ -310,11 +311,12 @@ impl Indexer {
                 sqlx::query(
                     r#"
                     INSERT INTO transactions
-                        (transaction_digest, sender, kind, success, raw_json)
-                    VALUES ($1, $2, $3, $4, $5)
+                        (checkpoint_seq, transaction_digest, sender, kind, success, raw_json)
+                    VALUES ($1, $2, $3, $4, $5, $6)
                     ON CONFLICT(transaction_digest) DO NOTHING
                     "#,
                 )
+                .bind(checkpoint_seq.map(|c| c as i64))
                 .bind(&tx_digest)
                 .bind(sender)
                 .bind(kind)
@@ -323,7 +325,8 @@ impl Indexer {
                 .execute(&self.pool)
                 .await?;
 
-                self.store_events_for_transaction(None, &tx_digest).await?;
+                self.store_events_for_transaction(checkpoint_seq, &tx_digest)
+                    .await?;
                 tx_count += 1;
             }
 
@@ -659,6 +662,28 @@ fn retry_delay(base: Duration, consecutive_failures: u32) -> Duration {
     let exponent = consecutive_failures.saturating_sub(1).min(5);
     let factor = 1_u32 << exponent;
     cmp::min(base.saturating_mul(factor), MAX_RETRY_DELAY)
+}
+
+/// Look up the checkpoint sequence number for a transaction via a raw GraphQL
+/// query, since the SDK's `transactions_data_effects` response does not include
+/// checkpoint info.
+async fn lookup_tx_checkpoint(client: &Client, tx_digest: &str) -> anyhow::Result<Option<u64>> {
+    let query = serde_json::json!({
+        "query": "query($digest: String!) { transactionBlock(digest: $digest) { effects { checkpoint { sequenceNumber } } } }",
+        "variables": { "digest": tx_digest }
+    });
+    let map = query.as_object().unwrap().clone();
+    let response = client.run_query_from_json(map).await?;
+    let Some(data) = response.data else {
+        return Ok(None);
+    };
+    let seq = data
+        .get("transactionBlock")
+        .and_then(|tb| tb.get("effects"))
+        .and_then(|e| e.get("checkpoint"))
+        .and_then(|c| c.get("sequenceNumber"))
+        .and_then(|s| s.as_u64());
+    Ok(seq)
 }
 
 fn event_matches(
