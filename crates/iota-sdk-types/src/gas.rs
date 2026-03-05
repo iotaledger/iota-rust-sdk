@@ -112,6 +112,10 @@ impl GasCostSummary {
 }
 
 impl crate::TreeDisplay for GasCostSummary {
+    fn label() -> &'static str {
+        "Gas Cost Summary"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Computation Cost", &self.computation_cost, false)?;
         w.leaf(
@@ -129,9 +133,7 @@ impl crate::TreeDisplay for GasCostSummary {
     }
 }
 
-impl_tree_display!(
-    GasCostSummary => "Gas Cost Summary",
-);
+impl_tree_display!(GasCostSummary);
 
 #[cfg(test)]
 mod tests {

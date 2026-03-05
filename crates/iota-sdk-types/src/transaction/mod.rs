@@ -57,6 +57,10 @@ impl std::fmt::Display for Transaction {
 }
 
 impl crate::TreeDisplay for Transaction {
+    fn label() -> &'static str {
+        "Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
             Self::V1(v1) => v1.fmt_tree(w),
@@ -80,6 +84,10 @@ pub struct TransactionV1 {
 }
 
 impl crate::TreeDisplay for TransactionV1 {
+    fn label() -> &'static str {
+        "Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.child("Kind", &self.kind, false)?;
         w.leaf("Sender", &self.sender, false)?;
@@ -192,6 +200,10 @@ pub struct GasPayment {
 }
 
 impl crate::TreeDisplay for GasPayment {
+    fn label() -> &'static str {
+        "Gas Payment"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.vec_children("Objects", &self.objects, false)?;
         w.leaf("Owner", &self.owner, false)?;
@@ -240,6 +252,10 @@ pub struct RandomnessStateUpdate {
 }
 
 impl crate::TreeDisplay for RandomnessStateUpdate {
+    fn label() -> &'static str {
+        "Randomness State Update"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         let bytes_size = self.random_bytes.len();
         w.leaf("Epoch", &self.epoch, false)?;
@@ -324,6 +340,10 @@ impl std::fmt::Display for TransactionKind {
 }
 
 impl crate::TreeDisplay for TransactionKind {
+    fn label() -> &'static str {
+        "Transaction Kind"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
             Self::ProgrammableTransaction(pt) => pt.fmt_tree(w),
@@ -404,6 +424,10 @@ impl std::fmt::Display for EndOfEpochTransactionKind {
 }
 
 impl crate::TreeDisplay for EndOfEpochTransactionKind {
+    fn label() -> &'static str {
+        "End of Epoch Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
             Self::ChangeEpoch(v) => v.fmt_tree(w),
@@ -465,6 +489,10 @@ pub struct ExecutionTimeObservation {
 }
 
 impl crate::TreeDisplay for ExecutionTimeObservation {
+    fn label() -> &'static str {
+        "Execution Time Observation"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Key", &self.key, false)?;
         w.vec_children("Observations", &self.observations, true)
@@ -492,6 +520,10 @@ pub struct ValidatorExecutionTimeObservation {
 }
 
 impl crate::TreeDisplay for ValidatorExecutionTimeObservation {
+    fn label() -> &'static str {
+        "Validator Execution Time Observation"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         let duration_str = format!("{:?}", self.duration);
         w.leaf("Validator", &self.validator, false)?;
@@ -610,6 +642,10 @@ pub struct AuthenticatorStateExpire {
 }
 
 impl crate::TreeDisplay for AuthenticatorStateExpire {
+    fn label() -> &'static str {
+        "Authenticator State Expire"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Min Epoch", &self.min_epoch, false)?;
         w.leaf(
@@ -658,6 +694,10 @@ pub struct AuthenticatorStateUpdateV1 {
 }
 
 impl crate::TreeDisplay for AuthenticatorStateUpdateV1 {
+    fn label() -> &'static str {
+        "Authenticator State Update"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Round", &self.round, false)?;
@@ -699,6 +739,10 @@ pub struct ActiveJwk {
 }
 
 impl crate::TreeDisplay for ActiveJwk {
+    fn label() -> &'static str {
+        "Active JWK"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("JWK ID", &self.jwk_id, false)?;
         w.leaf("JWK", &self.jwk, false)?;
@@ -771,6 +815,10 @@ pub struct CancelledTransaction {
 }
 
 impl crate::TreeDisplay for CancelledTransaction {
+    fn label() -> &'static str {
+        "Cancelled Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Digest", &self.digest, false)?;
         w.vec_children("Version Assignments", &self.version_assignments, true)
@@ -802,6 +850,10 @@ pub struct VersionAssignment {
 }
 
 impl crate::TreeDisplay for VersionAssignment {
+    fn label() -> &'static str {
+        "Version Assignment"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf("Version", &self.version, true)
@@ -854,6 +906,10 @@ pub struct ConsensusCommitPrologueV1 {
 }
 
 impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
+    fn label() -> &'static str {
+        "Consensus Commit Prologue"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Round", &self.round, false)?;
@@ -931,6 +987,10 @@ pub struct ChangeEpoch {
 }
 
 impl crate::TreeDisplay for ChangeEpoch {
+    fn label() -> &'static str {
+        "Change Epoch"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Protocol Version", &self.protocol_version, false)?;
@@ -1020,6 +1080,10 @@ pub struct ChangeEpochV2 {
 }
 
 impl crate::TreeDisplay for ChangeEpochV2 {
+    fn label() -> &'static str {
+        "Change Epoch V2"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Protocol Version", &self.protocol_version, false)?;
@@ -1100,6 +1164,10 @@ pub struct ChangeEpochV3 {
 }
 
 impl crate::TreeDisplay for ChangeEpochV3 {
+    fn label() -> &'static str {
+        "Change Epoch V3"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Protocol Version", &self.protocol_version, false)?;
@@ -1190,6 +1258,10 @@ pub struct ChangeEpochV4 {
 }
 
 impl crate::TreeDisplay for ChangeEpochV4 {
+    fn label() -> &'static str {
+        "Change Epoch V4"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Protocol Version", &self.protocol_version, false)?;
@@ -1247,6 +1319,10 @@ pub struct SystemPackage {
 }
 
 impl crate::TreeDisplay for SystemPackage {
+    fn label() -> &'static str {
+        "System Package"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Version", &self.version, false)?;
         w.bytes_vec("Modules", &self.modules, false)?;
@@ -1275,6 +1351,10 @@ pub struct GenesisTransaction {
 }
 
 impl crate::TreeDisplay for GenesisTransaction {
+    fn label() -> &'static str {
+        "Genesis Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.vec_children("Objects", &self.objects, false)?;
         w.vec_children("Events", &self.events, true)
@@ -1308,6 +1388,10 @@ pub struct ProgrammableTransaction {
 }
 
 impl crate::TreeDisplay for ProgrammableTransaction {
+    fn label() -> &'static str {
+        "Programmable Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.vec_children("Inputs", &self.inputs, false)?;
         w.vec_children("Commands", &self.commands, true)
@@ -1401,6 +1485,10 @@ impl std::fmt::Display for Input {
 }
 
 impl crate::TreeDisplay for Input {
+    fn label() -> &'static str {
+        "Input"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
             Self::Pure { value } => w.leaf("Value", &hex::encode(value), true),
@@ -1509,6 +1597,10 @@ impl std::fmt::Display for Command {
 }
 
 impl crate::TreeDisplay for Command {
+    fn label() -> &'static str {
+        "Command"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
             Self::MoveCall(v) => v.fmt_tree(w),
@@ -1544,6 +1636,10 @@ pub struct TransferObjects {
 }
 
 impl crate::TreeDisplay for TransferObjects {
+    fn label() -> &'static str {
+        "Transfer Objects"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.vec_inline("Objects", &self.objects, false)?;
         w.leaf("Address", &self.address, true)
@@ -1572,6 +1668,10 @@ pub struct SplitCoins {
 }
 
 impl crate::TreeDisplay for SplitCoins {
+    fn label() -> &'static str {
+        "Split Coins"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Coin", &self.coin, false)?;
         w.vec_inline("Amounts", &self.amounts, true)
@@ -1606,6 +1706,10 @@ pub struct MergeCoins {
 }
 
 impl crate::TreeDisplay for MergeCoins {
+    fn label() -> &'static str {
+        "Merge Coins"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Coin", &self.coin, false)?;
         w.vec_inline("Coins To Merge", &self.coins_to_merge, true)
@@ -1641,6 +1745,10 @@ pub struct Publish {
 }
 
 impl crate::TreeDisplay for Publish {
+    fn label() -> &'static str {
+        "Publish"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.bytes_vec("Modules", &self.modules, false)?;
         w.vec_inline("Dependencies", &self.dependencies, true)
@@ -1673,6 +1781,10 @@ pub struct MakeMoveVector {
 }
 
 impl crate::TreeDisplay for MakeMoveVector {
+    fn label() -> &'static str {
+        "Make Move Vector"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.option("Type", &self.type_, false)?;
         w.vec_inline("Elements", &self.elements, true)
@@ -1714,6 +1826,10 @@ pub struct Upgrade {
 }
 
 impl crate::TreeDisplay for Upgrade {
+    fn label() -> &'static str {
+        "Upgrade"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.bytes_vec("Modules", &self.modules, false)?;
         w.vec_inline("Dependencies", &self.dependencies, false)?;
@@ -1859,6 +1975,10 @@ pub struct MoveCall {
 }
 
 impl crate::TreeDisplay for MoveCall {
+    fn label() -> &'static str {
+        "Move Call"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Package", &self.package, false)?;
         w.leaf("Module", &self.module, false)?;
@@ -1869,29 +1989,29 @@ impl crate::TreeDisplay for MoveCall {
 }
 
 impl_tree_display!(
-    TransactionV1 => "Transaction",
-    GasPayment => "Gas Payment",
-    RandomnessStateUpdate => "Randomness State Update",
-    AuthenticatorStateExpire => "Authenticator State Expire",
-    AuthenticatorStateUpdateV1 => "Authenticator State Update",
-    ActiveJwk => "Active JWK",
-    VersionAssignment => "Version Assignment",
-    CancelledTransaction => "Cancelled Transaction",
-    ConsensusCommitPrologueV1 => "Consensus Commit Prologue",
-    ChangeEpoch => "Change Epoch",
-    ChangeEpochV2 => "Change Epoch V2",
-    ChangeEpochV3 => "Change Epoch V3",
-    ChangeEpochV4 => "Change Epoch V4",
-    SystemPackage => "System Package",
-    GenesisTransaction => "Genesis Transaction",
-    ProgrammableTransaction => "Programmable Transaction",
-    TransferObjects => "Transfer Objects",
-    SplitCoins => "Split Coins",
-    MergeCoins => "Merge Coins",
-    Publish => "Publish",
-    MakeMoveVector => "Make Move Vector",
-    Upgrade => "Upgrade",
-    MoveCall => "Move Call",
-    ExecutionTimeObservation => "Execution Time Observation",
-    ValidatorExecutionTimeObservation => "Validator Execution Time Observation",
+    TransactionV1,
+    GasPayment,
+    RandomnessStateUpdate,
+    AuthenticatorStateExpire,
+    AuthenticatorStateUpdateV1,
+    ActiveJwk,
+    VersionAssignment,
+    CancelledTransaction,
+    ConsensusCommitPrologueV1,
+    ChangeEpoch,
+    ChangeEpochV2,
+    ChangeEpochV3,
+    ChangeEpochV4,
+    SystemPackage,
+    GenesisTransaction,
+    ProgrammableTransaction,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    MoveCall,
+    ExecutionTimeObservation,
+    ValidatorExecutionTimeObservation,
 );

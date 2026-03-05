@@ -94,6 +94,10 @@ pub struct EndOfEpochData {
 }
 
 impl crate::TreeDisplay for EndOfEpochData {
+    fn label() -> &'static str {
+        "End of Epoch Data"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.vec_children("Next Epoch Committee", &self.next_epoch_committee, false)?;
         w.leaf(
@@ -195,6 +199,10 @@ pub struct CheckpointSummary {
 }
 
 impl crate::TreeDisplay for CheckpointSummary {
+    fn label() -> &'static str {
+        "Checkpoint Summary"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Sequence Number", &self.sequence_number, false)?;
@@ -294,6 +302,10 @@ pub struct CheckpointTransactionInfo {
 }
 
 impl crate::TreeDisplay for CheckpointTransactionInfo {
+    fn label() -> &'static str {
+        "Checkpoint Transaction Info"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
@@ -317,6 +329,10 @@ pub struct CheckpointData {
 }
 
 impl crate::TreeDisplay for CheckpointData {
+    fn label() -> &'static str {
+        "Checkpoint Data"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.child("Checkpoint", &self.checkpoint_summary.checkpoint, false)?;
         w.leaf("Contents", &self.checkpoint_contents, false)?;
@@ -354,6 +370,10 @@ pub struct CheckpointTransaction {
 }
 
 impl crate::TreeDisplay for CheckpointTransaction {
+    fn label() -> &'static str {
+        "Checkpoint Transaction"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
@@ -365,11 +385,11 @@ impl crate::TreeDisplay for CheckpointTransaction {
 }
 
 impl_tree_display!(
-    EndOfEpochData => "End of Epoch Data",
-    CheckpointSummary => "Checkpoint Summary",
-    CheckpointTransactionInfo => "Checkpoint Transaction Info",
-    CheckpointData => "Checkpoint Data",
-    CheckpointTransaction => "Checkpoint Transaction",
+    EndOfEpochData,
+    CheckpointSummary,
+    CheckpointTransactionInfo,
+    CheckpointData,
+    CheckpointTransaction,
 );
 
 #[cfg(feature = "serde")]

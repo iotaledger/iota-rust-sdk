@@ -91,6 +91,10 @@ impl MovePackageData {
 }
 
 impl crate::TreeDisplay for MovePackageData {
+    fn label() -> &'static str {
+        "Move Package Data"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.bytes_vec("Modules", &self.modules, false)?;
         w.vec_inline("Dependencies", &self.dependencies, false)?;
@@ -98,9 +102,7 @@ impl crate::TreeDisplay for MovePackageData {
     }
 }
 
-impl_tree_display!(
-    MovePackageData => "Move Package Data",
-);
+impl_tree_display!(MovePackageData);
 
 #[cfg(feature = "serde")]
 mod serialization {

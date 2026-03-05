@@ -27,6 +27,10 @@ pub struct ValidatorCommittee {
 }
 
 impl crate::TreeDisplay for ValidatorCommittee {
+    fn label() -> &'static str {
+        "Validator Committee"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.vec_children("Members", &self.members, true)
@@ -61,6 +65,10 @@ pub struct ValidatorCommitteeMember {
 }
 
 impl crate::TreeDisplay for ValidatorCommitteeMember {
+    fn label() -> &'static str {
+        "Validator Committee Member"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Public Key", &self.public_key, false)?;
         w.leaf("Stake", &self.stake, true)
@@ -103,6 +111,10 @@ pub struct ValidatorAggregatedSignature {
 }
 
 impl crate::TreeDisplay for ValidatorAggregatedSignature {
+    fn label() -> &'static str {
+        "Validator Aggregated Signature"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Signature", &self.signature, false)?;
@@ -180,6 +192,10 @@ pub struct ValidatorSignature {
 }
 
 impl crate::TreeDisplay for ValidatorSignature {
+    fn label() -> &'static str {
+        "Validator Signature"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
         w.leaf("Public Key", &self.public_key, false)?;
@@ -188,10 +204,10 @@ impl crate::TreeDisplay for ValidatorSignature {
 }
 
 impl_tree_display!(
-    ValidatorCommitteeMember => "Validator Committee Member",
-    ValidatorCommittee => "Validator Committee",
-    ValidatorAggregatedSignature => "Validator Aggregated Signature",
-    ValidatorSignature => "Validator Signature",
+    ValidatorCommitteeMember,
+    ValidatorCommittee,
+    ValidatorAggregatedSignature,
+    ValidatorSignature,
 );
 
 #[cfg(test)]

@@ -38,6 +38,10 @@ impl NameRegistration {
 }
 
 impl crate::TreeDisplay for NameRegistration {
+    fn label() -> &'static str {
+        "Name Registration"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("ID", &self.id, false)?;
         w.leaf("Name", &self.name, false)?;
@@ -65,16 +69,17 @@ impl SubnameRegistration {
 }
 
 impl crate::TreeDisplay for SubnameRegistration {
+    fn label() -> &'static str {
+        "Subname Registration"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("ID", &self.id, false)?;
         w.child("NFT", &self.nft, true)
     }
 }
 
-impl_tree_display!(
-    NameRegistration => "Name Registration",
-    SubnameRegistration => "Subname Registration",
-);
+impl_tree_display!(NameRegistration, SubnameRegistration,);
 
 /// Unifying trait for [`NameRegistration`] and [`SubnameRegistration`]
 pub trait IotaNamesNft {

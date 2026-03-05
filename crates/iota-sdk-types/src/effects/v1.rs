@@ -89,6 +89,10 @@ impl TransactionEffectsV1 {
 }
 
 impl crate::TreeDisplay for TransactionEffectsV1 {
+    fn label() -> &'static str {
+        "Transaction Effects"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Status", &format!("{:?}", self.status), false)?;
         w.leaf("Epoch", &self.epoch, false)?;
@@ -139,6 +143,10 @@ pub struct ChangedObject {
 }
 
 impl crate::TreeDisplay for ChangedObject {
+    fn label() -> &'static str {
+        "Changed Object"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf("Input State", &self.input_state, false)?;
@@ -170,17 +178,17 @@ pub struct UnchangedSharedObject {
 }
 
 impl crate::TreeDisplay for UnchangedSharedObject {
+    fn label() -> &'static str {
+        "Unchanged Shared Object"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Object ID", &self.object_id, false)?;
         w.leaf("Kind", &self.kind, true)
     }
 }
 
-impl_tree_display!(
-    TransactionEffectsV1 => "Transaction Effects",
-    ChangedObject => "Changed Object",
-    UnchangedSharedObject => "Unchanged Shared Object",
-);
+impl_tree_display!(TransactionEffectsV1, ChangedObject, UnchangedSharedObject,);
 
 /// Type of unchanged shared object
 ///

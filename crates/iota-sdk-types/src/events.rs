@@ -67,6 +67,10 @@ pub struct Event {
 }
 
 impl crate::TreeDisplay for Event {
+    fn label() -> &'static str {
+        "Event"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Package ID", &self.package_id, false)?;
         w.leaf("Module", &self.module, false)?;
@@ -99,6 +103,10 @@ pub struct BalanceChange {
 }
 
 impl crate::TreeDisplay for BalanceChange {
+    fn label() -> &'static str {
+        "Balance Change"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Address", &self.address, false)?;
         w.leaf("Coin Type", &self.coin_type, false)?;
@@ -106,7 +114,4 @@ impl crate::TreeDisplay for BalanceChange {
     }
 }
 
-impl_tree_display!(
-    Event => "Event",
-    BalanceChange => "Balance Change",
-);
+impl_tree_display!(Event, BalanceChange,);

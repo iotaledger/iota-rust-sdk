@@ -20,6 +20,10 @@ pub struct Table {
 }
 
 impl crate::TreeDisplay for Table {
+    fn label() -> &'static str {
+        "Table"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("ID", &self.id, false)?;
         w.leaf("Size", &self.size, true)
@@ -42,6 +46,10 @@ pub struct Registry {
 }
 
 impl crate::TreeDisplay for Registry {
+    fn label() -> &'static str {
+        "Registry"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.child("Registry", &self.registry, false)?;
         w.child("Reverse Registry", &self.reverse_registry, true)
@@ -61,6 +69,10 @@ pub struct RegistryEntry {
 }
 
 impl crate::TreeDisplay for RegistryEntry {
+    fn label() -> &'static str {
+        "Registry Entry"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("ID", &self.id, false)?;
         w.leaf("Name", &self.name, false)?;
@@ -77,6 +89,10 @@ pub struct ReverseRegistryEntry {
 }
 
 impl crate::TreeDisplay for ReverseRegistryEntry {
+    fn label() -> &'static str {
+        "Reverse Registry Entry"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("ID", &self.id, false)?;
         w.leaf("Address", &self.address, false)?;
@@ -110,6 +126,10 @@ pub struct NameRecord {
 }
 
 impl crate::TreeDisplay for NameRecord {
+    fn label() -> &'static str {
+        "Name Record"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("NFT ID", &self.nft_id, false)?;
         w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, false)?;
@@ -119,11 +139,11 @@ impl crate::TreeDisplay for NameRecord {
 }
 
 impl_tree_display!(
-    Table => "Table",
-    Registry => "Registry",
-    RegistryEntry => "Registry Entry",
-    ReverseRegistryEntry => "Reverse Registry Entry",
-    NameRecord => "Name Record",
+    Table,
+    Registry,
+    RegistryEntry,
+    ReverseRegistryEntry,
+    NameRecord,
 );
 
 #[cfg(feature = "serde")]

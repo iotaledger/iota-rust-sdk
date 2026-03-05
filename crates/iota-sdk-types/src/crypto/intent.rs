@@ -124,6 +124,10 @@ impl Intent {
 }
 
 impl crate::TreeDisplay for Intent {
+    fn label() -> &'static str {
+        "Intent"
+    }
+
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Scope", &self.scope, false)?;
         w.leaf("Version", &self.version, false)?;
@@ -131,9 +135,7 @@ impl crate::TreeDisplay for Intent {
     }
 }
 
-impl_tree_display!(
-    Intent => "Intent",
-);
+impl_tree_display!(Intent);
 
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
