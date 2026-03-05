@@ -614,6 +614,16 @@ impl crate::TreeDisplay for GenesisObject {
     }
 }
 
+impl_tree_display!(
+    ObjectReference => "Object Reference",
+    MovePackage => "Move Package",
+    TypeOrigin => "Type Origin",
+    UpgradeInfo => "Upgrade Info",
+    MoveStruct => "Move Struct",
+    Object => "Object",
+    GenesisObject => "Genesis Object",
+);
+
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

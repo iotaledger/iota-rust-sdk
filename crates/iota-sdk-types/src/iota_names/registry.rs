@@ -118,6 +118,14 @@ impl crate::TreeDisplay for NameRecord {
     }
 }
 
+impl_tree_display!(
+    Table => "Table",
+    Registry => "Registry",
+    RegistryEntry => "Registry Entry",
+    ReverseRegistryEntry => "Reverse Registry Entry",
+    NameRecord => "Name Record",
+);
+
 #[cfg(feature = "serde")]
 mod serde_vecmap {
     use std::collections::HashMap;

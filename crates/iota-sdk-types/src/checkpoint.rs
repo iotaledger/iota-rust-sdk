@@ -364,6 +364,14 @@ impl crate::TreeDisplay for CheckpointTransaction {
     }
 }
 
+impl_tree_display!(
+    EndOfEpochData => "End of Epoch Data",
+    CheckpointSummary => "Checkpoint Summary",
+    CheckpointTransactionInfo => "Checkpoint Transaction Info",
+    CheckpointData => "Checkpoint Data",
+    CheckpointTransaction => "Checkpoint Transaction",
+);
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

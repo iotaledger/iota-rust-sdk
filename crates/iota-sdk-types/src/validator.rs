@@ -187,6 +187,13 @@ impl crate::TreeDisplay for ValidatorSignature {
     }
 }
 
+impl_tree_display!(
+    ValidatorCommitteeMember => "Validator Committee Member",
+    ValidatorCommittee => "Validator Committee",
+    ValidatorAggregatedSignature => "Validator Aggregated Signature",
+    ValidatorSignature => "Validator Signature",
+);
+
 #[cfg(test)]
 mod tests {
     #[cfg(target_arch = "wasm32")]

@@ -274,8 +274,8 @@ macro_rules! impl_tree_display {
         impl std::fmt::Display for $ty {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "{}", $label)?;
-                let mut w = TreeWriter::new(f);
-                TreeDisplay::fmt_tree(self, &mut w)
+                let mut w = crate::TreeWriter::new(f);
+                crate::TreeDisplay::fmt_tree(self, &mut w)
             }
         }
         )*
@@ -356,75 +356,6 @@ pub use type_tag::{Identifier, IdentifierRef, StructTag, TypeParseError, TypeTag
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
-
-impl_tree_display!(
-    // gas.rs
-    GasCostSummary => "Gas Cost Summary",
-    // object.rs
-    object::ObjectReference => "Object Reference",
-    object::MovePackage => "Move Package",
-    object::TypeOrigin => "Type Origin",
-    object::UpgradeInfo => "Upgrade Info",
-    object::MoveStruct => "Move Struct",
-    object::Object => "Object",
-    object::GenesisObject => "Genesis Object",
-    // effects/v1.rs
-    effects::TransactionEffectsV1 => "Transaction Effects",
-    effects::ChangedObject => "Changed Object",
-    effects::UnchangedSharedObject => "Unchanged Shared Object",
-    // events.rs
-    events::Event => "Event",
-    events::BalanceChange => "Balance Change",
-    // checkpoint.rs
-    checkpoint::EndOfEpochData => "End of Epoch Data",
-    checkpoint::CheckpointSummary => "Checkpoint Summary",
-    checkpoint::CheckpointTransactionInfo => "Checkpoint Transaction Info",
-    checkpoint::CheckpointData => "Checkpoint Data",
-    checkpoint::CheckpointTransaction => "Checkpoint Transaction",
-    // validator.rs
-    validator::ValidatorCommitteeMember => "Validator Committee Member",
-    validator::ValidatorCommittee => "Validator Committee",
-    validator::ValidatorAggregatedSignature => "Validator Aggregated Signature",
-    validator::ValidatorSignature => "Validator Signature",
-    // crypto/intent.rs
-    crypto::Intent => "Intent",
-    // move_package.rs
-    move_package::MovePackageData => "Move Package Data",
-    // transaction/mod.rs
-    transaction::TransactionV1 => "Transaction",
-    transaction::GasPayment => "Gas Payment",
-    transaction::RandomnessStateUpdate => "Randomness State Update",
-    transaction::AuthenticatorStateExpire => "Authenticator State Expire",
-    transaction::AuthenticatorStateUpdateV1 => "Authenticator State Update",
-    transaction::ActiveJwk => "Active JWK",
-    transaction::VersionAssignment => "Version Assignment",
-    transaction::CancelledTransaction => "Cancelled Transaction",
-    transaction::ConsensusCommitPrologueV1 => "Consensus Commit Prologue",
-    transaction::ChangeEpoch => "Change Epoch",
-    transaction::ChangeEpochV2 => "Change Epoch V2",
-    transaction::ChangeEpochV3 => "Change Epoch V3",
-    transaction::ChangeEpochV4 => "Change Epoch V4",
-    transaction::SystemPackage => "System Package",
-    transaction::GenesisTransaction => "Genesis Transaction",
-    transaction::ProgrammableTransaction => "Programmable Transaction",
-    transaction::TransferObjects => "Transfer Objects",
-    transaction::SplitCoins => "Split Coins",
-    transaction::MergeCoins => "Merge Coins",
-    transaction::Publish => "Publish",
-    transaction::MakeMoveVector => "Make Move Vector",
-    transaction::Upgrade => "Upgrade",
-    transaction::MoveCall => "Move Call",
-    transaction::ExecutionTimeObservation => "Execution Time Observation",
-    transaction::ValidatorExecutionTimeObservation => "Validator Execution Time Observation",
-    // iota_names
-    iota_names::NameRegistration => "Name Registration",
-    iota_names::SubnameRegistration => "Subname Registration",
-    iota_names::registry::Table => "Table",
-    iota_names::registry::Registry => "Registry",
-    iota_names::registry::RegistryEntry => "Registry Entry",
-    iota_names::registry::ReverseRegistryEntry => "Reverse Registry Entry",
-    iota_names::registry::NameRecord => "Name Record",
-);
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;

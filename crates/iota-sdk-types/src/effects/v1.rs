@@ -176,6 +176,12 @@ impl crate::TreeDisplay for UnchangedSharedObject {
     }
 }
 
+impl_tree_display!(
+    TransactionEffectsV1 => "Transaction Effects",
+    ChangedObject => "Changed Object",
+    UnchangedSharedObject => "Unchanged Shared Object",
+);
+
 /// Type of unchanged shared object
 ///
 /// # BCS

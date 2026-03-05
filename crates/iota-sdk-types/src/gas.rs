@@ -129,6 +129,10 @@ impl crate::TreeDisplay for GasCostSummary {
     }
 }
 
+impl_tree_display!(
+    GasCostSummary => "Gas Cost Summary",
+);
+
 #[cfg(test)]
 mod tests {
     #[cfg(target_arch = "wasm32")]

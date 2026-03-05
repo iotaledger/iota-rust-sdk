@@ -71,6 +71,11 @@ impl crate::TreeDisplay for SubnameRegistration {
     }
 }
 
+impl_tree_display!(
+    NameRegistration => "Name Registration",
+    SubnameRegistration => "Subname Registration",
+);
+
 /// Unifying trait for [`NameRegistration`] and [`SubnameRegistration`]
 pub trait IotaNamesNft {
     const MODULE: &IdentifierRef;

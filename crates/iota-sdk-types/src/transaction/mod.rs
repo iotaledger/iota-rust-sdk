@@ -1867,3 +1867,31 @@ impl crate::TreeDisplay for MoveCall {
         w.vec_inline("Arguments", &self.arguments, true)
     }
 }
+
+impl_tree_display!(
+    TransactionV1 => "Transaction",
+    GasPayment => "Gas Payment",
+    RandomnessStateUpdate => "Randomness State Update",
+    AuthenticatorStateExpire => "Authenticator State Expire",
+    AuthenticatorStateUpdateV1 => "Authenticator State Update",
+    ActiveJwk => "Active JWK",
+    VersionAssignment => "Version Assignment",
+    CancelledTransaction => "Cancelled Transaction",
+    ConsensusCommitPrologueV1 => "Consensus Commit Prologue",
+    ChangeEpoch => "Change Epoch",
+    ChangeEpochV2 => "Change Epoch V2",
+    ChangeEpochV3 => "Change Epoch V3",
+    ChangeEpochV4 => "Change Epoch V4",
+    SystemPackage => "System Package",
+    GenesisTransaction => "Genesis Transaction",
+    ProgrammableTransaction => "Programmable Transaction",
+    TransferObjects => "Transfer Objects",
+    SplitCoins => "Split Coins",
+    MergeCoins => "Merge Coins",
+    Publish => "Publish",
+    MakeMoveVector => "Make Move Vector",
+    Upgrade => "Upgrade",
+    MoveCall => "Move Call",
+    ExecutionTimeObservation => "Execution Time Observation",
+    ValidatorExecutionTimeObservation => "Validator Execution Time Observation",
+);

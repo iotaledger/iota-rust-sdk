@@ -131,6 +131,10 @@ impl crate::TreeDisplay for Intent {
     }
 }
 
+impl_tree_display!(
+    Intent => "Intent",
+);
+
 #[cfg(feature = "serde")]
 impl FromStr for Intent {
     type Err = IntentError;

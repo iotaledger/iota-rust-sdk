@@ -105,3 +105,8 @@ impl crate::TreeDisplay for BalanceChange {
         w.leaf("Amount", &self.amount, true)
     }
 }
+
+impl_tree_display!(
+    Event => "Event",
+    BalanceChange => "Balance Change",
+);

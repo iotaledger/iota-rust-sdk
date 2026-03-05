@@ -98,6 +98,10 @@ impl crate::TreeDisplay for MovePackageData {
     }
 }
 
+impl_tree_display!(
+    MovePackageData => "Move Package Data",
+);
+
 #[cfg(feature = "serde")]
 mod serialization {
     use base64ct::Encoding;
