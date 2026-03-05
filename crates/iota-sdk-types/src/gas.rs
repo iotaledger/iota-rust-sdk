@@ -150,5 +150,4 @@ mod tests {
         println!("{}", serde_json::to_string(&actual).unwrap());
         println!("{:?}", bcs::to_bytes(&actual).unwrap());
     }
-
 }

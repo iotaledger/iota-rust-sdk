@@ -8,33 +8,22 @@ part of the public API of the IOTA blockchain.
 
 ## Display Support
 
-All public types implement `std::fmt::Display` for readable console output. Multi-field structs render as structured key-value tables using [`tabled`](https://crates.io/crates/tabled).
+All public types implement `std::fmt::Display` for readable console output. Multi-field structs render as tree structures using box-drawing characters.
 
 ### Example
 
 ```rust
 use iota_sdk_types::GasCostSummary;
 
-let gas = GasCostSummary {
-    computation_cost: 1000,
-    computation_cost_burned: 500,
-    storage_cost: 200,
-    storage_rebate: 50,
-    non_refundable_storage_fee: 10,
-};
+let gas = GasCostSummary::new(1000, 500, 200, 50, 10);
 println!("{gas}");
 ```
 
 ```
-+----------------------------+------+
-| Computation Cost           | 1000 |
-+----------------------------+------+
-| Computation Cost Burned    | 500  |
-+----------------------------+------+
-| Storage Cost               | 200  |
-+----------------------------+------+
-| Storage Rebate             | 50   |
-+----------------------------+------+
-| Non-Refundable Storage Fee | 10   |
-+----------------------------+------+
+Gas Cost Summary
+├── Computation Cost: 1000
+├── Computation Cost Burned: 500
+├── Storage Cost: 200
+├── Storage Rebate: 50
+└── Non-Refundable Storage Fee: 10
 ```

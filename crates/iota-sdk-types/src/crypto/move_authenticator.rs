@@ -76,8 +76,8 @@ impl std::fmt::Display for MoveAuthenticator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Move Authenticator")?;
         let mut w = crate::TreeWriter::new(f);
-        crate::tree_vec_inline(&mut w, "Call Args", &self.call_args, false)?;
-        crate::tree_vec_inline(&mut w, "Type Args", &self.type_args, false)?;
+        w.vec_inline("Call Args", &self.call_args, false)?;
+        w.vec_inline("Type Args", &self.type_args, false)?;
         w.leaf("Object to Authenticate", &self.object_to_authenticate, true)
     }
 }

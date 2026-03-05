@@ -92,8 +92,8 @@ impl MovePackageData {
 
 impl crate::TreeDisplay for MovePackageData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        crate::tree_bytes_vec(w, "Modules", &self.modules, false)?;
-        crate::tree_vec_inline(w, "Dependencies", &self.dependencies, false)?;
+        w.bytes_vec("Modules", &self.modules, false)?;
+        w.vec_inline("Dependencies", &self.dependencies, false)?;
         w.leaf("Digest", &self.digest, true)
     }
 }

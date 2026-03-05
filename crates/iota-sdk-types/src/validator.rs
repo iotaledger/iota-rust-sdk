@@ -29,7 +29,7 @@ pub struct ValidatorCommittee {
 impl crate::TreeDisplay for ValidatorCommittee {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Epoch", &self.epoch, false)?;
-        crate::tree_vec_children(w, "Members", &self.members, true)
+        w.vec_children("Members", &self.members, true)
     }
 }
 

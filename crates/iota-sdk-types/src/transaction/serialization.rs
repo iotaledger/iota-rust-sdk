@@ -1167,5 +1167,4 @@ mod tests {
             assert_eq!(tx, serde_json::from_str(&json).unwrap());
         }
     }
-
 }

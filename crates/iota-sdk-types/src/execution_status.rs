@@ -416,7 +416,7 @@ impl std::fmt::Display for MoveLocation {
         w.leaf("Module", &self.module, false)?;
         w.leaf("Function", &self.function, false)?;
         w.leaf("Instruction", &self.instruction, false)?;
-        crate::tree_option(&mut w, "Function Name", &self.function_name, true)
+        w.option("Function Name", &self.function_name, true)
     }
 }
 

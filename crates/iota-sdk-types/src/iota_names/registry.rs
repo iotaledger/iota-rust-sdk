@@ -113,7 +113,7 @@ impl crate::TreeDisplay for NameRecord {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("NFT ID", &self.nft_id, false)?;
         w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, false)?;
-        crate::tree_option(w, "Target Address", &self.target_address, false)?;
+        w.option("Target Address", &self.target_address, false)?;
         w.leaf("Data", &format!("[{} entries]", self.data.len()), true)
     }
 }

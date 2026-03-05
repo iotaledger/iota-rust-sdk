@@ -234,7 +234,7 @@ impl std::fmt::Display for MultisigCommittee {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Multisig Committee")?;
         let mut w = crate::TreeWriter::new(f);
-        crate::tree_vec_inline(&mut w, "Members", &self.members, false)?;
+        w.vec_inline("Members", &self.members, false)?;
         w.leaf("Threshold", &self.threshold, true)
     }
 }
@@ -333,7 +333,7 @@ impl std::fmt::Display for MultisigAggregatedSignature {
         write!(f, "Multisig Aggregated Signature")?;
         let mut w = crate::TreeWriter::new(f);
         w.leaf("Committee", &self.committee, false)?;
-        crate::tree_vec_inline(&mut w, "Signatures", &self.signatures, false)?;
+        w.vec_inline("Signatures", &self.signatures, false)?;
         w.leaf("Bitmap", &self.bitmap, true)
     }
 }

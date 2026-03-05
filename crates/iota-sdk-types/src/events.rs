@@ -23,7 +23,7 @@ impl std::fmt::Display for TransactionEvents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Transaction Events")?;
         let mut w = crate::TreeWriter::new(f);
-        crate::tree_vec_children(&mut w, "Events", &self.0, true)
+        w.vec_children("Events", &self.0, true)
     }
 }
 

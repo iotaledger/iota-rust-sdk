@@ -177,97 +177,92 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
     ) -> std::fmt::Result {
         self.branch(label, is_last, |w| child.fmt_tree(w))
     }
-}
 
-/// Display a `Vec` of `Display` items as indexed leaf nodes.
-pub(crate) fn tree_vec_inline(
-    w: &mut TreeWriter<'_, '_>,
-    label: &str,
-    items: &[impl std::fmt::Display],
-    is_last: bool,
-) -> std::fmt::Result {
-    if items.is_empty() {
-        w.leaf(label, &"[]", is_last)
-    } else {
-        w.branch(label, is_last, |w| {
-            let last_idx = items.len() - 1;
-            for (i, item) in items.iter().enumerate() {
-                w.leaf(&i.to_string(), &item, i == last_idx)?;
-            }
-            Ok(())
-        })
+    /// Display a `Vec` of `Display` items as indexed leaf nodes.
+    pub fn vec_inline(
+        &mut self,
+        label: &str,
+        items: &[impl std::fmt::Display],
+        is_last: bool,
+    ) -> std::fmt::Result {
+        if items.is_empty() {
+            self.leaf(label, &"[]", is_last)
+        } else {
+            self.branch(label, is_last, |w| {
+                let last_idx = items.len() - 1;
+                for (i, item) in items.iter().enumerate() {
+                    w.leaf(&i.to_string(), &item, i == last_idx)?;
+                }
+                Ok(())
+            })
+        }
     }
-}
 
-/// Display a `Vec` of [`TreeDisplay`] items as indexed sub-trees.
-pub(crate) fn tree_vec_children(
-    w: &mut TreeWriter<'_, '_>,
-    label: &str,
-    items: &[impl TreeDisplay],
-    is_last: bool,
-) -> std::fmt::Result {
-    if items.is_empty() {
-        w.leaf(label, &"[]", is_last)
-    } else {
-        w.branch(label, is_last, |w| {
-            let last_idx = items.len() - 1;
-            for (i, item) in items.iter().enumerate() {
-                w.child(&i.to_string(), item, i == last_idx)?;
-            }
-            Ok(())
-        })
+    /// Display a `Vec` of [`TreeDisplay`] items as indexed sub-trees.
+    pub fn vec_children(
+        &mut self,
+        label: &str,
+        items: &[impl TreeDisplay],
+        is_last: bool,
+    ) -> std::fmt::Result {
+        if items.is_empty() {
+            self.leaf(label, &"[]", is_last)
+        } else {
+            self.branch(label, is_last, |w| {
+                let last_idx = items.len() - 1;
+                for (i, item) in items.iter().enumerate() {
+                    w.child(&i.to_string(), item, i == last_idx)?;
+                }
+                Ok(())
+            })
+        }
     }
-}
 
-/// Display an `Option<impl Display>`, showing "None" for `None`.
-pub(crate) fn tree_option(
-    w: &mut TreeWriter<'_, '_>,
-    label: &str,
-    opt: &Option<impl std::fmt::Display>,
-    is_last: bool,
-) -> std::fmt::Result {
-    match opt {
-        Some(v) => w.leaf(label, v, is_last),
-        None => w.leaf(label, &"None", is_last),
+    /// Display an `Option<impl Display>`, showing "None" for `None`.
+    pub fn option(
+        &mut self,
+        label: &str,
+        opt: &Option<impl std::fmt::Display>,
+        is_last: bool,
+    ) -> std::fmt::Result {
+        match opt {
+            Some(v) => self.leaf(label, v, is_last),
+            None => self.leaf(label, &"None", is_last),
+        }
     }
-}
 
-/// Display an `Option<impl TreeDisplay>` as a sub-tree, showing "None" for
-/// `None`.
-pub(crate) fn tree_option_child(
-    w: &mut TreeWriter<'_, '_>,
-    label: &str,
-    opt: &Option<impl TreeDisplay>,
-    is_last: bool,
-) -> std::fmt::Result {
-    match opt {
-        Some(v) => w.child(label, v, is_last),
-        None => w.leaf(label, &"None", is_last),
+    /// Display an `Option<impl TreeDisplay>` as a sub-tree, showing "None" for
+    /// `None`.
+    pub fn option_child(
+        &mut self,
+        label: &str,
+        opt: &Option<impl TreeDisplay>,
+        is_last: bool,
+    ) -> std::fmt::Result {
+        match opt {
+            Some(v) => self.child(label, v, is_last),
+            None => self.leaf(label, &"None", is_last),
+        }
     }
-}
 
-/// Display a `Vec<Vec<u8>>` as Base64-encoded indexed leaves.
-pub(crate) fn tree_bytes_vec(
-    w: &mut TreeWriter<'_, '_>,
-    label: &str,
-    items: &[Vec<u8>],
-    is_last: bool,
-) -> std::fmt::Result {
-    if items.is_empty() {
-        w.leaf(label, &"[]", is_last)
-    } else {
-        use base64ct::Encoding;
-        w.branch(label, is_last, |w| {
-            let last_idx = items.len() - 1;
-            for (i, bytes) in items.iter().enumerate() {
-                w.leaf(
-                    &i.to_string(),
-                    &base64ct::Base64::encode_string(bytes),
-                    i == last_idx,
-                )?;
-            }
-            Ok(())
-        })
+    /// Display a `Vec<Vec<u8>>` as Base64-encoded indexed leaves.
+    pub fn bytes_vec(&mut self, label: &str, items: &[Vec<u8>], is_last: bool) -> std::fmt::Result {
+        if items.is_empty() {
+            self.leaf(label, &"[]", is_last)
+        } else {
+            use base64ct::Encoding;
+            self.branch(label, is_last, |w| {
+                let last_idx = items.len() - 1;
+                for (i, bytes) in items.iter().enumerate() {
+                    w.leaf(
+                        &i.to_string(),
+                        &base64ct::Base64::encode_string(bytes),
+                        i == last_idx,
+                    )?;
+                }
+                Ok(())
+            })
+        }
     }
 }
 

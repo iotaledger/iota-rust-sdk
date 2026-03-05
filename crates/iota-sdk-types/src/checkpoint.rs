@@ -95,13 +95,13 @@ pub struct EndOfEpochData {
 
 impl crate::TreeDisplay for EndOfEpochData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        crate::tree_vec_children(w, "Next Epoch Committee", &self.next_epoch_committee, false)?;
+        w.vec_children("Next Epoch Committee", &self.next_epoch_committee, false)?;
         w.leaf(
             "Next Epoch Protocol Version",
             &self.next_epoch_protocol_version,
             false,
         )?;
-        crate::tree_vec_inline(w, "Epoch Commitments", &self.epoch_commitments, false)?;
+        w.vec_inline("Epoch Commitments", &self.epoch_commitments, false)?;
         w.leaf("Epoch Supply Change", &self.epoch_supply_change, true)
     }
 }
@@ -204,20 +204,19 @@ impl crate::TreeDisplay for CheckpointSummary {
             false,
         )?;
         w.leaf("Content Digest", &self.content_digest, false)?;
-        crate::tree_option(w, "Previous Digest", &self.previous_digest, false)?;
+        w.option("Previous Digest", &self.previous_digest, false)?;
         w.child(
             "Epoch Rolling Gas Cost",
             &self.epoch_rolling_gas_cost_summary,
             false,
         )?;
         w.leaf("Timestamp (ms)", &self.timestamp_ms, false)?;
-        crate::tree_vec_inline(
-            w,
+        w.vec_inline(
             "Checkpoint Commitments",
             &self.checkpoint_commitments,
             false,
         )?;
-        crate::tree_option_child(w, "End of Epoch Data", &self.end_of_epoch_data, true)
+        w.option_child("End of Epoch Data", &self.end_of_epoch_data, true)
     }
 }
 
@@ -298,7 +297,7 @@ impl crate::TreeDisplay for CheckpointTransactionInfo {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
-        crate::tree_vec_inline(w, "Signatures", &self.signatures, true)
+        w.vec_inline("Signatures", &self.signatures, true)
     }
 }
 
@@ -321,7 +320,7 @@ impl crate::TreeDisplay for CheckpointData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.child("Checkpoint", &self.checkpoint_summary.checkpoint, false)?;
         w.leaf("Contents", &self.checkpoint_contents, false)?;
-        crate::tree_vec_children(w, "Transactions", &self.transactions, true)
+        w.vec_children("Transactions", &self.transactions, true)
     }
 }
 
@@ -360,8 +359,8 @@ impl crate::TreeDisplay for CheckpointTransaction {
         w.leaf("Effects", &self.effects, false)?;
         let events_display = if self.events.is_some() { "Yes" } else { "None" };
         w.leaf("Events", &events_display, false)?;
-        crate::tree_vec_children(w, "Input Objects", &self.input_objects, false)?;
-        crate::tree_vec_children(w, "Output Objects", &self.output_objects, true)
+        w.vec_children("Input Objects", &self.input_objects, false)?;
+        w.vec_children("Output Objects", &self.output_objects, true)
     }
 }
 
