@@ -6,7 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
-use crate::{Address, Identifier, ObjectId, ObjectReference, StructTag, TypeTag};
+use crate::{Identifier, ObjectId, ObjectReference};
 
 mod transaction_kind {
     use super::*;
@@ -1051,78 +1051,6 @@ mod transaction_expiration {
         ) -> schemars::schema::Schema {
             ReadableTransactionExpiration::json_schema(generator)
         }
-    }
-}
-
-/// Deserialize a `TypeTag` without validating the identifiers in struct tags.
-/// This is used for deserializing type tags in `MoveCall` arguments, where BCS
-/// bytes could contain invalid identifiers but we still want to be able to
-/// deserialize them and let the move VM handle the validation.
-pub(super) fn deserialize_type_tag_unchecked<'de, D>(d: D) -> Result<Option<TypeTag>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    use serde::Deserialize;
-
-    if d.is_human_readable() {
-        <Option<TypeTag>>::deserialize(d)
-    } else {
-        #[derive(Deserialize)]
-        enum UncheckedTypeTag {
-            U8,
-            U64,
-            U128,
-            Bool,
-            Address,
-            Signer,
-            Vector(Box<UncheckedTypeTag>),
-            Struct(Box<UncheckedStructTag>),
-            U16,
-            U32,
-            U256,
-        }
-
-        #[derive(Deserialize)]
-        #[serde(rename = "StructTag")]
-        struct UncheckedStructTag {
-            address: Address,
-            #[serde(deserialize_with = "deserialize_ident_unchecked")]
-            module: Identifier,
-            #[serde(deserialize_with = "deserialize_ident_unchecked")]
-            name: Identifier,
-            type_params: Vec<UncheckedTypeTag>,
-        }
-
-        impl From<UncheckedTypeTag> for TypeTag {
-            fn from(t: UncheckedTypeTag) -> Self {
-                match t {
-                    UncheckedTypeTag::U8 => TypeTag::U8,
-                    UncheckedTypeTag::U64 => TypeTag::U64,
-                    UncheckedTypeTag::U128 => TypeTag::U128,
-                    UncheckedTypeTag::Bool => TypeTag::Bool,
-                    UncheckedTypeTag::Address => TypeTag::Address,
-                    UncheckedTypeTag::Signer => TypeTag::Signer,
-                    UncheckedTypeTag::Vector(elem) => TypeTag::Vector(Box::new((*elem).into())),
-                    UncheckedTypeTag::Struct(st) => TypeTag::Struct(Box::new((*st).into())),
-                    UncheckedTypeTag::U16 => TypeTag::U16,
-                    UncheckedTypeTag::U32 => TypeTag::U32,
-                    UncheckedTypeTag::U256 => TypeTag::U256,
-                }
-            }
-        }
-
-        impl From<UncheckedStructTag> for StructTag {
-            fn from(st: UncheckedStructTag) -> Self {
-                StructTag {
-                    address: st.address,
-                    module: st.module.into(),
-                    name: st.name.into(),
-                    type_params: st.type_params.into_iter().map(Into::into).collect(),
-                }
-            }
-        }
-
-        <Option<UncheckedTypeTag>>::deserialize(d).map(|opt| opt.map(Into::into))
     }
 }
 

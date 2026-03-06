@@ -1472,11 +1472,7 @@ pub struct MakeMoveVector {
     ///
     /// This is required to be set when the type can't be inferred, for example
     /// when the set of provided arguments are all pure input values.
-    #[cfg_attr(
-        feature = "serde",
-        serde(rename = "type"),
-        serde(deserialize_with = "serialization::deserialize_type_tag_unchecked")
-    )]
+    #[cfg_attr(feature = "serde", serde(rename = "type"))]
     pub type_: Option<TypeTag>,
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
