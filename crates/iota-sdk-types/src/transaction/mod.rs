@@ -1473,13 +1473,14 @@ pub fn write_sep<T: core::fmt::Display>(
 
 impl core::fmt::Display for MoveCall {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
-        let MoveCall {
+        let Self {
             package,
             module,
             function,
             type_arguments,
             arguments,
         } = self;
+        write!(f, "MoveCall(")?;
         write!(f, "{package}::{module}::{function}")?;
         if !type_arguments.is_empty() {
             write!(f, "<")?;
@@ -1488,6 +1489,83 @@ impl core::fmt::Display for MoveCall {
         }
         write!(f, "(")?;
         write_sep(f, arguments, ",")?;
+        write!(f, ")")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for TransferObjects {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { objects, address } = self;
+
+        write!(f, "TransferObjects([")?;
+        write_sep(f, objects, ",")?;
+        write!(f, "],{address})")
+    }
+}
+
+impl core::fmt::Display for SplitCoins {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { coin, amounts } = self;
+
+        write!(f, "SplitCoins({coin},")?;
+        write_sep(f, amounts, ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for MergeCoins {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            coin,
+            coins_to_merge,
+        } = self;
+
+        write!(f, "MergeCoins({coin},")?;
+        write_sep(f, coins_to_merge, ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Publish {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { dependencies, .. } = self;
+
+        write!(f, "Publish(_,")?;
+        write_sep(f, dependencies, ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for MakeMoveVector {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { type_, elements } = self;
+
+        write!(f, "MakeMoveVector(")?;
+        if let Some(ty) = type_ {
+            write!(f, "Some{ty}")?;
+        } else {
+            write!(f, "None")?;
+        }
+        write!(f, ",[")?;
+        write_sep(f, elements, ",")?;
+        write!(f, "])")
+    }
+}
+
+impl core::fmt::Display for Upgrade {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            dependencies,
+            package,
+            ticket,
+            ..
+        } = self;
+
+        write!(f, "Upgrade(_,")?;
+        write_sep(f, dependencies, ",")?;
+        write!(f, ", {package}")?;
+        write!(f, ", {ticket}")?;
         write!(f, ")")
     }
 }
@@ -1495,60 +1573,13 @@ impl core::fmt::Display for MoveCall {
 impl core::fmt::Display for Command {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Command::MoveCall(MoveCall {
-                package,
-                module,
-                function,
-                ..
-            }) => {
-                write!(f, "MoveCall({package}::{module}::{function})")
-            }
-            Command::TransferObjects(TransferObjects { objects, address }) => {
-                write!(f, "TransferObjects([")?;
-                write_sep(f, objects, ",")?;
-                write!(f, "],{address})")
-            }
-            Command::SplitCoins(SplitCoins { coin, amounts }) => {
-                write!(f, "SplitCoins({coin},")?;
-                write_sep(f, amounts, ",")?;
-                write!(f, ")")
-            }
-            Command::MergeCoins(MergeCoins {
-                coin,
-                coins_to_merge,
-            }) => {
-                write!(f, "MergeCoins({coin},")?;
-                write_sep(f, coins_to_merge, ",")?;
-                write!(f, ")")
-            }
-            Command::Publish(Publish { dependencies, .. }) => {
-                write!(f, "Publish(_,")?;
-                write_sep(f, dependencies, ",")?;
-                write!(f, ")")
-            }
-            Command::MakeMoveVector(MakeMoveVector { type_, elements }) => {
-                write!(f, "MakeMoveVector(")?;
-                if let Some(ty) = type_ {
-                    write!(f, "Some{ty}")?;
-                } else {
-                    write!(f, "None")?;
-                }
-                write!(f, ",[")?;
-                write_sep(f, elements, ",")?;
-                write!(f, "])")
-            }
-            Command::Upgrade(Upgrade {
-                dependencies,
-                package,
-                ticket,
-                ..
-            }) => {
-                write!(f, "Upgrade(_,")?;
-                write_sep(f, dependencies, ",")?;
-                write!(f, ", {package}")?;
-                write!(f, ", {ticket}")?;
-                write!(f, ")")
-            }
+            Command::MoveCall(cmd) => write!(f, "{cmd}"),
+            Command::TransferObjects(cmd) => write!(f, "{cmd}"),
+            Command::SplitCoins(cmd) => write!(f, "{cmd}"),
+            Command::MergeCoins(cmd) => write!(f, "{cmd}"),
+            Command::Publish(cmd) => write!(f, "{cmd}"),
+            Command::MakeMoveVector(cmd) => write!(f, "{cmd}"),
+            Command::Upgrade(cmd) => write!(f, "{cmd}"),
         }
     }
 }
