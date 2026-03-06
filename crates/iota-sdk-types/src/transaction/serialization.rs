@@ -338,6 +338,7 @@ mod version_assignments {
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignments {
         CancelledTransactions {
+            #[serde(rename = "cancelledTransactions")]
             cancelled_transactions: Vec<CancelledTransaction>,
         },
     }
