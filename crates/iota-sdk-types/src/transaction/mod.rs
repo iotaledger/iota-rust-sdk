@@ -718,6 +718,7 @@ pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
     CancelledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
+        #[cfg_attr(feature = "schemars", schemars(rename = "cancelledTransactions"))]
         cancelled_transactions: Vec<CancelledTransaction>,
     },
 }
