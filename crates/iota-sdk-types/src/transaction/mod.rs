@@ -710,7 +710,6 @@ impl Ord for ActiveJwk {
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "camelCase")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
@@ -718,7 +717,7 @@ pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
     CancelledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-        #[cfg_attr(feature = "schemars", schemars(rename = "cancelledTransactions"))]
+        #[cfg_attr(feature = "schemars", schemars(rename = "CancelledTransactions"))]
         cancelled_transactions: Vec<CancelledTransaction>,
     },
 }
