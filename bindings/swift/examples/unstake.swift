@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct UnstakeExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let stakedIotas = try await client.objects(
       filter: ObjectFilter(typeTag: String(describing: StructTag.newStakedIota())))

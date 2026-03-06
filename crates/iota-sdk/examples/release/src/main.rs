@@ -5,7 +5,7 @@ use iota_sdk::graphql_client::{Client, error::Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let chain_id = client.chain_id().await?;
     println!("Chain ID: {chain_id}");
