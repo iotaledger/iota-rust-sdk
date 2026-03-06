@@ -1544,7 +1544,7 @@ impl core::fmt::Display for MakeMoveVector {
 
         write!(f, "MakeMoveVector(")?;
         if let Some(ty) = type_ {
-            write!(f, "Some{ty}")?;
+            write!(f, "Some({ty})")?;
         } else {
             write!(f, "None")?;
         }
