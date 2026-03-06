@@ -141,7 +141,7 @@ impl Indexer {
             }
 
             let result = if filtered {
-                let range_end = (position + self.config.batch_range).min(upper);
+                let range_end = position.saturating_add(self.config.batch_range).min(upper);
                 self.process_batch(position, range_end)
                     .await
                     .map(|()| ProcessResult::Advance(range_end.saturating_add(1)))
@@ -218,35 +218,32 @@ impl Indexer {
                 )
                 .await?;
 
-            let page_data = tx_page.data();
-
-            // Collect digests for eligible transactions, then batch-fetch
-            // their checkpoint numbers in a single GraphQL query.
-            let digests: Vec<String> = page_data
+            // Single pass: pair each eligible transaction with its digest.
+            let eligible: Vec<_> = tx_page
+                .data()
                 .iter()
                 .filter(|td| {
                     self.config.filters.include_failed_txs
                         || matches!(td.effects.status(), ExecutionStatus::Success)
                 })
-                .map(|td| td.effects.as_v1().transaction_digest.to_string())
+                .map(|td| {
+                    let digest = td.effects.as_v1().transaction_digest.to_string();
+                    (td, digest)
+                })
                 .collect();
 
+            // Batch-fetch checkpoint numbers in a single GraphQL query.
+            let digests: Vec<String> =
+                eligible.iter().map(|(_, d)| d.clone()).collect();
             let checkpoint_map =
                 batch_lookup_tx_checkpoints(&self.client, &digests).await?;
 
-            for tx_data in page_data {
-                if !self.config.filters.include_failed_txs
-                    && !matches!(tx_data.effects.status(), ExecutionStatus::Success)
-                {
-                    continue;
-                }
-
-                let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
+            for (tx_data, tx_digest) in &eligible {
                 let checkpoint_seq =
-                    checkpoint_map.get(&tx_digest).copied().flatten();
+                    checkpoint_map.get(tx_digest).copied().flatten();
 
                 let event_count = self
-                    .store_events_for_transaction(checkpoint_seq, &tx_digest)
+                    .store_events_for_transaction(checkpoint_seq, tx_digest)
                     .await?;
 
                 // When only event filters are set (package derived from
@@ -269,7 +266,7 @@ impl Indexer {
                     "#,
                 )
                 .bind(checkpoint_seq.map(|c| c as i64))
-                .bind(&tx_digest)
+                .bind(tx_digest.as_str())
                 .bind(sender)
                 .bind(kind)
                 .bind(success)
@@ -541,51 +538,61 @@ fn extract_event_name(event_type: &str) -> String {
     }
 }
 
-/// Batch-fetch checkpoint sequence numbers for multiple transactions in a
-/// single aliased GraphQL query, avoiding per-transaction round-trips.
+/// Batch-fetch checkpoint sequence numbers for multiple transactions using
+/// aliased GraphQL queries, avoiding per-transaction round-trips. Digests are
+/// processed in chunks to stay within GraphQL query complexity limits.
 async fn batch_lookup_tx_checkpoints(
     client: &Client,
     digests: &[String],
 ) -> anyhow::Result<HashMap<String, Option<u64>>> {
+    const CHUNK_SIZE: usize = 50;
+
     if digests.is_empty() {
         return Ok(HashMap::new());
     }
 
-    let mut var_decls = Vec::with_capacity(digests.len());
-    let mut query_fields = Vec::with_capacity(digests.len());
-    let mut variables = serde_json::Map::new();
-
-    for (i, digest) in digests.iter().enumerate() {
-        var_decls.push(format!("$d{i}: String!"));
-        query_fields.push(format!(
-            "t{i}: transactionBlock(digest: $d{i}) {{ effects {{ checkpoint {{ sequenceNumber }} }} }}"
-        ));
-        variables.insert(format!("d{i}"), serde_json::Value::String(digest.clone()));
-    }
-
-    let query_str = format!(
-        "query({}) {{ {} }}",
-        var_decls.join(", "),
-        query_fields.join(" "),
-    );
-
-    let request = serde_json::json!({
-        "query": query_str,
-        "variables": serde_json::Value::Object(variables),
-    });
-    let map = request.as_object().unwrap().clone();
-    let response = client.run_query_from_json(map).await?;
-
     let mut result = HashMap::with_capacity(digests.len());
-    if let Some(data) = response.data {
-        for (i, digest) in digests.iter().enumerate() {
-            let seq = data
-                .get(format!("t{i}").as_str())
-                .and_then(|tb| tb.get("effects"))
-                .and_then(|e| e.get("checkpoint"))
-                .and_then(|c| c.get("sequenceNumber"))
-                .and_then(|s| s.as_u64());
-            result.insert(digest.clone(), seq);
+
+    for chunk in digests.chunks(CHUNK_SIZE) {
+        let mut var_decls = Vec::with_capacity(chunk.len());
+        let mut query_fields = Vec::with_capacity(chunk.len());
+        let mut variables = serde_json::Map::new();
+
+        for (i, digest) in chunk.iter().enumerate() {
+            var_decls.push(format!("$d{i}: String!"));
+            query_fields.push(format!(
+                "t{i}: transactionBlock(digest: $d{i}) \
+                 {{ effects {{ checkpoint {{ sequenceNumber }} }} }}"
+            ));
+            variables.insert(
+                format!("d{i}"),
+                serde_json::Value::String(digest.clone()),
+            );
+        }
+
+        let query_str = format!(
+            "query({}) {{ {} }}",
+            var_decls.join(", "),
+            query_fields.join(" "),
+        );
+
+        let request = serde_json::json!({
+            "query": query_str,
+            "variables": serde_json::Value::Object(variables),
+        });
+        let map = request.as_object().unwrap().clone();
+        let response = client.run_query_from_json(map).await?;
+
+        if let Some(data) = response.data {
+            for (i, digest) in chunk.iter().enumerate() {
+                let seq = data
+                    .get(format!("t{i}").as_str())
+                    .and_then(|tb| tb.get("effects"))
+                    .and_then(|e| e.get("checkpoint"))
+                    .and_then(|c| c.get("sequenceNumber"))
+                    .and_then(|s| s.as_u64());
+                result.insert(digest.clone(), seq);
+            }
         }
     }
 
@@ -614,4 +621,62 @@ fn event_matches(
     }
 
     true
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // -- RetryState --
+
+    #[test]
+    fn retry_state_resets_on_success() {
+        let mut retry = RetryState::new(Duration::from_millis(100));
+        retry.next_delay();
+        retry.next_delay();
+        assert_eq!(retry.failures(), 2);
+        retry.reset();
+        assert_eq!(retry.failures(), 0);
+    }
+
+    #[test]
+    fn retry_state_exponential_backoff() {
+        let mut retry = RetryState::new(Duration::from_millis(100));
+        assert_eq!(retry.next_delay(), Duration::from_millis(100));
+        assert_eq!(retry.next_delay(), Duration::from_millis(200));
+        assert_eq!(retry.next_delay(), Duration::from_millis(400));
+        assert_eq!(retry.next_delay(), Duration::from_millis(800));
+    }
+
+    #[test]
+    fn retry_state_caps_at_max_delay() {
+        let mut retry = RetryState::new(Duration::from_secs(10));
+        for _ in 0..10 {
+            retry.next_delay();
+        }
+        assert_eq!(retry.next_delay(), RetryState::MAX_DELAY);
+    }
+
+    // -- extract_event_name --
+
+    #[test]
+    fn extract_event_name_simple() {
+        assert_eq!(
+            extract_event_name("0x2::display::DisplayCreated"),
+            "DisplayCreated"
+        );
+    }
+
+    #[test]
+    fn extract_event_name_generic() {
+        assert_eq!(
+            extract_event_name("0x2::display::DisplayCreated<0x107a::nft::Nft>"),
+            "DisplayCreated<0x107a::nft::Nft>"
+        );
+    }
+
+    #[test]
+    fn extract_event_name_no_module() {
+        assert_eq!(extract_event_name("SomeEvent"), "SomeEvent");
+    }
 }
