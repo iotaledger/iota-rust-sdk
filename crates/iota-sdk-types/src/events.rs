@@ -22,7 +22,7 @@ pub struct TransactionEvents(pub Vec<Event>);
 impl std::fmt::Display for TransactionEvents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Transaction Events")?;
-        let mut w = crate::TreeWriter::new(f);
+        let mut w = crate::TreeWriter::new_after_text(f);
         w.vec_children("Events", &self.0, true)
     }
 }

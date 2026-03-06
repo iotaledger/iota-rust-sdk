@@ -46,6 +46,17 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         }
     }
 
+    /// Create a TreeWriter after text has already been written to the
+    /// formatter, so the first tree node emits a newline before its connector.
+    pub fn new_after_text(f: &'f mut std::fmt::Formatter<'a>) -> Self {
+        Self {
+            f,
+            prefix: String::new(),
+            needs_newline: true,
+            skip_header: false,
+        }
+    }
+
     /// Write the root label without connectors. When called as a child
     /// (via [`child`](Self::child)), this is a no-op because the parent
     /// already wrote the label.
@@ -62,11 +73,12 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         Ok(())
     }
 
-    fn write_line(&mut self, connector: &str, text: &str) -> std::fmt::Result {
+    fn write_connector(&mut self, is_last: bool) -> std::fmt::Result {
         if self.needs_newline {
             writeln!(self.f)?;
         }
-        write!(self.f, "{}{}{}", self.prefix, connector, text)?;
+        let connector = if is_last { "└── " } else { "├── " };
+        write!(self.f, "{}{}", self.prefix, connector)?;
         self.needs_newline = true;
         Ok(())
     }
@@ -78,8 +90,8 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         value: &dyn std::fmt::Display,
         is_last: bool,
     ) -> std::fmt::Result {
-        let connector = if is_last { "└── " } else { "├── " };
-        self.write_line(connector, &format!("{label}: {value}"))
+        self.write_connector(is_last)?;
+        write!(self.f, "{label}: {value}")
     }
 
     /// Write a branch with children rendered by a closure.
@@ -89,8 +101,8 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         is_last: bool,
         children: impl FnOnce(&mut Self) -> std::fmt::Result,
     ) -> std::fmt::Result {
-        let connector = if is_last { "└── " } else { "├── " };
-        self.write_line(connector, label)?;
+        self.write_connector(is_last)?;
+        write!(self.f, "{label}")?;
         let extension = if is_last { "    " } else { "│   " };
         let old_len = self.prefix.len();
         self.prefix.push_str(extension);
@@ -197,5 +209,56 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
                 Ok(())
             })
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fmt;
+
+    /// Helper that captures formatted output by implementing Display with a
+    /// closure, letting us write plain text then use TreeWriter::new_after_text.
+    struct AfterText<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result>(F);
+
+    impl<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result> fmt::Display for AfterText<F> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            (self.0)(f)
+        }
+    }
+
+    #[test]
+    fn new_after_text_emits_newline_before_first_leaf() {
+        let output = AfterText(|f| {
+            write!(f, "MyLabel")?;
+            let mut w = TreeWriter::new_after_text(f);
+            w.leaf("Key", &"value", true)
+        })
+        .to_string();
+
+        assert_eq!(output, "MyLabel\n└── Key: value");
+    }
+
+    #[test]
+    fn new_after_text_emits_newline_before_first_branch() {
+        let output = AfterText(|f| {
+            write!(f, "Header")?;
+            let mut w = TreeWriter::new_after_text(f);
+            w.branch("Section", true, |w| w.leaf("A", &1, true))
+        })
+        .to_string();
+
+        assert_eq!(output, "Header\n└── Section\n    └── A: 1");
+    }
+
+    #[test]
+    fn new_without_after_text_has_no_leading_newline() {
+        let output = AfterText(|f| {
+            let mut w = TreeWriter::new(f);
+            w.leaf("Key", &"value", true)
+        })
+        .to_string();
+
+        assert_eq!(output, "└── Key: value");
     }
 }

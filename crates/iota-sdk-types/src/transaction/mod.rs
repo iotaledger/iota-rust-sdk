@@ -539,7 +539,7 @@ impl std::fmt::Display for ExecutionTimeObservationKey {
                 type_arguments,
             } => {
                 write!(f, "MoveEntryPoint({package}::{module}::{function})")?;
-                let mut w = crate::TreeWriter::new(f);
+                let mut w = crate::TreeWriter::new_after_text(f);
                 w.vec_inline("Type Arguments", type_arguments, true)
             }
             ExecutionTimeObservationKey::TransferObjects => write!(f, "TransferObjects"),
@@ -1360,7 +1360,7 @@ impl std::fmt::Display for Input {
             Self::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
             Self::ImmutableOrOwned(obj_ref) => {
                 write!(f, "ImmutableOrOwned")?;
-                let mut w = crate::TreeWriter::new(f);
+                let mut w = crate::TreeWriter::new_after_text(f);
                 obj_ref.fmt_tree(&mut w)
             }
             Self::Shared {
@@ -1369,14 +1369,14 @@ impl std::fmt::Display for Input {
                 mutable,
             } => {
                 write!(f, "Shared")?;
-                let mut w = crate::TreeWriter::new(f);
+                let mut w = crate::TreeWriter::new_after_text(f);
                 w.leaf("Object ID", object_id, false)?;
                 w.leaf("Initial Shared Version", initial_shared_version, false)?;
                 w.leaf("Mutable", mutable, true)
             }
             Self::Receiving(obj_ref) => {
                 write!(f, "Receiving")?;
-                let mut w = crate::TreeWriter::new(f);
+                let mut w = crate::TreeWriter::new_after_text(f);
                 obj_ref.fmt_tree(&mut w)
             }
         }
