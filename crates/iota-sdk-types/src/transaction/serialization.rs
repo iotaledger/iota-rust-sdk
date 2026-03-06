@@ -1055,10 +1055,9 @@ mod transaction_expiration {
 }
 
 /// Deserialize an `Identifier` without validating that it is a valid Move
-/// identifier. This is used for deserializing type tags in `MakeMoveVector`
-/// type arguments, where BCS bytes could contain invalid identifiers but we
-/// still want to be able to deserialize them and let the move VM handle the
-/// validation.
+/// identifier. This is used for deserializing type tags in `MoveCall` commands,
+/// where BCS bytes could contain invalid identifiers but we still want to be
+/// able to deserialize them and let the move VM handle the validation.
 pub(super) fn deserialize_ident_unchecked<'de, D>(d: D) -> Result<Identifier, D::Error>
 where
     D: serde::Deserializer<'de>,
