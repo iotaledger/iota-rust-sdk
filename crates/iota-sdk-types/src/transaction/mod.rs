@@ -802,13 +802,6 @@ impl Input {
         mutable: true,
     });
 
-    /// Shared `Input` for the authenticator state object.
-    pub const AUTHENTICATOR_STATE_MUTABLE: Self = Self::Shared(SharedObjectReference {
-        object_id: ObjectId::AUTHENTICATOR_STATE,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
-        mutable: true,
-    });
-
     crate::def_is_as_into_opt!(
         Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
