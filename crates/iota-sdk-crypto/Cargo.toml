@@ -93,7 +93,7 @@ pem-rfc7468 = { version = "0.7", optional = true, features = ["std"] }
 pkcs8 = { version = "0.10", optional = true, features = ["std"] }
 
 # bls12381 support
-blst = { version = "0.3.13", optional = true }
+blst = { version = "0.3.13", optional = true, features = ["portable"] }
 roaring = { workspace = true, optional = true }
 
 # bech32 encoding support
