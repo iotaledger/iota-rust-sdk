@@ -710,7 +710,7 @@ impl Ord for ActiveJwk {
 #[cfg_attr(
     feature = "schemars",
     derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
+    schemars(tag = "kind", rename_all = "camelCase")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
