@@ -89,6 +89,13 @@ impl FilterConfig {
             || self.event_package_id.is_some()
     }
 
+    /// Returns `true` when only event filters are active (no transaction-level
+    /// filters). In this mode, the indexer derives a package filter from the
+    /// event type and skips transactions that produce no matching events.
+    pub fn is_event_only(&self) -> bool {
+        self.has_event_filters() && !self.has_tx_filters()
+    }
+
     /// Derive an effective transaction function filter for batch mode.
     /// When only event filters are set, extracts the package address from
     /// `event_type` (e.g. `"0x...::module::Event"` → `"0x..."`) or falls
@@ -175,6 +182,27 @@ impl TryFrom<Cli> for AppConfig {
             .or(file_config.poll_interval_ms)
             .unwrap_or(DEFAULT_POLL_INTERVAL_MS);
 
+        let filters = FilterConfig {
+            include_failed_txs: value
+                .include_failed_txs
+                .or(file_config.include_failed_txs)
+                .unwrap_or(DEFAULT_INCLUDE_FAILED_TXS),
+            tx_function: value.tx_function.or(file_config.tx_function),
+            tx_sender,
+            event_type: value.event_type.or(file_config.event_type),
+            event_sending_module: value
+                .event_sending_module
+                .or(file_config.event_sending_module),
+            event_package_id: value.event_package_id.or(file_config.event_package_id),
+        };
+
+        if filters.is_event_only() && filters.derived_tx_function().is_none() {
+            anyhow::bail!(
+                "event filters require --event-type or --event-package-id so the \
+                 indexer can derive a transaction-level package filter"
+            );
+        }
+
         Ok(Self {
             graphql_url,
             db_url: value
@@ -190,19 +218,7 @@ impl TryFrom<Cli> for AppConfig {
             page_size,
             batch_range,
             poll_interval: Duration::from_millis(poll_interval_ms),
-            filters: FilterConfig {
-                include_failed_txs: value
-                    .include_failed_txs
-                    .or(file_config.include_failed_txs)
-                    .unwrap_or(DEFAULT_INCLUDE_FAILED_TXS),
-                tx_function: value.tx_function.or(file_config.tx_function),
-                tx_sender,
-                event_type: value.event_type.or(file_config.event_type),
-                event_sending_module: value
-                    .event_sending_module
-                    .or(file_config.event_sending_module),
-                event_package_id: value.event_package_id.or(file_config.event_package_id),
-            },
+            filters,
         })
     }
 }

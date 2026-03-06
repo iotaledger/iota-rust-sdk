@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{cmp, time::Duration};
+use std::{cmp, collections::HashMap, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
@@ -19,6 +19,52 @@ use crate::{
     db::progress,
 };
 
+// ------------------------------------------------------------------
+// Processing result & retry helpers
+// ------------------------------------------------------------------
+
+enum ProcessResult {
+    /// Successfully processed. Value is the next checkpoint to resume from.
+    Advance(u64),
+    /// The unit of work is not ready yet (e.g. checkpoint not indexed on-chain).
+    NotReady,
+}
+
+struct RetryState {
+    consecutive_failures: u32,
+    base_interval: Duration,
+}
+
+impl RetryState {
+    const MAX_DELAY: Duration = Duration::from_secs(30);
+
+    fn new(base_interval: Duration) -> Self {
+        Self {
+            consecutive_failures: 0,
+            base_interval,
+        }
+    }
+
+    fn reset(&mut self) {
+        self.consecutive_failures = 0;
+    }
+
+    fn failures(&self) -> u32 {
+        self.consecutive_failures
+    }
+
+    fn next_delay(&mut self) -> Duration {
+        self.consecutive_failures = self.consecutive_failures.saturating_add(1);
+        let exponent = self.consecutive_failures.saturating_sub(1).min(5);
+        let factor = 1_u32 << exponent;
+        cmp::min(self.base_interval.saturating_mul(factor), Self::MAX_DELAY)
+    }
+}
+
+// ------------------------------------------------------------------
+// Indexer
+// ------------------------------------------------------------------
+
 pub struct Indexer {
     client: Client,
     pool: PgPool,
@@ -34,41 +80,42 @@ impl Indexer {
         }
     }
 
+    // ------------------------------------------------------------------
+    // Polling loop
+    // ------------------------------------------------------------------
+
     pub async fn run(&self) -> anyhow::Result<()> {
-        if self.config.filters.has_filters() {
-            if self.config.filters.has_event_filters()
-                && !self.config.filters.has_tx_filters()
-                && self.config.filters.derived_tx_function().is_none()
-            {
-                anyhow::bail!(
-                    "event filters require --event-type or --event-package-id so the \
-                     indexer can derive a transaction-level package filter"
-                );
-            }
-            info!("filters active — using batch query mode");
-            self.run_filtered().await
+        let filtered = self.config.filters.has_filters();
+        let mode_name = if filtered {
+            "batch filtered"
         } else {
-            self.run_per_checkpoint().await
-        }
-    }
+            "per-checkpoint"
+        };
 
-    // ------------------------------------------------------------------
-    // Batch filtered mode: query transactions across large checkpoint ranges
-    // ------------------------------------------------------------------
-
-    async fn run_filtered(&self) -> anyhow::Result<()> {
         let state = progress::load(&self.pool, &self.config.progress_key).await?;
-        let mut range_start = self
+        let mut position = self
             .config
             .start_checkpoint
             .unwrap_or(state.next_checkpoint);
 
-        let mut consecutive_failures = 0_u32;
+        if let Some(start) = self.config.start_checkpoint
+            && start != state.next_checkpoint
+            && state.next_checkpoint > 0
+        {
+            warn!(
+                configured_start_checkpoint = start,
+                stored_next_checkpoint = state.next_checkpoint,
+                "configured start_checkpoint differs from stored progress; \
+                 using configured value"
+            );
+        }
+
+        let mut retry = RetryState::new(self.config.poll_interval);
 
         info!(
             graphql_url = %self.config.graphql_url,
-            range_start,
-            "starting SDK polling indexer (batch filtered mode)"
+            start = position,
+            "starting SDK polling indexer ({mode_name} mode)"
         );
 
         loop {
@@ -78,48 +125,69 @@ impl Indexer {
                 .await?
                 .unwrap_or(0);
 
-            let global_upper = self
+            let upper = self
                 .config
                 .end_checkpoint
                 .map_or(latest, |end| end.min(latest));
 
-            if range_start > global_upper {
+            if position > upper {
                 if self.config.end_checkpoint.is_some() {
-                    info!(
-                        range_start,
-                        global_upper, "reached configured end checkpoint"
-                    );
+                    info!(position, upper, "reached configured end checkpoint");
                     return Ok(());
                 }
-                debug!(range_start, latest, "no new checkpoints yet");
+                debug!(position, latest, "no new checkpoints yet");
                 tokio::time::sleep(self.config.poll_interval).await;
                 continue;
             }
 
-            let range_end = (range_start + self.config.batch_range).min(global_upper);
+            let result = if filtered {
+                let range_end = (position + self.config.batch_range).min(upper);
+                self.process_batch(position, range_end)
+                    .await
+                    .map(|()| ProcessResult::Advance(range_end.saturating_add(1)))
+            } else {
+                self.process_checkpoint(position).await.map(|ready| {
+                    if ready {
+                        ProcessResult::Advance(position.saturating_add(1))
+                    } else {
+                        ProcessResult::NotReady
+                    }
+                })
+            };
 
-            match self.process_batch(range_start, range_end).await {
-                Ok(()) => {
-                    consecutive_failures = 0;
-                    range_start = range_end.saturating_add(1);
-                    progress::store(&self.pool, &self.config.progress_key, range_start).await?;
+            match result {
+                Ok(ProcessResult::Advance(next)) => {
+                    retry.reset();
+                    position = next;
+                    progress::store(&self.pool, &self.config.progress_key, position)
+                        .await?;
+                }
+                Ok(ProcessResult::NotReady) => {
+                    retry.reset();
+                    warn!(
+                        checkpoint = position,
+                        "checkpoint not ready yet; retrying"
+                    );
+                    tokio::time::sleep(self.config.poll_interval).await;
                 }
                 Err(err) => {
-                    consecutive_failures = consecutive_failures.saturating_add(1);
-                    let delay = retry_delay(self.config.poll_interval, consecutive_failures);
+                    let delay = retry.next_delay();
                     warn!(
-                        range_start,
-                        range_end,
+                        position,
                         error = %err,
-                        consecutive_failures,
+                        consecutive_failures = retry.failures(),
                         retry_in_ms = delay.as_millis(),
-                        "batch processing failed; retrying with backoff"
+                        "processing failed; retrying with backoff"
                     );
                     tokio::time::sleep(delay).await;
                 }
             }
         }
     }
+
+    // ------------------------------------------------------------------
+    // Batch filtered mode
+    // ------------------------------------------------------------------
 
     /// Query transactions across `[range_start, range_end]` in one paginated
     /// stream, storing matching transactions and their events.
@@ -133,9 +201,6 @@ impl Indexer {
             before_checkpoint: Some(range_end.saturating_add(1)),
             ..Default::default()
         };
-
-        let only_event_filters =
-            self.config.filters.has_event_filters() && !self.config.filters.has_tx_filters();
 
         let mut tx_cursor: Option<String> = None;
         let mut tx_count = 0_u64;
@@ -153,7 +218,23 @@ impl Indexer {
                 )
                 .await?;
 
-            for tx_data in tx_page.data() {
+            let page_data = tx_page.data();
+
+            // Collect digests for eligible transactions, then batch-fetch
+            // their checkpoint numbers in a single GraphQL query.
+            let digests: Vec<String> = page_data
+                .iter()
+                .filter(|td| {
+                    self.config.filters.include_failed_txs
+                        || matches!(td.effects.status(), ExecutionStatus::Success)
+                })
+                .map(|td| td.effects.as_v1().transaction_digest.to_string())
+                .collect();
+
+            let checkpoint_map =
+                batch_lookup_tx_checkpoints(&self.client, &digests).await?;
+
+            for tx_data in page_data {
                 if !self.config.filters.include_failed_txs
                     && !matches!(tx_data.effects.status(), ExecutionStatus::Success)
                 {
@@ -161,7 +242,8 @@ impl Indexer {
                 }
 
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
-                let checkpoint_seq = lookup_tx_checkpoint(&self.client, &tx_digest).await?;
+                let checkpoint_seq =
+                    checkpoint_map.get(&tx_digest).copied().flatten();
 
                 let event_count = self
                     .store_events_for_transaction(checkpoint_seq, &tx_digest)
@@ -169,9 +251,8 @@ impl Indexer {
 
                 // When only event filters are set (package derived from
                 // event_type), skip transactions that produced no matching
-                // events — we only care about the events, not the
-                // transactions themselves.
-                if only_event_filters && event_count == 0 {
+                // events.
+                if self.config.filters.is_event_only() && event_count == 0 {
                     continue;
                 }
 
@@ -210,91 +291,8 @@ impl Indexer {
     }
 
     // ------------------------------------------------------------------
-    // Per-checkpoint mode: full indexing without filters
+    // Per-checkpoint mode
     // ------------------------------------------------------------------
-
-    async fn run_per_checkpoint(&self) -> anyhow::Result<()> {
-        let state = progress::load(&self.pool, &self.config.progress_key).await?;
-        let mut next_checkpoint = state.next_checkpoint;
-        let mut consecutive_failures = 0_u32;
-
-        if let Some(start) = self.config.start_checkpoint {
-            if start != state.next_checkpoint && state.next_checkpoint > 0 {
-                warn!(
-                    configured_start_checkpoint = start,
-                    stored_next_checkpoint = state.next_checkpoint,
-                    "configured start_checkpoint differs from stored progress; using configured value"
-                );
-            }
-            next_checkpoint = start;
-        }
-
-        info!(
-            graphql_url = %self.config.graphql_url,
-            next_checkpoint,
-            "starting SDK polling indexer (per-checkpoint mode)"
-        );
-
-        loop {
-            let latest = self
-                .client
-                .latest_checkpoint_sequence_number()
-                .await?
-                .unwrap_or(0);
-
-            let upper_bound = self
-                .config
-                .end_checkpoint
-                .map_or(latest, |end| end.min(latest));
-
-            if next_checkpoint > upper_bound {
-                if self.config.end_checkpoint.is_some() {
-                    info!(
-                        next_checkpoint,
-                        upper_bound, "reached configured end checkpoint"
-                    );
-                    return Ok(());
-                }
-
-                debug!(
-                    next_checkpoint,
-                    latest,
-                    poll_interval_ms = self.config.poll_interval.as_millis(),
-                    "no new checkpoints yet"
-                );
-                tokio::time::sleep(self.config.poll_interval).await;
-                continue;
-            }
-
-            match self.process_checkpoint(next_checkpoint).await {
-                Ok(true) => {
-                    consecutive_failures = 0;
-                    next_checkpoint = next_checkpoint.saturating_add(1);
-                    progress::store(&self.pool, &self.config.progress_key, next_checkpoint).await?;
-                }
-                Ok(false) => {
-                    consecutive_failures = 0;
-                    warn!(
-                        checkpoint = next_checkpoint,
-                        "checkpoint not indexed yet; retrying"
-                    );
-                    tokio::time::sleep(self.config.poll_interval).await;
-                }
-                Err(err) => {
-                    consecutive_failures = consecutive_failures.saturating_add(1);
-                    let retry_delay = retry_delay(self.config.poll_interval, consecutive_failures);
-                    warn!(
-                        checkpoint = next_checkpoint,
-                        error = %err,
-                        consecutive_failures,
-                        retry_in_ms = retry_delay.as_millis(),
-                        "checkpoint processing failed; retrying with backoff"
-                    );
-                    tokio::time::sleep(retry_delay).await;
-                }
-            }
-        }
-    }
 
     async fn checkpoint_exists(&self, sequence: u64) -> anyhow::Result<bool> {
         let row = sqlx::query("SELECT 1 FROM checkpoints WHERE sequence_number = $1")
@@ -490,6 +488,10 @@ impl Indexer {
     }
 }
 
+// ------------------------------------------------------------------
+// Free functions
+// ------------------------------------------------------------------
+
 fn sender_str(tx: &SignedTransaction) -> Option<String> {
     match &tx.transaction {
         Transaction::V1(v1) => Some(v1.sender.to_string()),
@@ -522,13 +524,6 @@ fn tx_kind_str(tx: &SignedTransaction) -> String {
     }
 }
 
-fn retry_delay(base: Duration, consecutive_failures: u32) -> Duration {
-    const MAX_RETRY_DELAY: Duration = Duration::from_secs(30);
-    let exponent = consecutive_failures.saturating_sub(1).min(5);
-    let factor = 1_u32 << exponent;
-    cmp::min(base.saturating_mul(factor), MAX_RETRY_DELAY)
-}
-
 /// Extract the short event name from a fully qualified event type.
 /// Handles generic types like `0x2::display::DisplayCreated<0x107a::nft::Nft>`
 /// → `DisplayCreated<0x107a::nft::Nft>`.
@@ -546,26 +541,55 @@ fn extract_event_name(event_type: &str) -> String {
     }
 }
 
-/// Look up the checkpoint sequence number for a transaction via a raw GraphQL
-/// query, since the SDK's `transactions_data_effects` response does not include
-/// checkpoint info.
-async fn lookup_tx_checkpoint(client: &Client, tx_digest: &str) -> anyhow::Result<Option<u64>> {
-    let query = serde_json::json!({
-        "query": "query($digest: String!) { transactionBlock(digest: $digest) { effects { checkpoint { sequenceNumber } } } }",
-        "variables": { "digest": tx_digest }
+/// Batch-fetch checkpoint sequence numbers for multiple transactions in a
+/// single aliased GraphQL query, avoiding per-transaction round-trips.
+async fn batch_lookup_tx_checkpoints(
+    client: &Client,
+    digests: &[String],
+) -> anyhow::Result<HashMap<String, Option<u64>>> {
+    if digests.is_empty() {
+        return Ok(HashMap::new());
+    }
+
+    let mut var_decls = Vec::with_capacity(digests.len());
+    let mut query_fields = Vec::with_capacity(digests.len());
+    let mut variables = serde_json::Map::new();
+
+    for (i, digest) in digests.iter().enumerate() {
+        var_decls.push(format!("$d{i}: String!"));
+        query_fields.push(format!(
+            "t{i}: transactionBlock(digest: $d{i}) {{ effects {{ checkpoint {{ sequenceNumber }} }} }}"
+        ));
+        variables.insert(format!("d{i}"), serde_json::Value::String(digest.clone()));
+    }
+
+    let query_str = format!(
+        "query({}) {{ {} }}",
+        var_decls.join(", "),
+        query_fields.join(" "),
+    );
+
+    let request = serde_json::json!({
+        "query": query_str,
+        "variables": serde_json::Value::Object(variables),
     });
-    let map = query.as_object().unwrap().clone();
+    let map = request.as_object().unwrap().clone();
     let response = client.run_query_from_json(map).await?;
-    let Some(data) = response.data else {
-        return Ok(None);
-    };
-    let seq = data
-        .get("transactionBlock")
-        .and_then(|tb| tb.get("effects"))
-        .and_then(|e| e.get("checkpoint"))
-        .and_then(|c| c.get("sequenceNumber"))
-        .and_then(|s| s.as_u64());
-    Ok(seq)
+
+    let mut result = HashMap::with_capacity(digests.len());
+    if let Some(data) = response.data {
+        for (i, digest) in digests.iter().enumerate() {
+            let seq = data
+                .get(format!("t{i}").as_str())
+                .and_then(|tb| tb.get("effects"))
+                .and_then(|e| e.get("checkpoint"))
+                .and_then(|c| c.get("sequenceNumber"))
+                .and_then(|s| s.as_u64());
+            result.insert(digest.clone(), seq);
+        }
+    }
+
+    Ok(result)
 }
 
 fn event_matches(
