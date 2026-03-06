@@ -717,7 +717,7 @@ mod command {
     }
 
     #[derive(serde::Serialize)]
-    #[serde(rename = "CommandRef")]
+    #[serde(rename = "Command")]
     enum BinaryCommandRef<'a> {
         MoveCall(&'a MoveCall),
         TransferObjects(&'a TransferObjects),
