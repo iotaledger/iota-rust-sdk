@@ -1456,20 +1456,25 @@ impl Command {
 pub fn write_sep<T: core::fmt::Display>(
     f: &mut core::fmt::Formatter<'_>,
     items: impl IntoIterator<Item = T>,
+    delimiters: Option<(&str, &str)>,
     sep: &str,
 ) -> std::fmt::Result {
     let mut xs = items.into_iter();
     let Some(x) = xs.next() else {
         return Ok(());
     };
+    if let Some((l, _)) = delimiters {
+        write!(f, "{l}")?;
+    }
     write!(f, "{x}")?;
     for x in xs {
         write!(f, "{sep}{x}")?;
     }
+    if let Some((_, r)) = delimiters {
+        write!(f, "{r}")?;
+    }
     Ok(())
 }
-
-// TODO split into cmds Display
 
 impl core::fmt::Display for MoveCall {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1483,13 +1488,9 @@ impl core::fmt::Display for MoveCall {
         write!(f, "MoveCall(")?;
         write!(f, "{package}::{module}::{function}")?;
         if !type_arguments.is_empty() {
-            write!(f, "<")?;
-            write_sep(f, type_arguments, ",")?;
-            write!(f, ">")?;
+            write_sep(f, type_arguments, Some(("<", ">")), ",")?;
         }
-        write!(f, "(")?;
-        write_sep(f, arguments, ",")?;
-        write!(f, ")")?;
+        write_sep(f, arguments, Some(("(", ")")), ",")?;
         write!(f, ")")
     }
 }
@@ -1498,9 +1499,9 @@ impl core::fmt::Display for TransferObjects {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
         let Self { objects, address } = self;
 
-        write!(f, "TransferObjects([")?;
-        write_sep(f, objects, ",")?;
-        write!(f, "],{address})")
+        write!(f, "TransferObjects(")?;
+        write_sep(f, objects, Some(("[", "]")), ",")?;
+        write!(f, ",{address})")
     }
 }
 
@@ -1509,7 +1510,7 @@ impl core::fmt::Display for SplitCoins {
         let Self { coin, amounts } = self;
 
         write!(f, "SplitCoins({coin},")?;
-        write_sep(f, amounts, ",")?;
+        write_sep(f, amounts, Some(("[", "]")), ",")?;
         write!(f, ")")
     }
 }
@@ -1522,7 +1523,7 @@ impl core::fmt::Display for MergeCoins {
         } = self;
 
         write!(f, "MergeCoins({coin},")?;
-        write_sep(f, coins_to_merge, ",")?;
+        write_sep(f, coins_to_merge, Some(("[", "]")), ",")?;
         write!(f, ")")
     }
 }
@@ -1532,7 +1533,7 @@ impl core::fmt::Display for Publish {
         let Self { dependencies, .. } = self;
 
         write!(f, "Publish(_,")?;
-        write_sep(f, dependencies, ",")?;
+        write_sep(f, dependencies, Some(("[", "]")), ",")?;
         write!(f, ")")
     }
 }
@@ -1547,9 +1548,9 @@ impl core::fmt::Display for MakeMoveVector {
         } else {
             write!(f, "None")?;
         }
-        write!(f, ",[")?;
-        write_sep(f, elements, ",")?;
-        write!(f, "])")
+        write!(f, ",")?;
+        write_sep(f, elements, Some(("[", "]")), ",")?;
+        write!(f, ")")
     }
 }
 
@@ -1563,7 +1564,7 @@ impl core::fmt::Display for Upgrade {
         } = self;
 
         write!(f, "Upgrade(_,")?;
-        write_sep(f, dependencies, ",")?;
+        write_sep(f, dependencies, Some(("[", "]")), ",")?;
         write!(f, ", {package}")?;
         write!(f, ", {ticket}")?;
         write!(f, ")")
