@@ -1644,10 +1644,6 @@ pub struct MoveCall {
     )]
     pub module: Identifier,
     /// The function to be called.
-    #[cfg_attr(
-        feature = "serde",
-        serde(deserialize_with = "serialization::deserialize_ident_unchecked")
-    )]
     pub function: Identifier,
     /// The type arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
