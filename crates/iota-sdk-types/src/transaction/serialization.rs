@@ -309,7 +309,9 @@ mod end_of_epoch {
 
 mod version_assignments {
     use super::*;
-    use crate::transaction::{CancelledTransaction, ConsensusDeterminedVersionAssignments};
+    use crate::transaction::{
+        CancelledTransaction, ConsensusDeterminedVersionAssignments, VersionAssignment,
+    };
 
     #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
@@ -395,6 +397,139 @@ mod version_assignments {
                     },
                 )
             }
+        }
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for VersionAssignment {
+        fn schema_name() -> String {
+            "VersionAssignment".to_owned()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            use schemars::schema::{ArrayValidation, InstanceType, SchemaObject};
+
+            // Tuple: [ObjectId, Version]
+            SchemaObject {
+                instance_type: Some(InstanceType::Array.into()),
+                array: Some(Box::new(ArrayValidation {
+                    items: Some(schemars::schema::SingleOrVec::Vec(vec![
+                        generator.subschema_for::<ObjectId>(),
+                        generator.subschema_for::<crate::Version>(),
+                    ])),
+                    max_items: Some(2),
+                    min_items: Some(2),
+                    ..Default::default()
+                })),
+                ..Default::default()
+            }
+            .into()
+        }
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for CancelledTransaction {
+        fn schema_name() -> String {
+            "CancelledTransaction".to_owned()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            use schemars::schema::{ArrayValidation, InstanceType, SchemaObject};
+
+            // Tuple: [Digest, Vec<VersionAssignment>]
+            SchemaObject {
+                instance_type: Some(InstanceType::Array.into()),
+                array: Some(Box::new(ArrayValidation {
+                    items: Some(schemars::schema::SingleOrVec::Vec(vec![
+                        generator.subschema_for::<crate::Digest>(),
+                        SchemaObject {
+                            instance_type: Some(InstanceType::Array.into()),
+                            array: Some(Box::new(ArrayValidation {
+                                items: Some(schemars::schema::SingleOrVec::Single(Box::new(
+                                    generator.subschema_for::<VersionAssignment>(),
+                                ))),
+                                ..Default::default()
+                            })),
+                            ..Default::default()
+                        }
+                        .into(),
+                    ])),
+                    max_items: Some(2),
+                    min_items: Some(2),
+                    ..Default::default()
+                })),
+                ..Default::default()
+            }
+            .into()
+        }
+    }
+
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for ConsensusDeterminedVersionAssignments {
+        fn schema_name() -> String {
+            "ConsensusDeterminedVersionAssignments".to_owned()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            use schemars::schema::{
+                ArrayValidation, InstanceType, ObjectValidation, Schema, SchemaObject,
+                SingleOrVec, SubschemaValidation,
+            };
+
+            // Externally tagged enum with oneOf
+            SchemaObject {
+                metadata: Some(Box::new(schemars::schema::Metadata {
+                    description: Some(
+                        "Uses an enum to allow for future expansion of the \
+                         ConsensusDeterminedVersionAssignments."
+                            .to_owned(),
+                    ),
+                    ..Default::default()
+                })),
+                subschemas: Some(Box::new(SubschemaValidation {
+                    one_of: Some(vec![
+                        // CancelledTransactions variant
+                        SchemaObject {
+                            instance_type: Some(InstanceType::Object.into()),
+                            object: Some(Box::new(ObjectValidation {
+                                required: ["CancelledTransactions".to_owned()]
+                                    .into_iter()
+                                    .collect(),
+                                properties: [(
+                                    "CancelledTransactions".to_owned(),
+                                    SchemaObject {
+                                        instance_type: Some(InstanceType::Array.into()),
+                                        array: Some(Box::new(ArrayValidation {
+                                            items: Some(SingleOrVec::Single(Box::new(
+                                                generator
+                                                    .subschema_for::<CancelledTransaction>(),
+                                            ))),
+                                            ..Default::default()
+                                        })),
+                                        ..Default::default()
+                                    }
+                                    .into(),
+                                )]
+                                .into_iter()
+                                .collect(),
+                                additional_properties: Some(Box::new(Schema::Bool(false))),
+                                ..Default::default()
+                            })),
+                            ..Default::default()
+                        }
+                        .into(),
+                    ]),
+                    ..Default::default()
+                })),
+                ..Default::default()
+            }
+            .into()
         }
     }
 }

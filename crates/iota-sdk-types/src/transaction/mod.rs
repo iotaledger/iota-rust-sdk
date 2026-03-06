@@ -707,17 +707,12 @@ impl Ord for ActiveJwk {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
     /// Cancelled transaction version assignment.
     CancelledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-        #[cfg_attr(feature = "schemars", schemars(rename = "CancelledTransactions"))]
         cancelled_transactions: Vec<CancelledTransaction>,
     },
 }
@@ -748,7 +743,6 @@ impl ConsensusDeterminedVersionAssignments {
     derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "camelCase")
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CancelledTransaction {
     pub digest: Digest,
@@ -771,12 +765,10 @@ pub struct CancelledTransaction {
     derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "camelCase")
 )]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
 }
 
