@@ -89,7 +89,6 @@ pub async fn init(pool: &PgPool) -> anyhow::Result<()> {
         CREATE TABLE IF NOT EXISTS indexer_progress (
             progress_key TEXT PRIMARY KEY,
             next_checkpoint BIGINT NOT NULL,
-            last_cursor TEXT,
             updated_at_ms BIGINT NOT NULL
         );
         "#,

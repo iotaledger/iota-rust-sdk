@@ -35,171 +35,21 @@ impl Indexer {
     }
 
     pub async fn run(&self) -> anyhow::Result<()> {
-        if self.config.filters.has_event_filters() && !self.config.filters.has_tx_filters() {
-            if self.config.filters.derived_tx_function().is_some() {
-                info!("event filters active — using batch query mode with derived package filter");
-                self.run_filtered().await
-            } else {
-                info!("event filters active — using direct event query mode");
-                self.run_event_only().await
+        if self.config.filters.has_filters() {
+            if self.config.filters.has_event_filters()
+                && !self.config.filters.has_tx_filters()
+                && self.config.filters.derived_tx_function().is_none()
+            {
+                anyhow::bail!(
+                    "event filters require --event-type or --event-package-id so the \
+                     indexer can derive a transaction-level package filter"
+                );
             }
-        } else if self.config.filters.has_tx_filters() {
-            info!("transaction filters active — using batch query mode");
+            info!("filters active — using batch query mode");
             self.run_filtered().await
         } else {
             self.run_per_checkpoint().await
         }
-    }
-
-    // ------------------------------------------------------------------
-    // Direct event query mode: query events via the events API
-    // ------------------------------------------------------------------
-
-    /// Query events directly using the events API with cursor-based progress.
-    /// Used when only event filters are set (no transaction filters), which is
-    /// much faster than iterating through all transactions in a checkpoint
-    /// range.
-    async fn run_event_only(&self) -> anyhow::Result<()> {
-        let state = progress::load(&self.pool, &self.config.progress_key).await?;
-        let mut cursor = state.last_cursor;
-        let mut consecutive_failures = 0_u32;
-
-        if self.config.start_checkpoint.is_some() || self.config.end_checkpoint.is_some() {
-            warn!(
-                "start_checkpoint/end_checkpoint are ignored in direct event query mode; \
-                 progress is tracked by cursor"
-            );
-        }
-
-        info!(
-            graphql_url = %self.config.graphql_url,
-            has_cursor = cursor.is_some(),
-            "starting SDK polling indexer (direct event query mode)"
-        );
-
-        // NOTE: The GraphQL EventFilter does not support combining
-        // emitting_module and event_type in the same query (the server will
-        // error). We prefer event_type when available, and fall back to
-        // emitting_module. event_package_id is always a post-filter.
-        let event_filter = if self.config.filters.event_type.is_some() {
-            EventFilter {
-                event_type: self.config.filters.event_type.clone(),
-                ..Default::default()
-            }
-        } else {
-            EventFilter {
-                emitting_module: self.config.filters.event_sending_module.clone(),
-                ..Default::default()
-            }
-        };
-
-        loop {
-            match self.poll_events(&event_filter, &mut cursor).await {
-                Ok(count) => {
-                    consecutive_failures = 0;
-                    if count == 0 {
-                        debug!("no new events; waiting");
-                        tokio::time::sleep(self.config.poll_interval).await;
-                    }
-                }
-                Err(err) => {
-                    consecutive_failures = consecutive_failures.saturating_add(1);
-                    let delay = retry_delay(self.config.poll_interval, consecutive_failures);
-                    warn!(
-                        error = %err,
-                        consecutive_failures,
-                        retry_in_ms = delay.as_millis(),
-                        "event polling failed; retrying with backoff"
-                    );
-                    tokio::time::sleep(delay).await;
-                }
-            }
-        }
-    }
-
-    /// Paginate through all available events from the current cursor, storing
-    /// each matching event. Returns the total number of events stored in this
-    /// poll cycle. Updates `cursor` in place and persists it after each page.
-    async fn poll_events(
-        &self,
-        filter: &EventFilter,
-        cursor: &mut Option<String>,
-    ) -> anyhow::Result<u64> {
-        let mut total_stored = 0_u64;
-
-        loop {
-            let page = self
-                .client
-                .events(
-                    filter.clone(),
-                    PaginationFilter {
-                        limit: Some(self.config.page_size),
-                        cursor: cursor.clone(),
-                        ..Default::default()
-                    },
-                )
-                .await?;
-
-            for event in page.data() {
-                if !event_matches(event, &self.config.filters) {
-                    continue;
-                }
-
-                let package_id = event
-                    .sending_module
-                    .as_ref()
-                    .map(|m| m.package.address.to_string());
-                let module = event.sending_module.as_ref().map(|m| m.name.clone());
-                let sender = event.sender.as_ref().map(|s| s.address.to_string());
-                let event_type = event.type_.repr.clone();
-                let event_name = event_type
-                    .rsplit("::")
-                    .next()
-                    .unwrap_or(event_type.as_str())
-                    .to_owned();
-
-                let raw_json = json!({
-                    "event_type": event_type,
-                    "module": module,
-                    "package_id": package_id,
-                    "sender": sender,
-                    "timestamp": event.timestamp.as_ref().map(|t| t.0.clone()),
-                    "json": event.json,
-                });
-
-                sqlx::query(
-                    r#"
-                    INSERT INTO events
-                        (package_id, module, event_name, sender, raw_json)
-                    VALUES ($1, $2, $3, $4, $5)
-                    "#,
-                )
-                .bind(&package_id)
-                .bind(&module)
-                .bind(&event_name)
-                .bind(&sender)
-                .bind(&raw_json)
-                .execute(&self.pool)
-                .await?;
-
-                total_stored += 1;
-            }
-
-            if let Some(end_cursor) = &page.page_info.end_cursor {
-                *cursor = Some(end_cursor.clone());
-                progress::store_cursor(&self.pool, &self.config.progress_key, end_cursor).await?;
-            }
-
-            if !page.page_info.has_next_page {
-                break;
-            }
-        }
-
-        if total_stored > 0 {
-            info!(total_stored, "stored events");
-        }
-
-        Ok(total_stored)
     }
 
     // ------------------------------------------------------------------
@@ -598,11 +448,7 @@ impl Indexer {
                 let module = event.sending_module.as_ref().map(|m| m.name.clone());
                 let sender = event.sender.as_ref().map(|s| s.address.to_string());
                 let event_type = event.type_.repr.clone();
-                let event_name = event_type
-                    .rsplit("::")
-                    .next()
-                    .unwrap_or(event_type.as_str())
-                    .to_owned();
+                let event_name = extract_event_name(&event_type);
 
                 let raw_json = json!({
                     "event_type": event_type,
@@ -681,6 +527,23 @@ fn retry_delay(base: Duration, consecutive_failures: u32) -> Duration {
     let exponent = consecutive_failures.saturating_sub(1).min(5);
     let factor = 1_u32 << exponent;
     cmp::min(base.saturating_mul(factor), MAX_RETRY_DELAY)
+}
+
+/// Extract the short event name from a fully qualified event type.
+/// Handles generic types like `0x2::display::DisplayCreated<0x107a::nft::Nft>`
+/// → `DisplayCreated<0x107a::nft::Nft>`.
+fn extract_event_name(event_type: &str) -> String {
+    if let Some(angle_pos) = event_type.find('<') {
+        let prefix = &event_type[..angle_pos];
+        let name = prefix.rsplit("::").next().unwrap_or(prefix);
+        format!("{}{}", name, &event_type[angle_pos..])
+    } else {
+        event_type
+            .rsplit("::")
+            .next()
+            .unwrap_or(event_type)
+            .to_owned()
+    }
 }
 
 /// Look up the checkpoint sequence number for a transaction via a raw GraphQL

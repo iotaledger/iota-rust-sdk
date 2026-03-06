@@ -9,7 +9,6 @@ use sqlx::{PgPool, Row};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProgressState {
     pub next_checkpoint: u64,
-    pub last_cursor: Option<String>,
     pub updated_at_ms: u128,
 }
 
@@ -17,7 +16,6 @@ impl Default for ProgressState {
     fn default() -> Self {
         Self {
             next_checkpoint: 0,
-            last_cursor: None,
             updated_at_ms: now_ms(),
         }
     }
@@ -26,7 +24,7 @@ impl Default for ProgressState {
 pub async fn load(pool: &PgPool, progress_key: &str) -> anyhow::Result<ProgressState> {
     let row = sqlx::query(
         r#"
-        SELECT next_checkpoint, last_cursor, updated_at_ms
+        SELECT next_checkpoint, updated_at_ms
         FROM indexer_progress
         WHERE progress_key = $1
         "#,
@@ -41,10 +39,8 @@ pub async fn load(pool: &PgPool, progress_key: &str) -> anyhow::Result<ProgressS
 
     let next_checkpoint_i64: i64 = row.try_get("next_checkpoint")?;
     let updated_at_ms_i64: i64 = row.try_get("updated_at_ms")?;
-    let last_cursor: Option<String> = row.try_get("last_cursor")?;
     Ok(ProgressState {
         next_checkpoint: u64::try_from(next_checkpoint_i64)?,
-        last_cursor,
         updated_at_ms: u128::try_from(updated_at_ms_i64)?,
     })
 }
@@ -62,26 +58,6 @@ pub async fn store(pool: &PgPool, progress_key: &str, next_checkpoint: u64) -> a
     )
     .bind(progress_key)
     .bind(i64::try_from(next_checkpoint)?)
-    .bind(i64::try_from(now_ms())?)
-    .execute(pool)
-    .await?;
-
-    Ok(())
-}
-
-pub async fn store_cursor(pool: &PgPool, progress_key: &str, cursor: &str) -> anyhow::Result<()> {
-    sqlx::query(
-        r#"
-        INSERT INTO indexer_progress (progress_key, next_checkpoint, last_cursor, updated_at_ms)
-        VALUES ($1, 0, $2, $3)
-        ON CONFLICT(progress_key)
-        DO UPDATE SET
-            last_cursor = excluded.last_cursor,
-            updated_at_ms = excluded.updated_at_ms
-        "#,
-    )
-    .bind(progress_key)
-    .bind(cursor)
     .bind(i64::try_from(now_ms())?)
     .execute(pool)
     .await?;
