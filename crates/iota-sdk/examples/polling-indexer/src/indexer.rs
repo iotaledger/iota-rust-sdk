@@ -36,8 +36,13 @@ impl Indexer {
 
     pub async fn run(&self) -> anyhow::Result<()> {
         if self.config.filters.has_event_filters() && !self.config.filters.has_tx_filters() {
-            info!("event filters active — using direct event query mode");
-            self.run_event_only().await
+            if self.config.filters.derived_tx_function().is_some() {
+                info!("event filters active — using batch query mode with derived package filter");
+                self.run_filtered().await
+            } else {
+                info!("event filters active — using direct event query mode");
+                self.run_event_only().await
+            }
         } else if self.config.filters.has_tx_filters() {
             info!("transaction filters active — using batch query mode");
             self.run_filtered().await
@@ -272,12 +277,15 @@ impl Indexer {
         info!(range_start, range_end, "processing batch");
 
         let tx_filter = TransactionsFilter {
-            function: self.config.filters.tx_function.clone(),
+            function: self.config.filters.derived_tx_function(),
             sign_address: self.config.filters.tx_sender,
             after_checkpoint: range_start.checked_sub(1),
             before_checkpoint: Some(range_end.saturating_add(1)),
             ..Default::default()
         };
+
+        let only_event_filters =
+            self.config.filters.has_event_filters() && !self.config.filters.has_tx_filters();
 
         let mut tx_cursor: Option<String> = None;
         let mut tx_count = 0_u64;
@@ -304,6 +312,19 @@ impl Indexer {
 
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
                 let checkpoint_seq = lookup_tx_checkpoint(&self.client, &tx_digest).await?;
+
+                let event_count = self
+                    .store_events_for_transaction(checkpoint_seq, &tx_digest)
+                    .await?;
+
+                // When only event filters are set (package derived from
+                // event_type), skip transactions that produced no matching
+                // events — we only care about the events, not the
+                // transactions themselves.
+                if only_event_filters && event_count == 0 {
+                    continue;
+                }
+
                 let sender = sender_str(&tx_data.tx);
                 let kind = tx_kind_str(&tx_data.tx);
                 let success = matches!(tx_data.effects.status(), ExecutionStatus::Success);
@@ -325,8 +346,6 @@ impl Indexer {
                 .execute(&self.pool)
                 .await?;
 
-                self.store_events_for_transaction(checkpoint_seq, &tx_digest)
-                    .await?;
                 tx_count += 1;
             }
 

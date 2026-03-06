@@ -88,6 +88,19 @@ impl FilterConfig {
             || self.event_sending_module.is_some()
             || self.event_package_id.is_some()
     }
+
+    /// Derive an effective transaction function filter for batch mode.
+    /// When only event filters are set, extracts the package address from
+    /// `event_type` (e.g. `"0x...::module::Event"` → `"0x..."`) or falls
+    /// back to `event_package_id`.
+    pub fn derived_tx_function(&self) -> Option<String> {
+        self.tx_function.clone().or_else(|| {
+            self.event_type
+                .as_ref()
+                .and_then(|et| et.split("::").next().map(|s| s.to_string()))
+                .or_else(|| self.event_package_id.clone())
+        })
+    }
 }
 
 #[derive(Debug, Clone)]
