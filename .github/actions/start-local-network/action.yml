@@ -20,10 +20,10 @@ runs:
         --health-retries 5 \
         postgres
 
-    - name: Get the IOTA alphanet binary and start a local network
+    - name: Get the IOTA binary and start a local network
       shell: bash
       env:
-        IOTA_BINARY_VERSION: "v1.16.2"
+        IOTA_BINARY_VERSION: "v1.18.1-rc"
         EPOCH_DURATION_MS: "10000"
         GH_TOKEN: ${{ github.token }}
       run: |

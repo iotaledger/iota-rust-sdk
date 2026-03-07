@@ -755,7 +755,41 @@ mod serialization {
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            ReadableUserSignature::json_schema(generator)
+            let mut schema = serde_json::to_value(ReadableUserSignature::json_schema(generator))
+                .expect("UserSignature schema should serialize");
+
+            if let Some(variants) = schema
+                .get_mut("oneOf")
+                .and_then(serde_json::Value::as_array_mut)
+            {
+                for variant in variants {
+                    let is_move_variant = variant
+                        .get("properties")
+                        .and_then(|properties| properties.get("scheme"))
+                        .and_then(|scheme| scheme.get("enum"))
+                        .and_then(serde_json::Value::as_array)
+                        .is_some_and(|values| values.len() == 1 && values[0] == "move");
+
+                    if is_move_variant {
+                        *variant = serde_json::json!({
+                            "type": "object",
+                            "required": ["scheme", "V1"],
+                            "properties": {
+                                "scheme": {
+                                    "type": "string",
+                                    "enum": ["move"]
+                                },
+                                "V1": {
+                                    "$ref": "#/definitions/MoveAuthenticatorV1"
+                                }
+                            },
+                            "additionalProperties": false
+                        });
+                    }
+                }
+            }
+
+            serde_json::from_value(schema).expect("UserSignature schema should deserialize")
         }
     }
 
