@@ -3987,6 +3987,12 @@ static class _UniFFILib {
     
     
     
+    
+    
+    
+    
+    
+    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -6128,27 +6134,11 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(RustBuffer @callArgs,RustBuffer @typeArgs,RustBuffer @objectToAuthenticate,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(IntPtr @moveAuthenticatorV1,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(RustBuffer @callArgs,RustBuffer @typeArgs,IntPtr @objectToAuthenticate,ulong @initialSharedVersion,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6165,6 +6155,38 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(IntPtr @ptr,IntPtr @client
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(RustBuffer @callArgs,RustBuffer @typeArgs,RustBuffer @objectToAuthenticate,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(RustBuffer @callArgs,RustBuffer @typeArgs,IntPtr @objectToAuthenticate,ulong @initialSharedVersion,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14304,23 +14326,27 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -16232,15 +16258,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -21072,33 +21102,39 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address();
-            if (checksum != 24164) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address` checksum `24164`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args();
-            if (checksum != 1111) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args` checksum `1111`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate();
-            if (checksum != 40516) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate` checksum `40516`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args();
-            if (checksum != 63576) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args` checksum `63576`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1();
+            if (checksum != 3713) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1` checksum `3713`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish();
             if (checksum != 16948) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish` checksum `16948`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address();
+            if (checksum != 27475) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address` checksum `27475`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args();
+            if (checksum != 32545) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args` checksum `32545`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate();
+            if (checksum != 54331) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate` checksum `54331`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args();
+            if (checksum != 58370) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args` checksum `58370`, library returned `{checksum}`");
             }
         }
         {
@@ -23964,21 +24000,27 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable();
-            if (checksum != 19047) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable` checksum `19047`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared();
-            if (checksum != 5389) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared` checksum `5389`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1();
+            if (checksum != 64779) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1` checksum `64779`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new();
             if (checksum != 1961) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new` checksum `1961`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable();
+            if (checksum != 32081) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable` checksum `32081`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared();
+            if (checksum != 22895) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared` checksum `22895`, library returned `{checksum}`");
             }
         }
         {
@@ -37720,10 +37762,7 @@ class FfiConverterTypeMoveArg: FfiConverter<MoveArg, IntPtr> {
 /// authentication flow.
 /// </summary>
 public interface IMoveAuthenticator {
-    Address Address();
-    Input[] CallArgs();
-    Input ObjectToAuthenticate();
-    TypeTag[] TypeArgs();
+    MoveAuthenticatorV1 AsV1();
 }
 /// <summary>
 /// MoveAuthenticator is a signature variant that enables a method of
@@ -37820,57 +37859,20 @@ public class MoveAuthenticator : IMoveAuthenticator, IDisposable {
     }
 
     
-    public Address Address() {
-        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
+    public MoveAuthenticatorV1 AsV1() {
+        return CallWithPointer(thisPtr => FfiConverterTypeMoveAuthenticatorV1.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Input[] CallArgs() {
-        return CallWithPointer(thisPtr => FfiConverterSequenceTypeInput.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Input ObjectToAuthenticate() {
-        return CallWithPointer(thisPtr => FfiConverterTypeInput.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public TypeTag[] TypeArgs() {
-        return CallWithPointer(thisPtr => FfiConverterSequenceTypeTypeTag.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(thisPtr,  ref _status)
 )));
     }
     
     
 
     
-    /// <summary>
-    /// Create a new move authenticator from an immutable object.
-    /// </summary>
-    public static MoveAuthenticator NewImmutable(Input[] @callArgs, TypeTag[] @typeArgs, ObjectReference @objectToAuthenticate) {
+    public static MoveAuthenticator NewV1(MoveAuthenticatorV1 @moveAuthenticatorV1) {
         return new MoveAuthenticator(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectReference.INSTANCE.Lower(@objectToAuthenticate), ref _status)
-));
-    }
-    
-    /// <summary>
-    /// Create a new move authenticator from a shared object.
-    /// </summary>
-    public static MoveAuthenticator NewShared(Input[] @callArgs, TypeTag[] @typeArgs, ObjectId @objectToAuthenticate, ulong @initialSharedVersion) {
-        return new MoveAuthenticator(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectId.INSTANCE.Lower(@objectToAuthenticate), FfiConverterUInt64.INSTANCE.Lower(@initialSharedVersion), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(FfiConverterTypeMoveAuthenticatorV1.INSTANCE.Lower(@moveAuthenticatorV1), ref _status)
 ));
     }
     
@@ -38059,6 +38061,190 @@ class FfiConverterTypeMoveAuthenticatorBuilder: FfiConverter<MoveAuthenticatorBu
     }
 
     public override void Write(MoveAuthenticatorBuilder value, BigEndianStream stream) {
+        stream.WriteLong(Lower(value).ToInt64());
+    }
+}
+
+
+
+/// <summary>
+/// Version 1 of the [`MoveAuthenticator`] data.
+/// </summary>
+public interface IMoveAuthenticatorV1 {
+    Address Address();
+    Input[] CallArgs();
+    Input ObjectToAuthenticate();
+    TypeTag[] TypeArgs();
+}
+/// <summary>
+/// Version 1 of the [`MoveAuthenticator`] data.
+/// </summary>
+public class MoveAuthenticatorV1 : IMoveAuthenticatorV1, IDisposable {
+    protected IntPtr pointer;
+    private int _wasDestroyed = 0;
+    private long _callCounter = 1;
+
+    public MoveAuthenticatorV1(IntPtr pointer) {
+        this.pointer = pointer;
+    }
+
+    ~MoveAuthenticatorV1() {
+        Destroy();
+    }
+
+    protected void FreeRustArcPtr() {
+        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(this.pointer, ref status);
+        });
+    }
+
+    protected IntPtr CloneRustArcPtr() {
+        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(this.pointer, ref status);
+        });
+    }
+
+    public void Destroy()
+    {
+        // Only allow a single call to this method.
+        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
+        {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (Interlocked.Decrement(ref _callCounter) == 0)
+            {
+                FreeRustArcPtr();
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        Destroy();
+        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
+    }
+
+    private void IncrementCallCounter() 
+    {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        long count;
+        do
+        {
+            count = Interlocked.Read(ref _callCounter);
+            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
+            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
+
+        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
+    }
+
+    private void DecrementCallCounter() 
+    {
+        // This decrement always matches the increment we performed above.
+        if (Interlocked.Decrement(ref _callCounter) == 0) {
+            FreeRustArcPtr();
+        }
+    }
+
+    internal void CallWithPointer(Action<IntPtr> action)
+    {
+        IncrementCallCounter();
+        try {
+            action(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    internal T CallWithPointer<T>(Func<IntPtr, T> func)
+    {   
+        IncrementCallCounter();
+        try {
+            return func(CloneRustArcPtr());
+        }
+        finally {
+            DecrementCallCounter();
+        }
+    }
+
+    
+    public Address Address() {
+        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Input[] CallArgs() {
+        return CallWithPointer(thisPtr => FfiConverterSequenceTypeInput.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Input ObjectToAuthenticate() {
+        return CallWithPointer(thisPtr => FfiConverterTypeInput.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public TypeTag[] TypeArgs() {
+        return CallWithPointer(thisPtr => FfiConverterSequenceTypeTypeTag.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(thisPtr,  ref _status)
+)));
+    }
+    
+    
+
+    
+    /// <summary>
+    /// Create a new move authenticator from an immutable object.
+    /// </summary>
+    public static MoveAuthenticatorV1 NewImmutable(Input[] @callArgs, TypeTag[] @typeArgs, ObjectReference @objectToAuthenticate) {
+        return new MoveAuthenticatorV1(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectReference.INSTANCE.Lower(@objectToAuthenticate), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Create a new move authenticator from a shared object.
+    /// </summary>
+    public static MoveAuthenticatorV1 NewShared(Input[] @callArgs, TypeTag[] @typeArgs, ObjectId @objectToAuthenticate, ulong @initialSharedVersion) {
+        return new MoveAuthenticatorV1(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectId.INSTANCE.Lower(@objectToAuthenticate), FfiConverterUInt64.INSTANCE.Lower(@initialSharedVersion), ref _status)
+));
+    }
+    
+    
+}
+class FfiConverterTypeMoveAuthenticatorV1: FfiConverter<MoveAuthenticatorV1, IntPtr> {
+    public static FfiConverterTypeMoveAuthenticatorV1 INSTANCE = new FfiConverterTypeMoveAuthenticatorV1();
+
+
+    public override IntPtr Lower(MoveAuthenticatorV1 value) {
+        return value.CallWithPointer(thisPtr => thisPtr);
+    }
+
+    public override MoveAuthenticatorV1 Lift(IntPtr value) {
+        return new MoveAuthenticatorV1(value);
+    }
+
+    public override MoveAuthenticatorV1 Read(BigEndianStream stream) {
+        return Lift(new IntPtr(stream.ReadLong()));
+    }
+
+    public override int AllocationSize(MoveAuthenticatorV1 value) {
+        return 8;
+    }
+
+    public override void Write(MoveAuthenticatorV1 value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
     }
 }

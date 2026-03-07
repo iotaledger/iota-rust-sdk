@@ -1771,15 +1771,17 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address() != 24164:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args() != 1111:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate() != 40516:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args() != 63576:
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address() != 27475:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args() != 32545:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate() != 54331:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args() != 58370:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments() != 17202:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -2735,11 +2737,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 19047:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1() != 64779:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() != 1961:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -6173,41 +6177,16 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticator.argtypes = (
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticator.restype = None
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable.argtypes = (
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared.argtypes = (
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    ctypes.c_void_p,
-    ctypes.c_uint64,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args.restype = _UniffiRustBuffer
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args.argtypes = (
-    ctypes.c_void_p,
-    ctypes.POINTER(_UniffiRustCallStatus),
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -6230,6 +6209,51 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish.argtype
     ctypes.c_void_p,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1.restype = None
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared.argtypes = (
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    ctypes.c_void_p,
+    ctypes.c_uint64,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_movecall.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -15289,21 +15313,24 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coin.restype = ctypes.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments.restype = ctypes.c_uint16
@@ -16735,15 +16762,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8.restype = ctypes.
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new.restype = ctypes.c_uint16
@@ -17650,6 +17680,8 @@ class _UniffiConverterDuration(_UniffiConverterRustBuffer):
         nanoseconds = value.microseconds * 1000
         buf.write_i64(seconds)
         buf.write_u32(nanoseconds)
+
+
 
 
 
@@ -42606,13 +42638,7 @@ class MoveAuthenticatorProtocol(typing.Protocol):
     authentication flow.
     """
 
-    def address(self, ):
-        raise NotImplementedError
-    def call_args(self, ):
-        raise NotImplementedError
-    def object_to_authenticate(self, ):
-        raise NotImplementedError
-    def type_args(self, ):
+    def as_v1(self, ):
         raise NotImplementedError
 # MoveAuthenticator is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MoveAuthenticator():
@@ -42646,78 +42672,19 @@ class MoveAuthenticator():
         inst._pointer = pointer
         return inst
     @classmethod
-    def new_immutable(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectReference"):
-        """
-        Create a new move authenticator from an immutable object.
-        """
-
-        _UniffiConverterSequenceTypeInput.check_lower(call_args)
-        
-        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
-        
-        _UniffiConverterTypeObjectReference.check_lower(object_to_authenticate)
+    def new_v1(cls, move_authenticator_v1: "MoveAuthenticatorV1"):
+        _UniffiConverterTypeMoveAuthenticatorV1.check_lower(move_authenticator_v1)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable,
-        _UniffiConverterSequenceTypeInput.lower(call_args),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
-        _UniffiConverterTypeObjectReference.lower(object_to_authenticate))
-        return cls._make_instance_(pointer)
-
-    @classmethod
-    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
-        """
-        Create a new move authenticator from a shared object.
-        """
-
-        _UniffiConverterSequenceTypeInput.check_lower(call_args)
-        
-        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
-        
-        _UniffiConverterTypeObjectId.check_lower(object_to_authenticate)
-        
-        _UniffiConverterUInt64.check_lower(initial_shared_version)
-        
-        # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared,
-        _UniffiConverterSequenceTypeInput.lower(call_args),
-        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
-        _UniffiConverterTypeObjectId.lower(object_to_authenticate),
-        _UniffiConverterUInt64.lower(initial_shared_version))
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1,
+        _UniffiConverterTypeMoveAuthenticatorV1.lower(move_authenticator_v1))
         return cls._make_instance_(pointer)
 
 
 
-    def address(self, ) -> "Address":
-        return _UniffiConverterTypeAddress.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def call_args(self, ) -> "typing.List[Input]":
-        return _UniffiConverterSequenceTypeInput.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def object_to_authenticate(self, ) -> "Input":
-        return _UniffiConverterTypeInput.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate,self._uniffi_clone_pointer(),)
-        )
-
-
-
-
-
-    def type_args(self, ) -> "typing.List[TypeTag]":
-        return _UniffiConverterSequenceTypeTypeTag.lift(
-            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args,self._uniffi_clone_pointer(),)
+    def as_v1(self, ) -> "MoveAuthenticatorV1":
+        return _UniffiConverterTypeMoveAuthenticatorV1.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1,self._uniffi_clone_pointer(),)
         )
 
 
@@ -42852,6 +42819,154 @@ class _UniffiConverterTypeMoveAuthenticatorBuilder:
 
     @classmethod
     def write(cls, value: MoveAuthenticatorBuilderProtocol, buf: _UniffiRustBuffer):
+        buf.write_u64(cls.lower(value))
+class MoveAuthenticatorV1Protocol(typing.Protocol):
+    """
+    Version 1 of the [`MoveAuthenticator`] data.
+    """
+
+    def address(self, ):
+        raise NotImplementedError
+    def call_args(self, ):
+        raise NotImplementedError
+    def object_to_authenticate(self, ):
+        raise NotImplementedError
+    def type_args(self, ):
+        raise NotImplementedError
+# MoveAuthenticatorV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
+class MoveAuthenticatorV1():
+    """
+    Version 1 of the [`MoveAuthenticator`] data.
+    """
+
+    _pointer: ctypes.c_void_p
+    
+    def __init__(self, *args, **kwargs):
+        raise ValueError("This class has no default constructor")
+
+    def __del__(self):
+        # In case of partial initialization of instances.
+        pointer = getattr(self, "_pointer", None)
+        if pointer is not None:
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1, pointer)
+
+    def _uniffi_clone_pointer(self):
+        return _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1, self._pointer)
+
+    # Used by alternative constructors or any methods which return this type.
+    @classmethod
+    def _make_instance_(cls, pointer):
+        # Lightly yucky way to bypass the usual __init__ logic
+        # and just create a new instance with the required pointer.
+        inst = cls.__new__(cls)
+        inst._pointer = pointer
+        return inst
+    @classmethod
+    def new_immutable(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectReference"):
+        """
+        Create a new move authenticator from an immutable object.
+        """
+
+        _UniffiConverterSequenceTypeInput.check_lower(call_args)
+        
+        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
+        
+        _UniffiConverterTypeObjectReference.check_lower(object_to_authenticate)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable,
+        _UniffiConverterSequenceTypeInput.lower(call_args),
+        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
+        _UniffiConverterTypeObjectReference.lower(object_to_authenticate))
+        return cls._make_instance_(pointer)
+
+    @classmethod
+    def new_shared(cls, call_args: "typing.List[Input]",type_args: "typing.List[TypeTag]",object_to_authenticate: "ObjectId",initial_shared_version: "int"):
+        """
+        Create a new move authenticator from a shared object.
+        """
+
+        _UniffiConverterSequenceTypeInput.check_lower(call_args)
+        
+        _UniffiConverterSequenceTypeTypeTag.check_lower(type_args)
+        
+        _UniffiConverterTypeObjectId.check_lower(object_to_authenticate)
+        
+        _UniffiConverterUInt64.check_lower(initial_shared_version)
+        
+        # Call the (fallible) function before creating any half-baked object instances.
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared,
+        _UniffiConverterSequenceTypeInput.lower(call_args),
+        _UniffiConverterSequenceTypeTypeTag.lower(type_args),
+        _UniffiConverterTypeObjectId.lower(object_to_authenticate),
+        _UniffiConverterUInt64.lower(initial_shared_version))
+        return cls._make_instance_(pointer)
+
+
+
+    def address(self, ) -> "Address":
+        return _UniffiConverterTypeAddress.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def call_args(self, ) -> "typing.List[Input]":
+        return _UniffiConverterSequenceTypeInput.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def object_to_authenticate(self, ) -> "Input":
+        return _UniffiConverterTypeInput.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def type_args(self, ) -> "typing.List[TypeTag]":
+        return _UniffiConverterSequenceTypeTypeTag.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+
+class _UniffiConverterTypeMoveAuthenticatorV1:
+
+    @staticmethod
+    def lift(value: int):
+        return MoveAuthenticatorV1._make_instance_(value)
+
+    @staticmethod
+    def check_lower(value: MoveAuthenticatorV1):
+        if not isinstance(value, MoveAuthenticatorV1):
+            raise TypeError("Expected MoveAuthenticatorV1 instance, {} found".format(type(value).__name__))
+
+    @staticmethod
+    def lower(value: MoveAuthenticatorV1Protocol):
+        if not isinstance(value, MoveAuthenticatorV1):
+            raise TypeError("Expected MoveAuthenticatorV1 instance, {} found".format(type(value).__name__))
+        return value._uniffi_clone_pointer()
+
+    @classmethod
+    def read(cls, buf: _UniffiRustBuffer):
+        ptr = buf.read_u64()
+        if ptr == 0:
+            raise InternalError("Raw pointer value was null")
+        return cls.lift(ptr)
+
+    @classmethod
+    def write(cls, value: MoveAuthenticatorV1Protocol, buf: _UniffiRustBuffer):
         buf.write_u64(cls.lower(value))
 class MoveCallProtocol(typing.Protocol):
     """
@@ -62451,6 +62566,7 @@ __all__ = [
     "MoveArg",
     "MoveAuthenticator",
     "MoveAuthenticatorBuilder",
+    "MoveAuthenticatorV1",
     "MoveCall",
     "MoveFunction",
     "MovePackage",

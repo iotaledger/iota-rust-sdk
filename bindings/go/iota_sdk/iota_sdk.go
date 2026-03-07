@@ -6280,38 +6280,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address()
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1()
 	})
-	if checksum != 24164 {
+	if checksum != 3713 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args()
-	})
-	if checksum != 1111 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate()
-	})
-	if checksum != 40516 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args()
-	})
-	if checksum != 63576 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -6321,6 +6294,42 @@ func uniffiCheckChecksums() {
 	if checksum != 16948 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address()
+	})
+	if checksum != 27475 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args()
+	})
+	if checksum != 32545 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate()
+	})
+	if checksum != 54331 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args()
+	})
+	if checksum != 58370 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10618,20 +10627,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1()
 	})
-	if checksum != 19047 {
+	if checksum != 64779 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable: UniFFI API checksum mismatch")
-	}
-	}
-	{
-	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared()
-	})
-	if checksum != 5389 {
-		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -10641,6 +10641,24 @@ func uniffiCheckChecksums() {
 	if checksum != 1961 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable()
+	})
+	if checksum != 32081 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable: UniFFI API checksum mismatch")
+	}
+	}
+	{
+	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared()
+	})
+	if checksum != 22895 {
+		// If this happens try cleaning and rebuilding your project
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -23492,10 +23510,7 @@ func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 // by the Move authenticate function during the Account Abstraction
 // authentication flow.
 type MoveAuthenticatorInterface interface {
-	Address() *Address
-	CallArgs() []*Input
-	ObjectToAuthenticate() *Input
-	TypeArgs() []*TypeTag
+	AsV1() *MoveAuthenticatorV1
 }
 // MoveAuthenticator is a signature variant that enables a method of
 // authentication through Move code. This type represents the data received
@@ -23506,59 +23521,20 @@ type MoveAuthenticator struct {
 }
 
 
-// Create a new move authenticator from an immutable object.
-func MoveAuthenticatorNewImmutable(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate ObjectReference) *MoveAuthenticator {
+func MoveAuthenticatorNewV1(moveAuthenticatorV1 *MoveAuthenticatorV1) *MoveAuthenticator {
 	return FfiConverterMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectReferenceINSTANCE.Lower(objectToAuthenticate),_uniffiStatus)
-	}))
-}
-
-// Create a new move authenticator from a shared object.
-func MoveAuthenticatorNewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticator {
-	return FfiConverterMoveAuthenticatorINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(FfiConverterMoveAuthenticatorV1INSTANCE.Lower(moveAuthenticatorV1),_uniffiStatus)
 	}))
 }
 
 
 
-func (_self *MoveAuthenticator) Address() *Address {
+func (_self *MoveAuthenticator) AsV1() *MoveAuthenticatorV1 {
 	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
 	defer _self.ffiObject.decrementPointer()
-	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(
+	return FfiConverterMoveAuthenticatorV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(
 		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MoveAuthenticator) CallArgs() []*Input {
-	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(
-		_pointer,_uniffiStatus),
-	}
-	}))
-}
-
-func (_self *MoveAuthenticator) ObjectToAuthenticate() *Input {
-	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(
-		_pointer,_uniffiStatus)
-	}))
-}
-
-func (_self *MoveAuthenticator) TypeArgs() []*TypeTag {
-	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticator")
-	defer _self.ffiObject.decrementPointer()
-	return FfiConverterSequenceTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
-		return GoRustBuffer {
-		inner: C.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(
-		_pointer,_uniffiStatus),
-	}
 	}))
 }
 func (object *MoveAuthenticator) Destroy() {
@@ -23714,6 +23690,127 @@ func (c FfiConverterMoveAuthenticatorBuilder) Write(writer io.Writer, value *Mov
 type FfiDestroyerMoveAuthenticatorBuilder struct {}
 
 func (_ FfiDestroyerMoveAuthenticatorBuilder) Destroy(value *MoveAuthenticatorBuilder) {
+		value.Destroy()
+}
+
+
+
+
+// Version 1 of the [`MoveAuthenticator`] data.
+type MoveAuthenticatorV1Interface interface {
+	Address() *Address
+	CallArgs() []*Input
+	ObjectToAuthenticate() *Input
+	TypeArgs() []*TypeTag
+}
+// Version 1 of the [`MoveAuthenticator`] data.
+type MoveAuthenticatorV1 struct {
+	ffiObject FfiObject
+}
+
+
+// Create a new move authenticator from an immutable object.
+func MoveAuthenticatorV1NewImmutable(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate ObjectReference) *MoveAuthenticatorV1 {
+	return FfiConverterMoveAuthenticatorV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectReferenceINSTANCE.Lower(objectToAuthenticate),_uniffiStatus)
+	}))
+}
+
+// Create a new move authenticator from a shared object.
+func MoveAuthenticatorV1NewShared(callArgs []*Input, typeArgs []*TypeTag, objectToAuthenticate *ObjectId, initialSharedVersion uint64) *MoveAuthenticatorV1 {
+	return FfiConverterMoveAuthenticatorV1INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceInputINSTANCE.Lower(callArgs), FfiConverterSequenceTypeTagINSTANCE.Lower(typeArgs), FfiConverterObjectIdINSTANCE.Lower(objectToAuthenticate), FfiConverterUint64INSTANCE.Lower(initialSharedVersion),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *MoveAuthenticatorV1) Address() *Address {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticatorV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterAddressINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MoveAuthenticatorV1) CallArgs() []*Input {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticatorV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+func (_self *MoveAuthenticatorV1) ObjectToAuthenticate() *Input {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticatorV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterInputINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(
+		_pointer,_uniffiStatus)
+	}))
+}
+
+func (_self *MoveAuthenticatorV1) TypeArgs() []*TypeTag {
+	_pointer := _self.ffiObject.incrementPointer("*MoveAuthenticatorV1")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceTypeTagINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+func (object *MoveAuthenticatorV1) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoveAuthenticatorV1 struct {}
+
+var FfiConverterMoveAuthenticatorV1INSTANCE = FfiConverterMoveAuthenticatorV1{}
+
+
+func (c FfiConverterMoveAuthenticatorV1) Lift(pointer unsafe.Pointer) *MoveAuthenticatorV1 {
+	result := &MoveAuthenticatorV1 {
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoveAuthenticatorV1).Destroy)
+	return result
+}
+
+func (c FfiConverterMoveAuthenticatorV1) Read(reader io.Reader) *MoveAuthenticatorV1 {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterMoveAuthenticatorV1) Lower(value *MoveAuthenticatorV1) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*MoveAuthenticatorV1")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+	
+}
+
+func (c FfiConverterMoveAuthenticatorV1) Write(writer io.Writer, value *MoveAuthenticatorV1) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerMoveAuthenticatorV1 struct {}
+
+func (_ FfiDestroyerMoveAuthenticatorV1) Destroy(value *MoveAuthenticatorV1) {
 		value.Destroy()
 }
 
