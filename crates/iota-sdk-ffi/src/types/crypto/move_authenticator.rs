@@ -17,8 +17,33 @@ use crate::types::{
 #[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveAuthenticator(pub iota_sdk::types::MoveAuthenticator);
 
+/// Version 1 of the [`MoveAuthenticator`] data.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveAuthenticatorV1(pub iota_sdk::types::MoveAuthenticatorV1);
+
 #[uniffi::export]
 impl MoveAuthenticator {
+    #[uniffi::constructor]
+    pub fn new_v1(move_authenticator_v1: &MoveAuthenticatorV1) -> Self {
+        Self(iota_sdk::types::MoveAuthenticator::V1(
+            move_authenticator_v1.0.clone(),
+        ))
+    }
+
+    pub fn as_v1(&self) -> Arc<MoveAuthenticatorV1> {
+        match &self.0 {
+            iota_sdk::types::MoveAuthenticator::V1(authenticator) => {
+                Arc::new(MoveAuthenticatorV1(authenticator.clone()))
+            }
+            _ => unimplemented!(
+                "a new MoveAuthenticator enum variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+#[uniffi::export]
+impl MoveAuthenticatorV1 {
     /// Create a new move authenticator from an immutable object.
     #[uniffi::constructor]
     pub fn new_immutable(
@@ -26,7 +51,7 @@ impl MoveAuthenticator {
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: ObjectReference,
     ) -> Self {
-        Self(iota_sdk::types::MoveAuthenticator::new_immutable(
+        Self(iota_sdk::types::MoveAuthenticatorV1::new_immutable(
             call_args.into_iter().map(|v| v.0.clone()).collect(),
             type_args.into_iter().map(|v| v.0.clone()).collect(),
             object_to_authenticate.into(),
@@ -41,7 +66,7 @@ impl MoveAuthenticator {
         object_to_authenticate: &ObjectId,
         initial_shared_version: u64,
     ) -> Self {
-        Self(iota_sdk::types::MoveAuthenticator::new_shared(
+        Self(iota_sdk::types::MoveAuthenticatorV1::new_shared(
             call_args.into_iter().map(|v| v.0.clone()).collect(),
             type_args.into_iter().map(|v| v.0.clone()).collect(),
             **object_to_authenticate,
