@@ -26,7 +26,8 @@ use crate::{
 enum ProcessResult {
     /// Successfully processed. Value is the next checkpoint to resume from.
     Advance(u64),
-    /// The unit of work is not ready yet (e.g. checkpoint not indexed on-chain).
+    /// The unit of work is not ready yet (e.g. checkpoint not indexed
+    /// on-chain).
     NotReady,
 }
 
@@ -159,15 +160,11 @@ impl Indexer {
                 Ok(ProcessResult::Advance(next)) => {
                     retry.reset();
                     position = next;
-                    progress::store(&self.pool, &self.config.progress_key, position)
-                        .await?;
+                    progress::store(&self.pool, &self.config.progress_key, position).await?;
                 }
                 Ok(ProcessResult::NotReady) => {
                     retry.reset();
-                    warn!(
-                        checkpoint = position,
-                        "checkpoint not ready yet; retrying"
-                    );
+                    warn!(checkpoint = position, "checkpoint not ready yet; retrying");
                     tokio::time::sleep(self.config.poll_interval).await;
                 }
                 Err(err) => {
@@ -233,14 +230,11 @@ impl Indexer {
                 .collect();
 
             // Batch-fetch checkpoint numbers in a single GraphQL query.
-            let digests: Vec<String> =
-                eligible.iter().map(|(_, d)| d.clone()).collect();
-            let checkpoint_map =
-                batch_lookup_tx_checkpoints(&self.client, &digests).await?;
+            let digests: Vec<String> = eligible.iter().map(|(_, d)| d.clone()).collect();
+            let checkpoint_map = batch_lookup_tx_checkpoints(&self.client, &digests).await?;
 
             for (tx_data, tx_digest) in &eligible {
-                let checkpoint_seq =
-                    checkpoint_map.get(tx_digest).copied().flatten();
+                let checkpoint_seq = checkpoint_map.get(tx_digest).copied().flatten();
 
                 let event_count = self
                     .store_events_for_transaction(checkpoint_seq, tx_digest)
@@ -564,10 +558,7 @@ async fn batch_lookup_tx_checkpoints(
                 "t{i}: transactionBlock(digest: $d{i}) \
                  {{ effects {{ checkpoint {{ sequenceNumber }} }} }}"
             ));
-            variables.insert(
-                format!("d{i}"),
-                serde_json::Value::String(digest.clone()),
-            );
+            variables.insert(format!("d{i}"), serde_json::Value::String(digest.clone()));
         }
 
         let query_str = format!(
