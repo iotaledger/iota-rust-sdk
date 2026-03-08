@@ -1369,7 +1369,6 @@ impl Input {
     );
 }
 
-
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {

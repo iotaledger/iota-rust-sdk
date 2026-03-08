@@ -214,11 +214,13 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::fmt;
 
+    use super::*;
+
     /// Helper that captures formatted output by implementing Display with a
-    /// closure, letting us write plain text then use TreeWriter::new_after_text.
+    /// closure, letting us write plain text then use
+    /// TreeWriter::new_after_text.
     struct AfterText<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result>(F);
 
     impl<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result> fmt::Display for AfterText<F> {
