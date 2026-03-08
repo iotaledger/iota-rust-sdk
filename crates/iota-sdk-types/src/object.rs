@@ -173,11 +173,11 @@ impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 }
 
-impl std::fmt::Display for ObjectData {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl crate::TreeDisplay for ObjectData {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            ObjectData::Struct(s) => write!(f, "Struct({s})"),
-            ObjectData::Package(p) => write!(f, "Package({p})"),
+            ObjectData::Struct(s) => s.fmt_tree(w),
+            ObjectData::Package(p) => p.fmt_tree(w),
         }
     }
 }
@@ -249,11 +249,8 @@ impl crate::TreeDisplay for MovePackage {
         w.header("Move Package")?;
         w.leaf("ID", &self.id, false)?;
         w.leaf("Version", &self.version, false)?;
-        w.leaf(
-            "Modules",
-            &format!("[{} modules]", self.modules.len()),
-            true,
-        )
+        let module_names: Vec<_> = self.modules.keys().map(|k| k.to_string()).collect();
+        w.leaf("Modules", &module_names.join(", "), true)
     }
 }
 
@@ -623,6 +620,7 @@ impl crate::TreeDisplay for GenesisObject {
 
 crate::impl_tree_display!(
     ObjectReference,
+    ObjectData,
     MovePackage,
     TypeOrigin,
     UpgradeInfo,

@@ -377,10 +377,7 @@ impl crate::TreeDisplay for EndOfEpochTransactionKind {
             Self::ChangeEpochV2(v) => v.fmt_tree(w),
             Self::ChangeEpochV3(v) => v.fmt_tree(w),
             Self::ChangeEpochV4(v) => v.fmt_tree(w),
-            Self::AuthenticatorStateCreate => {
-                w.header("AuthenticatorStateCreate")?;
-                w.leaf("Kind", &"AuthenticatorStateCreate", true)
-            }
+            Self::AuthenticatorStateCreate => w.header("AuthenticatorStateCreate"),
             Self::AuthenticatorStateExpire(v) => v.fmt_tree(w),
         }
     }
@@ -464,9 +461,8 @@ pub struct ValidatorExecutionTimeObservation {
 impl crate::TreeDisplay for ValidatorExecutionTimeObservation {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Validator Execution Time Observation")?;
-        let duration_str = format!("{:?}", self.duration);
         w.leaf("Validator", &self.validator, false)?;
-        w.leaf("Duration", &duration_str, true)
+        w.leaf("Duration", &format!("{:?}", self.duration), true)
     }
 }
 
@@ -1292,7 +1288,18 @@ pub struct ProgrammableTransaction {
 impl crate::TreeDisplay for ProgrammableTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Programmable Transaction")?;
-        w.vec_children("Inputs", &self.inputs, false)?;
+        if self.inputs.is_empty() {
+            w.leaf("Inputs", &"[]", false)?;
+        } else {
+            w.branch("Inputs", false, |w| {
+                let last_idx = self.inputs.len() - 1;
+                for (i, input) in self.inputs.iter().enumerate() {
+                    let label = format!("{i}: {}", input.variant_name());
+                    w.child(&label, input, i == last_idx)?;
+                }
+                Ok(())
+            })?;
+        }
         w.vec_children("Commands", &self.commands, true)
     }
 }
@@ -1346,6 +1353,15 @@ pub enum Input {
 }
 
 impl Input {
+    fn variant_name(&self) -> &'static str {
+        match self {
+            Self::Pure { .. } => "Pure",
+            Self::ImmutableOrOwned(_) => "ImmutableOrOwned",
+            Self::Shared { .. } => "Shared",
+            Self::Receiving(_) => "Receiving",
+        }
+    }
+
     crate::def_is!(Pure, Shared);
 
     crate::def_is_as_into_opt!(
@@ -1386,18 +1402,32 @@ impl std::fmt::Display for Input {
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         match self {
-            Self::Pure { value } => w.leaf("Value", &hex::encode(value), true),
-            Self::ImmutableOrOwned(obj_ref) => obj_ref.fmt_tree(w),
+            Self::Pure { value } => {
+                w.header("Pure")?;
+                w.leaf("Value", &hex::encode(value), true)
+            }
+            Self::ImmutableOrOwned(obj_ref) => {
+                w.header("ImmutableOrOwned")?;
+                w.leaf("Object ID", &obj_ref.object_id, false)?;
+                w.leaf("Version", &obj_ref.version, false)?;
+                w.leaf("Digest", &obj_ref.digest, true)
+            }
             Self::Shared {
                 object_id,
                 initial_shared_version,
                 mutable,
             } => {
+                w.header("Shared")?;
                 w.leaf("Object ID", object_id, false)?;
                 w.leaf("Initial Shared Version", initial_shared_version, false)?;
                 w.leaf("Mutable", mutable, true)
             }
-            Self::Receiving(obj_ref) => obj_ref.fmt_tree(w),
+            Self::Receiving(obj_ref) => {
+                w.header("Receiving")?;
+                w.leaf("Object ID", &obj_ref.object_id, false)?;
+                w.leaf("Version", &obj_ref.version, false)?;
+                w.leaf("Digest", &obj_ref.digest, true)
+            }
         }
     }
 }

@@ -232,7 +232,7 @@ impl MultisigCommittee {
 impl crate::TreeDisplay for MultisigCommittee {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Multisig Committee")?;
-        w.vec_inline("Members", &self.members, false)?;
+        w.vec_children("Members", &self.members, false)?;
         w.leaf("Threshold", &self.threshold, true)
     }
 }

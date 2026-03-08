@@ -19,10 +19,9 @@ use super::{Address, Identifier, ObjectId, StructTag, TypeTag};
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct TransactionEvents(pub Vec<Event>);
 
-impl std::fmt::Display for TransactionEvents {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Transaction Events")?;
-        let mut w = crate::TreeWriter::new_after_text(f);
+impl crate::TreeDisplay for TransactionEvents {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Transaction Events")?;
         w.vec_children("Events", &self.0, true)
     }
 }
@@ -108,4 +107,4 @@ impl crate::TreeDisplay for BalanceChange {
     }
 }
 
-crate::impl_tree_display!(Event, BalanceChange);
+crate::impl_tree_display!(TransactionEvents, Event, BalanceChange);

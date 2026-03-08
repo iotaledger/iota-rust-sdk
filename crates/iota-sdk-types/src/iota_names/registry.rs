@@ -119,7 +119,19 @@ impl crate::TreeDisplay for NameRecord {
         w.leaf("NFT ID", &self.nft_id, false)?;
         w.leaf("Expiration (ms)", &self.expiration_timestamp_ms, false)?;
         w.option("Target Address", &self.target_address, false)?;
-        w.leaf("Data", &format!("[{} entries]", self.data.len()), true)
+        w.branch("Data", true, |w| {
+            if self.data.is_empty() {
+                w.leaf("Entries", &"[]", true)
+            } else {
+                let mut entries: Vec<_> = self.data.iter().collect();
+                entries.sort_by_key(|(k, _)| *k);
+                let last_idx = entries.len() - 1;
+                for (i, (k, v)) in entries.iter().enumerate() {
+                    w.leaf(k, v, i == last_idx)?;
+                }
+                Ok(())
+            }
+        })
     }
 }
 

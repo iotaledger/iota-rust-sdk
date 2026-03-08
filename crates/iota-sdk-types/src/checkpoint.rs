@@ -231,9 +231,11 @@ pub struct SignedCheckpointSummary {
     pub signature: ValidatorAggregatedSignature,
 }
 
-impl std::fmt::Display for SignedCheckpointSummary {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.checkpoint)
+impl crate::TreeDisplay for SignedCheckpointSummary {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Signed Checkpoint Summary")?;
+        w.child("Checkpoint", &self.checkpoint, false)?;
+        w.child("Signature", &self.signature, true)
     }
 }
 
@@ -362,8 +364,7 @@ impl crate::TreeDisplay for CheckpointTransaction {
         w.header("Checkpoint Transaction")?;
         w.leaf("Transaction", &self.transaction, false)?;
         w.leaf("Effects", &self.effects, false)?;
-        let events_display = if self.events.is_some() { "Yes" } else { "None" };
-        w.leaf("Events", &events_display, false)?;
+        w.option_child("Events", &self.events, false)?;
         w.vec_children("Input Objects", &self.input_objects, false)?;
         w.vec_children("Output Objects", &self.output_objects, true)
     }
@@ -372,6 +373,7 @@ impl crate::TreeDisplay for CheckpointTransaction {
 crate::impl_tree_display!(
     EndOfEpochData,
     CheckpointSummary,
+    SignedCheckpointSummary,
     CheckpointTransactionInfo,
     CheckpointData,
     CheckpointTransaction
