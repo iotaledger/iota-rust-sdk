@@ -324,7 +324,7 @@ pub struct CheckpointData {
 impl crate::TreeDisplay for CheckpointData {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Checkpoint Data")?;
-        w.child("Checkpoint", &self.checkpoint_summary.checkpoint, false)?;
+        w.child("Checkpoint Summary", &self.checkpoint_summary, false)?;
         w.leaf("Contents", &self.checkpoint_contents, false)?;
         w.vec_children("Transactions", &self.transactions, true)
     }

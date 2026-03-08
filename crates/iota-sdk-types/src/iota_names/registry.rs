@@ -123,10 +123,8 @@ impl crate::TreeDisplay for NameRecord {
             if self.data.is_empty() {
                 w.leaf("Entries", &"[]", true)
             } else {
-                let mut entries: Vec<_> = self.data.iter().collect();
-                entries.sort_by_key(|(k, _)| *k);
-                let last_idx = entries.len() - 1;
-                for (i, (k, v)) in entries.iter().enumerate() {
+                let last_idx = self.data.len() - 1;
+                for (i, (k, v)) in self.data.iter().enumerate() {
                     w.leaf(k, v, i == last_idx)?;
                 }
                 Ok(())

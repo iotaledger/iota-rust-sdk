@@ -12,18 +12,16 @@ All public types implement `std::fmt::Display` for readable console output. Mult
 
 ### Example
 
-```rust
-use iota_sdk_types::GasCostSummary;
-
-let gas = GasCostSummary::new(1000, 500, 200, 50, 10);
-println!("{gas}");
-```
+Multi-field structs render as tree structures with box-drawing characters, including nested sub-trees:
 
 ```
-Gas Cost Summary
-├── Computation Cost: 1000
-├── Computation Cost Burned: 500
-├── Storage Cost: 200
-├── Storage Rebate: 50
-└── Non-Refundable Storage Fee: 10
+Gas Payment
+├── Objects
+│   └── 0
+│       ├── Object ID: 0x19ea...
+│       ├── Version: 1438
+│       └── Digest: 79jAf...
+├── Owner: 0xfc4c...
+├── Price: 1000
+└── Budget: 4264800
 ```

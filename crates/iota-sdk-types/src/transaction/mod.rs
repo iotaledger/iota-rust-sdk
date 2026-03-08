@@ -6,7 +6,6 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, Jwk, JwkId,
     ObjectId, ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
-use crate::TreeDisplay;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -1370,34 +1369,6 @@ impl Input {
     );
 }
 
-impl std::fmt::Display for Input {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Pure { value } => write!(f, "Pure({})", hex::encode(value)),
-            Self::ImmutableOrOwned(obj_ref) => {
-                write!(f, "ImmutableOrOwned")?;
-                let mut w = crate::TreeWriter::new_after_text(f);
-                obj_ref.fmt_tree(&mut w)
-            }
-            Self::Shared {
-                object_id,
-                initial_shared_version,
-                mutable,
-            } => {
-                write!(f, "Shared")?;
-                let mut w = crate::TreeWriter::new_after_text(f);
-                w.leaf("Object ID", object_id, false)?;
-                w.leaf("Initial Shared Version", initial_shared_version, false)?;
-                w.leaf("Mutable", mutable, true)
-            }
-            Self::Receiving(obj_ref) => {
-                write!(f, "Receiving")?;
-                let mut w = crate::TreeWriter::new_after_text(f);
-                obj_ref.fmt_tree(&mut w)
-            }
-        }
-    }
-}
 
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
@@ -1906,5 +1877,6 @@ crate::impl_tree_display!(
     MakeMoveVector,
     Upgrade,
     MoveCall,
+    Input,
     SignedTransaction,
 );
