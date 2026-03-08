@@ -18,10 +18,10 @@ Multi-field structs render as tree structures with box-drawing characters, inclu
 Gas Payment
 ├── Objects
 │   └── 0
-│       ├── Object ID: 0x19ea...
-│       ├── Version: 1438
-│       └── Digest: 79jAf...
-├── Owner: 0xfc4c...
+│       ├── Object ID: 0x0000000000000000000000000000000000000000000000000000000000000000
+│       ├── Version: 42
+│       └── Digest: 11111111111111111111111111111111
+├── Owner: 0x0000000000000000000000000000000000000000000000000000000000000000
 ├── Price: 1000
-└── Budget: 4264800
+└── Budget: 5000000
 ```
