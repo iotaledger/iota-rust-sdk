@@ -2,17 +2,27 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for dry-run transaction simulation.
+
 use iota_types::ObjectReference;
 
 use super::transaction::TransactionBlock;
 use crate::query_types::{Address, Base64, MoveType, ObjectId, schema};
 
+// ===========================================================================
+// Dry Run Queries
+// ===========================================================================
+
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunQueryArgs")]
 pub struct DryRunQuery {
     #[arguments(txBytes: $tx_bytes, skipChecks: $skip_checks, txMeta: $tx_meta)]
     pub dry_run_transaction_block: DryRunResult,
 }
+
+// ===========================================================================
+// Dry Run Types
+// ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DryRunResult")]
@@ -77,8 +87,12 @@ pub struct ResultArg {
     pub ix: Option<i32>,
 }
 
+// ===========================================================================
+// Dry Run Query Args
+// ===========================================================================
+
 #[derive(cynic::QueryVariables, Debug)]
-pub struct DryRunArgs {
+pub struct DryRunQueryArgs {
     pub tx_bytes: String,
     pub skip_checks: bool,
     pub tx_meta: Option<TransactionMetadata>,
@@ -101,6 +115,10 @@ pub struct ObjectRef {
     pub digest: String,
     pub version: u64,
 }
+
+// ===========================================================================
+// Conversions
+// ===========================================================================
 
 impl From<ObjectReference> for ObjectRef {
     fn from(value: ObjectReference) -> Self {

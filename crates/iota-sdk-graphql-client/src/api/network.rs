@@ -11,8 +11,8 @@ use crate::{
     error::Result,
     pagination::{Page, PaginationFilter},
     query_types::{
-        ActiveValidatorsArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochArgs,
-        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs, Validator,
+        ActiveValidatorsQueryArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochQueryArgs,
+        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigs, ProtocolConfigQueryArgs, Validator,
     },
 };
 
@@ -31,7 +31,7 @@ impl Client {
     /// This will return `Ok(None)` if the epoch requested is not available in
     /// the GraphQL service (e.g., due to pruning).
     pub async fn reference_gas_price(&self, epoch: impl Into<Option<u64>>) -> Result<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch.into() });
+        let operation = EpochSummaryQuery::build(EpochQueryArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
         response
@@ -46,7 +46,7 @@ impl Client {
         &self,
         version: impl Into<Option<u64>>,
     ) -> Result<ProtocolConfigs> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
+        let operation = ProtocolConfigQuery::build(ProtocolConfigQueryArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
         Ok(response.protocol_config)
     }
@@ -61,7 +61,7 @@ impl Client {
     ) -> Result<Page<Validator>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
+        let operation = ActiveValidatorsQuery::build(ActiveValidatorsQueryArgs {
             id: epoch.into(),
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),

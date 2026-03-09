@@ -10,7 +10,7 @@ use iota_types::Address;
 use crate::{
     Client,
     error::Result,
-    query_types::{BalanceArgs, BalanceQuery},
+    query_types::{BalanceQueryArgs, BalanceQuery},
 };
 
 impl Client {
@@ -22,7 +22,7 @@ impl Client {
         address: Address,
         coin_type: impl Into<Option<String>>,
     ) -> Result<Option<u64>> {
-        let operation = BalanceQuery::build(BalanceArgs {
+        let operation = BalanceQuery::build(BalanceQueryArgs {
             address,
             coin_type: coin_type.into(),
         });

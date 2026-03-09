@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for transaction blocks, execution, and effects.
+
 use base64ct::Encoding;
 use iota_types::{
     ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects, UserSignature,
@@ -20,7 +22,7 @@ use crate::{
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlockArgs"
+    variables = "TransactionBlockQueryArgs"
 )]
 pub struct TransactionBlockQuery {
     #[arguments(digest: $digest)]
@@ -31,7 +33,7 @@ pub struct TransactionBlockQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlockArgs"
+    variables = "TransactionBlockQueryArgs"
 )]
 pub struct TransactionBlockWithEffectsQuery {
     #[arguments(digest: $digest)]
@@ -42,7 +44,7 @@ pub struct TransactionBlockWithEffectsQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlockArgs"
+    variables = "TransactionBlockQueryArgs"
 )]
 pub struct TransactionBlockEffectsQuery {
     #[arguments(digest: $digest)]
@@ -53,7 +55,7 @@ pub struct TransactionBlockEffectsQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlockArgs"
+    variables = "TransactionBlockQueryArgs"
 )]
 pub struct TransactionBlockCheckpointQuery {
     #[arguments(digest: $digest)]
@@ -64,7 +66,7 @@ pub struct TransactionBlockCheckpointQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlockArgs"
+    variables = "TransactionBlockQueryArgs"
 )]
 pub struct TransactionBlockIndexedQuery {
     #[arguments(digest: $digest)]
@@ -108,7 +110,7 @@ pub struct TransactionBlocksEffectsQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlockArgs {
+pub struct TransactionBlockQueryArgs {
     pub digest: String,
 }
 
@@ -118,7 +120,7 @@ pub struct TransactionBlocksQueryArgs {
     pub after: Option<String>,
     pub last: Option<i32>,
     pub before: Option<String>,
-    pub filter: Option<TransactionsFilter>,
+    pub filter: Option<TransactionBlockFilter>,
 }
 
 // ===========================================================================
@@ -183,7 +185,7 @@ pub enum TransactionBlockKindInput {
 
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
-pub struct TransactionsFilter {
+pub struct TransactionBlockFilter {
     pub function: Option<String>,
     pub kind: Option<TransactionBlockKindInput>,
     pub after_checkpoint: Option<u64>,
@@ -268,4 +270,42 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
             )
         })
     }
+}
+
+// ===========================================================================
+// Execute Transaction
+// ===========================================================================
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Mutation",
+    variables = "ExecuteTransactionQueryArgs"
+)]
+pub struct ExecuteTransactionQuery {
+    #[arguments(signatures: $signatures, txBytes: $tx_bytes)]
+    pub execute_transaction_block: ExecutionResult,
+}
+
+#[derive(cynic::QueryVariables, Debug)]
+pub struct ExecuteTransactionQueryArgs {
+    pub signatures: Vec<String>,
+    pub tx_bytes: String,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "ExecutionResult")]
+pub struct ExecutionResult {
+    pub errors: Option<Vec<String>>,
+    pub effects: ExecuteTransactionBlockEffects,
+}
+
+/// The effects returned by the execute transaction mutation.
+/// Unlike [`TransactionBlockEffects`] (used in read queries where `bcs` may be
+/// absent), this variant always includes `bcs` because the mutation guarantees
+/// the effects are present.
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
+pub struct ExecuteTransactionBlockEffects {
+    pub bcs: Base64,
 }

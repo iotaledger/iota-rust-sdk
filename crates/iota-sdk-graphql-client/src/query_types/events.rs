@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for on-chain events.
+
 use crate::query_types::{
     Address, Base64, DateTime, GQLAddress, JsonValue, MoveData, MoveType, PageInfo,
     normalized_move::MoveModuleQuery, schema,

@@ -11,7 +11,7 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 use crate::{
     Client, DryRunEffect, DryRunResult,
     error::Result,
-    query_types::{DryRunArgs, DryRunQuery, TransactionMetadata},
+    query_types::{DryRunQueryArgs, DryRunQuery, TransactionMetadata},
 };
 
 impl Client {
@@ -53,7 +53,7 @@ impl Client {
         skip_checks: bool,
         tx_meta: impl Into<Option<TransactionMetadata>>,
     ) -> Result<DryRunResult> {
-        let operation = DryRunQuery::build(DryRunArgs {
+        let operation = DryRunQuery::build(DryRunQueryArgs {
             tx_bytes,
             skip_checks,
             tx_meta: tx_meta.into(),

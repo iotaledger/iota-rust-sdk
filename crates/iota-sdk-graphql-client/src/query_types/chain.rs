@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for chain identity.
+
 use crate::query_types::schema;
 
 // ===========================================================================

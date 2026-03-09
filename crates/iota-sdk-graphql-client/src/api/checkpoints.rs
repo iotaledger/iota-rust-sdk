@@ -13,7 +13,7 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
+        CheckpointQueryArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsQueryArgs,
         CheckpointsQuery,
     },
     streams::stream_paginated_query,
@@ -46,7 +46,7 @@ impl Client {
             ));
         }
 
-        let operation = CheckpointQuery::build(CheckpointArgs {
+        let operation = CheckpointQuery::build(CheckpointQueryArgs {
             id: CheckpointId {
                 digest: digest.map(|d| d.to_string()),
                 sequence_number: seq_num,
@@ -64,7 +64,7 @@ impl Client {
     ) -> Result<Page<CheckpointSummary>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = CheckpointsQuery::build(CheckpointsArgs {
+        let operation = CheckpointsQuery::build(CheckpointsQueryArgs {
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -128,7 +128,7 @@ impl Client {
             ));
         }
 
-        let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
+        let operation = CheckpointTotalTxQuery::build(CheckpointQueryArgs {
             id: CheckpointId {
                 digest,
                 sequence_number: seq_num,

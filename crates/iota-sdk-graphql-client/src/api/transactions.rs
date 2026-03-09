@@ -19,11 +19,11 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        ExecuteTransactionArgs, ExecuteTransactionQuery, TransactionBlockArgs,
+        ExecuteTransactionQueryArgs, ExecuteTransactionQuery, TransactionBlockQueryArgs,
         TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
         TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
         TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-        TransactionBlocksWithEffectsQuery, TransactionsFilter,
+        TransactionBlockFilter, TransactionBlocksWithEffectsQuery,
     },
     streams::stream_paginated_query,
 };
@@ -58,7 +58,7 @@ pub enum WaitForTx {
 impl Client {
     /// Get a transaction by its digest.
     pub async fn transaction(&self, digest: Digest) -> Result<Option<SignedTransaction>> {
-        let operation = TransactionBlockQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockQuery::build(TransactionBlockQueryArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -72,7 +72,7 @@ impl Client {
     /// Get a page of transactions based on the provided filters.
     pub async fn transactions(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
@@ -100,7 +100,7 @@ impl Client {
 
     /// Get a transaction's effects by its digest.
     pub async fn transaction_effects(&self, digest: Digest) -> Result<Option<TransactionEffects>> {
-        let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockEffectsQuery::build(TransactionBlockQueryArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -114,7 +114,7 @@ impl Client {
     /// Get a page of transactions' effects based on the provided filters.
     pub async fn transactions_effects(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
@@ -145,7 +145,7 @@ impl Client {
         &self,
         digest: Digest,
     ) -> Result<Option<TransactionDataEffects>> {
-        let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockQueryArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -170,7 +170,7 @@ impl Client {
     /// filters.
     pub async fn transactions_data_effects(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionDataEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
@@ -215,7 +215,7 @@ impl Client {
     /// Get a stream of transactions based on the (optional) transaction filter.
     pub fn transactions_stream(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<SignedTransaction>> + '_ {
         let filter = filter.into();
@@ -229,7 +229,7 @@ impl Client {
     /// transaction filter.
     pub fn transactions_effects_stream(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
         let filter = filter.into();
@@ -247,7 +247,7 @@ impl Client {
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects> {
         let wait_for = wait_for.into();
-        let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
+        let operation = ExecuteTransactionQuery::build(ExecuteTransactionQueryArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
             tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(tx).unwrap().as_ref()),
         });
@@ -270,7 +270,7 @@ impl Client {
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_tx_finalized`].
     pub async fn is_tx_indexed_on_node(&self, digest: Digest) -> Result<bool> {
-        let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockIndexedQuery::build(TransactionBlockQueryArgs {
             digest: digest.to_string(),
         });
         Ok(self
@@ -282,7 +282,7 @@ impl Client {
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
     pub async fn is_tx_finalized(&self, digest: Digest) -> Result<bool> {
-        let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockCheckpointQuery::build(TransactionBlockQueryArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -329,10 +329,8 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use iota_types::Digest;
-
     use crate::{
-        Client, PaginationFilter, query_types::TransactionsFilter, test_utils::test_client,
+        PaginationFilter, query_types::TransactionBlockFilter, test_utils::test_client,
     };
 
     #[tokio::test]
@@ -388,32 +386,71 @@ mod tests {
 
     #[tokio::test]
     async fn test_transaction_data_effects() {
-        let client = Client::new_devnet();
-
-        client
-            .transaction_data_effects(
-                Digest::from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf").unwrap(),
-            )
+        let client = test_client();
+        // Fetch a live digest rather than hard-coding one that can go stale.
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
             .await
-            .unwrap()
+            .map_err(|e| {
+                format!(
+                    "Transactions query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
             .unwrap();
+        let tx_digest = transactions.data()[0].transaction.digest();
+        let result = client
+            .transaction_data_effects(tx_digest)
+            .await
+            .map_err(|e| {
+                format!(
+                    "Transaction data effects query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
+        assert!(
+            result.is_some(),
+            "Transaction data/effects query returned None for {} network",
+            client.rpc_server(),
+        );
     }
 
     #[tokio::test]
     async fn test_transactions_data_effects() {
-        let client = Client::new_devnet();
-
-        client
+        let client = test_client();
+        // Fetch a live digest rather than hard-coding one that can go stale.
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
+            .await
+            .map_err(|e| {
+                format!(
+                    "Transactions query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
+            .unwrap();
+        let tx_digest = transactions.data()[0].transaction.digest().to_string();
+        let results = client
             .transactions_data_effects(
-                TransactionsFilter {
-                    transaction_ids: Some(vec![
-                        "Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf".to_string(),
-                    ]),
+                TransactionBlockFilter {
+                    transaction_ids: Some(vec![tx_digest]),
                     ..Default::default()
                 },
                 PaginationFilter::default(),
             )
             .await
+            .map_err(|e| {
+                format!(
+                    "Transactions data effects query failed for {} network: Error {e}",
+                    client.rpc_server()
+                )
+            })
             .unwrap();
+        assert!(
+            !results.is_empty(),
+            "Transactions data effects query returned no results for {} network",
+            client.rpc_server(),
+        );
     }
 }

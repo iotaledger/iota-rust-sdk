@@ -14,7 +14,7 @@ use crate::{
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
+        DynamicFieldQueryArgs, DynamicFieldsQueryArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
         DynamicObjectFieldQuery,
     },
     streams::stream_paginated_query,
@@ -62,7 +62,7 @@ impl Client {
         name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
-        let operation = DynamicFieldQuery::build(DynamicFieldArgs {
+        let operation = DynamicFieldQuery::build(DynamicFieldQueryArgs {
             address,
             name: crate::query_types::DynamicFieldName {
                 type_: type_.to_string(),
@@ -97,7 +97,7 @@ impl Client {
         name: impl Into<NameValue>,
     ) -> Result<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
-        let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
+        let operation = DynamicObjectFieldQuery::build(DynamicFieldQueryArgs {
             address,
             name: crate::query_types::DynamicFieldName {
                 type_: type_.to_string(),
@@ -125,7 +125,7 @@ impl Client {
         pagination_filter: PaginationFilter,
     ) -> Result<Page<DynamicFieldOutput>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
+        let operation = DynamicFieldsOwnerQuery::build(DynamicFieldsQueryArgs {
             address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),

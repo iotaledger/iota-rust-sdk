@@ -7,11 +7,11 @@ mod balance;
 mod chain;
 mod checkpoint;
 mod coin;
+mod common;
 mod dry_run;
 mod dynamic_fields;
 mod epoch;
 mod events;
-mod execute_tx;
 mod iota_names;
 mod move_view_call;
 mod normalized_move;
@@ -22,36 +22,34 @@ mod service_config;
 mod transaction;
 
 pub use active_validators::{
-    ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator, ValidatorConnection,
-    ValidatorCredentials, ValidatorSetQuery,
+    ActiveValidatorsQueryArgs, ActiveValidatorsQuery, EpochValidator, Validator,
+    ValidatorConnection, ValidatorCredentials, ValidatorSetQuery,
 };
-pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
+pub use balance::{Balance, BalanceQueryArgs, BalanceQuery, Owner};
 pub use chain::ChainIdentifierQuery;
 pub use checkpoint::{
-    CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
-    CheckpointsQuery,
+    CheckpointId, CheckpointQueryArgs, CheckpointQuery, CheckpointTotalTxQuery,
+    CheckpointsQueryArgs, CheckpointsQuery,
 };
-pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
-use cynic::impl_scalar;
+pub use coin::{CoinMetadata, CoinMetadataQueryArgs, CoinMetadataQuery};
+pub use common::*;
 pub use dry_run::{
-    DryRunArgs, DryRunEffect, DryRunMutation, DryRunQuery, DryRunResult, DryRunReturn, GasCoin,
-    Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
+    DryRunEffect, DryRunMutation, DryRunQueryArgs, DryRunQuery, DryRunResult, DryRunReturn,
+    GasCoin, Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
 };
 pub use dynamic_fields::{
-    DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
-    DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
+    DynamicFieldName, DynamicFieldQueryArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
+    DynamicFieldsQueryArgs, DynamicObjectFieldQuery,
 };
-pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
+pub use epoch::{Epoch, EpochQueryArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
-pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 pub use iota_names::{
-    IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
-    IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
-    NameRegistration, NameRegistrationConnection, ResolveIotaNamesAddressArgs,
-    ResolveIotaNamesAddressQuery,
+    IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
+    IotaNamesDefaultNameQueryArgs, IotaNamesDefaultNameQuery, IotaNamesRegistrationsQueryArgs,
+    IotaNamesRegistrationsQuery, NameRegistration, NameRegistrationConnection,
+    ResolveIotaNamesAddressQueryArgs, ResolveIotaNamesAddressQuery,
 };
-use iota_types::{Address, ObjectId};
-pub use move_view_call::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult};
+pub use move_view_call::{MoveViewCallQueryArgs, MoveViewCallQuery, MoveViewResult};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
@@ -63,112 +61,87 @@ pub use object::{
     ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
 };
 pub use packages::{
-    LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
-    PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
-    PackagesQuery, PackagesQueryArgs,
+    LatestPackageQuery, MovePackageConnection, MovePackage, MovePackageVersionFilter,
+    PackageCheckpointFilter, PackageQueryArgs, PackageQuery, PackageVersionsQueryArgs,
+    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
 };
 pub use protocol_config::{
     ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
-    ProtocolVersionArgs,
+    ProtocolConfigQueryArgs,
 };
-use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-    TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
-    TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-    TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    ExecuteTransactionBlockEffects, ExecuteTransactionQuery, ExecuteTransactionQueryArgs,
+    ExecutionResult, TransactionBlock, TransactionBlockCheckpointQuery,
+    TransactionBlockEffectsQuery, TransactionBlockFilter, TransactionBlockIndexedQuery,
+    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockQueryArgs,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
 };
-
-use crate::error;
 
 #[cynic::schema("rpc")]
 pub mod schema {}
 
 // ===========================================================================
-// Scalars
+// Deprecated Aliases (backward compatibility)
 // ===========================================================================
 
-impl_scalar!(Address, schema::IotaAddress);
-impl_scalar!(ObjectId, schema::IotaAddress);
-impl_scalar!(u64, schema::UInt53);
-impl_scalar!(JsonValue, schema::JSON);
+#[deprecated(note = "renamed to ActiveValidatorsQueryArgs")]
+pub type ActiveValidatorsArgs<'a> = ActiveValidatorsQueryArgs<'a>;
 
-#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
-#[cynic(graphql_type = "Base64")]
-pub struct Base64(pub String);
+#[deprecated(note = "renamed to BalanceQueryArgs")]
+pub type BalanceArgs = BalanceQueryArgs;
 
-#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
-#[cynic(graphql_type = "BigInt")]
-pub struct BigInt(pub String);
+#[deprecated(note = "renamed to CheckpointQueryArgs")]
+pub type CheckpointArgs = CheckpointQueryArgs;
 
-#[derive(cynic::Scalar, Debug, Clone)]
-#[cynic(graphql_type = "DateTime")]
-pub struct DateTime(pub String);
+#[deprecated(note = "renamed to CheckpointsQueryArgs")]
+pub type CheckpointsArgs<'a> = CheckpointsQueryArgs<'a>;
 
-#[derive(cynic::Scalar, Debug, Clone, derive_more::From)]
-#[cynic(graphql_type = "MoveData")]
-pub struct MoveData(pub serde_json::Value);
+#[deprecated(note = "renamed to CoinMetadataQueryArgs")]
+pub type CoinMetadataArgs<'a> = CoinMetadataQueryArgs<'a>;
 
-// ===========================================================================
-// Types used in several queries
-// ===========================================================================
+#[deprecated(note = "renamed to DryRunQueryArgs")]
+pub type DryRunArgs = DryRunQueryArgs;
 
-#[derive(cynic::QueryFragment, Debug, Clone, Copy)]
-#[cynic(schema = "rpc", graphql_type = "Address")]
-pub struct GQLAddress {
-    pub address: Address,
-}
+#[deprecated(note = "renamed to DynamicFieldQueryArgs")]
+pub type DynamicFieldArgs = DynamicFieldQueryArgs;
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
-#[cynic(schema = "rpc", graphql_type = "MoveObject")]
-pub struct MoveObject {
-    pub bcs: Option<Base64>,
-}
+#[deprecated(note = "renamed to DynamicFieldsQueryArgs")]
+pub type DynamicFieldConnectionArgs<'a> = DynamicFieldsQueryArgs<'a>;
 
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "MoveObject")]
-pub struct MoveObjectContents {
-    pub contents: Option<MoveValue>,
-}
+#[deprecated(note = "renamed to EpochQueryArgs")]
+pub type EpochArgs = EpochQueryArgs;
 
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "MoveValue")]
-pub struct MoveValue {
-    pub type_: MoveType,
-    pub bcs: Base64,
-    pub json: Option<JsonValue>,
-}
+#[deprecated(note = "renamed to ExecuteTransactionQueryArgs")]
+pub type ExecuteTransactionArgs = ExecuteTransactionQueryArgs;
 
-#[derive(cynic::QueryFragment, Debug, Clone)]
-#[cynic(schema = "rpc", graphql_type = "MoveType")]
-pub struct MoveType {
-    pub repr: String,
-}
+#[deprecated(note = "renamed to IotaNamesDefaultNameQueryArgs")]
+pub type IotaNamesDefaultNameArgs = IotaNamesDefaultNameQueryArgs;
 
-// ===========================================================================
-// Utility Types
-// ===========================================================================
+#[deprecated(note = "renamed to IotaNamesRegistrationsQueryArgs")]
+pub type IotaNamesRegistrationsArgs = IotaNamesRegistrationsQueryArgs;
 
-#[derive(Clone, Default, cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "PageInfo")]
-/// Information about pagination in a connection.
-pub struct PageInfo {
-    /// When paginating backwards, are there more items?
-    pub has_previous_page: bool,
-    /// Are there more items when paginating forwards?
-    pub has_next_page: bool,
-    /// When paginating backwards, the cursor to continue.
-    pub start_cursor: Option<String>,
-    /// When paginating forwards, the cursor to continue.
-    pub end_cursor: Option<String>,
-}
+#[deprecated(note = "renamed to MoveViewCallQueryArgs")]
+pub type MoveViewCallArgs = MoveViewCallQueryArgs;
 
-impl TryFrom<BigInt> for u64 {
-    type Error = error::Error;
+#[deprecated(note = "renamed to PackageQueryArgs")]
+pub type PackageArgs = PackageQueryArgs;
 
-    fn try_from(value: BigInt) -> Result<Self, Self::Error> {
-        Ok(value.0.parse::<u64>()?)
-    }
-}
+#[deprecated(note = "renamed to PackageVersionsQueryArgs")]
+pub type PackageVersionsArgs<'a> = PackageVersionsQueryArgs<'a>;
+
+#[deprecated(note = "renamed to ProtocolConfigQueryArgs")]
+pub type ProtocolVersionArgs = ProtocolConfigQueryArgs;
+
+#[deprecated(note = "renamed to ResolveIotaNamesAddressQueryArgs")]
+pub type ResolveIotaNamesAddressArgs = ResolveIotaNamesAddressQueryArgs;
+
+#[deprecated(note = "renamed to TransactionBlockQueryArgs")]
+pub type TransactionBlockArgs = TransactionBlockQueryArgs;
+
+#[deprecated(note = "renamed to TransactionBlockFilter")]
+pub type TransactionsFilter = TransactionBlockFilter;
+
+#[deprecated(note = "renamed to MovePackage")]
+pub type MovePackageQuery = MovePackage;

@@ -2,21 +2,31 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for active validator and validator set data.
+
 use crate::query_types::{Base64, BigInt, GQLAddress, MoveObject, ObjectId, PageInfo, schema};
+
+// ===========================================================================
+// Active Validators Queries
+// ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "ActiveValidatorsArgs"
+    variables = "ActiveValidatorsQueryArgs"
 )]
 pub struct ActiveValidatorsQuery {
     #[arguments(id: $id)]
     pub epoch: Option<EpochValidator>,
 }
 
+// ===========================================================================
+// Active Validators Query Args
+// ===========================================================================
+
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ActiveValidatorsArgs<'a> {
+pub struct ActiveValidatorsQueryArgs<'a> {
     pub id: Option<u64>,
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
@@ -24,11 +34,15 @@ pub struct ActiveValidatorsArgs<'a> {
     pub last: Option<i32>,
 }
 
+// ===========================================================================
+// Active Validators Types
+// ===========================================================================
+
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Epoch",
-    variables = "ActiveValidatorsArgs"
+    variables = "ActiveValidatorsQueryArgs"
 )]
 pub struct EpochValidator {
     pub validator_set: Option<ValidatorSetQuery>,
@@ -38,7 +52,7 @@ pub struct EpochValidator {
 #[cynic(
     schema = "rpc",
     graphql_type = "ValidatorSet",
-    variables = "ActiveValidatorsArgs"
+    variables = "ActiveValidatorsQueryArgs"
 )]
 pub struct ValidatorSetQuery {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
