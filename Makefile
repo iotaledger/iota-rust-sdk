@@ -79,6 +79,7 @@ bindings: ## Build all bindings
 	@$(MAKE) python
 	@$(MAKE) csharp
 	@$(MAKE) swift
+	@$(MAKE) typescript
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
@@ -87,6 +88,7 @@ bindings-example: ## Run a specific example for all bindings. Usage: make bindin
 	@$(MAKE) python-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) csharp-example $(word 2,$(MAKECMDGOALS))
 	@$(MAKE) swift-example $(word 2,$(MAKECMDGOALS))
+	@$(MAKE) typescript-example $(word 2,$(MAKECMDGOALS))
 
 .PHONY: bindings-examples
 bindings-examples: ## Run all bindings examples
@@ -95,6 +97,7 @@ bindings-examples: ## Run all bindings examples
 	@$(MAKE) python-examples
 	@$(MAKE) csharp-examples
 	@$(MAKE) swift-examples
+	@$(MAKE) typescript-examples
 
 .PHONY: bindings-examples-format-check
 bindings-examples-format-check: ## Check format of all bindings examples
@@ -103,6 +106,7 @@ bindings-examples-format-check: ## Check format of all bindings examples
 	@$(MAKE) python-examples-format-check
 	@$(MAKE) csharp-examples-format-check
 	@$(MAKE) swift-examples-format-check
+	@$(MAKE) typescript-examples-format-check
 
 .PHONY: bindings-examples-format
 bindings-examples-format: ## Format all bindings examples
@@ -111,6 +115,7 @@ bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) python-examples-format
 	@$(MAKE) csharp-examples-format
 	@$(MAKE) swift-examples-format
+	@$(MAKE) typescript-examples-format
 
 # Build ffi crate and detect platform
 define build_binding
@@ -315,6 +320,49 @@ swift-examples-format-check: ## Check format of all Swift bindings examples
 swift-examples-format: ## Format all Swift bindings examples
 	@swift-format format --recursive bindings/swift/examples --in-place
 
+.PHONY: typescript
+typescript: ## Build TypeScript bindings
+	@printf "Building TypeScript bindings...\n"
+	@$(build_binding) \
+	uniffi-bindgen-node generate target/release/libiota_sdk_ffi$${LIB_EXT} --crate-name iota_sdk_ffi --out-dir bindings/typescript/lib || exit $$?; \
+	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/typescript/lib/
+
+.PHONY: typescript-example
+typescript-example: ## Run a specific TypeScript example. Usage: make typescript-example example
+%:
+	@true
+typescript-example:
+	@printf "\nRunning TypeScript example \"$(word 2,$(MAKECMDGOALS))\"\n"
+	@cd bindings/typescript; \
+	npx tsx examples/$(word 2,$(MAKECMDGOALS)).ts || exit $$?; \
+	cd -
+
+# transaction_signer_callback: requires callback interface support not yet available in uniffi-bindgen-node
+# abstract_account: requires specific local network config (also fails in Go bindings)
+TYPESCRIPT_SKIP_EXAMPLES := transaction_signer_callback abstract_account
+
+.PHONY: typescript-examples
+typescript-examples: ## Run all TypeScript bindings examples
+	@for example in $$(find bindings/typescript/examples -name "*.ts" -not -path "*/release/*" -exec basename {} .ts \;); do \
+		skip=false; \
+		for s in $(TYPESCRIPT_SKIP_EXAMPLES); do \
+			if [ "$$example" = "$$s" ]; then skip=true; break; fi; \
+		done; \
+		if [ "$$skip" = "true" ]; then \
+			printf "\nSkipping TypeScript example \"$$example\"\n"; \
+		else \
+			$(MAKE) typescript-example "$$example" || exit $$?; \
+		fi; \
+	done
+
+.PHONY: typescript-examples-format-check
+typescript-examples-format-check: ## Check format of all TypeScript bindings examples
+	@cd bindings/typescript && npx prettier --check "examples/**/*.ts"
+
+.PHONY: typescript-examples-format
+typescript-examples-format: ## Format all TypeScript bindings examples
+	@cd bindings/typescript && npx prettier --write "examples/**/*.ts"
+
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
 %:
@@ -359,6 +407,11 @@ swift-release-example: ## Run the Swift release example
 	@printf "\nRunning Swift release example\n"
 	@cd bindings/swift/examples/release && swift run || exit $$?
 
+.PHONY: typescript-release-example
+typescript-release-example: ## Run the TypeScript release example
+	@printf "\nRunning TypeScript release example\n"
+	@cd bindings/typescript/examples/release && npm install && npx tsx example.ts || exit $$?
+
 .PHONY: release-examples
 release-examples: ## Run all release examples
 	@$(MAKE) rust-release-example
@@ -367,6 +420,7 @@ release-examples: ## Run all release examples
 	@$(MAKE) python-release-example
 	@$(MAKE) csharp-release-example
 	@$(MAKE) swift-release-example
+	@$(MAKE) typescript-release-example
 
 .PHONY: help
 help: ## Show this help

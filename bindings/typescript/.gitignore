@@ -1,0 +1,7 @@
+# Node modules
+node_modules
+
+# Native library files (platform-specific, built at compile time)
+lib/*.dylib
+lib/*.so
+lib/*.dll

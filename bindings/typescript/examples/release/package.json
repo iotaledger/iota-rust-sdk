@@ -1,0 +1,11 @@
+{
+  "name": "iota-sdk-typescript-release-example",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@iota/sdk": "latest"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}

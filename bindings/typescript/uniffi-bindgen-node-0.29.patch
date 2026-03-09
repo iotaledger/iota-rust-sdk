@@ -1,0 +1,445 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index a98f074..768e151 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -372,8 +372,6 @@ checksum = "6717a8d2a5a929a1a2eb43a12812498ed141a0bcfb7e8f7844fbdbe4303bba9f"
+ dependencies = [
+  "equivalent",
+  "hashbrown",
+- "serde",
+- "serde_core",
+ ]
+ 
+ [[package]]
+@@ -592,15 +590,6 @@ dependencies = [
+  "zmij",
+ ]
+ 
+-[[package]]
+-name = "serde_spanned"
+-version = "1.0.3"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "e24345aa0fe688594e73770a5f6d1b216508b4f93484c0026d521acd30134392"
+-dependencies = [
+- "serde_core",
+-]
+-
+ [[package]]
+ name = "siphasher"
+ version = "0.3.11"
+@@ -682,43 +671,13 @@ dependencies = [
+ 
+ [[package]]
+ name = "toml"
+-version = "0.9.8"
++version = "0.5.11"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f0dc8b1fb61449e27716ec0e1bdf0f6b8f3e8f6b05391e8497b8b6d7804ea6d8"
++checksum = "f4f7f0dd8d50a853a531c426359045b1998f04219d88799810762cd4ad314234"
+ dependencies = [
+- "indexmap",
+- "serde_core",
+- "serde_spanned",
+- "toml_datetime",
+- "toml_parser",
+- "toml_writer",
+- "winnow",
+-]
+-
+-[[package]]
+-name = "toml_datetime"
+-version = "0.7.3"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "f2cdb639ebbc97961c51720f858597f7f24c4fc295327923af55b74c3c724533"
+-dependencies = [
+- "serde_core",
+-]
+-
+-[[package]]
+-name = "toml_parser"
+-version = "1.0.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "c0cbe268d35bdb4bb5a56a2de88d0ad0eb70af5384a99d648cd4b3d04039800e"
+-dependencies = [
+- "winnow",
++ "serde",
+ ]
+ 
+-[[package]]
+-name = "toml_writer"
+-version = "1.0.4"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "df8b2b54733674ad286d16267dcfc7a71ed5c776e4ac7aa3c3e2561f7c637bf2"
+-
+ [[package]]
+ name = "unicode-ident"
+ version = "1.0.20"
+@@ -739,9 +698,9 @@ checksum = "b4ac048d71ede7ee76d585517add45da530660ef4390e49b098733c6e897f254"
+ 
+ [[package]]
+ name = "uniffi"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "c866f627c3f04c3df068b68bb2d725492caaa539dd313e2a9d26bb85b1a32f4e"
++checksum = "3291800a6b06569f7d3e15bdb6dc235e0f0c8bd3eb07177f430057feb076415f"
+ dependencies = [
+  "anyhow",
+  "cargo_metadata",
+@@ -771,9 +730,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_bindgen"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "7c8ca600167641ebe7c8ba9254af40492dda3397c528cc3b2f511bd23e8541a5"
++checksum = "a04b99fa7796eaaa7b87976a0dbdd1178dc1ee702ea00aca2642003aef9b669e"
+ dependencies = [
+  "anyhow",
+  "askama 0.13.1",
+@@ -797,9 +756,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_core"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "7e7a5a038ebffe8f4cf91416b154ef3c2468b18e828b7009e01b1b99938089f9"
++checksum = "f38a9a27529ccff732f8efddb831b65b1e07f7dea3fd4cacd4a35a8c4b253b98"
+ dependencies = [
+  "anyhow",
+  "bytes",
+@@ -809,9 +768,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_internal_macros"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "e3c2a6f93e7b73726e2015696ece25ca0ac5a5f1cf8d6a7ab5214dd0a01d2edf"
++checksum = "09acd2ce09c777dd65ee97c251d33c8a972afc04873f1e3b21eb3492ade16933"
+ dependencies = [
+  "anyhow",
+  "indexmap",
+@@ -822,9 +781,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_macros"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "64c6309fc36c7992afc03bc0c5b059c656bccbef3f2a4bc362980017f8936141"
++checksum = "5596f178c4f7aafa1a501c4e0b96236a96bc2ef92bdb453d83e609dad0040152"
+ dependencies = [
+  "camino",
+  "fs-err",
+@@ -839,9 +798,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_meta"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "0a138823392dba19b0aa494872689f97d0ee157de5852e2bec157ce6de9cdc22"
++checksum = "beadc1f460eb2e209263c49c4f5b19e9a02e00a3b2b393f78ad10d766346ecff"
+ dependencies = [
+  "anyhow",
+  "siphasher",
+@@ -851,9 +810,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_pipeline"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "8c27c4b515d25f8e53cc918e238c39a79c3144a40eaf2e51c4a7958973422c29"
++checksum = "dd76b3ac8a2d964ca9fce7df21c755afb4c77b054a85ad7a029ad179cc5abb8a"
+ dependencies = [
+  "anyhow",
+  "heck",
+@@ -864,9 +823,9 @@ dependencies = [
+ 
+ [[package]]
+ name = "uniffi_udl"
+-version = "0.30.0"
++version = "0.29.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "d0adacdd848aeed7af4f5af7d2f621d5e82531325d405e29463482becfdeafca"
++checksum = "4319cf905911d70d5b97ce0f46f101619a22e9a189c8c46d797a9955e9233716"
+ dependencies = [
+  "anyhow",
+  "textwrap",
+diff --git a/Cargo.toml b/Cargo.toml
+index 3f079fa..a7e6200 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -13,6 +13,6 @@ heck = "0.5.0"
+ serde = "1.0.228"
+ serde_json = "1.0.149"
+ textwrap = "0.16.2"
+-toml = "0.9.8"
+-uniffi = "0.30.0"
+-uniffi_bindgen = "0.30.0"
++toml = "0.5"
++uniffi = "0.29"
++uniffi_bindgen = "0.29"
+diff --git a/src/bindings/filters.rs b/src/bindings/filters.rs
+index 90c6689..4092de9 100644
+--- a/src/bindings/filters.rs
++++ b/src/bindings/filters.rs
+@@ -42,7 +42,7 @@ pub fn typescript_type_name(typ: &impl AsType, askama_values: &dyn askama::Value
+             typescript_type_name(&key_type, askama_values)?,
+             typescript_type_name(&value_type, askama_values)?,
+         ),
+-        Type::Custom { name, .. } => name.to_pascal_case(),
++        Type::Custom { builtin, .. } => typescript_type_name(&builtin, askama_values)?,
+     })
+ }
+ 
+@@ -67,6 +67,7 @@ pub fn typescript_ffi_type_name(ffi_type: &FfiType, askama_values: &dyn askama::
+         FfiType::MutReference(inner) => format!("/* MutReference to {} */ JsExternal", strip_comments(typescript_ffi_type_name(inner, askama_values)?)),
+         FfiType::Reference(inner) => format!("/* Reference to {} */ JsExternal", strip_comments(typescript_ffi_type_name(inner, askama_values)?)),
+         FfiType::VoidPointer => "void".into(), // ???
++        FfiType::RustArcPtr(_) => "/* RustArcPtr */ bigint".into(),
+     })
+ }
+ 
+@@ -75,22 +76,23 @@ pub fn typescript_ffi_datatype_name(ffi_type: &FfiType, askama_values: &dyn aska
+         FfiType::Int8 => "/* i8 */ DataType.U8".into(),
+         FfiType::Int16 => "DataType.I16".into(),
+         FfiType::Int32 => "DataType.I32".into(),
+-        FfiType::Int64 => "DataType.I64".into(),
++        FfiType::Int64 => "/* i64 */ DataType.BigInt".into(),
+         FfiType::UInt8 => "DataType.U8".into(),
+-        FfiType::UInt16 => "/* u16 */ DataType.U64".into(),
+-        FfiType::UInt32 => "/* u32 */ DataType.U64".into(),
+-        FfiType::UInt64 => "DataType.U64".into(),
++        FfiType::UInt16 => "/* u16 */ DataType.I32".into(),
++        FfiType::UInt32 => "/* u32 */ DataType.I32".into(),
++        FfiType::UInt64 => "/* u64 */ DataType.BigInt".into(),
+         FfiType::Float32 => "/* f32 */ DataType.Float".into(),
+         FfiType::Float64 => "/* f64 */ DataType.Double".into(), // FIXME: is this right for f64? I am not sure `number` is big enough?
+         FfiType::RustBuffer(_) => "DataType_UniffiRustBufferStruct".into(),
+         FfiType::ForeignBytes => "DataType_UniffiForeignBytes".into(),
+         FfiType::Callback(_name) => "/* callback */ DataType.External".into(),
+         FfiType::Struct(name) => format!("/* {} */ DataType.U8Array", typescript_ffi_struct_name(name, askama_values)?), // FIXME: this should make struct definitions in ffi-rs
+-        FfiType::Handle => "/* handle */ DataType.U64".into(),
++        FfiType::Handle => "/* handle */ DataType.BigInt".into(),
+         FfiType::RustCallStatus => "/* RustCallStatus */ DataType.External".into(),
+         FfiType::MutReference(inner) => format!("/* MutReference to {} */ DataType.External", strip_comments(typescript_ffi_type_name(inner, askama_values)?)),
+         FfiType::Reference(inner) => format!("/* Reference to {} */ DataType.External", strip_comments(typescript_ffi_type_name(inner, askama_values)?)),
+         FfiType::VoidPointer => "DataType.Void".into(), // ???
++        FfiType::RustArcPtr(_) => "/* RustArcPtr */ DataType.BigInt".into(),
+     })
+ }
+ 
+@@ -108,7 +110,7 @@ pub fn typescript_ffi_converter_name(typ: &impl AsType, askama_values: &dyn aska
+         Type::Float64 => "FfiConverterFloat64".into(),
+         Type::Boolean => "FfiConverterBool".into(),
+         Type::String => "FfiConverterString".into(),
+-        Type::Bytes => "FfiConverterBytes".into(),
++        Type::Bytes => "FfiConverterArrayBuffer".into(),
+         Type::Timestamp => "FfiConverterTimestamp".into(),
+         Type::Duration => "FfiConverterDuration".into(),
+         Type::Enum { name, .. } | Type::Record { name, .. } | Type::Object { name, .. } => typescript_ffi_converter_struct_enum_object_name(&name, askama_values)?,
+@@ -125,13 +127,13 @@ pub fn typescript_ffi_converter_name(typ: &impl AsType, askama_values: &dyn aska
+             typescript_ffi_converter_name(&key_type, askama_values)?,
+             typescript_ffi_converter_name(&value_type, askama_values)?,
+         ),
+-        Type::Custom { name, .. } => format!("/* custom? */ {}", name.to_pascal_case()), // FIXME: what should this be?
++        Type::Custom { builtin, .. } => typescript_ffi_converter_name(&builtin, askama_values)?,
+     })
+ }
+ 
+ pub fn typescript_ffi_converter_lift_with(target: String, askama_values: &dyn askama::Values, typ: &impl AsType) -> Result<String> {
+     Ok(match typ.as_type() {
+-        Type::String | Type::Map { .. } | Type::Sequence { .. } | Type::Enum { .. } | Type::Record { .. } => {
++        Type::String | Type::Bytes | Type::Map { .. } | Type::Sequence { .. } | Type::Enum { .. } | Type::Record { .. } | Type::Custom { .. } => {
+             format!("{}.lift(new UniffiRustBufferValue({target}).consumeIntoUint8Array())", typescript_ffi_converter_name(typ, askama_values)?)
+         },
+         Type::Optional { inner_type } => {
+@@ -143,7 +145,7 @@ pub fn typescript_ffi_converter_lift_with(target: String, askama_values: &dyn as
+ 
+ pub fn typescript_ffi_converter_lower_with(target: String, askama_values: &dyn askama::Values, typ: &impl AsType) -> Result<String> {
+     Ok(match typ.as_type() {
+-        Type::String | Type::Map { .. } | Type::Sequence { .. } | Type::Enum { .. } | Type::Record { .. } => {
++        Type::String | Type::Bytes | Type::Map { .. } | Type::Sequence { .. } | Type::Enum { .. } | Type::Record { .. } | Type::Custom { .. } => {
+             format!("UniffiRustBufferValue.allocateWithBytes({}.lower({target})).toStruct()", typescript_ffi_converter_name(typ, askama_values)?)
+         },
+         Type::Optional { inner_type } => {
+@@ -158,7 +160,31 @@ pub fn typescript_fn_name(raw_name: &str, _: &dyn askama::Values) -> Result<Stri
+ }
+ 
+ pub fn typescript_var_name(raw_name: &str, _: &dyn askama::Values) -> Result<String> {
+-    Ok(raw_name.to_lower_camel_case())
++    let name = raw_name.to_lower_camel_case();
++    Ok(escape_reserved_word(name))
++}
++
++/// Escape JavaScript/TypeScript reserved words and built-in globals by appending an underscore.
++fn escape_reserved_word(name: String) -> String {
++    match name.as_str() {
++        // JS/TS reserved words
++        "break" | "case" | "catch" | "class" | "const" | "continue" | "debugger" |
++        "default" | "delete" | "do" | "else" | "enum" | "export" | "extends" |
++        "false" | "finally" | "for" | "function" | "if" | "import" | "in" |
++        "instanceof" | "new" | "null" | "return" | "super" | "switch" | "this" |
++        "throw" | "true" | "try" | "typeof" | "var" | "void" | "while" | "with" |
++        "yield" | "let" | "static" | "implements" | "interface" | "package" |
++        "private" | "protected" | "public" | "arguments" | "async" | "await" |
++        // Built-in globals that must not be shadowed
++        "Object" | "Array" | "String" | "Number" | "Boolean" | "Symbol" | "BigInt" |
++        "Function" | "Date" | "RegExp" | "Error" | "Map" | "Set" | "WeakMap" |
++        "WeakSet" | "Promise" | "Proxy" | "Reflect" | "JSON" | "Math" | "Infinity" |
++        "NaN" | "undefined" | "globalThis" | "console" | "Buffer" | "ArrayBuffer" |
++        "DataView" | "Uint8Array" | "Int8Array" | "Float32Array" | "Float64Array" => {
++            format!("{name}_")
++        }
++        _ => name,
++    }
+ }
+ 
+ /// The name of a given argument to a extern c ffi function call
+@@ -167,7 +193,7 @@ pub fn typescript_argument_var_name(raw_name: &str, values: &dyn askama::Values)
+ }
+ 
+ pub fn typescript_class_name(raw_name: &str, _: &dyn askama::Values) -> Result<String> {
+-    Ok(raw_name.to_pascal_case())
++    Ok(escape_reserved_word(raw_name.to_pascal_case()))
+ }
+ 
+ pub fn typescript_protocol_name(raw_name: &str, values: &dyn askama::Values) -> Result<String> {
+diff --git a/src/bindings/generator.rs b/src/bindings/generator.rs
+index ea5c585..b2ce6f3 100644
+--- a/src/bindings/generator.rs
++++ b/src/bindings/generator.rs
+@@ -3,7 +3,7 @@
+ // file, You can obtain one at http://mozilla.org/MPL/2.0/
+ 
+ use std::borrow::Borrow;
+-use uniffi_bindgen::{ComponentInterface, interface::{AsType, FfiDefinition, FfiType, Type, Callable}};
++use uniffi_bindgen::{ComponentInterface, interface::{AsType, FfiDefinition, FfiType, Type, Callable, UniffiTrait}};
+ use anyhow::{Context, Result};
+ use askama::Template;
+ use heck::ToKebabCase;
+diff --git a/templates/node.ts b/templates/node.ts
+index 86b1763..8c03a8c 100644
+--- a/templates/node.ts
++++ b/templates/node.ts
+@@ -46,7 +46,7 @@
+       /*rustFutureFunc:*/ () => {
+         {% if out_verbose_logs -%}console.log("{{ func_def.ffi_func().name() }} async call starting...");{%- endif %}
+         const returnedHandle = FFI_DYNAMIC_LIB.{{ func_def.ffi_func().name() }}([
+-          {% if let Some(self_type) = func_def.self_type() -%}
++          {% if !associated_object_name.is_empty() -%}
+             {{ associated_object_name | typescript_ffi_object_factory_name }}.clonePointer(this)
+             {%- if !func_def.arguments().is_empty() %}, {% endif -%}
+           {% endif -%}
+@@ -57,7 +57,7 @@
+           {%- endfor -%}
+ 
+           {%- if func_def.ffi_func().has_rust_call_status_arg() -%}
+-            {%- if !func_def.arguments().is_empty() || func_def.self_type().is_some() %}, {% endif -%}
++            {%- if !func_def.arguments().is_empty() || !associated_object_name.is_empty() %}, {% endif -%}
+             callStatus
+           {%- endif %}
+         ]);
+@@ -93,10 +93,7 @@
+         FFI_DYNAMIC_LIB.{{ func_def.ffi_rust_future_poll(ci) }}([
+           handle,
+           unwrapped,
+-          // FIXME: the below should be able to passed through as a bigint, but ffi-rs doesn't seem
+-          // to be able to handle a bigint here even though this arg is a DataType.U64?
+-          // Investigate this - right now this hack could result in inadvertant precision loss.
+-          Number(callbackData) as unknown as bigint,
++          callbackData,
+         ]);
+         {% if out_verbose_logs -%}console.log('{{ func_def.ffi_func().name() }} async poll done');{%- endif %}
+       },
+@@ -125,7 +122,12 @@
+         /*liftFunc:*/ (_v) => { /* void return value */ },
+       {%- endif %}
+       /*liftString:*/ FfiConverterString.lift,
+-      /*asyncOpts:*/ asyncOpts_
++      /*asyncOpts:*/ asyncOpts_,
++      {% match func_def.throws_type() -%}
++        {%- when Some(err) -%}
++          /*errorHandler:*/ (buffer) => ["{{err | typescript_type_name}}", {{err | typescript_ffi_converter_name}}.lift(buffer)],
++        {%- when None -%}
++        {%- endmatch %}
+     );
+ 
+     return returnValue;
+@@ -148,7 +150,7 @@
+ 
+         {% if out_verbose_logs -%}console.log("{{ func_def.ffi_func().name() }} call starting...");{%- endif %}
+         const returnValue = FFI_DYNAMIC_LIB.{{ func_def.ffi_func().name() }}([
+-          {% if let Some(self_type) = func_def.self_type() -%}
++          {% if !associated_object_name.is_empty() -%}
+             {{ associated_object_name | typescript_ffi_object_factory_name }}.clonePointer(this)
+             {%- if !func_def.arguments().is_empty() %}, {% endif -%}
+           {% endif -%}
+@@ -159,7 +161,7 @@
+           {%- endfor -%}
+ 
+           {%- if func_def.ffi_func().has_rust_call_status_arg() -%}
+-            {%- if !func_def.arguments().is_empty() || func_def.self_type().is_some() %}, {% endif -%}
++            {%- if !func_def.arguments().is_empty() || !associated_object_name.is_empty() %}, {% endif -%}
+             callStatus
+           {%- endif %}
+         ]);
+@@ -425,6 +427,19 @@ export class {{ object_def.name() | typescript_class_name }} extends UniffiAbstr
+     }
+   {% endfor %}
+ 
++  // UniffiTrait implementations:
++  {% for trait_impl in object_def.uniffi_traits() %}
++    {%- match trait_impl -%}
++      {%- when UniffiTrait::Display { fmt } -%}
++        toString(): string {
++          {%- call function_call_body(fmt, object_def.name()) -%}
++        }
++      {%- when UniffiTrait::Debug { fmt } -%}
++      {%- when UniffiTrait::Eq { eq, ne } -%}
++      {%- when UniffiTrait::Hash { hash } -%}
++    {%- endmatch %}
++  {% endfor %}
++
+   /**
+    * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
+    */
+@@ -497,14 +512,9 @@ const {{ object_def.name() | typescript_ffi_object_factory_name }}: UniffiObject
+         return uniffiCaller.rustCall(
+           /*caller:*/ (callStatus) => {
+             return FFI_DYNAMIC_LIB.{{ object_def.ffi_object_clone().name() }}([
+-              {% for arg in object_def.ffi_object_clone().arguments() -%}
+-                {{ arg.name() | typescript_argument_var_name }}
+-                {%- if !loop.last %}, {% endif %}
+-              {%- endfor -%}
+-
++              handleArg
+               {%- if object_def.ffi_object_clone().has_rust_call_status_arg() -%}
+-                {%- if !object_def.ffi_object_clone().arguments().is_empty() %}, {% endif -%}
+-                callStatus
++                , callStatus
+               {%- endif %}
+             ]);
+           },
+@@ -516,14 +526,9 @@ const {{ object_def.name() | typescript_ffi_object_factory_name }}: UniffiObject
+         uniffiCaller.rustCall(
+           /*caller:*/ (callStatus) => {
+             return FFI_DYNAMIC_LIB.{{ object_def.ffi_object_free().name() }}([
+-              {% for arg in object_def.ffi_object_free().arguments() -%}
+-                {{ arg.name() | typescript_argument_var_name }}
+-                {%- if !loop.last %}, {% endif %}
+-              {%- endfor -%}
+-
++              handleArg
+               {%- if object_def.ffi_object_free().has_rust_call_status_arg() -%}
+-                {%- if !object_def.ffi_object_free().arguments().is_empty() %}, {% endif -%}
+-                callStatus
++                , callStatus
+               {%- endif %}
+             ]);
+           },
