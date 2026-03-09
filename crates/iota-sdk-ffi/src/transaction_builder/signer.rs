@@ -3,6 +3,22 @@
 
 use std::sync::Arc;
 
+// Platform-conditional thread-safety helper.
+// uniffi's `wasm-unstable-single-threaded` feature does not generate Send+Sync
+// impls for callback handler types, so the trait itself can't require Send+Sync
+// on wasm32 or the generated `impl TransactionSignerFn for UniFFICallback…`
+// won't satisfy the supertrait bounds.
+// On all other targets uniffi expects Arc<dyn Trait> to be Send+Sync, so the
+// supertrait must carry those bounds.
+#[cfg(not(target_arch = "wasm32"))]
+pub(crate) trait ThreadSafety: Send + Sync {}
+#[cfg(not(target_arch = "wasm32"))]
+impl<T: Send + Sync> ThreadSafety for T {}
+#[cfg(target_arch = "wasm32")]
+pub(crate) trait ThreadSafety {}
+#[cfg(target_arch = "wasm32")]
+impl<T> ThreadSafety for T {}
+
 use crate::{
     error::Result,
     types::{
@@ -21,9 +37,11 @@ pub struct TransactionSignerFnOutput {
 ///
 /// This trait can be implemented downstream to enable signing when using the
 /// `TransactionBuilder::execute` function.
+#[allow(private_bounds)]
 #[uniffi::export(with_foreign)]
-#[async_trait::async_trait]
-pub trait TransactionSignerFn: Send + Sync + std::fmt::Debug {
+#[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
+pub trait TransactionSignerFn: ThreadSafety + std::fmt::Debug {
     /// Sign a transaction and return a `UserSignature`.
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput>;
 }
@@ -38,7 +56,8 @@ mod crypto_signers {
         simple::SimpleKeypair,
     };
 
-    #[async_trait::async_trait]
+    #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+    #[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
     impl TransactionSignerFn for Ed25519PrivateKey {
         async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
             let signature = self.0.sign_transaction(&transaction.0)?;
@@ -49,7 +68,8 @@ mod crypto_signers {
         }
     }
 
-    #[async_trait::async_trait]
+    #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+    #[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
     impl TransactionSignerFn for Secp256k1PrivateKey {
         async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
             let signature = self.0.sign_transaction(&transaction.0)?;
@@ -60,7 +80,8 @@ mod crypto_signers {
         }
     }
 
-    #[async_trait::async_trait]
+    #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+    #[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
     impl TransactionSignerFn for Secp256r1PrivateKey {
         async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
             let signature = self.0.sign_transaction(&transaction.0)?;
@@ -71,7 +92,8 @@ mod crypto_signers {
         }
     }
 
-    #[async_trait::async_trait]
+    #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+    #[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
     impl TransactionSignerFn for SimpleKeypair {
         async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
             let signature = self.0.sign_transaction(&transaction.0)?;
@@ -83,7 +105,8 @@ mod crypto_signers {
     }
 }
 
-#[async_trait::async_trait]
+#[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
 impl TransactionSignerFn for MoveAuthenticator {
     async fn sign(&self, _transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput> {
         let signature = UserSignature::new_move_authenticator(self);

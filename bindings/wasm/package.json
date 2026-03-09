@@ -1,0 +1,17 @@
+{
+  "name": "iota-sdk-wasm",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
+    "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/",
+    "serve": "pnpm run build && npx http-server . -c-1 -p 5173"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "packageManager": "pnpm@10.14.0",
+  "dependencies": {
+    "uniffi-bindgen-react-native": "0.29.3-1"
+  }
+}
