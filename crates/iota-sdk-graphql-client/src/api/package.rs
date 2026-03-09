@@ -15,8 +15,8 @@ use crate::{
     query_types::{
         LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
         NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
-        NormalizedMoveModuleQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery,
-        PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+        NormalizedMoveModuleQueryArgs, PackageQueryArgs, PackageCheckpointFilter, PackageQuery,
+        PackageVersionsQueryArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
     },
 };
 
@@ -37,7 +37,7 @@ impl Client {
         address: Address,
         version: impl Into<Option<u64>>,
     ) -> Result<Option<MovePackage>> {
-        let operation = PackageQuery::build(PackageArgs {
+        let operation = PackageQuery::build(PackageQueryArgs {
             address,
             version: version.into(),
         });
@@ -65,7 +65,7 @@ impl Client {
         before_version: impl Into<Option<u64>>,
     ) -> Result<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = PackageVersionsQuery::build(PackageVersionsArgs {
+        let operation = PackageVersionsQuery::build(PackageVersionsQueryArgs {
             address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
@@ -102,7 +102,7 @@ impl Client {
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
     pub async fn package_latest(&self, address: Address) -> Result<Option<MovePackage>> {
-        let operation = LatestPackageQuery::build(PackageArgs {
+        let operation = LatestPackageQuery::build(PackageQueryArgs {
             address,
             version: None,
         });

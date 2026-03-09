@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for checkpoints.
+
 use chrono::DateTime as ChronoDT;
 use iota_types::{CheckpointSummary, Digest, GasCostSummary as NativeGasCostSummary};
 
@@ -16,14 +18,14 @@ use crate::{
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointQueryArgs")]
 pub struct CheckpointQuery {
     #[arguments(id: $id)]
     pub checkpoint: Option<Checkpoint>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointQueryArgs")]
 pub struct CheckpointTotalTxQuery {
     #[arguments(id: $id)]
     pub checkpoint: Option<CheckpointTotalTx>,
@@ -36,7 +38,7 @@ pub struct CheckpointTotalTx {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointsArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointsQueryArgs")]
 pub struct CheckpointsQuery {
     pub checkpoints: CheckpointConnection,
 }
@@ -49,7 +51,7 @@ pub struct CheckpointConnection {
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct CheckpointsArgs<'a> {
+pub struct CheckpointsQueryArgs<'a> {
     pub first: Option<i32>,
     pub after: Option<&'a str>,
     pub last: Option<i32>,
@@ -61,7 +63,7 @@ pub struct CheckpointsArgs<'a> {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct CheckpointArgs {
+pub struct CheckpointQueryArgs {
     pub id: CheckpointId,
 }
 

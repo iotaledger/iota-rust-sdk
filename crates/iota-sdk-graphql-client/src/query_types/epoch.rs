@@ -2,20 +2,22 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for epoch data and validator sets.
+
 use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 
 // ===========================================================================
 // Epoch Queries
 // ===========================================================================
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochQueryArgs")]
 pub struct EpochQuery {
     #[arguments(id: $id)]
     pub epoch: Option<Epoch>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochQueryArgs")]
 pub struct EpochSummaryQuery {
     #[arguments(id: $id)]
     pub epoch: Option<EpochSummary>,
@@ -26,7 +28,7 @@ pub struct EpochSummaryQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct EpochArgs {
+pub struct EpochQueryArgs {
     pub id: Option<u64>,
 }
 

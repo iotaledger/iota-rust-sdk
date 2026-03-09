@@ -7,7 +7,7 @@ use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 use crate::{
     Client,
     error::Result,
-    query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
+    query_types::{MoveViewCallQueryArgs, MoveViewCallQuery, MoveViewResult},
 };
 
 impl Client {
@@ -38,7 +38,7 @@ impl Client {
         type_arguments: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
     ) -> Result<MoveViewResult> {
-        let operation = MoveViewCallQuery::build(MoveViewCallArgs {
+        let operation = MoveViewCallQuery::build(MoveViewCallQueryArgs {
             function_name: function_name.into(),
             type_arguments: type_arguments.into(),
             arguments: arguments.into(),

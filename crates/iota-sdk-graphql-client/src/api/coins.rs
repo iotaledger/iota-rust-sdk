@@ -12,7 +12,7 @@ use crate::{
     Client,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery, ObjectFilter},
+    query_types::{CoinMetadata, CoinMetadataQueryArgs, CoinMetadataQuery, ObjectFilter},
     streams::stream_paginated_query,
 };
 
@@ -98,7 +98,7 @@ impl Client {
 
     /// Get the coin metadata for the coin type.
     pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
-        let operation = CoinMetadataQuery::build(CoinMetadataArgs { coin_type });
+        let operation = CoinMetadataQuery::build(CoinMetadataQueryArgs { coin_type });
         let response = self.run_query(&operation).await?;
 
         Ok(response.coin_metadata)

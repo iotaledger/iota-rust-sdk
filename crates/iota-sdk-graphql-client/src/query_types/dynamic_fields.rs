@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for dynamic fields on IOTA objects.
+
 use std::str::FromStr;
 
 use base64ct::Encoding;
@@ -12,11 +14,15 @@ use crate::{
     query_types::{Address, Base64, JsonValue, MoveObjectContents, MoveValue, PageInfo, schema},
 };
 
+// ===========================================================================
+// Dynamic Field Queries
+// ===========================================================================
+
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "DynamicFieldConnectionArgs"
+    variables = "DynamicFieldsQueryArgs"
 )]
 pub struct DynamicFieldsOwnerQuery {
     #[arguments(address: $address)]
@@ -26,7 +32,7 @@ pub struct DynamicFieldsOwnerQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Owner",
-    variables = "DynamicFieldConnectionArgs"
+    variables = "DynamicFieldsQueryArgs"
 )]
 pub struct ObjectOwner {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
@@ -34,33 +40,41 @@ pub struct ObjectOwner {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldQueryArgs")]
 pub struct DynamicFieldQuery {
     #[arguments(address: $address)]
     pub owner: Option<OwnerField>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldArgs")]
+#[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldQueryArgs")]
 pub struct OwnerField {
     #[arguments(name: $name)]
     pub dynamic_field: Option<DynamicField>,
 }
 
+// ===========================================================================
+// Dynamic Field Query Args
+// ===========================================================================
+
 #[derive(cynic::QueryVariables, Debug)]
-pub struct DynamicFieldArgs {
+pub struct DynamicFieldQueryArgs {
     pub address: Address,
     pub name: DynamicFieldName,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct DynamicFieldConnectionArgs<'a> {
+pub struct DynamicFieldsQueryArgs<'a> {
     pub address: Address,
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
     pub first: Option<i32>,
     pub last: Option<i32>,
 }
+
+// ===========================================================================
+// Dynamic Field Types
+// ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DynamicFieldConnection")]
@@ -95,17 +109,21 @@ pub struct DynamicFieldName {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldArgs")]
+#[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldQueryArgs")]
 pub struct DynamicObjectField {
     #[arguments(name: $name)]
     pub dynamic_object_field: Option<DynamicField>,
 }
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldQueryArgs")]
 pub struct DynamicObjectFieldQuery {
     #[arguments(address: $address)]
     pub owner: Option<DynamicObjectField>,
 }
+
+// ===========================================================================
+// Conversions
+// ===========================================================================
 
 impl DynamicFieldValue {
     /// Returns the JSON representation of the field value, if available.

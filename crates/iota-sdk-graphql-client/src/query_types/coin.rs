@@ -2,12 +2,14 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for coin metadata.
+
 // ===========================================================================
 // Coin(s) Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "CoinMetadataArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "CoinMetadataQueryArgs")]
 pub struct CoinMetadataQuery {
     #[arguments(coinType: $coin_type)]
     pub coin_metadata: Option<CoinMetadata>,
@@ -18,7 +20,7 @@ pub struct CoinMetadataQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct CoinMetadataArgs<'a> {
+pub struct CoinMetadataQueryArgs<'a> {
     pub coin_type: &'a str,
 }
 

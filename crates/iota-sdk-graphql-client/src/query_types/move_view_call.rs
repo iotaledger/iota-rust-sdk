@@ -1,7 +1,13 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for Move view calls (off-chain execution of Move functions).
+
 use crate::query_types::{JsonValue, schema};
+
+// ===========================================================================
+// Move View Call Queries
+// ===========================================================================
 
 /// GraphQL query for executing a Move View Function.
 ///
@@ -18,11 +24,35 @@ use crate::query_types::{JsonValue, schema};
 /// Returned results are resolved (Move types deserialized) and formatted in
 /// JSON.
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "MoveViewCallArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "MoveViewCallQueryArgs")]
 pub struct MoveViewCallQuery {
     #[arguments(functionName: $function_name, typeArgs: $type_arguments, arguments: $arguments)]
     pub move_view_call: MoveViewResult,
 }
+
+// ===========================================================================
+// Move View Call Query Args
+// ===========================================================================
+
+/// Arguments for the Move View Call GraphQL query.
+///
+/// The function name should be fully qualified as
+/// `<package_id>::<module_name>::<function_name>`,
+/// e.g., `0x3::iota_system::get_total_iota_supply`.
+#[derive(cynic::QueryVariables, Debug)]
+pub struct MoveViewCallQueryArgs {
+    /// The Move function fully qualified name as
+    /// `<package_id>::<module_name>::<function_name>`.
+    pub function_name: String,
+    /// The type arguments of the Move function.
+    pub type_arguments: Option<Vec<String>>,
+    /// The arguments to be passed into the Move function, in JSON format.
+    pub arguments: Option<Vec<JsonValue>>,
+}
+
+// ===========================================================================
+// Move View Call Types
+// ===========================================================================
 
 /// The result of executing a Move View Function.
 ///
@@ -38,20 +68,4 @@ pub struct MoveViewResult {
     /// The return values of the Move view function, resolved and formatted as
     /// JSON.
     pub results: Option<Vec<JsonValue>>,
-}
-
-/// Arguments for the Move View Call GraphQL query.
-///
-/// The function name should be fully qualified as
-/// `<package_id>::<module_name>::<function_name>`,
-/// e.g., `0x3::iota_system::get_total_iota_supply`.
-#[derive(cynic::QueryVariables, Debug)]
-pub struct MoveViewCallArgs {
-    /// The Move function fully qualified name as
-    /// `<package_id>::<module_name>::<function_name>`.
-    pub function_name: String,
-    /// The type arguments of the Move function.
-    pub type_arguments: Option<Vec<String>>,
-    /// The arguments to be passed into the Move function, in JSON format.
-    pub arguments: Option<Vec<JsonValue>>,
 }

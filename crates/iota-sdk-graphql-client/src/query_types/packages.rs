@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query types for Move packages.
+
 use iota_types::Address;
 
 use crate::query_types::{Base64, PageInfo, schema};
@@ -11,10 +13,10 @@ use crate::query_types::{Base64, PageInfo, schema};
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageQueryArgs")]
 pub struct PackageQuery {
     #[arguments(address: $address, version: $version)]
-    pub package: Option<MovePackageQuery>,
+    pub package: Option<MovePackage>,
 }
 
 // ===========================================================================
@@ -22,21 +24,21 @@ pub struct PackageQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageQueryArgs")]
 pub struct LatestPackageQuery {
     #[arguments(address: $address)]
-    pub latest_package: Option<MovePackageQuery>,
+    pub latest_package: Option<MovePackage>,
 }
 
 #[derive(cynic::QueryVariables, Debug, Clone)]
-pub struct PackageArgs {
+pub struct PackageQueryArgs {
     pub address: Address,
     pub version: Option<u64>,
 }
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
-pub struct MovePackageQuery {
+pub struct MovePackage {
     pub address: Address,
     pub bcs: Option<Base64>,
 }
@@ -75,7 +77,7 @@ pub struct PackageCheckpointFilter {
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageConnection")]
 pub struct MovePackageConnection {
-    pub nodes: Vec<MovePackageQuery>,
+    pub nodes: Vec<MovePackage>,
     pub page_info: PageInfo,
 }
 
@@ -87,7 +89,7 @@ pub struct MovePackageConnection {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "PackageVersionsArgs"
+    variables = "PackageVersionsQueryArgs"
 )]
 pub struct PackageVersionsQuery {
     #[arguments(address: $address, after: $after, first: $first, last: $last, before: $before, filter:$filter)]
@@ -95,7 +97,7 @@ pub struct PackageVersionsQuery {
 }
 
 #[derive(cynic::QueryVariables, Debug, Clone)]
-pub struct PackageVersionsArgs<'a> {
+pub struct PackageVersionsQueryArgs<'a> {
     pub address: Address,
     pub after: Option<&'a str>,
     pub first: Option<i32>,

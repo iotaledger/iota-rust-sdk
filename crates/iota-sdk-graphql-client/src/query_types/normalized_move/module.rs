@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, MoveAbility, MoveFunction, MovePackageQuery, OpenMoveType, PageInfo, schema,
+    Address, MoveAbility, MoveFunction, OpenMoveType, PageInfo, schema,
 };
+use crate::query_types::MovePackage as PackageMovePackage;
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(
@@ -95,7 +96,7 @@ pub struct MoveModuleConnection {
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
 pub struct MoveModuleQuery {
-    pub package: MovePackageQuery,
+    pub package: PackageMovePackage,
     pub name: String,
 }
 
