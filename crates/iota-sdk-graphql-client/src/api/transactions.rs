@@ -330,7 +330,7 @@ impl Client {
 #[cfg(test)]
 mod tests {
     use crate::{
-        PaginationFilter, query_types::TransactionBlockFilter, test_utils::test_client,
+        PaginationFilter, query_types::TransactionsFilter, test_utils::test_client,
     };
 
     #[tokio::test]
