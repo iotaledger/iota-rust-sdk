@@ -1,0 +1,29 @@
+[package]
+name = "iota-sdk-wasm"
+version = "0.0.0"
+edition = "2018"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+
+[dependencies]
+iota-sdk-ffi = { path = "../iota-sdk-ffi" }
+# We want to ensure that the version of wasm-bindgen is selected by the
+# uniffi-runtime-javascript crate.
+# cargo is smart enough to do this if we don't put any further restrictions
+# on it.
+uniffi-runtime-javascript = { git = "https://github.com/jhugman/uniffi-bindgen-react-native", tag = "0.29.3-1", features = ["wasm32"] }
+wasm-bindgen = "*"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# getrandom 0.3 renamed the js feature to wasm_js
+getrandom = { version = "0.3", features = ["wasm_js"] }
+console_error_panic_hook = "0.1"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
