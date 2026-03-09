@@ -433,7 +433,7 @@ mod tests {
         let tx_digest = transactions.data()[0].transaction.digest().to_string();
         let results = client
             .transactions_data_effects(
-                TransactionBlockFilter {
+                TransactionsFilter {
                     transaction_ids: Some(vec![tx_digest]),
                     ..Default::default()
                 },

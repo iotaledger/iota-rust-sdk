@@ -7,14 +7,14 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
+        val client = GraphQlClient.newTestnet()
 
         val sender = Address.zero()
 
         val iotaNamesPackageAddress =
-            Address.fromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
+            Address.fromHex("0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea")
         val iotaNamesObjectId =
-            ObjectId.fromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
+            ObjectId.fromHex("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
         val stdAddress = Address.std()
 
         val name = "name.iota"

@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
     transactions = await client.transactions(
         TransactionsFilter(function="0x3::iota_system::request_add_stake"),)
     for transaction in transactions.data:

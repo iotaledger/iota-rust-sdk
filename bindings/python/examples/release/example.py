@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     chain_id = await client.chain_id()
     print("Chain ID:", chain_id)

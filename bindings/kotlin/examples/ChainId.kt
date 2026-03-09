@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
+        val client = GraphQlClient.newTestnet()
         val chainId = client.chainId()
         println("Chain ID: $chainId")
     } catch (e: Exception) {
