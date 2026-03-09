@@ -6,7 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_with::{DeserializeAs, SerializeAs};
 
 use super::Argument;
-use crate::{ObjectId, ObjectReference};
+use crate::{Identifier, ObjectId, ObjectReference};
 
 mod transaction_kind {
     use super::*;
@@ -1051,6 +1051,23 @@ mod transaction_expiration {
         ) -> schemars::schema::Schema {
             ReadableTransactionExpiration::json_schema(generator)
         }
+    }
+}
+
+/// Deserialize an `Identifier` without validating that it is a valid Move
+/// identifier. This is used for deserializing the module in `MoveCall`
+/// commands, where BCS bytes could contain invalid identifiers but we still
+/// want to be able to deserialize them and let the move VM handle the
+/// validation.
+pub(super) fn deserialize_ident_unchecked<'de, D>(d: D) -> Result<Identifier, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    if d.is_human_readable() {
+        serde::Deserialize::deserialize(d)
+    } else {
+        let s: String = serde::Deserialize::deserialize(d)?;
+        Ok(Identifier::new_unchecked(s))
     }
 }
 

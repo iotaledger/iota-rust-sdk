@@ -1631,6 +1631,10 @@ pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,
     /// The specific module in the package containing the function.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "serialization::deserialize_ident_unchecked")
+    )]
     pub module: Identifier,
     /// The function to be called.
     pub function: Identifier,
