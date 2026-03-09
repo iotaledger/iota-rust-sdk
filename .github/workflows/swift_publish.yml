@@ -63,7 +63,7 @@ jobs:
         run: rustup target add ${{ matrix.target }}
 
       - name: Build ${{ matrix.os }} ${{ matrix.target }} library
-        run: RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/${{ matrix.lib }}" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
+        run: ${{ contains(matrix.target, 'ios') && 'IPHONEOS_DEPLOYMENT_TARGET=18.5' || '' }} RUSTFLAGS="-C link-args=-Wl,-install_name,@rpath/${{ matrix.lib }}" cargo build -p iota-sdk-ffi --lib --release --target ${{ matrix.target }}
 
       - name: Prepare library archive
         run: |
