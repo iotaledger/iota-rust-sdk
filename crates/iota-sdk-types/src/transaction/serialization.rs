@@ -400,6 +400,116 @@ mod version_assignments {
         }
     }
 
+    #[derive(serde::Serialize)]
+    struct BinaryVersionAssignmentRef<'a> {
+        object_id: &'a ObjectId,
+        version: &'a crate::Version,
+    }
+
+    #[derive(serde::Deserialize)]
+    struct BinaryVersionAssignment {
+        object_id: ObjectId,
+        version: crate::Version,
+    }
+
+    impl Serialize for VersionAssignment {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                use serde::ser::SerializeTuple;
+                let mut tuple = serializer.serialize_tuple(2)?;
+                tuple.serialize_element(&self.object_id)?;
+                tuple.serialize_element(&self.version.to_string())?;
+                tuple.end()
+            } else {
+                let binary = BinaryVersionAssignmentRef {
+                    object_id: &self.object_id,
+                    version: &self.version,
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for VersionAssignment {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let (object_id, version): (ObjectId, String) =
+                    Deserialize::deserialize(deserializer)?;
+                let version = version
+                    .parse::<crate::Version>()
+                    .map_err(serde::de::Error::custom)?;
+                Ok(VersionAssignment { object_id, version })
+            } else {
+                BinaryVersionAssignment::deserialize(deserializer).map(|b| VersionAssignment {
+                    object_id: b.object_id,
+                    version: b.version,
+                })
+            }
+        }
+    }
+
+    #[derive(serde::Serialize)]
+    struct BinaryCancelledTransactionRef<'a> {
+        digest: &'a crate::Digest,
+        version_assignments: &'a Vec<VersionAssignment>,
+    }
+
+    #[derive(serde::Deserialize)]
+    struct BinaryCancelledTransaction {
+        digest: crate::Digest,
+        version_assignments: Vec<VersionAssignment>,
+    }
+
+    impl Serialize for CancelledTransaction {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                use serde::ser::SerializeTuple;
+                let mut tuple = serializer.serialize_tuple(2)?;
+                tuple.serialize_element(&self.digest)?;
+                tuple.serialize_element(&self.version_assignments)?;
+                tuple.end()
+            } else {
+                let binary = BinaryCancelledTransactionRef {
+                    digest: &self.digest,
+                    version_assignments: &self.version_assignments,
+                };
+                binary.serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for CancelledTransaction {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                let (digest, version_assignments): (crate::Digest, Vec<VersionAssignment>) =
+                    Deserialize::deserialize(deserializer)?;
+                Ok(CancelledTransaction {
+                    digest,
+                    version_assignments,
+                })
+            } else {
+                BinaryCancelledTransaction::deserialize(deserializer).map(|b| {
+                    CancelledTransaction {
+                        digest: b.digest,
+                        version_assignments: b.version_assignments,
+                    }
+                })
+            }
+        }
+    }
+
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for VersionAssignment {
         fn schema_name() -> String {
@@ -411,7 +521,6 @@ mod version_assignments {
         ) -> schemars::schema::Schema {
             use schemars::schema::{ArrayValidation, InstanceType, SchemaObject};
 
-            // Tuple: [ObjectId, Version]
             SchemaObject {
                 instance_type: Some(InstanceType::Array.into()),
                 array: Some(Box::new(ArrayValidation {
@@ -440,7 +549,6 @@ mod version_assignments {
         ) -> schemars::schema::Schema {
             use schemars::schema::{ArrayValidation, InstanceType, SchemaObject};
 
-            // Tuple: [Digest, Vec<VersionAssignment>]
             SchemaObject {
                 instance_type: Some(InstanceType::Array.into()),
                 array: Some(Box::new(ArrayValidation {
@@ -478,8 +586,8 @@ mod version_assignments {
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
             use schemars::schema::{
-                ArrayValidation, InstanceType, ObjectValidation, Schema, SchemaObject,
-                SingleOrVec, SubschemaValidation,
+                ArrayValidation, InstanceType, ObjectValidation, Schema, SchemaObject, SingleOrVec,
+                SubschemaValidation,
             };
 
             // Externally tagged enum with oneOf
@@ -507,8 +615,7 @@ mod version_assignments {
                                         instance_type: Some(InstanceType::Array.into()),
                                         array: Some(Box::new(ArrayValidation {
                                             items: Some(SingleOrVec::Single(Box::new(
-                                                generator
-                                                    .subschema_for::<CancelledTransaction>(),
+                                                generator.subschema_for::<CancelledTransaction>(),
                                             ))),
                                             ..Default::default()
                                         })),
