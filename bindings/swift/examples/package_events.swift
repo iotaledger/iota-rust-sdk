@@ -11,7 +11,7 @@ struct PackageEventsExample {
     let events = try await client.events(
       filter: EventFilter(
         eventType:
-          "0x7aec8176867a0c8d2803d758ebf98226d301ef0f00393879ea718f6bd1554f16::registry::NameRecordAddedEvent"
+          "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
       ),
       paginationFilter: PaginationFilter(direction: Direction.forward, limit: 10)
     )
