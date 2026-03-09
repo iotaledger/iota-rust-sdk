@@ -27,7 +27,6 @@ pub struct MoveAuthenticatorV1 {
     /// Input objects or primitive values
     call_args: Vec<Input>,
     /// Type arguments for the Move authenticate function
-    #[cfg_attr(feature = "schemars", schemars(with = "Vec<String>"))]
     type_args: Vec<TypeTag>,
     /// The object that is authenticated. Represents the account being the
     /// sender of the transaction.
