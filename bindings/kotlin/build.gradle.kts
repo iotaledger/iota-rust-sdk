@@ -162,3 +162,7 @@ tasks.whenTaskAdded {
         (this as Jar).exclude("**/*.so", "**/*.dylib", "**/*.dll")
     }
 }
+
+tasks.dokkaGfm {
+    outputDirectory.set(layout.projectDirectory.dir("../../docs/kotlin"))
+}
