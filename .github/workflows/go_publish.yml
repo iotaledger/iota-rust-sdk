@@ -122,11 +122,12 @@ jobs:
         id: set-version
         run: |
           if [ -n "${{ inputs.version }}" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            version="${{ inputs.version }}"
           else
             version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-go-sdk-v(.*)|\1|p')
-            echo "version=$version" >> $GITHUB_OUTPUT
           fi
+          version="${version#v}" # Remove leading 'v' if present
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Tag the Go SDK
         run: |
@@ -135,5 +136,5 @@ jobs:
           git add .
           git commit -m "Update Go SDK to version ${{ steps.set-version.outputs.version }}"
           git push
-          git tag ${{ steps.set-version.outputs.version }} -m "${{ steps.set-version.outputs.version }}"
+          git tag v${{ steps.set-version.outputs.version }} -m "v${{ steps.set-version.outputs.version }}"
           git push --tags
