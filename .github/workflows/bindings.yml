@@ -25,6 +25,7 @@ jobs:
           filters: |
             isBindings:
               - ".github/workflows/bindings.yml"
+              - "Makefile"
               - "bindings/**"
               - "crates/iota-sdk-ffi/**"
 
