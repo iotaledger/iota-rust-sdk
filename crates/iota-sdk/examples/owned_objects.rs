@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_graphql_client::{Client, pagination::PaginationFilter, query_types::ObjectFilter};
-use iota_types::Address;
+use iota_sdk::{
+    graphql_client::{Client, pagination::PaginationFilter, query_types::ObjectFilter},
+    types::Address,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let address = Address::ZERO;
     let owned_objects_page = client

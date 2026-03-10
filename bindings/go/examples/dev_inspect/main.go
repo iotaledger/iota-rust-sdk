@@ -35,15 +35,15 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	sender := iota_sdk.AddressZero()
 
-	iotaNamesPackageAddress := addrFromHex("0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
+	iotaNamesPackageAddress := addrFromHex("0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea")
 
-	iotaNamesObjectId := objIdFromHex("0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
+	iotaNamesObjectId := objIdFromHex("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
 
-	stdlibAddress := iota_sdk.AddressStdLib()
+	stdAddress := iota_sdk.AddressStd()
 
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)
@@ -92,17 +92,17 @@ func main() {
 		iotaNamesPackageAddress,
 		registryModule,
 		lookupFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("iota_names"), iota_sdk.PtbArgumentRes("name")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("iota_names"), iota_sdk.PtbArgumentAssigned("name")},
 		nil,
 		[]string{"name_record_opt"},
 	)
 
 	// 4. Borrow name record from option
 	builder.MoveCall(
-		stdlibAddress,
+		stdAddress,
 		optionModule,
 		borrowFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("name_record_opt")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("name_record_opt")},
 		[]*iota_sdk.TypeTag{iota_sdk.TypeTagNewStruct(nameRecordType)},
 		[]string{"name_record"},
 	)
@@ -112,17 +112,17 @@ func main() {
 		iotaNamesPackageAddress,
 		nameRecordModule,
 		targetAddressFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("name_record")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("name_record")},
 		nil,
 		[]string{"target_address_opt"},
 	)
 
 	// 6. Borrow address from option
 	builder.MoveCall(
-		stdlibAddress,
+		stdAddress,
 		optionModule,
 		borrowFn,
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("target_address_opt")},
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("target_address_opt")},
 		[]*iota_sdk.TypeTag{iota_sdk.TypeTagNewAddress()},
 		[]string{"target_address"},
 	)

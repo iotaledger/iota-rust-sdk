@@ -63,7 +63,7 @@ pub struct ServiceConfig {
     /// layout of a single Move Type.
     pub max_type_nodes: i32,
     /// Maximum time in milliseconds spent waiting for a response from fullnode
-    /// after issuing a a transaction to execute. Note that the transaction
+    /// after issuing a transaction to execute. Note that the transaction
     /// may still succeed even in the case of a timeout. Transactions are
     /// idempotent, so a transaction that times out should be resubmitted
     /// until the network returns a definite response (success or failure, not
@@ -80,6 +80,7 @@ pub struct ServiceConfig {
     graphql_type = "Feature",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
+#[non_exhaustive]
 pub enum Feature {
     Analytics,
     Coins,

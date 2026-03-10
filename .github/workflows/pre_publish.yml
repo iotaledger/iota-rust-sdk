@@ -36,10 +36,15 @@ on:
           - iota-sdk-graphql-client
           - iota-sdk-transaction-builder
           - iota-sdk
+          - iota-csharp-sdk
+          - iota-go-sdk
+          - iota-kotlin-sdk
+          - iota-python-sdk
+          - iota-swift-sdk
 
 jobs:
   publish:
-    name: Setup for publish to crates.io
+    name: Setup for publishing ${{ inputs.package }}
     permissions:
       id-token: write # Enable OIDC
       pull-requests: write
@@ -54,8 +59,11 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0 # required for git-cliff to have full history
 
       - name: Install cargo-release
+        if: startsWith(inputs.package, 'iota-sdk')
         uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
         with:
           tool: cargo-release@0.25.20
@@ -67,7 +75,117 @@ jobs:
 
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
 
-      - id: pr-create
+      - name: Bump C# version
+        if: inputs.package == 'iota-csharp-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-csharp-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-csharp-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Update the version in IotaSdk.csproj
+          CONFIG="bindings/csharp/src/IotaSdk/IotaSdk.csproj"
+          current_version=$(grep '<PackageVersion>' $CONFIG | sed -nr 's|.*<PackageVersion>(.*)</PackageVersion>.*|\1|p')
+          sed -i "s/<PackageVersion>$current_version<\/PackageVersion>/<PackageVersion>$NEW_VERSION<\/PackageVersion>/" "$CONFIG"
+          echo "Updated IotaSdk.csproj with new version: $NEW_VERSION"
+
+          # Generate changelog for C#
+          ./.github/gen_changelog.sh iota-csharp-sdk bindings/csharp ${{ github.sha }} "$NEW_VERSION" true
+
+      - name: Bump Go version
+        if: inputs.package == 'iota-go-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-go-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Generate changelog for Go
+          ./.github/gen_changelog.sh iota-go-sdk bindings/go ${{ github.sha }} "$NEW_VERSION" true
+
+      - name: Bump Kotlin version
+        if: inputs.package == 'iota-kotlin-sdk'
+        run: |
+          source ./.github/bump_version.sh
+
+          # Read current version from build.gradle.kts
+          CONFIG="bindings/kotlin/build.gradle.kts"
+          CURRENT_VERSION=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
+          echo "Current version: $CURRENT_VERSION"
+
+          # Bump the version using the input level
+          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          echo "New version: $NEW_VERSION"
+
+          # Update the version in build.gradle.kts
+          sed -i "s/version = \"$CURRENT_VERSION\"/version = \"$NEW_VERSION\"/" "$CONFIG"
+          echo "Updated build.gradle.kts with new version: $NEW_VERSION"
+
+          # Generate changelog for Kotlin
+          ./.github/gen_changelog.sh iota-kotlin-sdk bindings/kotlin ${{ github.sha }} "$NEW_VERSION" true
+
+          # Set output for the next step
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Bump Python version
+        if: inputs.package == 'iota-python-sdk'
+        run: |
+          source ./.github/bump_version.sh
+
+          # Read current version from pyproject.toml
+          CONFIG="bindings/python/src/pyproject.toml"
+          CURRENT_VERSION_PEP440=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
+          CURRENT_VERSION=$(pep440_to_semver "$CURRENT_VERSION_PEP440")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Bump the version using the input level
+          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          echo "New version: $NEW_VERSION"
+
+          # Update the version in pyproject.toml
+          NEW_VERSION_PEP440=$(semver_to_pep440 "$NEW_VERSION")
+          sed -i "s/version = \"$CURRENT_VERSION_PEP440\"/version = \"$NEW_VERSION_PEP440\"/" "$CONFIG"
+          echo "Updated pyproject.toml with new version: $NEW_VERSION_PEP440"
+
+          # Generate changelog for Python
+          ./.github/gen_changelog.sh iota-python-sdk bindings/python ${{ github.sha }} "$NEW_VERSION" true
+
+          # Set output for the next step
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Bump Swift version
+        if: inputs.package == 'iota-swift-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-swift-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-swift-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Generate changelog for Swift
+          ./.github/gen_changelog.sh iota-swift-sdk bindings/swift ${{ github.sha }} "$NEW_VERSION" true
+
+      - name: Set COMMIT_TO environment variable
+        if: startsWith(inputs.package, 'iota-sdk')
+        run: echo "COMMIT_TO=${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Create PR for Rust
+        if: startsWith(inputs.package, 'iota-sdk')
+        id: pr-create-rust
         uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -78,16 +196,68 @@ jobs:
           base-branch: develop
           pr-template-file: ./.github/release-pr-template.ejs
 
+      - name: Create Pull Request
+        if: inputs.package == 'iota-csharp-sdk' || inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk'
+        id: pr-create-bindings
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "release: bump `${{ inputs.package }}` version to `${{ env.NEW_VERSION }}`"
+          title: "release: bump `${{ inputs.package }}` version to `${{ env.NEW_VERSION }}`"
+          body: "Automated semver bump of ${{ inputs.package }} version."
+          branch: "release/${{ inputs.package }}/${{ env.NEW_VERSION }}"
+          delete-branch: true
+
+      - name: Set release notes env vars (C#)
+        if: inputs.package == 'iota-csharp-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/csharp" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Rust)
+        if: startsWith(inputs.package, 'iota-sdk')
+        run: |
+          echo "PR_NUM=$(echo "${{ steps.pr-create-rust.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')" >> $GITHUB_ENV
+          echo "PKG_ROOT=crates/${{ inputs.package }}" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ steps.pr-create-rust.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Go)
+        if: inputs.package == 'iota-go-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/go" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Kotlin)
+        if: inputs.package == 'iota-kotlin-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/kotlin" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Python)
+        if: inputs.package == 'iota-python-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/python" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Swift)
+        if: inputs.package == 'iota-swift-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/swift" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
       - name: Add release notes
+        if: steps.pr-create-rust.outputs.pr-url || steps.pr-create-bindings.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pr_num=$(echo "${{ steps.pr-create.outputs.pr-url }}" | sed -nr 's|.*/pull/(.*)|\1|p')
-          body=$(gh pr view "$pr_num" --json body | jq -r '.["body"]')
-          cd crates/${{ inputs.package }}
-          notes=$(git-cliff --tag v${{ steps.pr-create.outputs.version }})
+          body=$(gh pr view "$PR_NUM" --json body | jq -r '.["body"]')
+          notes=$(./.github/gen_changelog.sh "${{inputs.package}}" "${{ env.PKG_ROOT }}" ${{ github.sha }} "${{ env.NEW_VERSION }}")
           body=$(echo "$body
           # Release Notes
 
           $notes")
-          gh pr edit $pr_num --body "$body"
+          gh pr edit "$PR_NUM" --body "$body"

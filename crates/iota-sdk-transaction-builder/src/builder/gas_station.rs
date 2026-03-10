@@ -1,10 +1,9 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
-use iota_crypto::{IotaSigner, simple::SimpleKeypair};
 use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction, Version};
 use reqwest::{
     Url,
@@ -12,7 +11,7 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::error::Error;
+use crate::{builder::signer::TransactionSigner, error::Error};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -353,13 +352,13 @@ impl GasStationData {
     pub(crate) async fn execute_txn(
         self,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        signer: &impl TransactionSigner,
     ) -> Result<Digest, Error> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
-        let effects = self.execute_txn_inner(&url, txn, keypair).await?;
+        let effects = self.execute_txn_inner(&url, txn, signer).await?;
 
         Digest::deserialize(&effects["transactionDigest"]).map_err(|e| Error::GasStationResponse {
             message: Some(e.to_string()),
@@ -370,24 +369,24 @@ impl GasStationData {
     pub(crate) async fn execute_txn_json(
         self,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, Error> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
             .map_err(Error::InvalidUrl)?;
-        self.execute_txn_inner(&url, txn, keypair).await
+        self.execute_txn_inner(&url, txn, signer).await
     }
 
     async fn execute_txn_inner(
         mut self,
         url: &Url,
         txn: &mut Transaction,
-        keypair: &SimpleKeypair,
+        signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, Error> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
-            Transaction::V1(ref mut inner_txn) => {
+            Transaction::V1(inner_txn) => {
                 let reservation = self
                     .reserve_gas(inner_txn.gas_payment.budget, &client)
                     .await?;
@@ -408,13 +407,15 @@ impl GasStationData {
                 inner_txn.gas_payment.objects = objects;
                 reservation_id
             }
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
         };
 
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
 
-        let user_sig = keypair
-            .sign_transaction(txn)
-            .map_err(Error::Signature)?
+        let user_sig = signer
+            .sign(txn)
+            .await
+            .map_err(Error::signature)?
             .to_base64();
 
         let response = client

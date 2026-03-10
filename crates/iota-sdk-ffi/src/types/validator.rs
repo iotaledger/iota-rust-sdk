@@ -8,7 +8,6 @@ use crate::{
     types::{
         checkpoint::EpochId,
         crypto::{Bls12381PublicKey, Bls12381Signature},
-        signature,
     },
 };
 
@@ -91,7 +90,8 @@ impl From<ValidatorCommitteeMember> for iota_sdk::types::ValidatorCommitteeMembe
 ///                       bls-public-key
 ///                       bls-signature
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ValidatorSignature(pub iota_sdk::types::ValidatorSignature);
 
 #[uniffi::export]
@@ -139,7 +139,8 @@ impl ValidatorSignature {
 ///
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregatedSignature);
 
 #[uniffi::export]
@@ -170,3 +171,5 @@ impl ValidatorAggregatedSignature {
 
 crate::export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
 crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
+crate::export_iota_types_json_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
+crate::export_iota_types_objects_json_conversion!(ValidatorSignature, ValidatorAggregatedSignature);

@@ -1,0 +1,25 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+using IotaSdk;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var client = GraphQlClient.NewTestnet();
+
+        var events = await client.Events(
+            new EventFilter(eventType: "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"),
+            new PaginationFilter(Direction.Forward, null, 10)
+        );
+
+        foreach (var evt in events.data)
+        {
+            Console.WriteLine($"Type: {evt.@type}");
+            Console.WriteLine($"Sender: {evt.sender.ToHex()}");
+            Console.WriteLine($"Module: {evt.module}");
+            Console.WriteLine($"JSON: {evt.json}");
+        }
+    }
+}

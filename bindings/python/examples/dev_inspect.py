@@ -1,21 +1,21 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     sender = Address.zero()
 
     iota_names_package_address = Address.from_hex(
-        "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba")
+        "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea")
     iota_names_object_id = ObjectId.from_hex(
-        "0x07c59b37bd7d036bf78fa30561a2ab9f7a970837487656ec29466e817f879342")
-    stdlib_address = Address.std_lib()
+        "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
+    std_address = Address.std()
 
     name = "name.iota"
     print(f"Looking up name: {name}")
@@ -53,17 +53,17 @@ async def main():
         iota_names_package_address,
         Identifier("registry"),
         Identifier("lookup"),
-        [PtbArgument.res("iota_names"),
-         PtbArgument.res("name")],
+        [PtbArgument.assigned("iota_names"),
+         PtbArgument.assigned("name")],
         names=["name_record_opt"],
     )
 
     # 4. Borrow name record from option
     builder.move_call(
-        stdlib_address,
+        std_address,
         Identifier("option"),
         Identifier("borrow"),
-        [PtbArgument.res("name_record_opt")],
+        [PtbArgument.assigned("name_record_opt")],
         [
             TypeTag.new_struct(
                 StructTag(
@@ -80,16 +80,16 @@ async def main():
         iota_names_package_address,
         Identifier("name_record"),
         Identifier("target_address"),
-        [PtbArgument.res("name_record")],
+        [PtbArgument.assigned("name_record")],
         names=["target_address_opt"],
     )
 
     # 6. Borrow address from option
     builder.move_call(
-        stdlib_address,
+        std_address,
         Identifier("option"),
         Identifier("borrow"),
-        [PtbArgument.res("target_address_opt")],
+        [PtbArgument.assigned("target_address_opt")],
         [TypeTag.new_address()],
         ["target_address"],
     )

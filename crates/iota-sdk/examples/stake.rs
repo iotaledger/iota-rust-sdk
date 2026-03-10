@@ -4,16 +4,14 @@
 use std::str::FromStr;
 
 use eyre::{OptionExt, Result};
-use iota_graphql_client::Client;
-use iota_transaction_builder::TransactionBuilder;
-use iota_types::Address;
+use iota_sdk::{graphql_client::Client, transaction_builder::TransactionBuilder, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let my_address =
-        Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 
     let validator = client
         .active_validators(None, Default::default())

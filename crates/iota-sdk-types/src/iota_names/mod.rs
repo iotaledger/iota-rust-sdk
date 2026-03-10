@@ -14,7 +14,11 @@ use crate::{Address, ObjectId, StructTag, type_tag::IdentifierRef};
 
 /// An object to manage a second-level name (SLN).
 #[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct NameRegistration {
     id: ObjectId,
     name: Name,
@@ -57,12 +61,12 @@ pub trait IotaNamesNft {
     const TYPE_NAME: &IdentifierRef;
 
     fn type_(package_id: Address) -> StructTag {
-        StructTag {
-            address: package_id,
-            module: Self::MODULE.into(),
-            name: Self::TYPE_NAME.into(),
-            type_params: Vec::new(),
-        }
+        StructTag::new(
+            package_id,
+            Self::MODULE.into(),
+            Self::TYPE_NAME.into(),
+            Vec::new(),
+        )
     }
 
     fn name(&self) -> &Name;

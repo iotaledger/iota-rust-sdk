@@ -6,13 +6,13 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newDevnet()
+        val client = GraphQlClient.newTestnet()
 
         val sender =
-            Address.fromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
         val coinId =
-            ObjectId.fromHex("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+            ObjectId.fromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
 
         val builder = TransactionBuilder(sender).withClient(client)
 
@@ -24,7 +24,11 @@ fun main() = runBlocking {
             )
             .transferObjects(
                 sender,
-                listOf(PtbArgument.res("coin1"), PtbArgument.res("coin2"), PtbArgument.res("coin3")),
+                listOf(
+                    PtbArgument.assigned("coin1"),
+                    PtbArgument.assigned("coin2"),
+                    PtbArgument.assigned("coin3"),
+                ),
             )
 
         val txn = builder.finish()

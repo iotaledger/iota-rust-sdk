@@ -64,7 +64,7 @@ The following methods are available:
 
 #### Commands
 
-Each command method adds one or more commands to the final transaction. Some commands have optional follow-up methods. Most command results can be named, which allows them to be used later in the transaction via the `PTBArgument::Res` variant. When a single name is provided, the result will be named, and when a list of names is provided, the names will be used for the individual nested results.
+Each command method adds one or more commands to the final transaction. Some commands have optional follow-up methods. Most command results can be assigned a name, which allows them to be used later in the transaction via the `PTBArgument::Assigned` variant. When a single name is provided, the result will be assigned, and when a list of names is provided, the names will be used for the individual nested results.
 
 - `move_call`: Call a move function.
 - `send_iota`: Send IOTA coins to a recipient address.
@@ -90,9 +90,9 @@ These methods set various metadata which may be needed for the execution.
 
 ### Finalization and Execution
 
-There are several ways to finish the builder. First, the [finish](transaction_builder::TransactionBuilder::finish) method can be used to return the resulting [Transaction](iota_sdk::types::Transaction), which can be manually serialized, executed, etc.
+There are several ways to finish the builder. First, the `TransactionBuilder::finish` method can be used to return the resulting `Transaction`, which can be manually serialized, executed, etc.
 
-Additionally, the builder can directly [dry_run](transaction_builder::TransactionBuilder::dry_run) or [execute](transaction_builder::TransactionBuilder::execute) the transaction.
+Additionally, the builder can directly `TransactionBuilder::dry_run` or `TransactionBuilder::execute` the transaction.
 
 When the transaction is resolved, the builder will try to ensure a valid state by de-duplicating and converting appropriate inputs into references to the gas coin. This means that the same input can be passed multiple times and the final transaction will only contain one instance. However, in some cases an invalid state can still be reached. For instance, if a coin is used both for gas and as part of a group of coins, i.e. when transferring objects, the transaction can not possibly be valid.
 
@@ -107,9 +107,9 @@ following are the default behaviors for each metadata value.
 
 ### Gas Station
 
-The Transaction Builder supports executing via a [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL, duration, and headers must be provided via [gas_station_sponsor](transaction_builder::TransactionBuilder::gas_station_sponsor).
+The Transaction Builder supports executing via a [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL, duration, and headers must be provided via `TransactionBuilder::gas_station_sponsor`.
 
-By default the request will contain the header `Content-Type: application/json` When this data has been set, calling [execute](transaction_builder::TransactionBuilder::execute) will request gas from and send the resulting transaction to this endpoint instead of using the GraphQL client.
+By default the request will contain the header `Content-Type: application/json` When this data has been set, calling `TransactionBuilder::execute` will request gas from and send the resulting transaction to this endpoint instead of using the GraphQL client.
 
 ## Supported languages
 

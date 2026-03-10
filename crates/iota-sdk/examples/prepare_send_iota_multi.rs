@@ -4,19 +4,21 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_graphql_client::Client;
-use iota_transaction_builder::{TransactionBuilder, res};
-use iota_types::{Address, ObjectId};
+use iota_sdk::{
+    graphql_client::Client,
+    transaction_builder::{TransactionBuilder, assigned},
+    types::{Address, ObjectId},
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let coin =
-        ObjectId::from_str("0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")?;
+        ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
 
     let sender =
-        Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 
     // Recipients and amounts
     let recipients = [
@@ -37,11 +39,11 @@ async fn main() -> Result<()> {
 
     let labels: Vec<String> = (0..recipients.len()).map(|i| format!("coin{i}")).collect();
 
-    builder.split_coins(coin, amounts).name(labels.clone());
+    builder.split_coins(coin, amounts).assign(labels.clone());
 
     // Transfer each split coin to the corresponding recipient
     for (i, (address, _)) in recipients.iter().enumerate() {
-        builder.transfer_objects(Address::from_str(address)?, [res(&labels[i])]);
+        builder.transfer_objects(Address::from_str(address)?, [assigned(&labels[i])]);
     }
 
     let txn = builder.finish().await?;

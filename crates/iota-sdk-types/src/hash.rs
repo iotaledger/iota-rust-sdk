@@ -400,11 +400,7 @@ mod signing_message {
 
     impl Transaction {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent {
-                scope: IntentScope::TransactionData,
-                version: IntentVersion::V0,
-                app_id: IntentAppId::Iota,
-            };
+            const INTENT: Intent = Intent::iota_transaction();
             let digest = signing_digest(INTENT, self);
             digest.into_inner()
         }
@@ -416,11 +412,7 @@ mod signing_message {
 
     impl TransactionV1 {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent {
-                scope: IntentScope::TransactionData,
-                version: IntentVersion::V0,
-                app_id: IntentAppId::Iota,
-            };
+            const INTENT: Intent = Intent::iota_transaction();
             let digest = signing_digest(INTENT, &Transaction::V1(self.clone()));
             digest.into_inner()
         }
@@ -439,11 +431,7 @@ mod signing_message {
 
     impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent {
-                scope: IntentScope::PersonalMessage,
-                version: IntentVersion::V0,
-                app_id: IntentAppId::Iota,
-            };
+            const INTENT: Intent = Intent::personal_message();
             let digest = signing_digest(INTENT, &self.0);
             digest.into_inner()
         }

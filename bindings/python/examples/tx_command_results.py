@@ -1,20 +1,20 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     sender = Address.from_hex(
-        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
     builder = TransactionBuilder(sender).with_client(client)
 
-    package_addr = Address.std_lib()
+    package_addr = Address.std()
     module_name = Identifier("u64")
     function_name = Identifier("max")
 
@@ -38,17 +38,17 @@ async def main():
 
     builder.split_coins(
         PtbArgument.gas(),
-        # Use the named results of previous commands as arguments
-        [PtbArgument.res("res0"),
-         PtbArgument.res("res1")],
-        # For nested results, a tuple or vec can be used to name them
+        # Use the assigned results of previous commands as arguments
+        [PtbArgument.assigned("res0"),
+         PtbArgument.assigned("res1")],
+        # For nested results, a tuple or vec can be used to assign them
         ["coin0", "coin1"],
     )
 
-    # Use named results as arguments
+    # Use assigned results as arguments
     builder.transfer_objects(
-        sender, [PtbArgument.res("coin0"),
-                 PtbArgument.res("coin1")])
+        sender, [PtbArgument.assigned("coin0"),
+                 PtbArgument.assigned("coin1")])
 
     txn = await builder.finish()
 

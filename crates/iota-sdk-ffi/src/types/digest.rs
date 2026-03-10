@@ -17,7 +17,19 @@ use crate::error::Result;
 /// IOTA's binary representation of a `Digest` is prefixed with its length
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(
+    Debug,
+    Hash,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    derive_more::Display,
+    derive_more::From,
+    derive_more::Deref,
+    uniffi::Object,
+)]
+#[uniffi::export(Debug, Display, Hash, Eq)]
 pub struct Digest(pub iota_sdk::types::Digest);
 
 #[uniffi::export]
@@ -45,6 +57,12 @@ impl Digest {
     pub fn to_base58(&self) -> String {
         self.0.to_base58()
     }
+
+    /// Returns the next digest in byte-increasing order.
+    pub fn next_lexicographical(&self) -> Self {
+        self.0.next_lexicographical().into()
+    }
 }
 
 crate::export_iota_types_objects_bcs_conversion!(Digest);
+crate::export_iota_types_objects_json_conversion!(Digest);

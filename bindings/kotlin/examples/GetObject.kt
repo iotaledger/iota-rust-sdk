@@ -9,10 +9,10 @@ import kotlinx.coroutines.runBlocking
 fun main() = runBlocking {
     try {
 
-        val client = GraphQlClient.newDevnet()
+        val client = GraphQlClient.newTestnet()
 
         val objectId =
-            ObjectId.fromHex("0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
+            ObjectId.fromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
         val obj = client.`object`(objectId)!!
 

@@ -9,7 +9,7 @@ pub use v1::{
     UnchangedSharedObject,
 };
 
-use crate::{SignedTransaction, TypeTag, execution_status::ExecutionStatus};
+use crate::execution_status::ExecutionStatus;
 
 /// The output or effects of executing a transaction
 ///
@@ -28,6 +28,7 @@ use crate::{SignedTransaction, TypeTag, execution_status::ExecutionStatus};
     schemars(tag = "version")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum TransactionEffects {
     #[cfg_attr(feature = "schemars", schemars(rename = "1"))]
     V1(Box<TransactionEffectsV1>),
@@ -66,79 +67,6 @@ impl TransactionEffects {
             TransactionEffects::V1(e) => e.gas_summary(),
         }
     }
-}
-
-/// The result of a simulation (dry run), which includes the effects of the
-/// transaction and intermediate results for each command.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DryRunResult {
-    /// The error that occurred during dry run execution, if any.
-    pub error: Option<String>,
-    /// The intermediate results for each command of the dry run execution,
-    /// including contents of mutated references and return values.
-    pub results: Vec<DryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
-    /// The effects of the transaction execution.
-    pub effects: Option<TransactionEffects>,
-}
-
-/// Effects of a single command in the dry run, including mutated references
-/// and return values.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DryRunEffect {
-    /// Changes made to arguments that were mutably borrowed by this
-    /// command.
-    pub mutated_references: Vec<DryRunMutation>,
-    /// Return results of this command.
-    pub return_values: Vec<DryRunReturn>,
-}
-
-/// A mutation to an argument that was mutably borrowed by a command.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DryRunMutation {
-    /// The transaction argument that was mutated.
-    pub input: TransactionArgument,
-    /// The Move type of the mutated value.
-    pub type_tag: TypeTag,
-    /// The BCS representation of the mutated value.
-    pub bcs: Vec<u8>,
-}
-
-/// A return value from a command in the dry run.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct DryRunReturn {
-    /// The Move type of the return value.
-    pub type_tag: TypeTag,
-    /// The BCS representation of the return value.
-    pub bcs: Vec<u8>,
-}
-
-/// A transaction argument used in programmable transactions.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub enum TransactionArgument {
-    /// Reference to the gas coin.
-    GasCoin,
-    /// An input to the programmable transaction block.
-    Input {
-        /// Index of the programmable transaction block input (0-indexed).
-        ix: u32,
-    },
-    /// The result of another transaction command.
-    Result {
-        /// The index of the previous command (0-indexed) that returned this
-        /// result.
-        cmd: u32,
-        /// If the previous command returns multiple values, this is the
-        /// index of the individual result among the multiple
-        /// results from that command (also 0-indexed).
-        ix: Option<u32>,
-    },
 }
 
 #[cfg(feature = "serde")]

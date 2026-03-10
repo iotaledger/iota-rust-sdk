@@ -1,22 +1,22 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     sender = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
     sponsor = Address.from_hex(
-        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
     builder = TransactionBuilder(sender).with_client(client)
 
-    package_addr = Address.std_lib()
+    package_addr = Address.std()
     module_name = Identifier("u8")
     function_name = Identifier("max")
 

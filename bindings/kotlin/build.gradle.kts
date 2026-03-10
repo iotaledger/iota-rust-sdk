@@ -13,7 +13,7 @@ plugins {
 
 group = "org.iota"
 
-version = "0.0.1-alpha.3"
+version = "0.0.1-alpha.4"
 
 repositories { mavenCentral() }
 
@@ -67,7 +67,10 @@ tasks.register<JavaExec>("example") {
 
 sourceSets {
     main {
-        kotlin { srcDirs("lib", "examples") }
+        kotlin {
+            srcDirs("lib", "examples")
+            exclude("android-demo/**")
+        }
         resources {
             srcDir("lib")
             exclude("**/*.kt")

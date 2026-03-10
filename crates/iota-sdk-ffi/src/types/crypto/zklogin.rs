@@ -29,7 +29,8 @@ use crate::{
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ZkLoginAuthenticator(pub iota_sdk::types::ZkLoginAuthenticator);
 
 #[uniffi::export]
@@ -106,7 +107,8 @@ impl ZkLoginAuthenticator {
 /// ; with any leading zero bytes stripped
 /// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ZkLoginPublicIdentifier(pub iota_sdk::types::ZkLoginPublicIdentifier);
 
 #[uniffi::export]
@@ -176,7 +178,8 @@ impl ZkLoginPublicIdentifier {
 ///                  string              ; base64url-unpadded encoded JwtHeader
 ///                  bn254-field-element ; address_seed
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ZkLoginInputs(pub iota_sdk::types::ZkLoginInputs);
 
 #[uniffi::export]
@@ -234,7 +237,8 @@ impl ZkLoginInputs {
 /// ```text
 /// zklogin-proof = circom-g1 circom-g2 circom-g1
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct ZkLoginProof(pub iota_sdk::types::ZkLoginProof);
 
 #[uniffi::export]
@@ -288,7 +292,8 @@ pub struct ZkLoginClaim {
 /// ```text
 /// circom-g1 = %x03 3(bn254-field-element)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct CircomG1(pub iota_sdk::types::CircomG1);
 
 #[uniffi::export]
@@ -319,7 +324,8 @@ impl CircomG1 {
 /// ```text
 /// circom-g2 = %x03 3(%x02 2(bn254-field-element))
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct CircomG2(pub iota_sdk::types::CircomG2);
 
 #[uniffi::export]
@@ -354,7 +360,8 @@ impl CircomG2 {
 /// ```text
 /// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Bn254FieldElement(pub iota_sdk::types::Bn254FieldElement);
 
 #[uniffi::export]
@@ -431,6 +438,7 @@ pub struct Jwk {
     pub alg: String,
 }
 
+crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);
 crate::export_iota_types_objects_bcs_conversion!(
     ZkLoginAuthenticator,
     ZkLoginPublicIdentifier,
@@ -439,5 +447,12 @@ crate::export_iota_types_objects_bcs_conversion!(
     CircomG2,
     Bn254FieldElement
 );
-
-crate::export_iota_types_bcs_conversion!(ZkLoginClaim, JwkId, Jwk);
+crate::export_iota_types_json_conversion!(ZkLoginClaim, JwkId, Jwk);
+crate::export_iota_types_objects_json_conversion!(
+    ZkLoginAuthenticator,
+    ZkLoginPublicIdentifier,
+    ZkLoginProof,
+    CircomG1,
+    CircomG2,
+    Bn254FieldElement
+);

@@ -98,7 +98,11 @@ impl TransactionEffectsV1 {
 /// changed-object = object-id object-in object-out id-operation
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ChangedObject {
@@ -124,7 +128,11 @@ pub struct ChangedObject {
 /// unchanged-shared-object = object-id unchanged-shared-object-kind
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct UnchangedSharedObject {
@@ -158,6 +166,7 @@ pub struct UnchangedSharedObject {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
@@ -221,6 +230,7 @@ impl UnchangedSharedKind {
     schemars(tag = "state", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
@@ -295,6 +305,7 @@ impl ObjectIn {
     schemars(tag = "state", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
@@ -384,6 +395,7 @@ impl ObjectOut {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[non_exhaustive]
 pub enum IdOperation {
     None,
     Created,

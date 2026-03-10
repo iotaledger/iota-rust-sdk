@@ -10,13 +10,14 @@ use rand::rngs::OsRng;
 use crate::{
     error::{Result, SdkFfiError},
     types::{
-        crypto::{Secp256k1PublicKey, Secp256k1Signature},
+        crypto::{Secp256k1PublicKey, Secp256k1Signature, intent::PersonalMessage},
         signature::{SimpleSignature, UserSignature},
     },
 };
 
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Secp256k1PrivateKey(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey);
+#[derive(Debug, PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct Secp256k1PrivateKey(pub iota_sdk::crypto::secp256k1::Secp256k1PrivateKey);
 
 #[uniffi::export]
 impl Secp256k1PrivateKey {
@@ -148,15 +149,13 @@ impl Secp256k1PrivateKey {
     }
 
     /// Sign a personal message and return a UserSignature.
-    pub fn sign_personal_message(
-        &self,
-        message: &crate::types::PersonalMessage,
-    ) -> Result<UserSignature> {
+    pub fn sign_personal_message(&self, message: &PersonalMessage) -> Result<UserSignature> {
         Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Secp256k1VerifyingKey(iota_sdk::crypto::secp256k1::Secp256k1VerifyingKey);
 
 #[uniffi::export]
@@ -215,7 +214,8 @@ impl Secp256k1VerifyingKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Secp256k1Verifier(iota_sdk::crypto::secp256k1::Secp256k1Verifier);
 
 #[uniffi::export]

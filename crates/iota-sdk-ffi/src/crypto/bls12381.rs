@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::RwLock;
-
 use iota_sdk::types::SignatureScheme;
 use rand::rngs::OsRng;
 
@@ -11,7 +9,7 @@ use crate::{
     types::{
         checkpoint::CheckpointSummary,
         crypto::{Bls12381PublicKey, Bls12381Signature},
-        validator::{ValidatorCommittee, ValidatorSignature},
+        validator::ValidatorSignature,
     },
 };
 
@@ -62,7 +60,8 @@ impl Bls12381PrivateKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Bls12381VerifyingKey(pub iota_sdk::crypto::bls12381::Bls12381VerifyingKey);
 
 #[uniffi::export]

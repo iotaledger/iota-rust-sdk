@@ -1,10 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
 use iota_sdk::{
-    crypto::{FromMnemonic, Signer, ToFromBech32, ToFromBytes, Verifier},
+    crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier},
     types::SignatureScheme,
 };
 use rand::rngs::OsRng;
@@ -12,12 +10,13 @@ use rand::rngs::OsRng;
 use crate::{
     error::{Result, SdkFfiError},
     types::{
-        crypto::{Secp256r1PublicKey, Secp256r1Signature},
+        crypto::{Secp256r1PublicKey, Secp256r1Signature, intent::PersonalMessage},
         signature::{SimpleSignature, UserSignature},
     },
 };
 
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Secp256r1PrivateKey(pub iota_sdk::crypto::secp256r1::Secp256r1PrivateKey);
 
 #[uniffi::export]
@@ -77,10 +76,7 @@ impl Secp256r1PrivateKey {
     }
 
     /// Sign a personal message and return a UserSignature.
-    pub fn sign_personal_message(
-        &self,
-        message: &crate::types::PersonalMessage,
-    ) -> Result<UserSignature> {
+    pub fn sign_personal_message(&self, message: &PersonalMessage) -> Result<UserSignature> {
         Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 
@@ -163,7 +159,8 @@ impl Secp256r1PrivateKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Secp256r1VerifyingKey(pub iota_sdk::crypto::secp256r1::Secp256r1VerifyingKey);
 
 #[uniffi::export]
@@ -220,7 +217,8 @@ impl Secp256r1VerifyingKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Secp256r1Verifier(pub iota_sdk::crypto::secp256r1::Secp256r1Verifier);
 
 #[uniffi::export]

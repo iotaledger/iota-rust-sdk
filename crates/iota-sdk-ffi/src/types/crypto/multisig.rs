@@ -31,7 +31,8 @@ use crate::types::{
 /// secp256r1-multisig-member-signature = %x02 secp256r1-signature
 /// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MultisigMemberSignature(pub iota_sdk::types::MultisigMemberSignature);
 
 #[uniffi::export]
@@ -129,7 +130,8 @@ impl MultisigMemberSignature {
 ///                     (secp256k1-flag secp256k1-public-key) /
 ///                     (secp256r1-flag secp256r1-public-key)
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MultisigMemberPublicKey(pub iota_sdk::types::MultisigMemberPublicKey);
 
 #[uniffi::export]
@@ -197,6 +199,10 @@ impl MultisigMemberPublicKey {
     pub fn as_zklogin(&self) -> ZkLoginPublicIdentifier {
         self.0.as_zklogin().clone().into()
     }
+
+    pub fn scheme(&self) -> SignatureScheme {
+        self.0.scheme()
+    }
 }
 
 /// Aggregated signature from members of a multisig committee.
@@ -224,7 +230,8 @@ impl MultisigMemberPublicKey {
 ///
 /// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
 /// serialized format of RoaringBitmaps.
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSignature);
 
 #[uniffi::export]
@@ -293,7 +300,8 @@ impl MultisigAggregatedSignature {
 /// legacy-multisig-committee = (vector legacy-multisig-member)
 ///                             u16     ; threshold
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
 
 #[uniffi::export]
@@ -383,7 +391,8 @@ impl MultisigCommittee {
 /// legacy-multisig-member = legacy-multisig-member-public-key
 ///                          u8     ; weight
 /// ```
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
 
 #[uniffi::export]
@@ -409,6 +418,13 @@ impl MultisigMember {
 }
 
 crate::export_iota_types_objects_bcs_conversion!(
+    MultisigMemberSignature,
+    MultisigMemberPublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);
+crate::export_iota_types_objects_json_conversion!(
     MultisigMemberSignature,
     MultisigMemberPublicKey,
     MultisigAggregatedSignature,

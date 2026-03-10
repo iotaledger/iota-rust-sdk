@@ -1,14 +1,14 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
-    digest = Digest.from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")
+    client = GraphQlClient.new_testnet()
+    digest = Digest.from_base58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8")
 
     signed_transaction = await client.transaction(digest)
     print(f"Signed Transaction: `{signed_transaction}`\n")

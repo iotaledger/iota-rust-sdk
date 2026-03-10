@@ -1,64 +1,68 @@
-name: Release
+name: Create GitHub release
 
 on:
-  workflow_dispatch:
-    inputs:
-      package:
-        type: choice
-        required: true
-        description: The package to publish.
-        options:
-          - iota-sdk-types
-          - iota-sdk-crypto
-          - iota-sdk-graphql-client-build
-          - iota-sdk-graphql-client
-          - iota-sdk-transaction-builder
-          - iota-sdk
-      version:
-        type: string
-        description: The exact version.
   pull_request:
     types: closed
     branches: [develop]
 
-# We need this to be able to create releases.
 permissions:
   contents: write
 
 jobs:
   create-release:
-    if: github.event.pull_request == null || (github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/'))
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Set package and tag from inputs
-        if: github.event.pull_request == null
-        run: |
-          echo "TAG=${{ inputs.package }}-v${{ inputs.version }}" >> $GITHUB_ENV
-          echo "PKG=${{ inputs.package }}" >> $GITHUB_ENV
-          echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+      - name: Install git-cliff
+        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        with:
+          tool: git-cliff
 
-      - name: Set package and tag from ref
-        if: github.event.pull_request.merged == true
+      - name: Extract tag/package/version from branch name
         run: |
           tag=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/(.*)|\1-v\2|p')
-          pkg=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
-          version=$(echo "${{ github.head_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
+          echo "Tag: $tag"
           echo "TAG=$tag" >> $GITHUB_ENV
-          echo "PKG=$pkg" >> $GITHUB_ENV
+
+          package=$(echo "${{ github.head_ref }}" | sed -nr 's|release/(.*)/.*|\1|p')
+          echo "Package: $package"
+          echo "PACKAGE=$package" >> $GITHUB_ENV
+
+          version=$(echo "${{ github.head_ref }}" | sed -nr 's|release/.*/(.*)|\1|p')
+          echo "Version: $version"
           echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: Create changelog
+        run: |
+          if [[ "$PACKAGE" == iota-sdk* ]]; then
+            PACKAGE_ROOT="crates/$PACKAGE"
+          elif [[ "$PACKAGE" == "iota-csharp-sdk" ]]; then
+            PACKAGE_ROOT="bindings/csharp"
+          elif [[ "$PACKAGE" == "iota-go-sdk" ]]; then
+            PACKAGE_ROOT="bindings/go"
+          elif [[ "$PACKAGE" == "iota-kotlin-sdk" ]]; then
+            PACKAGE_ROOT="bindings/kotlin"
+          elif [[ "$PACKAGE" == "iota-python-sdk" ]]; then
+            PACKAGE_ROOT="bindings/python"
+          elif [[ "$PACKAGE" == "iota-swift-sdk" ]]; then
+            PACKAGE_ROOT="bindings/swift"
+          fi
+          CHANGELOG=$(./.github/gen_changelog.sh "$PACKAGE" "$PACKAGE_ROOT" ${{ github.sha }} "$VERSION")
+          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ env.TAG }}
-          PKG: ${{ env.PKG }}
+          PACKAGE: ${{ env.PACKAGE }}
           VERSION: ${{ env.VERSION }}
+          CHANGELOG: ${{ env.CHANGELOG }}
         run: |
           if [[ "$VERSION" =~ .*-alpha\..*  ]] || [[ "$VERSION" =~ .*-beta\..*  ]] || [[ "$VERSION" =~ .*-rc\..*  ]]; then
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes-file "crates/$PKG/CHANGELOG.md"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --prerelease --notes "$CHANGELOG"
           else
-            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes-file "crates/$PKG/CHANGELOG.md"
+            gh release create "$TAG" --title "$TAG" --target ${{ github.sha }} --draft --notes "$CHANGELOG"
           fi

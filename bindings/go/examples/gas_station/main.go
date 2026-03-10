@@ -5,8 +5,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 	"log"
+
+	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func identifier(ident string) *iota_sdk.Identifier {
@@ -23,11 +24,11 @@ func main() {
 	gasStationAuthToken := "test"
 	keypair := iota_sdk.Ed25519PrivateKeyGenerate()
 	sender := keypair.PublicKey().DeriveAddress()
-	simpleKey := iota_sdk.SimpleKeypairFromEd25519(keypair)
+	signer := iota_sdk.TransactionSignerFromEd25519(keypair)
 
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	package_id := iota_sdk.AddressStdLib()
+	package_id := iota_sdk.AddressStd()
 	module_name := identifier("u64")
 	function_name := identifier("sqrt")
 
@@ -45,7 +46,7 @@ func main() {
 
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
-	res, err := builder.Execute(simpleKey, nil)
+	res, err := builder.Execute(signer, nil)
 	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}

@@ -1,13 +1,15 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{Client, error::Result};
-use iota_types::Digest;
+use iota_sdk::{
+    graphql_client::{Client, error::Result},
+    types::Digest,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
-    let digest = Digest::from_base58("Agug2GETToZj4Ncw3RJn2KgDUEpVQKG1WaTZVcLcqYnf")?;
+    let client = Client::new_testnet();
+    let digest = Digest::from_base58("CY14gCcLcVuSMN9Hq7Ya6vEhBAzSzciNw47togWXJAZ8")?;
 
     let signed_transaction = client.transaction(digest).await?.expect("tx not found");
     println!("Signed Transaction: {signed_transaction:#?}\n");

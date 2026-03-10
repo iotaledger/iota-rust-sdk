@@ -36,8 +36,18 @@ use crate::types::struct_tag::StructTag;
 /// type-tag-vector = %x06 type-tag
 /// type-tag-struct = %x07 struct-tag
 /// ```
-#[derive(derive_more::Display, derive_more::From, uniffi::Object)]
-#[uniffi::export(Display)]
+#[derive(
+    Debug,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    derive_more::Display,
+    derive_more::From,
+    uniffi::Object,
+)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct TypeTag(pub iota_sdk::types::TypeTag);
 
 #[uniffi::export]
@@ -183,6 +193,13 @@ impl TypeTag {
             struct_tag.0.clone(),
         )))
     }
+
+    /// Returns the string representation of this type tag using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        self.0.to_canonical_string(with_prefix)
+    }
 }
 
 crate::export_iota_types_objects_bcs_conversion!(TypeTag);
+crate::export_iota_types_objects_json_conversion!(TypeTag);

@@ -5,10 +5,7 @@ use std::sync::Arc;
 
 use iota_sdk::types::GasCostSummary;
 
-use crate::{
-    error::Result,
-    types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember},
-};
+use crate::types::{digest::Digest, signature::UserSignature, validator::ValidatorCommitteeMember};
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -338,11 +335,17 @@ impl From<EndOfEpochData> for iota_sdk::types::EndOfEpochData {
     }
 }
 
+crate::export_iota_types_bcs_conversion!(EndOfEpochData);
 crate::export_iota_types_objects_bcs_conversion!(
     CheckpointSummary,
     CheckpointContents,
     CheckpointTransactionInfo,
     CheckpointCommitment
 );
-
-crate::export_iota_types_bcs_conversion!(EndOfEpochData);
+crate::export_iota_types_json_conversion!(EndOfEpochData);
+crate::export_iota_types_objects_json_conversion!(
+    CheckpointSummary,
+    CheckpointContents,
+    CheckpointTransactionInfo,
+    CheckpointCommitment
+);

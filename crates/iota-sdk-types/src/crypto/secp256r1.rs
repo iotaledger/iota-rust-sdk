@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of secp256r1 public-key cryptogrophy.
+//! Implementation of secp256r1 public-key cryptography.
 
 use crate::crypto::{PublicKeyExt, SignatureScheme};
 
@@ -13,7 +13,7 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// secp256r1-public-key = 33OCTECT
+/// secp256r1-public-key = 33OCTET
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -131,7 +131,7 @@ impl std::fmt::Debug for Secp256r1PublicKey {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// secp256r1-signature = 64OCTECT
+/// secp256r1-signature = 64OCTET
 /// ```
 #[derive(Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

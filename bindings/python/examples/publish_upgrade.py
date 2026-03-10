@@ -21,7 +21,7 @@
 # iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 # ```
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 import os
@@ -49,20 +49,20 @@ async def main():
     sender = private_key.public_key().derive_address()
     print(f"Sender: {sender.to_hex()}")
 
+    client = GraphQlClient.new_localnet()
+
     # Fund the sender address for gas payment
     faucet = FaucetClient.new_localnet()
-    faucet_receipt = await faucet.request_and_wait(sender)
+    faucet_receipt = await faucet.request_and_wait_for_finalized(sender, client)
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
-
-    client = GraphQlClient.new_localnet()
 
     # Build the `publish` PTB
     builder = TransactionBuilder(sender).with_client(client)
     # Publish the package and receive the upgrade cap in return
     builder.publish(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
-    builder.transfer_objects(sender, [PtbArgument.res("upgrade_cap")])
+    builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
     tx = await builder.finish()
 
     # Perform a dry-run first to check if everything is correct
@@ -131,7 +131,7 @@ async def main():
     builder.upgrade(
         package_id,
         package_data,
-        PtbArgument.res("upgrade_ticket"),
+        PtbArgument.assigned("upgrade_ticket"),
         "upgrade_receipt",
     )
 
@@ -142,7 +142,7 @@ async def main():
         Identifier("commit_upgrade"),
         [
             PtbArgument.object_id(upgrade_cap),
-            PtbArgument.res("upgrade_receipt")
+            PtbArgument.assigned("upgrade_receipt")
         ],
     )
 

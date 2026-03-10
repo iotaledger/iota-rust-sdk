@@ -26,13 +26,13 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
-	sender := addrFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	sender := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
 	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
 
-	packageAddr := iota_sdk.AddressStdLib()
+	packageAddr := iota_sdk.AddressStd()
 	moduleName := identifier("u64")
 	functionName := identifier("max")
 	builder.MoveCall(
@@ -57,14 +57,14 @@ func main() {
 
 	builder.SplitCoins(
 		iota_sdk.PtbArgumentGas(),
-		// Use the named results of previous commands to use as arguments
-		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("res0"), iota_sdk.PtbArgumentRes("res1")},
-		// For nested results, a tuple or vec can be used to name them
+		// Use the assigned results of previous commands to use as arguments
+		[]*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("res0"), iota_sdk.PtbArgumentAssigned("res1")},
+		// For nested results, a tuple or vec can be used to assign them
 		[]string{"coin0", "coin1"},
 	)
 
-	// Use named results as arguments
-	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentRes("coin0"), iota_sdk.PtbArgumentRes("coin1")})
+	// Use assigned results as arguments
+	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("coin0"), iota_sdk.PtbArgumentAssigned("coin1")})
 
 	txn, err := builder.Finish()
 	if err.(*iota_sdk.SdkFfiError) != nil {

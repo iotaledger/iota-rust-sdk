@@ -11,12 +11,12 @@ fun main() = runBlocking {
         var gasStationAuthToken = "test"
         var keypair = Ed25519PrivateKey.generate()
         var sender = keypair.publicKey().deriveAddress()
-        var simpleKey = SimpleKeypair.fromEd25519(keypair)
+        var signer = TransactionSigner.fromEd25519(keypair)
 
         val builder = TransactionBuilder(sender).withClient(client)
 
         builder.moveCall(
-            Address.stdLib(),
+            Address.std(),
             Identifier("u64"),
             Identifier("sqrt"),
             listOf(PtbArgument.u64(64uL)),
@@ -27,7 +27,7 @@ fun main() = runBlocking {
             headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
         )
 
-        val res = builder.execute(simpleKey)
+        val res = builder.execute(signer)
 
         println("$res")
 

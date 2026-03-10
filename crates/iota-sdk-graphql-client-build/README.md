@@ -62,6 +62,6 @@ async fn main() {
 }
 ```
 
-6. For `UInt53`, you can use `u64` type directly as the `iota-sdk-graphql-client`'s schema implements the `impl_scalar`. Similarly for other types (Base64, DateTime). See more available types here: <https://github.com/iotaledger/iota-rust-sdk/blob/02639f6b09375fe03fa2243868be17bec1dfa33c/crates/iota-sdk-graphql-client/src/query_types/mod.rs?plain=1#L124-L126>
+6. For `UInt53`, you can use `u64` type directly as the `iota-sdk-graphql-client`'s schema implements the `impl_scalar`. Similarly for other types (Base64, DateTime). See more available types [here](https://github.com/iotaledger/iota-rust-sdk/tree/develop/crates/iota-sdk-graphql-client/src/query_types/mod.rs).
 
 7. Read the `cynic` [documentation](https://cynic-rs.dev/) to learn how to work with it, particularly when it comes to passing arguments to the query.

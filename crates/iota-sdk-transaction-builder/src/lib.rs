@@ -1,4 +1,4 @@
-// Copyright 2025 IOTA Stiftung
+// Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 //! # IOTA Transaction Builder
@@ -31,14 +31,14 @@
 //! # async fn main() -> eyre::Result<()> {
 //!
 //! let sender =
-//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
-//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_devnet());
+//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_testnet());
 //!
 //! let coin =
-//!     ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
+//!     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
 //!
 //! builder.send_coins([coin], to_address, 50000000000u64);
 //!
@@ -55,7 +55,7 @@
 //! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
 //!
 //! let sender =
-//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
@@ -63,14 +63,14 @@
 //!
 //! let coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
-//!         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+//!         "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
 //!     )?,
-//!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-//!     version: 435090179,
+//!     digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+//!     version: 545110774,
 //! };
 //! let gas_coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
-//!         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+//!         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
 //!     )?,
 //!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
 //!     version: 473053810,
@@ -97,9 +97,10 @@
 //! ### Commands
 //!
 //! Each command method adds one or more commands to the final transaction. Some
-//! commands have optional follow-up methods. All command results can be named
-//! via [name](TransactionBuilder::name). Naming a command allows them to be
-//! used later in the transaction via the [res] method.
+//! commands have optional follow-up methods. All command results can be
+//! assigned a name via [assign](TransactionBuilder::assign). Assigning a name
+//! to a command allows them to be used later in the transaction via the
+//! [assigned] method.
 //!
 //! - [move_call](TransactionBuilder::move_call): Call a move function.
 //!     - `arguments`: Add arguments to the move call.
@@ -149,7 +150,7 @@
 //! - [pure_bytes](TransactionBuilder::pure_bytes)
 //! - [pure](TransactionBuilder::pure)
 //! - [command](TransactionBuilder::command)
-//! - [named_command](TransactionBuilder::named_command)
+//! - [assigned_command](TransactionBuilder::assigned_command)
 //!
 //! ## Finalization and Execution
 //!
@@ -211,8 +212,9 @@
 //!   client is provided. This will be assumed immutable or owned.
 //! - [ObjectReference](iota_types::ObjectReference): An object's reference.
 //!   This will be assumed immutable or owned.
-//! - [Res](builder::ptb_arguments::Res): A reference to the result of a
-//!   previous named command, set with [name](TransactionBuilder::name).
+//! - [Assigned](builder::ptb_arguments::Assigned): A reference to the result of
+//!   a previous assigned command, set with
+//!   [assign](TransactionBuilder::assign).
 //! - [Shared]: Allows specifying shared immutable move objects.
 //! - [SharedMut]: Allows specifying shared mutable move objects.
 //! - [Receiving]: Allows specifying receiving move objects.
@@ -241,7 +243,7 @@
 //! builder
 //!     .move_call(Address::TWO, "vec_map", "from_keys_values")
 //!     .generics::<(Address, u64)>()
-//!     .arguments((vec![address1, address2], vec![10000000u64, 20000000u64]));
+//!     .arguments(([address1, address2], [10000000u64, 20000000u64]));
 //! ```
 //!
 //! ### Custom Type
@@ -287,7 +289,9 @@ pub use self::{
     builder::{
         TransactionBuilder,
         client_methods::ClientMethods,
-        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, res},
+        move_authenticator::MoveAuthenticatorBuilder,
+        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
+        signer::TransactionSigner,
     },
     types::PureBytes,
 };
@@ -306,7 +310,7 @@ mod tests {
         ObjectType, TransactionEffects, UpgradePolicy,
     };
 
-    use crate::{TransactionBuilder, error::Error, res};
+    use crate::{TransactionBuilder, assigned, error::Error};
 
     /// This is used to read the json file that contains the modules/deps/digest
     /// generated with iota move build --dump-bytecode-as-base64 on the
@@ -373,7 +377,7 @@ mod tests {
     /// Wait for the transaction to be finalized and indexed. This queries the
     /// GraphQL server until it retrieves the requested transaction.
     async fn wait_for_tx(client: &Client, digest: Digest) {
-        while client.transaction(digest).await.unwrap().is_none() {
+        while !client.is_tx_finalized(digest).await.unwrap() {
             tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
         }
     }
@@ -434,7 +438,7 @@ mod tests {
         let recipient = Address::generate(rand::thread_rng());
         tx.transfer_objects(recipient, [coin]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -451,11 +455,11 @@ mod tests {
         // set up the sender, gas object, gas budget, and gas price and return the pk to
         // sign
         let (mut tx, _, pk, _) = helper_setup().await;
-        tx.move_call(Address::STD_LIB, "option", "is_none")
+        tx.move_call(Address::STD, "option", "is_none")
             .generics::<u64>()
             .arguments([Some(1u64)]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
     }
 
@@ -466,11 +470,11 @@ mod tests {
 
         // transfer 1 IOTA from Gas coin
         let gas = tx.get_gas()[0];
-        tx.split_coins(gas, [1_000_000_000u64]).name("coin");
+        tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
         let recipient = Address::generate(rand::thread_rng());
-        tx.transfer_objects(recipient, [res("coin")]);
+        tx.transfer_objects(recipient, [assigned("coin")]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
         // check that recipient has 1 coin
@@ -490,7 +494,7 @@ mod tests {
         // transfer 1 IOTA
         tx.split_coins(coin, [1_000_000_000u64]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await.unwrap();
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await.unwrap();
 
         let expected_status = ExecutionStatus::Success;
         // The tx failed, so we expect Failure instead of Success
@@ -512,7 +516,7 @@ mod tests {
         tx.merge_coins(coin1, coins_to_merge);
         let client = tx.get_client().clone();
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
 
         // check that there are two coins
@@ -529,7 +533,7 @@ mod tests {
 
         tx.make_move_vec([1u64]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
     }
 
@@ -540,23 +544,22 @@ mod tests {
         let package = move_package_data("package_test_example_v1.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [assigned("cap")]);
 
-        let effects = tx.execute(&pk.into(), WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
     }
 
     #[tokio::test]
     async fn test_upgrade() {
         let (mut tx, address, pk, coins) = helper_setup().await;
-        let key = pk.into();
 
         let package = move_package_data("package_test_example_v2.json");
         tx.publish(package)
             .upgrade_cap("cap")
-            .transfer_objects(address, [res("cap")]);
+            .transfer_objects(address, [assigned("cap")]);
 
-        let effects = tx.execute(&key, WaitForTx::Finalized).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         let mut package_id: Option<ObjectId> = None;
         let mut created_objs = vec![];
         if let Ok(ref effects) = effects {
@@ -577,6 +580,7 @@ mod tests {
                         }
                     }
                 }
+                _ => unimplemented!("a new enum variant was added and needs to be handled"),
             }
         }
         check_effects_status_success(effects).await;
@@ -587,7 +591,7 @@ mod tests {
         for o in created_objs {
             let obj = client.object(o, None).await.unwrap().unwrap();
             match obj.object_type() {
-                ObjectType::Struct(x) if x.name.to_string() == "UpgradeCap" => {
+                ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                     upgrade_cap = Some(obj.object_id());
                     break;
                 }
@@ -604,10 +608,10 @@ mod tests {
                 UpgradePolicy::Compatible as u8,
                 updated_package.digest,
             ))
-            .name("ticket");
+            .assign("ticket");
         // now we can upgrade the package
         let receipt = tx
-            .upgrade(package_id.unwrap(), updated_package, res("ticket"))
+            .upgrade(package_id.unwrap(), updated_package, assigned("ticket"))
             .arg();
 
         // commit the upgrade
@@ -616,7 +620,7 @@ mod tests {
 
         tx.gas([coins.last().unwrap().id]);
 
-        let effects = tx.execute(&key, WaitForTx::Indexed).await;
+        let effects = tx.execute(&pk, WaitForTx::Finalized).await;
         check_effects_status_success(effects).await;
     }
 }

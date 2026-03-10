@@ -1,19 +1,19 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     sender = Address.from_hex(
-        "0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
     coin_id = ObjectId.from_hex(
-        "0x0b0270ee9d27da0db09651e5f7338dfa32c7ee6441ccefa1f6e305735bcfc7ab")
+        "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
 
     builder = TransactionBuilder(sender).with_client(client)
 
@@ -26,9 +26,9 @@ async def main():
     ).transfer_objects(
         sender,
         [
-            PtbArgument.res("coin1"),
-            PtbArgument.res("coin2"),
-            PtbArgument.res("coin3"),
+            PtbArgument.assigned("coin1"),
+            PtbArgument.assigned("coin2"),
+            PtbArgument.assigned("coin3"),
         ],
     )
 

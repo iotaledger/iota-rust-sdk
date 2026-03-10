@@ -1,9 +1,11 @@
-# IOTA Sdk
+# IOTA SDK
+
+[![Coverage Status](https://coveralls.io/repos/github/iotaledger/iota-rust-sdk/badge.svg?branch=develop)](https://coveralls.io/github/iotaledger/iota-rust-sdk?branch=develop)
 
 A Rust SDK for integrating with the [IOTA blockchain](https://docs.iota.org/).
 
 > [!NOTE]
-> This is project is under development and many features may still be under
+> This project is under development and many features may still be under
 > development or missing.
 
 ## Overview
@@ -12,7 +14,7 @@ This repository contains a collection of libraries for integrating with the IOTA
 
 A few of the project's high-level goals are as follows:
 
-- **Be modular** - user's should only need to pay the cost (in terms of dependencies/compilation time) for the features that they use.
+- **Be modular** - users should only need to pay the cost (in terms of dependencies/compilation time) for the features that they use.
 - **Be light** - strive to have a minimal dependency footprint.
 - **Support developers** - provide all needed types, abstractions and APIs to enable developers to build robust applications on IOTA.
 - **Support wasm** - where possible, libraries should be usable in wasm environments.
@@ -24,10 +26,6 @@ In an effort to be modular, functionality is split between a number of crates. T
 - [`iota-sdk`](crates/iota-sdk)
   [![iota-sdk on crates.io](https://img.shields.io/crates/v/iota-sdk)](https://crates.io/crates/iota-sdk)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk)
-  [![Documentation (develop)](https://img.shields.io/badge/docs-develop-59f)](https://github.com/iotaledger/iota-rust-sdk/iota_sdk_types/)
-- [`iota-sdk-types`](crates/iota-sdk-types)
-  [![iota-sdk-types on crates.io](https://img.shields.io/crates/v/iota-sdk-types)](https://crates.io/crates/iota-sdk-types)
-  [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-types)
 - [`iota-sdk-crypto`](crates/iota-sdk-crypto)
   [![iota-sdk-crypto on crates.io](https://img.shields.io/crates/v/iota-sdk-crypto)](https://crates.io/crates/iota-sdk-crypto)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-crypto)
@@ -37,6 +35,9 @@ In an effort to be modular, functionality is split between a number of crates. T
 - [`iota-sdk-transaction-builder`](crates/iota-sdk-transaction-builder)
   [![iota-sdk-transaction-builder on crates.io](https://img.shields.io/crates/v/iota-sdk-transaction-builder)](https://crates.io/crates/iota-sdk-transaction-builder)
   [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-transaction-builder)
+- [`iota-sdk-types`](crates/iota-sdk-types)
+  [![iota-sdk-types on crates.io](https://img.shields.io/crates/v/iota-sdk-types)](https://crates.io/crates/iota-sdk-types)
+  [![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-types)
 
 ## License
 

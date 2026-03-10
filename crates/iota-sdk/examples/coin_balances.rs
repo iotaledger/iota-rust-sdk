@@ -1,12 +1,12 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_graphql_client::{Client, error::Result};
+use iota_sdk::graphql_client::{Client, error::Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
-    let address = "0xb14f13f5343641e5b52d144fd6f106a7058efe2f1ad44598df5cda73acf0101f".parse()?;
+    let client = Client::new_testnet();
+    let address = "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
     for coin in client
         .coins(address, None, Default::default())

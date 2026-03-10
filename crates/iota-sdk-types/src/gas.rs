@@ -39,7 +39,11 @@
 ///                    u64 ; non-refundable-storage-fee
 /// ```
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GasCostSummary {
@@ -110,6 +114,11 @@ impl GasCostSummary {
 impl std::fmt::Display for GasCostSummary {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "computation_cost: {}, ", self.computation_cost)?;
+        write!(
+            f,
+            "computation_cost_burned: {}, ",
+            self.computation_cost_burned
+        )?;
         write!(f, "storage_cost: {}, ", self.storage_cost)?;
         write!(f, "storage_rebate: {}, ", self.storage_rebate)?;
         write!(

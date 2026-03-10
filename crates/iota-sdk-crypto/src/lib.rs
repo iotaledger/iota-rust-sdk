@@ -43,6 +43,10 @@ pub mod validator;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
 pub mod ed25519;
 
+#[cfg(feature = "mnemonic")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "mnemonic")))]
+pub mod mnemonic;
+
 #[cfg(feature = "secp256k1")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
 pub mod secp256k1;

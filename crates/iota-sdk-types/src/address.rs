@@ -69,7 +69,7 @@ pub struct Address(
 impl Address {
     pub const LENGTH: usize = 32;
     pub const ZERO: Self = Self([0u8; Self::LENGTH]);
-    pub const STD_LIB: Self = Self::from_u8(1);
+    pub const STD: Self = Self::from_u8(1);
     pub const FRAMEWORK: Self = Self::from_u8(2);
     pub const SYSTEM: Self = Self::from_u8(3);
 
@@ -107,14 +107,16 @@ impl Address {
         &self.0
     }
 
+    /// Parses an Address from a hex string, with or without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s.
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         let hex = hex.as_ref();
-
-        if !hex.starts_with(b"0x") {
-            return Err(AddressParseError);
-        }
-
-        let hex = &hex[2..];
+        let hex = if hex.starts_with(b"0x") {
+            &hex[2..]
+        } else {
+            hex
+        };
 
         // If the string is too short we'll need to pad with 0's
         if hex.len() < Self::LENGTH * 2 {
@@ -128,17 +130,43 @@ impl Address {
             <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
         }
         .map(Self)
-        // TODO fix error to contain hex parse error
-        .map_err(|_| AddressParseError)
+        .map_err(AddressParseError::FromHex)
     }
 
     pub fn to_hex(&self) -> String {
         self.to_string()
     }
 
+    /// Returns the string representation of this address using the
+    /// canonical display, with or without a `0x` prefix.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        let hex_str = hex::encode(self.0);
+        if with_prefix {
+            format!("0x{hex_str}")
+        } else {
+            hex_str
+        }
+    }
+
+    /// Returns the shortest possible string representation of the address (i.e.
+    /// with leading zeroes trimmed).
+    pub fn to_short_string(&self, with_prefix: bool) -> String {
+        let full_str = self.to_canonical_string(false);
+        let trimmed = full_str.trim_start_matches('0');
+        let hex_str = if trimmed.is_empty() { "0" } else { trimmed };
+        if with_prefix {
+            format!("0x{hex_str}")
+        } else {
+            hex_str.to_owned()
+        }
+    }
+
     pub fn from_bytes<T: AsRef<[u8]>>(bytes: T) -> Result<Self, AddressParseError> {
-        <[u8; Self::LENGTH]>::try_from(bytes.as_ref())
-            .map_err(|_| AddressParseError)
+        let bytes = bytes.as_ref();
+        <[u8; Self::LENGTH]>::try_from(bytes)
+            .map_err(|_| AddressParseError::InvalidByteLength {
+                actual: bytes.len(),
+            })
             .map(Self)
     }
 }
@@ -189,12 +217,7 @@ impl From<super::ObjectId> for Address {
 
 impl std::fmt::Display for Address {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "0x")?;
-        for byte in &self.0 {
-            write!(f, "{byte:02x}")?;
-        }
-
-        Ok(())
+        self.to_canonical_string(true).fmt(f)
     }
 }
 
@@ -234,20 +257,17 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct AddressParseError;
-
-impl std::fmt::Display for AddressParseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "Unable to parse Address (must be hex string of length {})",
-            2 * Address::LENGTH
-        )
-    }
+#[derive(Clone, Debug, thiserror::Error, PartialEq)]
+#[non_exhaustive]
+pub enum AddressParseError {
+    #[error("address must be hex string of length {}", Address::LENGTH * 2)]
+    FromHex(#[from] hex::FromHexError),
+    #[error(
+        "invalid address byte length: expected {}, got {actual}",
+        Address::LENGTH
+    )]
+    InvalidByteLength { actual: usize },
 }
-
-impl std::error::Error for AddressParseError {}
 
 #[cfg(feature = "schemars")]
 impl schemars::JsonSchema for Address {
@@ -255,7 +275,7 @@ impl schemars::JsonSchema for Address {
         "Address".to_owned()
     }
 
-    fn json_schema(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    fn json_schema(_: &mut schemars::r#gen::SchemaGenerator) -> schemars::schema::Schema {
         use schemars::schema::{InstanceType, Metadata, SchemaObject, StringValidation};
 
         let hex_length = Address::LENGTH * 2;
@@ -301,11 +321,133 @@ mod tests {
     use super::Address;
 
     #[test]
-    fn hex_parsing() {
-        let actual = Address::from_hex("0x2").unwrap();
-        let expected = "0x0000000000000000000000000000000000000000000000000000000000000002";
+    fn parse_address_with_0x_prefix() {
+        let hex = "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
+        let address = Address::from_hex(hex).unwrap();
+        assert_eq!(address.to_string(), hex);
+    }
 
-        assert_eq!(actual.to_string(), expected);
+    #[test]
+    fn parse_address_without_0x_prefix() {
+        let hex = "02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
+        let address = Address::from_hex(hex).unwrap();
+        assert_eq!(
+            address.to_string(),
+            "0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331"
+        );
+    }
+
+    #[test]
+    fn parse_short_address_single_digit() {
+        let address = Address::from_hex("0x1").unwrap();
+        assert_eq!(address, Address::STD);
+        assert_eq!(
+            address.to_string(),
+            "0x0000000000000000000000000000000000000000000000000000000000000001"
+        );
+    }
+
+    #[test]
+    fn parse_short_address_without_prefix() {
+        let address = Address::from_hex("3").unwrap();
+        assert_eq!(address, Address::SYSTEM);
+    }
+
+    #[test]
+    fn parse_zero_address() {
+        let address = Address::from_hex("0x0").unwrap();
+        assert_eq!(address, Address::ZERO);
+
+        let address = Address::from_hex("0").unwrap();
+        assert_eq!(address, Address::ZERO);
+
+        let address =
+            Address::from_hex("0x0000000000000000000000000000000000000000000000000000000000000000")
+                .unwrap();
+        assert_eq!(address, Address::ZERO);
+    }
+
+    #[test]
+    fn parse_address_invalid_hex_char() {
+        let result = Address::from_hex("0xGGGG");
+        assert!(result.is_err());
+        assert!(matches!(
+            result,
+            Err(AddressParseError::FromHex(
+                hex::FromHexError::InvalidHexCharacter { .. }
+            ))
+        ));
+    }
+
+    #[test]
+    fn parse_address_too_long() {
+        // 65 hex chars (one more than allowed 64)
+        let result = Address::from_hex(
+            "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331",
+        );
+        assert!(matches!(
+            result,
+            Err(AddressParseError::FromHex(hex::FromHexError::OddLength))
+        ));
+
+        // 66 hex chars (two more than allowed 64)
+        let result = Address::from_hex(
+            "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f3316",
+        );
+        assert!(matches!(
+            result,
+            Err(AddressParseError::FromHex(
+                hex::FromHexError::InvalidStringLength
+            ))
+        ));
+    }
+
+    #[test]
+    fn from_bytes_valid() {
+        let bytes = [0u8; 32];
+        let address = Address::from_bytes(bytes).unwrap();
+        assert_eq!(address, Address::ZERO);
+    }
+
+    #[test]
+    fn from_bytes_invalid_length() {
+        let bytes = [0u8; 31];
+        let result = Address::from_bytes(bytes);
+        assert!(matches!(
+            result,
+            Err(AddressParseError::InvalidByteLength { actual: 31 })
+        ));
+
+        let bytes = [0u8; 33];
+        let result = Address::from_bytes(bytes);
+        assert!(matches!(
+            result,
+            Err(AddressParseError::InvalidByteLength { actual: 33 })
+        ));
+    }
+
+    #[test]
+    fn to_short_string_formats() {
+        let address = Address::from_hex("0x2").unwrap();
+        assert_eq!(address.to_short_string(true), "0x2");
+        assert_eq!(address.to_short_string(false), "2");
+
+        let zero = Address::ZERO;
+        assert_eq!(zero.to_short_string(true), "0x0");
+        assert_eq!(zero.to_short_string(false), "0");
+    }
+
+    #[test]
+    fn to_canonical_string_formats() {
+        let address = Address::from_hex("0x2").unwrap();
+        assert_eq!(
+            address.to_canonical_string(true),
+            "0x0000000000000000000000000000000000000000000000000000000000000002"
+        );
+        assert_eq!(
+            address.to_canonical_string(false),
+            "0000000000000000000000000000000000000000000000000000000000000002"
+        );
     }
 
     #[test]

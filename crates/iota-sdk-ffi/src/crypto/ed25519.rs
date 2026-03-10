@@ -10,13 +10,14 @@ use rand::rngs::OsRng;
 use crate::{
     error::{Result, SdkFfiError},
     types::{
-        crypto::{Ed25519PublicKey, Ed25519Signature},
+        crypto::{Ed25519PublicKey, Ed25519Signature, intent::PersonalMessage},
         signature::{SimpleSignature, UserSignature},
     },
 };
 
-#[derive(derive_more::From, derive_more::Deref, uniffi::Object)]
-pub struct Ed25519PrivateKey(iota_sdk::crypto::ed25519::Ed25519PrivateKey);
+#[derive(Debug, PartialEq, Eq, derive_more::From, derive_more::Deref, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct Ed25519PrivateKey(pub iota_sdk::crypto::ed25519::Ed25519PrivateKey);
 
 #[uniffi::export]
 impl Ed25519PrivateKey {
@@ -146,15 +147,13 @@ impl Ed25519PrivateKey {
     }
 
     /// Sign a personal message and return a UserSignature.
-    pub fn sign_personal_message(
-        &self,
-        message: &crate::types::PersonalMessage,
-    ) -> Result<UserSignature> {
+    pub fn sign_personal_message(&self, message: &PersonalMessage) -> Result<UserSignature> {
         Ok(iota_sdk::crypto::IotaSigner::sign_personal_message(&self.0, &message.0)?.into())
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
 pub struct Ed25519VerifyingKey(iota_sdk::crypto::ed25519::Ed25519VerifyingKey);
 
 #[uniffi::export]
@@ -213,9 +212,11 @@ impl Ed25519VerifyingKey {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
 pub struct Ed25519Verifier(iota_sdk::crypto::ed25519::Ed25519Verifier);
 
+#[uniffi::export]
 impl Ed25519Verifier {
     #[uniffi::constructor]
     pub fn new() -> Self {

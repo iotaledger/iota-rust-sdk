@@ -1,16 +1,16 @@
 # Copyright (c) 2025 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-from lib.iota_sdk_ffi import *
+from lib.iota_sdk import *
 
 import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     object_id = ObjectId.from_hex(
-        "0x20c056090c3dd1604fcfd7ea759781de650aa45323738e799365d0c28bebeb1e")
+        "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
     obj = await client.object(object_id)
     if obj is None:
