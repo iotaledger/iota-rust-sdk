@@ -323,6 +323,8 @@ mod version_assignments {
 
     #[derive(serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
+    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableConsensusDeterminedVersionAssignments {
         CancelledTransactions {
             cancelled_transactions: Vec<CancelledTransaction>,
@@ -421,7 +423,7 @@ mod version_assignments {
                 use serde::ser::SerializeTuple;
                 let mut tuple = serializer.serialize_tuple(2)?;
                 tuple.serialize_element(&self.object_id)?;
-                tuple.serialize_element(&self.version.to_string())?;
+                tuple.serialize_element(&self.version)?;
                 tuple.end()
             } else {
                 let binary = BinaryVersionAssignmentRef {
@@ -439,12 +441,11 @@ mod version_assignments {
             D: Deserializer<'de>,
         {
             if deserializer.is_human_readable() {
-                let (object_id, version): (ObjectId, String) =
-                    Deserialize::deserialize(deserializer)?;
-                let version = version
-                    .parse::<crate::Version>()
-                    .map_err(serde::de::Error::custom)?;
-                Ok(VersionAssignment { object_id, version })
+                let (object_id, version): (ObjectId, u64) = Deserialize::deserialize(deserializer)?;
+                Ok(VersionAssignment {
+                    object_id,
+                    version: version.into(),
+                })
             } else {
                 BinaryVersionAssignment::deserialize(deserializer).map(|b| VersionAssignment {
                     object_id: b.object_id,
@@ -579,64 +580,13 @@ mod version_assignments {
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for ConsensusDeterminedVersionAssignments {
         fn schema_name() -> String {
-            "ConsensusDeterminedVersionAssignments".to_owned()
+            ReadableConsensusDeterminedVersionAssignments::schema_name()
         }
 
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            use schemars::schema::{
-                ArrayValidation, InstanceType, ObjectValidation, Schema, SchemaObject, SingleOrVec,
-                SubschemaValidation,
-            };
-
-            // Externally tagged enum with oneOf
-            SchemaObject {
-                metadata: Some(Box::new(schemars::schema::Metadata {
-                    description: Some(
-                        "Uses an enum to allow for future expansion of the \
-                         ConsensusDeterminedVersionAssignments."
-                            .to_owned(),
-                    ),
-                    ..Default::default()
-                })),
-                subschemas: Some(Box::new(SubschemaValidation {
-                    one_of: Some(vec![
-                        // CancelledTransactions variant
-                        SchemaObject {
-                            instance_type: Some(InstanceType::Object.into()),
-                            object: Some(Box::new(ObjectValidation {
-                                required: ["CancelledTransactions".to_owned()]
-                                    .into_iter()
-                                    .collect(),
-                                properties: [(
-                                    "CancelledTransactions".to_owned(),
-                                    SchemaObject {
-                                        instance_type: Some(InstanceType::Array.into()),
-                                        array: Some(Box::new(ArrayValidation {
-                                            items: Some(SingleOrVec::Single(Box::new(
-                                                generator.subschema_for::<CancelledTransaction>(),
-                                            ))),
-                                            ..Default::default()
-                                        })),
-                                        ..Default::default()
-                                    }
-                                    .into(),
-                                )]
-                                .into_iter()
-                                .collect(),
-                                additional_properties: Some(Box::new(Schema::Bool(false))),
-                                ..Default::default()
-                            })),
-                            ..Default::default()
-                        }
-                        .into(),
-                    ]),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            }
-            .into()
+            ReadableConsensusDeterminedVersionAssignments::json_schema(generator)
         }
     }
 }
