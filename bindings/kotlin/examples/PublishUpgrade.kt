@@ -77,9 +77,6 @@ fun main() = runBlocking {
         val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
         println("Success")
 
-        // Wait some time for the indexer to process the tx
-        kotlinx.coroutines.delay(3000)
-
         // Resolve UpgradeCap and PackageId via the client
         var upgradeCap: ObjectId? = null
         var packageId: ObjectId? = null
@@ -159,9 +156,6 @@ fun main() = runBlocking {
         val sigUpgrade = privateKey.signTransaction(txUpgrade)
         val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
         println("Success")
-
-        // Wait some time for the indexer to process the tx
-        kotlinx.coroutines.delay(3000)
 
         // Print the new package version (should now be 2)
         for (changedObj in effectsUpgrade.asV1().changedObjects) {
