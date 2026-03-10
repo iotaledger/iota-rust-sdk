@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, MoveAbility, MoveFunction, OpenMoveType, PageInfo, schema,
+    Address, MoveAbility, MoveFunction, MovePackage as PackageMovePackage, OpenMoveType, PageInfo,
+    schema,
 };
-use crate::query_types::MovePackage as PackageMovePackage;
 
 #[derive(cynic::QueryFragment, Debug, Clone)]
 #[cynic(

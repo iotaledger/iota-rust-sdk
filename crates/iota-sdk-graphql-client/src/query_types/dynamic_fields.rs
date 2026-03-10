@@ -40,14 +40,22 @@ pub struct ObjectOwner {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldQueryArgs")]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "DynamicFieldQueryArgs"
+)]
 pub struct DynamicFieldQuery {
     #[arguments(address: $address)]
     pub owner: Option<OwnerField>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldQueryArgs")]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Owner",
+    variables = "DynamicFieldQueryArgs"
+)]
 pub struct OwnerField {
     #[arguments(name: $name)]
     pub dynamic_field: Option<DynamicField>,
@@ -109,13 +117,21 @@ pub struct DynamicFieldName {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldQueryArgs")]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Owner",
+    variables = "DynamicFieldQueryArgs"
+)]
 pub struct DynamicObjectField {
     #[arguments(name: $name)]
     pub dynamic_object_field: Option<DynamicField>,
 }
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldQueryArgs")]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "DynamicFieldQueryArgs"
+)]
 pub struct DynamicObjectFieldQuery {
     #[arguments(address: $address)]
     pub owner: Option<DynamicObjectField>,

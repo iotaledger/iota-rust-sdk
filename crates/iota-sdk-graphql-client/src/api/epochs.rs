@@ -9,7 +9,7 @@ use cynic::QueryBuilder;
 use crate::{
     Client,
     error::Result,
-    query_types::{Epoch, EpochQueryArgs, EpochQuery, EpochSummaryQuery},
+    query_types::{Epoch, EpochQuery, EpochQueryArgs, EpochSummaryQuery},
 };
 
 impl Client {

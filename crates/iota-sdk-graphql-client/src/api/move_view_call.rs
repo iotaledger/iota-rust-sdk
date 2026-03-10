@@ -7,7 +7,7 @@ use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 use crate::{
     Client,
     error::Result,
-    query_types::{MoveViewCallQueryArgs, MoveViewCallQuery, MoveViewResult},
+    query_types::{MoveViewCallQuery, MoveViewCallQueryArgs, MoveViewResult},
 };
 
 impl Client {

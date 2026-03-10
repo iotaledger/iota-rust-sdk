@@ -301,7 +301,7 @@ pub struct ExecutionResult {
 }
 
 /// The effects returned by the execute transaction mutation.
-/// Unlike [`TransactionBlockEffects`] (used in read queries where `bcs` may be
+/// Unlike `TransactionBlockEffects` (used in read queries where `bcs` may be
 /// absent), this variant always includes `bcs` because the mutation guarantees
 /// the effects are present.
 #[derive(cynic::QueryFragment, Debug)]

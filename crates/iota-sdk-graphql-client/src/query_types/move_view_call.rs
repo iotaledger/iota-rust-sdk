@@ -24,7 +24,11 @@ use crate::query_types::{JsonValue, schema};
 /// Returned results are resolved (Move types deserialized) and formatted in
 /// JSON.
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "MoveViewCallQueryArgs")]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "MoveViewCallQueryArgs"
+)]
 pub struct MoveViewCallQuery {
     #[arguments(functionName: $function_name, typeArgs: $type_arguments, arguments: $arguments)]
     pub move_view_call: MoveViewResult,

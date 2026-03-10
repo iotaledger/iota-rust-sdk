@@ -15,8 +15,8 @@ use crate::{
     query_types::{
         LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
         NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
-        NormalizedMoveModuleQueryArgs, PackageQueryArgs, PackageCheckpointFilter, PackageQuery,
-        PackageVersionsQueryArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+        NormalizedMoveModuleQueryArgs, PackageCheckpointFilter, PackageQuery, PackageQueryArgs,
+        PackageVersionsQuery, PackageVersionsQueryArgs, PackagesQuery, PackagesQueryArgs,
     },
 };
 

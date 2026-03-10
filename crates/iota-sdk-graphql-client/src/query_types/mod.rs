@@ -22,34 +22,34 @@ mod service_config;
 mod transaction;
 
 pub use active_validators::{
-    ActiveValidatorsQueryArgs, ActiveValidatorsQuery, EpochValidator, Validator,
+    ActiveValidatorsQuery, ActiveValidatorsQueryArgs, EpochValidator, Validator,
     ValidatorConnection, ValidatorCredentials, ValidatorSetQuery,
 };
-pub use balance::{Balance, BalanceQueryArgs, BalanceQuery, Owner};
+pub use balance::{Balance, BalanceQuery, BalanceQueryArgs, Owner};
 pub use chain::ChainIdentifierQuery;
 pub use checkpoint::{
-    CheckpointId, CheckpointQueryArgs, CheckpointQuery, CheckpointTotalTxQuery,
-    CheckpointsQueryArgs, CheckpointsQuery,
+    CheckpointId, CheckpointQuery, CheckpointQueryArgs, CheckpointTotalTxQuery, CheckpointsQuery,
+    CheckpointsQueryArgs,
 };
-pub use coin::{CoinMetadata, CoinMetadataQueryArgs, CoinMetadataQuery};
+pub use coin::{CoinMetadata, CoinMetadataQuery, CoinMetadataQueryArgs};
 pub use common::*;
 pub use dry_run::{
-    DryRunEffect, DryRunMutation, DryRunQueryArgs, DryRunQuery, DryRunResult, DryRunReturn,
+    DryRunEffect, DryRunMutation, DryRunQuery, DryRunQueryArgs, DryRunResult, DryRunReturn,
     GasCoin, Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
 };
 pub use dynamic_fields::{
-    DynamicFieldName, DynamicFieldQueryArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
+    DynamicFieldName, DynamicFieldQuery, DynamicFieldQueryArgs, DynamicFieldsOwnerQuery,
     DynamicFieldsQueryArgs, DynamicObjectFieldQuery,
 };
-pub use epoch::{Epoch, EpochQueryArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
+pub use epoch::{Epoch, EpochQuery, EpochQueryArgs, EpochSummaryQuery, ValidatorSet};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
 pub use iota_names::{
     IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
-    IotaNamesDefaultNameQueryArgs, IotaNamesDefaultNameQuery, IotaNamesRegistrationsQueryArgs,
-    IotaNamesRegistrationsQuery, NameRegistration, NameRegistrationConnection,
-    ResolveIotaNamesAddressQueryArgs, ResolveIotaNamesAddressQuery,
+    IotaNamesDefaultNameQuery, IotaNamesDefaultNameQueryArgs, IotaNamesRegistrationsQuery,
+    IotaNamesRegistrationsQueryArgs, NameRegistration, NameRegistrationConnection,
+    ResolveIotaNamesAddressQuery, ResolveIotaNamesAddressQueryArgs,
 };
-pub use move_view_call::{MoveViewCallQueryArgs, MoveViewCallQuery, MoveViewResult};
+pub use move_view_call::{MoveViewCallQuery, MoveViewCallQueryArgs, MoveViewResult};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
@@ -61,13 +61,13 @@ pub use object::{
     ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
 };
 pub use packages::{
-    LatestPackageQuery, MovePackageConnection, MovePackage, MovePackageVersionFilter,
-    PackageCheckpointFilter, PackageQueryArgs, PackageQuery, PackageVersionsQueryArgs,
-    PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+    LatestPackageQuery, MovePackage, MovePackageConnection, MovePackageVersionFilter,
+    PackageCheckpointFilter, PackageQuery, PackageQueryArgs, PackageVersionsQuery,
+    PackageVersionsQueryArgs, PackagesQuery, PackagesQueryArgs,
 };
 pub use protocol_config::{
-    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
-    ProtocolConfigQueryArgs,
+    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigQueryArgs,
+    ProtocolConfigs,
 };
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
 pub use transaction::{

@@ -12,7 +12,7 @@ use crate::{
     Client,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::{CoinMetadata, CoinMetadataQueryArgs, CoinMetadataQuery, ObjectFilter},
+    query_types::{CoinMetadata, CoinMetadataQuery, CoinMetadataQueryArgs, ObjectFilter},
     streams::stream_paginated_query,
 };
 

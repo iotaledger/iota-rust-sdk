@@ -100,7 +100,7 @@ async fn main() -> Result<()> {
 There are several options for running custom queries.
 
 1. Use a GraphQL client library of your choosing.
-2. Use the [cynic's web generator](https://generator.cynic-rs.dev/) that accepts as input the schema and generates the query types.
+2. Use the cynic's query generator tool that accepts as input the schema and generates the query types.
 3. Use the [cynic's CLI](https://github.com/obmarg/cynic/tree/main/cynic-cli) and use the `cynic querygen` command to generate the query types.
 
 Below is an example that uses the `cynic querygen` CLI to generate the query types from the schema and the following query:

@@ -11,8 +11,9 @@ use crate::{
     error::Result,
     pagination::{Page, PaginationFilter},
     query_types::{
-        ActiveValidatorsQueryArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochQueryArgs,
-        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigs, ProtocolConfigQueryArgs, Validator,
+        ActiveValidatorsQuery, ActiveValidatorsQueryArgs, ChainIdentifierQuery, EpochQueryArgs,
+        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigQueryArgs, ProtocolConfigs,
+        Validator,
     },
 };
 
