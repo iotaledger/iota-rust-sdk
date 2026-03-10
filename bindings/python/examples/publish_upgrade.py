@@ -80,9 +80,6 @@ async def main():
     effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
     print("Success")
 
-    # Wait some time for the indexer to process the tx
-    await asyncio.sleep(3)
-
     # Resolve UpgradeCap and PackageId via the client
     upgrade_cap = None
     package_id = None
@@ -162,9 +159,6 @@ async def main():
     sig = private_key.sign_transaction(tx)
     effects = await client.execute_tx([sig], tx)
     print("Success")
-
-    # Wait some time for the indexer to process the tx
-    await asyncio.sleep(3)
 
     # Print the new package version (should now be 2)
     for changed_obj in effects.as_v1().changed_objects:

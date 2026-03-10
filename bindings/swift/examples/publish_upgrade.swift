@@ -91,9 +91,6 @@ struct PublishUpgradeExample {
       signatures: [sig], tx: tx, waitFor: WaitForTx.finalized)
     print("Success")
 
-    // Wait some time for the indexer to process the tx
-    try await Task.sleep(nanoseconds: 3_000_000_000)
-
     // Resolve UpgradeCap and PackageId via the client
     var upgradeCap: ObjectId?
     var packageId: ObjectId?
@@ -192,9 +189,6 @@ struct PublishUpgradeExample {
     let upgradeSig = try privateKey.signTransaction(transaction: upgradeTx)
     let upgradeEffects = try await client.executeTx(signatures: [upgradeSig], tx: upgradeTx)
     print("Success")
-
-    // Wait some time for the indexer to process the tx
-    try await Task.sleep(nanoseconds: 3_000_000_000)
 
     // Print the new package version (should now be 2)
     for changedObj in upgradeEffects.asV1().changedObjects {

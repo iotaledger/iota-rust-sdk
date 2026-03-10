@@ -80,9 +80,6 @@ struct AbstractAccountExample {
 
     print("Publishing package: \(effects.asV1().status)\n")
 
-    // Wait some time for the indexer to process the tx
-    try await Task.sleep(nanoseconds: 3_000_000_000)
-
     // Get package, package metadata and account IDs from the effects
     var packageId: ObjectId?
     var packageMetadataId: ObjectId?

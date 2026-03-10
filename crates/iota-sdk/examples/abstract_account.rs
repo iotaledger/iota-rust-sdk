@@ -78,9 +78,6 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
 
     println!("Publishing package: {:?}\n", effects.status());
 
-    // Wait some time for the indexer to process the tx
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-
     // Get package, package metadata and account IDs from the effects
     let mut package_id = None::<ObjectId>;
     let mut package_metadata_id = None::<ObjectId>;
