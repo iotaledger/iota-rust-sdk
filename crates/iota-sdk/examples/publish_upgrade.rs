@@ -91,9 +91,6 @@ async fn main() -> Result<()> {
     let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
     println!("{:?}", effects.status());
 
-    // Wait some time for the indexer to process the tx
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-
     // Resolve UpgradeCap and PackageId via the client
     let mut upgrade_cap = None::<ObjectId>;
     let mut package_id = None::<ObjectId>;
@@ -164,9 +161,6 @@ async fn main() -> Result<()> {
     let sig = private_key.sign_transaction(&tx)?;
     let effects = client.execute_tx(&[sig], &tx, None).await?;
     println!("{:?}", effects.status());
-
-    // Wait some time for the indexer to process the tx
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
     // Print the new package version (should now be 2)
     for changed_obj in effects.as_v1().changed_objects.iter() {
