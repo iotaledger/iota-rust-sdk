@@ -6,12 +6,12 @@ import IotaSDK
 @main
 struct PackageEventsExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     let events = try await client.events(
       filter: EventFilter(
         eventType:
-          "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent"
+          "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
       ),
       paginationFilter: PaginationFilter(direction: Direction.forward, limit: 10)
     )

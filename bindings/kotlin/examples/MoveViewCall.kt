@@ -1,9 +1,11 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
+
+// import iota_sdk.ObjectId
 import iota_sdk.GraphQlClient
 import iota_sdk.MoveViewArg
-import iota_sdk.ObjectId
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -50,54 +52,57 @@ fun main() = runBlocking {
         // ===========================================================================
         // Example 3: Using moveViewCall() with typed arguments (auction)
         // ===========================================================================
-        println()
-        println("=== Example 3: moveViewCall() with typed arguments (auction) ===")
-        println()
+        // println()
+        // println("=== Example 3: moveViewCall() with typed arguments (auction) ===")
+        // println()
 
-        val objectId =
-            ObjectId.fromHex("0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b")
+        // val objectId =
+        //
+        // ObjectId.fromHex("0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
 
-        val auctionArgs = listOf(MoveViewArg.objectId(objectId), MoveViewArg.string("auc.iota"))
+        // val auctionArgs = listOf(MoveViewArg.objectId(objectId), MoveViewArg.string("auc.iota"))
 
-        val auctionResult =
-            client.moveViewCall(
-                "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-                null,
-                auctionArgs,
-            )
+        // val auctionResult =
+        //     client.moveViewCall(
+        //
+        // "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+        //         null,
+        //         auctionArgs,
+        //     )
 
-        if (auctionResult.error != null) {
-            println("Auction Error: ${auctionResult.error}")
-        } else if (auctionResult.results != null) {
-            println("Auction Results: ${auctionResult.results}")
-        } else {
-            println("No auction results")
-        }
+        // if (auctionResult.error != null) {
+        //     println("Auction Error: ${auctionResult.error}")
+        // } else if (auctionResult.results != null) {
+        //     println("Auction Results: ${auctionResult.results}")
+        // } else {
+        //     println("No auction results")
+        // }
 
         // ===========================================================================
         // Example 4: Using moveViewCallJson() with JSON values (auction)
         // ===========================================================================
-        println()
-        println("=== Example 4: moveViewCallJson() with JSON values (auction) ===")
-        println()
+        // println()
+        // println("=== Example 4: moveViewCallJson() with JSON values (auction) ===")
+        // println()
 
-        val auctionJsonResult =
-            client.moveViewCallJson(
-                "0x5e7a300e640f645a4030aeb507c7be16909e6fa9711e7ca2d4397bbd967d5c50::auction::get_auction_metadata",
-                null,
-                listOf(
-                    "\"0x31deb8cbd320867089d52c37fed2d443520aac0fc5a957de1f64f9135b83f42b\"",
-                    "\"auc.iota\"",
-                ),
-            )
+        // val auctionJsonResult =
+        //     client.moveViewCallJson(
+        //
+        // "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
+        //         null,
+        //         listOf(
+        //             "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
+        //             "\"auc.iota\"",
+        //         ),
+        //     )
 
-        if (auctionJsonResult.error != null) {
-            println("Auction JSON Error: ${auctionJsonResult.error}")
-        } else if (auctionJsonResult.results != null) {
-            println("Auction JSON Results: ${auctionJsonResult.results}")
-        } else {
-            println("No auction JSON results")
-        }
+        // if (auctionJsonResult.error != null) {
+        //     println("Auction JSON Error: ${auctionJsonResult.error}")
+        // } else if (auctionJsonResult.results != null) {
+        //     println("Auction JSON Results: ${auctionJsonResult.results}")
+        // } else {
+        //     println("No auction JSON results")
+        // }
     } catch (e: Exception) {
         e.printStackTrace()
         kotlin.system.exitProcess(1)

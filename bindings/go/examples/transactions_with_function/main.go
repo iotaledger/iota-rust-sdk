@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client := iota_sdk.GraphQlClientNewTestnet()
 
 	function := "0x3::iota_system::request_add_stake"
 	transactions, err := client.Transactions(&iota_sdk.TransactionsFilter{
