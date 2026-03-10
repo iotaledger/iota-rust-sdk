@@ -14,7 +14,7 @@ use crate::{
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        DynamicFieldQueryArgs, DynamicFieldsQueryArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
+        DynamicFieldQuery, DynamicFieldQueryArgs, DynamicFieldsOwnerQuery, DynamicFieldsQueryArgs,
         DynamicObjectFieldQuery,
     },
     streams::stream_paginated_query,

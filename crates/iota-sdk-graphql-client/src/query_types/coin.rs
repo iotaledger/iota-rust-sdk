@@ -9,7 +9,11 @@
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "CoinMetadataQueryArgs")]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "CoinMetadataQueryArgs"
+)]
 pub struct CoinMetadataQuery {
     #[arguments(coinType: $coin_type)]
     pub coin_metadata: Option<CoinMetadata>,

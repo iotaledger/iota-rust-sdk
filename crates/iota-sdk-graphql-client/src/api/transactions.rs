@@ -19,11 +19,11 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        ExecuteTransactionQueryArgs, ExecuteTransactionQuery, TransactionBlockQueryArgs,
-        TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
-        TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
+        ExecuteTransactionQuery, ExecuteTransactionQueryArgs, TransactionBlockCheckpointQuery,
+        TransactionBlockEffectsQuery, TransactionBlockFilter, TransactionBlockIndexedQuery,
+        TransactionBlockQuery, TransactionBlockQueryArgs, TransactionBlockWithEffectsQuery,
         TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-        TransactionBlockFilter, TransactionBlocksWithEffectsQuery,
+        TransactionBlocksWithEffectsQuery,
     },
     streams::stream_paginated_query,
 };
@@ -329,9 +329,7 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        PaginationFilter, query_types::TransactionsFilter, test_utils::test_client,
-    };
+    use crate::{PaginationFilter, query_types::TransactionBlockFilter, test_utils::test_client};
 
     #[tokio::test]
     async fn test_transaction_effects_query() {
@@ -433,7 +431,7 @@ mod tests {
         let tx_digest = transactions.data()[0].transaction.digest().to_string();
         let results = client
             .transactions_data_effects(
-                TransactionsFilter {
+                TransactionBlockFilter {
                     transaction_ids: Some(vec![tx_digest]),
                     ..Default::default()
                 },

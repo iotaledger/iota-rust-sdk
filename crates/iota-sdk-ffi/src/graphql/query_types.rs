@@ -126,8 +126,8 @@ pub struct TransactionsFilter {
     pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
-    fn from(value: iota_sdk::graphql_client::query_types::TransactionsFilter) -> Self {
+impl From<iota_sdk::graphql_client::query_types::TransactionBlockFilter> for TransactionsFilter {
+    fn from(value: iota_sdk::graphql_client::query_types::TransactionBlockFilter) -> Self {
         Self {
             function: value.function,
             kind: value.kind,
@@ -147,7 +147,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
     }
 }
 
-impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
+impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionBlockFilter {
     fn from(value: TransactionsFilter) -> Self {
         Self {
             function: value.function,
@@ -1057,14 +1057,14 @@ impl From<MoveModuleConnection> for iota_sdk::graphql_client::query_types::MoveM
 }
 
 #[derive(uniffi::Record)]
-pub struct MovePackageQuery {
+pub struct MovePackage {
     pub address: Arc<Address>,
     #[uniffi(default = None)]
     pub bcs: Option<Base64>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for MovePackageQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MovePackageQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MovePackage> for MovePackage {
+    fn from(value: iota_sdk::graphql_client::query_types::MovePackage) -> Self {
         Self {
             address: Arc::new(value.address.into()),
             bcs: value.bcs,
@@ -1072,8 +1072,8 @@ impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for MovePacka
     }
 }
 
-impl From<MovePackageQuery> for iota_sdk::graphql_client::query_types::MovePackageQuery {
-    fn from(value: MovePackageQuery) -> Self {
+impl From<MovePackage> for iota_sdk::graphql_client::query_types::MovePackage {
+    fn from(value: MovePackage) -> Self {
         Self {
             address: (**value.address),
             bcs: value.bcs,
@@ -1083,7 +1083,7 @@ impl From<MovePackageQuery> for iota_sdk::graphql_client::query_types::MovePacka
 
 #[derive(uniffi::Record)]
 pub struct MoveModuleQuery {
-    pub package: MovePackageQuery,
+    pub package: MovePackage,
     pub name: String,
 }
 

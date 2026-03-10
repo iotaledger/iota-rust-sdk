@@ -10,7 +10,7 @@ use iota_types::Address;
 use crate::{
     Client,
     error::Result,
-    query_types::{BalanceQueryArgs, BalanceQuery},
+    query_types::{BalanceQuery, BalanceQueryArgs},
 };
 
 impl Client {

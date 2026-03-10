@@ -6,7 +6,7 @@ use std::{str::FromStr, sync::Arc};
 use base64ct::Encoding;
 use iota_sdk::{
     graphql_client::query_types::{
-        Base64, DateTime, GQLAddress, MoveData, MoveModuleQuery, MovePackageQuery, MoveType,
+        Base64, DateTime, GQLAddress, MoveData, MoveModuleQuery, MovePackage, MoveType,
     },
     types::{Identifier, StructTag},
 };
@@ -79,7 +79,7 @@ impl From<Event> for iota_sdk::graphql_client::query_types::Event {
     fn from(value: Event) -> Self {
         Self {
             sending_module: Some(MoveModuleQuery {
-                package: MovePackageQuery {
+                package: MovePackage {
                     address: iota_sdk::types::Address::from(**value.package_id),
                     bcs: None,
                 },

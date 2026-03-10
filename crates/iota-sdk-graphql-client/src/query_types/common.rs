@@ -9,9 +9,8 @@ use cynic::impl_scalar;
 pub use iota_types::{Address, ObjectId};
 pub use serde_json::Value as JsonValue;
 
-use crate::error;
-
 use super::schema;
+use crate::error;
 
 // ===========================================================================
 // Scalars

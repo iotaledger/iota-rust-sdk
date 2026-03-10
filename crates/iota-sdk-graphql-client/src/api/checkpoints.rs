@@ -13,8 +13,8 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        CheckpointQueryArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsQueryArgs,
-        CheckpointsQuery,
+        CheckpointId, CheckpointQuery, CheckpointQueryArgs, CheckpointTotalTxQuery,
+        CheckpointsQuery, CheckpointsQueryArgs,
     },
     streams::stream_paginated_query,
 };

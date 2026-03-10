@@ -18,8 +18,9 @@ use crate::{
     pagination::{Page, PaginationFilter},
     query_types::{
         IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
-        IotaNamesDefaultNameQueryArgs, IotaNamesDefaultNameQuery, IotaNamesRegistrationsQueryArgs,
-        IotaNamesRegistrationsQuery, ResolveIotaNamesAddressQueryArgs, ResolveIotaNamesAddressQuery,
+        IotaNamesDefaultNameQuery, IotaNamesDefaultNameQueryArgs, IotaNamesRegistrationsQuery,
+        IotaNamesRegistrationsQueryArgs, ResolveIotaNamesAddressQuery,
+        ResolveIotaNamesAddressQueryArgs,
     },
 };
 
@@ -48,13 +49,14 @@ impl Client {
         pagination_filter: PaginationFilter,
     ) -> Result<Page<NameRegistration>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = IotaNamesAddressRegistrationsQuery::build(IotaNamesRegistrationsQueryArgs {
-            address,
-            after: pagination.after,
-            before: pagination.before,
-            first: pagination.first,
-            last: pagination.last,
-        });
+        let operation =
+            IotaNamesAddressRegistrationsQuery::build(IotaNamesRegistrationsQueryArgs {
+                address,
+                after: pagination.after,
+                before: pagination.before,
+                first: pagination.first,
+                last: pagination.last,
+            });
         let response = self.run_query(&operation).await?;
 
         let IotaNamesAddressRegistrationsQuery {
