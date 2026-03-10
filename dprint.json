@@ -9,7 +9,7 @@
   "excludes": [
     "**/CHANGELOG.md",
     "**/target/",
-    "**/build/",
+    "**/build/"
   ],
   "toml": {
     "lineWidth": 80
