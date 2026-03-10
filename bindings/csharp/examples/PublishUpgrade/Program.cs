@@ -52,8 +52,6 @@ class Program
         var effects = await client.ExecuteTx(new[] { sig }, tx, WaitForTx.Finalized);
         Console.WriteLine("Success");
 
-        await Task.Delay(3000);
-
         ObjectId? upgradeCap = null;
         ObjectId? packageId = null;
         foreach (var changedObj in effects.AsV1().changedObjects)
@@ -128,8 +126,6 @@ class Program
         sig = privateKey.SignTransaction(tx);
         effects = await client.ExecuteTx(new[] { sig }, tx);
         Console.WriteLine("Success");
-
-        await Task.Delay(3000);
 
         foreach (var changedObj in effects.AsV1().changedObjects)
         {
