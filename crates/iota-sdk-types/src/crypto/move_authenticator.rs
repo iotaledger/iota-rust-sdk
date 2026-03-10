@@ -116,8 +116,8 @@ mod serialization {
     #[cfg(feature = "schemars")]
     #[derive(schemars::JsonSchema)]
     #[schemars(rename = "MoveAuthenticator", deny_unknown_fields)]
+    #[allow(dead_code, non_snake_case)]
     struct MoveAuthenticatorSchema {
-        #[allow(non_snake_case)]
         V1: MoveAuthenticatorV1,
     }
 
