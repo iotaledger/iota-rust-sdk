@@ -409,6 +409,7 @@ mod version_assignments {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "VersionAssignment")]
     struct BinaryVersionAssignment {
         object_id: ObjectId,
         version: crate::Version,
@@ -462,6 +463,7 @@ mod version_assignments {
     }
 
     #[derive(serde::Deserialize)]
+    #[serde(rename = "CancelledTransaction")]
     struct BinaryCancelledTransaction {
         digest: crate::Digest,
         version_assignments: Vec<VersionAssignment>,
