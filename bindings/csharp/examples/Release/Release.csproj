@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="IotaSdk" Version="0.0.1-alpha.1" />
+  </ItemGroup>
+</Project>

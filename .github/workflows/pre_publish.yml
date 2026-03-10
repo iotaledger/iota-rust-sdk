@@ -36,9 +36,11 @@ on:
           - iota-sdk-graphql-client
           - iota-sdk-transaction-builder
           - iota-sdk
+          - iota-csharp-sdk
           - iota-go-sdk
           - iota-kotlin-sdk
           - iota-python-sdk
+          - iota-swift-sdk
 
 jobs:
   publish:
@@ -72,6 +74,28 @@ jobs:
           tool: git-cliff
 
       - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
+
+      - name: Bump C# version
+        if: inputs.package == 'iota-csharp-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-csharp-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-csharp-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Update the version in IotaSdk.csproj
+          CONFIG="bindings/csharp/src/IotaSdk/IotaSdk.csproj"
+          current_version=$(grep '<PackageVersion>' $CONFIG | sed -nr 's|.*<PackageVersion>(.*)</PackageVersion>.*|\1|p')
+          sed -i "s/<PackageVersion>$current_version<\/PackageVersion>/<PackageVersion>$NEW_VERSION<\/PackageVersion>/" "$CONFIG"
+          echo "Updated IotaSdk.csproj with new version: $NEW_VERSION"
+
+          # Generate changelog for C#
+          ./.github/gen_changelog.sh iota-csharp-sdk bindings/csharp ${{ github.sha }} "$NEW_VERSION" true
 
       - name: Bump Go version
         if: inputs.package == 'iota-go-sdk'
@@ -139,6 +163,22 @@ jobs:
           # Set output for the next step
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
+      - name: Bump Swift version
+        if: inputs.package == 'iota-swift-sdk'
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag -l "*iota-swift-sdk*" --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="iota-swift-sdk-v0.0.0"
+          fi
+          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+          source .github/bump_version.sh
+          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          # Generate changelog for Swift
+          ./.github/gen_changelog.sh iota-swift-sdk bindings/swift ${{ github.sha }} "$NEW_VERSION" true
+
       - name: Set COMMIT_TO environment variable
         if: startsWith(inputs.package, 'iota-sdk')
         run: echo "COMMIT_TO=${{ github.sha }}" >> $GITHUB_ENV
@@ -157,7 +197,7 @@ jobs:
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Create Pull Request
-        if: inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk'
+        if: inputs.package == 'iota-csharp-sdk' || inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk'
         id: pr-create-bindings
         uses: peter-evans/create-pull-request@v7
         with:
@@ -166,6 +206,13 @@ jobs:
           body: "Automated semver bump of ${{ inputs.package }} version."
           branch: "release/${{ inputs.package }}/${{ env.NEW_VERSION }}"
           delete-branch: true
+
+      - name: Set release notes env vars (C#)
+        if: inputs.package == 'iota-csharp-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/csharp" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Set release notes env vars (Rust)
         if: startsWith(inputs.package, 'iota-sdk')
@@ -193,6 +240,13 @@ jobs:
         run: |
           echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
           echo "PKG_ROOT=bindings/python" >> $GITHUB_ENV
+          echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
+
+      - name: Set release notes env vars (Swift)
+        if: inputs.package == 'iota-swift-sdk'
+        run: |
+          echo "PR_NUM=${{ steps.pr-create-bindings.outputs.pull-request-number }}" >> $GITHUB_ENV
+          echo "PKG_ROOT=bindings/swift" >> $GITHUB_ENV
           echo "VERSION_TAG=v${{ env.NEW_VERSION }}" >> $GITHUB_ENV
 
       - name: Add release notes

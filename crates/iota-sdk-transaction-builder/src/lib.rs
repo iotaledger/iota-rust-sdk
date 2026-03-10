@@ -31,14 +31,14 @@
 //! # async fn main() -> eyre::Result<()> {
 //!
 //! let sender =
-//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
-//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_devnet());
+//! let mut builder = TransactionBuilder::new(sender).with_client(Client::new_testnet());
 //!
 //! let coin =
-//!     ObjectId::from_str("0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9")?;
+//!     ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?;
 //!
 //! builder.send_coins([coin], to_address, 50000000000u64);
 //!
@@ -55,7 +55,7 @@
 //! use iota_types::{Address, Digest, ObjectId, ObjectReference, Transaction};
 //!
 //! let sender =
-//!     Address::from_str("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")?;
+//!     Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 //! let to_address =
 //!     Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //!
@@ -63,14 +63,14 @@
 //!
 //! let coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
-//!         "0x8ef4259fa2a3499826fa4b8aebeb1d8e478cf5397d05361c96438940b43d28c9",
+//!         "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
 //!     )?,
-//!     digest: Digest::from_str("4jJMQScR4z5kK3vchvDEFYTiCkZPEYdvttpi3iTj1gEW")?,
-//!     version: 435090179,
+//!     digest: Digest::from_str("hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn")?,
+//!     version: 545110774,
 //! };
 //! let gas_coin = ObjectReference {
 //!     object_id: ObjectId::from_str(
-//!         "0xd04077fe3b6fad13b3d4ed0d535b7ca92afcac8f0f2a0e0925fb9f4f0b30c699",
+//!         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
 //!     )?,
 //!     digest: Digest::from_str("8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX")?,
 //!     version: 473053810,

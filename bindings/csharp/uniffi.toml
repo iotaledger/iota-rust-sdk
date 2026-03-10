@@ -1,0 +1,4 @@
+[bindings.csharp]
+namespace = "IotaSdk"
+class_name = "IotaSdk"
+access_modifier = "public"
