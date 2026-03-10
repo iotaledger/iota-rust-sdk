@@ -109,9 +109,16 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
-    #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum MoveAuthenticatorOwned {
         V1(MoveAuthenticatorV1),
+    }
+
+    #[cfg(feature = "schemars")]
+    #[derive(schemars::JsonSchema)]
+    #[schemars(rename = "MoveAuthenticator", deny_unknown_fields)]
+    struct MoveAuthenticatorSchema {
+        #[allow(non_snake_case)]
+        V1: MoveAuthenticatorV1,
     }
 
     impl From<MoveAuthenticatorOwned> for MoveAuthenticator {
@@ -161,13 +168,13 @@ mod serialization {
     #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for MoveAuthenticator {
         fn schema_name() -> String {
-            MoveAuthenticatorOwned::schema_name()
+            MoveAuthenticatorSchema::schema_name()
         }
 
         fn json_schema(
             generator: &mut schemars::r#gen::SchemaGenerator,
         ) -> schemars::schema::Schema {
-            MoveAuthenticatorOwned::json_schema(generator)
+            MoveAuthenticatorSchema::json_schema(generator)
         }
     }
 
