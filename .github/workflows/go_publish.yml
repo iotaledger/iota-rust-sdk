@@ -134,7 +134,7 @@ jobs:
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
-          git commit -m "Update Go SDK to version ${{ steps.set-version.outputs.version }}"
+          git commit -m "Update Go SDK to version v${{ steps.set-version.outputs.version }}"
           git push
           git tag v${{ steps.set-version.outputs.version }} -m "v${{ steps.set-version.outputs.version }}"
           git push --tags
