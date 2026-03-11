@@ -411,17 +411,11 @@ mod version_assignments {
 
     #[derive(serde::Serialize)]
     #[serde(rename = "VersionAssignment")]
-    struct BinaryVersionAssignmentRef<'a> {
-        object_id: &'a ObjectId,
-        version: &'a crate::Version,
-    }
+    struct BinaryVersionAssignmentRef<'a>(&'a ObjectId, &'a crate::Version);
 
     #[derive(serde::Deserialize)]
     #[serde(rename = "VersionAssignment")]
-    struct BinaryVersionAssignment {
-        object_id: ObjectId,
-        version: crate::Version,
-    }
+    struct BinaryVersionAssignment(ObjectId, crate::Version);
 
     impl Serialize for VersionAssignment {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -435,10 +429,7 @@ mod version_assignments {
                 tuple.serialize_element(&self.version)?;
                 tuple.end()
             } else {
-                let binary = BinaryVersionAssignmentRef {
-                    object_id: &self.object_id,
-                    version: &self.version,
-                };
+                let binary = BinaryVersionAssignmentRef(&self.object_id, &self.version);
                 binary.serialize(serializer)
             }
         }
@@ -457,8 +448,8 @@ mod version_assignments {
                 })
             } else {
                 BinaryVersionAssignment::deserialize(deserializer).map(|b| VersionAssignment {
-                    object_id: b.object_id,
-                    version: b.version,
+                    object_id: b.0,
+                    version: b.1,
                 })
             }
         }
