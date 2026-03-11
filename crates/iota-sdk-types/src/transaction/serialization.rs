@@ -314,7 +314,7 @@ mod version_assignments {
     };
 
     #[derive(serde::Serialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions {
             cancelled_transactions: &'a Vec<CancelledTransaction>,
@@ -322,7 +322,6 @@ mod version_assignments {
     }
 
     #[derive(serde::Deserialize)]
-    #[serde(tag = "kind", rename_all = "snake_case")]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableConsensusDeterminedVersionAssignments {
@@ -332,6 +331,7 @@ mod version_assignments {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
         CancelledTransactions {
             cancelled_transactions: &'a Vec<CancelledTransaction>,
@@ -402,7 +402,21 @@ mod version_assignments {
         }
     }
 
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for ConsensusDeterminedVersionAssignments {
+        fn schema_name() -> String {
+            ReadableConsensusDeterminedVersionAssignments::schema_name()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            ReadableConsensusDeterminedVersionAssignments::json_schema(generator)
+        }
+    }
+
     #[derive(serde::Serialize)]
+    #[serde(rename = "VersionAssignment")]
     struct BinaryVersionAssignmentRef<'a> {
         object_id: &'a ObjectId,
         version: &'a crate::Version,
@@ -456,7 +470,36 @@ mod version_assignments {
         }
     }
 
+    #[cfg(feature = "schemars")]
+    impl schemars::JsonSchema for VersionAssignment {
+        fn schema_name() -> String {
+            "VersionAssignment".to_owned()
+        }
+
+        fn json_schema(
+            generator: &mut schemars::r#gen::SchemaGenerator,
+        ) -> schemars::schema::Schema {
+            use schemars::schema::{ArrayValidation, InstanceType, SchemaObject};
+
+            SchemaObject {
+                instance_type: Some(InstanceType::Array.into()),
+                array: Some(Box::new(ArrayValidation {
+                    items: Some(schemars::schema::SingleOrVec::Vec(vec![
+                        generator.subschema_for::<ObjectId>(),
+                        generator.subschema_for::<crate::Version>(),
+                    ])),
+                    max_items: Some(2),
+                    min_items: Some(2),
+                    ..Default::default()
+                })),
+                ..Default::default()
+            }
+            .into()
+        }
+    }
+
     #[derive(serde::Serialize)]
+    #[serde(rename = "CancelledTransaction")]
     struct BinaryCancelledTransactionRef<'a> {
         digest: &'a crate::Digest,
         version_assignments: &'a Vec<VersionAssignment>,
@@ -514,34 +557,6 @@ mod version_assignments {
     }
 
     #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for VersionAssignment {
-        fn schema_name() -> String {
-            "VersionAssignment".to_owned()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            use schemars::schema::{ArrayValidation, InstanceType, SchemaObject};
-
-            SchemaObject {
-                instance_type: Some(InstanceType::Array.into()),
-                array: Some(Box::new(ArrayValidation {
-                    items: Some(schemars::schema::SingleOrVec::Vec(vec![
-                        generator.subschema_for::<ObjectId>(),
-                        generator.subschema_for::<crate::Version>(),
-                    ])),
-                    max_items: Some(2),
-                    min_items: Some(2),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            }
-            .into()
-        }
-    }
-
-    #[cfg(feature = "schemars")]
     impl schemars::JsonSchema for CancelledTransaction {
         fn schema_name() -> String {
             "CancelledTransaction".to_owned()
@@ -576,19 +591,6 @@ mod version_assignments {
                 ..Default::default()
             }
             .into()
-        }
-    }
-
-    #[cfg(feature = "schemars")]
-    impl schemars::JsonSchema for ConsensusDeterminedVersionAssignments {
-        fn schema_name() -> String {
-            ReadableConsensusDeterminedVersionAssignments::schema_name()
-        }
-
-        fn json_schema(
-            generator: &mut schemars::r#gen::SchemaGenerator,
-        ) -> schemars::schema::Schema {
-            ReadableConsensusDeterminedVersionAssignments::json_schema(generator)
         }
     }
 }
