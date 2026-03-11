@@ -316,18 +316,16 @@ mod version_assignments {
     #[derive(serde::Serialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum ReadableConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
+    /// Uses an enum to allow for future expansion of the
+    /// ConsensusDeterminedVersionAssignments.
     #[derive(serde::Deserialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
     enum ReadableConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(Vec<CancelledTransaction>),
     }
 
     #[derive(serde::Serialize)]
@@ -355,9 +353,9 @@ mod version_assignments {
                 let readable = match self {
                     Self::CancelledTransactions {
                         cancelled_transactions,
-                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
+                    } => ReadableConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
                         cancelled_transactions,
-                    },
+                    ),
                 };
                 readable.serialize(serializer)
             } else {
@@ -381,9 +379,9 @@ mod version_assignments {
             if deserializer.is_human_readable() {
                 ReadableConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
                     |readable| match readable {
-                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions {
+                        ReadableConsensusDeterminedVersionAssignments::CancelledTransactions(
                             cancelled_transactions,
-                        } => Self::CancelledTransactions {
+                        ) => Self::CancelledTransactions {
                             cancelled_transactions,
                         },
                     },
