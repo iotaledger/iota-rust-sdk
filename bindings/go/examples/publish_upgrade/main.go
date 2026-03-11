@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
@@ -105,9 +104,6 @@ func main() {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
-
-	// Wait some time for the indexer to process the tx
-	time.Sleep(3 * time.Second)
 
 	// Resolve UpgradeCap and PackageId via the client
 	var upgradeCap *iota_sdk.ObjectId
@@ -207,9 +203,6 @@ func main() {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
-
-	// Wait some time for the indexer to process the tx
-	time.Sleep(3 * time.Second)
 
 	// Print the new package version (should now be 2)
 	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects {

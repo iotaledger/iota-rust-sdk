@@ -53,7 +53,6 @@ class Program
         var effects = await builder.Execute(txSigner, WaitForTx.Finalized);
 
         Console.WriteLine($"Publishing package: {effects.AsV1().status}\n");
-        await Task.Delay(3000);
 
         ObjectId? packageId = null;
         ObjectId? packageMetadataId = null;

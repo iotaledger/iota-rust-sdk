@@ -63,9 +63,6 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
 
     print(f"Publishing package: {effects.as_v1().status}\n")
 
-    # Wait some time for the indexer to process the tx
-    await asyncio.sleep(3)
-
     # Get package, package metadata and account IDs from the effects
     package_id = None
     package_metadata_id = None
