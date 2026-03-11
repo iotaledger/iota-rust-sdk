@@ -331,17 +331,13 @@ mod version_assignments {
     #[derive(serde::Serialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignmentsRef<'a> {
-        CancelledTransactions {
-            cancelled_transactions: &'a Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(&'a Vec<CancelledTransaction>),
     }
 
     #[derive(serde::Deserialize)]
     #[serde(rename = "ConsensusDeterminedVersionAssignments")]
     enum BinaryConsensusDeterminedVersionAssignments {
-        CancelledTransactions {
-            cancelled_transactions: Vec<CancelledTransaction>,
-        },
+        CancelledTransactions(Vec<CancelledTransaction>),
     }
 
     impl Serialize for ConsensusDeterminedVersionAssignments {
@@ -362,9 +358,9 @@ mod version_assignments {
                 let binary = match self {
                     Self::CancelledTransactions {
                         cancelled_transactions,
-                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions {
+                    } => BinaryConsensusDeterminedVersionAssignmentsRef::CancelledTransactions(
                         cancelled_transactions,
-                    },
+                    ),
                 };
                 binary.serialize(serializer)
             }
@@ -389,9 +385,9 @@ mod version_assignments {
             } else {
                 BinaryConsensusDeterminedVersionAssignments::deserialize(deserializer).map(
                     |binary| match binary {
-                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions {
+                        BinaryConsensusDeterminedVersionAssignments::CancelledTransactions(
                             cancelled_transactions,
-                        } => Self::CancelledTransactions {
+                        ) => Self::CancelledTransactions {
                             cancelled_transactions,
                         },
                     },
@@ -498,17 +494,11 @@ mod version_assignments {
 
     #[derive(serde::Serialize)]
     #[serde(rename = "CancelledTransaction")]
-    struct BinaryCancelledTransactionRef<'a> {
-        digest: &'a crate::Digest,
-        version_assignments: &'a Vec<VersionAssignment>,
-    }
+    struct BinaryCancelledTransactionRef<'a>(&'a crate::Digest, &'a Vec<VersionAssignment>);
 
     #[derive(serde::Deserialize)]
     #[serde(rename = "CancelledTransaction")]
-    struct BinaryCancelledTransaction {
-        digest: crate::Digest,
-        version_assignments: Vec<VersionAssignment>,
-    }
+    struct BinaryCancelledTransaction(crate::Digest, Vec<VersionAssignment>);
 
     impl Serialize for CancelledTransaction {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -522,10 +512,7 @@ mod version_assignments {
                 tuple.serialize_element(&self.version_assignments)?;
                 tuple.end()
             } else {
-                let binary = BinaryCancelledTransactionRef {
-                    digest: &self.digest,
-                    version_assignments: &self.version_assignments,
-                };
+                let binary = BinaryCancelledTransactionRef(&self.digest, &self.version_assignments);
                 binary.serialize(serializer)
             }
         }
@@ -546,8 +533,8 @@ mod version_assignments {
             } else {
                 BinaryCancelledTransaction::deserialize(deserializer).map(|b| {
                     CancelledTransaction {
-                        digest: b.digest,
-                        version_assignments: b.version_assignments,
+                        digest: b.0,
+                        version_assignments: b.1,
                     }
                 })
             }
