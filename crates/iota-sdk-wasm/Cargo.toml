@@ -24,6 +24,5 @@ wasm-bindgen = "*"
 getrandom = { version = "0.3", features = ["wasm_js"] }
 console_error_panic_hook = "0.1"
 
-[profile.release]
-# Tell `rustc` to optimize for small code size.
-opt-level = "s"
+# NOTE: Profile settings must be in the workspace root Cargo.toml.
+# Settings here are silently ignored by Cargo for workspace members.

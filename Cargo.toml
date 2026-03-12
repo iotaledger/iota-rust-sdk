@@ -71,6 +71,15 @@ iota-sdk = { version = "3.0.0-alpha.1", package = "iota-sdk", path = "crates/iot
 iota-transaction-builder = { version = "0.0.1-alpha.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
 iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
 
+# Custom profile for WASM builds — optimizes for binary size.
+# Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+
 # Replace async-compat with a wasm32-compatible version that uses a transparent
 # passthrough on wasm32 (no thread spawning, no Instant::now).
 [patch.crates-io]

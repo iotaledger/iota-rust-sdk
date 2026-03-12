@@ -47,10 +47,19 @@ This writes:
 
 ```bash
 RUSTFLAGS="-C link-arg=--export-table -C link-arg=--growable-table --cfg getrandom_backend=\"wasm_js\"" \
-  cargo build -p iota-sdk-wasm --target wasm32-unknown-unknown --release
+  cargo build -p iota-sdk-wasm --target wasm32-unknown-unknown --profile wasm-release
 ```
 
-Output: `target/wasm32-unknown-unknown/release/iota_sdk_wasm.wasm`
+Output: `target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm`
+
+Optionally, run `wasm-opt` for further size reduction (install via `binaryen`):
+
+```bash
+wasm-opt -Oz --vacuum --strip-debug \
+  --enable-bulk-memory --enable-mutable-globals --enable-sign-ext --enable-nontrapping-float-to-int \
+  target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm \
+  -o target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm
+```
 
 Then generate the browser JS glue:
 
@@ -60,7 +69,7 @@ wasm-bindgen \
   --omit-default-module-path \
   --out-name index \
   --out-dir bindings/wasm/src/ts/wasm-bindgen \
-  target/wasm32-unknown-unknown/release/iota_sdk_wasm.wasm
+  target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm
 ```
 
 ## Step 3 – Bundle for the browser
