@@ -8,8 +8,8 @@ members = [
   "crates/iota-sdk-graphql-client-build",
   "crates/iota-sdk-transaction-builder",
   "crates/iota-sdk-types",
-  "crates/iota-sdk/examples/polling-indexer",
   "crates/iota-sdk-wasm",
+  "crates/iota-sdk/examples/polling-indexer",
 ]
 
 [workspace.lints.rust]
@@ -58,6 +58,7 @@ opt-level = "z"
 lto = true
 codegen-units = 1
 strip = true
+panic = "abort"
 
 # Replace async-compat with a wasm32-compatible version that uses a transparent
 # passthrough on wasm32 (no thread spawning, no Instant::now).
