@@ -5,7 +5,7 @@
   "scripts": {
     "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
     "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/",
-    "serve": "pnpm run build && npx http-server . -c-1 -p 5173"
+    "serve": "pnpm run build && node scripts/serve.mjs 5173"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"
