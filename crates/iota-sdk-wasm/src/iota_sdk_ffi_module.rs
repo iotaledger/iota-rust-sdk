@@ -1,6 +1,3 @@
-// Copyright (c) 2026 IOTA Stiftung
-// SPDX-License-Identifier: Apache-2.0
-
 #[allow(unused_imports)]
 use uniffi_runtime_javascript::{self as js, IntoJs, IntoRust, uniffi as u};
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -113,43 +110,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_new(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_scheme(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_sign_checkpoint_summary(
-        ptr: u::VoidPointer,
-        summary: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_try_sign(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_verifying_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
     fn uniffi_iota_sdk_ffi_fn_clone_bls12381publickey(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -224,32 +184,6 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_bls12381verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_bls12381verifyingkey_new(
-        public_key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_clone_bn254fieldelement(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -1142,112 +1076,6 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(
-        value: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
-        phrase: u::RustBuffer,
-        account_index: u64,
-        password: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(
-        phrase: u::RustBuffer,
-        path: u::RustBuffer,
-        password: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(
-        ptr: u::VoidPointer,
-        message: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(
-        ptr: u::VoidPointer,
-        transaction: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
     fn uniffi_iota_sdk_ffi_fn_clone_ed25519publickey(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -1334,97 +1162,6 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_ed25519verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new(
-        public_key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
     fn uniffi_iota_sdk_ffi_fn_clone_endofepochtransactionkind(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -1754,6 +1491,7 @@ extern "C" {
         ptr: u::VoidPointer,
         pagination_filter: u::RustBuffer,
     ) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(ptr: u::VoidPointer) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(
         ptr: u::VoidPointer,
         coin_type: u::RustBuffer,
@@ -1934,6 +1672,10 @@ extern "C" {
         query: u::RustBuffer,
     ) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(ptr: u::VoidPointer) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+        ptr: u::VoidPointer,
+        inspector: u::VoidPointer,
+    ) -> u64;
     fn uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(
         ptr: u::VoidPointer,
         server: u::RustBuffer,
@@ -1986,6 +1728,24 @@ extern "C" {
         wait_for: u::RustBuffer,
         timeout: u::RustBuffer,
     ) -> u64;
+    fn uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(
+        ptr: u::VoidPointer,
+        status_: &mut u::RustCallStatus,
+    ) -> u::VoidPointer;
+    fn uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(
+        ptr: u::VoidPointer,
+        status_: &mut u::RustCallStatus,
+    );
+    fn uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(
+        vtable: std::ptr::NonNull<
+            v_table_callback_interface_graph_ql_request_inspector_fn::VTableRs,
+        >,
+    );
+    fn uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(
+        ptr: u::VoidPointer,
+        result: u::RustBuffer,
+        status_: &mut u::RustCallStatus,
+    );
     fn uniffi_iota_sdk_ffi_fn_clone_identifier(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -2641,46 +2401,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_multisigaggregator(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_multisigaggregator(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message(
-        committee: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(
-        committee: u::VoidPointer,
-        transaction: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigaggregator_finish(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigaggregator_verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_signature(
-        ptr: u::VoidPointer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier(
-        ptr: u::VoidPointer,
-        verifier: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_clone_multisigcommittee(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -2907,36 +2627,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_multisigverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_multisigverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
-        ptr: u::VoidPointer,
-        zklogin_verifier: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_clone_name(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -3600,27 +3290,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_passkeyverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        authenticator: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_clone_personalmessage(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -3726,112 +3395,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
-        value: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
-        phrase: u::RustBuffer,
-        account_index: u64,
-        password: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
-        phrase: u::RustBuffer,
-        path: u::RustBuffer,
-        password: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
-        ptr: u::VoidPointer,
-        message: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
-        ptr: u::VoidPointer,
-        transaction: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
     fn uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -3918,203 +3481,6 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_new(
-        public_key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
-        value: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
-        phrase: u::RustBuffer,
-        account_index: u64,
-        password: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
-        phrase: u::RustBuffer,
-        path: u::RustBuffer,
-        password: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
-        ptr: u::VoidPointer,
-        message: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
-        ptr: u::VoidPointer,
-        transaction: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
     fn uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -4201,185 +3567,6 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
-        public_key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_simplekeypair(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_simplekeypair(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
-        value: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
-        keypair: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
-        keypair: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
-        keypair: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
-        ptr: u::VoidPointer,
-        message: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
-        ptr: u::VoidPointer,
-        transaction: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_clone_simplesignature(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -4489,75 +3676,6 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u64;
-    fn uniffi_iota_sdk_ffi_fn_clone_simpleverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_simpleverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
-        bytes: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
-        s: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne(
-        ptr: u::VoidPointer,
-        other: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> i8;
     fn uniffi_iota_sdk_ffi_fn_clone_splitcoins(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -5123,24 +4241,8 @@ extern "C" {
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     );
-    fn uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
-        key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
-        key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
     fn uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
         auth: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
-        key: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
-        key: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
     fn uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_new(
@@ -5596,36 +4698,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
-        ptr: u::VoidPointer,
-        zklogin_verifier: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
@@ -5653,74 +4725,6 @@ extern "C" {
         status_: &mut u::RustCallStatus,
     ) -> u::VoidPointer;
     fn uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
-        committee: u::RustBuffer,
-        summary: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
-        ptr: u::VoidPointer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
-        committee: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
-        ptr: u::VoidPointer,
-        summary: u::VoidPointer,
-        signature: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(
         ptr: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> u::RustBuffer;
@@ -6022,39 +5026,6 @@ extern "C" {
         other: u::VoidPointer,
         status_: &mut u::RustCallStatus,
     ) -> i8;
-    fn uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_free_zkloginverifier(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
-        ptr: u::VoidPointer,
-        message: u::RustBuffer,
-        authenticator: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    );
-    fn uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
-        ptr: u::VoidPointer,
-        jwks: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::VoidPointer;
-    fn uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(
-        ptr: u::VoidPointer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_func_active_jwk_from_bcs(
         bcs: u::RustBuffer,
         status_: &mut u::RustCallStatus,
@@ -6621,10 +5592,6 @@ extern "C" {
     ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_func_gas_payment_to_json(
         data: u::RustBuffer,
-        status_: &mut u::RustCallStatus,
-    ) -> u::RustBuffer;
-    fn uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
-        word_count: u::RustBuffer,
         status_: &mut u::RustCallStatus,
     ) -> u::RustBuffer;
     fn uniffi_iota_sdk_ffi_fn_func_genesis_object_from_bcs(
@@ -8097,7 +7064,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_func_gas_payment_from_json() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_bcs() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_json() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_json() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_func_genesis_object_to_bcs() -> u16;
@@ -8401,15 +7367,8 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_address_to_hex() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_unpadded() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_cancelledtransaction_digest() -> u16;
@@ -8513,31 +7472,11 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_scheme() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagged_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_observations() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_faucetclient_request() -> u16;
@@ -8556,6 +7495,7 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_chain_id() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coins() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_dry_run_tx() -> u16;
@@ -8593,6 +7533,7 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_reference_gas_price() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_run_query() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_supply() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_total_transaction_blocks() -> u16;
@@ -8605,6 +7546,7 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() -> u16;
+    fn uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_intent_app_id() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_intent_scope() -> u16;
@@ -8643,10 +7585,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_bitmap() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_committee() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_is_valid() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_members() -> u16;
@@ -8679,9 +7617,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256k1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_secp256r1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_name_format() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_name_is_sln() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_name_is_subname() -> u16;
@@ -8737,7 +7672,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_passkeyauthenticator_signature() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_derive_address() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_personalmessage_signing_digest_hex() -> u16;
@@ -8745,67 +7679,16 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_programmabletransaction_inputs() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_publish_dependencies() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_publish_modules() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_scheme() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_to_flagged_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_scheme() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_flagged_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key_opt() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_sig() -> u16;
@@ -8823,12 +7706,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1_sig_opt() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_simplesignature_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_verify() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_splitcoins_amounts() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_splitcoins_coin() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_structtag_address() -> u16;
@@ -8927,22 +7804,9 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_usersignature_scheme() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_usersignature_to_base64() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_epoch() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
-    -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
-    -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
-    -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_validator() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_validatorsignature_epoch() -> u16;
@@ -8968,9 +7832,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_padded() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_derive_address_unpadded() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_address_framework() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() -> u16;
@@ -8982,15 +7843,12 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_argument_new_input() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_argument_new_nested_result() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_generate() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_str_radix_10() -> u16;
@@ -9018,23 +7876,12 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_digest_from_base58() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_generate() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
     -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_expire()
@@ -9131,11 +7978,8 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_moveviewarg_u8_vec() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_name_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_nameregistration_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_object_new() -> u16;
@@ -9190,57 +8034,24 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_u8_vec() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_programmabletransaction_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_publish_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_generate() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_generate() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_bytes() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_from_str() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256k1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_splitcoins_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_structtag_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() -> u16;
@@ -9290,11 +8101,7 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_from_base64() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_transactionv1_new() -> u16;
@@ -9321,11 +8128,7 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_passkey_authenticator() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_simple() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
-    -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() -> u16;
@@ -9333,8 +8136,6 @@ extern "C" {
     fn uniffi_iota_sdk_ffi_checksum_constructor_zklogininputs_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_zkloginproof_new() -> u16;
     fn uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() -> u16;
-    fn uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() -> u16;
     fn ffi_iota_sdk_ffi_uniffi_contract_version() -> u32;
 }
 #[wasm_bindgen]
@@ -9714,139 +8515,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_argument_uniffi_trait_eq_ne(
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_new(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_new(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_scheme(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_scheme(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_sign_checkpoint_summary(
-    ptr: js::VoidPointer,
-    summary: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_sign_checkpoint_summary(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(summary),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_try_sign(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_try_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_verifying_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_verifying_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_bls12381publickey(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -10105,98 +8773,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash(
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_method_bls12381signature_uniffi_trait_hash(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_bls12381verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_bls12381verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381verifyingkey_new(
-    public_key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_bls12381verifyingkey_new(
-            u::VoidPointer::into_rust(public_key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(
             u::VoidPointer::into_rust(ptr),
             &mut u_status_,
         )
@@ -13288,382 +11864,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_digest_uniffi_trait_hash(
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(
-    value: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(
-            u::RustBuffer::into_rust(value),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
-    phrase: js::ForeignBytes,
-    account_index: js::UInt64,
-    password: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
-            u::RustBuffer::into_rust(phrase),
-            u64::into_rust(account_index),
-            u::RustBuffer::into_rust(password),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(
-    phrase: js::ForeignBytes,
-    path: js::ForeignBytes,
-    password: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(
-            u::RustBuffer::into_rust(phrase),
-            u::RustBuffer::into_rust(path),
-            u::RustBuffer::into_rust(password),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(
-    ptr: js::VoidPointer,
-    message: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(
-    ptr: js::VoidPointer,
-    transaction: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(transaction),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519publickey(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -13962,311 +12162,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash(
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_method_ed25519signature_uniffi_trait_hash(
             u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ed25519verifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new(
-    public_key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new(
-            u::VoidPointer::into_rust(public_key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
             &mut u_status_,
         )
     };
@@ -15413,6 +13308,13 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_checkpoints(
     .into_js()
 }
 #[wasm_bindgen]
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
+    ptr: js::VoidPointer,
+) -> js::Handle {
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(u::VoidPointer::into_rust(ptr))
+        .into_js()
+}
+#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_coin_metadata(
     ptr: js::VoidPointer,
     coin_type: js::ForeignBytes,
@@ -15888,6 +13790,17 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_service_config(
         .into_js()
 }
 #[wasm_bindgen]
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+    ptr: js::VoidPointer,
+    inspector: js::VoidPointer,
+) -> js::Handle {
+    uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+        u::VoidPointer::into_rust(ptr),
+        u::VoidPointer::into_rust(inspector),
+    )
+    .into_js()
+}
+#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_rpc_server(
     ptr: js::VoidPointer,
     server: js::ForeignBytes,
@@ -16026,6 +13939,59 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_wait_for_tx(
         u::RustBuffer::into_rust(timeout),
     )
     .into_js()
+}
+#[wasm_bindgen]
+pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(
+    ptr: js::VoidPointer,
+    f_status_: &mut js::RustCallStatus,
+) -> js::VoidPointer {
+    let mut u_status_ = u::RustCallStatus::default();
+    let value_ = unsafe {
+        uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(
+            u::VoidPointer::into_rust(ptr),
+            &mut u_status_,
+        )
+    };
+    f_status_.copy_from(u_status_);
+    value_.into_js()
+}
+#[wasm_bindgen]
+pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(
+    ptr: js::VoidPointer,
+    f_status_: &mut js::RustCallStatus,
+) {
+    let mut u_status_ = u::RustCallStatus::default();
+    unsafe {
+        uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(
+            u::VoidPointer::into_rust(ptr),
+            &mut u_status_,
+        )
+    };
+    f_status_.copy_from(u_status_);
+}
+#[wasm_bindgen]
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(
+    vtable: v_table_callback_interface_graph_ql_request_inspector_fn::VTableJs,
+) {
+    uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(std::ptr::NonNull::<
+        v_table_callback_interface_graph_ql_request_inspector_fn::VTableRs,
+    >::into_rust(vtable));
+}
+#[wasm_bindgen]
+pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(
+    ptr: js::VoidPointer,
+    result: js::ForeignBytes,
+    f_status_: &mut js::RustCallStatus,
+) {
+    let mut u_status_ = u::RustCallStatus::default();
+    unsafe {
+        uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(
+            u::VoidPointer::into_rust(ptr),
+            u::RustBuffer::into_rust(result),
+            &mut u_status_,
+        )
+    };
+    f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_identifier(
@@ -18343,148 +16309,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregatedsignature_uniffi_tra
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_multisigaggregator(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_multisigaggregator(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_multisigaggregator(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_multisigaggregator(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message(
-    committee: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message(
-            u::VoidPointer::into_rust(committee),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(
-    committee: js::VoidPointer,
-    transaction: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(
-            u::VoidPointer::into_rust(committee),
-            u::VoidPointer::into_rust(transaction),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_finish(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigaggregator_finish(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigaggregator_verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_signature(
-    ptr: js::VoidPointer,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_signature(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier(
-    ptr: js::VoidPointer,
-    verifier: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(verifier),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_multisigcommittee(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -19298,106 +17122,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_e
         uniffi_iota_sdk_ffi_fn_method_multisigmembersignature_uniffi_trait_eq_ne(
             u::VoidPointer::into_rust(ptr),
             u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_multisigverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_multisigverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_multisigverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_multisigverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
-    ptr: js::VoidPointer,
-    zklogin_verifier: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(zklogin_verifier),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
             &mut u_status_,
         )
     };
@@ -21787,71 +19511,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_passkeypublickey_uniffi_trait_eq_ne(
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_passkeyverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_passkeyverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    authenticator: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(authenticator),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_personalmessage(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -22226,382 +19885,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_publish_uniffi_trait_eq_ne(
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
-    value: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
-            u::RustBuffer::into_rust(value),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
-    phrase: js::ForeignBytes,
-    account_index: js::UInt64,
-    password: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
-            u::RustBuffer::into_rust(phrase),
-            u64::into_rust(account_index),
-            u::RustBuffer::into_rust(password),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
-    phrase: js::ForeignBytes,
-    path: js::ForeignBytes,
-    password: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
-            u::RustBuffer::into_rust(phrase),
-            u::RustBuffer::into_rust(path),
-            u::RustBuffer::into_rust(password),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
-    ptr: js::VoidPointer,
-    message: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
-    ptr: js::VoidPointer,
-    transaction: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(transaction),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1publickey(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -22913,694 +20196,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1signature_uniffi_trait_hash(
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_new(
-    public_key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_new(
-            u::VoidPointer::into_rust(public_key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
-    value: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
-            u::RustBuffer::into_rust(value),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
-    phrase: js::ForeignBytes,
-    account_index: js::UInt64,
-    password: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
-            u::RustBuffer::into_rust(phrase),
-            u64::into_rust(account_index),
-            u::RustBuffer::into_rust(password),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
-    phrase: js::ForeignBytes,
-    path: js::ForeignBytes,
-    password: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
-            u::RustBuffer::into_rust(phrase),
-            u::RustBuffer::into_rust(path),
-            u::RustBuffer::into_rust(password),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
-    ptr: js::VoidPointer,
-    message: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
-    ptr: js::VoidPointer,
-    transaction: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(transaction),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1publickey(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -23904,634 +20499,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
-    public_key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
-            u::VoidPointer::into_rust(public_key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_simplekeypair(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_simplekeypair(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_simplekeypair(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_simplekeypair(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
-    value: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
-            u::RustBuffer::into_rust(value),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
-    keypair: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
-            u::VoidPointer::into_rust(keypair),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
-    keypair: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
-            u::VoidPointer::into_rust(keypair),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
-    keypair: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
-            u::VoidPointer::into_rust(keypair),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
-    ptr: js::VoidPointer,
-    message: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
-    ptr: js::VoidPointer,
-    transaction: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(transaction),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug(
             u::VoidPointer::into_rust(ptr),
             &mut u_status_,
         )
@@ -24926,242 +20893,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_method_simplesignature_uniffi_trait_hash(
             u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_simpleverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_simpleverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_simpleverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_simpleverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe { uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
-    bytes: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
-            u::RustBuffer::into_rust(bytes),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
-    s: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
-            u::RustBuffer::into_rust(s),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne(
-    ptr: js::VoidPointer,
-    other: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::Int8 {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_ne(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(other),
             &mut u_status_,
         )
     };
@@ -27136,36 +22867,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_transactionsigner(
     f_status_.copy_from(u_status_);
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
-    key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
-            u::VoidPointer::into_rust(key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
-    key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
-            u::VoidPointer::into_rust(key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
     auth: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -27174,36 +22875,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authe
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
             u::VoidPointer::into_rust(auth),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
-    key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
-            u::VoidPointer::into_rust(key),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
-    key: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
-            u::VoidPointer::into_rust(key),
             &mut u_status_,
         )
     };
@@ -28800,110 +24471,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_usersignature_uniffi_trait_eq_ne(
     value_.into_js()
 }
 #[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
-    ptr: js::VoidPointer,
-    zklogin_verifier: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(zklogin_verifier),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
 pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(
     ptr: js::VoidPointer,
     f_status_: &mut js::RustCallStatus,
@@ -29004,241 +24571,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_tr
     let mut u_status_ = u::RustCallStatus::default();
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
-    committee: js::ForeignBytes,
-    summary: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
-            u::RustBuffer::into_rust(committee),
-            u::VoidPointer::into_rust(summary),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
-    ptr: js::VoidPointer,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
-    committee: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
-            u::RustBuffer::into_rust(committee),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
-    ptr: js::VoidPointer,
-    summary: js::VoidPointer,
-    signature: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
-            u::VoidPointer::into_rust(ptr),
-            u::VoidPointer::into_rust(summary),
-            u::VoidPointer::into_rust(signature),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(
             u::VoidPointer::into_rust(ptr),
             &mut u_status_,
         )
@@ -30284,114 +25616,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_e
         uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_ne(
             u::VoidPointer::into_rust(ptr),
             u::VoidPointer::into_rust(other),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_free_zkloginverifier(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_free_zkloginverifier(u::VoidPointer::into_rust(ptr), &mut u_status_)
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ =
-        unsafe { uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(&mut u_status_) };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
-            u::VoidPointer::into_rust(ptr),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
-    ptr: js::VoidPointer,
-    message: js::ForeignBytes,
-    authenticator: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) {
-    let mut u_status_ = u::RustCallStatus::default();
-    unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(message),
-            u::VoidPointer::into_rust(authenticator),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
-    ptr: js::VoidPointer,
-    jwks: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::VoidPointer {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(
-            u::VoidPointer::into_rust(ptr),
-            u::RustBuffer::into_rust(jwks),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(
-    ptr: js::VoidPointer,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(
-            u::VoidPointer::into_rust(ptr),
             &mut u_status_,
         )
     };
@@ -32454,21 +27678,6 @@ pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_gas_payment_to_json(
     let value_ = unsafe {
         uniffi_iota_sdk_ffi_fn_func_gas_payment_to_json(
             u::RustBuffer::into_rust(data),
-            &mut u_status_,
-        )
-    };
-    f_status_.copy_from(u_status_);
-    value_.into_js()
-}
-#[wasm_bindgen]
-pub fn ubrn_uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
-    word_count: js::ForeignBytes,
-    f_status_: &mut js::RustCallStatus,
-) -> js::ForeignBytes {
-    let mut u_status_ = u::RustCallStatus::default();
-    let value_ = unsafe {
-        uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
-            u::RustBuffer::into_rust(word_count),
             &mut u_status_,
         )
     };
@@ -37750,10 +32959,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_json() -> js
     uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_json().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs().into_js()
 }
@@ -39023,44 +34228,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_resul
     uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded() -> js::UInt16 {
@@ -39543,60 +34716,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() -> js::
     uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address().into_js()
@@ -39617,42 +34736,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_to_flagg
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() -> js::UInt16
@@ -39730,6 +34813,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoint(
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints().into_js()
+}
+#[wasm_bindgen]
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() -> js::UInt16
+{
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() -> js::UInt16 {
@@ -39902,6 +34990,10 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_con
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config().into_js()
 }
 #[wasm_bindgen]
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector() -> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector().into_js()
+}
+#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() -> js::UInt16
 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server().into_js()
@@ -39957,6 +35049,11 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transaction
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx().into_js()
+}
+#[wasm_bindgen]
+pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete()
+-> js::UInt16 {
+    uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() -> js::UInt16 {
@@ -40119,24 +35216,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignatu
     uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address().into_js()
@@ -40289,20 +35368,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_i
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_name_format() -> js::UInt16 {
@@ -40534,10 +35599,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner() 
     uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() -> js::UInt16
 {
     uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes().into_js()
@@ -40571,63 +35632,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_publish_modules() -> js::
     uniffi_iota_sdk_ffi_checksum_method_publish_modules().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address().into_js()
@@ -40650,103 +35654,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_byt
     uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address().into_js()
@@ -40767,92 +35674,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_to_fla
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key()
@@ -40934,31 +35755,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_secp256r1
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_to_bytes() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_simplesignature_to_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_verify().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_splitcoins_amounts() -> js::UInt16 {
@@ -41382,21 +36178,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes() 
     uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes().into_js()
@@ -41410,44 +36191,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignat
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature()
-        .into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated()
-        .into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary()
-        .into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration()
@@ -41562,18 +36305,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_i
     uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_address_framework() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_address_framework().into_js()
 }
@@ -41619,15 +36350,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result(
     uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes().into_js()
@@ -41656,11 +36378,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_fr
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes()
@@ -41779,40 +36496,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() ->
     uniffi_iota_sdk_ffi_checksum_constructor_digest_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes().into_js()
@@ -41841,25 +36524,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_fro
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() -> js::UInt16
 {
     uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create()
@@ -42258,26 +36922,12 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsi
     uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_name_from_str() -> js::UInt16 {
@@ -42507,10 +37157,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new
     uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new().into_js()
 }
@@ -42522,41 +37168,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_programmabletransact
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_publish_new() -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_publish_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes()
@@ -42589,60 +37200,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_g
     uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes().into_js()
@@ -42673,58 +37230,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_g
     uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519().into_js()
@@ -42738,20 +37243,6 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new() -> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_splitcoins_new() -> js::UInt16 {
@@ -42976,29 +37467,9 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_
     uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new() -> js::UInt16 {
@@ -43114,25 +37585,9 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zk
     uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new()
 -> js::UInt16 {
     uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary()
-        .into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new().into_js()
 }
 #[wasm_bindgen]
 pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new()
@@ -43166,138 +37621,8 @@ pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentif
     uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new().into_js()
 }
 #[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() -> js::UInt16
-{
-    uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev().into_js()
-}
-#[wasm_bindgen]
-pub unsafe fn ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet()
--> js::UInt16 {
-    uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet().into_js()
-}
-#[wasm_bindgen]
 pub unsafe fn ubrn_ffi_iota_sdk_ffi_uniffi_contract_version() -> js::UInt32 {
     ffi_iota_sdk_ffi_uniffi_contract_version().into_js()
-}
-mod foreign_future_struct_i64 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::Int64;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: i64,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: i64::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_u64 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::UInt64;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: u64,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: u64::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_u8 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::UInt8;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: u8,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: u8::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_f64 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::Float64;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: f64,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: f64::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
 }
 mod foreign_future_struct_pointer {
     use super::*;
@@ -43319,148 +37644,6 @@ mod foreign_future_struct_pointer {
             Self {
                 return_value: u::VoidPointer::into_rust(v_.return_value()),
                 call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_i32 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::Int32;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: i32,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: i32::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_i8 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::Int8;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: i8,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: i8::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_void {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-#[allow(non_snake_case)]
-mod foreign_future__free {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        #[wasm_bindgen]
-        pub type JsCallbackFn;
-        #[wasm_bindgen(method)]
-        pub fn call(this_: &JsCallbackFn, ctx_: &JsCallbackFn, handle: js::UInt64);
-    }
-    thread_local! {
-        static CALLBACK : js::ForeignCell < JsCallbackFn > = js::ForeignCell::new();
-    }
-    impl IntoRust<JsCallbackFn> for FnSig {
-        fn into_rust(callback: JsCallbackFn) -> Self {
-            CALLBACK.with(|cell| cell.set(callback));
-            implementation
-        }
-    }
-    pub(super) type FnSig = extern "C" fn(handle: u64);
-    extern "C" fn implementation(handle: u64) {
-        CALLBACK.with(|cell_| {
-            cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
-        });
-    }
-}
-mod foreign_future {
-    use super::{foreign_future__free as method_free, *};
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = handle)]
-        fn handle(this: &VTableJs) -> js::UInt64;
-        #[wasm_bindgen(method, getter, js_name = free)]
-        fn free(this: &VTableJs) -> method_free::JsCallbackFn;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        handle: u64,
-        free: method_free::FnSig,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                handle: u64::into_rust(v_.handle()),
-                free: method_free::FnSig::into_rust(v_.free()),
             }
         }
     }
@@ -43531,96 +37714,6 @@ mod foreign_future_struct_rust_buffer {
         }
     }
 }
-mod foreign_future_struct_u16 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::UInt16;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: u16,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: u16::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_i16 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::Int16;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: i16,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: i16::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
-mod foreign_future_struct_f32 {
-    use super::*;
-    #[wasm_bindgen]
-    extern "C" {
-        pub type VTableJs;
-        #[wasm_bindgen(method, getter, js_name = returnValue)]
-        fn return_value(this: &VTableJs) -> js::Float32;
-        #[wasm_bindgen(method, getter, js_name = callStatus)]
-        fn call_status(this: &VTableJs) -> js::RustCallStatus;
-    }
-    #[repr(C)]
-    pub(super) struct VTableRs {
-        return_value: f32,
-        call_status: u::RustCallStatus,
-    }
-    impl IntoRust<VTableJs> for VTableRs {
-        fn into_rust(v_: VTableJs) -> Self {
-            Self {
-                return_value: f32::into_rust(v_.return_value()),
-                call_status: u::RustCallStatus::into_rust(v_.call_status()),
-            }
-        }
-    }
-    impl VTableJs {
-        #[allow(unused)]
-        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
-            *rust = <VTableRs>::into_rust(self);
-        }
-    }
-}
 #[allow(non_snake_case)]
 mod v_table_callback_interface_transaction_signer_fn__free {
     use super::*;
@@ -43674,9 +37767,416 @@ mod v_table_callback_interface_transaction_signer_fn {
         }
     }
 }
-mod foreign_future_complete_f32 {
+mod foreign_future_struct_i16 {
     use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteF32)]
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::Int16;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: i16,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: i16::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_i8 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::Int8;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: i8,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: i8::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_f64 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::Float64;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: f64,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: f64::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_u8 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::UInt8;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: u8,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: u8::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_f32 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::Float32;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: f32,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: f32::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+#[allow(non_snake_case)]
+mod foreign_future__free {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        #[wasm_bindgen]
+        pub type JsCallbackFn;
+        #[wasm_bindgen(method)]
+        pub fn call(this_: &JsCallbackFn, ctx_: &JsCallbackFn, handle: js::UInt64);
+    }
+    thread_local! {
+        static CALLBACK : js::ForeignCell < JsCallbackFn > = js::ForeignCell::new();
+    }
+    impl IntoRust<JsCallbackFn> for FnSig {
+        fn into_rust(callback: JsCallbackFn) -> Self {
+            CALLBACK.with(|cell| cell.set(callback));
+            implementation
+        }
+    }
+    pub(super) type FnSig = extern "C" fn(handle: u64);
+    extern "C" fn implementation(handle: u64) {
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
+        });
+    }
+}
+mod foreign_future {
+    use super::{foreign_future__free as method_free, *};
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = handle)]
+        fn handle(this: &VTableJs) -> js::UInt64;
+        #[wasm_bindgen(method, getter, js_name = free)]
+        fn free(this: &VTableJs) -> method_free::JsCallbackFn;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        handle: u64,
+        free: method_free::FnSig,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                handle: u64::into_rust(v_.handle()),
+                free: method_free::FnSig::into_rust(v_.free()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_i64 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::Int64;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: i64,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: i64::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_void {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+#[allow(non_snake_case)]
+mod v_table_callback_interface_graph_ql_request_inspector_fn__free {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        #[wasm_bindgen]
+        pub type JsCallbackFn;
+        #[wasm_bindgen(method)]
+        pub fn call(this_: &JsCallbackFn, ctx_: &JsCallbackFn, handle: js::UInt64);
+    }
+    thread_local! {
+        static CALLBACK : js::ForeignCell < JsCallbackFn > = js::ForeignCell::new();
+    }
+    impl IntoRust<JsCallbackFn> for FnSig {
+        fn into_rust(callback: JsCallbackFn) -> Self {
+            CALLBACK.with(|cell| cell.set(callback));
+            implementation
+        }
+    }
+    pub(super) type FnSig = extern "C" fn(handle: u64);
+    extern "C" fn implementation(handle: u64) {
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| callback_.call(callback_, handle.into_js()))
+        });
+    }
+}
+mod v_table_callback_interface_graph_ql_request_inspector_fn {
+    use super::{
+        callback_interface_graph_ql_request_inspector_fn_method0 as method_on_request_complete,
+        v_table_callback_interface_graph_ql_request_inspector_fn__free as method_uniffi_free, *,
+    };
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = onRequestComplete)]
+        fn on_request_complete(this: &VTableJs) -> method_on_request_complete::JsCallbackFn;
+        #[wasm_bindgen(method, getter, js_name = uniffiFree)]
+        fn uniffi_free(this: &VTableJs) -> method_uniffi_free::JsCallbackFn;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        on_request_complete: method_on_request_complete::FnSig,
+        uniffi_free: method_uniffi_free::FnSig,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                on_request_complete: method_on_request_complete::FnSig::into_rust(
+                    v_.on_request_complete(),
+                ),
+                uniffi_free: method_uniffi_free::FnSig::into_rust(v_.uniffi_free()),
+            }
+        }
+    }
+}
+mod foreign_future_struct_u64 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::UInt64;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: u64,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: u64::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_u16 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::UInt16;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: u16,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: u16::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_struct_i32 {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type VTableJs;
+        #[wasm_bindgen(method, getter, js_name = returnValue)]
+        fn return_value(this: &VTableJs) -> js::Int32;
+        #[wasm_bindgen(method, getter, js_name = callStatus)]
+        fn call_status(this: &VTableJs) -> js::RustCallStatus;
+    }
+    #[repr(C)]
+    pub(super) struct VTableRs {
+        return_value: i32,
+        call_status: u::RustCallStatus,
+    }
+    impl IntoRust<VTableJs> for VTableRs {
+        fn into_rust(v_: VTableJs) -> Self {
+            Self {
+                return_value: i32::into_rust(v_.return_value()),
+                call_status: u::RustCallStatus::into_rust(v_.call_status()),
+            }
+        }
+    }
+    impl VTableJs {
+        #[allow(unused)]
+        pub(super) fn copy_into_return(self, rust: &mut VTableRs) {
+            *rust = <VTableRs>::into_rust(self);
+        }
+    }
+}
+mod foreign_future_complete_u16 {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteU16)]
     pub struct JsCallbackFn {
         callback: FnSig,
     }
@@ -43685,32 +38185,32 @@ mod foreign_future_complete_f32 {
             Self { callback }
         }
     }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteF32)]
+    #[wasm_bindgen(js_class = ForeignFutureCompleteU16)]
     impl JsCallbackFn {
         #[wasm_bindgen]
         pub fn call(
             &self,
             _ctx: &Self,
             callback_data: js::UInt64,
-            result: foreign_future_struct_f32::VTableJs,
+            result: foreign_future_struct_u16::VTableJs,
         ) {
             (self.callback)(
                 u64::into_rust(callback_data),
-                foreign_future_struct_f32::VTableRs::into_rust(result),
+                foreign_future_struct_u16::VTableRs::into_rust(result),
             )
         }
     }
     pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_f32::VTableRs);
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u16::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
         }
     }
 }
-mod foreign_future_complete_i8 {
+mod foreign_future_complete_i16 {
     use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteI8)]
+    #[wasm_bindgen(js_name = ForeignFutureCompleteI16)]
     pub struct JsCallbackFn {
         callback: FnSig,
     }
@@ -43719,91 +38219,23 @@ mod foreign_future_complete_i8 {
             Self { callback }
         }
     }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteI8)]
+    #[wasm_bindgen(js_class = ForeignFutureCompleteI16)]
     impl JsCallbackFn {
         #[wasm_bindgen]
         pub fn call(
             &self,
             _ctx: &Self,
             callback_data: js::UInt64,
-            result: foreign_future_struct_i8::VTableJs,
+            result: foreign_future_struct_i16::VTableJs,
         ) {
             (self.callback)(
                 u64::into_rust(callback_data),
-                foreign_future_struct_i8::VTableRs::into_rust(result),
+                foreign_future_struct_i16::VTableRs::into_rust(result),
             )
         }
     }
     pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_i8::VTableRs);
-    impl IntoJs<JsCallbackFn> for FnSig {
-        fn into_js(self) -> JsCallbackFn {
-            JsCallbackFn::new(self)
-        }
-    }
-}
-mod foreign_future_complete_void {
-    use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteVoid)]
-    pub struct JsCallbackFn {
-        callback: FnSig,
-    }
-    impl JsCallbackFn {
-        fn new(callback: FnSig) -> Self {
-            Self { callback }
-        }
-    }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteVoid)]
-    impl JsCallbackFn {
-        #[wasm_bindgen]
-        pub fn call(
-            &self,
-            _ctx: &Self,
-            callback_data: js::UInt64,
-            result: foreign_future_struct_void::VTableJs,
-        ) {
-            (self.callback)(
-                u64::into_rust(callback_data),
-                foreign_future_struct_void::VTableRs::into_rust(result),
-            )
-        }
-    }
-    pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_void::VTableRs);
-    impl IntoJs<JsCallbackFn> for FnSig {
-        fn into_js(self) -> JsCallbackFn {
-            JsCallbackFn::new(self)
-        }
-    }
-}
-mod foreign_future_complete_u32 {
-    use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteU32)]
-    pub struct JsCallbackFn {
-        callback: FnSig,
-    }
-    impl JsCallbackFn {
-        fn new(callback: FnSig) -> Self {
-            Self { callback }
-        }
-    }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteU32)]
-    impl JsCallbackFn {
-        #[wasm_bindgen]
-        pub fn call(
-            &self,
-            _ctx: &Self,
-            callback_data: js::UInt64,
-            result: foreign_future_struct_u32::VTableJs,
-        ) {
-            (self.callback)(
-                u64::into_rust(callback_data),
-                foreign_future_struct_u32::VTableRs::into_rust(result),
-            )
-        }
-    }
-    pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_u32::VTableRs);
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i16::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -43844,9 +38276,9 @@ mod foreign_future_complete_i32 {
         }
     }
 }
-mod foreign_future_complete_u8 {
+mod foreign_future_complete_pointer {
     use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteU8)]
+    #[wasm_bindgen(js_name = ForeignFutureCompletePointer)]
     pub struct JsCallbackFn {
         callback: FnSig,
     }
@@ -43855,23 +38287,123 @@ mod foreign_future_complete_u8 {
             Self { callback }
         }
     }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteU8)]
+    #[wasm_bindgen(js_class = ForeignFutureCompletePointer)]
     impl JsCallbackFn {
         #[wasm_bindgen]
         pub fn call(
             &self,
             _ctx: &Self,
             callback_data: js::UInt64,
-            result: foreign_future_struct_u8::VTableJs,
+            result: foreign_future_struct_pointer::VTableJs,
         ) {
             (self.callback)(
                 u64::into_rust(callback_data),
-                foreign_future_struct_u8::VTableRs::into_rust(result),
+                foreign_future_struct_pointer::VTableRs::into_rust(result),
             )
         }
     }
     pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_u8::VTableRs);
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_pointer::VTableRs);
+    impl IntoJs<JsCallbackFn> for FnSig {
+        fn into_js(self) -> JsCallbackFn {
+            JsCallbackFn::new(self)
+        }
+    }
+}
+mod rust_future_continuation_callback {
+    use super::*;
+    #[wasm_bindgen]
+    extern "C" {
+        #[wasm_bindgen]
+        pub type JsCallbackFn;
+        #[wasm_bindgen(method)]
+        pub fn call(
+            this_: &JsCallbackFn,
+            ctx_: &JsCallbackFn,
+            data: js::UInt64,
+            poll_result: js::Int8,
+        );
+    }
+    thread_local! {
+        static CALLBACK : js::ForeignCell < JsCallbackFn > = js::ForeignCell::new();
+    }
+    impl IntoRust<JsCallbackFn> for FnSig {
+        fn into_rust(callback: JsCallbackFn) -> Self {
+            CALLBACK.with(|cell| cell.set(callback));
+            implementation
+        }
+    }
+    pub(super) type FnSig = extern "C" fn(data: u64, poll_result: i8);
+    extern "C" fn implementation(data: u64, poll_result: i8) {
+        CALLBACK.with(|cell_| {
+            cell_.with_value(|callback_| {
+                callback_.call(callback_, data.into_js(), poll_result.into_js())
+            })
+        });
+    }
+}
+mod foreign_future_complete_i64 {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteI64)]
+    pub struct JsCallbackFn {
+        callback: FnSig,
+    }
+    impl JsCallbackFn {
+        fn new(callback: FnSig) -> Self {
+            Self { callback }
+        }
+    }
+    #[wasm_bindgen(js_class = ForeignFutureCompleteI64)]
+    impl JsCallbackFn {
+        #[wasm_bindgen]
+        pub fn call(
+            &self,
+            _ctx: &Self,
+            callback_data: js::UInt64,
+            result: foreign_future_struct_i64::VTableJs,
+        ) {
+            (self.callback)(
+                u64::into_rust(callback_data),
+                foreign_future_struct_i64::VTableRs::into_rust(result),
+            )
+        }
+    }
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i64::VTableRs);
+    impl IntoJs<JsCallbackFn> for FnSig {
+        fn into_js(self) -> JsCallbackFn {
+            JsCallbackFn::new(self)
+        }
+    }
+}
+mod foreign_future_complete_rust_buffer {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteRustBuffer)]
+    pub struct JsCallbackFn {
+        callback: FnSig,
+    }
+    impl JsCallbackFn {
+        fn new(callback: FnSig) -> Self {
+            Self { callback }
+        }
+    }
+    #[wasm_bindgen(js_class = ForeignFutureCompleteRustBuffer)]
+    impl JsCallbackFn {
+        #[wasm_bindgen]
+        pub fn call(
+            &self,
+            _ctx: &Self,
+            callback_data: js::UInt64,
+            result: foreign_future_struct_rust_buffer::VTableJs,
+        ) {
+            (self.callback)(
+                u64::into_rust(callback_data),
+                foreign_future_struct_rust_buffer::VTableRs::into_rust(result),
+            )
+        }
+    }
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_rust_buffer::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -43906,40 +38438,6 @@ mod foreign_future_complete_f64 {
     }
     pub(super) type FnSig =
         extern "C" fn(callback_data: u64, result: foreign_future_struct_f64::VTableRs);
-    impl IntoJs<JsCallbackFn> for FnSig {
-        fn into_js(self) -> JsCallbackFn {
-            JsCallbackFn::new(self)
-        }
-    }
-}
-mod foreign_future_complete_u16 {
-    use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteU16)]
-    pub struct JsCallbackFn {
-        callback: FnSig,
-    }
-    impl JsCallbackFn {
-        fn new(callback: FnSig) -> Self {
-            Self { callback }
-        }
-    }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteU16)]
-    impl JsCallbackFn {
-        #[wasm_bindgen]
-        pub fn call(
-            &self,
-            _ctx: &Self,
-            callback_data: js::UInt64,
-            result: foreign_future_struct_u16::VTableJs,
-        ) {
-            (self.callback)(
-                u64::into_rust(callback_data),
-                foreign_future_struct_u16::VTableRs::into_rust(result),
-            )
-        }
-    }
-    pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_u16::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)
@@ -43999,109 +38497,7 @@ mod callback_interface_transaction_signer_fn_method0 {
         uniffi_result_.copy_into_return(rs_return_);
     }
 }
-mod foreign_future_complete_pointer {
-    use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompletePointer)]
-    pub struct JsCallbackFn {
-        callback: FnSig,
-    }
-    impl JsCallbackFn {
-        fn new(callback: FnSig) -> Self {
-            Self { callback }
-        }
-    }
-    #[wasm_bindgen(js_class = ForeignFutureCompletePointer)]
-    impl JsCallbackFn {
-        #[wasm_bindgen]
-        pub fn call(
-            &self,
-            _ctx: &Self,
-            callback_data: js::UInt64,
-            result: foreign_future_struct_pointer::VTableJs,
-        ) {
-            (self.callback)(
-                u64::into_rust(callback_data),
-                foreign_future_struct_pointer::VTableRs::into_rust(result),
-            )
-        }
-    }
-    pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_pointer::VTableRs);
-    impl IntoJs<JsCallbackFn> for FnSig {
-        fn into_js(self) -> JsCallbackFn {
-            JsCallbackFn::new(self)
-        }
-    }
-}
-mod foreign_future_complete_i16 {
-    use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteI16)]
-    pub struct JsCallbackFn {
-        callback: FnSig,
-    }
-    impl JsCallbackFn {
-        fn new(callback: FnSig) -> Self {
-            Self { callback }
-        }
-    }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteI16)]
-    impl JsCallbackFn {
-        #[wasm_bindgen]
-        pub fn call(
-            &self,
-            _ctx: &Self,
-            callback_data: js::UInt64,
-            result: foreign_future_struct_i16::VTableJs,
-        ) {
-            (self.callback)(
-                u64::into_rust(callback_data),
-                foreign_future_struct_i16::VTableRs::into_rust(result),
-            )
-        }
-    }
-    pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_i16::VTableRs);
-    impl IntoJs<JsCallbackFn> for FnSig {
-        fn into_js(self) -> JsCallbackFn {
-            JsCallbackFn::new(self)
-        }
-    }
-}
-mod foreign_future_complete_i64 {
-    use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteI64)]
-    pub struct JsCallbackFn {
-        callback: FnSig,
-    }
-    impl JsCallbackFn {
-        fn new(callback: FnSig) -> Self {
-            Self { callback }
-        }
-    }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteI64)]
-    impl JsCallbackFn {
-        #[wasm_bindgen]
-        pub fn call(
-            &self,
-            _ctx: &Self,
-            callback_data: js::UInt64,
-            result: foreign_future_struct_i64::VTableJs,
-        ) {
-            (self.callback)(
-                u64::into_rust(callback_data),
-                foreign_future_struct_i64::VTableRs::into_rust(result),
-            )
-        }
-    }
-    pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_i64::VTableRs);
-    impl IntoJs<JsCallbackFn> for FnSig {
-        fn into_js(self) -> JsCallbackFn {
-            JsCallbackFn::new(self)
-        }
-    }
-}
-mod rust_future_continuation_callback {
+mod callback_interface_graph_ql_request_inspector_fn_method0 {
     use super::*;
     #[wasm_bindgen]
     extern "C" {
@@ -44111,9 +38507,9 @@ mod rust_future_continuation_callback {
         pub fn call(
             this_: &JsCallbackFn,
             ctx_: &JsCallbackFn,
-            data: js::UInt64,
-            poll_result: js::Int8,
-        );
+            uniffi_handle: js::UInt64,
+            result: js::ForeignBytes,
+        ) -> js::UniffiResultVoid;
     }
     thread_local! {
         static CALLBACK : js::ForeignCell < JsCallbackFn > = js::ForeignCell::new();
@@ -44124,18 +38520,29 @@ mod rust_future_continuation_callback {
             implementation
         }
     }
-    pub(super) type FnSig = extern "C" fn(data: u64, poll_result: i8);
-    extern "C" fn implementation(data: u64, poll_result: i8) {
-        CALLBACK.with(|cell_| {
+    pub(super) type FnSig = extern "C" fn(
+        uniffi_handle: u64,
+        result: u::RustBuffer,
+        _rs_return: &mut (),
+        rs_call_status_: &mut u::RustCallStatus,
+    );
+    extern "C" fn implementation(
+        uniffi_handle: u64,
+        result: u::RustBuffer,
+        _rs_return: &mut (),
+        rs_call_status_: &mut u::RustCallStatus,
+    ) {
+        let uniffi_result_ = CALLBACK.with(|cell_| {
             cell_.with_value(|callback_| {
-                callback_.call(callback_, data.into_js(), poll_result.into_js())
+                callback_.call(callback_, uniffi_handle.into_js(), result.into_js())
             })
         });
+        uniffi_result_.copy_into_status(rs_call_status_);
     }
 }
-mod foreign_future_complete_rust_buffer {
+mod foreign_future_complete_void {
     use super::*;
-    #[wasm_bindgen(js_name = ForeignFutureCompleteRustBuffer)]
+    #[wasm_bindgen(js_name = ForeignFutureCompleteVoid)]
     pub struct JsCallbackFn {
         callback: FnSig,
     }
@@ -44144,23 +38551,159 @@ mod foreign_future_complete_rust_buffer {
             Self { callback }
         }
     }
-    #[wasm_bindgen(js_class = ForeignFutureCompleteRustBuffer)]
+    #[wasm_bindgen(js_class = ForeignFutureCompleteVoid)]
     impl JsCallbackFn {
         #[wasm_bindgen]
         pub fn call(
             &self,
             _ctx: &Self,
             callback_data: js::UInt64,
-            result: foreign_future_struct_rust_buffer::VTableJs,
+            result: foreign_future_struct_void::VTableJs,
         ) {
             (self.callback)(
                 u64::into_rust(callback_data),
-                foreign_future_struct_rust_buffer::VTableRs::into_rust(result),
+                foreign_future_struct_void::VTableRs::into_rust(result),
             )
         }
     }
     pub(super) type FnSig =
-        extern "C" fn(callback_data: u64, result: foreign_future_struct_rust_buffer::VTableRs);
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_void::VTableRs);
+    impl IntoJs<JsCallbackFn> for FnSig {
+        fn into_js(self) -> JsCallbackFn {
+            JsCallbackFn::new(self)
+        }
+    }
+}
+mod foreign_future_complete_u8 {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteU8)]
+    pub struct JsCallbackFn {
+        callback: FnSig,
+    }
+    impl JsCallbackFn {
+        fn new(callback: FnSig) -> Self {
+            Self { callback }
+        }
+    }
+    #[wasm_bindgen(js_class = ForeignFutureCompleteU8)]
+    impl JsCallbackFn {
+        #[wasm_bindgen]
+        pub fn call(
+            &self,
+            _ctx: &Self,
+            callback_data: js::UInt64,
+            result: foreign_future_struct_u8::VTableJs,
+        ) {
+            (self.callback)(
+                u64::into_rust(callback_data),
+                foreign_future_struct_u8::VTableRs::into_rust(result),
+            )
+        }
+    }
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u8::VTableRs);
+    impl IntoJs<JsCallbackFn> for FnSig {
+        fn into_js(self) -> JsCallbackFn {
+            JsCallbackFn::new(self)
+        }
+    }
+}
+mod foreign_future_complete_f32 {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteF32)]
+    pub struct JsCallbackFn {
+        callback: FnSig,
+    }
+    impl JsCallbackFn {
+        fn new(callback: FnSig) -> Self {
+            Self { callback }
+        }
+    }
+    #[wasm_bindgen(js_class = ForeignFutureCompleteF32)]
+    impl JsCallbackFn {
+        #[wasm_bindgen]
+        pub fn call(
+            &self,
+            _ctx: &Self,
+            callback_data: js::UInt64,
+            result: foreign_future_struct_f32::VTableJs,
+        ) {
+            (self.callback)(
+                u64::into_rust(callback_data),
+                foreign_future_struct_f32::VTableRs::into_rust(result),
+            )
+        }
+    }
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_f32::VTableRs);
+    impl IntoJs<JsCallbackFn> for FnSig {
+        fn into_js(self) -> JsCallbackFn {
+            JsCallbackFn::new(self)
+        }
+    }
+}
+mod foreign_future_complete_u32 {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteU32)]
+    pub struct JsCallbackFn {
+        callback: FnSig,
+    }
+    impl JsCallbackFn {
+        fn new(callback: FnSig) -> Self {
+            Self { callback }
+        }
+    }
+    #[wasm_bindgen(js_class = ForeignFutureCompleteU32)]
+    impl JsCallbackFn {
+        #[wasm_bindgen]
+        pub fn call(
+            &self,
+            _ctx: &Self,
+            callback_data: js::UInt64,
+            result: foreign_future_struct_u32::VTableJs,
+        ) {
+            (self.callback)(
+                u64::into_rust(callback_data),
+                foreign_future_struct_u32::VTableRs::into_rust(result),
+            )
+        }
+    }
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_u32::VTableRs);
+    impl IntoJs<JsCallbackFn> for FnSig {
+        fn into_js(self) -> JsCallbackFn {
+            JsCallbackFn::new(self)
+        }
+    }
+}
+mod foreign_future_complete_i8 {
+    use super::*;
+    #[wasm_bindgen(js_name = ForeignFutureCompleteI8)]
+    pub struct JsCallbackFn {
+        callback: FnSig,
+    }
+    impl JsCallbackFn {
+        fn new(callback: FnSig) -> Self {
+            Self { callback }
+        }
+    }
+    #[wasm_bindgen(js_class = ForeignFutureCompleteI8)]
+    impl JsCallbackFn {
+        #[wasm_bindgen]
+        pub fn call(
+            &self,
+            _ctx: &Self,
+            callback_data: js::UInt64,
+            result: foreign_future_struct_i8::VTableJs,
+        ) {
+            (self.callback)(
+                u64::into_rust(callback_data),
+                foreign_future_struct_i8::VTableRs::into_rust(result),
+            )
+        }
+    }
+    pub(super) type FnSig =
+        extern "C" fn(callback_data: u64, result: foreign_future_struct_i8::VTableRs);
     impl IntoJs<JsCallbackFn> for FnSig {
         fn into_js(self) -> JsCallbackFn {
             JsCallbackFn::new(self)

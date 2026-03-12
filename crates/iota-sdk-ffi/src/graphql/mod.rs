@@ -7,6 +7,7 @@ pub mod api;
 pub mod client;
 pub mod client_methods;
 pub mod faucet;
+pub mod inspector;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;

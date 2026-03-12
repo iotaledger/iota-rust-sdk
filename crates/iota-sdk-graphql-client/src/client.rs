@@ -4,6 +4,8 @@
 
 //! Core client implementation for the GraphQL API.
 
+use std::sync::Arc;
+
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
@@ -12,6 +14,26 @@ use crate::{
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQuery},
 };
+
+/// Returns the current instant (native) or a no-op marker (wasm32 where
+/// `std::time::Instant` is unsupported).
+#[cfg(not(target_arch = "wasm32"))]
+fn now() -> std::time::Instant {
+    std::time::Instant::now()
+}
+
+#[cfg(target_arch = "wasm32")]
+fn now() -> () {}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn elapsed(start: std::time::Instant) -> std::time::Duration {
+    start.elapsed()
+}
+
+#[cfg(target_arch = "wasm32")]
+fn elapsed(_start: ()) -> std::time::Duration {
+    std::time::Duration::ZERO
+}
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
 pub(crate) const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
@@ -32,15 +54,63 @@ pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Erro
     }
 }
 
+/// Information about a completed GraphQL request, passed to inspectors.
+#[derive(Debug, Clone)]
+pub struct GraphQlRequestResult {
+    /// The URL of the GraphQL endpoint that was called.
+    pub url: String,
+    /// If the request failed, the error message. `None` on success.
+    pub error: Option<String>,
+    /// How long the request took.
+    pub duration: std::time::Duration,
+}
+
+/// A callback invoked after every GraphQL request completes.
+///
+/// Implementations should be lightweight and non-blocking — this is
+/// intended for telemetry / error-reporting (e.g. Sentry).
+pub trait RequestInspector: Send + Sync + 'static {
+    fn inspect(&self, result: &GraphQlRequestResult);
+}
+
+impl<F: Fn(&GraphQlRequestResult) + Send + Sync + 'static> RequestInspector for F {
+    fn inspect(&self, result: &GraphQlRequestResult) {
+        self(result);
+    }
+}
+
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
-#[derive(Debug, Clone)]
 pub struct Client {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
     pub(crate) service_config: std::sync::OnceLock<ServiceConfig>,
+    /// Optional inspector called after every request.
+    pub(crate) inspector: Option<Arc<dyn RequestInspector>>,
+}
+
+impl Clone for Client {
+    fn clone(&self) -> Self {
+        Self {
+            rpc: self.rpc.clone(),
+            inner: self.inner.clone(),
+            service_config: self.service_config.clone(),
+            inspector: self.inspector.clone(),
+        }
+    }
+}
+
+impl std::fmt::Debug for Client {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Client")
+            .field("rpc", &self.rpc)
+            .field("inner", &self.inner)
+            .field("service_config", &self.service_config)
+            .field("has_inspector", &self.inspector.is_some())
+            .finish()
+    }
 }
 
 impl Client {
@@ -52,6 +122,7 @@ impl Client {
             rpc,
             inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
             service_config: Default::default(),
+            inspector: None,
         };
         Ok(client)
     }
@@ -83,6 +154,39 @@ impl Client {
     /// Return the URL for the GraphQL server.
     pub(crate) fn rpc_server(&self) -> &Url {
         &self.rpc
+    }
+
+    /// Attach a request inspector that will be called after every
+    /// GraphQL request completes (both successes and failures).
+    ///
+    /// ```rust,no_run
+    /// use iota_graphql_client::Client;
+    ///
+    /// let client = Client::new_devnet().with_inspector(|result| {
+    ///     if let Some(err) = &result.error {
+    ///         eprintln!("GraphQL error at {}: {err}", result.url);
+    ///     }
+    /// });
+    /// ```
+    pub fn with_inspector(mut self, inspector: impl RequestInspector) -> Self {
+        self.inspector = Some(Arc::new(inspector));
+        self
+    }
+
+    /// Set the request inspector. Replaces any previously set inspector.
+    pub fn set_inspector(&mut self, inspector: impl RequestInspector) {
+        self.inspector = Some(Arc::new(inspector));
+    }
+
+    /// Remove the current request inspector, if any.
+    pub fn clear_inspector(&mut self) {
+        self.inspector = None;
+    }
+
+    fn notify_inspector(&self, result: &GraphQlRequestResult) {
+        if let Some(inspector) = &self.inspector {
+            inspector.inspect(result);
+        }
     }
 
     /// Set the server address for the GraphQL client. It should be a
@@ -120,7 +224,10 @@ impl Client {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        response_to_err(
+        let url = self.rpc_server().to_string();
+        let start = now();
+
+        let result = response_to_err(
             self.inner
                 .post(self.rpc_server().clone())
                 .json(&operation)
@@ -128,7 +235,15 @@ impl Client {
                 .await?
                 .json::<GraphQlResponse<T>>()
                 .await?,
-        )
+        );
+
+        self.notify_inspector(&GraphQlRequestResult {
+            url,
+            error: result.as_ref().err().map(|e| e.to_string()),
+            duration: elapsed(start),
+        });
+
+        result
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -141,15 +256,29 @@ impl Client {
         &self,
         json: serde_json::Map<String, serde_json::Value>,
     ) -> Result<GraphQlResponse<serde_json::Value>> {
-        let res = self
-            .inner
-            .post(self.rpc_server().clone())
-            .json(&json)
-            .send()
-            .await?
-            .json::<GraphQlResponse<serde_json::Value>>()
-            .await?;
-        Ok(res)
+        let url = self.rpc_server().to_string();
+        let start = now();
+
+        let result: Result<GraphQlResponse<serde_json::Value>> = async {
+            let res = self
+                .inner
+                .post(self.rpc_server().clone())
+                .json(&json)
+                .send()
+                .await?
+                .json::<GraphQlResponse<serde_json::Value>>()
+                .await?;
+            Ok(res)
+        }
+        .await;
+
+        self.notify_inspector(&GraphQlRequestResult {
+            url,
+            error: result.as_ref().err().map(|e| e.to_string()),
+            duration: elapsed(start),
+        });
+
+        result
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
