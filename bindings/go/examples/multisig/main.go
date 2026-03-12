@@ -1,6 +1,15 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// 2-of-3 Ed25519 multisig example.
+//
+// Derives 3 keypairs from a mnemonic at indices 0, 1, 2, creates a multisig
+// committee with threshold 2, funds the multisig address via faucet, builds
+// a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
+// and executes.
+//
+// Requires a running localnet (`iota start --force-regenesis`).
+
 package main
 
 import (
