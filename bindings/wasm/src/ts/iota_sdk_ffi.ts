@@ -40,6 +40,7 @@ import {
   uniffiCreateFfiConverterString, 
   uniffiCreateRecord, 
   uniffiRustCallAsync, 
+  uniffiTraitInterfaceCall, 
   uniffiTraitInterfaceCallAsyncWithError, 
   uniffiTypeNameSymbol, 
   variantOrdinalSymbol } from "uniffi-bindgen-react-native";
@@ -2173,20 +2174,6 @@ export function gasPaymentToJson(data: GasPayment): string /*throws*/ {
             /*caller:*/ (callStatus) => {
                 return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_func_gas_payment_to_json(
         FfiConverterTypeGasPayment.lower(data),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-/**
- * Generate a new BIP-39 mnemonic in English.
- * Supported word counts are 12 and 24 (default).
- */
-export function generateMnemonic(wordCount: MnemonicLength | undefined): string {
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_func_generate_mnemonic(
-        FfiConverterOptionalTypeMnemonicLength.lower(wordCount),
                 callStatus);
             },
             /*liftString:*/ FfiConverterString.lift,
@@ -8816,6 +8803,79 @@ const FfiConverterTypeGasPayment = (() => {
             FfiConverterTypeAddress.allocationSize(value.owner) + 
             FfiConverterUInt64.allocationSize(value.price) + 
             FfiConverterUInt64.allocationSize(value.budget);
+            
+        }
+    };
+    return new FFIConverter();
+})();
+
+
+/**
+ * Information about a completed GraphQL request.
+ */
+export type GraphQlRequestResult = {
+    /**
+     * The URL of the GraphQL endpoint that was called.
+     */
+    url: string,
+    /**
+     * If the request failed, a description of the error. `None` on success.
+     */
+    error: string | undefined,
+    /**
+     * How long the request took, in milliseconds.
+     */
+    durationMs: /*u64*/bigint
+}
+
+/**
+ * Generated factory for {@link GraphQlRequestResult} record objects.
+ */
+export const GraphQlRequestResult = (() => {
+    const defaults = () => ({
+    });
+    const create = (() => {
+        return uniffiCreateRecord<GraphQlRequestResult, ReturnType<typeof defaults>>(defaults);
+    })();
+    return globalThis.Object.freeze({
+        /**
+         * Create a frozen instance of {@link GraphQlRequestResult}, with defaults specified
+         * in Rust, in the {@link iota_sdk_ffi} crate.
+         */
+        create,
+
+        /**
+         * Create a frozen instance of {@link GraphQlRequestResult}, with defaults specified
+         * in Rust, in the {@link iota_sdk_ffi} crate.
+         */
+        new: create,
+
+        /**
+         * Defaults specified in the {@link iota_sdk_ffi} crate.
+         */
+        defaults: () => globalThis.Object.freeze(defaults()) as Partial<GraphQlRequestResult>,
+    });
+})();
+
+const FfiConverterTypeGraphQlRequestResult = (() => {
+    type TypeName = GraphQlRequestResult;
+    class FFIConverter extends AbstractFfiConverterByteArray<TypeName> {
+        read(from: RustBuffer): TypeName {
+            return {
+                url: FfiConverterString.read(from), 
+                error: FfiConverterOptionalString.read(from), 
+                durationMs: FfiConverterUInt64.read(from)
+            };
+        }
+        write(value: TypeName, into: RustBuffer): void {
+            FfiConverterString.write(value.url, into);
+            FfiConverterOptionalString.write(value.error, into);
+            FfiConverterUInt64.write(value.durationMs, into);
+        }
+        allocationSize(value: TypeName): number {
+            return FfiConverterString.allocationSize(value.url) + 
+            FfiConverterOptionalString.allocationSize(value.error) + 
+            FfiConverterUInt64.allocationSize(value.durationMs);
             
         }
     };
@@ -16421,39 +16481,6 @@ const FfiConverterTypeIntentVersion = (() => {
 
 
 
-export enum MnemonicLength {
-    Words12,
-    Words24
-}
-
-const FfiConverterTypeMnemonicLength = (() => {
-    const ordinalConverter = FfiConverterInt32;
-    type TypeName = MnemonicLength;
-    class FFIConverter extends AbstractFfiConverterByteArray<TypeName> {
-        read(from: RustBuffer): TypeName {
-            switch (ordinalConverter.read(from)) {
-                case 1: return MnemonicLength.Words12;
-                case 2: return MnemonicLength.Words24;
-                default: throw new UniffiInternalError.UnexpectedEnumCase();
-            }
-        }
-        write(value: TypeName, into: RustBuffer): void {
-            switch (value) {
-                case MnemonicLength.Words12: return ordinalConverter.write(1, into);
-                case MnemonicLength.Words24: return ordinalConverter.write(2, into);
-            }
-        }
-        allocationSize(value: TypeName): number {
-            return ordinalConverter.allocationSize(0);
-        }
-    }
-    return new FFIConverter();
-})();
-
-
-
-
-
 export enum MoveAbility {
     Copy,
     Drop,
@@ -18400,10 +18427,6 @@ const FfiConverterTypeWaitForTx = (() => {
 
 
 
-// FfiConverter for Map<JwkId, Jwk>
-const FfiConverterMapTypeJwkIdTypeJwk = new FfiConverterMap(FfiConverterTypeJwkId, FfiConverterTypeJwk);
-
-
 /**
  * Unique identifier for an Account on the IOTA blockchain.
  *
@@ -19073,190 +19096,6 @@ const uniffiTypeArgumentObjectFactory: UniffiObjectFactory<ArgumentInterface> = 
 const FfiConverterTypeArgument =  new FfiConverterObject(uniffiTypeArgumentObjectFactory);
 
 
-export interface Bls12381PrivateKeyInterface {
-    
-    publicKey() : Bls12381PublicKeyInterface;
-    scheme() : SignatureScheme;
-    signCheckpointSummary(summary: CheckpointSummaryInterface) : ValidatorSignatureInterface;
-    trySign(message: ArrayBuffer)  /*throws*/: Bls12381SignatureInterface;
-    verifyingKey() : Bls12381VerifyingKeyInterface;
-}
-
-
-export class Bls12381PrivateKey extends UniffiAbstractObject implements Bls12381PrivateKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Bls12381PrivateKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(bytes: ArrayBuffer) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_new(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeBls12381PrivateKeyObjectFactory.bless(pointer);
-    }
-
-    
-public static generate(): Bls12381PrivateKeyInterface {
-    return FfiConverterTypeBls12381PrivateKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381privatekey_generate(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): Bls12381PublicKeyInterface {
-    return FfiConverterTypeBls12381PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_public_key(uniffiTypeBls12381PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public scheme(): SignatureScheme {
-    return FfiConverterTypeSignatureScheme.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_scheme(uniffiTypeBls12381PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public signCheckpointSummary(summary: CheckpointSummaryInterface): ValidatorSignatureInterface {
-    return FfiConverterTypeValidatorSignature.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_sign_checkpoint_summary(uniffiTypeBls12381PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeCheckpointSummary.lower(summary),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySign(message: ArrayBuffer): Bls12381SignatureInterface /*throws*/ {
-    return FfiConverterTypeBls12381Signature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_try_sign(uniffiTypeBls12381PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verifyingKey(): Bls12381VerifyingKeyInterface {
-    return FfiConverterTypeBls12381VerifyingKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381privatekey_verifying_key(uniffiTypeBls12381PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeBls12381PrivateKeyObjectFactory.pointer(this);
-            uniffiTypeBls12381PrivateKeyObjectFactory.freePointer(pointer);
-            uniffiTypeBls12381PrivateKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Bls12381PrivateKey {
-        return uniffiTypeBls12381PrivateKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeBls12381PrivateKeyObjectFactory: UniffiObjectFactory<Bls12381PrivateKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeBls12381PrivateKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Bls12381PrivateKeyInterface {
-        const instance = globalThis.Object.create(Bls12381PrivateKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Bls12381PrivateKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Bls12381PrivateKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Bls12381PrivateKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_bls12381privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_bls12381privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Bls12381PrivateKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Bls12381PrivateKey";
-    },
-}})();
-// FfiConverter for Bls12381PrivateKeyInterface
-const FfiConverterTypeBls12381PrivateKey =  new FfiConverterObject(uniffiTypeBls12381PrivateKeyObjectFactory);
-
-
 /**
  * A bls12381 min-sig public key.
  *
@@ -19695,171 +19534,6 @@ const uniffiTypeBls12381SignatureObjectFactory: UniffiObjectFactory<Bls12381Sign
 }})();
 // FfiConverter for Bls12381SignatureInterface
 const FfiConverterTypeBls12381Signature =  new FfiConverterObject(uniffiTypeBls12381SignatureObjectFactory);
-
-
-export interface Bls12381VerifyingKeyInterface {
-    
-    publicKey() : Bls12381PublicKeyInterface;
-    verify(message: ArrayBuffer, signature: Bls12381SignatureInterface)  /*throws*/: void;
-}
-
-
-export class Bls12381VerifyingKey extends UniffiAbstractObject implements Bls12381VerifyingKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Bls12381VerifyingKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(publicKey: Bls12381PublicKeyInterface) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_bls12381verifyingkey_new(
-        FfiConverterTypeBls12381PublicKey.lower(publicKey),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeBls12381VerifyingKeyObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public publicKey(): Bls12381PublicKeyInterface {
-    return FfiConverterTypeBls12381PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_public_key(uniffiTypeBls12381VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, signature: Bls12381SignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_verify(uniffiTypeBls12381VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeBls12381Signature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Bls12381VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_bls12381verifyingkey_uniffi_trait_debug(uniffiTypeBls12381VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Bls12381VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeBls12381VerifyingKeyObjectFactory.pointer(this);
-            uniffiTypeBls12381VerifyingKeyObjectFactory.freePointer(pointer);
-            uniffiTypeBls12381VerifyingKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Bls12381VerifyingKey {
-        return uniffiTypeBls12381VerifyingKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeBls12381VerifyingKeyObjectFactory: UniffiObjectFactory<Bls12381VerifyingKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeBls12381VerifyingKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Bls12381VerifyingKeyInterface {
-        const instance = globalThis.Object.create(Bls12381VerifyingKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Bls12381VerifyingKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Bls12381VerifyingKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Bls12381VerifyingKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_bls12381verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_bls12381verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Bls12381VerifyingKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Bls12381VerifyingKey";
-    },
-}})();
-// FfiConverter for Bls12381VerifyingKeyInterface
-const FfiConverterTypeBls12381VerifyingKey =  new FfiConverterObject(uniffiTypeBls12381VerifyingKeyObjectFactory);
 
 
 /**
@@ -24915,455 +24589,6 @@ const uniffiTypeDigestObjectFactory: UniffiObjectFactory<DigestInterface> = (() 
 const FfiConverterTypeDigest =  new FfiConverterObject(uniffiTypeDigestObjectFactory);
 
 
-export interface Ed25519PrivateKeyInterface {
-    
-    publicKey() : Ed25519PublicKeyInterface;
-    scheme() : SignatureScheme;
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-    signPersonalMessage(message: PersonalMessageInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-    signTransaction(transaction: TransactionInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Encode this private key as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string.
-     */
-    toBech32()  /*throws*/: string;
-    /**
-     * Serialize this private key to bytes.
-     */
-    toBytes() : ArrayBuffer;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this private key as PEM-encoded PKCS#8
-     */
-    toPem()  /*throws*/: string;
-    trySign(message: ArrayBuffer)  /*throws*/: Ed25519SignatureInterface;
-    trySignSimple(message: ArrayBuffer)  /*throws*/: SimpleSignatureInterface;
-    trySignUser(message: ArrayBuffer)  /*throws*/: UserSignatureInterface;
-    verifyingKey() : Ed25519VerifyingKeyInterface;
-}
-
-
-export class Ed25519PrivateKey extends UniffiAbstractObject implements Ed25519PrivateKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Ed25519PrivateKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(bytes: ArrayBuffer) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_new(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeEd25519PrivateKeyObjectFactory.bless(pointer);
-    }
-
-    
-    /**
-     * Decode a private key from `flag || privkey` in Bech32 starting with
-     * "iotaprivkey".
-     */
-public static fromBech32(value: string): Ed25519PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_bech32(
-        FfiConverterString.lower(value),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-     * format).
-     */
-public static fromDer(bytes: ArrayBuffer): Ed25519PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Construct the private key from a mnemonic phrase
-     */
-public static fromMnemonic(phrase: string, accountIndex: /*u64*/bigint = BigInt("0"), password: string = ""): Ed25519PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic(
-        FfiConverterString.lower(phrase),
-        FfiConverterUInt64.lower(accountIndex),
-        FfiConverterString.lower(password),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Create an instance from a mnemonic phrase and a derivation path like
-     * `"m/44'/4218'/0'/0'/0'"`
-     */
-public static fromMnemonicWithPath(phrase: string, path: string, password: string = ""): Ed25519PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_mnemonic_with_path(
-        FfiConverterString.lower(phrase),
-        FfiConverterString.lower(path),
-        FfiConverterString.lower(password),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8-encoded private key from PEM.
-     */
-public static fromPem(s: string): Ed25519PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static generate(): Ed25519PrivateKeyInterface {
-    return FfiConverterTypeEd25519PrivateKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519privatekey_generate(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): Ed25519PublicKeyInterface {
-    return FfiConverterTypeEd25519PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_public_key(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public scheme(): SignatureScheme {
-    return FfiConverterTypeSignatureScheme.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_scheme(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-public signPersonalMessage(message: PersonalMessageInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_personal_message(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypePersonalMessage.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-public signTransaction(transaction: TransactionInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_sign_transaction(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeTransaction.lower(transaction),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Encode this private key as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string.
-     */
-public toBech32(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bech32(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key to bytes.
-     */
-public toBytes(): ArrayBuffer {
-    return FfiConverterArrayBuffer.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_bytes(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_der(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as PEM-encoded PKCS#8
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_to_pem(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySign(message: ArrayBuffer): Ed25519SignatureInterface /*throws*/ {
-    return FfiConverterTypeEd25519Signature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySignSimple(message: ArrayBuffer): SimpleSignatureInterface /*throws*/ {
-    return FfiConverterTypeSimpleSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_simple(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySignUser(message: ArrayBuffer): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_try_sign_user(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verifyingKey(): Ed25519VerifyingKeyInterface {
-    return FfiConverterTypeEd25519VerifyingKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_verifying_key(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Ed25519PrivateKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_debug(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Ed25519PrivateKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `Ed25519PrivateKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `Ed25519PrivateKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: Ed25519PrivateKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519privatekey_uniffi_trait_eq_eq(uniffiTypeEd25519PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeEd25519PrivateKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeEd25519PrivateKeyObjectFactory.pointer(this);
-            uniffiTypeEd25519PrivateKeyObjectFactory.freePointer(pointer);
-            uniffiTypeEd25519PrivateKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Ed25519PrivateKey {
-        return uniffiTypeEd25519PrivateKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeEd25519PrivateKeyObjectFactory: UniffiObjectFactory<Ed25519PrivateKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeEd25519PrivateKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Ed25519PrivateKeyInterface {
-        const instance = globalThis.Object.create(Ed25519PrivateKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Ed25519PrivateKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Ed25519PrivateKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Ed25519PrivateKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Ed25519PrivateKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Ed25519PrivateKey";
-    },
-}})();
-// FfiConverter for Ed25519PrivateKeyInterface
-const FfiConverterTypeEd25519PrivateKey =  new FfiConverterObject(uniffiTypeEd25519PrivateKeyObjectFactory);
-
-
 /**
  * An ed25519 public key.
  *
@@ -25843,451 +25068,6 @@ const uniffiTypeEd25519SignatureObjectFactory: UniffiObjectFactory<Ed25519Signat
 }})();
 // FfiConverter for Ed25519SignatureInterface
 const FfiConverterTypeEd25519Signature =  new FfiConverterObject(uniffiTypeEd25519SignatureObjectFactory);
-
-
-export interface Ed25519VerifierInterface {
-    
-    verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-    verifyUser(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-}
-
-
-export class Ed25519Verifier extends UniffiAbstractObject implements Ed25519VerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Ed25519Verifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeEd25519VerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_simple(uniffiTypeEd25519VerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyUser(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifier_verify_user(uniffiTypeEd25519VerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Ed25519VerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifier_uniffi_trait_debug(uniffiTypeEd25519VerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Ed25519VerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeEd25519VerifierObjectFactory.pointer(this);
-            uniffiTypeEd25519VerifierObjectFactory.freePointer(pointer);
-            uniffiTypeEd25519VerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Ed25519Verifier {
-        return uniffiTypeEd25519VerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeEd25519VerifierObjectFactory: UniffiObjectFactory<Ed25519VerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeEd25519VerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Ed25519VerifierInterface {
-        const instance = globalThis.Object.create(Ed25519Verifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Ed25519Verifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Ed25519VerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Ed25519VerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519verifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519verifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Ed25519VerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Ed25519Verifier";
-    },
-}})();
-// FfiConverter for Ed25519VerifierInterface
-const FfiConverterTypeEd25519Verifier =  new FfiConverterObject(uniffiTypeEd25519VerifierObjectFactory);
-
-
-export interface Ed25519VerifyingKeyInterface {
-    
-    publicKey() : Ed25519PublicKeyInterface;
-    /**
-     * Serialize this public key as DER-encoded data
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this public key into PEM format
-     */
-    toPem()  /*throws*/: string;
-    verify(message: ArrayBuffer, signature: Ed25519SignatureInterface)  /*throws*/: void;
-    verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-    verifyUser(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-}
-
-
-export class Ed25519VerifyingKey extends UniffiAbstractObject implements Ed25519VerifyingKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Ed25519VerifyingKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(publicKey: Ed25519PublicKeyInterface) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_new(
-        FfiConverterTypeEd25519PublicKey.lower(publicKey),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeEd25519VerifyingKeyObjectFactory.bless(pointer);
-    }
-
-    
-    /**
-     * Deserialize public key from ASN.1 DER-encoded data (binary format).
-     */
-public static fromDer(bytes: ArrayBuffer): Ed25519VerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519VerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize public key from PEM.
-     */
-public static fromPem(s: string): Ed25519VerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeEd25519VerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_ed25519verifyingkey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): Ed25519PublicKeyInterface {
-    return FfiConverterTypeEd25519PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_public_key(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this public key as DER-encoded data
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_der(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this public key into PEM format
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_to_pem(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, signature: Ed25519SignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeEd25519Signature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_simple(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyUser(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_verify_user(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Ed25519VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_debug(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Ed25519VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `Ed25519VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `Ed25519VerifyingKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: Ed25519VerifyingKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_ed25519verifyingkey_uniffi_trait_eq_eq(uniffiTypeEd25519VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeEd25519VerifyingKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeEd25519VerifyingKeyObjectFactory.pointer(this);
-            uniffiTypeEd25519VerifyingKeyObjectFactory.freePointer(pointer);
-            uniffiTypeEd25519VerifyingKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Ed25519VerifyingKey {
-        return uniffiTypeEd25519VerifyingKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeEd25519VerifyingKeyObjectFactory: UniffiObjectFactory<Ed25519VerifyingKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeEd25519VerifyingKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Ed25519VerifyingKeyInterface {
-        const instance = globalThis.Object.create(Ed25519VerifyingKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Ed25519VerifyingKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Ed25519VerifyingKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Ed25519VerifyingKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_ed25519verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_ed25519verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Ed25519VerifyingKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Ed25519VerifyingKey";
-    },
-}})();
-// FfiConverter for Ed25519VerifyingKeyInterface
-const FfiConverterTypeEd25519VerifyingKey =  new FfiConverterObject(uniffiTypeEd25519VerifyingKeyObjectFactory);
 
 
 /**
@@ -28069,6 +26849,10 @@ export interface GraphQlClientInterface {
      */
     checkpoints(paginationFilter: PaginationFilter | undefined, asyncOpts_?: { signal: AbortSignal })  /*throws*/: Promise<CheckpointSummaryPage>;
     /**
+     * Remove any previously set request inspector.
+     */
+    clearInspector(asyncOpts_?: { signal: AbortSignal }) : Promise<void>;
+    /**
      * Get the coin metadata for the coin type.
      */
     coinMetadata(coinType: string, asyncOpts_?: { signal: AbortSignal })  /*throws*/: Promise<CoinMetadata | undefined>;
@@ -28348,6 +27132,11 @@ export interface GraphQlClientInterface {
      * and mutation limits, supported versions, and others.
      */
     serviceConfig(asyncOpts_?: { signal: AbortSignal })  /*throws*/: Promise<ServiceConfig>;
+    /**
+     * Attach a request inspector callback that will be invoked after
+     * every GraphQL request completes (both successes and failures).
+     */
+    setInspector(inspector: GraphQlRequestInspectorFn, asyncOpts_?: { signal: AbortSignal }) : Promise<void>;
     /**
      * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
@@ -28645,6 +27434,37 @@ public async checkpoints(paginationFilter: PaginationFilter | undefined = undefi
             /*liftString:*/ FfiConverterString.lift,
             /*asyncOpts:*/ asyncOpts_,
             /*errorHandler:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError)
+        );
+    } catch (__error: any) {
+        if (uniffiIsDebug && __error instanceof Error) {
+            __error.stack = __stack;
+        }
+        throw __error;
+    }
+    }
+    
+    /**
+     * Remove any previously set request inspector.
+     */
+public async clearInspector(asyncOpts_?: { signal: AbortSignal }): Promise<void> {
+    const __stack = uniffiIsDebug ? new Error().stack : undefined;
+    try {
+        return await uniffiRustCallAsync(
+            /*rustCaller:*/ uniffiCaller,
+            /*rustFutureFunc:*/ () => {
+                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_clear_inspector(
+                    uniffiTypeGraphQlClientObjectFactory.clonePointer(this)
+                    
+                );
+            },
+            /*pollFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_poll_void,
+            /*cancelFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_cancel_void,
+            /*completeFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_complete_void,
+            /*freeFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_free_void,
+            /*liftFunc:*/ (_v) => {},
+            /*liftString:*/ FfiConverterString.lift,
+            /*asyncOpts:*/ asyncOpts_,
+            
         );
     } catch (__error: any) {
         if (uniffiIsDebug && __error instanceof Error) {
@@ -29934,6 +28754,38 @@ public async serviceConfig(asyncOpts_?: { signal: AbortSignal }): Promise<Servic
     }
     
     /**
+     * Attach a request inspector callback that will be invoked after
+     * every GraphQL request completes (both successes and failures).
+     */
+public async setInspector(inspector: GraphQlRequestInspectorFn, asyncOpts_?: { signal: AbortSignal }): Promise<void> {
+    const __stack = uniffiIsDebug ? new Error().stack : undefined;
+    try {
+        return await uniffiRustCallAsync(
+            /*rustCaller:*/ uniffiCaller,
+            /*rustFutureFunc:*/ () => {
+                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlclient_set_inspector(
+                    uniffiTypeGraphQlClientObjectFactory.clonePointer(this),
+                    FfiConverterTypeGraphQlRequestInspectorFn.lower(inspector)
+                );
+            },
+            /*pollFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_poll_void,
+            /*cancelFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_cancel_void,
+            /*completeFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_complete_void,
+            /*freeFunc:*/ nativeModule().ubrn_ffi_iota_sdk_ffi_rust_future_free_void,
+            /*liftFunc:*/ (_v) => {},
+            /*liftString:*/ FfiConverterString.lift,
+            /*asyncOpts:*/ asyncOpts_,
+            
+        );
+    } catch (__error: any) {
+        if (uniffiIsDebug && __error instanceof Error) {
+            __error.stack = __stack;
+        }
+        throw __error;
+    }
+    }
+    
+    /**
      * Set the server address for the GraphQL client. It should be a
      * valid URL with a host and optionally a port number.
      */
@@ -30395,6 +29247,183 @@ const uniffiTypeGraphQlClientObjectFactory: UniffiObjectFactory<GraphQlClientInt
 }})();
 // FfiConverter for GraphQlClientInterface
 const FfiConverterTypeGraphQLClient =  new FfiConverterObject(uniffiTypeGraphQlClientObjectFactory);
+
+
+/**
+ * A callback invoked after every GraphQL request completes.
+ *
+ * Implement this trait to receive notifications about request outcomes,
+ * for example to report errors to Sentry or a logging service.
+ */
+export interface GraphQlRequestInspectorFn {
+    
+    /**
+     * Called after each GraphQL request with the result.
+     */
+    onRequestComplete(result: GraphQlRequestResult) : void;
+}
+
+
+/**
+ * A callback invoked after every GraphQL request completes.
+ *
+ * Implement this trait to receive notifications about request outcomes,
+ * for example to report errors to Sentry or a logging service.
+ */
+export class GraphQlRequestInspectorFnImpl extends UniffiAbstractObject implements GraphQlRequestInspectorFn {
+
+    readonly [uniffiTypeNameSymbol] = "GraphQlRequestInspectorFnImpl";
+    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
+    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
+    // No primary constructor declared for this class.
+private constructor(pointer: UnsafeMutableRawPointer) {
+    super();
+    this[pointerLiteralSymbol] = pointer;
+    this[destructorGuardSymbol] = uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.bless(pointer);
+}
+
+    
+
+    
+    /**
+     * Called after each GraphQL request with the result.
+     */
+public onRequestComplete(result: GraphQlRequestResult): void {uniffiCaller.rustCall(
+            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_graphqlrequestinspectorfn_on_request_complete(uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.clonePointer(this), 
+        FfiConverterTypeGraphQlRequestResult.lower(result),
+                callStatus);
+            },
+            /*liftString:*/ FfiConverterString.lift,
+    );
+    }
+    
+
+    /**
+     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
+     */
+    uniffiDestroy(): void {
+        const ptr = (this as any)[destructorGuardSymbol];
+        if (ptr !== undefined) {
+            const pointer = uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.pointer(this);
+            uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.freePointer(pointer);
+            uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.unbless(ptr);
+            delete (this as any)[destructorGuardSymbol];
+        }
+    }
+
+    static instanceOf(obj: any): obj is GraphQlRequestInspectorFnImpl {
+        return uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.isConcreteType(obj);
+    }
+
+    
+}
+
+const uniffiTypeGraphQlRequestInspectorFnImplObjectFactory: UniffiObjectFactory<GraphQlRequestInspectorFn> = (() => {
+    
+    /// <reference lib="es2021" />
+    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
+        uniffiTypeGraphQlRequestInspectorFnImplObjectFactory.freePointer(heldValue);
+    }) : null;
+    
+    return {
+    create(pointer: UnsafeMutableRawPointer): GraphQlRequestInspectorFn {
+        const instance = globalThis.Object.create(GraphQlRequestInspectorFnImpl.prototype);
+        instance[pointerLiteralSymbol] = pointer;
+        instance[destructorGuardSymbol] = this.bless(pointer);
+        instance[uniffiTypeNameSymbol] = "GraphQlRequestInspectorFnImpl";
+        return instance;
+    },
+
+    
+    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
+        const ptr = {
+            p, // make sure this object doesn't get optimized away.
+            markDestroyed: () => undefined,
+        };
+        if (registry) {
+            registry.register(ptr, p, ptr);
+        }
+        return ptr;
+    },
+
+    unbless(ptr: UniffiRustArcPtr) {
+        if (registry) {
+            registry.unregister(ptr);
+        }
+    },
+
+    pointer(obj: GraphQlRequestInspectorFn): UnsafeMutableRawPointer {
+        if ((obj as any)[destructorGuardSymbol] === undefined) {
+            throw new UniffiInternalError.UnexpectedNullPointer();
+        }
+        return (obj as any)[pointerLiteralSymbol];
+    },
+
+    clonePointer(obj: GraphQlRequestInspectorFn): UnsafeMutableRawPointer {
+        const pointer = this.pointer(obj);
+        return uniffiCaller.rustCall(
+            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_graphqlrequestinspectorfn(pointer, callStatus),
+            /*liftString:*/ FfiConverterString.lift
+        );
+    },
+
+    freePointer(pointer: UnsafeMutableRawPointer): void {
+        uniffiCaller.rustCall(
+            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_graphqlrequestinspectorfn(pointer, callStatus),
+            /*liftString:*/ FfiConverterString.lift
+        );
+    },
+
+    isConcreteType(obj: any): obj is GraphQlRequestInspectorFn {
+        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "GraphQlRequestInspectorFnImpl";
+    },
+}})();
+// FfiConverter for GraphQlRequestInspectorFn
+const FfiConverterTypeGraphQlRequestInspectorFn = new FfiConverterObjectWithCallbacks(uniffiTypeGraphQlRequestInspectorFnImplObjectFactory);
+
+// Add a vtavble for the callbacks that go in GraphQlRequestInspectorFn.
+
+
+// Put the implementation in a struct so we don't pollute the top-level namespace
+const uniffiCallbackInterfaceGraphQlRequestInspectorFn: { vtable: any; register: () => void; } = {
+    // Create the VTable using a series of closures.
+    // ts automatically converts these into C callback functions.
+    vtable: {
+        onRequestComplete: (
+            uniffiHandle: bigint,
+            result: Uint8Array,) => {
+            const uniffiMakeCall = 
+            ()
+            : void => {
+                const jsCallback = FfiConverterTypeGraphQlRequestInspectorFn.lift(uniffiHandle);
+                return jsCallback.onRequestComplete(
+                    FfiConverterTypeGraphQlRequestResult.lift(result)
+                )
+            };
+            const uniffiResult = UniffiResult.ready<void>();
+            const uniffiHandleSuccess = (obj: any) => {};
+            const uniffiHandleError = (code: number, errBuf: UniffiByteArray) => {
+                UniffiResult.writeError(uniffiResult, code, errBuf);
+            };
+            uniffiTraitInterfaceCall(
+                /*makeCall:*/ uniffiMakeCall,
+                /*handleSuccess:*/ uniffiHandleSuccess,
+                /*handleError:*/ uniffiHandleError,
+                /*lowerString:*/ FfiConverterString.lower
+            )
+            return uniffiResult;
+        },
+        uniffiFree: (uniffiHandle: UniffiHandle): void => {
+            // GraphQlRequestInspectorFn: this will throw a stale handle error if the handle isn't found.
+            FfiConverterTypeGraphQlRequestInspectorFn.drop(uniffiHandle);
+        }
+    },
+    register: () => {
+        nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_init_callback_vtable_graphqlrequestinspectorfn(
+            uniffiCallbackInterfaceGraphQlRequestInspectorFn.vtable
+        );
+    },
+};
 
 
 /**
@@ -33967,211 +32996,6 @@ const uniffiTypeMultisigAggregatedSignatureObjectFactory: UniffiObjectFactory<Mu
 const FfiConverterTypeMultisigAggregatedSignature =  new FfiConverterObject(uniffiTypeMultisigAggregatedSignatureObjectFactory);
 
 
-export interface MultisigAggregatorInterface {
-    
-    finish()  /*throws*/: MultisigAggregatedSignatureInterface;
-    verifier() : MultisigVerifierInterface;
-    withSignature(signature: UserSignatureInterface)  /*throws*/: MultisigAggregatorInterface;
-    withVerifier(verifier: MultisigVerifierInterface) : MultisigAggregatorInterface;
-}
-
-
-export class MultisigAggregator extends UniffiAbstractObject implements MultisigAggregatorInterface {
-
-    readonly [uniffiTypeNameSymbol] = "MultisigAggregator";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    // No primary constructor declared for this class.
-private constructor(pointer: UnsafeMutableRawPointer) {
-    super();
-    this[pointerLiteralSymbol] = pointer;
-    this[destructorGuardSymbol] = uniffiTypeMultisigAggregatorObjectFactory.bless(pointer);
-}
-
-    
-public static newWithMessage(committee: MultisigCommitteeInterface, message: ArrayBuffer): MultisigAggregatorInterface {
-    return FfiConverterTypeMultisigAggregator.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_message(
-        FfiConverterTypeMultisigCommittee.lower(committee),
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static newWithTransaction(committee: MultisigCommitteeInterface, transaction: TransactionInterface): MultisigAggregatorInterface {
-    return FfiConverterTypeMultisigAggregator.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigaggregator_new_with_transaction(
-        FfiConverterTypeMultisigCommittee.lower(committee),
-        FfiConverterTypeTransaction.lower(transaction),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public finish(): MultisigAggregatedSignatureInterface /*throws*/ {
-    return FfiConverterTypeMultisigAggregatedSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_finish(uniffiTypeMultisigAggregatorObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verifier(): MultisigVerifierInterface {
-    return FfiConverterTypeMultisigVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_verifier(uniffiTypeMultisigAggregatorObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public withSignature(signature: UserSignatureInterface): MultisigAggregatorInterface /*throws*/ {
-    return FfiConverterTypeMultisigAggregator.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_signature(uniffiTypeMultisigAggregatorObjectFactory.clonePointer(this), 
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public withVerifier(verifier: MultisigVerifierInterface): MultisigAggregatorInterface {
-    return FfiConverterTypeMultisigAggregator.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_with_verifier(uniffiTypeMultisigAggregatorObjectFactory.clonePointer(this), 
-        FfiConverterTypeMultisigVerifier.lower(verifier),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `MultisigAggregatorInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigaggregator_uniffi_trait_debug(uniffiTypeMultisigAggregatorObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `MultisigAggregatorInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeMultisigAggregatorObjectFactory.pointer(this);
-            uniffiTypeMultisigAggregatorObjectFactory.freePointer(pointer);
-            uniffiTypeMultisigAggregatorObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is MultisigAggregator {
-        return uniffiTypeMultisigAggregatorObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeMultisigAggregatorObjectFactory: UniffiObjectFactory<MultisigAggregatorInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeMultisigAggregatorObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): MultisigAggregatorInterface {
-        const instance = globalThis.Object.create(MultisigAggregator.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "MultisigAggregator";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: MultisigAggregatorInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: MultisigAggregatorInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_multisigaggregator(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_multisigaggregator(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is MultisigAggregatorInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "MultisigAggregator";
-    },
-}})();
-// FfiConverter for MultisigAggregatorInterface
-const FfiConverterTypeMultisigAggregator =  new FfiConverterObject(uniffiTypeMultisigAggregatorObjectFactory);
-
-
 /**
  * A multisig committee
  *
@@ -35426,180 +34250,6 @@ const uniffiTypeMultisigMemberSignatureObjectFactory: UniffiObjectFactory<Multis
 }})();
 // FfiConverter for MultisigMemberSignatureInterface
 const FfiConverterTypeMultisigMemberSignature =  new FfiConverterObject(uniffiTypeMultisigMemberSignatureObjectFactory);
-
-
-export interface MultisigVerifierInterface {
-    
-    verify(message: ArrayBuffer, signature: MultisigAggregatedSignatureInterface)  /*throws*/: void;
-    withZkloginVerifier(zkloginVerifier: ZkloginVerifierInterface) : MultisigVerifierInterface;
-    zkloginVerifier() : ZkloginVerifierInterface | undefined;
-}
-
-
-export class MultisigVerifier extends UniffiAbstractObject implements MultisigVerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "MultisigVerifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_multisigverifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeMultisigVerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verify(message: ArrayBuffer, signature: MultisigAggregatedSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_verify(uniffiTypeMultisigVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeMultisigAggregatedSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public withZkloginVerifier(zkloginVerifier: ZkloginVerifierInterface): MultisigVerifierInterface {
-    return FfiConverterTypeMultisigVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_with_zklogin_verifier(uniffiTypeMultisigVerifierObjectFactory.clonePointer(this), 
-        FfiConverterTypeZkloginVerifier.lower(zkloginVerifier),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public zkloginVerifier(): ZkloginVerifierInterface | undefined {
-    return FfiConverterOptionalTypeZkloginVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_zklogin_verifier(uniffiTypeMultisigVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `MultisigVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_multisigverifier_uniffi_trait_debug(uniffiTypeMultisigVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `MultisigVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeMultisigVerifierObjectFactory.pointer(this);
-            uniffiTypeMultisigVerifierObjectFactory.freePointer(pointer);
-            uniffiTypeMultisigVerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is MultisigVerifier {
-        return uniffiTypeMultisigVerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeMultisigVerifierObjectFactory: UniffiObjectFactory<MultisigVerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeMultisigVerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): MultisigVerifierInterface {
-        const instance = globalThis.Object.create(MultisigVerifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "MultisigVerifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: MultisigVerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: MultisigVerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_multisigverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_multisigverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is MultisigVerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "MultisigVerifier";
-    },
-}})();
-// FfiConverter for MultisigVerifierInterface
-const FfiConverterTypeMultisigVerifier =  new FfiConverterObject(uniffiTypeMultisigVerifierObjectFactory);
 
 
 export interface NameInterface {
@@ -38859,157 +37509,6 @@ const uniffiTypePasskeyPublicKeyObjectFactory: UniffiObjectFactory<PasskeyPublic
 const FfiConverterTypePasskeyPublicKey =  new FfiConverterObject(uniffiTypePasskeyPublicKeyObjectFactory);
 
 
-export interface PasskeyVerifierInterface {
-    
-    verify(message: ArrayBuffer, authenticator: PasskeyAuthenticatorInterface)  /*throws*/: void;
-}
-
-
-export class PasskeyVerifier extends UniffiAbstractObject implements PasskeyVerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "PasskeyVerifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_passkeyverifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypePasskeyVerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verify(message: ArrayBuffer, authenticator: PasskeyAuthenticatorInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_passkeyverifier_verify(uniffiTypePasskeyVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypePasskeyAuthenticator.lower(authenticator),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `PasskeyVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_passkeyverifier_uniffi_trait_debug(uniffiTypePasskeyVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `PasskeyVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypePasskeyVerifierObjectFactory.pointer(this);
-            uniffiTypePasskeyVerifierObjectFactory.freePointer(pointer);
-            uniffiTypePasskeyVerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is PasskeyVerifier {
-        return uniffiTypePasskeyVerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypePasskeyVerifierObjectFactory: UniffiObjectFactory<PasskeyVerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypePasskeyVerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): PasskeyVerifierInterface {
-        const instance = globalThis.Object.create(PasskeyVerifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "PasskeyVerifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: PasskeyVerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: PasskeyVerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_passkeyverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_passkeyverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is PasskeyVerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "PasskeyVerifier";
-    },
-}})();
-// FfiConverter for PasskeyVerifierInterface
-const FfiConverterTypePasskeyVerifier =  new FfiConverterObject(uniffiTypePasskeyVerifierObjectFactory);
-
-
 /**
  * A personal message that wraps around a byte array.
  */
@@ -39671,455 +38170,6 @@ const uniffiTypePublishObjectFactory: UniffiObjectFactory<PublishInterface> = ((
 const FfiConverterTypePublish =  new FfiConverterObject(uniffiTypePublishObjectFactory);
 
 
-export interface Secp256k1PrivateKeyInterface {
-    
-    publicKey() : Secp256k1PublicKeyInterface;
-    scheme() : SignatureScheme;
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-    signPersonalMessage(message: PersonalMessageInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-    signTransaction(transaction: TransactionInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Encode this private key as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string.
-     */
-    toBech32()  /*throws*/: string;
-    /**
-     * Serialize this private key to bytes.
-     */
-    toBytes() : ArrayBuffer;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this private key as PEM-encoded PKCS#8
-     */
-    toPem()  /*throws*/: string;
-    trySign(message: ArrayBuffer)  /*throws*/: Secp256k1SignatureInterface;
-    trySignSimple(message: ArrayBuffer)  /*throws*/: SimpleSignatureInterface;
-    trySignUser(message: ArrayBuffer)  /*throws*/: UserSignatureInterface;
-    verifyingKey() : Secp256k1VerifyingKeyInterface;
-}
-
-
-export class Secp256k1PrivateKey extends UniffiAbstractObject implements Secp256k1PrivateKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Secp256k1PrivateKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(bytes: ArrayBuffer) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_new(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSecp256k1PrivateKeyObjectFactory.bless(pointer);
-    }
-
-    
-    /**
-     * Decode a private key from `flag || privkey` in Bech32 starting with
-     * "iotaprivkey".
-     */
-public static fromBech32(value: string): Secp256k1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_bech32(
-        FfiConverterString.lower(value),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-     * format).
-     */
-public static fromDer(bytes: ArrayBuffer): Secp256k1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Construct the private key from a mnemonic phrase
-     */
-public static fromMnemonic(phrase: string, accountIndex: /*u64*/bigint = BigInt("0"), password: string = ""): Secp256k1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic(
-        FfiConverterString.lower(phrase),
-        FfiConverterUInt64.lower(accountIndex),
-        FfiConverterString.lower(password),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Create an instance from a mnemonic phrase and a derivation path like
-     * `"m/54'/4218'/0'/0/0"`
-     */
-public static fromMnemonicWithPath(phrase: string, path: string, password: string = ""): Secp256k1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_mnemonic_with_path(
-        FfiConverterString.lower(phrase),
-        FfiConverterString.lower(path),
-        FfiConverterString.lower(password),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8-encoded private key from PEM.
-     */
-public static fromPem(s: string): Secp256k1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static generate(): Secp256k1PrivateKeyInterface {
-    return FfiConverterTypeSecp256k1PrivateKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1privatekey_generate(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): Secp256k1PublicKeyInterface {
-    return FfiConverterTypeSecp256k1PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_public_key(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public scheme(): SignatureScheme {
-    return FfiConverterTypeSignatureScheme.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_scheme(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-public signPersonalMessage(message: PersonalMessageInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_personal_message(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypePersonalMessage.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-public signTransaction(transaction: TransactionInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_sign_transaction(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeTransaction.lower(transaction),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Encode this private key as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string.
-     */
-public toBech32(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bech32(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key to bytes.
-     */
-public toBytes(): ArrayBuffer {
-    return FfiConverterArrayBuffer.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_bytes(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_der(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as PEM-encoded PKCS#8
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_to_pem(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySign(message: ArrayBuffer): Secp256k1SignatureInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1Signature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySignSimple(message: ArrayBuffer): SimpleSignatureInterface /*throws*/ {
-    return FfiConverterTypeSimpleSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_simple(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySignUser(message: ArrayBuffer): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_try_sign_user(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verifyingKey(): Secp256k1VerifyingKeyInterface {
-    return FfiConverterTypeSecp256k1VerifyingKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_verifying_key(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Secp256k1PrivateKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_debug(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Secp256k1PrivateKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `Secp256k1PrivateKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `Secp256k1PrivateKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: Secp256k1PrivateKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1privatekey_uniffi_trait_eq_eq(uniffiTypeSecp256k1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeSecp256k1PrivateKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSecp256k1PrivateKeyObjectFactory.pointer(this);
-            uniffiTypeSecp256k1PrivateKeyObjectFactory.freePointer(pointer);
-            uniffiTypeSecp256k1PrivateKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Secp256k1PrivateKey {
-        return uniffiTypeSecp256k1PrivateKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSecp256k1PrivateKeyObjectFactory: UniffiObjectFactory<Secp256k1PrivateKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSecp256k1PrivateKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Secp256k1PrivateKeyInterface {
-        const instance = globalThis.Object.create(Secp256k1PrivateKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Secp256k1PrivateKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Secp256k1PrivateKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Secp256k1PrivateKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_secp256k1privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Secp256k1PrivateKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Secp256k1PrivateKey";
-    },
-}})();
-// FfiConverter for Secp256k1PrivateKeyInterface
-const FfiConverterTypeSecp256k1PrivateKey =  new FfiConverterObject(uniffiTypeSecp256k1PrivateKeyObjectFactory);
-
-
 /**
  * A secp256k1 signature.
  *
@@ -40601,927 +38651,6 @@ const uniffiTypeSecp256k1SignatureObjectFactory: UniffiObjectFactory<Secp256k1Si
 }})();
 // FfiConverter for Secp256k1SignatureInterface
 const FfiConverterTypeSecp256k1Signature =  new FfiConverterObject(uniffiTypeSecp256k1SignatureObjectFactory);
-
-
-export interface Secp256k1VerifierInterface {
-    
-    verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-    verifyUser(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-}
-
-
-export class Secp256k1Verifier extends UniffiAbstractObject implements Secp256k1VerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Secp256k1Verifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSecp256k1VerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_simple(uniffiTypeSecp256k1VerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyUser(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_verify_user(uniffiTypeSecp256k1VerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Secp256k1VerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifier_uniffi_trait_debug(uniffiTypeSecp256k1VerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Secp256k1VerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSecp256k1VerifierObjectFactory.pointer(this);
-            uniffiTypeSecp256k1VerifierObjectFactory.freePointer(pointer);
-            uniffiTypeSecp256k1VerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Secp256k1Verifier {
-        return uniffiTypeSecp256k1VerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSecp256k1VerifierObjectFactory: UniffiObjectFactory<Secp256k1VerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSecp256k1VerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Secp256k1VerifierInterface {
-        const instance = globalThis.Object.create(Secp256k1Verifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Secp256k1Verifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Secp256k1VerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Secp256k1VerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1verifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_secp256k1verifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Secp256k1VerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Secp256k1Verifier";
-    },
-}})();
-// FfiConverter for Secp256k1VerifierInterface
-const FfiConverterTypeSecp256k1Verifier =  new FfiConverterObject(uniffiTypeSecp256k1VerifierObjectFactory);
-
-
-export interface Secp256k1VerifyingKeyInterface {
-    
-    publicKey() : Secp256k1PublicKeyInterface;
-    /**
-     * Serialize this public key as DER-encoded data
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this public key into PEM
-     */
-    toPem()  /*throws*/: string;
-    verify(message: ArrayBuffer, signature: Secp256k1SignatureInterface)  /*throws*/: void;
-    verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-    verifyUser(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-}
-
-
-export class Secp256k1VerifyingKey extends UniffiAbstractObject implements Secp256k1VerifyingKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Secp256k1VerifyingKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(publicKey: Secp256k1PublicKeyInterface) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_new(
-        FfiConverterTypeSecp256k1PublicKey.lower(publicKey),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSecp256k1VerifyingKeyObjectFactory.bless(pointer);
-    }
-
-    
-    /**
-     * Deserialize public key from ASN.1 DER-encoded data (binary format).
-     */
-public static fromDer(bytes: ArrayBuffer): Secp256k1VerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1VerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize public key from PEM.
-     */
-public static fromPem(s: string): Secp256k1VerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256k1VerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256k1verifyingkey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): Secp256k1PublicKeyInterface {
-    return FfiConverterTypeSecp256k1PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_public_key(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this public key as DER-encoded data
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_der(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this public key into PEM
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_to_pem(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, signature: Secp256k1SignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSecp256k1Signature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_simple(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyUser(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_verify_user(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Secp256k1VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_debug(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Secp256k1VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `Secp256k1VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `Secp256k1VerifyingKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: Secp256k1VerifyingKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256k1verifyingkey_uniffi_trait_eq_eq(uniffiTypeSecp256k1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeSecp256k1VerifyingKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSecp256k1VerifyingKeyObjectFactory.pointer(this);
-            uniffiTypeSecp256k1VerifyingKeyObjectFactory.freePointer(pointer);
-            uniffiTypeSecp256k1VerifyingKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Secp256k1VerifyingKey {
-        return uniffiTypeSecp256k1VerifyingKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSecp256k1VerifyingKeyObjectFactory: UniffiObjectFactory<Secp256k1VerifyingKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSecp256k1VerifyingKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Secp256k1VerifyingKeyInterface {
-        const instance = globalThis.Object.create(Secp256k1VerifyingKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Secp256k1VerifyingKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Secp256k1VerifyingKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Secp256k1VerifyingKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256k1verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_secp256k1verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Secp256k1VerifyingKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Secp256k1VerifyingKey";
-    },
-}})();
-// FfiConverter for Secp256k1VerifyingKeyInterface
-const FfiConverterTypeSecp256k1VerifyingKey =  new FfiConverterObject(uniffiTypeSecp256k1VerifyingKeyObjectFactory);
-
-
-export interface Secp256r1PrivateKeyInterface {
-    
-    /**
-     * Get the public key corresponding to this private key.
-     */
-    publicKey() : Secp256r1PublicKeyInterface;
-    scheme() : SignatureScheme;
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-    signPersonalMessage(message: PersonalMessageInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-    signTransaction(transaction: TransactionInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Encode this private key as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string.
-     */
-    toBech32()  /*throws*/: string;
-    /**
-     * Serialize this private key to bytes.
-     */
-    toBytes() : ArrayBuffer;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this private key as PEM-encoded PKCS#8
-     */
-    toPem()  /*throws*/: string;
-    /**
-     * Sign a message and return a Secp256r1Signature.
-     */
-    trySign(message: ArrayBuffer)  /*throws*/: Secp256r1SignatureInterface;
-    /**
-     * Sign a message and return a SimpleSignature.
-     */
-    trySignSimple(message: ArrayBuffer)  /*throws*/: SimpleSignatureInterface;
-    /**
-     * Sign a message and return a UserSignature.
-     */
-    trySignUser(message: ArrayBuffer)  /*throws*/: UserSignatureInterface;
-    verifyingKey() : Secp256r1VerifyingKeyInterface;
-}
-
-
-export class Secp256r1PrivateKey extends UniffiAbstractObject implements Secp256r1PrivateKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Secp256r1PrivateKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(bytes: ArrayBuffer) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_new(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSecp256r1PrivateKeyObjectFactory.bless(pointer);
-    }
-
-    
-    /**
-     * Decode a private key from `flag || privkey` in Bech32 starting with
-     * "iotaprivkey".
-     */
-public static fromBech32(value: string): Secp256r1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_bech32(
-        FfiConverterString.lower(value),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-     * format).
-     */
-public static fromDer(bytes: ArrayBuffer): Secp256r1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Construct the private key from a mnemonic phrase
-     */
-public static fromMnemonic(phrase: string, accountIndex: /*u64*/bigint = BigInt("0"), password: string = ""): Secp256r1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic(
-        FfiConverterString.lower(phrase),
-        FfiConverterUInt64.lower(accountIndex),
-        FfiConverterString.lower(password),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Create an instance from a mnemonic phrase and a derivation path like
-     * `"m/74'/4218'/0'/0/0"`
-     */
-public static fromMnemonicWithPath(phrase: string, path: string, password: string = ""): Secp256r1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_mnemonic_with_path(
-        FfiConverterString.lower(phrase),
-        FfiConverterString.lower(path),
-        FfiConverterString.lower(password),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8-encoded private key from PEM.
-     */
-public static fromPem(s: string): Secp256r1PrivateKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1PrivateKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Generate a new random Secp256r1PrivateKey
-     */
-public static generate(): Secp256r1PrivateKeyInterface {
-    return FfiConverterTypeSecp256r1PrivateKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1privatekey_generate(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-    /**
-     * Get the public key corresponding to this private key.
-     */
-public publicKey(): Secp256r1PublicKeyInterface {
-    return FfiConverterTypeSecp256r1PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_public_key(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public scheme(): SignatureScheme {
-    return FfiConverterTypeSignatureScheme.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_scheme(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-public signPersonalMessage(message: PersonalMessageInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_personal_message(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypePersonalMessage.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-public signTransaction(transaction: TransactionInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_sign_transaction(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeTransaction.lower(transaction),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Encode this private key as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string.
-     */
-public toBech32(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bech32(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key to bytes.
-     */
-public toBytes(): ArrayBuffer {
-    return FfiConverterArrayBuffer.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_bytes(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_der(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as PEM-encoded PKCS#8
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_to_pem(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a message and return a Secp256r1Signature.
-     */
-public trySign(message: ArrayBuffer): Secp256r1SignatureInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1Signature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a message and return a SimpleSignature.
-     */
-public trySignSimple(message: ArrayBuffer): SimpleSignatureInterface /*throws*/ {
-    return FfiConverterTypeSimpleSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_simple(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a message and return a UserSignature.
-     */
-public trySignUser(message: ArrayBuffer): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_try_sign_user(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verifyingKey(): Secp256r1VerifyingKeyInterface {
-    return FfiConverterTypeSecp256r1VerifyingKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_verifying_key(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Secp256r1PrivateKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_debug(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Secp256r1PrivateKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `Secp256r1PrivateKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `Secp256r1PrivateKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: Secp256r1PrivateKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1privatekey_uniffi_trait_eq_eq(uniffiTypeSecp256r1PrivateKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeSecp256r1PrivateKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSecp256r1PrivateKeyObjectFactory.pointer(this);
-            uniffiTypeSecp256r1PrivateKeyObjectFactory.freePointer(pointer);
-            uniffiTypeSecp256r1PrivateKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Secp256r1PrivateKey {
-        return uniffiTypeSecp256r1PrivateKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSecp256r1PrivateKeyObjectFactory: UniffiObjectFactory<Secp256r1PrivateKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSecp256r1PrivateKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Secp256r1PrivateKeyInterface {
-        const instance = globalThis.Object.create(Secp256r1PrivateKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Secp256r1PrivateKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Secp256r1PrivateKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Secp256r1PrivateKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_secp256r1privatekey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Secp256r1PrivateKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Secp256r1PrivateKey";
-    },
-}})();
-// FfiConverter for Secp256r1PrivateKeyInterface
-const FfiConverterTypeSecp256r1PrivateKey =  new FfiConverterObject(uniffiTypeSecp256r1PrivateKeyObjectFactory);
 
 
 /**
@@ -42007,859 +39136,6 @@ const uniffiTypeSecp256r1SignatureObjectFactory: UniffiObjectFactory<Secp256r1Si
 const FfiConverterTypeSecp256r1Signature =  new FfiConverterObject(uniffiTypeSecp256r1SignatureObjectFactory);
 
 
-export interface Secp256r1VerifierInterface {
-    
-    verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-    verifyUser(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-}
-
-
-export class Secp256r1Verifier extends UniffiAbstractObject implements Secp256r1VerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Secp256r1Verifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSecp256r1VerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(uniffiTypeSecp256r1VerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyUser(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_user(uniffiTypeSecp256r1VerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Secp256r1VerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_uniffi_trait_debug(uniffiTypeSecp256r1VerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Secp256r1VerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSecp256r1VerifierObjectFactory.pointer(this);
-            uniffiTypeSecp256r1VerifierObjectFactory.freePointer(pointer);
-            uniffiTypeSecp256r1VerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Secp256r1Verifier {
-        return uniffiTypeSecp256r1VerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSecp256r1VerifierObjectFactory: UniffiObjectFactory<Secp256r1VerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSecp256r1VerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Secp256r1VerifierInterface {
-        const instance = globalThis.Object.create(Secp256r1Verifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Secp256r1Verifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Secp256r1VerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Secp256r1VerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Secp256r1VerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Secp256r1Verifier";
-    },
-}})();
-// FfiConverter for Secp256r1VerifierInterface
-const FfiConverterTypeSecp256r1Verifier =  new FfiConverterObject(uniffiTypeSecp256r1VerifierObjectFactory);
-
-
-export interface Secp256r1VerifyingKeyInterface {
-    
-    publicKey() : Secp256r1PublicKeyInterface;
-    /**
-     * Serialize this public key as DER-encoded data.
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this public key into PEM.
-     */
-    toPem()  /*throws*/: string;
-    verify(message: ArrayBuffer, signature: Secp256r1SignatureInterface)  /*throws*/: void;
-    verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-    verifyUser(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-}
-
-
-export class Secp256r1VerifyingKey extends UniffiAbstractObject implements Secp256r1VerifyingKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "Secp256r1VerifyingKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(publicKey: Secp256r1PublicKeyInterface) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_new(
-        FfiConverterTypeSecp256r1PublicKey.lower(publicKey),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSecp256r1VerifyingKeyObjectFactory.bless(pointer);
-    }
-
-    
-    /**
-     * Deserialize public key from ASN.1 DER-encoded data (binary format).
-     */
-public static fromDer(bytes: ArrayBuffer): Secp256r1VerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1VerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize public key from PEM.
-     */
-public static fromPem(s: string): Secp256r1VerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeSecp256r1VerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifyingkey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): Secp256r1PublicKeyInterface {
-    return FfiConverterTypeSecp256r1PublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_public_key(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this public key as DER-encoded data.
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_der(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this public key into PEM.
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_to_pem(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, signature: Secp256r1SignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSecp256r1Signature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifySimple(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_simple(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyUser(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_verify_user(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `Secp256r1VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_debug(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `Secp256r1VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `Secp256r1VerifyingKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `Secp256r1VerifyingKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: Secp256r1VerifyingKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_secp256r1verifyingkey_uniffi_trait_eq_eq(uniffiTypeSecp256r1VerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeSecp256r1VerifyingKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSecp256r1VerifyingKeyObjectFactory.pointer(this);
-            uniffiTypeSecp256r1VerifyingKeyObjectFactory.freePointer(pointer);
-            uniffiTypeSecp256r1VerifyingKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is Secp256r1VerifyingKey {
-        return uniffiTypeSecp256r1VerifyingKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSecp256r1VerifyingKeyObjectFactory: UniffiObjectFactory<Secp256r1VerifyingKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSecp256r1VerifyingKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): Secp256r1VerifyingKeyInterface {
-        const instance = globalThis.Object.create(Secp256r1VerifyingKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "Secp256r1VerifyingKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: Secp256r1VerifyingKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: Secp256r1VerifyingKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_secp256r1verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_secp256r1verifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is Secp256r1VerifyingKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "Secp256r1VerifyingKey";
-    },
-}})();
-// FfiConverter for Secp256r1VerifyingKeyInterface
-const FfiConverterTypeSecp256r1VerifyingKey =  new FfiConverterObject(uniffiTypeSecp256r1VerifyingKeyObjectFactory);
-
-
-export interface SimpleKeypairInterface {
-    
-    publicKey() : MultisigMemberPublicKeyInterface;
-    scheme() : SignatureScheme;
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-    signPersonalMessage(message: PersonalMessageInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-    signTransaction(transaction: TransactionInterface)  /*throws*/: UserSignatureInterface;
-    /**
-     * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string. Note that the pubkey is not encoded.
-     */
-    toBech32()  /*throws*/: string;
-    /**
-     * Encode a SimpleKeypair as `flag || privkey` in bytes
-     */
-    toBytes() : ArrayBuffer;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toPem()  /*throws*/: string;
-    trySign(message: ArrayBuffer)  /*throws*/: SimpleSignatureInterface;
-    trySignUser(message: ArrayBuffer)  /*throws*/: UserSignatureInterface;
-    verifyingKey() : SimpleVerifyingKeyInterface;
-}
-
-
-export class SimpleKeypair extends UniffiAbstractObject implements SimpleKeypairInterface {
-
-    readonly [uniffiTypeNameSymbol] = "SimpleKeypair";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    // No primary constructor declared for this class.
-private constructor(pointer: UnsafeMutableRawPointer) {
-    super();
-    this[pointerLiteralSymbol] = pointer;
-    this[destructorGuardSymbol] = uniffiTypeSimpleKeypairObjectFactory.bless(pointer);
-}
-
-    
-    /**
-     * Decode a SimpleKeypair from `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to SimpleKeypair. The public key is computed directly from
-     * the private key bytes.
-     */
-public static fromBech32(value: string): SimpleKeypairInterface /*throws*/ {
-    return FfiConverterTypeSimpleKeypair.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bech32(
-        FfiConverterString.lower(value),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Decode a SimpleKeypair from `flag || privkey` bytes
-     */
-public static fromBytes(bytes: ArrayBuffer): SimpleKeypairInterface /*throws*/ {
-    return FfiConverterTypeSimpleKeypair.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_bytes(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-     * format).
-     */
-public static fromDer(bytes: ArrayBuffer): SimpleKeypairInterface /*throws*/ {
-    return FfiConverterTypeSimpleKeypair.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static fromEd25519(keypair: Ed25519PrivateKeyInterface): SimpleKeypairInterface {
-    return FfiConverterTypeSimpleKeypair.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_ed25519(
-        FfiConverterTypeEd25519PrivateKey.lower(keypair),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8-encoded private key from PEM.
-     */
-public static fromPem(s: string): SimpleKeypairInterface /*throws*/ {
-    return FfiConverterTypeSimpleKeypair.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static fromSecp256k1(keypair: Secp256k1PrivateKeyInterface): SimpleKeypairInterface {
-    return FfiConverterTypeSimpleKeypair.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256k1(
-        FfiConverterTypeSecp256k1PrivateKey.lower(keypair),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static fromSecp256r1(keypair: Secp256r1PrivateKeyInterface): SimpleKeypairInterface {
-    return FfiConverterTypeSimpleKeypair.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simplekeypair_from_secp256r1(
-        FfiConverterTypeSecp256r1PrivateKey.lower(keypair),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): MultisigMemberPublicKeyInterface {
-    return FfiConverterTypeMultisigMemberPublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_public_key(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public scheme(): SignatureScheme {
-    return FfiConverterTypeSignatureScheme.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_scheme(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a personal message and return a UserSignature.
-     */
-public signPersonalMessage(message: PersonalMessageInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_personal_message(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-        FfiConverterTypePersonalMessage.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Sign a transaction and return a UserSignature.
-     */
-public signTransaction(transaction: TransactionInterface): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_sign_transaction(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-        FfiConverterTypeTransaction.lower(transaction),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Encode a SimpleKeypair as `flag || privkey` in Bech32 starting with
-     * "iotaprivkey" to a string. Note that the pubkey is not encoded.
-     */
-public toBech32(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bech32(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Encode a SimpleKeypair as `flag || privkey` in bytes
-     */
-public toBytes(): ArrayBuffer {
-    return FfiConverterArrayBuffer.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_bytes(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_der(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_to_pem(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySign(message: ArrayBuffer): SimpleSignatureInterface /*throws*/ {
-    return FfiConverterTypeSimpleSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public trySignUser(message: ArrayBuffer): UserSignatureInterface /*throws*/ {
-    return FfiConverterTypeUserSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_try_sign_user(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verifyingKey(): SimpleVerifyingKeyInterface {
-    return FfiConverterTypeSimpleVerifyingKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_verifying_key(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `SimpleKeypairInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simplekeypair_uniffi_trait_debug(uniffiTypeSimpleKeypairObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `SimpleKeypairInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSimpleKeypairObjectFactory.pointer(this);
-            uniffiTypeSimpleKeypairObjectFactory.freePointer(pointer);
-            uniffiTypeSimpleKeypairObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is SimpleKeypair {
-        return uniffiTypeSimpleKeypairObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSimpleKeypairObjectFactory: UniffiObjectFactory<SimpleKeypairInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSimpleKeypairObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): SimpleKeypairInterface {
-        const instance = globalThis.Object.create(SimpleKeypair.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "SimpleKeypair";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: SimpleKeypairInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: SimpleKeypairInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_simplekeypair(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_simplekeypair(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is SimpleKeypairInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "SimpleKeypair";
-    },
-}})();
-// FfiConverter for SimpleKeypairInterface
-const FfiConverterTypeSimpleKeypair =  new FfiConverterObject(uniffiTypeSimpleKeypairObjectFactory);
-
-
 /**
  * A basic signature
  *
@@ -43296,388 +39572,6 @@ const uniffiTypeSimpleSignatureObjectFactory: UniffiObjectFactory<SimpleSignatur
 }})();
 // FfiConverter for SimpleSignatureInterface
 const FfiConverterTypeSimpleSignature =  new FfiConverterObject(uniffiTypeSimpleSignatureObjectFactory);
-
-
-export interface SimpleVerifierInterface {
-    
-    verify(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-}
-
-
-export class SimpleVerifier extends UniffiAbstractObject implements SimpleVerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "SimpleVerifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeSimpleVerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verify(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifier_verify(uniffiTypeSimpleVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSimpleVerifierObjectFactory.pointer(this);
-            uniffiTypeSimpleVerifierObjectFactory.freePointer(pointer);
-            uniffiTypeSimpleVerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is SimpleVerifier {
-        return uniffiTypeSimpleVerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSimpleVerifierObjectFactory: UniffiObjectFactory<SimpleVerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSimpleVerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): SimpleVerifierInterface {
-        const instance = globalThis.Object.create(SimpleVerifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "SimpleVerifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: SimpleVerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: SimpleVerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_simpleverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_simpleverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is SimpleVerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "SimpleVerifier";
-    },
-}})();
-// FfiConverter for SimpleVerifierInterface
-const FfiConverterTypeSimpleVerifier =  new FfiConverterObject(uniffiTypeSimpleVerifierObjectFactory);
-
-
-export interface SimpleVerifyingKeyInterface {
-    
-    publicKey() : MultisigMemberPublicKeyInterface;
-    scheme() : SignatureScheme;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toDer()  /*throws*/: ArrayBuffer;
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-    toPem()  /*throws*/: string;
-    verify(message: ArrayBuffer, signature: SimpleSignatureInterface)  /*throws*/: void;
-}
-
-
-export class SimpleVerifyingKey extends UniffiAbstractObject implements SimpleVerifyingKeyInterface {
-
-    readonly [uniffiTypeNameSymbol] = "SimpleVerifyingKey";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    // No primary constructor declared for this class.
-private constructor(pointer: UnsafeMutableRawPointer) {
-    super();
-    this[pointerLiteralSymbol] = pointer;
-    this[destructorGuardSymbol] = uniffiTypeSimpleVerifyingKeyObjectFactory.bless(pointer);
-}
-
-    
-    /**
-     * Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-     * format).
-     */
-public static fromDer(bytes: ArrayBuffer): SimpleVerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeSimpleVerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_der(
-        FfiConverterArrayBuffer.lower(bytes),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Deserialize PKCS#8-encoded private key from PEM.
-     */
-public static fromPem(s: string): SimpleVerifyingKeyInterface /*throws*/ {
-    return FfiConverterTypeSimpleVerifyingKey.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_simpleverifyingkey_from_pem(
-        FfiConverterString.lower(s),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public publicKey(): MultisigMemberPublicKeyInterface {
-    return FfiConverterTypeMultisigMemberPublicKey.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_public_key(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public scheme(): SignatureScheme {
-    return FfiConverterTypeSignatureScheme.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_scheme(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toDer(): ArrayBuffer /*throws*/ {
-    return FfiConverterArrayBuffer.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_der(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    /**
-     * Serialize this private key as DER-encoded PKCS#8
-     */
-public toPem(): string /*throws*/ {
-    return FfiConverterString.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_to_pem(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, signature: SimpleSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_verify(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeSimpleSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `SimpleVerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_debug(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `SimpleVerifyingKeyInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-    
-    /**
-     * Calls into the `==` method of `SimpleVerifyingKeyInterface` (the native Rust peer).
-     *
-     * Returns `true` if and only if the two instance of `SimpleVerifyingKeyInterface` are
-     * equivalent on the Rust side.
-     *
-     * Generated by deriving the `Eq` trait in Rust.
-     */
-    equals(other: SimpleVerifyingKey): boolean {
-        
-    return FfiConverterBool.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_simpleverifyingkey_uniffi_trait_eq_eq(uniffiTypeSimpleVerifyingKeyObjectFactory.clonePointer(this), 
-        FfiConverterTypeSimpleVerifyingKey.lower(other),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeSimpleVerifyingKeyObjectFactory.pointer(this);
-            uniffiTypeSimpleVerifyingKeyObjectFactory.freePointer(pointer);
-            uniffiTypeSimpleVerifyingKeyObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is SimpleVerifyingKey {
-        return uniffiTypeSimpleVerifyingKeyObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeSimpleVerifyingKeyObjectFactory: UniffiObjectFactory<SimpleVerifyingKeyInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeSimpleVerifyingKeyObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): SimpleVerifyingKeyInterface {
-        const instance = globalThis.Object.create(SimpleVerifyingKey.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "SimpleVerifyingKey";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: SimpleVerifyingKeyInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: SimpleVerifyingKeyInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_simpleverifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_simpleverifyingkey(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is SimpleVerifyingKeyInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "SimpleVerifyingKey";
-    },
-}})();
-// FfiConverter for SimpleVerifyingKeyInterface
-const FfiConverterTypeSimpleVerifyingKey =  new FfiConverterObject(uniffiTypeSimpleVerifyingKeyObjectFactory);
 
 
 /**
@@ -46449,55 +42343,11 @@ export class TransactionSigner extends UniffiAbstractObject implements Transacti
     }
 
     
-public static fromEd25519(key: Ed25519PrivateKeyInterface): TransactionSignerInterface {
-    return FfiConverterTypeTransactionSigner.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_ed25519(
-        FfiConverterTypeEd25519PrivateKey.lower(key),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static fromKeypair(key: SimpleKeypairInterface): TransactionSignerInterface {
-    return FfiConverterTypeTransactionSigner.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_keypair(
-        FfiConverterTypeSimpleKeypair.lower(key),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
 public static fromMoveAuthenticator(auth: MoveAuthenticatorInterface): TransactionSignerInterface {
     return FfiConverterTypeTransactionSigner.lift(uniffiCaller.rustCall(
             /*caller:*/ (callStatus) => {
                 return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_move_authenticator(
         FfiConverterTypeMoveAuthenticator.lower(auth),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static fromSecp256k1(key: Secp256k1PrivateKeyInterface): TransactionSignerInterface {
-    return FfiConverterTypeTransactionSigner.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256k1(
-        FfiConverterTypeSecp256k1PrivateKey.lower(key),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static fromSecp256r1(key: Secp256r1PrivateKeyInterface): TransactionSignerInterface {
-    return FfiConverterTypeTransactionSigner.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_transactionsigner_from_secp256r1(
-        FfiConverterTypeSecp256r1PrivateKey.lower(key),
                 callStatus);
             },
             /*liftString:*/ FfiConverterString.lift,
@@ -48858,186 +44708,6 @@ const FfiConverterTypeUserSignature =  new FfiConverterObject(uniffiTypeUserSign
 
 
 /**
- * Verifier that will verify all UserSignature variants
- */
-export interface UserSignatureVerifierInterface {
-    
-    verify(message: ArrayBuffer, signature: UserSignatureInterface)  /*throws*/: void;
-    withZkloginVerifier(zkloginVerifier: ZkloginVerifierInterface) : UserSignatureVerifierInterface;
-    zkloginVerifier() : ZkloginVerifierInterface | undefined;
-}
-
-
-/**
- * Verifier that will verify all UserSignature variants
- */
-export class UserSignatureVerifier extends UniffiAbstractObject implements UserSignatureVerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "UserSignatureVerifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor() {
-        super();
-        const pointer =
-            uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeUserSignatureVerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public verify(message: ArrayBuffer, signature: UserSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(uniffiTypeUserSignatureVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeUserSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public withZkloginVerifier(zkloginVerifier: ZkloginVerifierInterface): UserSignatureVerifierInterface {
-    return FfiConverterTypeUserSignatureVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(uniffiTypeUserSignatureVerifierObjectFactory.clonePointer(this), 
-        FfiConverterTypeZkloginVerifier.lower(zkloginVerifier),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public zkloginVerifier(): ZkloginVerifierInterface | undefined {
-    return FfiConverterOptionalTypeZkloginVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(uniffiTypeUserSignatureVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `UserSignatureVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_uniffi_trait_debug(uniffiTypeUserSignatureVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `UserSignatureVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeUserSignatureVerifierObjectFactory.pointer(this);
-            uniffiTypeUserSignatureVerifierObjectFactory.freePointer(pointer);
-            uniffiTypeUserSignatureVerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is UserSignatureVerifier {
-        return uniffiTypeUserSignatureVerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeUserSignatureVerifierObjectFactory: UniffiObjectFactory<UserSignatureVerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeUserSignatureVerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): UserSignatureVerifierInterface {
-        const instance = globalThis.Object.create(UserSignatureVerifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "UserSignatureVerifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: UserSignatureVerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: UserSignatureVerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is UserSignatureVerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "UserSignatureVerifier";
-    },
-}})();
-// FfiConverter for UserSignatureVerifierInterface
-const FfiConverterTypeUserSignatureVerifier =  new FfiConverterObject(uniffiTypeUserSignatureVerifierObjectFactory);
-
-
-/**
  * An aggregated signature from multiple Validators.
  *
  * # BCS
@@ -49251,378 +44921,6 @@ const uniffiTypeValidatorAggregatedSignatureObjectFactory: UniffiObjectFactory<V
 }})();
 // FfiConverter for ValidatorAggregatedSignatureInterface
 const FfiConverterTypeValidatorAggregatedSignature =  new FfiConverterObject(uniffiTypeValidatorAggregatedSignatureObjectFactory);
-
-
-export interface ValidatorCommitteeSignatureAggregatorInterface {
-    
-    addSignature(signature: ValidatorSignatureInterface)  /*throws*/: void;
-    committee() : ValidatorCommittee;
-    finish()  /*throws*/: ValidatorAggregatedSignatureInterface;
-}
-
-
-export class ValidatorCommitteeSignatureAggregator extends UniffiAbstractObject implements ValidatorCommitteeSignatureAggregatorInterface {
-
-    readonly [uniffiTypeNameSymbol] = "ValidatorCommitteeSignatureAggregator";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    // No primary constructor declared for this class.
-private constructor(pointer: UnsafeMutableRawPointer) {
-    super();
-    this[pointerLiteralSymbol] = pointer;
-    this[destructorGuardSymbol] = uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.bless(pointer);
-}
-
-    
-public static newCheckpointSummary(committee: ValidatorCommittee, summary: CheckpointSummaryInterface): ValidatorCommitteeSignatureAggregatorInterface /*throws*/ {
-    return FfiConverterTypeValidatorCommitteeSignatureAggregator.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
-        FfiConverterTypeValidatorCommittee.lower(committee),
-        FfiConverterTypeCheckpointSummary.lower(summary),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public addSignature(signature: ValidatorSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.clonePointer(this), 
-        FfiConverterTypeValidatorSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public committee(): ValidatorCommittee {
-    return FfiConverterTypeValidatorCommittee.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public finish(): ValidatorAggregatedSignatureInterface /*throws*/ {
-    return FfiConverterTypeValidatorAggregatedSignature.lift(
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `ValidatorCommitteeSignatureAggregatorInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_uniffi_trait_debug(uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `ValidatorCommitteeSignatureAggregatorInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.pointer(this);
-            uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.freePointer(pointer);
-            uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is ValidatorCommitteeSignatureAggregator {
-        return uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory: UniffiObjectFactory<ValidatorCommitteeSignatureAggregatorInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): ValidatorCommitteeSignatureAggregatorInterface {
-        const instance = globalThis.Object.create(ValidatorCommitteeSignatureAggregator.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "ValidatorCommitteeSignatureAggregator";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: ValidatorCommitteeSignatureAggregatorInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: ValidatorCommitteeSignatureAggregatorInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is ValidatorCommitteeSignatureAggregatorInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "ValidatorCommitteeSignatureAggregator";
-    },
-}})();
-// FfiConverter for ValidatorCommitteeSignatureAggregatorInterface
-const FfiConverterTypeValidatorCommitteeSignatureAggregator =  new FfiConverterObject(uniffiTypeValidatorCommitteeSignatureAggregatorObjectFactory);
-
-
-export interface ValidatorCommitteeSignatureVerifierInterface {
-    
-    committee() : ValidatorCommittee;
-    verify(message: ArrayBuffer, signature: ValidatorSignatureInterface)  /*throws*/: void;
-    verifyAggregated(message: ArrayBuffer, signature: ValidatorAggregatedSignatureInterface)  /*throws*/: void;
-    verifyCheckpointSummary(summary: CheckpointSummaryInterface, signature: ValidatorAggregatedSignatureInterface)  /*throws*/: void;
-}
-
-
-export class ValidatorCommitteeSignatureVerifier extends UniffiAbstractObject implements ValidatorCommitteeSignatureVerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "ValidatorCommitteeSignatureVerifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    constructor(committee: ValidatorCommittee) /*throws*/ {
-        super();
-        const pointer =
-            
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
-        FfiConverterTypeValidatorCommittee.lower(committee),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-        this[pointerLiteralSymbol] = pointer;
-        this[destructorGuardSymbol] = uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.bless(pointer);
-    }
-
-    
-
-    
-public committee(): ValidatorCommittee {
-    return FfiConverterTypeValidatorCommittee.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, signature: ValidatorSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeValidatorSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyAggregated(message: ArrayBuffer, signature: ValidatorAggregatedSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeValidatorAggregatedSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public verifyCheckpointSummary(summary: CheckpointSummaryInterface, signature: ValidatorAggregatedSignatureInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.clonePointer(this), 
-        FfiConverterTypeCheckpointSummary.lower(summary),
-        FfiConverterTypeValidatorAggregatedSignature.lower(signature),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `ValidatorCommitteeSignatureVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_uniffi_trait_debug(uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `ValidatorCommitteeSignatureVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.pointer(this);
-            uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.freePointer(pointer);
-            uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is ValidatorCommitteeSignatureVerifier {
-        return uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory: UniffiObjectFactory<ValidatorCommitteeSignatureVerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): ValidatorCommitteeSignatureVerifierInterface {
-        const instance = globalThis.Object.create(ValidatorCommitteeSignatureVerifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "ValidatorCommitteeSignatureVerifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: ValidatorCommitteeSignatureVerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: ValidatorCommitteeSignatureVerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is ValidatorCommitteeSignatureVerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "ValidatorCommitteeSignatureVerifier";
-    },
-}})();
-// FfiConverter for ValidatorCommitteeSignatureVerifierInterface
-const FfiConverterTypeValidatorCommitteeSignatureVerifier =  new FfiConverterObject(uniffiTypeValidatorCommitteeSignatureVerifierObjectFactory);
 
 
 /**
@@ -51369,197 +46667,6 @@ const uniffiTypeZkLoginPublicIdentifierObjectFactory: UniffiObjectFactory<ZkLogi
 const FfiConverterTypeZkLoginPublicIdentifier =  new FfiConverterObject(uniffiTypeZkLoginPublicIdentifierObjectFactory);
 
 
-export interface ZkloginVerifierInterface {
-    
-    jwks() : Map<JwkId, Jwk>;
-    verify(message: ArrayBuffer, authenticator: ZkLoginAuthenticatorInterface)  /*throws*/: void;
-    withJwks(jwks: Map<JwkId, Jwk>) : ZkloginVerifierInterface;
-}
-
-
-export class ZkloginVerifier extends UniffiAbstractObject implements ZkloginVerifierInterface {
-
-    readonly [uniffiTypeNameSymbol] = "ZkloginVerifier";
-    readonly [destructorGuardSymbol]: UniffiRustArcPtr;
-    readonly [pointerLiteralSymbol]: UnsafeMutableRawPointer;
-    // No primary constructor declared for this class.
-private constructor(pointer: UnsafeMutableRawPointer) {
-    super();
-    this[pointerLiteralSymbol] = pointer;
-    this[destructorGuardSymbol] = uniffiTypeZkloginVerifierObjectFactory.bless(pointer);
-}
-
-    
-    /**
-     * Load a fixed verifying key from zkLogin.vkey output. This is based on a
-     * local setup and should not be used in production.
-     */
-public static newDev(): ZkloginVerifierInterface {
-    return FfiConverterTypeZkloginVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public static newMainnet(): ZkloginVerifierInterface {
-    return FfiConverterTypeZkloginVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-
-    
-public jwks(): Map<JwkId, Jwk> {
-    return FfiConverterMapTypeJwkIdTypeJwk.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(uniffiTypeZkloginVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-public verify(message: ArrayBuffer, authenticator: ZkLoginAuthenticatorInterface): void /*throws*/ {
-        uniffiCaller.rustCallWithError(
-            /*liftError:*/ FfiConverterTypeSdkFfiError.lift.bind(FfiConverterTypeSdkFfiError),
-            /*caller:*/ (callStatus) => { nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(uniffiTypeZkloginVerifierObjectFactory.clonePointer(this), 
-        FfiConverterArrayBuffer.lower(message),
-        FfiConverterTypeZkLoginAuthenticator.lower(authenticator),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    );
-    }
-    
-public withJwks(jwks: Map<JwkId, Jwk>): ZkloginVerifierInterface {
-    return FfiConverterTypeZkloginVerifier.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(uniffiTypeZkloginVerifierObjectFactory.clonePointer(this), 
-        FfiConverterMapTypeJwkIdTypeJwk.lower(jwks),
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-    
-    
-    /**
-     * Calls into the `Debug` string representation of `ZkloginVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust.
-     */
-    toDebugString(): string {
-        
-    return FfiConverterString.lift(uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => {
-                return nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_method_zkloginverifier_uniffi_trait_debug(uniffiTypeZkloginVerifierObjectFactory.clonePointer(this), 
-                callStatus);
-            },
-            /*liftString:*/ FfiConverterString.lift,
-    ));
-    }
-
-    /**
-     * Calls into the `Debug` string representation of `ZkloginVerifierInterface` (the native Rust peer).
-     *
-     * Generated by deriving the `Debug` trait in Rust, without deriving `Display`.
-     */
-    toString(): string {
-        return this.toDebugString();
-    }
-    
-
-    /**
-     * {@inheritDoc uniffi-bindgen-react-native#UniffiAbstractObject.uniffiDestroy}
-     */
-    uniffiDestroy(): void {
-        const ptr = (this as any)[destructorGuardSymbol];
-        if (ptr !== undefined) {
-            const pointer = uniffiTypeZkloginVerifierObjectFactory.pointer(this);
-            uniffiTypeZkloginVerifierObjectFactory.freePointer(pointer);
-            uniffiTypeZkloginVerifierObjectFactory.unbless(ptr);
-            delete (this as any)[destructorGuardSymbol];
-        }
-    }
-
-    static instanceOf(obj: any): obj is ZkloginVerifier {
-        return uniffiTypeZkloginVerifierObjectFactory.isConcreteType(obj);
-    }
-
-    
-}
-
-const uniffiTypeZkloginVerifierObjectFactory: UniffiObjectFactory<ZkloginVerifierInterface> = (() => {
-    
-    /// <reference lib="es2021" />
-    const registry = typeof FinalizationRegistry !== 'undefined' ? new FinalizationRegistry<UnsafeMutableRawPointer>((heldValue: UnsafeMutableRawPointer) => {
-        uniffiTypeZkloginVerifierObjectFactory.freePointer(heldValue);
-    }) : null;
-    
-    return {
-    create(pointer: UnsafeMutableRawPointer): ZkloginVerifierInterface {
-        const instance = globalThis.Object.create(ZkloginVerifier.prototype);
-        instance[pointerLiteralSymbol] = pointer;
-        instance[destructorGuardSymbol] = this.bless(pointer);
-        instance[uniffiTypeNameSymbol] = "ZkloginVerifier";
-        return instance;
-    },
-
-    
-    bless(p: UnsafeMutableRawPointer): UniffiRustArcPtr {
-        const ptr = {
-            p, // make sure this object doesn't get optimized away.
-            markDestroyed: () => undefined,
-        };
-        if (registry) {
-            registry.register(ptr, p, ptr);
-        }
-        return ptr;
-    },
-
-    unbless(ptr: UniffiRustArcPtr) {
-        if (registry) {
-            registry.unregister(ptr);
-        }
-    },
-
-    pointer(obj: ZkloginVerifierInterface): UnsafeMutableRawPointer {
-        if ((obj as any)[destructorGuardSymbol] === undefined) {
-            throw new UniffiInternalError.UnexpectedNullPointer();
-        }
-        return (obj as any)[pointerLiteralSymbol];
-    },
-
-    clonePointer(obj: ZkloginVerifierInterface): UnsafeMutableRawPointer {
-        const pointer = this.pointer(obj);
-        return uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    freePointer(pointer: UnsafeMutableRawPointer): void {
-        uniffiCaller.rustCall(
-            /*caller:*/ (callStatus) => nativeModule().ubrn_uniffi_iota_sdk_ffi_fn_free_zkloginverifier(pointer, callStatus),
-            /*liftString:*/ FfiConverterString.lift
-        );
-    },
-
-    isConcreteType(obj: any): obj is ZkloginVerifierInterface {
-        return obj[destructorGuardSymbol] && obj[uniffiTypeNameSymbol] === "ZkloginVerifier";
-    },
-}})();
-// FfiConverter for ZkloginVerifierInterface
-const FfiConverterTypeZkloginVerifier =  new FfiConverterObject(uniffiTypeZkloginVerifierObjectFactory);
-
-
 // FfiConverter for ArrayBuffer | undefined
 const FfiConverterOptionalArrayBuffer = new FfiConverterOptional(FfiConverterArrayBuffer);
 
@@ -51836,10 +46943,6 @@ const FfiConverterOptionalTypeBigInt = new FfiConverterOptional(FfiConverterType
 const FfiConverterOptionalTypeValue = new FfiConverterOptional(FfiConverterTypeValue);
 
 
-// FfiConverter for MnemonicLength | undefined
-const FfiConverterOptionalTypeMnemonicLength = new FfiConverterOptional(FfiConverterTypeMnemonicLength);
-
-
 // FfiConverter for MoveVisibility | undefined
 const FfiConverterOptionalTypeMoveVisibility = new FfiConverterOptional(FfiConverterTypeMoveVisibility);
 
@@ -51962,10 +47065,6 @@ const FfiConverterOptionalTypeZkLoginAuthenticator = new FfiConverterOptional(Ff
 
 // FfiConverter for ZkLoginPublicIdentifierInterface | undefined
 const FfiConverterOptionalTypeZkLoginPublicIdentifier = new FfiConverterOptional(FfiConverterTypeZkLoginPublicIdentifier);
-
-
-// FfiConverter for ZkloginVerifierInterface | undefined
-const FfiConverterOptionalTypeZkloginVerifier = new FfiConverterOptional(FfiConverterTypeZkloginVerifier);
 
 
 // FfiConverter for Array</*i32*/number> | undefined
@@ -52663,9 +47762,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_json() !== 5922) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_func_gas_payment_to_json");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic() !== 15726) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_func_generate_mnemonic");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs() !== 15482) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_func_genesis_object_from_bcs");
@@ -53576,32 +48672,11 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() !== 53358) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key() !== 53765) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme() !== 8293) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_scheme");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary() !== 1487) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_sign_checkpoint_summary");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign() !== 59341) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_try_sign");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key() !== 36438) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381privatekey_verifying_key");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes() !== 9890) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381publickey_to_bytes");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes() !== 56969) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381signature_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key() !== 59353) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify() !== 54718) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bls12381verifyingkey_verify");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded() !== 44301) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_bn254fieldelement_padded");
@@ -53900,42 +48975,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes() !== 14244) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_digest_to_bytes");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key() !== 55389) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme() !== 8128) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_scheme");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message() !== 59851) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_personal_message");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction() !== 4951) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_sign_transaction");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32() !== 64514) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes() !== 26261) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der() !== 61433) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem() !== 34166) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign() !== 39795) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple() !== 56024) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user() !== 42020) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_try_sign_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key() !== 59162) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519privatekey_verifying_key");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address() !== 37757) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519publickey_derive_address");
     }
@@ -53950,30 +48989,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes() !== 31911) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519signature_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple() !== 6579) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user() !== 16895) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifier_verify_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key() !== 55026) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der() !== 56779) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem() !== 56327) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify() !== 24673) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple() !== 29563) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user() !== 43622) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_ed25519verifyingkey_verify_user");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key() !== 10295) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_executiontimeobservation_key");
@@ -54028,6 +49043,9 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints() !== 36867) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_checkpoints");
+    }
+    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector() !== 18004) {
+        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_clear_inspector");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata() !== 10872) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_coin_metadata");
@@ -54140,6 +49158,9 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config() !== 11931) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_service_config");
     }
+    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector() !== 2614) {
+        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_inspector");
+    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server() !== 63707) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_set_rpc_server");
     }
@@ -54175,6 +49196,9 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx() !== 10761) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlclient_wait_for_tx");
+    }
+    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete() !== 58807) {
+        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_graphqlrequestinspectorfn_on_request_complete");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_identifier_as_str() !== 63815) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_identifier_as_str");
@@ -54290,18 +49314,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures() !== 5488) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigaggregatedsignature_signatures");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish() !== 31014) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_finish");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier() !== 36902) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_verifier");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature() !== 48209) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_signature");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier() !== 10820) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigaggregator_with_verifier");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address() !== 26282) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigcommittee_derive_address");
     }
@@ -54397,15 +49409,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin() !== 65193) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigmembersignature_is_zklogin");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify() !== 49901) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigverifier_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier() !== 20062) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigverifier_with_zklogin_verifier");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier() !== 5971) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_multisigverifier_zklogin_verifier");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_name_format() !== 66) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_name_format");
@@ -54572,9 +49575,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner() !== 65008) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_passkeypublickey_inner");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify() !== 19101) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_passkeyverifier_verify");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes() !== 17910) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_personalmessage_message_bytes");
     }
@@ -54596,42 +49596,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_publish_modules() !== 26011) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_publish_modules");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key() !== 27155) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme() !== 60810) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_scheme");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message() !== 53577) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_personal_message");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction() !== 34208) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_sign_transaction");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32() !== 60488) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes() !== 18583) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der() !== 65507) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem() !== 12369) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign() !== 5798) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple() !== 11597) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user() !== 20597) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_try_sign_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key() !== 51137) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1privatekey_verifying_key");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address() !== 48490) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1publickey_derive_address");
     }
@@ -54647,66 +49611,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes() !== 49705) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1signature_to_bytes");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple() !== 36777) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user() !== 26362) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifier_verify_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key() !== 56083) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der() !== 21325) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem() !== 29137) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify() !== 27904) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple() !== 35045) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user() !== 41639) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256k1verifyingkey_verify_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key() !== 58075) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme() !== 20973) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_scheme");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message() !== 113) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_personal_message");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction() !== 1687) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_sign_transaction");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32() !== 4230) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes() !== 8648) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der() !== 48507) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem() !== 34634) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign() !== 39126) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple() !== 57038) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user() !== 36924) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_try_sign_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key() !== 55895) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1privatekey_verifying_key");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address() !== 27344) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1publickey_derive_address");
     }
@@ -54721,63 +49625,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes() !== 64948) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1signature_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple() !== 18491) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user() !== 19940) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifier_verify_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key() !== 35474) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der() !== 49763) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem() !== 51401) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify() !== 32594) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple() !== 35191) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_simple");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user() !== 46052) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_secp256r1verifyingkey_verify_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key() !== 11009) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme() !== 19826) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_scheme");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message() !== 2940) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_personal_message");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction() !== 35221) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_sign_transaction");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32() !== 4776) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes() !== 1555) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der() !== 22161) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem() !== 18854) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign() !== 52266) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user() !== 17485) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_try_sign_user");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key() !== 20797) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplekeypair_verifying_key");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key() !== 36693) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplesignature_ed25519_pub_key");
@@ -54829,24 +49676,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simplesignature_to_bytes() !== 28081) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simplesignature_to_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify() !== 8441) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simpleverifier_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key() !== 58667) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_public_key");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme() !== 7296) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_scheme");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_der() !== 3936) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_pem() !== 55066) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_to_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_verify() !== 22348) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_simpleverifyingkey_verify");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_splitcoins_amounts() !== 10377) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_splitcoins_amounts");
@@ -55142,15 +49971,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes() !== 58893) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_usersignature_to_bytes");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify() !== 47797) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier() !== 44658) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_with_zklogin_verifier");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier() !== 9821) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_usersignatureverifier_zklogin_verifier");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes() !== 59039) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_bitmap_bytes");
     }
@@ -55159,27 +49979,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature() !== 39125) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatoraggregatedsignature_signature");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature() !== 13923) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_add_signature");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee() !== 36159) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_committee");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish() !== 7324) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureaggregator_finish");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee() !== 5093) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_committee");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify() !== 29238) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated() !== 46271) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_aggregated");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary() !== 36331) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorcommitteesignatureverifier_verify_checkpoint_summary");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration() !== 59803) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_validatorexecutiontimeobservation_duration");
@@ -55256,15 +50055,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss() !== 58864) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_zkloginpublicidentifier_iss");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks() !== 62366) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_jwks");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify() !== 29967) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_verify");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks() !== 49665) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_method_zkloginverifier_with_jwks");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_address_framework() !== 52951) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_address_framework");
     }
@@ -55298,12 +50088,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result() !== 44025) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_argument_new_result");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate() !== 14780) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_generate");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new() !== 52467) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_bls12381privatekey_new");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes() !== 6069) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_bls12381publickey_from_bytes");
     }
@@ -55321,9 +50105,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate() !== 58435) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_bls12381signature_generate");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new() !== 22402) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_bls12381verifyingkey_new");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes() !== 3672) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_bn254fieldelement_from_bytes");
@@ -55403,27 +50184,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() !== 8094) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_digest_generate");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() !== 16842) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der() !== 42838) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic() !== 55789) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path() !== 15255) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_mnemonic_with_path");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem() !== 53776) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate() !== 53932) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_generate");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new() !== 12862) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_new");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes() !== 60403) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519publickey_from_bytes");
     }
@@ -55441,18 +50201,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate() !== 41607) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519signature_generate");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new() !== 6910) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifier_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der() !== 1677) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem() !== 37214) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new() !== 23280) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_ed25519verifyingkey_new");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create() !== 42248) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_endofepochtransactionkind_new_authenticator_state_create");
@@ -55718,20 +50466,11 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new() !== 3396) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregatedsignature_new");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message() !== 41388) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_message");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction() !== 27644) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_multisigaggregator_new_with_transaction");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new() !== 40069) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_multisigcommittee_new");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new() !== 63622) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_multisigmember_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new() !== 53197) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_multisigverifier_new");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_name_from_str() !== 30248) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_name_from_str");
@@ -55895,9 +50634,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new() !== 30856) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_passkeypublickey_new");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new() !== 23457) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_passkeyverifier_new");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new() !== 17579) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_personalmessage_new");
     }
@@ -55906,27 +50642,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_publish_new() !== 4785) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_publish_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32() !== 34529) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der() !== 45448) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic() !== 33082) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path() !== 7431) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_mnemonic_with_path");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem() !== 20937) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate() !== 49496) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_generate");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new() !== 35513) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1privatekey_new");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes() !== 20339) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1publickey_from_bytes");
@@ -55946,39 +50661,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate() !== 63087) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1signature_generate");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_new() !== 59813) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifier_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der() !== 40127) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem() !== 40573) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new() !== 16080) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256k1verifyingkey_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32() !== 7016) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der() !== 63595) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic() !== 57849) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path() !== 7709) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_mnemonic_with_path");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem() !== 28166) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate() !== 47736) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_generate");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new() !== 32825) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1privatekey_new");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes() !== 60002) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1publickey_from_bytes");
     }
@@ -55997,39 +50679,6 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate() !== 40260) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1signature_generate");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new() !== 59881) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifier_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der() !== 6292) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem() !== 20421) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new() !== 57317) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_secp256r1verifyingkey_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32() !== 51811) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bech32");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes() !== 9299) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_bytes");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der() !== 24923) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519() !== 22142) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_ed25519");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem() !== 2041) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_pem");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1() !== 46546) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256k1");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1() !== 13117) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplekeypair_from_secp256r1");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519() !== 65185) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_ed25519");
     }
@@ -56038,15 +50687,6 @@ function uniffiEnsureInitialized() {
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1() !== 19953) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simplesignature_new_secp256r1");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new() !== 34783) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simpleverifier_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der() !== 21482) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_der");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem() !== 11192) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_simpleverifyingkey_from_pem");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_splitcoins_new() !== 50321) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_splitcoins_new");
@@ -56189,20 +50829,8 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() !== 37051) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() !== 15863) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair() !== 13858) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_keypair");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator() !== 17379) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_move_authenticator");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1() !== 54758) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256k1");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1() !== 17667) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_secp256r1");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new() !== 8178) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_new");
@@ -56282,17 +50910,8 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator() !== 30659) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_usersignature_new_zklogin_authenticator");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new() !== 32322) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_usersignatureverifier_new");
-    }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new() !== 15846) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_validatoraggregatedsignature_new");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary() !== 25823) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new() !== 17424) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_validatorcommitteesignatureverifier_new");
     }
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new() !== 47546) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_validatorexecutiontimeobservation_new");
@@ -56315,13 +50934,8 @@ function uniffiEnsureInitialized() {
     if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new() !== 53294) {
         throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_zkloginpublicidentifier_new");
     }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev() !== 44446) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_dev");
-    }
-    if (nativeModule().ubrn_uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet() !== 12123) {
-        throw new UniffiInternalError.ApiChecksumMismatch("uniffi_iota_sdk_ffi_checksum_constructor_zkloginverifier_new_mainnet");
-    }
 
+    uniffiCallbackInterfaceGraphQlRequestInspectorFn.register();
     uniffiCallbackInterfaceTransactionSignerFn.register();
     }
 
@@ -56337,10 +50951,8 @@ export default globalThis.Object.freeze({
     FfiConverterTypeBatchSendStatus,
     FfiConverterTypeBatchSendStatusType,
     FfiConverterTypeBigInt,
-    FfiConverterTypeBls12381PrivateKey,
     FfiConverterTypeBls12381PublicKey,
     FfiConverterTypeBls12381Signature,
-    FfiConverterTypeBls12381VerifyingKey,
     FfiConverterTypeBn254FieldElement,
     FfiConverterTypeCancelledTransaction,
     FfiConverterTypeChangeEpoch,
@@ -56374,11 +50986,8 @@ export default globalThis.Object.freeze({
     FfiConverterTypeDynamicFieldOutput,
     FfiConverterTypeDynamicFieldOutputPage,
     FfiConverterTypeDynamicFieldValue,
-    FfiConverterTypeEd25519PrivateKey,
     FfiConverterTypeEd25519PublicKey,
     FfiConverterTypeEd25519Signature,
-    FfiConverterTypeEd25519Verifier,
-    FfiConverterTypeEd25519VerifyingKey,
     FfiConverterTypeEndOfEpochData,
     FfiConverterTypeEndOfEpochTransactionKind,
     FfiConverterTypeEpoch,
@@ -56400,6 +51009,8 @@ export default globalThis.Object.freeze({
     FfiConverterTypeGenesisObject,
     FfiConverterTypeGenesisTransaction,
     FfiConverterTypeGraphQLClient,
+    FfiConverterTypeGraphQlRequestInspectorFn,
+    FfiConverterTypeGraphQlRequestResult,
     FfiConverterTypeHashingIntentScope,
     FfiConverterTypeIdOperation,
     FfiConverterTypeIdentifier,
@@ -56413,7 +51024,6 @@ export default globalThis.Object.freeze({
     FfiConverterTypeJwkId,
     FfiConverterTypeMakeMoveVector,
     FfiConverterTypeMergeCoins,
-    FfiConverterTypeMnemonicLength,
     FfiConverterTypeMoveAbility,
     FfiConverterTypeMoveArg,
     FfiConverterTypeMoveAuthenticator,
@@ -56443,12 +51053,10 @@ export default globalThis.Object.freeze({
     FfiConverterTypeMoveViewResult,
     FfiConverterTypeMoveVisibility,
     FfiConverterTypeMultisigAggregatedSignature,
-    FfiConverterTypeMultisigAggregator,
     FfiConverterTypeMultisigCommittee,
     FfiConverterTypeMultisigMember,
     FfiConverterTypeMultisigMemberPublicKey,
     FfiConverterTypeMultisigMemberSignature,
-    FfiConverterTypeMultisigVerifier,
     FfiConverterTypeName,
     FfiConverterTypeNameFormat,
     FfiConverterTypeNameRegistration,
@@ -56471,7 +51079,6 @@ export default globalThis.Object.freeze({
     FfiConverterTypePaginationFilter,
     FfiConverterTypePasskeyAuthenticator,
     FfiConverterTypePasskeyPublicKey,
-    FfiConverterTypePasskeyVerifier,
     FfiConverterTypePersonalMessage,
     FfiConverterTypeProgrammableTransaction,
     FfiConverterTypeProtocolConfigAttr,
@@ -56481,24 +51088,15 @@ export default globalThis.Object.freeze({
     FfiConverterTypeQuery,
     FfiConverterTypeRandomnessStateUpdate,
     FfiConverterTypeSdkFfiError,
-    FfiConverterTypeSecp256k1PrivateKey,
     FfiConverterTypeSecp256k1PublicKey,
     FfiConverterTypeSecp256k1Signature,
-    FfiConverterTypeSecp256k1Verifier,
-    FfiConverterTypeSecp256k1VerifyingKey,
-    FfiConverterTypeSecp256r1PrivateKey,
     FfiConverterTypeSecp256r1PublicKey,
     FfiConverterTypeSecp256r1Signature,
-    FfiConverterTypeSecp256r1Verifier,
-    FfiConverterTypeSecp256r1VerifyingKey,
     FfiConverterTypeServiceConfig,
     FfiConverterTypeSignatureScheme,
     FfiConverterTypeSignedTransaction,
     FfiConverterTypeSignedTransactionPage,
-    FfiConverterTypeSimpleKeypair,
     FfiConverterTypeSimpleSignature,
-    FfiConverterTypeSimpleVerifier,
-    FfiConverterTypeSimpleVerifyingKey,
     FfiConverterTypeSplitCoins,
     FfiConverterTypeStructTag,
     FfiConverterTypeSystemPackage,
@@ -56530,13 +51128,10 @@ export default globalThis.Object.freeze({
     FfiConverterTypeUpgradeInfo,
     FfiConverterTypeUpgradePolicy,
     FfiConverterTypeUserSignature,
-    FfiConverterTypeUserSignatureVerifier,
     FfiConverterTypeValidator,
     FfiConverterTypeValidatorAggregatedSignature,
     FfiConverterTypeValidatorCommittee,
     FfiConverterTypeValidatorCommitteeMember,
-    FfiConverterTypeValidatorCommitteeSignatureAggregator,
-    FfiConverterTypeValidatorCommitteeSignatureVerifier,
     FfiConverterTypeValidatorConnection,
     FfiConverterTypeValidatorCredentials,
     FfiConverterTypeValidatorExecutionTimeObservation,
@@ -56551,6 +51146,5 @@ export default globalThis.Object.freeze({
     FfiConverterTypeZkLoginInputs,
     FfiConverterTypeZkLoginProof,
     FfiConverterTypeZkLoginPublicIdentifier,
-    FfiConverterTypeZkloginVerifier,
   }
 });

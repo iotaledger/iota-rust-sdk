@@ -228,14 +228,28 @@
       return `https://explorer.iota.org/txBlock/${digest}?network=${net}`;
     }
 
-    function createClient(network) {
+    async function createClient(network) {
+      let c;
       switch (network) {
-        case "mainnet": return GraphQlClient.newMainnet();
-        case "testnet": return GraphQlClient.newTestnet();
-        case "devnet": return GraphQlClient.newDevnet();
-        case "localnet": return GraphQlClient.newLocalnet();
-        default: return GraphQlClient.newTestnet();
+        case "mainnet": c = GraphQlClient.newMainnet(); break;
+        case "testnet": c = GraphQlClient.newTestnet(); break;
+        case "devnet": c = GraphQlClient.newDevnet(); break;
+        case "localnet": c = GraphQlClient.newLocalnet(); break;
+        default: c = GraphQlClient.newTestnet();
       }
+
+      // Attach a request inspector that logs every GraphQL request.
+      await c.setInspector({
+        onRequestComplete(result) {
+          const status = result.error ? "FAIL" : "OK";
+          console.log(
+            `[inspector] ${status} ${result.url} (${result.durationMs}ms)`,
+            result.error ?? ""
+          );
+        },
+      });
+
+      return c;
     }
 
     // --------------- Wallet Standard discovery ---------------
@@ -647,7 +661,7 @@
 
     // --------------- Event listeners ---------------
     $("network").addEventListener("change", async () => {
-      client = createClient($("network").value);
+      client = await createClient($("network").value);
       selectedValidator = null;
       hide("result");
       if (connectedAccount) {
@@ -663,7 +677,7 @@
     // --------------- Init ---------------
     async function main() {
       await uniffiInitAsync();
-      client = createClient($("network").value);
+      client = await createClient($("network").value);
       hide("init-status");
       show("app");
       listenForWallets();
