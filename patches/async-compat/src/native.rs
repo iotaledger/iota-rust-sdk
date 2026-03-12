@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 // Minimal async-compat for native targets.
 //
 // UniFFI only uses `Compat::new(future)` to enter a tokio runtime context
