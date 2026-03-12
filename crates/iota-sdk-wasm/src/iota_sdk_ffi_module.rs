@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 #[allow(unused_imports)]
 use uniffi_runtime_javascript::{self as js, IntoJs, IntoRust, uniffi as u};
 use wasm_bindgen::prelude::wasm_bindgen;

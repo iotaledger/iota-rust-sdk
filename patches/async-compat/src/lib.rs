@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 // Patched async-compat for iota-rust-sdk.
 //
 // On wasm32-unknown-unknown there are no threads and std::time::Instant is
