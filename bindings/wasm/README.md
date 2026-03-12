@@ -40,6 +40,7 @@ uniffi-bindgen-react-native generate wasm bindings \
 ```
 
 This writes:
+
 - `bindings/wasm/src/ts/iota_sdk_ffi.ts` – full TypeScript API (~45 k lines)
 - `crates/iota-sdk-wasm/src/iota_sdk_ffi_module.rs` – wasm-bindgen bridge
 

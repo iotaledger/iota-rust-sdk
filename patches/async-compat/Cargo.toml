@@ -3,8 +3,8 @@ name = "async-compat"
 version = "0.2.5"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
-description = "Compatibility adapter between tokio and futures (patched for wasm32)"
 publish = false
+description = "Compatibility adapter between tokio and futures (patched for wasm32)"
 
 [dependencies]
 pin-project-lite = "0.2"

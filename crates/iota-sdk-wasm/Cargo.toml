@@ -11,7 +11,7 @@ crate-type = ["cdylib", "rlib"]
 default = []
 
 [dependencies]
-iota-sdk-ffi = { path = "../iota-sdk-ffi" }
+iota-sdk-ffi = { path = "../iota-sdk-ffi", default-features = false }
 # We want to ensure that the version of wasm-bindgen is selected by the
 # uniffi-runtime-javascript crate.
 # cargo is smart enough to do this if we don't put any further restrictions
