@@ -15,7 +15,7 @@ func main() {
 
 	// Get current epoch
 	currentEpoch, err := client.Epoch(nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get current epoch: %v", err)
 	}
 	if currentEpoch == nil {
@@ -28,7 +28,7 @@ func main() {
 	// Get previous epoch
 	previousEpochId := currentEpoch.EpochId - 1
 	previousEpoch, err := client.Epoch(&previousEpochId)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get previous epoch: %v", err)
 	}
 	if previousEpoch == nil {

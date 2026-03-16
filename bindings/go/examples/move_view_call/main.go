@@ -32,9 +32,7 @@ func main() {
 		&hashArgs,
 	)
 	if err != nil {
-		if sdkErr, ok := err.(*iota_sdk.SdkFfiError); !ok || sdkErr != nil {
-			log.Fatalf("Failed to call move view function: %v", err)
-		}
+		log.Fatalf("Failed to call move view function: %v", err)
 	}
 
 	if result.Error != nil {
@@ -63,9 +61,7 @@ func main() {
 		&jsonArgs,
 	)
 	if err != nil {
-		if sdkErr, ok := err.(*iota_sdk.SdkFfiError); !ok || sdkErr != nil {
-			log.Fatalf("Failed to call move view function: %v", err)
-		}
+		log.Fatalf("Failed to call move view function: %v", err)
 	}
 
 	if result2.Error != nil {
@@ -99,9 +95,7 @@ func main() {
 	// 	&auctionArgs,
 	// )
 	// if err != nil {
-	// 	if sdkErr, ok := err.(*iota_sdk.SdkFfiError); !ok || sdkErr != nil {
-	// 		log.Fatalf("Failed to call auction function: %v", err)
-	// 	}
+	// 	log.Fatalf("Failed to call auction function: %v", err)
 	// }
 
 	// if auctionResult.Error != nil {
@@ -131,9 +125,7 @@ func main() {
 	// 	&auctionJsonArgs,
 	// )
 	// if err != nil {
-	// 	if sdkErr, ok := err.(*iota_sdk.SdkFfiError); !ok || sdkErr != nil {
-	// 		log.Fatalf("Failed to call auction function: %v", err)
-	// 	}
+	// 	log.Fatalf("Failed to call auction function: %v", err)
 	// }
 
 	// if auctionJsonResult.Error != nil {

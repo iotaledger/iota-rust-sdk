@@ -18,19 +18,19 @@ func main() {
 	}
 
 	signed_transaction, err := client.Transaction(digest)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get transaction: %v", err)
 	}
 	fmt.Printf("Signed Transaction: %v\n", signed_transaction)
 
 	transaction_effects, err := client.TransactionEffects(digest)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get transaction effects: %v", err)
 	}
 	fmt.Printf("Transaction Effects: %v\n", transaction_effects)
 
 	transaction_data_effects, err := client.TransactionDataEffects(digest)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get transaction data effects: %v", err)
 	}
 	fmt.Printf("Transaction Data Effects: %v\n", transaction_data_effects)
