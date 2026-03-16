@@ -61,8 +61,21 @@ if [ "$1" == "start" ]; then
     echo "Setting up client environment..."
     $IOTA_BINARY client -y new-env --alias localnet --rpc http://127.0.0.1:9000 --graphql http://0.0.0.0:9125 --faucet http://127.0.0.1:9123/v1/gas
 
-    echo "Requesting faucet coins..."
-    $IOTA_BINARY client faucet --address $address
+    echo "Waiting for faucet to be ready..."
+    success=false
+    for i in {1..60}; do
+        sleep 1
+        if $IOTA_BINARY client faucet --address $address >/dev/null 2>&1; then
+            success=true
+            break
+        fi
+    done
+    if ! $success; then
+        echo "Failed to request faucet coins after 60 seconds"
+        echo "Last 20 lines of $IOTA_LOG:"
+        tail -20 "$IOTA_LOG" 2>/dev/null || echo "(no log file)"
+        exit 1
+    fi
 
     echo "Starting Gas Station..."
     # Set gas station auth
