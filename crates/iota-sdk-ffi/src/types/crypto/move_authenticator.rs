@@ -17,10 +17,6 @@ use crate::types::{
 #[derive(Debug, derive_more::From, uniffi::Object)]
 pub struct MoveAuthenticator(pub iota_sdk::types::MoveAuthenticator);
 
-/// Version 1 of the [`MoveAuthenticator`].
-#[derive(Debug, derive_more::From, uniffi::Object)]
-pub struct MoveAuthenticatorV1(pub iota_sdk::types::MoveAuthenticatorV1);
-
 #[uniffi::export]
 impl MoveAuthenticator {
     #[uniffi::constructor]
@@ -41,6 +37,10 @@ impl MoveAuthenticator {
         }
     }
 }
+
+/// Version 1 of the [`MoveAuthenticator`].
+#[derive(Debug, derive_more::From, uniffi::Object)]
+pub struct MoveAuthenticatorV1(pub iota_sdk::types::MoveAuthenticatorV1);
 
 #[uniffi::export]
 impl MoveAuthenticatorV1 {
