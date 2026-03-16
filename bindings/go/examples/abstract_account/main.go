@@ -6,7 +6,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
@@ -90,9 +89,6 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	}
 
 	fmt.Printf("Publishing package: %v\n\n", (*effects).AsV1().Status)
-
-	// Wait some time for the indexer to process the tx
-	time.Sleep(3 * time.Second)
 
 	// Get package, package metadata and account IDs from the effects
 	var packageId *iota_sdk.ObjectId

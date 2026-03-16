@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -64,9 +63,6 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     var effects = builder.execute(signer, WaitForTx.FINALIZED)
 
     println("Publishing package: ${effects.asV1().status}\n")
-
-    // Wait some time for the indexer to process the tx
-    delay(3000)
 
     // Get package, package metadata and account IDs from the effects
     var packageId: ObjectId? = null
