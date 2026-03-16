@@ -42,7 +42,7 @@ if [ "$1" == "start" ]; then
 
     echo "Waiting for network to start and requesting faucet coins..."
     success=false
-    for i in {1..30}; do
+    for i in {1..60}; do
         sleep 1
         if $IOTA_BINARY client faucet --url http://127.0.0.1:9123/gas --address $address >/dev/null 2>&1; then
             success=true
@@ -50,7 +50,9 @@ if [ "$1" == "start" ]; then
         fi
     done
     if ! $success; then
-        echo "Failed to request faucet coins after 30 seconds"
+        echo "Failed to request faucet coins after 60 seconds"
+        echo "Last 20 lines of $IOTA_LOG:"
+        tail -20 "$IOTA_LOG" 2>/dev/null || echo "(no log file)"
         exit 1
     fi
 
@@ -61,7 +63,7 @@ if [ "$1" == "start" ]; then
 
     echo "Waiting for gas station to be ready..."
     success=false
-    for i in {1..30}; do
+    for i in {1..60}; do
         sleep 1
         if curl --silent --fail http://localhost:9527/version >/dev/null 2>&1; then
             success=true
@@ -69,7 +71,8 @@ if [ "$1" == "start" ]; then
         fi
     done
     if ! $success; then
-        echo "Gas station did not become ready after 30 seconds"
+        echo "Gas station did not become ready after 60 seconds"
+        docker logs iota-gas-station 2>&1 || echo "(no container logs)"
         exit 1
     fi
 
