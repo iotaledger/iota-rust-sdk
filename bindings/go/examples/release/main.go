@@ -14,7 +14,7 @@ func main() {
 	client := iota_sdk.GraphQlClientNewTestnet()
 
 	chainID, err := client.ChainId()
-	if err != nil {
+	if err.(*iota_sdk.SdkFfiError) != nil {
 		log.Fatalf("Failed to get chain ID: %v", err)
 	}
 	fmt.Println("Chain ID:", chainID)
