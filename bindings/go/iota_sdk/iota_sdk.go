@@ -37,7 +37,29 @@ type RustBufferI interface {
 	Capacity() uint64
 }
 
-func RustBufferFromExternal(b RustBufferI) GoRustBuffer {
+// C.RustBuffer fields exposed as an interface so they can be accessed in different Go packages.
+// See https://github.com/golang/go/issues/13467
+type ExternalCRustBuffer interface {
+	Data() unsafe.Pointer
+	Len() uint64
+	Capacity() uint64
+}
+
+func RustBufferFromC(b C.RustBuffer) ExternalCRustBuffer {
+	return GoRustBuffer {
+		inner: b,
+	}
+}
+
+func CFromRustBuffer(b ExternalCRustBuffer) C.RustBuffer {
+	return C.RustBuffer {
+		capacity: C.uint64_t(b.Capacity()),
+		len: C.uint64_t(b.Len()),
+		data: (*C.uchar)(b.Data()),
+	}
+}
+
+func RustBufferFromExternal(b ExternalCRustBuffer) GoRustBuffer {
 	return GoRustBuffer {
 		inner: C.RustBuffer {
 			capacity: C.uint64_t(b.Capacity()),
@@ -90,7 +112,7 @@ func bytesToRustBuffer(b []byte) C.RustBuffer {
 		len: C.int(len(b)),
 		data: (*C.uchar)(unsafe.Pointer(&b[0])),
 	}
-
+	
 	return rustCall(func( status *C.RustCallStatus) C.RustBuffer {
 		return C.ffi_iota_sdk_ffi_rustbuffer_from_bytes(foreign, status)
 	})
@@ -12886,6 +12908,10 @@ func (FfiConverterString) Lower(value string) C.RustBuffer {
 	return stringToRustBuffer(value)
 }
 
+func (c FfiConverterString) LowerExternal(value string) ExternalCRustBuffer {
+	return RustBufferFromC(stringToRustBuffer(value))
+}
+
 func (FfiConverterString) Write(writer io.Writer, value string) {
 	if len(value) > math.MaxInt32 {
 		panic("String is too large to fit into Int32")
@@ -12911,6 +12937,10 @@ var FfiConverterBytesINSTANCE = FfiConverterBytes{}
 
 func (c FfiConverterBytes) Lower(value []byte) C.RustBuffer {
 	return LowerIntoRustBuffer[[]byte](c, value)
+}
+
+func (c FfiConverterBytes) LowerExternal(value []byte) ExternalCRustBuffer {
+	return RustBufferFromC(c.Lower(value))
 }
 
 func (c FfiConverterBytes) Write(writer io.Writer, value []byte) {
@@ -12950,6 +12980,7 @@ type FfiDestroyerBytes struct {}
 func (FfiDestroyerBytes) Destroy(_ []byte) {}
 
 
+
 // FfiConverterDuration converts between uniffi duration and Go duration.
 type FfiConverterDuration struct{}
 
@@ -12967,6 +12998,10 @@ func (c FfiConverterDuration) Read(reader io.Reader) time.Duration {
 
 func (c FfiConverterDuration) Lower(value time.Duration) C.RustBuffer {
 	return LowerIntoRustBuffer[time.Duration](c, value)
+}
+
+func (c FfiConverterDuration) LowerExternal(value time.Duration) ExternalCRustBuffer {
+	return RustBufferFromC(c.Lower(value))
 }
 
 func (c FfiConverterDuration) Write(writer io.Writer, value time.Duration) {
@@ -12988,6 +13023,7 @@ type FfiDestroyerDuration struct {}
 
 func (FfiDestroyerDuration) Destroy(_ time.Duration) {}
 
+
 // Below is an implementation of synchronization requirements outlined in the link.
 // https://github.com/mozilla/uniffi-rs/blob/0dc031132d9493ca812c3af6e7dd60ad2ea95bf0/uniffi_bindgen/src/bindings/kotlin/templates/ObjectRuntime.kt#L31
 
@@ -13000,13 +13036,13 @@ type FfiObject struct {
 }
 
 func newFfiObject(
-	pointer unsafe.Pointer,
-	cloneFunction func(unsafe.Pointer, *C.RustCallStatus) unsafe.Pointer,
+	pointer unsafe.Pointer, 
+	cloneFunction func(unsafe.Pointer, *C.RustCallStatus) unsafe.Pointer, 
 	freeFunction func(unsafe.Pointer, *C.RustCallStatus),
 ) FfiObject {
 	return FfiObject {
 		pointer: pointer,
-		cloneFunction: cloneFunction,
+		cloneFunction: cloneFunction, 
 		freeFunction: freeFunction,
 	}
 }
@@ -13345,7 +13381,7 @@ func (c FfiConverterAddress) Lower(value *Address) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Address")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterAddress) Write(writer io.Writer, value *Address) {
@@ -13357,6 +13393,7 @@ type FfiDestroyerAddress struct {}
 func (_ FfiDestroyerAddress) Destroy(value *Address) {
 		value.Destroy()
 }
+
 
 
 
@@ -13520,7 +13557,7 @@ func (c FfiConverterArgument) Lower(value *Argument) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Argument")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterArgument) Write(writer io.Writer, value *Argument) {
@@ -13532,6 +13569,7 @@ type FfiDestroyerArgument struct {}
 func (_ FfiDestroyerArgument) Destroy(value *Argument) {
 		value.Destroy()
 }
+
 
 
 
@@ -13655,7 +13693,7 @@ func (c FfiConverterBls12381PrivateKey) Lower(value *Bls12381PrivateKey) unsafe.
 	pointer := value.ffiObject.incrementPointer("*Bls12381PrivateKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterBls12381PrivateKey) Write(writer io.Writer, value *Bls12381PrivateKey) {
@@ -13667,6 +13705,7 @@ type FfiDestroyerBls12381PrivateKey struct {}
 func (_ FfiDestroyerBls12381PrivateKey) Destroy(value *Bls12381PrivateKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -13816,7 +13855,7 @@ func (c FfiConverterBls12381PublicKey) Lower(value *Bls12381PublicKey) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*Bls12381PublicKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterBls12381PublicKey) Write(writer io.Writer, value *Bls12381PublicKey) {
@@ -13828,6 +13867,7 @@ type FfiDestroyerBls12381PublicKey struct {}
 func (_ FfiDestroyerBls12381PublicKey) Destroy(value *Bls12381PublicKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -13977,7 +14017,7 @@ func (c FfiConverterBls12381Signature) Lower(value *Bls12381Signature) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*Bls12381Signature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterBls12381Signature) Write(writer io.Writer, value *Bls12381Signature) {
@@ -13989,6 +14029,7 @@ type FfiDestroyerBls12381Signature struct {}
 func (_ FfiDestroyerBls12381Signature) Destroy(value *Bls12381Signature) {
 		value.Destroy()
 }
+
 
 
 
@@ -14083,7 +14124,7 @@ func (c FfiConverterBls12381VerifyingKey) Lower(value *Bls12381VerifyingKey) uns
 	pointer := value.ffiObject.incrementPointer("*Bls12381VerifyingKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterBls12381VerifyingKey) Write(writer io.Writer, value *Bls12381VerifyingKey) {
@@ -14095,6 +14136,7 @@ type FfiDestroyerBls12381VerifyingKey struct {}
 func (_ FfiDestroyerBls12381VerifyingKey) Destroy(value *Bls12381VerifyingKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -14262,7 +14304,7 @@ func (c FfiConverterBn254FieldElement) Lower(value *Bn254FieldElement) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*Bn254FieldElement")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterBn254FieldElement) Write(writer io.Writer, value *Bn254FieldElement) {
@@ -14274,6 +14316,7 @@ type FfiDestroyerBn254FieldElement struct {}
 func (_ FfiDestroyerBn254FieldElement) Destroy(value *Bn254FieldElement) {
 		value.Destroy()
 }
+
 
 
 
@@ -14400,7 +14443,7 @@ func (c FfiConverterCancelledTransaction) Lower(value *CancelledTransaction) uns
 	pointer := value.ffiObject.incrementPointer("*CancelledTransaction")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCancelledTransaction) Write(writer io.Writer, value *CancelledTransaction) {
@@ -14412,6 +14455,7 @@ type FfiDestroyerCancelledTransaction struct {}
 func (_ FfiDestroyerCancelledTransaction) Destroy(value *CancelledTransaction) {
 		value.Destroy()
 }
+
 
 
 
@@ -14630,7 +14674,7 @@ func (c FfiConverterChangeEpoch) Lower(value *ChangeEpoch) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ChangeEpoch")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterChangeEpoch) Write(writer io.Writer, value *ChangeEpoch) {
@@ -14642,6 +14686,7 @@ type FfiDestroyerChangeEpoch struct {}
 func (_ FfiDestroyerChangeEpoch) Destroy(value *ChangeEpoch) {
 		value.Destroy()
 }
+
 
 
 
@@ -14874,7 +14919,7 @@ func (c FfiConverterChangeEpochV2) Lower(value *ChangeEpochV2) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ChangeEpochV2")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterChangeEpochV2) Write(writer io.Writer, value *ChangeEpochV2) {
@@ -14886,6 +14931,7 @@ type FfiDestroyerChangeEpochV2 struct {}
 func (_ FfiDestroyerChangeEpochV2) Destroy(value *ChangeEpochV2) {
 		value.Destroy()
 }
+
 
 
 
@@ -15100,7 +15146,7 @@ func (c FfiConverterChangeEpochV3) Lower(value *ChangeEpochV3) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ChangeEpochV3")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterChangeEpochV3) Write(writer io.Writer, value *ChangeEpochV3) {
@@ -15112,6 +15158,7 @@ type FfiDestroyerChangeEpochV3 struct {}
 func (_ FfiDestroyerChangeEpochV3) Destroy(value *ChangeEpochV3) {
 		value.Destroy()
 }
+
 
 
 
@@ -15321,7 +15368,7 @@ func (c FfiConverterChangeEpochV4) Lower(value *ChangeEpochV4) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ChangeEpochV4")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterChangeEpochV4) Write(writer io.Writer, value *ChangeEpochV4) {
@@ -15333,6 +15380,7 @@ type FfiDestroyerChangeEpochV4 struct {}
 func (_ FfiDestroyerChangeEpochV4) Destroy(value *ChangeEpochV4) {
 		value.Destroy()
 }
+
 
 
 
@@ -15423,7 +15471,7 @@ func (c FfiConverterCheckpointCommitment) Lower(value *CheckpointCommitment) uns
 	pointer := value.ffiObject.incrementPointer("*CheckpointCommitment")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCheckpointCommitment) Write(writer io.Writer, value *CheckpointCommitment) {
@@ -15435,6 +15483,7 @@ type FfiDestroyerCheckpointCommitment struct {}
 func (_ FfiDestroyerCheckpointCommitment) Destroy(value *CheckpointCommitment) {
 		value.Destroy()
 }
+
 
 
 
@@ -15546,7 +15595,7 @@ func (c FfiConverterCheckpointContents) Lower(value *CheckpointContents) unsafe.
 	pointer := value.ffiObject.incrementPointer("*CheckpointContents")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCheckpointContents) Write(writer io.Writer, value *CheckpointContents) {
@@ -15558,6 +15607,7 @@ type FfiDestroyerCheckpointContents struct {}
 func (_ FfiDestroyerCheckpointContents) Destroy(value *CheckpointContents) {
 		value.Destroy()
 }
+
 
 
 
@@ -15875,7 +15925,7 @@ func (c FfiConverterCheckpointSummary) Lower(value *CheckpointSummary) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*CheckpointSummary")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCheckpointSummary) Write(writer io.Writer, value *CheckpointSummary) {
@@ -15887,6 +15937,7 @@ type FfiDestroyerCheckpointSummary struct {}
 func (_ FfiDestroyerCheckpointSummary) Destroy(value *CheckpointSummary) {
 		value.Destroy()
 }
+
 
 
 
@@ -15974,7 +16025,7 @@ func (c FfiConverterCheckpointTransactionInfo) Lower(value *CheckpointTransactio
 	pointer := value.ffiObject.incrementPointer("*CheckpointTransactionInfo")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCheckpointTransactionInfo) Write(writer io.Writer, value *CheckpointTransactionInfo) {
@@ -15986,6 +16037,7 @@ type FfiDestroyerCheckpointTransactionInfo struct {}
 func (_ FfiDestroyerCheckpointTransactionInfo) Destroy(value *CheckpointTransactionInfo) {
 		value.Destroy()
 }
+
 
 
 
@@ -16096,7 +16148,7 @@ func (c FfiConverterCircomG1) Lower(value *CircomG1) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*CircomG1")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCircomG1) Write(writer io.Writer, value *CircomG1) {
@@ -16108,6 +16160,7 @@ type FfiDestroyerCircomG1 struct {}
 func (_ FfiDestroyerCircomG1) Destroy(value *CircomG1) {
 		value.Destroy()
 }
+
 
 
 
@@ -16218,7 +16271,7 @@ func (c FfiConverterCircomG2) Lower(value *CircomG2) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*CircomG2")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCircomG2) Write(writer io.Writer, value *CircomG2) {
@@ -16230,6 +16283,7 @@ type FfiDestroyerCircomG2 struct {}
 func (_ FfiDestroyerCircomG2) Destroy(value *CircomG2) {
 		value.Destroy()
 }
+
 
 
 
@@ -16369,6 +16423,10 @@ func (_self *ClientTransactionBuilder) DryRun(skipChecks bool) (DryRunResult, er
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -16399,6 +16457,10 @@ func (_self *ClientTransactionBuilder) Execute(signer *TransactionSigner, waitFo
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -16428,6 +16490,10 @@ func (_self *ClientTransactionBuilder) ExecuteWithSponsor(signer *TransactionSig
 			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -16468,6 +16534,10 @@ func (_self *ClientTransactionBuilder) Finish() (*Transaction, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -16729,7 +16799,7 @@ func (c FfiConverterClientTransactionBuilder) Lower(value *ClientTransactionBuil
 	pointer := value.ffiObject.incrementPointer("*ClientTransactionBuilder")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterClientTransactionBuilder) Write(writer io.Writer, value *ClientTransactionBuilder) {
@@ -16741,6 +16811,7 @@ type FfiDestroyerClientTransactionBuilder struct {}
 func (_ FfiDestroyerClientTransactionBuilder) Destroy(value *ClientTransactionBuilder) {
 		value.Destroy()
 }
+
 
 
 
@@ -16844,7 +16915,7 @@ func (c FfiConverterCoin) Lower(value *Coin) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Coin")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCoin) Write(writer io.Writer, value *Coin) {
@@ -16856,6 +16927,7 @@ type FfiDestroyerCoin struct {}
 func (_ FfiDestroyerCoin) Destroy(value *Coin) {
 		value.Destroy()
 }
+
 
 
 
@@ -17043,7 +17115,7 @@ func (c FfiConverterCommand) Lower(value *Command) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Command")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterCommand) Write(writer io.Writer, value *Command) {
@@ -17055,6 +17127,7 @@ type FfiDestroyerCommand struct {}
 func (_ FfiDestroyerCommand) Destroy(value *Command) {
 		value.Destroy()
 }
+
 
 
 
@@ -17237,7 +17310,7 @@ func (c FfiConverterConsensusCommitPrologueV1) Lower(value *ConsensusCommitProlo
 	pointer := value.ffiObject.incrementPointer("*ConsensusCommitPrologueV1")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterConsensusCommitPrologueV1) Write(writer io.Writer, value *ConsensusCommitPrologueV1) {
@@ -17249,6 +17322,7 @@ type FfiDestroyerConsensusCommitPrologueV1 struct {}
 func (_ FfiDestroyerConsensusCommitPrologueV1) Destroy(value *ConsensusCommitPrologueV1) {
 		value.Destroy()
 }
+
 
 
 
@@ -17358,7 +17432,7 @@ func (c FfiConverterConsensusDeterminedVersionAssignments) Lower(value *Consensu
 	pointer := value.ffiObject.incrementPointer("*ConsensusDeterminedVersionAssignments")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterConsensusDeterminedVersionAssignments) Write(writer io.Writer, value *ConsensusDeterminedVersionAssignments) {
@@ -17370,6 +17444,7 @@ type FfiDestroyerConsensusDeterminedVersionAssignments struct {}
 func (_ FfiDestroyerConsensusDeterminedVersionAssignments) Destroy(value *ConsensusDeterminedVersionAssignments) {
 		value.Destroy()
 }
+
 
 
 
@@ -17569,7 +17644,7 @@ func (c FfiConverterDigest) Lower(value *Digest) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Digest")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterDigest) Write(writer io.Writer, value *Digest) {
@@ -17581,6 +17656,7 @@ type FfiDestroyerDigest struct {}
 func (_ FfiDestroyerDigest) Destroy(value *Digest) {
 		value.Destroy()
 }
+
 
 
 
@@ -17939,7 +18015,7 @@ func (c FfiConverterEd25519PrivateKey) Lower(value *Ed25519PrivateKey) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*Ed25519PrivateKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterEd25519PrivateKey) Write(writer io.Writer, value *Ed25519PrivateKey) {
@@ -17951,6 +18027,7 @@ type FfiDestroyerEd25519PrivateKey struct {}
 func (_ FfiDestroyerEd25519PrivateKey) Destroy(value *Ed25519PrivateKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -18140,7 +18217,7 @@ func (c FfiConverterEd25519PublicKey) Lower(value *Ed25519PublicKey) unsafe.Poin
 	pointer := value.ffiObject.incrementPointer("*Ed25519PublicKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterEd25519PublicKey) Write(writer io.Writer, value *Ed25519PublicKey) {
@@ -18152,6 +18229,7 @@ type FfiDestroyerEd25519PublicKey struct {}
 func (_ FfiDestroyerEd25519PublicKey) Destroy(value *Ed25519PublicKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -18291,7 +18369,7 @@ func (c FfiConverterEd25519Signature) Lower(value *Ed25519Signature) unsafe.Poin
 	pointer := value.ffiObject.incrementPointer("*Ed25519Signature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterEd25519Signature) Write(writer io.Writer, value *Ed25519Signature) {
@@ -18303,6 +18381,7 @@ type FfiDestroyerEd25519Signature struct {}
 func (_ FfiDestroyerEd25519Signature) Destroy(value *Ed25519Signature) {
 		value.Destroy()
 }
+
 
 
 
@@ -18393,7 +18472,7 @@ func (c FfiConverterEd25519Verifier) Lower(value *Ed25519Verifier) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*Ed25519Verifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterEd25519Verifier) Write(writer io.Writer, value *Ed25519Verifier) {
@@ -18405,6 +18484,7 @@ type FfiDestroyerEd25519Verifier struct {}
 func (_ FfiDestroyerEd25519Verifier) Destroy(value *Ed25519Verifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -18609,7 +18689,7 @@ func (c FfiConverterEd25519VerifyingKey) Lower(value *Ed25519VerifyingKey) unsaf
 	pointer := value.ffiObject.incrementPointer("*Ed25519VerifyingKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterEd25519VerifyingKey) Write(writer io.Writer, value *Ed25519VerifyingKey) {
@@ -18621,6 +18701,7 @@ type FfiDestroyerEd25519VerifyingKey struct {}
 func (_ FfiDestroyerEd25519VerifyingKey) Destroy(value *Ed25519VerifyingKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -18788,7 +18869,7 @@ func (c FfiConverterEndOfEpochTransactionKind) Lower(value *EndOfEpochTransactio
 	pointer := value.ffiObject.incrementPointer("*EndOfEpochTransactionKind")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterEndOfEpochTransactionKind) Write(writer io.Writer, value *EndOfEpochTransactionKind) {
@@ -18800,6 +18881,7 @@ type FfiDestroyerEndOfEpochTransactionKind struct {}
 func (_ FfiDestroyerEndOfEpochTransactionKind) Destroy(value *EndOfEpochTransactionKind) {
 		value.Destroy()
 }
+
 
 
 
@@ -18919,7 +19001,7 @@ func (c FfiConverterExecutionTimeObservation) Lower(value *ExecutionTimeObservat
 	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservation")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterExecutionTimeObservation) Write(writer io.Writer, value *ExecutionTimeObservation) {
@@ -18931,6 +19013,7 @@ type FfiDestroyerExecutionTimeObservation struct {}
 func (_ FfiDestroyerExecutionTimeObservation) Destroy(value *ExecutionTimeObservation) {
 		value.Destroy()
 }
+
 
 
 
@@ -19099,7 +19182,7 @@ func (c FfiConverterExecutionTimeObservationKey) Lower(value *ExecutionTimeObser
 	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservationKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterExecutionTimeObservationKey) Write(writer io.Writer, value *ExecutionTimeObservationKey) {
@@ -19111,6 +19194,7 @@ type FfiDestroyerExecutionTimeObservationKey struct {}
 func (_ FfiDestroyerExecutionTimeObservationKey) Destroy(value *ExecutionTimeObservationKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -19237,7 +19321,7 @@ func (c FfiConverterExecutionTimeObservations) Lower(value *ExecutionTimeObserva
 	pointer := value.ffiObject.incrementPointer("*ExecutionTimeObservations")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterExecutionTimeObservations) Write(writer io.Writer, value *ExecutionTimeObservations) {
@@ -19249,6 +19333,7 @@ type FfiDestroyerExecutionTimeObservations struct {}
 func (_ FfiDestroyerExecutionTimeObservations) Destroy(value *ExecutionTimeObservations) {
 		value.Destroy()
 }
+
 
 
 
@@ -19354,6 +19439,10 @@ func (_self *FaucetClient) Request(address *Address) (*string, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -19396,6 +19485,10 @@ func (_self *FaucetClient) RequestAndWait(address *Address) (*FaucetReceipt, err
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -19435,6 +19528,10 @@ func (_self *FaucetClient) RequestAndWaitForFinalized(address *Address, client *
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -19468,6 +19565,10 @@ func (_self *FaucetClient) RequestStatus(id string) (*BatchSendStatus, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -19508,7 +19609,7 @@ func (c FfiConverterFaucetClient) Lower(value *FaucetClient) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*FaucetClient")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterFaucetClient) Write(writer io.Writer, value *FaucetClient) {
@@ -19520,6 +19621,7 @@ type FfiDestroyerFaucetClient struct {}
 func (_ FfiDestroyerFaucetClient) Destroy(value *FaucetClient) {
 		value.Destroy()
 }
+
 
 
 
@@ -19680,7 +19782,7 @@ func (c FfiConverterGenesisObject) Lower(value *GenesisObject) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*GenesisObject")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterGenesisObject) Write(writer io.Writer, value *GenesisObject) {
@@ -19692,6 +19794,7 @@ type FfiDestroyerGenesisObject struct {}
 func (_ FfiDestroyerGenesisObject) Destroy(value *GenesisObject) {
 		value.Destroy()
 }
+
 
 
 
@@ -19820,7 +19923,7 @@ func (c FfiConverterGenesisTransaction) Lower(value *GenesisTransaction) unsafe.
 	pointer := value.ffiObject.incrementPointer("*GenesisTransaction")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterGenesisTransaction) Write(writer io.Writer, value *GenesisTransaction) {
@@ -19832,6 +19935,7 @@ type FfiDestroyerGenesisTransaction struct {}
 func (_ FfiDestroyerGenesisTransaction) Destroy(value *GenesisTransaction) {
 		value.Destroy()
 }
+
 
 
 
@@ -20174,6 +20278,10 @@ func (_self *GraphQlClient) ActiveValidators(epoch *uint64, paginationFilter *Pa
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20208,6 +20316,10 @@ func (_self *GraphQlClient) Balance(address *Address, coinType *string) (*uint64
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20239,6 +20351,10 @@ func (_self *GraphQlClient) ChainId() (string, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20274,6 +20390,10 @@ func (_self *GraphQlClient) Checkpoint(digest **Digest, seqNum *uint64) (**Check
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20306,6 +20426,10 @@ func (_self *GraphQlClient) Checkpoints(paginationFilter *PaginationFilter) (Che
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20337,6 +20461,10 @@ func (_self *GraphQlClient) CoinMetadata(coinType string) (*CoinMetadata, error)
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20372,6 +20500,10 @@ func (_self *GraphQlClient) Coins(owner *Address, paginationFilter *PaginationFi
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20410,6 +20542,10 @@ func (_self *GraphQlClient) DryRunTx(tx *Transaction, skipChecks bool) (DryRunRe
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20451,6 +20587,10 @@ func (_self *GraphQlClient) DryRunTxKind(txKind *TransactionKind, txMeta Transac
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20490,6 +20630,10 @@ func (_self *GraphQlClient) DynamicField(address *Address, typeTag *TypeTag, nam
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20524,6 +20668,10 @@ func (_self *GraphQlClient) DynamicFields(address *Address, paginationFilter *Pa
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20564,6 +20712,10 @@ func (_self *GraphQlClient) DynamicObjectField(address *Address, typeTag *TypeTa
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20596,6 +20748,10 @@ func (_self *GraphQlClient) Epoch(epoch *uint64) (*Epoch, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20631,6 +20787,10 @@ func (_self *GraphQlClient) EpochTotalCheckpoints(epoch *uint64) (*uint64, error
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20665,6 +20825,10 @@ func (_self *GraphQlClient) EpochTotalTransactionBlocks(epoch *uint64) (*uint64,
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20698,6 +20862,10 @@ func (_self *GraphQlClient) Events(filter *EventFilter, paginationFilter *Pagina
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20727,6 +20895,10 @@ func (_self *GraphQlClient) ExecuteTx(signatures []*UserSignature, tx *Transacti
 			C.ffi_iota_sdk_ffi_rust_future_free_pointer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20760,6 +20932,10 @@ func (_self *GraphQlClient) GasCoins(owner *Address, paginationFilter *Paginatio
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20791,6 +20967,10 @@ func (_self *GraphQlClient) IotaNamesDefaultName(address *Address, format *NameF
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20824,6 +21004,10 @@ func (_self *GraphQlClient) IotaNamesLookup(name string) (**Address, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20856,6 +21040,10 @@ func (_self *GraphQlClient) IotaNamesRegistrations(address *Address, paginationF
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20886,6 +21074,10 @@ func (_self *GraphQlClient) IsTxFinalized(digest *Digest) (bool, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_i8(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -20920,6 +21112,10 @@ func (_self *GraphQlClient) IsTxIndexedOnNode(digest *Digest) (bool, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20953,6 +21149,10 @@ func (_self *GraphQlClient) LatestCheckpointSequenceNumber() (*uint64, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -20982,6 +21182,10 @@ func (_self *GraphQlClient) MaxPageSize() (int32, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_i32(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21019,6 +21223,10 @@ func (_self *GraphQlClient) MoveObjectContents(objectId *ObjectId, version *uint
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21054,6 +21262,10 @@ func (_self *GraphQlClient) MoveObjectContentsBcs(objectId *ObjectId, version *u
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21112,6 +21324,10 @@ func (_self *GraphQlClient) MoveViewCall(functionName string, typeArguments *[]*
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21164,6 +21380,10 @@ func (_self *GraphQlClient) MoveViewCallJson(functionName string, typeArguments 
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21197,6 +21417,10 @@ func (_self *GraphQlClient) NormalizedMoveFunction(varPackage *Address, module s
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21228,6 +21452,10 @@ func (_self *GraphQlClient) NormalizedMoveModule(varPackage *Address, module str
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21265,6 +21493,10 @@ func (_self *GraphQlClient) Object(objectId *ObjectId, version *uint64) (**Objec
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21297,6 +21529,10 @@ func (_self *GraphQlClient) ObjectBcs(objectId *ObjectId) (*[]byte, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21332,6 +21568,10 @@ func (_self *GraphQlClient) Objects(filter *ObjectFilter, paginationFilter *Pagi
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21375,6 +21615,10 @@ func (_self *GraphQlClient) Package(address *Address, version *uint64) (**MovePa
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21409,6 +21653,10 @@ func (_self *GraphQlClient) PackageLatest(address *Address) (**MovePackage, erro
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21442,6 +21690,10 @@ func (_self *GraphQlClient) PackageVersions(address *Address, afterVersion *uint
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21481,6 +21733,10 @@ func (_self *GraphQlClient) Packages(afterCheckpoint *uint64, beforeCheckpoint *
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21512,6 +21768,10 @@ func (_self *GraphQlClient) ProtocolConfig(version *uint64) (ProtocolConfigs, er
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21549,6 +21809,10 @@ func (_self *GraphQlClient) ReferenceGasPrice(epoch *uint64) (*uint64, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21580,6 +21844,10 @@ func (_self *GraphQlClient) RunQuery(query Query) (Value, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21614,6 +21882,10 @@ func (_self *GraphQlClient) ServiceConfig() (ServiceConfig, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21642,6 +21914,10 @@ func (_self *GraphQlClient) SetRpcServer(server string) error {
 			C.ffi_iota_sdk_ffi_rust_future_free_void(handle)
 		},
 	)
+
+	if err == nil {
+		return nil
+	}
 
 	return err 
 }
@@ -21674,6 +21950,10 @@ func (_self *GraphQlClient) TotalSupply(coinType string) (*uint64, error) {
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21708,6 +21988,10 @@ func (_self *GraphQlClient) TotalTransactionBlocks() (*uint64, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21740,6 +22024,10 @@ func (_self *GraphQlClient) TotalTransactionBlocksByDigest(digest *Digest) (*uin
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21774,6 +22062,10 @@ func (_self *GraphQlClient) TotalTransactionBlocksBySeqNum(seqNum uint64) (*uint
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21805,6 +22097,10 @@ func (_self *GraphQlClient) Transaction(digest *Digest) (*SignedTransaction, err
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21838,6 +22134,10 @@ func (_self *GraphQlClient) TransactionDataEffects(digest *Digest) (*Transaction
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21870,6 +22170,10 @@ func (_self *GraphQlClient) TransactionEffects(digest *Digest) (**TransactionEff
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21901,6 +22205,10 @@ func (_self *GraphQlClient) Transactions(filter *TransactionsFilter, paginationF
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -21935,6 +22243,10 @@ func (_self *GraphQlClient) TransactionsDataEffects(filter *TransactionsFilter, 
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21967,6 +22279,10 @@ func (_self *GraphQlClient) TransactionsEffects(filter *TransactionsFilter, pagi
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 
@@ -21996,6 +22312,10 @@ func (_self *GraphQlClient) WaitForTx(digest *Digest, waitFor WaitForTx, timeout
 			C.ffi_iota_sdk_ffi_rust_future_free_void(handle)
 		},
 	)
+
+	if err == nil {
+		return nil
+	}
 
 	return err 
 }
@@ -22036,7 +22356,7 @@ func (c FfiConverterGraphQlClient) Lower(value *GraphQlClient) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*GraphQlClient")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterGraphQlClient) Write(writer io.Writer, value *GraphQlClient) {
@@ -22048,6 +22368,7 @@ type FfiDestroyerGraphQlClient struct {}
 func (_ FfiDestroyerGraphQlClient) Destroy(value *GraphQlClient) {
 		value.Destroy()
 }
+
 
 
 
@@ -22202,7 +22523,7 @@ func (c FfiConverterIdentifier) Lower(value *Identifier) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Identifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterIdentifier) Write(writer io.Writer, value *Identifier) {
@@ -22214,6 +22535,7 @@ type FfiDestroyerIdentifier struct {}
 func (_ FfiDestroyerIdentifier) Destroy(value *Identifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -22351,7 +22673,7 @@ func (c FfiConverterInput) Lower(value *Input) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Input")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterInput) Write(writer io.Writer, value *Input) {
@@ -22363,6 +22685,7 @@ type FfiDestroyerInput struct {}
 func (_ FfiDestroyerInput) Destroy(value *Input) {
 		value.Destroy()
 }
+
 
 
 
@@ -22609,7 +22932,7 @@ func (c FfiConverterIntent) Lower(value *Intent) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Intent")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterIntent) Write(writer io.Writer, value *Intent) {
@@ -22621,6 +22944,7 @@ type FfiDestroyerIntent struct {}
 func (_ FfiDestroyerIntent) Destroy(value *Intent) {
 		value.Destroy()
 }
+
 
 
 
@@ -22759,7 +23083,7 @@ func (c FfiConverterMakeMoveVector) Lower(value *MakeMoveVector) unsafe.Pointer 
 	pointer := value.ffiObject.incrementPointer("*MakeMoveVector")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMakeMoveVector) Write(writer io.Writer, value *MakeMoveVector) {
@@ -22771,6 +23095,7 @@ type FfiDestroyerMakeMoveVector struct {}
 func (_ FfiDestroyerMakeMoveVector) Destroy(value *MakeMoveVector) {
 		value.Destroy()
 }
+
 
 
 
@@ -22905,7 +23230,7 @@ func (c FfiConverterMergeCoins) Lower(value *MergeCoins) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*MergeCoins")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMergeCoins) Write(writer io.Writer, value *MergeCoins) {
@@ -22917,6 +23242,7 @@ type FfiDestroyerMergeCoins struct {}
 func (_ FfiDestroyerMergeCoins) Destroy(value *MergeCoins) {
 		value.Destroy()
 }
+
 
 
 
@@ -23163,7 +23489,7 @@ func (c FfiConverterMoveArg) Lower(value *MoveArg) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*MoveArg")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveArg) Write(writer io.Writer, value *MoveArg) {
@@ -23175,6 +23501,7 @@ type FfiDestroyerMoveArg struct {}
 func (_ FfiDestroyerMoveArg) Destroy(value *MoveArg) {
 		value.Destroy()
 }
+
 
 
 
@@ -23247,7 +23574,7 @@ func (c FfiConverterMoveAuthenticator) Lower(value *MoveAuthenticator) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*MoveAuthenticator")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveAuthenticator) Write(writer io.Writer, value *MoveAuthenticator) {
@@ -23259,6 +23586,7 @@ type FfiDestroyerMoveAuthenticator struct {}
 func (_ FfiDestroyerMoveAuthenticator) Destroy(value *MoveAuthenticator) {
 		value.Destroy()
 }
+
 
 
 
@@ -23309,6 +23637,10 @@ func (_self *MoveAuthenticatorBuilder) Finish(client *GraphQlClient) (*MoveAuthe
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 func (object *MoveAuthenticatorBuilder) Destroy() {
@@ -23348,7 +23680,7 @@ func (c FfiConverterMoveAuthenticatorBuilder) Lower(value *MoveAuthenticatorBuil
 	pointer := value.ffiObject.incrementPointer("*MoveAuthenticatorBuilder")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveAuthenticatorBuilder) Write(writer io.Writer, value *MoveAuthenticatorBuilder) {
@@ -23363,14 +23695,15 @@ func (_ FfiDestroyerMoveAuthenticatorBuilder) Destroy(value *MoveAuthenticatorBu
 
 
 
-// Version 1 of the [`MoveAuthenticator`] data.
+
+// Version 1 of the [`MoveAuthenticator`].
 type MoveAuthenticatorV1Interface interface {
 	Address() *Address
 	CallArgs() []*Input
 	ObjectToAuthenticate() *Input
 	TypeArgs() []*TypeTag
 }
-// Version 1 of the [`MoveAuthenticator`] data.
+// Version 1 of the [`MoveAuthenticator`].
 type MoveAuthenticatorV1 struct {
 	ffiObject FfiObject
 }
@@ -23468,7 +23801,7 @@ func (c FfiConverterMoveAuthenticatorV1) Lower(value *MoveAuthenticatorV1) unsaf
 	pointer := value.ffiObject.incrementPointer("*MoveAuthenticatorV1")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveAuthenticatorV1) Write(writer io.Writer, value *MoveAuthenticatorV1) {
@@ -23480,6 +23813,7 @@ type FfiDestroyerMoveAuthenticatorV1 struct {}
 func (_ FfiDestroyerMoveAuthenticatorV1) Destroy(value *MoveAuthenticatorV1) {
 		value.Destroy()
 }
+
 
 
 
@@ -23664,7 +23998,7 @@ func (c FfiConverterMoveCall) Lower(value *MoveCall) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*MoveCall")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveCall) Write(writer io.Writer, value *MoveCall) {
@@ -23676,6 +24010,7 @@ type FfiDestroyerMoveCall struct {}
 func (_ FfiDestroyerMoveCall) Destroy(value *MoveCall) {
 		value.Destroy()
 }
+
 
 
 
@@ -23820,7 +24155,7 @@ func (c FfiConverterMoveFunction) Lower(value *MoveFunction) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*MoveFunction")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveFunction) Write(writer io.Writer, value *MoveFunction) {
@@ -23832,6 +24167,7 @@ type FfiDestroyerMoveFunction struct {}
 func (_ FfiDestroyerMoveFunction) Destroy(value *MoveFunction) {
 		value.Destroy()
 }
+
 
 
 
@@ -24017,7 +24353,7 @@ func (c FfiConverterMovePackage) Lower(value *MovePackage) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*MovePackage")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMovePackage) Write(writer io.Writer, value *MovePackage) {
@@ -24029,6 +24365,7 @@ type FfiDestroyerMovePackage struct {}
 func (_ FfiDestroyerMovePackage) Destroy(value *MovePackage) {
 		value.Destroy()
 }
+
 
 
 
@@ -24187,7 +24524,7 @@ func (c FfiConverterMovePackageData) Lower(value *MovePackageData) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*MovePackageData")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMovePackageData) Write(writer io.Writer, value *MovePackageData) {
@@ -24199,6 +24536,7 @@ type FfiDestroyerMovePackageData struct {}
 func (_ FfiDestroyerMovePackageData) Destroy(value *MovePackageData) {
 		value.Destroy()
 }
+
 
 
 
@@ -24339,7 +24677,7 @@ func (c FfiConverterMoveViewArg) Lower(value *MoveViewArg) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*MoveViewArg")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMoveViewArg) Write(writer io.Writer, value *MoveViewArg) {
@@ -24351,6 +24689,7 @@ type FfiDestroyerMoveViewArg struct {}
 func (_ FfiDestroyerMoveViewArg) Destroy(value *MoveViewArg) {
 		value.Destroy()
 }
+
 
 
 
@@ -24532,7 +24871,7 @@ func (c FfiConverterMultisigAggregatedSignature) Lower(value *MultisigAggregated
 	pointer := value.ffiObject.incrementPointer("*MultisigAggregatedSignature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigAggregatedSignature) Write(writer io.Writer, value *MultisigAggregatedSignature) {
@@ -24544,6 +24883,7 @@ type FfiDestroyerMultisigAggregatedSignature struct {}
 func (_ FfiDestroyerMultisigAggregatedSignature) Destroy(value *MultisigAggregatedSignature) {
 		value.Destroy()
 }
+
 
 
 
@@ -24669,7 +25009,7 @@ func (c FfiConverterMultisigAggregator) Lower(value *MultisigAggregator) unsafe.
 	pointer := value.ffiObject.incrementPointer("*MultisigAggregator")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigAggregator) Write(writer io.Writer, value *MultisigAggregator) {
@@ -24681,6 +25021,7 @@ type FfiDestroyerMultisigAggregator struct {}
 func (_ FfiDestroyerMultisigAggregator) Destroy(value *MultisigAggregator) {
 		value.Destroy()
 }
+
 
 
 
@@ -24926,7 +25267,7 @@ func (c FfiConverterMultisigCommittee) Lower(value *MultisigCommittee) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*MultisigCommittee")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigCommittee) Write(writer io.Writer, value *MultisigCommittee) {
@@ -24938,6 +25279,7 @@ type FfiDestroyerMultisigCommittee struct {}
 func (_ FfiDestroyerMultisigCommittee) Destroy(value *MultisigCommittee) {
 		value.Destroy()
 }
+
 
 
 
@@ -25083,7 +25425,7 @@ func (c FfiConverterMultisigMember) Lower(value *MultisigMember) unsafe.Pointer 
 	pointer := value.ffiObject.incrementPointer("*MultisigMember")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigMember) Write(writer io.Writer, value *MultisigMember) {
@@ -25095,6 +25437,7 @@ type FfiDestroyerMultisigMember struct {}
 func (_ FfiDestroyerMultisigMember) Destroy(value *MultisigMember) {
 		value.Destroy()
 }
+
 
 
 
@@ -25372,7 +25715,7 @@ func (c FfiConverterMultisigMemberPublicKey) Lower(value *MultisigMemberPublicKe
 	pointer := value.ffiObject.incrementPointer("*MultisigMemberPublicKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigMemberPublicKey) Write(writer io.Writer, value *MultisigMemberPublicKey) {
@@ -25384,6 +25727,7 @@ type FfiDestroyerMultisigMemberPublicKey struct {}
 func (_ FfiDestroyerMultisigMemberPublicKey) Destroy(value *MultisigMemberPublicKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -25627,7 +25971,7 @@ func (c FfiConverterMultisigMemberSignature) Lower(value *MultisigMemberSignatur
 	pointer := value.ffiObject.incrementPointer("*MultisigMemberSignature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigMemberSignature) Write(writer io.Writer, value *MultisigMemberSignature) {
@@ -25639,6 +25983,7 @@ type FfiDestroyerMultisigMemberSignature struct {}
 func (_ FfiDestroyerMultisigMemberSignature) Destroy(value *MultisigMemberSignature) {
 		value.Destroy()
 }
+
 
 
 
@@ -25739,7 +26084,7 @@ func (c FfiConverterMultisigVerifier) Lower(value *MultisigVerifier) unsafe.Poin
 	pointer := value.ffiObject.incrementPointer("*MultisigVerifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterMultisigVerifier) Write(writer io.Writer, value *MultisigVerifier) {
@@ -25751,6 +26096,7 @@ type FfiDestroyerMultisigVerifier struct {}
 func (_ FfiDestroyerMultisigVerifier) Destroy(value *MultisigVerifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -25964,7 +26310,7 @@ func (c FfiConverterName) Lower(value *Name) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Name")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterName) Write(writer io.Writer, value *Name) {
@@ -25976,6 +26322,7 @@ type FfiDestroyerName struct {}
 func (_ FfiDestroyerName) Destroy(value *Name) {
 		value.Destroy()
 }
+
 
 
 
@@ -26106,7 +26453,7 @@ func (c FfiConverterNameRegistration) Lower(value *NameRegistration) unsafe.Poin
 	pointer := value.ffiObject.incrementPointer("*NameRegistration")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterNameRegistration) Write(writer io.Writer, value *NameRegistration) {
@@ -26118,6 +26465,7 @@ type FfiDestroyerNameRegistration struct {}
 func (_ FfiDestroyerNameRegistration) Destroy(value *NameRegistration) {
 		value.Destroy()
 }
+
 
 
 
@@ -26396,7 +26744,7 @@ func (c FfiConverterObject) Lower(value *Object) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Object")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterObject) Write(writer io.Writer, value *Object) {
@@ -26408,6 +26756,7 @@ type FfiDestroyerObject struct {}
 func (_ FfiDestroyerObject) Destroy(value *Object) {
 		value.Destroy()
 }
+
 
 
 
@@ -26590,7 +26939,7 @@ func (c FfiConverterObjectData) Lower(value *ObjectData) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ObjectData")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterObjectData) Write(writer io.Writer, value *ObjectData) {
@@ -26602,6 +26951,7 @@ type FfiDestroyerObjectData struct {}
 func (_ FfiDestroyerObjectData) Destroy(value *ObjectData) {
 		value.Destroy()
 }
+
 
 
 
@@ -26875,7 +27225,7 @@ func (c FfiConverterObjectId) Lower(value *ObjectId) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ObjectId")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterObjectId) Write(writer io.Writer, value *ObjectId) {
@@ -26887,6 +27237,7 @@ type FfiDestroyerObjectId struct {}
 func (_ FfiDestroyerObjectId) Destroy(value *ObjectId) {
 		value.Destroy()
 }
+
 
 
 
@@ -27037,7 +27388,7 @@ func (c FfiConverterObjectType) Lower(value *ObjectType) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ObjectType")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterObjectType) Write(writer io.Writer, value *ObjectType) {
@@ -27049,6 +27400,7 @@ type FfiDestroyerObjectType struct {}
 func (_ FfiDestroyerObjectType) Destroy(value *ObjectType) {
 		value.Destroy()
 }
+
 
 
 
@@ -27312,7 +27664,7 @@ func (c FfiConverterOwner) Lower(value *Owner) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Owner")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterOwner) Write(writer io.Writer, value *Owner) {
@@ -27324,6 +27676,7 @@ type FfiDestroyerOwner struct {}
 func (_ FfiDestroyerOwner) Destroy(value *Owner) {
 		value.Destroy()
 }
+
 
 
 
@@ -27660,7 +28013,7 @@ func (c FfiConverterPtbArgument) Lower(value *PtbArgument) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*PtbArgument")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterPtbArgument) Write(writer io.Writer, value *PtbArgument) {
@@ -27672,6 +28025,7 @@ type FfiDestroyerPtbArgument struct {}
 func (_ FfiDestroyerPtbArgument) Destroy(value *PtbArgument) {
 		value.Destroy()
 }
+
 
 
 
@@ -27891,7 +28245,7 @@ func (c FfiConverterPasskeyAuthenticator) Lower(value *PasskeyAuthenticator) uns
 	pointer := value.ffiObject.incrementPointer("*PasskeyAuthenticator")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterPasskeyAuthenticator) Write(writer io.Writer, value *PasskeyAuthenticator) {
@@ -27903,6 +28257,7 @@ type FfiDestroyerPasskeyAuthenticator struct {}
 func (_ FfiDestroyerPasskeyAuthenticator) Destroy(value *PasskeyAuthenticator) {
 		value.Destroy()
 }
+
 
 
 
@@ -28045,7 +28400,7 @@ func (c FfiConverterPasskeyPublicKey) Lower(value *PasskeyPublicKey) unsafe.Poin
 	pointer := value.ffiObject.incrementPointer("*PasskeyPublicKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterPasskeyPublicKey) Write(writer io.Writer, value *PasskeyPublicKey) {
@@ -28057,6 +28412,7 @@ type FfiDestroyerPasskeyPublicKey struct {}
 func (_ FfiDestroyerPasskeyPublicKey) Destroy(value *PasskeyPublicKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -28135,7 +28491,7 @@ func (c FfiConverterPasskeyVerifier) Lower(value *PasskeyVerifier) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*PasskeyVerifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterPasskeyVerifier) Write(writer io.Writer, value *PasskeyVerifier) {
@@ -28147,6 +28503,7 @@ type FfiDestroyerPasskeyVerifier struct {}
 func (_ FfiDestroyerPasskeyVerifier) Destroy(value *PasskeyVerifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -28278,7 +28635,7 @@ func (c FfiConverterPersonalMessage) Lower(value *PersonalMessage) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*PersonalMessage")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterPersonalMessage) Write(writer io.Writer, value *PersonalMessage) {
@@ -28290,6 +28647,7 @@ type FfiDestroyerPersonalMessage struct {}
 func (_ FfiDestroyerPersonalMessage) Destroy(value *PersonalMessage) {
 		value.Destroy()
 }
+
 
 
 
@@ -28430,7 +28788,7 @@ func (c FfiConverterProgrammableTransaction) Lower(value *ProgrammableTransactio
 	pointer := value.ffiObject.incrementPointer("*ProgrammableTransaction")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterProgrammableTransaction) Write(writer io.Writer, value *ProgrammableTransaction) {
@@ -28442,6 +28800,7 @@ type FfiDestroyerProgrammableTransaction struct {}
 func (_ FfiDestroyerProgrammableTransaction) Destroy(value *ProgrammableTransaction) {
 		value.Destroy()
 }
+
 
 
 
@@ -28576,7 +28935,7 @@ func (c FfiConverterPublish) Lower(value *Publish) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Publish")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterPublish) Write(writer io.Writer, value *Publish) {
@@ -28588,6 +28947,7 @@ type FfiDestroyerPublish struct {}
 func (_ FfiDestroyerPublish) Destroy(value *Publish) {
 		value.Destroy()
 }
+
 
 
 
@@ -28946,7 +29306,7 @@ func (c FfiConverterSecp256k1PrivateKey) Lower(value *Secp256k1PrivateKey) unsaf
 	pointer := value.ffiObject.incrementPointer("*Secp256k1PrivateKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256k1PrivateKey) Write(writer io.Writer, value *Secp256k1PrivateKey) {
@@ -28958,6 +29318,7 @@ type FfiDestroyerSecp256k1PrivateKey struct {}
 func (_ FfiDestroyerSecp256k1PrivateKey) Destroy(value *Secp256k1PrivateKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -29149,7 +29510,7 @@ func (c FfiConverterSecp256k1PublicKey) Lower(value *Secp256k1PublicKey) unsafe.
 	pointer := value.ffiObject.incrementPointer("*Secp256k1PublicKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256k1PublicKey) Write(writer io.Writer, value *Secp256k1PublicKey) {
@@ -29161,6 +29522,7 @@ type FfiDestroyerSecp256k1PublicKey struct {}
 func (_ FfiDestroyerSecp256k1PublicKey) Destroy(value *Secp256k1PublicKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -29300,7 +29662,7 @@ func (c FfiConverterSecp256k1Signature) Lower(value *Secp256k1Signature) unsafe.
 	pointer := value.ffiObject.incrementPointer("*Secp256k1Signature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256k1Signature) Write(writer io.Writer, value *Secp256k1Signature) {
@@ -29312,6 +29674,7 @@ type FfiDestroyerSecp256k1Signature struct {}
 func (_ FfiDestroyerSecp256k1Signature) Destroy(value *Secp256k1Signature) {
 		value.Destroy()
 }
+
 
 
 
@@ -29402,7 +29765,7 @@ func (c FfiConverterSecp256k1Verifier) Lower(value *Secp256k1Verifier) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*Secp256k1Verifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256k1Verifier) Write(writer io.Writer, value *Secp256k1Verifier) {
@@ -29414,6 +29777,7 @@ type FfiDestroyerSecp256k1Verifier struct {}
 func (_ FfiDestroyerSecp256k1Verifier) Destroy(value *Secp256k1Verifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -29618,7 +29982,7 @@ func (c FfiConverterSecp256k1VerifyingKey) Lower(value *Secp256k1VerifyingKey) u
 	pointer := value.ffiObject.incrementPointer("*Secp256k1VerifyingKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256k1VerifyingKey) Write(writer io.Writer, value *Secp256k1VerifyingKey) {
@@ -29630,6 +29994,7 @@ type FfiDestroyerSecp256k1VerifyingKey struct {}
 func (_ FfiDestroyerSecp256k1VerifyingKey) Destroy(value *Secp256k1VerifyingKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -29997,7 +30362,7 @@ func (c FfiConverterSecp256r1PrivateKey) Lower(value *Secp256r1PrivateKey) unsaf
 	pointer := value.ffiObject.incrementPointer("*Secp256r1PrivateKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256r1PrivateKey) Write(writer io.Writer, value *Secp256r1PrivateKey) {
@@ -30009,6 +30374,7 @@ type FfiDestroyerSecp256r1PrivateKey struct {}
 func (_ FfiDestroyerSecp256r1PrivateKey) Destroy(value *Secp256r1PrivateKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -30200,7 +30566,7 @@ func (c FfiConverterSecp256r1PublicKey) Lower(value *Secp256r1PublicKey) unsafe.
 	pointer := value.ffiObject.incrementPointer("*Secp256r1PublicKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256r1PublicKey) Write(writer io.Writer, value *Secp256r1PublicKey) {
@@ -30212,6 +30578,7 @@ type FfiDestroyerSecp256r1PublicKey struct {}
 func (_ FfiDestroyerSecp256r1PublicKey) Destroy(value *Secp256r1PublicKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -30351,7 +30718,7 @@ func (c FfiConverterSecp256r1Signature) Lower(value *Secp256r1Signature) unsafe.
 	pointer := value.ffiObject.incrementPointer("*Secp256r1Signature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256r1Signature) Write(writer io.Writer, value *Secp256r1Signature) {
@@ -30363,6 +30730,7 @@ type FfiDestroyerSecp256r1Signature struct {}
 func (_ FfiDestroyerSecp256r1Signature) Destroy(value *Secp256r1Signature) {
 		value.Destroy()
 }
+
 
 
 
@@ -30453,7 +30821,7 @@ func (c FfiConverterSecp256r1Verifier) Lower(value *Secp256r1Verifier) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*Secp256r1Verifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256r1Verifier) Write(writer io.Writer, value *Secp256r1Verifier) {
@@ -30465,6 +30833,7 @@ type FfiDestroyerSecp256r1Verifier struct {}
 func (_ FfiDestroyerSecp256r1Verifier) Destroy(value *Secp256r1Verifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -30669,7 +31038,7 @@ func (c FfiConverterSecp256r1VerifyingKey) Lower(value *Secp256r1VerifyingKey) u
 	pointer := value.ffiObject.incrementPointer("*Secp256r1VerifyingKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSecp256r1VerifyingKey) Write(writer io.Writer, value *Secp256r1VerifyingKey) {
@@ -30681,6 +31050,7 @@ type FfiDestroyerSecp256r1VerifyingKey struct {}
 func (_ FfiDestroyerSecp256r1VerifyingKey) Destroy(value *Secp256r1VerifyingKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -30991,7 +31361,7 @@ func (c FfiConverterSimpleKeypair) Lower(value *SimpleKeypair) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*SimpleKeypair")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSimpleKeypair) Write(writer io.Writer, value *SimpleKeypair) {
@@ -31003,6 +31373,7 @@ type FfiDestroyerSimpleKeypair struct {}
 func (_ FfiDestroyerSimpleKeypair) Destroy(value *SimpleKeypair) {
 		value.Destroy()
 }
+
 
 
 
@@ -31343,7 +31714,7 @@ func (c FfiConverterSimpleSignature) Lower(value *SimpleSignature) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*SimpleSignature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSimpleSignature) Write(writer io.Writer, value *SimpleSignature) {
@@ -31355,6 +31726,7 @@ type FfiDestroyerSimpleSignature struct {}
 func (_ FfiDestroyerSimpleSignature) Destroy(value *SimpleSignature) {
 		value.Destroy()
 }
+
 
 
 
@@ -31420,7 +31792,7 @@ func (c FfiConverterSimpleVerifier) Lower(value *SimpleVerifier) unsafe.Pointer 
 	pointer := value.ffiObject.incrementPointer("*SimpleVerifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSimpleVerifier) Write(writer io.Writer, value *SimpleVerifier) {
@@ -31432,6 +31804,7 @@ type FfiDestroyerSimpleVerifier struct {}
 func (_ FfiDestroyerSimpleVerifier) Destroy(value *SimpleVerifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -31614,7 +31987,7 @@ func (c FfiConverterSimpleVerifyingKey) Lower(value *SimpleVerifyingKey) unsafe.
 	pointer := value.ffiObject.incrementPointer("*SimpleVerifyingKey")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSimpleVerifyingKey) Write(writer io.Writer, value *SimpleVerifyingKey) {
@@ -31626,6 +31999,7 @@ type FfiDestroyerSimpleVerifyingKey struct {}
 func (_ FfiDestroyerSimpleVerifyingKey) Destroy(value *SimpleVerifyingKey) {
 		value.Destroy()
 }
+
 
 
 
@@ -31756,7 +32130,7 @@ func (c FfiConverterSplitCoins) Lower(value *SplitCoins) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*SplitCoins")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSplitCoins) Write(writer io.Writer, value *SplitCoins) {
@@ -31768,6 +32142,7 @@ type FfiDestroyerSplitCoins struct {}
 func (_ FfiDestroyerSplitCoins) Destroy(value *SplitCoins) {
 		value.Destroy()
 }
+
 
 
 
@@ -32192,7 +32567,7 @@ func (c FfiConverterStructTag) Lower(value *StructTag) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*StructTag")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterStructTag) Write(writer io.Writer, value *StructTag) {
@@ -32204,6 +32579,7 @@ type FfiDestroyerStructTag struct {}
 func (_ FfiDestroyerStructTag) Destroy(value *StructTag) {
 		value.Destroy()
 }
+
 
 
 
@@ -32346,7 +32722,7 @@ func (c FfiConverterSystemPackage) Lower(value *SystemPackage) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*SystemPackage")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterSystemPackage) Write(writer io.Writer, value *SystemPackage) {
@@ -32358,6 +32734,7 @@ type FfiDestroyerSystemPackage struct {}
 func (_ FfiDestroyerSystemPackage) Destroy(value *SystemPackage) {
 		value.Destroy()
 }
+
 
 
 
@@ -32586,7 +32963,7 @@ func (c FfiConverterTransaction) Lower(value *Transaction) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Transaction")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransaction) Write(writer io.Writer, value *Transaction) {
@@ -32598,6 +32975,7 @@ type FfiDestroyerTransaction struct {}
 func (_ FfiDestroyerTransaction) Destroy(value *Transaction) {
 		value.Destroy()
 }
+
 
 
 
@@ -32749,6 +33127,10 @@ func (_self *TransactionBuilder) ExecuteWithGasStation(signer *TransactionSigner
 			C.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(handle)
 		},
 	)
+
+	if err == nil {
+		return res, nil
+	}
 
 	return res, err 
 }
@@ -33058,7 +33440,7 @@ func (c FfiConverterTransactionBuilder) Lower(value *TransactionBuilder) unsafe.
 	pointer := value.ffiObject.incrementPointer("*TransactionBuilder")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionBuilder) Write(writer io.Writer, value *TransactionBuilder) {
@@ -33070,6 +33452,7 @@ type FfiDestroyerTransactionBuilder struct {}
 func (_ FfiDestroyerTransactionBuilder) Destroy(value *TransactionBuilder) {
 		value.Destroy()
 }
+
 
 
 
@@ -33209,7 +33592,7 @@ func (c FfiConverterTransactionEffects) Lower(value *TransactionEffects) unsafe.
 	pointer := value.ffiObject.incrementPointer("*TransactionEffects")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionEffects) Write(writer io.Writer, value *TransactionEffects) {
@@ -33221,6 +33604,7 @@ type FfiDestroyerTransactionEffects struct {}
 func (_ FfiDestroyerTransactionEffects) Destroy(value *TransactionEffects) {
 		value.Destroy()
 }
+
 
 
 
@@ -33314,7 +33698,7 @@ func (c FfiConverterTransactionEvents) Lower(value *TransactionEvents) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*TransactionEvents")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionEvents) Write(writer io.Writer, value *TransactionEvents) {
@@ -33326,6 +33710,7 @@ type FfiDestroyerTransactionEvents struct {}
 func (_ FfiDestroyerTransactionEvents) Destroy(value *TransactionEvents) {
 		value.Destroy()
 }
+
 
 
 
@@ -33477,7 +33862,7 @@ func (c FfiConverterTransactionKind) Lower(value *TransactionKind) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*TransactionKind")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionKind) Write(writer io.Writer, value *TransactionKind) {
@@ -33489,6 +33874,7 @@ type FfiDestroyerTransactionKind struct {}
 func (_ FfiDestroyerTransactionKind) Destroy(value *TransactionKind) {
 		value.Destroy()
 }
+
 
 
 
@@ -33567,6 +33953,10 @@ func (_self *TransactionSigner) Sign(txn *Transaction) (*UserSignature, error) {
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 func (object *TransactionSigner) Destroy() {
@@ -33606,7 +33996,7 @@ func (c FfiConverterTransactionSigner) Lower(value *TransactionSigner) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*TransactionSigner")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionSigner) Write(writer io.Writer, value *TransactionSigner) {
@@ -33618,6 +34008,7 @@ type FfiDestroyerTransactionSigner struct {}
 func (_ FfiDestroyerTransactionSigner) Destroy(value *TransactionSigner) {
 		value.Destroy()
 }
+
 
 
 
@@ -33669,6 +34060,10 @@ func (_self *TransactionSignerFnImpl) Sign(transaction *Transaction) (Transactio
 		},
 	)
 
+	if err == nil {
+		return res, nil
+	}
+
 	return res, err 
 }
 func (object *TransactionSignerFnImpl) Destroy() {
@@ -33711,7 +34106,7 @@ func (c FfiConverterTransactionSignerFn) Lower(value TransactionSignerFn) unsafe
 	// and someone will be left holding onto a non-locked pointer.
 	pointer := unsafe.Pointer(uintptr(c.handleMap.insert(value)))
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionSignerFn) Write(writer io.Writer, value TransactionSignerFn) {
@@ -33782,7 +34177,7 @@ func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uniffi
 	if !ok {
 		panic(fmt.Errorf("no callback in handle map: %d", handle))
 	}
-
+	
 	
 	result := make(chan C.UniffiForeignFutureStructRustBuffer, 1)
 	cancel := make(chan struct{}, 1)
@@ -33791,7 +34186,7 @@ func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uniffi
 		handle: C.uint64_t(guardHandle),
 		free: C.UniffiForeignFutureFree(C.iota_sdk_uniffiFreeGorutine),
 	}
-
+	
 	// Wait for compleation or cancel
 	go func() {
 		select {
@@ -33815,7 +34210,7 @@ func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnMethod0(uniffi
     uniffiObj.Sign(
         FfiConverterTransactionINSTANCE.Lift(transaction),
     )
-
+	
     
 	if err != nil {
 		var actualError *SdkFfiError
@@ -33851,6 +34246,7 @@ func iota_sdk_ffi_cgo_dispatchCallbackInterfaceTransactionSignerFnFree(handle C.
 func (c FfiConverterTransactionSignerFn) register() {
 	C.uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(&UniffiVTableCallbackInterfaceTransactionSignerFnINSTANCE)
 }
+
 
 
 // A transaction
@@ -34067,7 +34463,7 @@ func (c FfiConverterTransactionV1) Lower(value *TransactionV1) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*TransactionV1")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransactionV1) Write(writer io.Writer, value *TransactionV1) {
@@ -34079,6 +34475,7 @@ type FfiDestroyerTransactionV1 struct {}
 func (_ FfiDestroyerTransactionV1) Destroy(value *TransactionV1) {
 		value.Destroy()
 }
+
 
 
 
@@ -34209,7 +34606,7 @@ func (c FfiConverterTransferObjects) Lower(value *TransferObjects) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*TransferObjects")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTransferObjects) Write(writer io.Writer, value *TransferObjects) {
@@ -34221,6 +34618,7 @@ type FfiDestroyerTransferObjects struct {}
 func (_ FfiDestroyerTransferObjects) Destroy(value *TransferObjects) {
 		value.Destroy()
 }
+
 
 
 
@@ -34624,7 +35022,7 @@ func (c FfiConverterTypeTag) Lower(value *TypeTag) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*TypeTag")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterTypeTag) Write(writer io.Writer, value *TypeTag) {
@@ -34636,6 +35034,7 @@ type FfiDestroyerTypeTag struct {}
 func (_ FfiDestroyerTypeTag) Destroy(value *TypeTag) {
 		value.Destroy()
 }
+
 
 
 
@@ -34798,7 +35197,7 @@ func (c FfiConverterUpgrade) Lower(value *Upgrade) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*Upgrade")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterUpgrade) Write(writer io.Writer, value *Upgrade) {
@@ -34810,6 +35209,7 @@ type FfiDestroyerUpgrade struct {}
 func (_ FfiDestroyerUpgrade) Destroy(value *Upgrade) {
 		value.Destroy()
 }
+
 
 
 
@@ -34944,7 +35344,7 @@ func (c FfiConverterUpgradePolicy) Lower(value *UpgradePolicy) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*UpgradePolicy")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterUpgradePolicy) Write(writer io.Writer, value *UpgradePolicy) {
@@ -34956,6 +35356,7 @@ type FfiDestroyerUpgradePolicy struct {}
 func (_ FfiDestroyerUpgradePolicy) Destroy(value *UpgradePolicy) {
 		value.Destroy()
 }
+
 
 
 
@@ -35327,7 +35728,7 @@ func (c FfiConverterUserSignature) Lower(value *UserSignature) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*UserSignature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterUserSignature) Write(writer io.Writer, value *UserSignature) {
@@ -35339,6 +35740,7 @@ type FfiDestroyerUserSignature struct {}
 func (_ FfiDestroyerUserSignature) Destroy(value *UserSignature) {
 		value.Destroy()
 }
+
 
 
 
@@ -35441,7 +35843,7 @@ func (c FfiConverterUserSignatureVerifier) Lower(value *UserSignatureVerifier) u
 	pointer := value.ffiObject.incrementPointer("*UserSignatureVerifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterUserSignatureVerifier) Write(writer io.Writer, value *UserSignatureVerifier) {
@@ -35453,6 +35855,7 @@ type FfiDestroyerUserSignatureVerifier struct {}
 func (_ FfiDestroyerUserSignatureVerifier) Destroy(value *UserSignatureVerifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -35597,7 +36000,7 @@ func (c FfiConverterValidatorAggregatedSignature) Lower(value *ValidatorAggregat
 	pointer := value.ffiObject.incrementPointer("*ValidatorAggregatedSignature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterValidatorAggregatedSignature) Write(writer io.Writer, value *ValidatorAggregatedSignature) {
@@ -35609,6 +36012,7 @@ type FfiDestroyerValidatorAggregatedSignature struct {}
 func (_ FfiDestroyerValidatorAggregatedSignature) Destroy(value *ValidatorAggregatedSignature) {
 		value.Destroy()
 }
+
 
 
 
@@ -35722,7 +36126,7 @@ func (c FfiConverterValidatorCommitteeSignatureAggregator) Lower(value *Validato
 	pointer := value.ffiObject.incrementPointer("*ValidatorCommitteeSignatureAggregator")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterValidatorCommitteeSignatureAggregator) Write(writer io.Writer, value *ValidatorCommitteeSignatureAggregator) {
@@ -35734,6 +36138,7 @@ type FfiDestroyerValidatorCommitteeSignatureAggregator struct {}
 func (_ FfiDestroyerValidatorCommitteeSignatureAggregator) Destroy(value *ValidatorCommitteeSignatureAggregator) {
 		value.Destroy()
 }
+
 
 
 
@@ -35854,7 +36259,7 @@ func (c FfiConverterValidatorCommitteeSignatureVerifier) Lower(value *ValidatorC
 	pointer := value.ffiObject.incrementPointer("*ValidatorCommitteeSignatureVerifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterValidatorCommitteeSignatureVerifier) Write(writer io.Writer, value *ValidatorCommitteeSignatureVerifier) {
@@ -35866,6 +36271,7 @@ type FfiDestroyerValidatorCommitteeSignatureVerifier struct {}
 func (_ FfiDestroyerValidatorCommitteeSignatureVerifier) Destroy(value *ValidatorCommitteeSignatureVerifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -36007,7 +36413,7 @@ func (c FfiConverterValidatorExecutionTimeObservation) Lower(value *ValidatorExe
 	pointer := value.ffiObject.incrementPointer("*ValidatorExecutionTimeObservation")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterValidatorExecutionTimeObservation) Write(writer io.Writer, value *ValidatorExecutionTimeObservation) {
@@ -36019,6 +36425,7 @@ type FfiDestroyerValidatorExecutionTimeObservation struct {}
 func (_ FfiDestroyerValidatorExecutionTimeObservation) Destroy(value *ValidatorExecutionTimeObservation) {
 		value.Destroy()
 }
+
 
 
 
@@ -36157,7 +36564,7 @@ func (c FfiConverterValidatorSignature) Lower(value *ValidatorSignature) unsafe.
 	pointer := value.ffiObject.incrementPointer("*ValidatorSignature")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterValidatorSignature) Write(writer io.Writer, value *ValidatorSignature) {
@@ -36169,6 +36576,7 @@ type FfiDestroyerValidatorSignature struct {}
 func (_ FfiDestroyerValidatorSignature) Destroy(value *ValidatorSignature) {
 		value.Destroy()
 }
+
 
 
 
@@ -36293,7 +36701,7 @@ func (c FfiConverterVersionAssignment) Lower(value *VersionAssignment) unsafe.Po
 	pointer := value.ffiObject.incrementPointer("*VersionAssignment")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterVersionAssignment) Write(writer io.Writer, value *VersionAssignment) {
@@ -36305,6 +36713,7 @@ type FfiDestroyerVersionAssignment struct {}
 func (_ FfiDestroyerVersionAssignment) Destroy(value *VersionAssignment) {
 		value.Destroy()
 }
+
 
 
 
@@ -36459,7 +36868,7 @@ func (c FfiConverterZkLoginAuthenticator) Lower(value *ZkLoginAuthenticator) uns
 	pointer := value.ffiObject.incrementPointer("*ZkLoginAuthenticator")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterZkLoginAuthenticator) Write(writer io.Writer, value *ZkLoginAuthenticator) {
@@ -36471,6 +36880,7 @@ type FfiDestroyerZkLoginAuthenticator struct {}
 func (_ FfiDestroyerZkLoginAuthenticator) Destroy(value *ZkLoginAuthenticator) {
 		value.Destroy()
 }
+
 
 
 
@@ -36667,7 +37077,7 @@ func (c FfiConverterZkLoginInputs) Lower(value *ZkLoginInputs) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ZkLoginInputs")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterZkLoginInputs) Write(writer io.Writer, value *ZkLoginInputs) {
@@ -36679,6 +37089,7 @@ type FfiDestroyerZkLoginInputs struct {}
 func (_ FfiDestroyerZkLoginInputs) Destroy(value *ZkLoginInputs) {
 		value.Destroy()
 }
+
 
 
 
@@ -36813,7 +37224,7 @@ func (c FfiConverterZkLoginProof) Lower(value *ZkLoginProof) unsafe.Pointer {
 	pointer := value.ffiObject.incrementPointer("*ZkLoginProof")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterZkLoginProof) Write(writer io.Writer, value *ZkLoginProof) {
@@ -36825,6 +37236,7 @@ type FfiDestroyerZkLoginProof struct {}
 func (_ FfiDestroyerZkLoginProof) Destroy(value *ZkLoginProof) {
 		value.Destroy()
 }
+
 
 
 
@@ -37111,7 +37523,7 @@ func (c FfiConverterZkLoginPublicIdentifier) Lower(value *ZkLoginPublicIdentifie
 	pointer := value.ffiObject.incrementPointer("*ZkLoginPublicIdentifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterZkLoginPublicIdentifier) Write(writer io.Writer, value *ZkLoginPublicIdentifier) {
@@ -37123,6 +37535,7 @@ type FfiDestroyerZkLoginPublicIdentifier struct {}
 func (_ FfiDestroyerZkLoginPublicIdentifier) Destroy(value *ZkLoginPublicIdentifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -37232,7 +37645,7 @@ func (c FfiConverterZkloginVerifier) Lower(value *ZkloginVerifier) unsafe.Pointe
 	pointer := value.ffiObject.incrementPointer("*ZkloginVerifier")
 	defer value.ffiObject.decrementPointer()
 	return pointer
-
+	
 }
 
 func (c FfiConverterZkloginVerifier) Write(writer io.Writer, value *ZkloginVerifier) {
@@ -37244,6 +37657,7 @@ type FfiDestroyerZkloginVerifier struct {}
 func (_ FfiDestroyerZkloginVerifier) Destroy(value *ZkloginVerifier) {
 		value.Destroy()
 }
+
 
 
 
@@ -37291,6 +37705,10 @@ func (c FfiConverterActiveJwk) Lower(value ActiveJwk) C.RustBuffer {
 	return LowerIntoRustBuffer[ActiveJwk](c, value)
 }
 
+func (c FfiConverterActiveJwk) LowerExternal(value ActiveJwk) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ActiveJwk](c, value))
+}
+
 func (c FfiConverterActiveJwk) Write(writer io.Writer, value ActiveJwk) {
 		FfiConverterJwkIdINSTANCE.Write(writer, value.JwkId);
 		FfiConverterJwkINSTANCE.Write(writer, value.Jwk);
@@ -37302,6 +37720,7 @@ type FfiDestroyerActiveJwk struct {}
 func (_ FfiDestroyerActiveJwk) Destroy(value ActiveJwk) {
 	value.Destroy()
 }
+
 // Expire old JWKs
 //
 // # BCS
@@ -37342,6 +37761,10 @@ func (c FfiConverterAuthenticatorStateExpire) Lower(value AuthenticatorStateExpi
 	return LowerIntoRustBuffer[AuthenticatorStateExpire](c, value)
 }
 
+func (c FfiConverterAuthenticatorStateExpire) LowerExternal(value AuthenticatorStateExpire) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[AuthenticatorStateExpire](c, value))
+}
+
 func (c FfiConverterAuthenticatorStateExpire) Write(writer io.Writer, value AuthenticatorStateExpire) {
 		FfiConverterUint64INSTANCE.Write(writer, value.MinEpoch);
 		FfiConverterUint64INSTANCE.Write(writer, value.AuthenticatorObjInitialSharedVersion);
@@ -37352,6 +37775,7 @@ type FfiDestroyerAuthenticatorStateExpire struct {}
 func (_ FfiDestroyerAuthenticatorStateExpire) Destroy(value AuthenticatorStateExpire) {
 	value.Destroy()
 }
+
 // Update the set of valid JWKs
 //
 // # BCS
@@ -37402,6 +37826,10 @@ func (c FfiConverterAuthenticatorStateUpdateV1) Lower(value AuthenticatorStateUp
 	return LowerIntoRustBuffer[AuthenticatorStateUpdateV1](c, value)
 }
 
+func (c FfiConverterAuthenticatorStateUpdateV1) LowerExternal(value AuthenticatorStateUpdateV1) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[AuthenticatorStateUpdateV1](c, value))
+}
+
 func (c FfiConverterAuthenticatorStateUpdateV1) Write(writer io.Writer, value AuthenticatorStateUpdateV1) {
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
 		FfiConverterUint64INSTANCE.Write(writer, value.Round);
@@ -37414,6 +37842,7 @@ type FfiDestroyerAuthenticatorStateUpdateV1 struct {}
 func (_ FfiDestroyerAuthenticatorStateUpdateV1) Destroy(value AuthenticatorStateUpdateV1) {
 	value.Destroy()
 }
+
 type BatchSendStatus struct {
 	Status BatchSendStatusType
 	TransferredGasObjects *FaucetReceipt
@@ -37443,6 +37872,10 @@ func (c FfiConverterBatchSendStatus) Lower(value BatchSendStatus) C.RustBuffer {
 	return LowerIntoRustBuffer[BatchSendStatus](c, value)
 }
 
+func (c FfiConverterBatchSendStatus) LowerExternal(value BatchSendStatus) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[BatchSendStatus](c, value))
+}
+
 func (c FfiConverterBatchSendStatus) Write(writer io.Writer, value BatchSendStatus) {
 		FfiConverterBatchSendStatusTypeINSTANCE.Write(writer, value.Status);
 		FfiConverterOptionalFaucetReceiptINSTANCE.Write(writer, value.TransferredGasObjects);
@@ -37453,6 +37886,7 @@ type FfiDestroyerBatchSendStatus struct {}
 func (_ FfiDestroyerBatchSendStatus) Destroy(value BatchSendStatus) {
 	value.Destroy()
 }
+
 // Input/output state of an object that was changed during execution
 //
 // # BCS
@@ -37503,6 +37937,10 @@ func (c FfiConverterChangedObject) Lower(value ChangedObject) C.RustBuffer {
 	return LowerIntoRustBuffer[ChangedObject](c, value)
 }
 
+func (c FfiConverterChangedObject) LowerExternal(value ChangedObject) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ChangedObject](c, value))
+}
+
 func (c FfiConverterChangedObject) Write(writer io.Writer, value ChangedObject) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.ObjectId);
 		FfiConverterObjectInINSTANCE.Write(writer, value.InputState);
@@ -37515,6 +37953,7 @@ type FfiDestroyerChangedObject struct {}
 func (_ FfiDestroyerChangedObject) Destroy(value ChangedObject) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type CheckpointSummaryPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -37548,6 +37987,10 @@ func (c FfiConverterCheckpointSummaryPage) Lower(value CheckpointSummaryPage) C.
 	return LowerIntoRustBuffer[CheckpointSummaryPage](c, value)
 }
 
+func (c FfiConverterCheckpointSummaryPage) LowerExternal(value CheckpointSummaryPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[CheckpointSummaryPage](c, value))
+}
+
 func (c FfiConverterCheckpointSummaryPage) Write(writer io.Writer, value CheckpointSummaryPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceCheckpointSummaryINSTANCE.Write(writer, value.Data);
@@ -37558,6 +38001,7 @@ type FfiDestroyerCheckpointSummaryPage struct {}
 func (_ FfiDestroyerCheckpointSummaryPage) Destroy(value CheckpointSummaryPage) {
 	value.Destroy()
 }
+
 type CoinInfo struct {
 	Amount uint64
 	Id *ObjectId
@@ -37590,6 +38034,10 @@ func (c FfiConverterCoinInfo) Lower(value CoinInfo) C.RustBuffer {
 	return LowerIntoRustBuffer[CoinInfo](c, value)
 }
 
+func (c FfiConverterCoinInfo) LowerExternal(value CoinInfo) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[CoinInfo](c, value))
+}
+
 func (c FfiConverterCoinInfo) Write(writer io.Writer, value CoinInfo) {
 		FfiConverterUint64INSTANCE.Write(writer, value.Amount);
 		FfiConverterObjectIdINSTANCE.Write(writer, value.Id);
@@ -37601,6 +38049,7 @@ type FfiDestroyerCoinInfo struct {}
 func (_ FfiDestroyerCoinInfo) Destroy(value CoinInfo) {
 	value.Destroy()
 }
+
 // The coin metadata associated with the given coin type.
 type CoinMetadata struct {
 	// The CoinMetadata object ID.
@@ -37657,6 +38106,10 @@ func (c FfiConverterCoinMetadata) Lower(value CoinMetadata) C.RustBuffer {
 	return LowerIntoRustBuffer[CoinMetadata](c, value)
 }
 
+func (c FfiConverterCoinMetadata) LowerExternal(value CoinMetadata) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[CoinMetadata](c, value))
+}
+
 func (c FfiConverterCoinMetadata) Write(writer io.Writer, value CoinMetadata) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.Address);
 		FfiConverterOptionalInt32INSTANCE.Write(writer, value.Decimals);
@@ -37673,6 +38126,7 @@ type FfiDestroyerCoinMetadata struct {}
 func (_ FfiDestroyerCoinMetadata) Destroy(value CoinMetadata) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type CoinPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -37706,6 +38160,10 @@ func (c FfiConverterCoinPage) Lower(value CoinPage) C.RustBuffer {
 	return LowerIntoRustBuffer[CoinPage](c, value)
 }
 
+func (c FfiConverterCoinPage) LowerExternal(value CoinPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[CoinPage](c, value))
+}
+
 func (c FfiConverterCoinPage) Write(writer io.Writer, value CoinPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceCoinINSTANCE.Write(writer, value.Data);
@@ -37716,6 +38174,7 @@ type FfiDestroyerCoinPage struct {}
 func (_ FfiDestroyerCoinPage) Destroy(value CoinPage) {
 	value.Destroy()
 }
+
 // Effects of a single command in the dry run, including mutated references
 // and return values.
 type DryRunEffect struct {
@@ -37749,6 +38208,10 @@ func (c FfiConverterDryRunEffect) Lower(value DryRunEffect) C.RustBuffer {
 	return LowerIntoRustBuffer[DryRunEffect](c, value)
 }
 
+func (c FfiConverterDryRunEffect) LowerExternal(value DryRunEffect) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DryRunEffect](c, value))
+}
+
 func (c FfiConverterDryRunEffect) Write(writer io.Writer, value DryRunEffect) {
 		FfiConverterSequenceDryRunMutationINSTANCE.Write(writer, value.MutatedReferences);
 		FfiConverterSequenceDryRunReturnINSTANCE.Write(writer, value.ReturnValues);
@@ -37759,6 +38222,7 @@ type FfiDestroyerDryRunEffect struct {}
 func (_ FfiDestroyerDryRunEffect) Destroy(value DryRunEffect) {
 	value.Destroy()
 }
+
 // A mutation to an argument that was mutably borrowed by a command.
 type DryRunMutation struct {
 	// The transaction argument that was mutated.
@@ -37795,6 +38259,10 @@ func (c FfiConverterDryRunMutation) Lower(value DryRunMutation) C.RustBuffer {
 	return LowerIntoRustBuffer[DryRunMutation](c, value)
 }
 
+func (c FfiConverterDryRunMutation) LowerExternal(value DryRunMutation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DryRunMutation](c, value))
+}
+
 func (c FfiConverterDryRunMutation) Write(writer io.Writer, value DryRunMutation) {
 		FfiConverterTransactionArgumentINSTANCE.Write(writer, value.Input);
 		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
@@ -37806,6 +38274,7 @@ type FfiDestroyerDryRunMutation struct {}
 func (_ FfiDestroyerDryRunMutation) Destroy(value DryRunMutation) {
 	value.Destroy()
 }
+
 // The result of a simulation (dry run), which includes the effects of the
 // transaction, any errors that may have occurred, and intermediate results for
 // each command.
@@ -37849,6 +38318,10 @@ func (c FfiConverterDryRunResult) Lower(value DryRunResult) C.RustBuffer {
 	return LowerIntoRustBuffer[DryRunResult](c, value)
 }
 
+func (c FfiConverterDryRunResult) LowerExternal(value DryRunResult) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DryRunResult](c, value))
+}
+
 func (c FfiConverterDryRunResult) Write(writer io.Writer, value DryRunResult) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
 		FfiConverterSequenceDryRunEffectINSTANCE.Write(writer, value.Results);
@@ -37861,6 +38334,7 @@ type FfiDestroyerDryRunResult struct {}
 func (_ FfiDestroyerDryRunResult) Destroy(value DryRunResult) {
 	value.Destroy()
 }
+
 // A return value from a command in the dry run.
 type DryRunReturn struct {
 	// The Move type of the return value.
@@ -37893,6 +38367,10 @@ func (c FfiConverterDryRunReturn) Lower(value DryRunReturn) C.RustBuffer {
 	return LowerIntoRustBuffer[DryRunReturn](c, value)
 }
 
+func (c FfiConverterDryRunReturn) LowerExternal(value DryRunReturn) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DryRunReturn](c, value))
+}
+
 func (c FfiConverterDryRunReturn) Write(writer io.Writer, value DryRunReturn) {
 		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
 		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
@@ -37903,6 +38381,7 @@ type FfiDestroyerDryRunReturn struct {}
 func (_ FfiDestroyerDryRunReturn) Destroy(value DryRunReturn) {
 	value.Destroy()
 }
+
 // The name part of a dynamic field, including its type, bcs, and json
 // representation.
 type DynamicFieldName struct {
@@ -37940,6 +38419,10 @@ func (c FfiConverterDynamicFieldName) Lower(value DynamicFieldName) C.RustBuffer
 	return LowerIntoRustBuffer[DynamicFieldName](c, value)
 }
 
+func (c FfiConverterDynamicFieldName) LowerExternal(value DynamicFieldName) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DynamicFieldName](c, value))
+}
+
 func (c FfiConverterDynamicFieldName) Write(writer io.Writer, value DynamicFieldName) {
 		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
 		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
@@ -37951,6 +38434,7 @@ type FfiDestroyerDynamicFieldName struct {}
 func (_ FfiDestroyerDynamicFieldName) Destroy(value DynamicFieldName) {
 	value.Destroy()
 }
+
 // The output of a dynamic field query, that includes the name, value, and
 // value's json representation.
 type DynamicFieldOutput struct {
@@ -37988,6 +38472,10 @@ func (c FfiConverterDynamicFieldOutput) Lower(value DynamicFieldOutput) C.RustBu
 	return LowerIntoRustBuffer[DynamicFieldOutput](c, value)
 }
 
+func (c FfiConverterDynamicFieldOutput) LowerExternal(value DynamicFieldOutput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DynamicFieldOutput](c, value))
+}
+
 func (c FfiConverterDynamicFieldOutput) Write(writer io.Writer, value DynamicFieldOutput) {
 		FfiConverterDynamicFieldNameINSTANCE.Write(writer, value.Name);
 		FfiConverterOptionalDynamicFieldValueINSTANCE.Write(writer, value.Value);
@@ -37999,6 +38487,7 @@ type FfiDestroyerDynamicFieldOutput struct {}
 func (_ FfiDestroyerDynamicFieldOutput) Destroy(value DynamicFieldOutput) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type DynamicFieldOutputPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -38032,6 +38521,10 @@ func (c FfiConverterDynamicFieldOutputPage) Lower(value DynamicFieldOutputPage) 
 	return LowerIntoRustBuffer[DynamicFieldOutputPage](c, value)
 }
 
+func (c FfiConverterDynamicFieldOutputPage) LowerExternal(value DynamicFieldOutputPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DynamicFieldOutputPage](c, value))
+}
+
 func (c FfiConverterDynamicFieldOutputPage) Write(writer io.Writer, value DynamicFieldOutputPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceDynamicFieldOutputINSTANCE.Write(writer, value.Data);
@@ -38042,6 +38535,7 @@ type FfiDestroyerDynamicFieldOutputPage struct {}
 func (_ FfiDestroyerDynamicFieldOutputPage) Destroy(value DynamicFieldOutputPage) {
 	value.Destroy()
 }
+
 // The value part of a dynamic field.
 type DynamicFieldValue struct {
 	TypeTag *TypeTag
@@ -38072,6 +38566,10 @@ func (c FfiConverterDynamicFieldValue) Lower(value DynamicFieldValue) C.RustBuff
 	return LowerIntoRustBuffer[DynamicFieldValue](c, value)
 }
 
+func (c FfiConverterDynamicFieldValue) LowerExternal(value DynamicFieldValue) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[DynamicFieldValue](c, value))
+}
+
 func (c FfiConverterDynamicFieldValue) Write(writer io.Writer, value DynamicFieldValue) {
 		FfiConverterTypeTagINSTANCE.Write(writer, value.TypeTag);
 		FfiConverterBytesINSTANCE.Write(writer, value.Bcs);
@@ -38082,6 +38580,7 @@ type FfiDestroyerDynamicFieldValue struct {}
 func (_ FfiDestroyerDynamicFieldValue) Destroy(value DynamicFieldValue) {
 	value.Destroy()
 }
+
 // Data which, when included in a [`CheckpointSummary`], signals the end of an
 // `Epoch`.
 //
@@ -38129,6 +38628,10 @@ func (c FfiConverterEndOfEpochData) Lower(value EndOfEpochData) C.RustBuffer {
 	return LowerIntoRustBuffer[EndOfEpochData](c, value)
 }
 
+func (c FfiConverterEndOfEpochData) LowerExternal(value EndOfEpochData) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[EndOfEpochData](c, value))
+}
+
 func (c FfiConverterEndOfEpochData) Write(writer io.Writer, value EndOfEpochData) {
 		FfiConverterSequenceValidatorCommitteeMemberINSTANCE.Write(writer, value.NextEpochCommittee);
 		FfiConverterUint64INSTANCE.Write(writer, value.NextEpochProtocolVersion);
@@ -38141,6 +38644,7 @@ type FfiDestroyerEndOfEpochData struct {}
 func (_ FfiDestroyerEndOfEpochData) Destroy(value EndOfEpochData) {
 	value.Destroy()
 }
+
 type Epoch struct {
 	// The epoch's id as a sequence number that starts at 0 and is incremented
 	// by one at every epoch change.
@@ -38244,6 +38748,10 @@ func (c FfiConverterEpoch) Lower(value Epoch) C.RustBuffer {
 	return LowerIntoRustBuffer[Epoch](c, value)
 }
 
+func (c FfiConverterEpoch) LowerExternal(value Epoch) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Epoch](c, value))
+}
+
 func (c FfiConverterEpoch) Write(writer io.Writer, value Epoch) {
 		FfiConverterUint64INSTANCE.Write(writer, value.EpochId);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.FundInflow);
@@ -38268,6 +38776,7 @@ type FfiDestroyerEpoch struct {}
 func (_ FfiDestroyerEpoch) Destroy(value Epoch) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type EpochPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -38301,6 +38810,10 @@ func (c FfiConverterEpochPage) Lower(value EpochPage) C.RustBuffer {
 	return LowerIntoRustBuffer[EpochPage](c, value)
 }
 
+func (c FfiConverterEpochPage) LowerExternal(value EpochPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[EpochPage](c, value))
+}
+
 func (c FfiConverterEpochPage) Write(writer io.Writer, value EpochPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceEpochINSTANCE.Write(writer, value.Data);
@@ -38311,6 +38824,7 @@ type FfiDestroyerEpochPage struct {}
 func (_ FfiDestroyerEpochPage) Destroy(value EpochPage) {
 	value.Destroy()
 }
+
 // An event
 //
 // # BCS
@@ -38378,6 +38892,10 @@ func (c FfiConverterEvent) Lower(value Event) C.RustBuffer {
 	return LowerIntoRustBuffer[Event](c, value)
 }
 
+func (c FfiConverterEvent) LowerExternal(value Event) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Event](c, value))
+}
+
 func (c FfiConverterEvent) Write(writer io.Writer, value Event) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.PackageId);
 		FfiConverterStringINSTANCE.Write(writer, value.Module);
@@ -38394,6 +38912,7 @@ type FfiDestroyerEvent struct {}
 func (_ FfiDestroyerEvent) Destroy(value Event) {
 	value.Destroy()
 }
+
 type EventFilter struct {
 	EmittingModule *string
 	EventType *string
@@ -38429,6 +38948,10 @@ func (c FfiConverterEventFilter) Lower(value EventFilter) C.RustBuffer {
 	return LowerIntoRustBuffer[EventFilter](c, value)
 }
 
+func (c FfiConverterEventFilter) LowerExternal(value EventFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[EventFilter](c, value))
+}
+
 func (c FfiConverterEventFilter) Write(writer io.Writer, value EventFilter) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.EmittingModule);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.EventType);
@@ -38441,6 +38964,7 @@ type FfiDestroyerEventFilter struct {}
 func (_ FfiDestroyerEventFilter) Destroy(value EventFilter) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type EventPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -38474,6 +38998,10 @@ func (c FfiConverterEventPage) Lower(value EventPage) C.RustBuffer {
 	return LowerIntoRustBuffer[EventPage](c, value)
 }
 
+func (c FfiConverterEventPage) LowerExternal(value EventPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[EventPage](c, value))
+}
+
 func (c FfiConverterEventPage) Write(writer io.Writer, value EventPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceEventINSTANCE.Write(writer, value.Data);
@@ -38484,6 +39012,7 @@ type FfiDestroyerEventPage struct {}
 func (_ FfiDestroyerEventPage) Destroy(value EventPage) {
 	value.Destroy()
 }
+
 type FaucetReceipt struct {
 	Sent []CoinInfo
 }
@@ -38510,6 +39039,10 @@ func (c FfiConverterFaucetReceipt) Lower(value FaucetReceipt) C.RustBuffer {
 	return LowerIntoRustBuffer[FaucetReceipt](c, value)
 }
 
+func (c FfiConverterFaucetReceipt) LowerExternal(value FaucetReceipt) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[FaucetReceipt](c, value))
+}
+
 func (c FfiConverterFaucetReceipt) Write(writer io.Writer, value FaucetReceipt) {
 		FfiConverterSequenceCoinInfoINSTANCE.Write(writer, value.Sent);
 }
@@ -38519,6 +39052,7 @@ type FfiDestroyerFaucetReceipt struct {}
 func (_ FfiDestroyerFaucetReceipt) Destroy(value FaucetReceipt) {
 	value.Destroy()
 }
+
 type GqlAddress struct {
 	Address *Address
 }
@@ -38545,6 +39079,10 @@ func (c FfiConverterGqlAddress) Lower(value GqlAddress) C.RustBuffer {
 	return LowerIntoRustBuffer[GqlAddress](c, value)
 }
 
+func (c FfiConverterGqlAddress) LowerExternal(value GqlAddress) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[GqlAddress](c, value))
+}
+
 func (c FfiConverterGqlAddress) Write(writer io.Writer, value GqlAddress) {
 		FfiConverterAddressINSTANCE.Write(writer, value.Address);
 }
@@ -38554,6 +39092,7 @@ type FfiDestroyerGqlAddress struct {}
 func (_ FfiDestroyerGqlAddress) Destroy(value GqlAddress) {
 	value.Destroy()
 }
+
 // Summary of gas charges.
 //
 // Storage is charged independently of computation.
@@ -38636,6 +39175,10 @@ func (c FfiConverterGasCostSummary) Lower(value GasCostSummary) C.RustBuffer {
 	return LowerIntoRustBuffer[GasCostSummary](c, value)
 }
 
+func (c FfiConverterGasCostSummary) LowerExternal(value GasCostSummary) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[GasCostSummary](c, value))
+}
+
 func (c FfiConverterGasCostSummary) Write(writer io.Writer, value GasCostSummary) {
 		FfiConverterUint64INSTANCE.Write(writer, value.ComputationCost);
 		FfiConverterUint64INSTANCE.Write(writer, value.ComputationCostBurned);
@@ -38649,6 +39192,7 @@ type FfiDestroyerGasCostSummary struct {}
 func (_ FfiDestroyerGasCostSummary) Destroy(value GasCostSummary) {
 	value.Destroy()
 }
+
 // Payment information for executing a transaction
 //
 // # BCS
@@ -38702,6 +39246,10 @@ func (c FfiConverterGasPayment) Lower(value GasPayment) C.RustBuffer {
 	return LowerIntoRustBuffer[GasPayment](c, value)
 }
 
+func (c FfiConverterGasPayment) LowerExternal(value GasPayment) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[GasPayment](c, value))
+}
+
 func (c FfiConverterGasPayment) Write(writer io.Writer, value GasPayment) {
 		FfiConverterSequenceObjectReferenceINSTANCE.Write(writer, value.Objects);
 		FfiConverterAddressINSTANCE.Write(writer, value.Owner);
@@ -38714,6 +39262,7 @@ type FfiDestroyerGasPayment struct {}
 func (_ FfiDestroyerGasPayment) Destroy(value GasPayment) {
 	value.Destroy()
 }
+
 // A JSON Web Key
 //
 // Struct that contains info for a JWK. A list of them for different kids can
@@ -38766,6 +39315,10 @@ func (c FfiConverterJwk) Lower(value Jwk) C.RustBuffer {
 	return LowerIntoRustBuffer[Jwk](c, value)
 }
 
+func (c FfiConverterJwk) LowerExternal(value Jwk) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Jwk](c, value))
+}
+
 func (c FfiConverterJwk) Write(writer io.Writer, value Jwk) {
 		FfiConverterStringINSTANCE.Write(writer, value.Kty);
 		FfiConverterStringINSTANCE.Write(writer, value.E);
@@ -38778,6 +39331,7 @@ type FfiDestroyerJwk struct {}
 func (_ FfiDestroyerJwk) Destroy(value Jwk) {
 	value.Destroy()
 }
+
 // Key to uniquely identify a JWK
 //
 // # BCS
@@ -38818,6 +39372,10 @@ func (c FfiConverterJwkId) Lower(value JwkId) C.RustBuffer {
 	return LowerIntoRustBuffer[JwkId](c, value)
 }
 
+func (c FfiConverterJwkId) LowerExternal(value JwkId) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[JwkId](c, value))
+}
+
 func (c FfiConverterJwkId) Write(writer io.Writer, value JwkId) {
 		FfiConverterStringINSTANCE.Write(writer, value.Iss);
 		FfiConverterStringINSTANCE.Write(writer, value.Kid);
@@ -38828,6 +39386,7 @@ type FfiDestroyerJwkId struct {}
 func (_ FfiDestroyerJwkId) Destroy(value JwkId) {
 	value.Destroy()
 }
+
 type MoveEnum struct {
 	Abilities *[]MoveAbility
 	Name string
@@ -38863,6 +39422,10 @@ func (c FfiConverterMoveEnum) Lower(value MoveEnum) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveEnum](c, value)
 }
 
+func (c FfiConverterMoveEnum) LowerExternal(value MoveEnum) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveEnum](c, value))
+}
+
 func (c FfiConverterMoveEnum) Write(writer io.Writer, value MoveEnum) {
 		FfiConverterOptionalSequenceMoveAbilityINSTANCE.Write(writer, value.Abilities);
 		FfiConverterStringINSTANCE.Write(writer, value.Name);
@@ -38875,6 +39438,7 @@ type FfiDestroyerMoveEnum struct {}
 func (_ FfiDestroyerMoveEnum) Destroy(value MoveEnum) {
 	value.Destroy()
 }
+
 type MoveEnumConnection struct {
 	Nodes []MoveEnum
 	PageInfo PageInfo
@@ -38904,6 +39468,10 @@ func (c FfiConverterMoveEnumConnection) Lower(value MoveEnumConnection) C.RustBu
 	return LowerIntoRustBuffer[MoveEnumConnection](c, value)
 }
 
+func (c FfiConverterMoveEnumConnection) LowerExternal(value MoveEnumConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveEnumConnection](c, value))
+}
+
 func (c FfiConverterMoveEnumConnection) Write(writer io.Writer, value MoveEnumConnection) {
 		FfiConverterSequenceMoveEnumINSTANCE.Write(writer, value.Nodes);
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
@@ -38914,6 +39482,7 @@ type FfiDestroyerMoveEnumConnection struct {}
 func (_ FfiDestroyerMoveEnumConnection) Destroy(value MoveEnumConnection) {
 	value.Destroy()
 }
+
 type MoveEnumVariant struct {
 	Fields *[]MoveField
 	Name string
@@ -38943,6 +39512,10 @@ func (c FfiConverterMoveEnumVariant) Lower(value MoveEnumVariant) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveEnumVariant](c, value)
 }
 
+func (c FfiConverterMoveEnumVariant) LowerExternal(value MoveEnumVariant) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveEnumVariant](c, value))
+}
+
 func (c FfiConverterMoveEnumVariant) Write(writer io.Writer, value MoveEnumVariant) {
 		FfiConverterOptionalSequenceMoveFieldINSTANCE.Write(writer, value.Fields);
 		FfiConverterStringINSTANCE.Write(writer, value.Name);
@@ -38953,6 +39526,7 @@ type FfiDestroyerMoveEnumVariant struct {}
 func (_ FfiDestroyerMoveEnumVariant) Destroy(value MoveEnumVariant) {
 	value.Destroy()
 }
+
 type MoveField struct {
 	Name string
 	Type *OpenMoveType
@@ -38982,6 +39556,10 @@ func (c FfiConverterMoveField) Lower(value MoveField) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveField](c, value)
 }
 
+func (c FfiConverterMoveField) LowerExternal(value MoveField) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveField](c, value))
+}
+
 func (c FfiConverterMoveField) Write(writer io.Writer, value MoveField) {
 		FfiConverterStringINSTANCE.Write(writer, value.Name);
 		FfiConverterOptionalOpenMoveTypeINSTANCE.Write(writer, value.Type);
@@ -38992,6 +39570,7 @@ type FfiDestroyerMoveField struct {}
 func (_ FfiDestroyerMoveField) Destroy(value MoveField) {
 	value.Destroy()
 }
+
 type MoveFunctionConnection struct {
 	Nodes []*MoveFunction
 	PageInfo PageInfo
@@ -39021,6 +39600,10 @@ func (c FfiConverterMoveFunctionConnection) Lower(value MoveFunctionConnection) 
 	return LowerIntoRustBuffer[MoveFunctionConnection](c, value)
 }
 
+func (c FfiConverterMoveFunctionConnection) LowerExternal(value MoveFunctionConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveFunctionConnection](c, value))
+}
+
 func (c FfiConverterMoveFunctionConnection) Write(writer io.Writer, value MoveFunctionConnection) {
 		FfiConverterSequenceMoveFunctionINSTANCE.Write(writer, value.Nodes);
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
@@ -39031,6 +39614,7 @@ type FfiDestroyerMoveFunctionConnection struct {}
 func (_ FfiDestroyerMoveFunctionConnection) Destroy(value MoveFunctionConnection) {
 	value.Destroy()
 }
+
 type MoveFunctionTypeParameter struct {
 	Constraints []MoveAbility
 }
@@ -39057,6 +39641,10 @@ func (c FfiConverterMoveFunctionTypeParameter) Lower(value MoveFunctionTypeParam
 	return LowerIntoRustBuffer[MoveFunctionTypeParameter](c, value)
 }
 
+func (c FfiConverterMoveFunctionTypeParameter) LowerExternal(value MoveFunctionTypeParameter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveFunctionTypeParameter](c, value))
+}
+
 func (c FfiConverterMoveFunctionTypeParameter) Write(writer io.Writer, value MoveFunctionTypeParameter) {
 		FfiConverterSequenceMoveAbilityINSTANCE.Write(writer, value.Constraints);
 }
@@ -39066,6 +39654,7 @@ type FfiDestroyerMoveFunctionTypeParameter struct {}
 func (_ FfiDestroyerMoveFunctionTypeParameter) Destroy(value MoveFunctionTypeParameter) {
 	value.Destroy()
 }
+
 // Location in move bytecode where an error occurred
 //
 // # BCS
@@ -39119,6 +39708,10 @@ func (c FfiConverterMoveLocation) Lower(value MoveLocation) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveLocation](c, value)
 }
 
+func (c FfiConverterMoveLocation) LowerExternal(value MoveLocation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveLocation](c, value))
+}
+
 func (c FfiConverterMoveLocation) Write(writer io.Writer, value MoveLocation) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.Package);
 		FfiConverterStringINSTANCE.Write(writer, value.Module);
@@ -39132,6 +39725,7 @@ type FfiDestroyerMoveLocation struct {}
 func (_ FfiDestroyerMoveLocation) Destroy(value MoveLocation) {
 	value.Destroy()
 }
+
 type MoveModule struct {
 	FileFormatVersion int32
 	Enums *MoveEnumConnection
@@ -39170,6 +39764,10 @@ func (c FfiConverterMoveModule) Lower(value MoveModule) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveModule](c, value)
 }
 
+func (c FfiConverterMoveModule) LowerExternal(value MoveModule) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveModule](c, value))
+}
+
 func (c FfiConverterMoveModule) Write(writer io.Writer, value MoveModule) {
 		FfiConverterInt32INSTANCE.Write(writer, value.FileFormatVersion);
 		FfiConverterOptionalMoveEnumConnectionINSTANCE.Write(writer, value.Enums);
@@ -39183,6 +39781,7 @@ type FfiDestroyerMoveModule struct {}
 func (_ FfiDestroyerMoveModule) Destroy(value MoveModule) {
 	value.Destroy()
 }
+
 type MoveModuleConnection struct {
 	Nodes []MoveModuleQuery
 	PageInfo PageInfo
@@ -39212,6 +39811,10 @@ func (c FfiConverterMoveModuleConnection) Lower(value MoveModuleConnection) C.Ru
 	return LowerIntoRustBuffer[MoveModuleConnection](c, value)
 }
 
+func (c FfiConverterMoveModuleConnection) LowerExternal(value MoveModuleConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveModuleConnection](c, value))
+}
+
 func (c FfiConverterMoveModuleConnection) Write(writer io.Writer, value MoveModuleConnection) {
 		FfiConverterSequenceMoveModuleQueryINSTANCE.Write(writer, value.Nodes);
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
@@ -39222,6 +39825,7 @@ type FfiDestroyerMoveModuleConnection struct {}
 func (_ FfiDestroyerMoveModuleConnection) Destroy(value MoveModuleConnection) {
 	value.Destroy()
 }
+
 type MoveModuleQuery struct {
 	Package MovePackageQuery
 	Name string
@@ -39251,6 +39855,10 @@ func (c FfiConverterMoveModuleQuery) Lower(value MoveModuleQuery) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveModuleQuery](c, value)
 }
 
+func (c FfiConverterMoveModuleQuery) LowerExternal(value MoveModuleQuery) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveModuleQuery](c, value))
+}
+
 func (c FfiConverterMoveModuleQuery) Write(writer io.Writer, value MoveModuleQuery) {
 		FfiConverterMovePackageQueryINSTANCE.Write(writer, value.Package);
 		FfiConverterStringINSTANCE.Write(writer, value.Name);
@@ -39261,6 +39869,7 @@ type FfiDestroyerMoveModuleQuery struct {}
 func (_ FfiDestroyerMoveModuleQuery) Destroy(value MoveModuleQuery) {
 	value.Destroy()
 }
+
 type MoveObject struct {
 	Bcs *Base64
 }
@@ -39287,6 +39896,10 @@ func (c FfiConverterMoveObject) Lower(value MoveObject) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveObject](c, value)
 }
 
+func (c FfiConverterMoveObject) LowerExternal(value MoveObject) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveObject](c, value))
+}
+
 func (c FfiConverterMoveObject) Write(writer io.Writer, value MoveObject) {
 		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.Bcs);
 }
@@ -39296,6 +39909,7 @@ type FfiDestroyerMoveObject struct {}
 func (_ FfiDestroyerMoveObject) Destroy(value MoveObject) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type MovePackagePage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -39329,6 +39943,10 @@ func (c FfiConverterMovePackagePage) Lower(value MovePackagePage) C.RustBuffer {
 	return LowerIntoRustBuffer[MovePackagePage](c, value)
 }
 
+func (c FfiConverterMovePackagePage) LowerExternal(value MovePackagePage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MovePackagePage](c, value))
+}
+
 func (c FfiConverterMovePackagePage) Write(writer io.Writer, value MovePackagePage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceMovePackageINSTANCE.Write(writer, value.Data);
@@ -39339,6 +39957,7 @@ type FfiDestroyerMovePackagePage struct {}
 func (_ FfiDestroyerMovePackagePage) Destroy(value MovePackagePage) {
 	value.Destroy()
 }
+
 type MovePackageQuery struct {
 	Address *Address
 	Bcs *Base64
@@ -39368,6 +39987,10 @@ func (c FfiConverterMovePackageQuery) Lower(value MovePackageQuery) C.RustBuffer
 	return LowerIntoRustBuffer[MovePackageQuery](c, value)
 }
 
+func (c FfiConverterMovePackageQuery) LowerExternal(value MovePackageQuery) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MovePackageQuery](c, value))
+}
+
 func (c FfiConverterMovePackageQuery) Write(writer io.Writer, value MovePackageQuery) {
 		FfiConverterAddressINSTANCE.Write(writer, value.Address);
 		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.Bcs);
@@ -39378,6 +40001,7 @@ type FfiDestroyerMovePackageQuery struct {}
 func (_ FfiDestroyerMovePackageQuery) Destroy(value MovePackageQuery) {
 	value.Destroy()
 }
+
 // A move struct
 //
 // # BCS
@@ -39433,6 +40057,10 @@ func (c FfiConverterMoveStruct) Lower(value MoveStruct) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveStruct](c, value)
 }
 
+func (c FfiConverterMoveStruct) LowerExternal(value MoveStruct) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveStruct](c, value))
+}
+
 func (c FfiConverterMoveStruct) Write(writer io.Writer, value MoveStruct) {
 		FfiConverterStructTagINSTANCE.Write(writer, value.StructType);
 		FfiConverterUint64INSTANCE.Write(writer, value.Version);
@@ -39444,6 +40072,7 @@ type FfiDestroyerMoveStruct struct {}
 func (_ FfiDestroyerMoveStruct) Destroy(value MoveStruct) {
 	value.Destroy()
 }
+
 type MoveStructConnection struct {
 	PageInfo PageInfo
 	Nodes []MoveStructQuery
@@ -39473,6 +40102,10 @@ func (c FfiConverterMoveStructConnection) Lower(value MoveStructConnection) C.Ru
 	return LowerIntoRustBuffer[MoveStructConnection](c, value)
 }
 
+func (c FfiConverterMoveStructConnection) LowerExternal(value MoveStructConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveStructConnection](c, value))
+}
+
 func (c FfiConverterMoveStructConnection) Write(writer io.Writer, value MoveStructConnection) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceMoveStructQueryINSTANCE.Write(writer, value.Nodes);
@@ -39483,6 +40116,7 @@ type FfiDestroyerMoveStructConnection struct {}
 func (_ FfiDestroyerMoveStructConnection) Destroy(value MoveStructConnection) {
 	value.Destroy()
 }
+
 type MoveStructQuery struct {
 	Abilities *[]MoveAbility
 	Name string
@@ -39518,6 +40152,10 @@ func (c FfiConverterMoveStructQuery) Lower(value MoveStructQuery) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveStructQuery](c, value)
 }
 
+func (c FfiConverterMoveStructQuery) LowerExternal(value MoveStructQuery) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveStructQuery](c, value))
+}
+
 func (c FfiConverterMoveStructQuery) Write(writer io.Writer, value MoveStructQuery) {
 		FfiConverterOptionalSequenceMoveAbilityINSTANCE.Write(writer, value.Abilities);
 		FfiConverterStringINSTANCE.Write(writer, value.Name);
@@ -39530,6 +40168,7 @@ type FfiDestroyerMoveStructQuery struct {}
 func (_ FfiDestroyerMoveStructQuery) Destroy(value MoveStructQuery) {
 	value.Destroy()
 }
+
 type MoveStructTypeParameter struct {
 	Constraints []MoveAbility
 	IsPhantom bool
@@ -39559,6 +40198,10 @@ func (c FfiConverterMoveStructTypeParameter) Lower(value MoveStructTypeParameter
 	return LowerIntoRustBuffer[MoveStructTypeParameter](c, value)
 }
 
+func (c FfiConverterMoveStructTypeParameter) LowerExternal(value MoveStructTypeParameter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveStructTypeParameter](c, value))
+}
+
 func (c FfiConverterMoveStructTypeParameter) Write(writer io.Writer, value MoveStructTypeParameter) {
 		FfiConverterSequenceMoveAbilityINSTANCE.Write(writer, value.Constraints);
 		FfiConverterBoolINSTANCE.Write(writer, value.IsPhantom);
@@ -39569,6 +40212,7 @@ type FfiDestroyerMoveStructTypeParameter struct {}
 func (_ FfiDestroyerMoveStructTypeParameter) Destroy(value MoveStructTypeParameter) {
 	value.Destroy()
 }
+
 // The result of executing a Move View Function.
 //
 // Execution errors are captured in the `error` field, in which case the
@@ -39607,6 +40251,10 @@ func (c FfiConverterMoveViewResult) Lower(value MoveViewResult) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveViewResult](c, value)
 }
 
+func (c FfiConverterMoveViewResult) LowerExternal(value MoveViewResult) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveViewResult](c, value))
+}
+
 func (c FfiConverterMoveViewResult) Write(writer io.Writer, value MoveViewResult) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Error);
 		FfiConverterOptionalSequenceStringINSTANCE.Write(writer, value.Results);
@@ -39617,6 +40265,7 @@ type FfiDestroyerMoveViewResult struct {}
 func (_ FfiDestroyerMoveViewResult) Destroy(value MoveViewResult) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type NameRegistrationPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -39650,6 +40299,10 @@ func (c FfiConverterNameRegistrationPage) Lower(value NameRegistrationPage) C.Ru
 	return LowerIntoRustBuffer[NameRegistrationPage](c, value)
 }
 
+func (c FfiConverterNameRegistrationPage) LowerExternal(value NameRegistrationPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[NameRegistrationPage](c, value))
+}
+
 func (c FfiConverterNameRegistrationPage) Write(writer io.Writer, value NameRegistrationPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceNameRegistrationINSTANCE.Write(writer, value.Data);
@@ -39660,6 +40313,7 @@ type FfiDestroyerNameRegistrationPage struct {}
 func (_ FfiDestroyerNameRegistrationPage) Destroy(value NameRegistrationPage) {
 	value.Destroy()
 }
+
 type ObjectFilter struct {
 	TypeTag *string
 	Owner **Address
@@ -39692,6 +40346,10 @@ func (c FfiConverterObjectFilter) Lower(value ObjectFilter) C.RustBuffer {
 	return LowerIntoRustBuffer[ObjectFilter](c, value)
 }
 
+func (c FfiConverterObjectFilter) LowerExternal(value ObjectFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ObjectFilter](c, value))
+}
+
 func (c FfiConverterObjectFilter) Write(writer io.Writer, value ObjectFilter) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.TypeTag);
 		FfiConverterOptionalAddressINSTANCE.Write(writer, value.Owner);
@@ -39703,6 +40361,7 @@ type FfiDestroyerObjectFilter struct {}
 func (_ FfiDestroyerObjectFilter) Destroy(value ObjectFilter) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type ObjectPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -39736,6 +40395,10 @@ func (c FfiConverterObjectPage) Lower(value ObjectPage) C.RustBuffer {
 	return LowerIntoRustBuffer[ObjectPage](c, value)
 }
 
+func (c FfiConverterObjectPage) LowerExternal(value ObjectPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ObjectPage](c, value))
+}
+
 func (c FfiConverterObjectPage) Write(writer io.Writer, value ObjectPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceObjectINSTANCE.Write(writer, value.Data);
@@ -39746,6 +40409,7 @@ type FfiDestroyerObjectPage struct {}
 func (_ FfiDestroyerObjectPage) Destroy(value ObjectPage) {
 	value.Destroy()
 }
+
 type ObjectRef struct {
 	Address *ObjectId
 	Digest string
@@ -39778,6 +40442,10 @@ func (c FfiConverterObjectRef) Lower(value ObjectRef) C.RustBuffer {
 	return LowerIntoRustBuffer[ObjectRef](c, value)
 }
 
+func (c FfiConverterObjectRef) LowerExternal(value ObjectRef) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ObjectRef](c, value))
+}
+
 func (c FfiConverterObjectRef) Write(writer io.Writer, value ObjectRef) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.Address);
 		FfiConverterStringINSTANCE.Write(writer, value.Digest);
@@ -39789,6 +40457,7 @@ type FfiDestroyerObjectRef struct {}
 func (_ FfiDestroyerObjectRef) Destroy(value ObjectRef) {
 	value.Destroy()
 }
+
 // Reference to an object
 //
 // Contains sufficient information to uniquely identify a specific object.
@@ -39832,6 +40501,10 @@ func (c FfiConverterObjectReference) Lower(value ObjectReference) C.RustBuffer {
 	return LowerIntoRustBuffer[ObjectReference](c, value)
 }
 
+func (c FfiConverterObjectReference) LowerExternal(value ObjectReference) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ObjectReference](c, value))
+}
+
 func (c FfiConverterObjectReference) Write(writer io.Writer, value ObjectReference) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.ObjectId);
 		FfiConverterUint64INSTANCE.Write(writer, value.Version);
@@ -39843,6 +40516,7 @@ type FfiDestroyerObjectReference struct {}
 func (_ FfiDestroyerObjectReference) Destroy(value ObjectReference) {
 	value.Destroy()
 }
+
 type OpenMoveType struct {
 	Repr string
 }
@@ -39869,6 +40543,10 @@ func (c FfiConverterOpenMoveType) Lower(value OpenMoveType) C.RustBuffer {
 	return LowerIntoRustBuffer[OpenMoveType](c, value)
 }
 
+func (c FfiConverterOpenMoveType) LowerExternal(value OpenMoveType) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[OpenMoveType](c, value))
+}
+
 func (c FfiConverterOpenMoveType) Write(writer io.Writer, value OpenMoveType) {
 		FfiConverterStringINSTANCE.Write(writer, value.Repr);
 }
@@ -39878,6 +40556,7 @@ type FfiDestroyerOpenMoveType struct {}
 func (_ FfiDestroyerOpenMoveType) Destroy(value OpenMoveType) {
 	value.Destroy()
 }
+
 // Information about pagination in a connection.
 type PageInfo struct {
 	// When paginating backwards, are there more items?
@@ -39918,6 +40597,10 @@ func (c FfiConverterPageInfo) Lower(value PageInfo) C.RustBuffer {
 	return LowerIntoRustBuffer[PageInfo](c, value)
 }
 
+func (c FfiConverterPageInfo) LowerExternal(value PageInfo) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[PageInfo](c, value))
+}
+
 func (c FfiConverterPageInfo) Write(writer io.Writer, value PageInfo) {
 		FfiConverterBoolINSTANCE.Write(writer, value.HasPreviousPage);
 		FfiConverterBoolINSTANCE.Write(writer, value.HasNextPage);
@@ -39930,6 +40613,7 @@ type FfiDestroyerPageInfo struct {}
 func (_ FfiDestroyerPageInfo) Destroy(value PageInfo) {
 	value.Destroy()
 }
+
 // Pagination options for querying the GraphQL server. It defaults to forward
 // pagination with the GraphQL server's max page size.
 type PaginationFilter struct {
@@ -39968,6 +40652,10 @@ func (c FfiConverterPaginationFilter) Lower(value PaginationFilter) C.RustBuffer
 	return LowerIntoRustBuffer[PaginationFilter](c, value)
 }
 
+func (c FfiConverterPaginationFilter) LowerExternal(value PaginationFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[PaginationFilter](c, value))
+}
+
 func (c FfiConverterPaginationFilter) Write(writer io.Writer, value PaginationFilter) {
 		FfiConverterDirectionINSTANCE.Write(writer, value.Direction);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Cursor);
@@ -39979,6 +40667,7 @@ type FfiDestroyerPaginationFilter struct {}
 func (_ FfiDestroyerPaginationFilter) Destroy(value PaginationFilter) {
 	value.Destroy()
 }
+
 // A key-value protocol configuration attribute.
 type ProtocolConfigAttr struct {
 	Key string
@@ -40009,6 +40698,10 @@ func (c FfiConverterProtocolConfigAttr) Lower(value ProtocolConfigAttr) C.RustBu
 	return LowerIntoRustBuffer[ProtocolConfigAttr](c, value)
 }
 
+func (c FfiConverterProtocolConfigAttr) LowerExternal(value ProtocolConfigAttr) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ProtocolConfigAttr](c, value))
+}
+
 func (c FfiConverterProtocolConfigAttr) Write(writer io.Writer, value ProtocolConfigAttr) {
 		FfiConverterStringINSTANCE.Write(writer, value.Key);
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Value);
@@ -40019,6 +40712,7 @@ type FfiDestroyerProtocolConfigAttr struct {}
 func (_ FfiDestroyerProtocolConfigAttr) Destroy(value ProtocolConfigAttr) {
 	value.Destroy()
 }
+
 // Feature flags are a form of boolean configuration that are usually used to
 // gate features while they are in development. Once a lag has been enabled, it
 // is rare for it to be disabled.
@@ -40051,6 +40745,10 @@ func (c FfiConverterProtocolConfigFeatureFlag) Lower(value ProtocolConfigFeature
 	return LowerIntoRustBuffer[ProtocolConfigFeatureFlag](c, value)
 }
 
+func (c FfiConverterProtocolConfigFeatureFlag) LowerExternal(value ProtocolConfigFeatureFlag) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ProtocolConfigFeatureFlag](c, value))
+}
+
 func (c FfiConverterProtocolConfigFeatureFlag) Write(writer io.Writer, value ProtocolConfigFeatureFlag) {
 		FfiConverterStringINSTANCE.Write(writer, value.Key);
 		FfiConverterBoolINSTANCE.Write(writer, value.Value);
@@ -40061,6 +40759,7 @@ type FfiDestroyerProtocolConfigFeatureFlag struct {}
 func (_ FfiDestroyerProtocolConfigFeatureFlag) Destroy(value ProtocolConfigFeatureFlag) {
 	value.Destroy()
 }
+
 // Information about the configuration of the protocol.
 // Constants that control how the chain operates.
 // These can only change during protocol upgrades which happen on epoch
@@ -40107,6 +40806,10 @@ func (c FfiConverterProtocolConfigs) Lower(value ProtocolConfigs) C.RustBuffer {
 	return LowerIntoRustBuffer[ProtocolConfigs](c, value)
 }
 
+func (c FfiConverterProtocolConfigs) LowerExternal(value ProtocolConfigs) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ProtocolConfigs](c, value))
+}
+
 func (c FfiConverterProtocolConfigs) Write(writer io.Writer, value ProtocolConfigs) {
 		FfiConverterUint64INSTANCE.Write(writer, value.ProtocolVersion);
 		FfiConverterSequenceProtocolConfigFeatureFlagINSTANCE.Write(writer, value.FeatureFlags);
@@ -40118,6 +40821,7 @@ type FfiDestroyerProtocolConfigs struct {}
 func (_ FfiDestroyerProtocolConfigs) Destroy(value ProtocolConfigs) {
 	value.Destroy()
 }
+
 type Query struct {
 	Query string
 	Variables *Value
@@ -40147,6 +40851,10 @@ func (c FfiConverterQuery) Lower(value Query) C.RustBuffer {
 	return LowerIntoRustBuffer[Query](c, value)
 }
 
+func (c FfiConverterQuery) LowerExternal(value Query) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Query](c, value))
+}
+
 func (c FfiConverterQuery) Write(writer io.Writer, value Query) {
 		FfiConverterStringINSTANCE.Write(writer, value.Query);
 		FfiConverterOptionalTypeValueINSTANCE.Write(writer, value.Variables);
@@ -40157,6 +40865,7 @@ type FfiDestroyerQuery struct {}
 func (_ FfiDestroyerQuery) Destroy(value Query) {
 	value.Destroy()
 }
+
 // Randomness update
 //
 // # BCS
@@ -40205,6 +40914,10 @@ func (c FfiConverterRandomnessStateUpdate) Lower(value RandomnessStateUpdate) C.
 	return LowerIntoRustBuffer[RandomnessStateUpdate](c, value)
 }
 
+func (c FfiConverterRandomnessStateUpdate) LowerExternal(value RandomnessStateUpdate) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[RandomnessStateUpdate](c, value))
+}
+
 func (c FfiConverterRandomnessStateUpdate) Write(writer io.Writer, value RandomnessStateUpdate) {
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
 		FfiConverterUint64INSTANCE.Write(writer, value.RandomnessRound);
@@ -40217,6 +40930,7 @@ type FfiDestroyerRandomnessStateUpdate struct {}
 func (_ FfiDestroyerRandomnessStateUpdate) Destroy(value RandomnessStateUpdate) {
 	value.Destroy()
 }
+
 type ServiceConfig struct {
 	// Default number of elements allowed on a single page of a connection.
 	DefaultPageSize int32
@@ -40314,6 +41028,10 @@ func (c FfiConverterServiceConfig) Lower(value ServiceConfig) C.RustBuffer {
 	return LowerIntoRustBuffer[ServiceConfig](c, value)
 }
 
+func (c FfiConverterServiceConfig) LowerExternal(value ServiceConfig) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ServiceConfig](c, value))
+}
+
 func (c FfiConverterServiceConfig) Write(writer io.Writer, value ServiceConfig) {
 		FfiConverterInt32INSTANCE.Write(writer, value.DefaultPageSize);
 		FfiConverterSequenceFeatureINSTANCE.Write(writer, value.EnabledFeatures);
@@ -40335,6 +41053,7 @@ type FfiDestroyerServiceConfig struct {}
 func (_ FfiDestroyerServiceConfig) Destroy(value ServiceConfig) {
 	value.Destroy()
 }
+
 type SignedTransaction struct {
 	Transaction *Transaction
 	Signatures []*UserSignature
@@ -40364,6 +41083,10 @@ func (c FfiConverterSignedTransaction) Lower(value SignedTransaction) C.RustBuff
 	return LowerIntoRustBuffer[SignedTransaction](c, value)
 }
 
+func (c FfiConverterSignedTransaction) LowerExternal(value SignedTransaction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[SignedTransaction](c, value))
+}
+
 func (c FfiConverterSignedTransaction) Write(writer io.Writer, value SignedTransaction) {
 		FfiConverterTransactionINSTANCE.Write(writer, value.Transaction);
 		FfiConverterSequenceUserSignatureINSTANCE.Write(writer, value.Signatures);
@@ -40374,6 +41097,7 @@ type FfiDestroyerSignedTransaction struct {}
 func (_ FfiDestroyerSignedTransaction) Destroy(value SignedTransaction) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type SignedTransactionPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -40407,6 +41131,10 @@ func (c FfiConverterSignedTransactionPage) Lower(value SignedTransactionPage) C.
 	return LowerIntoRustBuffer[SignedTransactionPage](c, value)
 }
 
+func (c FfiConverterSignedTransactionPage) LowerExternal(value SignedTransactionPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[SignedTransactionPage](c, value))
+}
+
 func (c FfiConverterSignedTransactionPage) Write(writer io.Writer, value SignedTransactionPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceSignedTransactionINSTANCE.Write(writer, value.Data);
@@ -40417,6 +41145,7 @@ type FfiDestroyerSignedTransactionPage struct {}
 func (_ FfiDestroyerSignedTransactionPage) Destroy(value SignedTransactionPage) {
 	value.Destroy()
 }
+
 type TransactionDataEffects struct {
 	Tx SignedTransaction
 	Effects *TransactionEffects
@@ -40446,6 +41175,10 @@ func (c FfiConverterTransactionDataEffects) Lower(value TransactionDataEffects) 
 	return LowerIntoRustBuffer[TransactionDataEffects](c, value)
 }
 
+func (c FfiConverterTransactionDataEffects) LowerExternal(value TransactionDataEffects) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionDataEffects](c, value))
+}
+
 func (c FfiConverterTransactionDataEffects) Write(writer io.Writer, value TransactionDataEffects) {
 		FfiConverterSignedTransactionINSTANCE.Write(writer, value.Tx);
 		FfiConverterTransactionEffectsINSTANCE.Write(writer, value.Effects);
@@ -40456,6 +41189,7 @@ type FfiDestroyerTransactionDataEffects struct {}
 func (_ FfiDestroyerTransactionDataEffects) Destroy(value TransactionDataEffects) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type TransactionDataEffectsPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -40489,6 +41223,10 @@ func (c FfiConverterTransactionDataEffectsPage) Lower(value TransactionDataEffec
 	return LowerIntoRustBuffer[TransactionDataEffectsPage](c, value)
 }
 
+func (c FfiConverterTransactionDataEffectsPage) LowerExternal(value TransactionDataEffectsPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionDataEffectsPage](c, value))
+}
+
 func (c FfiConverterTransactionDataEffectsPage) Write(writer io.Writer, value TransactionDataEffectsPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceTransactionDataEffectsINSTANCE.Write(writer, value.Data);
@@ -40499,6 +41237,7 @@ type FfiDestroyerTransactionDataEffectsPage struct {}
 func (_ FfiDestroyerTransactionDataEffectsPage) Destroy(value TransactionDataEffectsPage) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type TransactionEffectsPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -40532,6 +41271,10 @@ func (c FfiConverterTransactionEffectsPage) Lower(value TransactionEffectsPage) 
 	return LowerIntoRustBuffer[TransactionEffectsPage](c, value)
 }
 
+func (c FfiConverterTransactionEffectsPage) LowerExternal(value TransactionEffectsPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionEffectsPage](c, value))
+}
+
 func (c FfiConverterTransactionEffectsPage) Write(writer io.Writer, value TransactionEffectsPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceTransactionEffectsINSTANCE.Write(writer, value.Data);
@@ -40542,6 +41285,7 @@ type FfiDestroyerTransactionEffectsPage struct {}
 func (_ FfiDestroyerTransactionEffectsPage) Destroy(value TransactionEffectsPage) {
 	value.Destroy()
 }
+
 // Version 1 of TransactionEffects
 //
 // # BCS
@@ -40638,6 +41382,10 @@ func (c FfiConverterTransactionEffectsV1) Lower(value TransactionEffectsV1) C.Ru
 	return LowerIntoRustBuffer[TransactionEffectsV1](c, value)
 }
 
+func (c FfiConverterTransactionEffectsV1) LowerExternal(value TransactionEffectsV1) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionEffectsV1](c, value))
+}
+
 func (c FfiConverterTransactionEffectsV1) Write(writer io.Writer, value TransactionEffectsV1) {
 		FfiConverterExecutionStatusINSTANCE.Write(writer, value.Status);
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
@@ -40657,6 +41405,7 @@ type FfiDestroyerTransactionEffectsV1 struct {}
 func (_ FfiDestroyerTransactionEffectsV1) Destroy(value TransactionEffectsV1) {
 	value.Destroy()
 }
+
 type TransactionMetadata struct {
 	GasBudget *uint64
 	GasObjects *[]ObjectRef
@@ -40695,6 +41444,10 @@ func (c FfiConverterTransactionMetadata) Lower(value TransactionMetadata) C.Rust
 	return LowerIntoRustBuffer[TransactionMetadata](c, value)
 }
 
+func (c FfiConverterTransactionMetadata) LowerExternal(value TransactionMetadata) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionMetadata](c, value))
+}
+
 func (c FfiConverterTransactionMetadata) Write(writer io.Writer, value TransactionMetadata) {
 		FfiConverterOptionalUint64INSTANCE.Write(writer, value.GasBudget);
 		FfiConverterOptionalSequenceObjectRefINSTANCE.Write(writer, value.GasObjects);
@@ -40708,6 +41461,7 @@ type FfiDestroyerTransactionMetadata struct {}
 func (_ FfiDestroyerTransactionMetadata) Destroy(value TransactionMetadata) {
 	value.Destroy()
 }
+
 // The result of an async sign call containing the `UserSignature`.
 type TransactionSignerFnOutput struct {
 	Signature *UserSignature
@@ -40735,6 +41489,10 @@ func (c FfiConverterTransactionSignerFnOutput) Lower(value TransactionSignerFnOu
 	return LowerIntoRustBuffer[TransactionSignerFnOutput](c, value)
 }
 
+func (c FfiConverterTransactionSignerFnOutput) LowerExternal(value TransactionSignerFnOutput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionSignerFnOutput](c, value))
+}
+
 func (c FfiConverterTransactionSignerFnOutput) Write(writer io.Writer, value TransactionSignerFnOutput) {
 		FfiConverterUserSignatureINSTANCE.Write(writer, value.Signature);
 }
@@ -40744,6 +41502,7 @@ type FfiDestroyerTransactionSignerFnOutput struct {}
 func (_ FfiDestroyerTransactionSignerFnOutput) Destroy(value TransactionSignerFnOutput) {
 	value.Destroy()
 }
+
 type TransactionsFilter struct {
 	Function *string
 	Kind *TransactionBlockKindInput
@@ -40800,6 +41559,10 @@ func (c FfiConverterTransactionsFilter) Lower(value TransactionsFilter) C.RustBu
 	return LowerIntoRustBuffer[TransactionsFilter](c, value)
 }
 
+func (c FfiConverterTransactionsFilter) LowerExternal(value TransactionsFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionsFilter](c, value))
+}
+
 func (c FfiConverterTransactionsFilter) Write(writer io.Writer, value TransactionsFilter) {
 		FfiConverterOptionalStringINSTANCE.Write(writer, value.Function);
 		FfiConverterOptionalTransactionBlockKindInputINSTANCE.Write(writer, value.Kind);
@@ -40819,6 +41582,7 @@ type FfiDestroyerTransactionsFilter struct {}
 func (_ FfiDestroyerTransactionsFilter) Destroy(value TransactionsFilter) {
 	value.Destroy()
 }
+
 // Identifies a struct and the module it was defined in
 //
 // # BCS
@@ -40860,6 +41624,10 @@ func (c FfiConverterTypeOrigin) Lower(value TypeOrigin) C.RustBuffer {
 	return LowerIntoRustBuffer[TypeOrigin](c, value)
 }
 
+func (c FfiConverterTypeOrigin) LowerExternal(value TypeOrigin) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TypeOrigin](c, value))
+}
+
 func (c FfiConverterTypeOrigin) Write(writer io.Writer, value TypeOrigin) {
 		FfiConverterIdentifierINSTANCE.Write(writer, value.ModuleName);
 		FfiConverterIdentifierINSTANCE.Write(writer, value.StructName);
@@ -40871,6 +41639,7 @@ type FfiDestroyerTypeOrigin struct {}
 func (_ FfiDestroyerTypeOrigin) Destroy(value TypeOrigin) {
 	value.Destroy()
 }
+
 // A shared object that wasn't changed during execution
 //
 // # BCS
@@ -40909,6 +41678,10 @@ func (c FfiConverterUnchangedSharedObject) Lower(value UnchangedSharedObject) C.
 	return LowerIntoRustBuffer[UnchangedSharedObject](c, value)
 }
 
+func (c FfiConverterUnchangedSharedObject) LowerExternal(value UnchangedSharedObject) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[UnchangedSharedObject](c, value))
+}
+
 func (c FfiConverterUnchangedSharedObject) Write(writer io.Writer, value UnchangedSharedObject) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.ObjectId);
 		FfiConverterUnchangedSharedKindINSTANCE.Write(writer, value.Kind);
@@ -40919,6 +41692,7 @@ type FfiDestroyerUnchangedSharedObject struct {}
 func (_ FfiDestroyerUnchangedSharedObject) Destroy(value UnchangedSharedObject) {
 	value.Destroy()
 }
+
 // Upgraded package info for the linkage table
 //
 // # BCS
@@ -40959,6 +41733,10 @@ func (c FfiConverterUpgradeInfo) Lower(value UpgradeInfo) C.RustBuffer {
 	return LowerIntoRustBuffer[UpgradeInfo](c, value)
 }
 
+func (c FfiConverterUpgradeInfo) LowerExternal(value UpgradeInfo) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[UpgradeInfo](c, value))
+}
+
 func (c FfiConverterUpgradeInfo) Write(writer io.Writer, value UpgradeInfo) {
 		FfiConverterObjectIdINSTANCE.Write(writer, value.UpgradedId);
 		FfiConverterUint64INSTANCE.Write(writer, value.UpgradedVersion);
@@ -40969,6 +41747,7 @@ type FfiDestroyerUpgradeInfo struct {}
 func (_ FfiDestroyerUpgradeInfo) Destroy(value UpgradeInfo) {
 	value.Destroy()
 }
+
 // Represents a validator in the system.
 type Validator struct {
 	// The APY of this validator in basis points.
@@ -41098,6 +41877,10 @@ func (c FfiConverterValidator) Lower(value Validator) C.RustBuffer {
 	return LowerIntoRustBuffer[Validator](c, value)
 }
 
+func (c FfiConverterValidator) LowerExternal(value Validator) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Validator](c, value))
+}
+
 func (c FfiConverterValidator) Write(writer io.Writer, value Validator) {
 		FfiConverterOptionalInt32INSTANCE.Write(writer, value.Apy);
 		FfiConverterAddressINSTANCE.Write(writer, value.Address);
@@ -41130,6 +41913,7 @@ type FfiDestroyerValidator struct {}
 func (_ FfiDestroyerValidator) Destroy(value Validator) {
 	value.Destroy()
 }
+
 // The Validator Set for a particular epoch.
 //
 // # BCS
@@ -41169,6 +41953,10 @@ func (c FfiConverterValidatorCommittee) Lower(value ValidatorCommittee) C.RustBu
 	return LowerIntoRustBuffer[ValidatorCommittee](c, value)
 }
 
+func (c FfiConverterValidatorCommittee) LowerExternal(value ValidatorCommittee) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ValidatorCommittee](c, value))
+}
+
 func (c FfiConverterValidatorCommittee) Write(writer io.Writer, value ValidatorCommittee) {
 		FfiConverterUint64INSTANCE.Write(writer, value.Epoch);
 		FfiConverterSequenceValidatorCommitteeMemberINSTANCE.Write(writer, value.Members);
@@ -41179,6 +41967,7 @@ type FfiDestroyerValidatorCommittee struct {}
 func (_ FfiDestroyerValidatorCommittee) Destroy(value ValidatorCommittee) {
 	value.Destroy()
 }
+
 // A member of a Validator Committee
 //
 // # BCS
@@ -41218,6 +42007,10 @@ func (c FfiConverterValidatorCommitteeMember) Lower(value ValidatorCommitteeMemb
 	return LowerIntoRustBuffer[ValidatorCommitteeMember](c, value)
 }
 
+func (c FfiConverterValidatorCommitteeMember) LowerExternal(value ValidatorCommitteeMember) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ValidatorCommitteeMember](c, value))
+}
+
 func (c FfiConverterValidatorCommitteeMember) Write(writer io.Writer, value ValidatorCommitteeMember) {
 		FfiConverterBls12381PublicKeyINSTANCE.Write(writer, value.PublicKey);
 		FfiConverterUint64INSTANCE.Write(writer, value.Stake);
@@ -41228,6 +42021,7 @@ type FfiDestroyerValidatorCommitteeMember struct {}
 func (_ FfiDestroyerValidatorCommitteeMember) Destroy(value ValidatorCommitteeMember) {
 	value.Destroy()
 }
+
 type ValidatorConnection struct {
 	PageInfo PageInfo
 	Nodes []Validator
@@ -41257,6 +42051,10 @@ func (c FfiConverterValidatorConnection) Lower(value ValidatorConnection) C.Rust
 	return LowerIntoRustBuffer[ValidatorConnection](c, value)
 }
 
+func (c FfiConverterValidatorConnection) LowerExternal(value ValidatorConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ValidatorConnection](c, value))
+}
+
 func (c FfiConverterValidatorConnection) Write(writer io.Writer, value ValidatorConnection) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceValidatorINSTANCE.Write(writer, value.Nodes);
@@ -41267,6 +42065,7 @@ type FfiDestroyerValidatorConnection struct {}
 func (_ FfiDestroyerValidatorConnection) Destroy(value ValidatorConnection) {
 	value.Destroy()
 }
+
 // The credentials related fields associated with a validator.
 type ValidatorCredentials struct {
 	AuthorityPubKey *Base64
@@ -41312,6 +42111,10 @@ func (c FfiConverterValidatorCredentials) Lower(value ValidatorCredentials) C.Ru
 	return LowerIntoRustBuffer[ValidatorCredentials](c, value)
 }
 
+func (c FfiConverterValidatorCredentials) LowerExternal(value ValidatorCredentials) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ValidatorCredentials](c, value))
+}
+
 func (c FfiConverterValidatorCredentials) Write(writer io.Writer, value ValidatorCredentials) {
 		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.AuthorityPubKey);
 		FfiConverterOptionalTypeBase64INSTANCE.Write(writer, value.NetworkPubKey);
@@ -41327,6 +42130,7 @@ type FfiDestroyerValidatorCredentials struct {}
 func (_ FfiDestroyerValidatorCredentials) Destroy(value ValidatorCredentials) {
 	value.Destroy()
 }
+
 // A page of items returned by the GraphQL server.
 type ValidatorPage struct {
 	// Information about the page, such as the cursor and whether there are
@@ -41360,6 +42164,10 @@ func (c FfiConverterValidatorPage) Lower(value ValidatorPage) C.RustBuffer {
 	return LowerIntoRustBuffer[ValidatorPage](c, value)
 }
 
+func (c FfiConverterValidatorPage) LowerExternal(value ValidatorPage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ValidatorPage](c, value))
+}
+
 func (c FfiConverterValidatorPage) Write(writer io.Writer, value ValidatorPage) {
 		FfiConverterPageInfoINSTANCE.Write(writer, value.PageInfo);
 		FfiConverterSequenceValidatorINSTANCE.Write(writer, value.Data);
@@ -41370,6 +42178,7 @@ type FfiDestroyerValidatorPage struct {}
 func (_ FfiDestroyerValidatorPage) Destroy(value ValidatorPage) {
 	value.Destroy()
 }
+
 type ValidatorSet struct {
 	// Object ID of the `Table` storing the inactive staking pools.
 	InactivePoolsId **ObjectId
@@ -41439,6 +42248,10 @@ func (c FfiConverterValidatorSet) Lower(value ValidatorSet) C.RustBuffer {
 	return LowerIntoRustBuffer[ValidatorSet](c, value)
 }
 
+func (c FfiConverterValidatorSet) LowerExternal(value ValidatorSet) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ValidatorSet](c, value))
+}
+
 func (c FfiConverterValidatorSet) Write(writer io.Writer, value ValidatorSet) {
 		FfiConverterOptionalObjectIdINSTANCE.Write(writer, value.InactivePoolsId);
 		FfiConverterOptionalInt32INSTANCE.Write(writer, value.InactivePoolsSize);
@@ -41457,6 +42270,7 @@ type FfiDestroyerValidatorSet struct {}
 func (_ FfiDestroyerValidatorSet) Destroy(value ValidatorSet) {
 	value.Destroy()
 }
+
 // A claim of the iss in a zklogin proof
 //
 // # BCS
@@ -41495,6 +42309,10 @@ func (c FfiConverterZkLoginClaim) Lower(value ZkLoginClaim) C.RustBuffer {
 	return LowerIntoRustBuffer[ZkLoginClaim](c, value)
 }
 
+func (c FfiConverterZkLoginClaim) LowerExternal(value ZkLoginClaim) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ZkLoginClaim](c, value))
+}
+
 func (c FfiConverterZkLoginClaim) Write(writer io.Writer, value ZkLoginClaim) {
 		FfiConverterStringINSTANCE.Write(writer, value.Value);
 		FfiConverterUint8INSTANCE.Write(writer, value.IndexMod4);
@@ -41526,6 +42344,10 @@ func (c FfiConverterBatchSendStatusType) Lift(rb RustBufferI) BatchSendStatusTyp
 func (c FfiConverterBatchSendStatusType) Lower(value BatchSendStatusType) C.RustBuffer {
 	return LowerIntoRustBuffer[BatchSendStatusType](c, value)
 }
+
+func (c FfiConverterBatchSendStatusType) LowerExternal(value BatchSendStatusType) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[BatchSendStatusType](c, value))
+}
 func (FfiConverterBatchSendStatusType) Read(reader io.Reader) BatchSendStatusType {
 	id := readInt32(reader)
 	return BatchSendStatusType(id)
@@ -41539,6 +42361,7 @@ type FfiDestroyerBatchSendStatusType struct {}
 
 func (_ FfiDestroyerBatchSendStatusType) Destroy(value BatchSendStatusType) {
 }
+
 
 
 // An error with an argument to a command
@@ -41680,6 +42503,10 @@ func (c FfiConverterCommandArgumentError) Lift(rb RustBufferI) CommandArgumentEr
 func (c FfiConverterCommandArgumentError) Lower(value CommandArgumentError) C.RustBuffer {
 	return LowerIntoRustBuffer[CommandArgumentError](c, value)
 }
+
+func (c FfiConverterCommandArgumentError) LowerExternal(value CommandArgumentError) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[CommandArgumentError](c, value))
+}
 func (FfiConverterCommandArgumentError) Read(reader io.Reader) CommandArgumentError {
 	id := readInt32(reader)
 	switch (id) {
@@ -41776,6 +42603,7 @@ func (_ FfiDestroyerCommandArgumentError) Destroy(value CommandArgumentError) {
 }
 
 
+
 // Pagination direction.
 type Direction uint
 
@@ -41795,6 +42623,10 @@ func (c FfiConverterDirection) Lift(rb RustBufferI) Direction {
 func (c FfiConverterDirection) Lower(value Direction) C.RustBuffer {
 	return LowerIntoRustBuffer[Direction](c, value)
 }
+
+func (c FfiConverterDirection) LowerExternal(value Direction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Direction](c, value))
+}
 func (FfiConverterDirection) Read(reader io.Reader) Direction {
 	id := readInt32(reader)
 	return Direction(id)
@@ -41808,6 +42640,7 @@ type FfiDestroyerDirection struct {}
 
 func (_ FfiDestroyerDirection) Destroy(value Direction) {
 }
+
 
 
 // An error that can occur during the execution of a transaction
@@ -42208,6 +43041,10 @@ func (c FfiConverterExecutionError) Lift(rb RustBufferI) ExecutionError {
 func (c FfiConverterExecutionError) Lower(value ExecutionError) C.RustBuffer {
 	return LowerIntoRustBuffer[ExecutionError](c, value)
 }
+
+func (c FfiConverterExecutionError) LowerExternal(value ExecutionError) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ExecutionError](c, value))
+}
 func (FfiConverterExecutionError) Read(reader io.Reader) ExecutionError {
 	id := readInt32(reader)
 	switch (id) {
@@ -42478,6 +43315,7 @@ func (_ FfiDestroyerExecutionError) Destroy(value ExecutionError) {
 }
 
 
+
 // The status of an executed Transaction
 //
 // # BCS
@@ -42525,6 +43363,10 @@ func (c FfiConverterExecutionStatus) Lift(rb RustBufferI) ExecutionStatus {
 func (c FfiConverterExecutionStatus) Lower(value ExecutionStatus) C.RustBuffer {
 	return LowerIntoRustBuffer[ExecutionStatus](c, value)
 }
+
+func (c FfiConverterExecutionStatus) LowerExternal(value ExecutionStatus) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ExecutionStatus](c, value))
+}
 func (FfiConverterExecutionStatus) Read(reader io.Reader) ExecutionStatus {
 	id := readInt32(reader)
 	switch (id) {
@@ -42562,6 +43404,7 @@ func (_ FfiDestroyerExecutionStatus) Destroy(value ExecutionStatus) {
 }
 
 
+
 type Feature uint
 
 const (
@@ -42583,6 +43426,10 @@ func (c FfiConverterFeature) Lift(rb RustBufferI) Feature {
 func (c FfiConverterFeature) Lower(value Feature) C.RustBuffer {
 	return LowerIntoRustBuffer[Feature](c, value)
 }
+
+func (c FfiConverterFeature) LowerExternal(value Feature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[Feature](c, value))
+}
 func (FfiConverterFeature) Read(reader io.Reader) Feature {
 	id := readInt32(reader)
 	return Feature(id)
@@ -42596,6 +43443,7 @@ type FfiDestroyerFeature struct {}
 
 func (_ FfiDestroyerFeature) Destroy(value Feature) {
 }
+
 
 
 // A 1-byte domain separator for hashing Object ID in IOTA. It starts from
@@ -42619,6 +43467,10 @@ func (c FfiConverterHashingIntentScope) Lift(rb RustBufferI) HashingIntentScope 
 func (c FfiConverterHashingIntentScope) Lower(value HashingIntentScope) C.RustBuffer {
 	return LowerIntoRustBuffer[HashingIntentScope](c, value)
 }
+
+func (c FfiConverterHashingIntentScope) LowerExternal(value HashingIntentScope) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[HashingIntentScope](c, value))
+}
 func (FfiConverterHashingIntentScope) Read(reader io.Reader) HashingIntentScope {
 	id := readInt32(reader)
 	return HashingIntentScope(id)
@@ -42632,6 +43484,7 @@ type FfiDestroyerHashingIntentScope struct {}
 
 func (_ FfiDestroyerHashingIntentScope) Destroy(value HashingIntentScope) {
 }
+
 
 
 // Defines what happened to an ObjectId during execution
@@ -42668,6 +43521,10 @@ func (c FfiConverterIdOperation) Lift(rb RustBufferI) IdOperation {
 func (c FfiConverterIdOperation) Lower(value IdOperation) C.RustBuffer {
 	return LowerIntoRustBuffer[IdOperation](c, value)
 }
+
+func (c FfiConverterIdOperation) LowerExternal(value IdOperation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[IdOperation](c, value))
+}
 func (FfiConverterIdOperation) Read(reader io.Reader) IdOperation {
 	id := readInt32(reader)
 	return IdOperation(id)
@@ -42681,6 +43538,7 @@ type FfiDestroyerIdOperation struct {}
 
 func (_ FfiDestroyerIdOperation) Destroy(value IdOperation) {
 }
+
 
 
 // Byte signifying the application id of an Intent
@@ -42716,6 +43574,10 @@ func (c FfiConverterIntentAppId) Lift(rb RustBufferI) IntentAppId {
 func (c FfiConverterIntentAppId) Lower(value IntentAppId) C.RustBuffer {
 	return LowerIntoRustBuffer[IntentAppId](c, value)
 }
+
+func (c FfiConverterIntentAppId) LowerExternal(value IntentAppId) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[IntentAppId](c, value))
+}
 func (FfiConverterIntentAppId) Read(reader io.Reader) IntentAppId {
 	id := readInt32(reader)
 	return IntentAppId(id)
@@ -42729,6 +43591,7 @@ type FfiDestroyerIntentAppId struct {}
 
 func (_ FfiDestroyerIntentAppId) Destroy(value IntentAppId) {
 }
+
 // Intent errors.
 type IntentError struct {
 	err error
@@ -42878,6 +43741,10 @@ func (c FfiConverterIntentError) Lower(value *IntentError) C.RustBuffer {
 	return LowerIntoRustBuffer[*IntentError](c, value)
 }
 
+func (c FfiConverterIntentError) LowerExternal(value *IntentError) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*IntentError](c, value))
+}
+
 func (c FfiConverterIntentError) Read(reader io.Reader) *IntentError {
 	errorID := readUint32(reader)
 
@@ -42991,6 +43858,10 @@ func (c FfiConverterIntentScope) Lift(rb RustBufferI) IntentScope {
 func (c FfiConverterIntentScope) Lower(value IntentScope) C.RustBuffer {
 	return LowerIntoRustBuffer[IntentScope](c, value)
 }
+
+func (c FfiConverterIntentScope) LowerExternal(value IntentScope) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[IntentScope](c, value))
+}
 func (FfiConverterIntentScope) Read(reader io.Reader) IntentScope {
 	id := readInt32(reader)
 	return IntentScope(id)
@@ -43004,6 +43875,7 @@ type FfiDestroyerIntentScope struct {}
 
 func (_ FfiDestroyerIntentScope) Destroy(value IntentScope) {
 }
+
 
 
 // Byte signifying the version of an Intent
@@ -43036,6 +43908,10 @@ func (c FfiConverterIntentVersion) Lift(rb RustBufferI) IntentVersion {
 func (c FfiConverterIntentVersion) Lower(value IntentVersion) C.RustBuffer {
 	return LowerIntoRustBuffer[IntentVersion](c, value)
 }
+
+func (c FfiConverterIntentVersion) LowerExternal(value IntentVersion) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[IntentVersion](c, value))
+}
 func (FfiConverterIntentVersion) Read(reader io.Reader) IntentVersion {
 	id := readInt32(reader)
 	return IntentVersion(id)
@@ -43049,6 +43925,7 @@ type FfiDestroyerIntentVersion struct {}
 
 func (_ FfiDestroyerIntentVersion) Destroy(value IntentVersion) {
 }
+
 
 
 type MnemonicLength uint
@@ -43069,6 +43946,10 @@ func (c FfiConverterMnemonicLength) Lift(rb RustBufferI) MnemonicLength {
 func (c FfiConverterMnemonicLength) Lower(value MnemonicLength) C.RustBuffer {
 	return LowerIntoRustBuffer[MnemonicLength](c, value)
 }
+
+func (c FfiConverterMnemonicLength) LowerExternal(value MnemonicLength) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MnemonicLength](c, value))
+}
 func (FfiConverterMnemonicLength) Read(reader io.Reader) MnemonicLength {
 	id := readInt32(reader)
 	return MnemonicLength(id)
@@ -43082,6 +43963,7 @@ type FfiDestroyerMnemonicLength struct {}
 
 func (_ FfiDestroyerMnemonicLength) Destroy(value MnemonicLength) {
 }
+
 
 
 type MoveAbility uint
@@ -43104,6 +43986,10 @@ func (c FfiConverterMoveAbility) Lift(rb RustBufferI) MoveAbility {
 func (c FfiConverterMoveAbility) Lower(value MoveAbility) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveAbility](c, value)
 }
+
+func (c FfiConverterMoveAbility) LowerExternal(value MoveAbility) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveAbility](c, value))
+}
 func (FfiConverterMoveAbility) Read(reader io.Reader) MoveAbility {
 	id := readInt32(reader)
 	return MoveAbility(id)
@@ -43117,6 +44003,7 @@ type FfiDestroyerMoveAbility struct {}
 
 func (_ FfiDestroyerMoveAbility) Destroy(value MoveAbility) {
 }
+
 
 
 type MoveVisibility uint
@@ -43138,6 +44025,10 @@ func (c FfiConverterMoveVisibility) Lift(rb RustBufferI) MoveVisibility {
 func (c FfiConverterMoveVisibility) Lower(value MoveVisibility) C.RustBuffer {
 	return LowerIntoRustBuffer[MoveVisibility](c, value)
 }
+
+func (c FfiConverterMoveVisibility) LowerExternal(value MoveVisibility) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoveVisibility](c, value))
+}
 func (FfiConverterMoveVisibility) Read(reader io.Reader) MoveVisibility {
 	id := readInt32(reader)
 	return MoveVisibility(id)
@@ -43151,6 +44042,7 @@ type FfiDestroyerMoveVisibility struct {}
 
 func (_ FfiDestroyerMoveVisibility) Destroy(value MoveVisibility) {
 }
+
 
 
 // Two different view options for a name.
@@ -43173,6 +44065,10 @@ func (c FfiConverterNameFormat) Lift(rb RustBufferI) NameFormat {
 func (c FfiConverterNameFormat) Lower(value NameFormat) C.RustBuffer {
 	return LowerIntoRustBuffer[NameFormat](c, value)
 }
+
+func (c FfiConverterNameFormat) LowerExternal(value NameFormat) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[NameFormat](c, value))
+}
 func (FfiConverterNameFormat) Read(reader io.Reader) NameFormat {
 	id := readInt32(reader)
 	return NameFormat(id)
@@ -43186,6 +44082,7 @@ type FfiDestroyerNameFormat struct {}
 
 func (_ FfiDestroyerNameFormat) Destroy(value NameFormat) {
 }
+
 
 
 // State of an object prior to execution
@@ -43236,6 +44133,10 @@ func (c FfiConverterObjectIn) Lift(rb RustBufferI) ObjectIn {
 func (c FfiConverterObjectIn) Lower(value ObjectIn) C.RustBuffer {
 	return LowerIntoRustBuffer[ObjectIn](c, value)
 }
+
+func (c FfiConverterObjectIn) LowerExternal(value ObjectIn) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ObjectIn](c, value))
+}
 func (FfiConverterObjectIn) Read(reader io.Reader) ObjectIn {
 	id := readInt32(reader)
 	switch (id) {
@@ -43273,6 +44174,7 @@ type FfiDestroyerObjectIn struct {}
 func (_ FfiDestroyerObjectIn) Destroy(value ObjectIn) {
 	value.Destroy()
 }
+
 
 
 // State of an object after execution
@@ -43333,6 +44235,10 @@ func (c FfiConverterObjectOut) Lift(rb RustBufferI) ObjectOut {
 func (c FfiConverterObjectOut) Lower(value ObjectOut) C.RustBuffer {
 	return LowerIntoRustBuffer[ObjectOut](c, value)
 }
+
+func (c FfiConverterObjectOut) LowerExternal(value ObjectOut) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[ObjectOut](c, value))
+}
 func (FfiConverterObjectOut) Read(reader io.Reader) ObjectOut {
 	id := readInt32(reader)
 	switch (id) {
@@ -43377,6 +44283,7 @@ type FfiDestroyerObjectOut struct {}
 func (_ FfiDestroyerObjectOut) Destroy(value ObjectOut) {
 	value.Destroy()
 }
+
 
 
 // An error with a upgrading a package
@@ -43463,6 +44370,10 @@ func (c FfiConverterPackageUpgradeError) Lift(rb RustBufferI) PackageUpgradeErro
 func (c FfiConverterPackageUpgradeError) Lower(value PackageUpgradeError) C.RustBuffer {
 	return LowerIntoRustBuffer[PackageUpgradeError](c, value)
 }
+
+func (c FfiConverterPackageUpgradeError) LowerExternal(value PackageUpgradeError) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[PackageUpgradeError](c, value))
+}
 func (FfiConverterPackageUpgradeError) Read(reader io.Reader) PackageUpgradeError {
 	id := readInt32(reader)
 	switch (id) {
@@ -43526,6 +44437,7 @@ type FfiDestroyerPackageUpgradeError struct {}
 func (_ FfiDestroyerPackageUpgradeError) Destroy(value PackageUpgradeError) {
 	value.Destroy()
 }
+
 type SdkFfiError struct {
 	err error
 }
@@ -43582,6 +44494,10 @@ func (c FfiConverterSdkFfiError) Lift(eb RustBufferI) *SdkFfiError {
 
 func (c FfiConverterSdkFfiError) Lower(value *SdkFfiError) C.RustBuffer {
 	return LowerIntoRustBuffer[*SdkFfiError](c, value)
+}
+
+func (c FfiConverterSdkFfiError) LowerExternal(value *SdkFfiError) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*SdkFfiError](c, value))
 }
 
 func (c FfiConverterSdkFfiError) Read(reader io.Reader) *SdkFfiError {
@@ -43665,6 +44581,10 @@ func (c FfiConverterSignatureScheme) Lift(rb RustBufferI) SignatureScheme {
 func (c FfiConverterSignatureScheme) Lower(value SignatureScheme) C.RustBuffer {
 	return LowerIntoRustBuffer[SignatureScheme](c, value)
 }
+
+func (c FfiConverterSignatureScheme) LowerExternal(value SignatureScheme) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[SignatureScheme](c, value))
+}
 func (FfiConverterSignatureScheme) Read(reader io.Reader) SignatureScheme {
 	id := readInt32(reader)
 	return SignatureScheme(id)
@@ -43678,6 +44598,7 @@ type FfiDestroyerSignatureScheme struct {}
 
 func (_ FfiDestroyerSignatureScheme) Destroy(value SignatureScheme) {
 }
+
 
 
 // A transaction argument used in programmable transactions.
@@ -43719,6 +44640,10 @@ func (c FfiConverterTransactionArgument) Lift(rb RustBufferI) TransactionArgumen
 
 func (c FfiConverterTransactionArgument) Lower(value TransactionArgument) C.RustBuffer {
 	return LowerIntoRustBuffer[TransactionArgument](c, value)
+}
+
+func (c FfiConverterTransactionArgument) LowerExternal(value TransactionArgument) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionArgument](c, value))
 }
 func (FfiConverterTransactionArgument) Read(reader io.Reader) TransactionArgument {
 	id := readInt32(reader)
@@ -43764,6 +44689,7 @@ func (_ FfiDestroyerTransactionArgument) Destroy(value TransactionArgument) {
 }
 
 
+
 type TransactionBlockKindInput uint
 
 const (
@@ -43787,6 +44713,10 @@ func (c FfiConverterTransactionBlockKindInput) Lift(rb RustBufferI) TransactionB
 func (c FfiConverterTransactionBlockKindInput) Lower(value TransactionBlockKindInput) C.RustBuffer {
 	return LowerIntoRustBuffer[TransactionBlockKindInput](c, value)
 }
+
+func (c FfiConverterTransactionBlockKindInput) LowerExternal(value TransactionBlockKindInput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionBlockKindInput](c, value))
+}
 func (FfiConverterTransactionBlockKindInput) Read(reader io.Reader) TransactionBlockKindInput {
 	id := readInt32(reader)
 	return TransactionBlockKindInput(id)
@@ -43800,6 +44730,7 @@ type FfiDestroyerTransactionBlockKindInput struct {}
 
 func (_ FfiDestroyerTransactionBlockKindInput) Destroy(value TransactionBlockKindInput) {
 }
+
 
 
 // A TTL for a transaction
@@ -43842,6 +44773,10 @@ func (c FfiConverterTransactionExpiration) Lift(rb RustBufferI) TransactionExpir
 func (c FfiConverterTransactionExpiration) Lower(value TransactionExpiration) C.RustBuffer {
 	return LowerIntoRustBuffer[TransactionExpiration](c, value)
 }
+
+func (c FfiConverterTransactionExpiration) LowerExternal(value TransactionExpiration) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TransactionExpiration](c, value))
+}
 func (FfiConverterTransactionExpiration) Read(reader io.Reader) TransactionExpiration {
 	id := readInt32(reader)
 	switch (id) {
@@ -43877,6 +44812,7 @@ func (_ FfiDestroyerTransactionExpiration) Destroy(value TransactionExpiration) 
 }
 
 
+
 // An error with a type argument
 //
 // # BCS
@@ -43908,6 +44844,10 @@ func (c FfiConverterTypeArgumentError) Lift(rb RustBufferI) TypeArgumentError {
 func (c FfiConverterTypeArgumentError) Lower(value TypeArgumentError) C.RustBuffer {
 	return LowerIntoRustBuffer[TypeArgumentError](c, value)
 }
+
+func (c FfiConverterTypeArgumentError) LowerExternal(value TypeArgumentError) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[TypeArgumentError](c, value))
+}
 func (FfiConverterTypeArgumentError) Read(reader io.Reader) TypeArgumentError {
 	id := readInt32(reader)
 	return TypeArgumentError(id)
@@ -43921,6 +44861,7 @@ type FfiDestroyerTypeArgumentError struct {}
 
 func (_ FfiDestroyerTypeArgumentError) Destroy(value TypeArgumentError) {
 }
+
 
 
 // Type of unchanged shared object
@@ -44001,6 +44942,10 @@ func (c FfiConverterUnchangedSharedKind) Lift(rb RustBufferI) UnchangedSharedKin
 func (c FfiConverterUnchangedSharedKind) Lower(value UnchangedSharedKind) C.RustBuffer {
 	return LowerIntoRustBuffer[UnchangedSharedKind](c, value)
 }
+
+func (c FfiConverterUnchangedSharedKind) LowerExternal(value UnchangedSharedKind) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[UnchangedSharedKind](c, value))
+}
 func (FfiConverterUnchangedSharedKind) Read(reader io.Reader) UnchangedSharedKind {
 	id := readInt32(reader)
 	switch (id) {
@@ -44059,6 +45004,7 @@ func (_ FfiDestroyerUnchangedSharedKind) Destroy(value UnchangedSharedKind) {
 }
 
 
+
 // Determines what to wait for after executing a transaction.
 //
 // Users should almost always use WaitForTx::Finalized (the default).
@@ -44096,6 +45042,10 @@ func (c FfiConverterWaitForTx) Lift(rb RustBufferI) WaitForTx {
 func (c FfiConverterWaitForTx) Lower(value WaitForTx) C.RustBuffer {
 	return LowerIntoRustBuffer[WaitForTx](c, value)
 }
+
+func (c FfiConverterWaitForTx) LowerExternal(value WaitForTx) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[WaitForTx](c, value))
+}
 func (FfiConverterWaitForTx) Read(reader io.Reader) WaitForTx {
 	id := readInt32(reader)
 	return WaitForTx(id)
@@ -44109,6 +45059,8 @@ type FfiDestroyerWaitForTx struct {}
 
 func (_ FfiDestroyerWaitForTx) Destroy(value WaitForTx) {
 }
+
+
 
 type FfiConverterOptionalUint32 struct{}
 
@@ -44130,6 +45082,10 @@ func (c FfiConverterOptionalUint32) Lower(value *uint32) C.RustBuffer {
 	return LowerIntoRustBuffer[*uint32](c, value)
 }
 
+func (c FfiConverterOptionalUint32) LowerExternal(value *uint32) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*uint32](c, value))
+}
+
 func (_ FfiConverterOptionalUint32) Write(writer io.Writer, value *uint32) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44146,6 +45102,7 @@ func (_ FfiDestroyerOptionalUint32) Destroy(value *uint32) {
 		FfiDestroyerUint32{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalInt32 struct{}
 
@@ -44167,6 +45124,10 @@ func (c FfiConverterOptionalInt32) Lower(value *int32) C.RustBuffer {
 	return LowerIntoRustBuffer[*int32](c, value)
 }
 
+func (c FfiConverterOptionalInt32) LowerExternal(value *int32) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*int32](c, value))
+}
+
 func (_ FfiConverterOptionalInt32) Write(writer io.Writer, value *int32) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44183,6 +45144,7 @@ func (_ FfiDestroyerOptionalInt32) Destroy(value *int32) {
 		FfiDestroyerInt32{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalUint64 struct{}
 
@@ -44204,6 +45166,10 @@ func (c FfiConverterOptionalUint64) Lower(value *uint64) C.RustBuffer {
 	return LowerIntoRustBuffer[*uint64](c, value)
 }
 
+func (c FfiConverterOptionalUint64) LowerExternal(value *uint64) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*uint64](c, value))
+}
+
 func (_ FfiConverterOptionalUint64) Write(writer io.Writer, value *uint64) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44220,6 +45186,7 @@ func (_ FfiDestroyerOptionalUint64) Destroy(value *uint64) {
 		FfiDestroyerUint64{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalString struct{}
 
@@ -44241,6 +45208,10 @@ func (c FfiConverterOptionalString) Lower(value *string) C.RustBuffer {
 	return LowerIntoRustBuffer[*string](c, value)
 }
 
+func (c FfiConverterOptionalString) LowerExternal(value *string) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*string](c, value))
+}
+
 func (_ FfiConverterOptionalString) Write(writer io.Writer, value *string) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44257,6 +45228,7 @@ func (_ FfiDestroyerOptionalString) Destroy(value *string) {
 		FfiDestroyerString{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalBytes struct{}
 
@@ -44278,6 +45250,10 @@ func (c FfiConverterOptionalBytes) Lower(value *[]byte) C.RustBuffer {
 	return LowerIntoRustBuffer[*[]byte](c, value)
 }
 
+func (c FfiConverterOptionalBytes) LowerExternal(value *[]byte) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]byte](c, value))
+}
+
 func (_ FfiConverterOptionalBytes) Write(writer io.Writer, value *[]byte) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44294,6 +45270,7 @@ func (_ FfiDestroyerOptionalBytes) Destroy(value *[]byte) {
 		FfiDestroyerBytes{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalDuration struct{}
 
@@ -44315,6 +45292,10 @@ func (c FfiConverterOptionalDuration) Lower(value *time.Duration) C.RustBuffer {
 	return LowerIntoRustBuffer[*time.Duration](c, value)
 }
 
+func (c FfiConverterOptionalDuration) LowerExternal(value *time.Duration) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*time.Duration](c, value))
+}
+
 func (_ FfiConverterOptionalDuration) Write(writer io.Writer, value *time.Duration) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44331,6 +45312,7 @@ func (_ FfiDestroyerOptionalDuration) Destroy(value *time.Duration) {
 		FfiDestroyerDuration{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalAddress struct{}
 
@@ -44352,6 +45334,10 @@ func (c FfiConverterOptionalAddress) Lower(value **Address) C.RustBuffer {
 	return LowerIntoRustBuffer[**Address](c, value)
 }
 
+func (c FfiConverterOptionalAddress) LowerExternal(value **Address) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Address](c, value))
+}
+
 func (_ FfiConverterOptionalAddress) Write(writer io.Writer, value **Address) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44368,6 +45354,7 @@ func (_ FfiDestroyerOptionalAddress) Destroy(value **Address) {
 		FfiDestroyerAddress{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalArgument struct{}
 
@@ -44389,6 +45376,10 @@ func (c FfiConverterOptionalArgument) Lower(value **Argument) C.RustBuffer {
 	return LowerIntoRustBuffer[**Argument](c, value)
 }
 
+func (c FfiConverterOptionalArgument) LowerExternal(value **Argument) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Argument](c, value))
+}
+
 func (_ FfiConverterOptionalArgument) Write(writer io.Writer, value **Argument) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44405,6 +45396,7 @@ func (_ FfiDestroyerOptionalArgument) Destroy(value **Argument) {
 		FfiDestroyerArgument{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalCheckpointSummary struct{}
 
@@ -44426,6 +45418,10 @@ func (c FfiConverterOptionalCheckpointSummary) Lower(value **CheckpointSummary) 
 	return LowerIntoRustBuffer[**CheckpointSummary](c, value)
 }
 
+func (c FfiConverterOptionalCheckpointSummary) LowerExternal(value **CheckpointSummary) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**CheckpointSummary](c, value))
+}
+
 func (_ FfiConverterOptionalCheckpointSummary) Write(writer io.Writer, value **CheckpointSummary) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44442,6 +45438,7 @@ func (_ FfiDestroyerOptionalCheckpointSummary) Destroy(value **CheckpointSummary
 		FfiDestroyerCheckpointSummary{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalDigest struct{}
 
@@ -44463,6 +45460,10 @@ func (c FfiConverterOptionalDigest) Lower(value **Digest) C.RustBuffer {
 	return LowerIntoRustBuffer[**Digest](c, value)
 }
 
+func (c FfiConverterOptionalDigest) LowerExternal(value **Digest) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Digest](c, value))
+}
+
 func (_ FfiConverterOptionalDigest) Write(writer io.Writer, value **Digest) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44479,6 +45480,7 @@ func (_ FfiDestroyerOptionalDigest) Destroy(value **Digest) {
 		FfiDestroyerDigest{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalEd25519PublicKey struct{}
 
@@ -44500,6 +45502,10 @@ func (c FfiConverterOptionalEd25519PublicKey) Lower(value **Ed25519PublicKey) C.
 	return LowerIntoRustBuffer[**Ed25519PublicKey](c, value)
 }
 
+func (c FfiConverterOptionalEd25519PublicKey) LowerExternal(value **Ed25519PublicKey) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Ed25519PublicKey](c, value))
+}
+
 func (_ FfiConverterOptionalEd25519PublicKey) Write(writer io.Writer, value **Ed25519PublicKey) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44516,6 +45522,7 @@ func (_ FfiDestroyerOptionalEd25519PublicKey) Destroy(value **Ed25519PublicKey) 
 		FfiDestroyerEd25519PublicKey{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalEd25519Signature struct{}
 
@@ -44537,6 +45544,10 @@ func (c FfiConverterOptionalEd25519Signature) Lower(value **Ed25519Signature) C.
 	return LowerIntoRustBuffer[**Ed25519Signature](c, value)
 }
 
+func (c FfiConverterOptionalEd25519Signature) LowerExternal(value **Ed25519Signature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Ed25519Signature](c, value))
+}
+
 func (_ FfiConverterOptionalEd25519Signature) Write(writer io.Writer, value **Ed25519Signature) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44553,6 +45564,7 @@ func (_ FfiDestroyerOptionalEd25519Signature) Destroy(value **Ed25519Signature) 
 		FfiDestroyerEd25519Signature{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveArg struct{}
 
@@ -44574,6 +45586,10 @@ func (c FfiConverterOptionalMoveArg) Lower(value **MoveArg) C.RustBuffer {
 	return LowerIntoRustBuffer[**MoveArg](c, value)
 }
 
+func (c FfiConverterOptionalMoveArg) LowerExternal(value **MoveArg) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**MoveArg](c, value))
+}
+
 func (_ FfiConverterOptionalMoveArg) Write(writer io.Writer, value **MoveArg) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44590,6 +45606,7 @@ func (_ FfiDestroyerOptionalMoveArg) Destroy(value **MoveArg) {
 		FfiDestroyerMoveArg{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveAuthenticator struct{}
 
@@ -44611,6 +45628,10 @@ func (c FfiConverterOptionalMoveAuthenticator) Lower(value **MoveAuthenticator) 
 	return LowerIntoRustBuffer[**MoveAuthenticator](c, value)
 }
 
+func (c FfiConverterOptionalMoveAuthenticator) LowerExternal(value **MoveAuthenticator) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**MoveAuthenticator](c, value))
+}
+
 func (_ FfiConverterOptionalMoveAuthenticator) Write(writer io.Writer, value **MoveAuthenticator) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44627,6 +45648,7 @@ func (_ FfiDestroyerOptionalMoveAuthenticator) Destroy(value **MoveAuthenticator
 		FfiDestroyerMoveAuthenticator{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveFunction struct{}
 
@@ -44648,6 +45670,10 @@ func (c FfiConverterOptionalMoveFunction) Lower(value **MoveFunction) C.RustBuff
 	return LowerIntoRustBuffer[**MoveFunction](c, value)
 }
 
+func (c FfiConverterOptionalMoveFunction) LowerExternal(value **MoveFunction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**MoveFunction](c, value))
+}
+
 func (_ FfiConverterOptionalMoveFunction) Write(writer io.Writer, value **MoveFunction) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44664,6 +45690,7 @@ func (_ FfiDestroyerOptionalMoveFunction) Destroy(value **MoveFunction) {
 		FfiDestroyerMoveFunction{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMovePackage struct{}
 
@@ -44685,6 +45712,10 @@ func (c FfiConverterOptionalMovePackage) Lower(value **MovePackage) C.RustBuffer
 	return LowerIntoRustBuffer[**MovePackage](c, value)
 }
 
+func (c FfiConverterOptionalMovePackage) LowerExternal(value **MovePackage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**MovePackage](c, value))
+}
+
 func (_ FfiConverterOptionalMovePackage) Write(writer io.Writer, value **MovePackage) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44701,6 +45732,7 @@ func (_ FfiDestroyerOptionalMovePackage) Destroy(value **MovePackage) {
 		FfiDestroyerMovePackage{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveViewArg struct{}
 
@@ -44722,6 +45754,10 @@ func (c FfiConverterOptionalMoveViewArg) Lower(value **MoveViewArg) C.RustBuffer
 	return LowerIntoRustBuffer[**MoveViewArg](c, value)
 }
 
+func (c FfiConverterOptionalMoveViewArg) LowerExternal(value **MoveViewArg) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**MoveViewArg](c, value))
+}
+
 func (_ FfiConverterOptionalMoveViewArg) Write(writer io.Writer, value **MoveViewArg) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44738,6 +45774,7 @@ func (_ FfiDestroyerOptionalMoveViewArg) Destroy(value **MoveViewArg) {
 		FfiDestroyerMoveViewArg{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMultisigAggregatedSignature struct{}
 
@@ -44759,6 +45796,10 @@ func (c FfiConverterOptionalMultisigAggregatedSignature) Lower(value **MultisigA
 	return LowerIntoRustBuffer[**MultisigAggregatedSignature](c, value)
 }
 
+func (c FfiConverterOptionalMultisigAggregatedSignature) LowerExternal(value **MultisigAggregatedSignature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**MultisigAggregatedSignature](c, value))
+}
+
 func (_ FfiConverterOptionalMultisigAggregatedSignature) Write(writer io.Writer, value **MultisigAggregatedSignature) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44775,6 +45816,7 @@ func (_ FfiDestroyerOptionalMultisigAggregatedSignature) Destroy(value **Multisi
 		FfiDestroyerMultisigAggregatedSignature{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalName struct{}
 
@@ -44796,6 +45838,10 @@ func (c FfiConverterOptionalName) Lower(value **Name) C.RustBuffer {
 	return LowerIntoRustBuffer[**Name](c, value)
 }
 
+func (c FfiConverterOptionalName) LowerExternal(value **Name) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Name](c, value))
+}
+
 func (_ FfiConverterOptionalName) Write(writer io.Writer, value **Name) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44812,6 +45858,7 @@ func (_ FfiDestroyerOptionalName) Destroy(value **Name) {
 		FfiDestroyerName{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalObject struct{}
 
@@ -44833,6 +45880,10 @@ func (c FfiConverterOptionalObject) Lower(value **Object) C.RustBuffer {
 	return LowerIntoRustBuffer[**Object](c, value)
 }
 
+func (c FfiConverterOptionalObject) LowerExternal(value **Object) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Object](c, value))
+}
+
 func (_ FfiConverterOptionalObject) Write(writer io.Writer, value **Object) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44849,6 +45900,7 @@ func (_ FfiDestroyerOptionalObject) Destroy(value **Object) {
 		FfiDestroyerObject{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalObjectId struct{}
 
@@ -44870,6 +45922,10 @@ func (c FfiConverterOptionalObjectId) Lower(value **ObjectId) C.RustBuffer {
 	return LowerIntoRustBuffer[**ObjectId](c, value)
 }
 
+func (c FfiConverterOptionalObjectId) LowerExternal(value **ObjectId) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**ObjectId](c, value))
+}
+
 func (_ FfiConverterOptionalObjectId) Write(writer io.Writer, value **ObjectId) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44886,6 +45942,7 @@ func (_ FfiDestroyerOptionalObjectId) Destroy(value **ObjectId) {
 		FfiDestroyerObjectId{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalPtbArgument struct{}
 
@@ -44907,6 +45964,10 @@ func (c FfiConverterOptionalPtbArgument) Lower(value **PtbArgument) C.RustBuffer
 	return LowerIntoRustBuffer[**PtbArgument](c, value)
 }
 
+func (c FfiConverterOptionalPtbArgument) LowerExternal(value **PtbArgument) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**PtbArgument](c, value))
+}
+
 func (_ FfiConverterOptionalPtbArgument) Write(writer io.Writer, value **PtbArgument) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44923,6 +45984,7 @@ func (_ FfiDestroyerOptionalPtbArgument) Destroy(value **PtbArgument) {
 		FfiDestroyerPtbArgument{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalPasskeyAuthenticator struct{}
 
@@ -44944,6 +46006,10 @@ func (c FfiConverterOptionalPasskeyAuthenticator) Lower(value **PasskeyAuthentic
 	return LowerIntoRustBuffer[**PasskeyAuthenticator](c, value)
 }
 
+func (c FfiConverterOptionalPasskeyAuthenticator) LowerExternal(value **PasskeyAuthenticator) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**PasskeyAuthenticator](c, value))
+}
+
 func (_ FfiConverterOptionalPasskeyAuthenticator) Write(writer io.Writer, value **PasskeyAuthenticator) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44960,6 +46026,7 @@ func (_ FfiDestroyerOptionalPasskeyAuthenticator) Destroy(value **PasskeyAuthent
 		FfiDestroyerPasskeyAuthenticator{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSecp256k1PublicKey struct{}
 
@@ -44981,6 +46048,10 @@ func (c FfiConverterOptionalSecp256k1PublicKey) Lower(value **Secp256k1PublicKey
 	return LowerIntoRustBuffer[**Secp256k1PublicKey](c, value)
 }
 
+func (c FfiConverterOptionalSecp256k1PublicKey) LowerExternal(value **Secp256k1PublicKey) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Secp256k1PublicKey](c, value))
+}
+
 func (_ FfiConverterOptionalSecp256k1PublicKey) Write(writer io.Writer, value **Secp256k1PublicKey) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -44997,6 +46068,7 @@ func (_ FfiDestroyerOptionalSecp256k1PublicKey) Destroy(value **Secp256k1PublicK
 		FfiDestroyerSecp256k1PublicKey{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSecp256k1Signature struct{}
 
@@ -45018,6 +46090,10 @@ func (c FfiConverterOptionalSecp256k1Signature) Lower(value **Secp256k1Signature
 	return LowerIntoRustBuffer[**Secp256k1Signature](c, value)
 }
 
+func (c FfiConverterOptionalSecp256k1Signature) LowerExternal(value **Secp256k1Signature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Secp256k1Signature](c, value))
+}
+
 func (_ FfiConverterOptionalSecp256k1Signature) Write(writer io.Writer, value **Secp256k1Signature) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45034,6 +46110,7 @@ func (_ FfiDestroyerOptionalSecp256k1Signature) Destroy(value **Secp256k1Signatu
 		FfiDestroyerSecp256k1Signature{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSecp256r1PublicKey struct{}
 
@@ -45055,6 +46132,10 @@ func (c FfiConverterOptionalSecp256r1PublicKey) Lower(value **Secp256r1PublicKey
 	return LowerIntoRustBuffer[**Secp256r1PublicKey](c, value)
 }
 
+func (c FfiConverterOptionalSecp256r1PublicKey) LowerExternal(value **Secp256r1PublicKey) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Secp256r1PublicKey](c, value))
+}
+
 func (_ FfiConverterOptionalSecp256r1PublicKey) Write(writer io.Writer, value **Secp256r1PublicKey) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45071,6 +46152,7 @@ func (_ FfiDestroyerOptionalSecp256r1PublicKey) Destroy(value **Secp256r1PublicK
 		FfiDestroyerSecp256r1PublicKey{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSecp256r1Signature struct{}
 
@@ -45092,6 +46174,10 @@ func (c FfiConverterOptionalSecp256r1Signature) Lower(value **Secp256r1Signature
 	return LowerIntoRustBuffer[**Secp256r1Signature](c, value)
 }
 
+func (c FfiConverterOptionalSecp256r1Signature) LowerExternal(value **Secp256r1Signature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**Secp256r1Signature](c, value))
+}
+
 func (_ FfiConverterOptionalSecp256r1Signature) Write(writer io.Writer, value **Secp256r1Signature) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45108,6 +46194,7 @@ func (_ FfiDestroyerOptionalSecp256r1Signature) Destroy(value **Secp256r1Signatu
 		FfiDestroyerSecp256r1Signature{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSimpleSignature struct{}
 
@@ -45129,6 +46216,10 @@ func (c FfiConverterOptionalSimpleSignature) Lower(value **SimpleSignature) C.Ru
 	return LowerIntoRustBuffer[**SimpleSignature](c, value)
 }
 
+func (c FfiConverterOptionalSimpleSignature) LowerExternal(value **SimpleSignature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**SimpleSignature](c, value))
+}
+
 func (_ FfiConverterOptionalSimpleSignature) Write(writer io.Writer, value **SimpleSignature) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45145,6 +46236,7 @@ func (_ FfiDestroyerOptionalSimpleSignature) Destroy(value **SimpleSignature) {
 		FfiDestroyerSimpleSignature{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalStructTag struct{}
 
@@ -45166,6 +46258,10 @@ func (c FfiConverterOptionalStructTag) Lower(value **StructTag) C.RustBuffer {
 	return LowerIntoRustBuffer[**StructTag](c, value)
 }
 
+func (c FfiConverterOptionalStructTag) LowerExternal(value **StructTag) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**StructTag](c, value))
+}
+
 func (_ FfiConverterOptionalStructTag) Write(writer io.Writer, value **StructTag) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45182,6 +46278,7 @@ func (_ FfiDestroyerOptionalStructTag) Destroy(value **StructTag) {
 		FfiDestroyerStructTag{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTransactionEffects struct{}
 
@@ -45203,6 +46300,10 @@ func (c FfiConverterOptionalTransactionEffects) Lower(value **TransactionEffects
 	return LowerIntoRustBuffer[**TransactionEffects](c, value)
 }
 
+func (c FfiConverterOptionalTransactionEffects) LowerExternal(value **TransactionEffects) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**TransactionEffects](c, value))
+}
+
 func (_ FfiConverterOptionalTransactionEffects) Write(writer io.Writer, value **TransactionEffects) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45219,6 +46320,7 @@ func (_ FfiDestroyerOptionalTransactionEffects) Destroy(value **TransactionEffec
 		FfiDestroyerTransactionEffects{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTypeTag struct{}
 
@@ -45240,6 +46342,10 @@ func (c FfiConverterOptionalTypeTag) Lower(value **TypeTag) C.RustBuffer {
 	return LowerIntoRustBuffer[**TypeTag](c, value)
 }
 
+func (c FfiConverterOptionalTypeTag) LowerExternal(value **TypeTag) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**TypeTag](c, value))
+}
+
 func (_ FfiConverterOptionalTypeTag) Write(writer io.Writer, value **TypeTag) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45256,6 +46362,7 @@ func (_ FfiDestroyerOptionalTypeTag) Destroy(value **TypeTag) {
 		FfiDestroyerTypeTag{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalZkLoginAuthenticator struct{}
 
@@ -45277,6 +46384,10 @@ func (c FfiConverterOptionalZkLoginAuthenticator) Lower(value **ZkLoginAuthentic
 	return LowerIntoRustBuffer[**ZkLoginAuthenticator](c, value)
 }
 
+func (c FfiConverterOptionalZkLoginAuthenticator) LowerExternal(value **ZkLoginAuthenticator) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**ZkLoginAuthenticator](c, value))
+}
+
 func (_ FfiConverterOptionalZkLoginAuthenticator) Write(writer io.Writer, value **ZkLoginAuthenticator) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45293,6 +46404,7 @@ func (_ FfiDestroyerOptionalZkLoginAuthenticator) Destroy(value **ZkLoginAuthent
 		FfiDestroyerZkLoginAuthenticator{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalZkLoginPublicIdentifier struct{}
 
@@ -45314,6 +46426,10 @@ func (c FfiConverterOptionalZkLoginPublicIdentifier) Lower(value **ZkLoginPublic
 	return LowerIntoRustBuffer[**ZkLoginPublicIdentifier](c, value)
 }
 
+func (c FfiConverterOptionalZkLoginPublicIdentifier) LowerExternal(value **ZkLoginPublicIdentifier) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**ZkLoginPublicIdentifier](c, value))
+}
+
 func (_ FfiConverterOptionalZkLoginPublicIdentifier) Write(writer io.Writer, value **ZkLoginPublicIdentifier) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45330,6 +46446,7 @@ func (_ FfiDestroyerOptionalZkLoginPublicIdentifier) Destroy(value **ZkLoginPubl
 		FfiDestroyerZkLoginPublicIdentifier{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalZkloginVerifier struct{}
 
@@ -45351,6 +46468,10 @@ func (c FfiConverterOptionalZkloginVerifier) Lower(value **ZkloginVerifier) C.Ru
 	return LowerIntoRustBuffer[**ZkloginVerifier](c, value)
 }
 
+func (c FfiConverterOptionalZkloginVerifier) LowerExternal(value **ZkloginVerifier) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[**ZkloginVerifier](c, value))
+}
+
 func (_ FfiConverterOptionalZkloginVerifier) Write(writer io.Writer, value **ZkloginVerifier) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45367,6 +46488,7 @@ func (_ FfiDestroyerOptionalZkloginVerifier) Destroy(value **ZkloginVerifier) {
 		FfiDestroyerZkloginVerifier{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalBatchSendStatus struct{}
 
@@ -45388,6 +46510,10 @@ func (c FfiConverterOptionalBatchSendStatus) Lower(value *BatchSendStatus) C.Rus
 	return LowerIntoRustBuffer[*BatchSendStatus](c, value)
 }
 
+func (c FfiConverterOptionalBatchSendStatus) LowerExternal(value *BatchSendStatus) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*BatchSendStatus](c, value))
+}
+
 func (_ FfiConverterOptionalBatchSendStatus) Write(writer io.Writer, value *BatchSendStatus) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45404,6 +46530,7 @@ func (_ FfiDestroyerOptionalBatchSendStatus) Destroy(value *BatchSendStatus) {
 		FfiDestroyerBatchSendStatus{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalCoinMetadata struct{}
 
@@ -45425,6 +46552,10 @@ func (c FfiConverterOptionalCoinMetadata) Lower(value *CoinMetadata) C.RustBuffe
 	return LowerIntoRustBuffer[*CoinMetadata](c, value)
 }
 
+func (c FfiConverterOptionalCoinMetadata) LowerExternal(value *CoinMetadata) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*CoinMetadata](c, value))
+}
+
 func (_ FfiConverterOptionalCoinMetadata) Write(writer io.Writer, value *CoinMetadata) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45441,6 +46572,7 @@ func (_ FfiDestroyerOptionalCoinMetadata) Destroy(value *CoinMetadata) {
 		FfiDestroyerCoinMetadata{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalDynamicFieldOutput struct{}
 
@@ -45462,6 +46594,10 @@ func (c FfiConverterOptionalDynamicFieldOutput) Lower(value *DynamicFieldOutput)
 	return LowerIntoRustBuffer[*DynamicFieldOutput](c, value)
 }
 
+func (c FfiConverterOptionalDynamicFieldOutput) LowerExternal(value *DynamicFieldOutput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*DynamicFieldOutput](c, value))
+}
+
 func (_ FfiConverterOptionalDynamicFieldOutput) Write(writer io.Writer, value *DynamicFieldOutput) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45478,6 +46614,7 @@ func (_ FfiDestroyerOptionalDynamicFieldOutput) Destroy(value *DynamicFieldOutpu
 		FfiDestroyerDynamicFieldOutput{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalDynamicFieldValue struct{}
 
@@ -45499,6 +46636,10 @@ func (c FfiConverterOptionalDynamicFieldValue) Lower(value *DynamicFieldValue) C
 	return LowerIntoRustBuffer[*DynamicFieldValue](c, value)
 }
 
+func (c FfiConverterOptionalDynamicFieldValue) LowerExternal(value *DynamicFieldValue) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*DynamicFieldValue](c, value))
+}
+
 func (_ FfiConverterOptionalDynamicFieldValue) Write(writer io.Writer, value *DynamicFieldValue) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45515,6 +46656,7 @@ func (_ FfiDestroyerOptionalDynamicFieldValue) Destroy(value *DynamicFieldValue)
 		FfiDestroyerDynamicFieldValue{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalEndOfEpochData struct{}
 
@@ -45536,6 +46678,10 @@ func (c FfiConverterOptionalEndOfEpochData) Lower(value *EndOfEpochData) C.RustB
 	return LowerIntoRustBuffer[*EndOfEpochData](c, value)
 }
 
+func (c FfiConverterOptionalEndOfEpochData) LowerExternal(value *EndOfEpochData) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*EndOfEpochData](c, value))
+}
+
 func (_ FfiConverterOptionalEndOfEpochData) Write(writer io.Writer, value *EndOfEpochData) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45552,6 +46698,7 @@ func (_ FfiDestroyerOptionalEndOfEpochData) Destroy(value *EndOfEpochData) {
 		FfiDestroyerEndOfEpochData{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalEpoch struct{}
 
@@ -45573,6 +46720,10 @@ func (c FfiConverterOptionalEpoch) Lower(value *Epoch) C.RustBuffer {
 	return LowerIntoRustBuffer[*Epoch](c, value)
 }
 
+func (c FfiConverterOptionalEpoch) LowerExternal(value *Epoch) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*Epoch](c, value))
+}
+
 func (_ FfiConverterOptionalEpoch) Write(writer io.Writer, value *Epoch) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45589,6 +46740,7 @@ func (_ FfiDestroyerOptionalEpoch) Destroy(value *Epoch) {
 		FfiDestroyerEpoch{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalEventFilter struct{}
 
@@ -45610,6 +46762,10 @@ func (c FfiConverterOptionalEventFilter) Lower(value *EventFilter) C.RustBuffer 
 	return LowerIntoRustBuffer[*EventFilter](c, value)
 }
 
+func (c FfiConverterOptionalEventFilter) LowerExternal(value *EventFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*EventFilter](c, value))
+}
+
 func (_ FfiConverterOptionalEventFilter) Write(writer io.Writer, value *EventFilter) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45626,6 +46782,7 @@ func (_ FfiDestroyerOptionalEventFilter) Destroy(value *EventFilter) {
 		FfiDestroyerEventFilter{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalFaucetReceipt struct{}
 
@@ -45647,6 +46804,10 @@ func (c FfiConverterOptionalFaucetReceipt) Lower(value *FaucetReceipt) C.RustBuf
 	return LowerIntoRustBuffer[*FaucetReceipt](c, value)
 }
 
+func (c FfiConverterOptionalFaucetReceipt) LowerExternal(value *FaucetReceipt) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*FaucetReceipt](c, value))
+}
+
 func (_ FfiConverterOptionalFaucetReceipt) Write(writer io.Writer, value *FaucetReceipt) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45663,6 +46824,7 @@ func (_ FfiDestroyerOptionalFaucetReceipt) Destroy(value *FaucetReceipt) {
 		FfiDestroyerFaucetReceipt{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveEnumConnection struct{}
 
@@ -45684,6 +46846,10 @@ func (c FfiConverterOptionalMoveEnumConnection) Lower(value *MoveEnumConnection)
 	return LowerIntoRustBuffer[*MoveEnumConnection](c, value)
 }
 
+func (c FfiConverterOptionalMoveEnumConnection) LowerExternal(value *MoveEnumConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveEnumConnection](c, value))
+}
+
 func (_ FfiConverterOptionalMoveEnumConnection) Write(writer io.Writer, value *MoveEnumConnection) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45700,6 +46866,7 @@ func (_ FfiDestroyerOptionalMoveEnumConnection) Destroy(value *MoveEnumConnectio
 		FfiDestroyerMoveEnumConnection{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveFunctionConnection struct{}
 
@@ -45721,6 +46888,10 @@ func (c FfiConverterOptionalMoveFunctionConnection) Lower(value *MoveFunctionCon
 	return LowerIntoRustBuffer[*MoveFunctionConnection](c, value)
 }
 
+func (c FfiConverterOptionalMoveFunctionConnection) LowerExternal(value *MoveFunctionConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveFunctionConnection](c, value))
+}
+
 func (_ FfiConverterOptionalMoveFunctionConnection) Write(writer io.Writer, value *MoveFunctionConnection) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45737,6 +46908,7 @@ func (_ FfiDestroyerOptionalMoveFunctionConnection) Destroy(value *MoveFunctionC
 		FfiDestroyerMoveFunctionConnection{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveLocation struct{}
 
@@ -45758,6 +46930,10 @@ func (c FfiConverterOptionalMoveLocation) Lower(value *MoveLocation) C.RustBuffe
 	return LowerIntoRustBuffer[*MoveLocation](c, value)
 }
 
+func (c FfiConverterOptionalMoveLocation) LowerExternal(value *MoveLocation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveLocation](c, value))
+}
+
 func (_ FfiConverterOptionalMoveLocation) Write(writer io.Writer, value *MoveLocation) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45774,6 +46950,7 @@ func (_ FfiDestroyerOptionalMoveLocation) Destroy(value *MoveLocation) {
 		FfiDestroyerMoveLocation{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveModule struct{}
 
@@ -45795,6 +46972,10 @@ func (c FfiConverterOptionalMoveModule) Lower(value *MoveModule) C.RustBuffer {
 	return LowerIntoRustBuffer[*MoveModule](c, value)
 }
 
+func (c FfiConverterOptionalMoveModule) LowerExternal(value *MoveModule) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveModule](c, value))
+}
+
 func (_ FfiConverterOptionalMoveModule) Write(writer io.Writer, value *MoveModule) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45811,6 +46992,7 @@ func (_ FfiDestroyerOptionalMoveModule) Destroy(value *MoveModule) {
 		FfiDestroyerMoveModule{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveStruct struct{}
 
@@ -45832,6 +47014,10 @@ func (c FfiConverterOptionalMoveStruct) Lower(value *MoveStruct) C.RustBuffer {
 	return LowerIntoRustBuffer[*MoveStruct](c, value)
 }
 
+func (c FfiConverterOptionalMoveStruct) LowerExternal(value *MoveStruct) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveStruct](c, value))
+}
+
 func (_ FfiConverterOptionalMoveStruct) Write(writer io.Writer, value *MoveStruct) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45848,6 +47034,7 @@ func (_ FfiDestroyerOptionalMoveStruct) Destroy(value *MoveStruct) {
 		FfiDestroyerMoveStruct{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveStructConnection struct{}
 
@@ -45869,6 +47056,10 @@ func (c FfiConverterOptionalMoveStructConnection) Lower(value *MoveStructConnect
 	return LowerIntoRustBuffer[*MoveStructConnection](c, value)
 }
 
+func (c FfiConverterOptionalMoveStructConnection) LowerExternal(value *MoveStructConnection) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveStructConnection](c, value))
+}
+
 func (_ FfiConverterOptionalMoveStructConnection) Write(writer io.Writer, value *MoveStructConnection) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45885,6 +47076,7 @@ func (_ FfiDestroyerOptionalMoveStructConnection) Destroy(value *MoveStructConne
 		FfiDestroyerMoveStructConnection{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalObjectFilter struct{}
 
@@ -45906,6 +47098,10 @@ func (c FfiConverterOptionalObjectFilter) Lower(value *ObjectFilter) C.RustBuffe
 	return LowerIntoRustBuffer[*ObjectFilter](c, value)
 }
 
+func (c FfiConverterOptionalObjectFilter) LowerExternal(value *ObjectFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*ObjectFilter](c, value))
+}
+
 func (_ FfiConverterOptionalObjectFilter) Write(writer io.Writer, value *ObjectFilter) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45922,6 +47118,7 @@ func (_ FfiDestroyerOptionalObjectFilter) Destroy(value *ObjectFilter) {
 		FfiDestroyerObjectFilter{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalOpenMoveType struct{}
 
@@ -45943,6 +47140,10 @@ func (c FfiConverterOptionalOpenMoveType) Lower(value *OpenMoveType) C.RustBuffe
 	return LowerIntoRustBuffer[*OpenMoveType](c, value)
 }
 
+func (c FfiConverterOptionalOpenMoveType) LowerExternal(value *OpenMoveType) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*OpenMoveType](c, value))
+}
+
 func (_ FfiConverterOptionalOpenMoveType) Write(writer io.Writer, value *OpenMoveType) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45959,6 +47160,7 @@ func (_ FfiDestroyerOptionalOpenMoveType) Destroy(value *OpenMoveType) {
 		FfiDestroyerOpenMoveType{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalPaginationFilter struct{}
 
@@ -45980,6 +47182,10 @@ func (c FfiConverterOptionalPaginationFilter) Lower(value *PaginationFilter) C.R
 	return LowerIntoRustBuffer[*PaginationFilter](c, value)
 }
 
+func (c FfiConverterOptionalPaginationFilter) LowerExternal(value *PaginationFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*PaginationFilter](c, value))
+}
+
 func (_ FfiConverterOptionalPaginationFilter) Write(writer io.Writer, value *PaginationFilter) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -45996,6 +47202,7 @@ func (_ FfiDestroyerOptionalPaginationFilter) Destroy(value *PaginationFilter) {
 		FfiDestroyerPaginationFilter{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalProtocolConfigs struct{}
 
@@ -46017,6 +47224,10 @@ func (c FfiConverterOptionalProtocolConfigs) Lower(value *ProtocolConfigs) C.Rus
 	return LowerIntoRustBuffer[*ProtocolConfigs](c, value)
 }
 
+func (c FfiConverterOptionalProtocolConfigs) LowerExternal(value *ProtocolConfigs) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*ProtocolConfigs](c, value))
+}
+
 func (_ FfiConverterOptionalProtocolConfigs) Write(writer io.Writer, value *ProtocolConfigs) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46033,6 +47244,7 @@ func (_ FfiDestroyerOptionalProtocolConfigs) Destroy(value *ProtocolConfigs) {
 		FfiDestroyerProtocolConfigs{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSignedTransaction struct{}
 
@@ -46054,6 +47266,10 @@ func (c FfiConverterOptionalSignedTransaction) Lower(value *SignedTransaction) C
 	return LowerIntoRustBuffer[*SignedTransaction](c, value)
 }
 
+func (c FfiConverterOptionalSignedTransaction) LowerExternal(value *SignedTransaction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*SignedTransaction](c, value))
+}
+
 func (_ FfiConverterOptionalSignedTransaction) Write(writer io.Writer, value *SignedTransaction) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46070,6 +47286,7 @@ func (_ FfiDestroyerOptionalSignedTransaction) Destroy(value *SignedTransaction)
 		FfiDestroyerSignedTransaction{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTransactionDataEffects struct{}
 
@@ -46091,6 +47308,10 @@ func (c FfiConverterOptionalTransactionDataEffects) Lower(value *TransactionData
 	return LowerIntoRustBuffer[*TransactionDataEffects](c, value)
 }
 
+func (c FfiConverterOptionalTransactionDataEffects) LowerExternal(value *TransactionDataEffects) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*TransactionDataEffects](c, value))
+}
+
 func (_ FfiConverterOptionalTransactionDataEffects) Write(writer io.Writer, value *TransactionDataEffects) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46107,6 +47328,7 @@ func (_ FfiDestroyerOptionalTransactionDataEffects) Destroy(value *TransactionDa
 		FfiDestroyerTransactionDataEffects{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTransactionsFilter struct{}
 
@@ -46128,6 +47350,10 @@ func (c FfiConverterOptionalTransactionsFilter) Lower(value *TransactionsFilter)
 	return LowerIntoRustBuffer[*TransactionsFilter](c, value)
 }
 
+func (c FfiConverterOptionalTransactionsFilter) LowerExternal(value *TransactionsFilter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*TransactionsFilter](c, value))
+}
+
 func (_ FfiConverterOptionalTransactionsFilter) Write(writer io.Writer, value *TransactionsFilter) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46144,6 +47370,7 @@ func (_ FfiDestroyerOptionalTransactionsFilter) Destroy(value *TransactionsFilte
 		FfiDestroyerTransactionsFilter{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalValidatorCredentials struct{}
 
@@ -46165,6 +47392,10 @@ func (c FfiConverterOptionalValidatorCredentials) Lower(value *ValidatorCredenti
 	return LowerIntoRustBuffer[*ValidatorCredentials](c, value)
 }
 
+func (c FfiConverterOptionalValidatorCredentials) LowerExternal(value *ValidatorCredentials) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*ValidatorCredentials](c, value))
+}
+
 func (_ FfiConverterOptionalValidatorCredentials) Write(writer io.Writer, value *ValidatorCredentials) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46181,6 +47412,7 @@ func (_ FfiDestroyerOptionalValidatorCredentials) Destroy(value *ValidatorCreden
 		FfiDestroyerValidatorCredentials{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalValidatorSet struct{}
 
@@ -46202,6 +47434,10 @@ func (c FfiConverterOptionalValidatorSet) Lower(value *ValidatorSet) C.RustBuffe
 	return LowerIntoRustBuffer[*ValidatorSet](c, value)
 }
 
+func (c FfiConverterOptionalValidatorSet) LowerExternal(value *ValidatorSet) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*ValidatorSet](c, value))
+}
+
 func (_ FfiConverterOptionalValidatorSet) Write(writer io.Writer, value *ValidatorSet) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46218,6 +47454,7 @@ func (_ FfiDestroyerOptionalValidatorSet) Destroy(value *ValidatorSet) {
 		FfiDestroyerValidatorSet{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMnemonicLength struct{}
 
@@ -46239,6 +47476,10 @@ func (c FfiConverterOptionalMnemonicLength) Lower(value *MnemonicLength) C.RustB
 	return LowerIntoRustBuffer[*MnemonicLength](c, value)
 }
 
+func (c FfiConverterOptionalMnemonicLength) LowerExternal(value *MnemonicLength) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MnemonicLength](c, value))
+}
+
 func (_ FfiConverterOptionalMnemonicLength) Write(writer io.Writer, value *MnemonicLength) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46255,6 +47496,7 @@ func (_ FfiDestroyerOptionalMnemonicLength) Destroy(value *MnemonicLength) {
 		FfiDestroyerMnemonicLength{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMoveVisibility struct{}
 
@@ -46276,6 +47518,10 @@ func (c FfiConverterOptionalMoveVisibility) Lower(value *MoveVisibility) C.RustB
 	return LowerIntoRustBuffer[*MoveVisibility](c, value)
 }
 
+func (c FfiConverterOptionalMoveVisibility) LowerExternal(value *MoveVisibility) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoveVisibility](c, value))
+}
+
 func (_ FfiConverterOptionalMoveVisibility) Write(writer io.Writer, value *MoveVisibility) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46292,6 +47538,7 @@ func (_ FfiDestroyerOptionalMoveVisibility) Destroy(value *MoveVisibility) {
 		FfiDestroyerMoveVisibility{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalNameFormat struct{}
 
@@ -46313,6 +47560,10 @@ func (c FfiConverterOptionalNameFormat) Lower(value *NameFormat) C.RustBuffer {
 	return LowerIntoRustBuffer[*NameFormat](c, value)
 }
 
+func (c FfiConverterOptionalNameFormat) LowerExternal(value *NameFormat) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*NameFormat](c, value))
+}
+
 func (_ FfiConverterOptionalNameFormat) Write(writer io.Writer, value *NameFormat) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46329,6 +47580,7 @@ func (_ FfiDestroyerOptionalNameFormat) Destroy(value *NameFormat) {
 		FfiDestroyerNameFormat{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTransactionBlockKindInput struct{}
 
@@ -46350,6 +47602,10 @@ func (c FfiConverterOptionalTransactionBlockKindInput) Lower(value *TransactionB
 	return LowerIntoRustBuffer[*TransactionBlockKindInput](c, value)
 }
 
+func (c FfiConverterOptionalTransactionBlockKindInput) LowerExternal(value *TransactionBlockKindInput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*TransactionBlockKindInput](c, value))
+}
+
 func (_ FfiConverterOptionalTransactionBlockKindInput) Write(writer io.Writer, value *TransactionBlockKindInput) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46366,6 +47622,7 @@ func (_ FfiDestroyerOptionalTransactionBlockKindInput) Destroy(value *Transactio
 		FfiDestroyerTransactionBlockKindInput{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalWaitForTx struct{}
 
@@ -46387,6 +47644,10 @@ func (c FfiConverterOptionalWaitForTx) Lower(value *WaitForTx) C.RustBuffer {
 	return LowerIntoRustBuffer[*WaitForTx](c, value)
 }
 
+func (c FfiConverterOptionalWaitForTx) LowerExternal(value *WaitForTx) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*WaitForTx](c, value))
+}
+
 func (_ FfiConverterOptionalWaitForTx) Write(writer io.Writer, value *WaitForTx) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46403,6 +47664,7 @@ func (_ FfiDestroyerOptionalWaitForTx) Destroy(value *WaitForTx) {
 		FfiDestroyerWaitForTx{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceInt32 struct{}
 
@@ -46424,6 +47686,10 @@ func (c FfiConverterOptionalSequenceInt32) Lower(value *[]int32) C.RustBuffer {
 	return LowerIntoRustBuffer[*[]int32](c, value)
 }
 
+func (c FfiConverterOptionalSequenceInt32) LowerExternal(value *[]int32) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]int32](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceInt32) Write(writer io.Writer, value *[]int32) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46440,6 +47706,7 @@ func (_ FfiDestroyerOptionalSequenceInt32) Destroy(value *[]int32) {
 		FfiDestroyerSequenceInt32{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceString struct{}
 
@@ -46461,6 +47728,10 @@ func (c FfiConverterOptionalSequenceString) Lower(value *[]string) C.RustBuffer 
 	return LowerIntoRustBuffer[*[]string](c, value)
 }
 
+func (c FfiConverterOptionalSequenceString) LowerExternal(value *[]string) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]string](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceString) Write(writer io.Writer, value *[]string) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46477,6 +47748,7 @@ func (_ FfiDestroyerOptionalSequenceString) Destroy(value *[]string) {
 		FfiDestroyerSequenceString{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceMoveViewArg struct{}
 
@@ -46498,6 +47770,10 @@ func (c FfiConverterOptionalSequenceMoveViewArg) Lower(value *[]*MoveViewArg) C.
 	return LowerIntoRustBuffer[*[]*MoveViewArg](c, value)
 }
 
+func (c FfiConverterOptionalSequenceMoveViewArg) LowerExternal(value *[]*MoveViewArg) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]*MoveViewArg](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceMoveViewArg) Write(writer io.Writer, value *[]*MoveViewArg) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46514,6 +47790,7 @@ func (_ FfiDestroyerOptionalSequenceMoveViewArg) Destroy(value *[]*MoveViewArg) 
 		FfiDestroyerSequenceMoveViewArg{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceObjectId struct{}
 
@@ -46535,6 +47812,10 @@ func (c FfiConverterOptionalSequenceObjectId) Lower(value *[]*ObjectId) C.RustBu
 	return LowerIntoRustBuffer[*[]*ObjectId](c, value)
 }
 
+func (c FfiConverterOptionalSequenceObjectId) LowerExternal(value *[]*ObjectId) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]*ObjectId](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceObjectId) Write(writer io.Writer, value *[]*ObjectId) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46551,6 +47832,7 @@ func (_ FfiDestroyerOptionalSequenceObjectId) Destroy(value *[]*ObjectId) {
 		FfiDestroyerSequenceObjectId{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceTypeTag struct{}
 
@@ -46572,6 +47854,10 @@ func (c FfiConverterOptionalSequenceTypeTag) Lower(value *[]*TypeTag) C.RustBuff
 	return LowerIntoRustBuffer[*[]*TypeTag](c, value)
 }
 
+func (c FfiConverterOptionalSequenceTypeTag) LowerExternal(value *[]*TypeTag) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]*TypeTag](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceTypeTag) Write(writer io.Writer, value *[]*TypeTag) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46588,6 +47874,7 @@ func (_ FfiDestroyerOptionalSequenceTypeTag) Destroy(value *[]*TypeTag) {
 		FfiDestroyerSequenceTypeTag{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceMoveEnumVariant struct{}
 
@@ -46609,6 +47896,10 @@ func (c FfiConverterOptionalSequenceMoveEnumVariant) Lower(value *[]MoveEnumVari
 	return LowerIntoRustBuffer[*[]MoveEnumVariant](c, value)
 }
 
+func (c FfiConverterOptionalSequenceMoveEnumVariant) LowerExternal(value *[]MoveEnumVariant) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]MoveEnumVariant](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceMoveEnumVariant) Write(writer io.Writer, value *[]MoveEnumVariant) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46625,6 +47916,7 @@ func (_ FfiDestroyerOptionalSequenceMoveEnumVariant) Destroy(value *[]MoveEnumVa
 		FfiDestroyerSequenceMoveEnumVariant{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceMoveField struct{}
 
@@ -46646,6 +47938,10 @@ func (c FfiConverterOptionalSequenceMoveField) Lower(value *[]MoveField) C.RustB
 	return LowerIntoRustBuffer[*[]MoveField](c, value)
 }
 
+func (c FfiConverterOptionalSequenceMoveField) LowerExternal(value *[]MoveField) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]MoveField](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceMoveField) Write(writer io.Writer, value *[]MoveField) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46662,6 +47958,7 @@ func (_ FfiDestroyerOptionalSequenceMoveField) Destroy(value *[]MoveField) {
 		FfiDestroyerSequenceMoveField{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceMoveFunctionTypeParameter struct{}
 
@@ -46683,6 +47980,10 @@ func (c FfiConverterOptionalSequenceMoveFunctionTypeParameter) Lower(value *[]Mo
 	return LowerIntoRustBuffer[*[]MoveFunctionTypeParameter](c, value)
 }
 
+func (c FfiConverterOptionalSequenceMoveFunctionTypeParameter) LowerExternal(value *[]MoveFunctionTypeParameter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]MoveFunctionTypeParameter](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceMoveFunctionTypeParameter) Write(writer io.Writer, value *[]MoveFunctionTypeParameter) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46699,6 +48000,7 @@ func (_ FfiDestroyerOptionalSequenceMoveFunctionTypeParameter) Destroy(value *[]
 		FfiDestroyerSequenceMoveFunctionTypeParameter{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceMoveStructTypeParameter struct{}
 
@@ -46720,6 +48022,10 @@ func (c FfiConverterOptionalSequenceMoveStructTypeParameter) Lower(value *[]Move
 	return LowerIntoRustBuffer[*[]MoveStructTypeParameter](c, value)
 }
 
+func (c FfiConverterOptionalSequenceMoveStructTypeParameter) LowerExternal(value *[]MoveStructTypeParameter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]MoveStructTypeParameter](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceMoveStructTypeParameter) Write(writer io.Writer, value *[]MoveStructTypeParameter) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46736,6 +48042,7 @@ func (_ FfiDestroyerOptionalSequenceMoveStructTypeParameter) Destroy(value *[]Mo
 		FfiDestroyerSequenceMoveStructTypeParameter{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceObjectRef struct{}
 
@@ -46757,6 +48064,10 @@ func (c FfiConverterOptionalSequenceObjectRef) Lower(value *[]ObjectRef) C.RustB
 	return LowerIntoRustBuffer[*[]ObjectRef](c, value)
 }
 
+func (c FfiConverterOptionalSequenceObjectRef) LowerExternal(value *[]ObjectRef) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]ObjectRef](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceObjectRef) Write(writer io.Writer, value *[]ObjectRef) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46773,6 +48084,7 @@ func (_ FfiDestroyerOptionalSequenceObjectRef) Destroy(value *[]ObjectRef) {
 		FfiDestroyerSequenceObjectRef{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceOpenMoveType struct{}
 
@@ -46794,6 +48106,10 @@ func (c FfiConverterOptionalSequenceOpenMoveType) Lower(value *[]OpenMoveType) C
 	return LowerIntoRustBuffer[*[]OpenMoveType](c, value)
 }
 
+func (c FfiConverterOptionalSequenceOpenMoveType) LowerExternal(value *[]OpenMoveType) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]OpenMoveType](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceOpenMoveType) Write(writer io.Writer, value *[]OpenMoveType) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46810,6 +48126,7 @@ func (_ FfiDestroyerOptionalSequenceOpenMoveType) Destroy(value *[]OpenMoveType)
 		FfiDestroyerSequenceOpenMoveType{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceMoveAbility struct{}
 
@@ -46831,6 +48148,10 @@ func (c FfiConverterOptionalSequenceMoveAbility) Lower(value *[]MoveAbility) C.R
 	return LowerIntoRustBuffer[*[]MoveAbility](c, value)
 }
 
+func (c FfiConverterOptionalSequenceMoveAbility) LowerExternal(value *[]MoveAbility) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]MoveAbility](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceMoveAbility) Write(writer io.Writer, value *[]MoveAbility) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46847,6 +48168,7 @@ func (_ FfiDestroyerOptionalSequenceMoveAbility) Destroy(value *[]MoveAbility) {
 		FfiDestroyerSequenceMoveAbility{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalSequenceTypeValue struct{}
 
@@ -46868,6 +48190,10 @@ func (c FfiConverterOptionalSequenceTypeValue) Lower(value *[]Value) C.RustBuffe
 	return LowerIntoRustBuffer[*[]Value](c, value)
 }
 
+func (c FfiConverterOptionalSequenceTypeValue) LowerExternal(value *[]Value) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*[]Value](c, value))
+}
+
 func (_ FfiConverterOptionalSequenceTypeValue) Write(writer io.Writer, value *[]Value) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46884,6 +48210,7 @@ func (_ FfiDestroyerOptionalSequenceTypeValue) Destroy(value *[]Value) {
 		FfiDestroyerSequenceTypeValue{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalMapStringSequenceString struct{}
 
@@ -46905,6 +48232,10 @@ func (c FfiConverterOptionalMapStringSequenceString) Lower(value *map[string][]s
 	return LowerIntoRustBuffer[*map[string][]string](c, value)
 }
 
+func (c FfiConverterOptionalMapStringSequenceString) LowerExternal(value *map[string][]string) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*map[string][]string](c, value))
+}
+
 func (_ FfiConverterOptionalMapStringSequenceString) Write(writer io.Writer, value *map[string][]string) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46921,6 +48252,7 @@ func (_ FfiDestroyerOptionalMapStringSequenceString) Destroy(value *map[string][
 		FfiDestroyerMapStringSequenceString{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTypeBase64 struct{}
 
@@ -46942,6 +48274,10 @@ func (c FfiConverterOptionalTypeBase64) Lower(value *Base64) C.RustBuffer {
 	return LowerIntoRustBuffer[*Base64](c, value)
 }
 
+func (c FfiConverterOptionalTypeBase64) LowerExternal(value *Base64) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*Base64](c, value))
+}
+
 func (_ FfiConverterOptionalTypeBase64) Write(writer io.Writer, value *Base64) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46958,6 +48294,7 @@ func (_ FfiDestroyerOptionalTypeBase64) Destroy(value *Base64) {
 		FfiDestroyerTypeBase64{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTypeBigInt struct{}
 
@@ -46979,6 +48316,10 @@ func (c FfiConverterOptionalTypeBigInt) Lower(value *BigInt) C.RustBuffer {
 	return LowerIntoRustBuffer[*BigInt](c, value)
 }
 
+func (c FfiConverterOptionalTypeBigInt) LowerExternal(value *BigInt) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*BigInt](c, value))
+}
+
 func (_ FfiConverterOptionalTypeBigInt) Write(writer io.Writer, value *BigInt) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -46995,6 +48336,7 @@ func (_ FfiDestroyerOptionalTypeBigInt) Destroy(value *BigInt) {
 		FfiDestroyerTypeBigInt{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterOptionalTypeValue struct{}
 
@@ -47016,6 +48358,10 @@ func (c FfiConverterOptionalTypeValue) Lower(value *Value) C.RustBuffer {
 	return LowerIntoRustBuffer[*Value](c, value)
 }
 
+func (c FfiConverterOptionalTypeValue) LowerExternal(value *Value) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*Value](c, value))
+}
+
 func (_ FfiConverterOptionalTypeValue) Write(writer io.Writer, value *Value) {
 	if value == nil {
 		writeInt8(writer, 0)
@@ -47032,6 +48378,7 @@ func (_ FfiDestroyerOptionalTypeValue) Destroy(value *Value) {
 		FfiDestroyerTypeValue{}.Destroy(*value)
 	}
 }
+
 
 type FfiConverterSequenceUint16 struct{}
 
@@ -47057,6 +48404,10 @@ func (c FfiConverterSequenceUint16) Lower(value []uint16) C.RustBuffer {
 	return LowerIntoRustBuffer[[]uint16](c, value)
 }
 
+func (c FfiConverterSequenceUint16) LowerExternal(value []uint16) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]uint16](c, value))
+}
+
 func (c FfiConverterSequenceUint16) Write(writer io.Writer, value []uint16) {
 	if len(value) > math.MaxInt32 {
 		panic("[]uint16 is too large to fit into Int32")
@@ -47072,9 +48423,10 @@ type FfiDestroyerSequenceUint16 struct {}
 
 func (FfiDestroyerSequenceUint16) Destroy(sequence []uint16) {
 	for _, value := range sequence {
-		FfiDestroyerUint16{}.Destroy(value)
+		FfiDestroyerUint16{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceUint32 struct{}
 
@@ -47100,6 +48452,10 @@ func (c FfiConverterSequenceUint32) Lower(value []uint32) C.RustBuffer {
 	return LowerIntoRustBuffer[[]uint32](c, value)
 }
 
+func (c FfiConverterSequenceUint32) LowerExternal(value []uint32) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]uint32](c, value))
+}
+
 func (c FfiConverterSequenceUint32) Write(writer io.Writer, value []uint32) {
 	if len(value) > math.MaxInt32 {
 		panic("[]uint32 is too large to fit into Int32")
@@ -47115,9 +48471,10 @@ type FfiDestroyerSequenceUint32 struct {}
 
 func (FfiDestroyerSequenceUint32) Destroy(sequence []uint32) {
 	for _, value := range sequence {
-		FfiDestroyerUint32{}.Destroy(value)
+		FfiDestroyerUint32{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceInt32 struct{}
 
@@ -47143,6 +48500,10 @@ func (c FfiConverterSequenceInt32) Lower(value []int32) C.RustBuffer {
 	return LowerIntoRustBuffer[[]int32](c, value)
 }
 
+func (c FfiConverterSequenceInt32) LowerExternal(value []int32) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]int32](c, value))
+}
+
 func (c FfiConverterSequenceInt32) Write(writer io.Writer, value []int32) {
 	if len(value) > math.MaxInt32 {
 		panic("[]int32 is too large to fit into Int32")
@@ -47158,9 +48519,10 @@ type FfiDestroyerSequenceInt32 struct {}
 
 func (FfiDestroyerSequenceInt32) Destroy(sequence []int32) {
 	for _, value := range sequence {
-		FfiDestroyerInt32{}.Destroy(value)
+		FfiDestroyerInt32{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceUint64 struct{}
 
@@ -47186,6 +48548,10 @@ func (c FfiConverterSequenceUint64) Lower(value []uint64) C.RustBuffer {
 	return LowerIntoRustBuffer[[]uint64](c, value)
 }
 
+func (c FfiConverterSequenceUint64) LowerExternal(value []uint64) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]uint64](c, value))
+}
+
 func (c FfiConverterSequenceUint64) Write(writer io.Writer, value []uint64) {
 	if len(value) > math.MaxInt32 {
 		panic("[]uint64 is too large to fit into Int32")
@@ -47201,9 +48567,10 @@ type FfiDestroyerSequenceUint64 struct {}
 
 func (FfiDestroyerSequenceUint64) Destroy(sequence []uint64) {
 	for _, value := range sequence {
-		FfiDestroyerUint64{}.Destroy(value)
+		FfiDestroyerUint64{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceBool struct{}
 
@@ -47229,6 +48596,10 @@ func (c FfiConverterSequenceBool) Lower(value []bool) C.RustBuffer {
 	return LowerIntoRustBuffer[[]bool](c, value)
 }
 
+func (c FfiConverterSequenceBool) LowerExternal(value []bool) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]bool](c, value))
+}
+
 func (c FfiConverterSequenceBool) Write(writer io.Writer, value []bool) {
 	if len(value) > math.MaxInt32 {
 		panic("[]bool is too large to fit into Int32")
@@ -47244,9 +48615,10 @@ type FfiDestroyerSequenceBool struct {}
 
 func (FfiDestroyerSequenceBool) Destroy(sequence []bool) {
 	for _, value := range sequence {
-		FfiDestroyerBool{}.Destroy(value)
+		FfiDestroyerBool{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceString struct{}
 
@@ -47272,6 +48644,10 @@ func (c FfiConverterSequenceString) Lower(value []string) C.RustBuffer {
 	return LowerIntoRustBuffer[[]string](c, value)
 }
 
+func (c FfiConverterSequenceString) LowerExternal(value []string) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]string](c, value))
+}
+
 func (c FfiConverterSequenceString) Write(writer io.Writer, value []string) {
 	if len(value) > math.MaxInt32 {
 		panic("[]string is too large to fit into Int32")
@@ -47287,9 +48663,10 @@ type FfiDestroyerSequenceString struct {}
 
 func (FfiDestroyerSequenceString) Destroy(sequence []string) {
 	for _, value := range sequence {
-		FfiDestroyerString{}.Destroy(value)
+		FfiDestroyerString{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceBytes struct{}
 
@@ -47315,6 +48692,10 @@ func (c FfiConverterSequenceBytes) Lower(value [][]byte) C.RustBuffer {
 	return LowerIntoRustBuffer[[][]byte](c, value)
 }
 
+func (c FfiConverterSequenceBytes) LowerExternal(value [][]byte) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[][]byte](c, value))
+}
+
 func (c FfiConverterSequenceBytes) Write(writer io.Writer, value [][]byte) {
 	if len(value) > math.MaxInt32 {
 		panic("[][]byte is too large to fit into Int32")
@@ -47330,9 +48711,10 @@ type FfiDestroyerSequenceBytes struct {}
 
 func (FfiDestroyerSequenceBytes) Destroy(sequence [][]byte) {
 	for _, value := range sequence {
-		FfiDestroyerBytes{}.Destroy(value)
+		FfiDestroyerBytes{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceAddress struct{}
 
@@ -47358,6 +48740,10 @@ func (c FfiConverterSequenceAddress) Lower(value []*Address) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Address](c, value)
 }
 
+func (c FfiConverterSequenceAddress) LowerExternal(value []*Address) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Address](c, value))
+}
+
 func (c FfiConverterSequenceAddress) Write(writer io.Writer, value []*Address) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Address is too large to fit into Int32")
@@ -47373,9 +48759,10 @@ type FfiDestroyerSequenceAddress struct {}
 
 func (FfiDestroyerSequenceAddress) Destroy(sequence []*Address) {
 	for _, value := range sequence {
-		FfiDestroyerAddress{}.Destroy(value)
+		FfiDestroyerAddress{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceArgument struct{}
 
@@ -47401,6 +48788,10 @@ func (c FfiConverterSequenceArgument) Lower(value []*Argument) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Argument](c, value)
 }
 
+func (c FfiConverterSequenceArgument) LowerExternal(value []*Argument) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Argument](c, value))
+}
+
 func (c FfiConverterSequenceArgument) Write(writer io.Writer, value []*Argument) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Argument is too large to fit into Int32")
@@ -47416,9 +48807,10 @@ type FfiDestroyerSequenceArgument struct {}
 
 func (FfiDestroyerSequenceArgument) Destroy(sequence []*Argument) {
 	for _, value := range sequence {
-		FfiDestroyerArgument{}.Destroy(value)
+		FfiDestroyerArgument{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCancelledTransaction struct{}
 
@@ -47444,6 +48836,10 @@ func (c FfiConverterSequenceCancelledTransaction) Lower(value []*CancelledTransa
 	return LowerIntoRustBuffer[[]*CancelledTransaction](c, value)
 }
 
+func (c FfiConverterSequenceCancelledTransaction) LowerExternal(value []*CancelledTransaction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*CancelledTransaction](c, value))
+}
+
 func (c FfiConverterSequenceCancelledTransaction) Write(writer io.Writer, value []*CancelledTransaction) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*CancelledTransaction is too large to fit into Int32")
@@ -47459,9 +48855,10 @@ type FfiDestroyerSequenceCancelledTransaction struct {}
 
 func (FfiDestroyerSequenceCancelledTransaction) Destroy(sequence []*CancelledTransaction) {
 	for _, value := range sequence {
-		FfiDestroyerCancelledTransaction{}.Destroy(value)
+		FfiDestroyerCancelledTransaction{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCheckpointCommitment struct{}
 
@@ -47487,6 +48884,10 @@ func (c FfiConverterSequenceCheckpointCommitment) Lower(value []*CheckpointCommi
 	return LowerIntoRustBuffer[[]*CheckpointCommitment](c, value)
 }
 
+func (c FfiConverterSequenceCheckpointCommitment) LowerExternal(value []*CheckpointCommitment) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*CheckpointCommitment](c, value))
+}
+
 func (c FfiConverterSequenceCheckpointCommitment) Write(writer io.Writer, value []*CheckpointCommitment) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*CheckpointCommitment is too large to fit into Int32")
@@ -47502,9 +48903,10 @@ type FfiDestroyerSequenceCheckpointCommitment struct {}
 
 func (FfiDestroyerSequenceCheckpointCommitment) Destroy(sequence []*CheckpointCommitment) {
 	for _, value := range sequence {
-		FfiDestroyerCheckpointCommitment{}.Destroy(value)
+		FfiDestroyerCheckpointCommitment{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCheckpointSummary struct{}
 
@@ -47530,6 +48932,10 @@ func (c FfiConverterSequenceCheckpointSummary) Lower(value []*CheckpointSummary)
 	return LowerIntoRustBuffer[[]*CheckpointSummary](c, value)
 }
 
+func (c FfiConverterSequenceCheckpointSummary) LowerExternal(value []*CheckpointSummary) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*CheckpointSummary](c, value))
+}
+
 func (c FfiConverterSequenceCheckpointSummary) Write(writer io.Writer, value []*CheckpointSummary) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*CheckpointSummary is too large to fit into Int32")
@@ -47545,9 +48951,10 @@ type FfiDestroyerSequenceCheckpointSummary struct {}
 
 func (FfiDestroyerSequenceCheckpointSummary) Destroy(sequence []*CheckpointSummary) {
 	for _, value := range sequence {
-		FfiDestroyerCheckpointSummary{}.Destroy(value)
+		FfiDestroyerCheckpointSummary{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCheckpointTransactionInfo struct{}
 
@@ -47573,6 +48980,10 @@ func (c FfiConverterSequenceCheckpointTransactionInfo) Lower(value []*Checkpoint
 	return LowerIntoRustBuffer[[]*CheckpointTransactionInfo](c, value)
 }
 
+func (c FfiConverterSequenceCheckpointTransactionInfo) LowerExternal(value []*CheckpointTransactionInfo) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*CheckpointTransactionInfo](c, value))
+}
+
 func (c FfiConverterSequenceCheckpointTransactionInfo) Write(writer io.Writer, value []*CheckpointTransactionInfo) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*CheckpointTransactionInfo is too large to fit into Int32")
@@ -47588,9 +48999,10 @@ type FfiDestroyerSequenceCheckpointTransactionInfo struct {}
 
 func (FfiDestroyerSequenceCheckpointTransactionInfo) Destroy(sequence []*CheckpointTransactionInfo) {
 	for _, value := range sequence {
-		FfiDestroyerCheckpointTransactionInfo{}.Destroy(value)
+		FfiDestroyerCheckpointTransactionInfo{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCoin struct{}
 
@@ -47616,6 +49028,10 @@ func (c FfiConverterSequenceCoin) Lower(value []*Coin) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Coin](c, value)
 }
 
+func (c FfiConverterSequenceCoin) LowerExternal(value []*Coin) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Coin](c, value))
+}
+
 func (c FfiConverterSequenceCoin) Write(writer io.Writer, value []*Coin) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Coin is too large to fit into Int32")
@@ -47631,9 +49047,10 @@ type FfiDestroyerSequenceCoin struct {}
 
 func (FfiDestroyerSequenceCoin) Destroy(sequence []*Coin) {
 	for _, value := range sequence {
-		FfiDestroyerCoin{}.Destroy(value)
+		FfiDestroyerCoin{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCommand struct{}
 
@@ -47659,6 +49076,10 @@ func (c FfiConverterSequenceCommand) Lower(value []*Command) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Command](c, value)
 }
 
+func (c FfiConverterSequenceCommand) LowerExternal(value []*Command) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Command](c, value))
+}
+
 func (c FfiConverterSequenceCommand) Write(writer io.Writer, value []*Command) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Command is too large to fit into Int32")
@@ -47674,9 +49095,10 @@ type FfiDestroyerSequenceCommand struct {}
 
 func (FfiDestroyerSequenceCommand) Destroy(sequence []*Command) {
 	for _, value := range sequence {
-		FfiDestroyerCommand{}.Destroy(value)
+		FfiDestroyerCommand{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceDigest struct{}
 
@@ -47702,6 +49124,10 @@ func (c FfiConverterSequenceDigest) Lower(value []*Digest) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Digest](c, value)
 }
 
+func (c FfiConverterSequenceDigest) LowerExternal(value []*Digest) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Digest](c, value))
+}
+
 func (c FfiConverterSequenceDigest) Write(writer io.Writer, value []*Digest) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Digest is too large to fit into Int32")
@@ -47717,9 +49143,10 @@ type FfiDestroyerSequenceDigest struct {}
 
 func (FfiDestroyerSequenceDigest) Destroy(sequence []*Digest) {
 	for _, value := range sequence {
-		FfiDestroyerDigest{}.Destroy(value)
+		FfiDestroyerDigest{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceEndOfEpochTransactionKind struct{}
 
@@ -47745,6 +49172,10 @@ func (c FfiConverterSequenceEndOfEpochTransactionKind) Lower(value []*EndOfEpoch
 	return LowerIntoRustBuffer[[]*EndOfEpochTransactionKind](c, value)
 }
 
+func (c FfiConverterSequenceEndOfEpochTransactionKind) LowerExternal(value []*EndOfEpochTransactionKind) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*EndOfEpochTransactionKind](c, value))
+}
+
 func (c FfiConverterSequenceEndOfEpochTransactionKind) Write(writer io.Writer, value []*EndOfEpochTransactionKind) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*EndOfEpochTransactionKind is too large to fit into Int32")
@@ -47760,9 +49191,10 @@ type FfiDestroyerSequenceEndOfEpochTransactionKind struct {}
 
 func (FfiDestroyerSequenceEndOfEpochTransactionKind) Destroy(sequence []*EndOfEpochTransactionKind) {
 	for _, value := range sequence {
-		FfiDestroyerEndOfEpochTransactionKind{}.Destroy(value)
+		FfiDestroyerEndOfEpochTransactionKind{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceExecutionTimeObservation struct{}
 
@@ -47788,6 +49220,10 @@ func (c FfiConverterSequenceExecutionTimeObservation) Lower(value []*ExecutionTi
 	return LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value)
 }
 
+func (c FfiConverterSequenceExecutionTimeObservation) LowerExternal(value []*ExecutionTimeObservation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*ExecutionTimeObservation](c, value))
+}
+
 func (c FfiConverterSequenceExecutionTimeObservation) Write(writer io.Writer, value []*ExecutionTimeObservation) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*ExecutionTimeObservation is too large to fit into Int32")
@@ -47803,9 +49239,10 @@ type FfiDestroyerSequenceExecutionTimeObservation struct {}
 
 func (FfiDestroyerSequenceExecutionTimeObservation) Destroy(sequence []*ExecutionTimeObservation) {
 	for _, value := range sequence {
-		FfiDestroyerExecutionTimeObservation{}.Destroy(value)
+		FfiDestroyerExecutionTimeObservation{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceGenesisObject struct{}
 
@@ -47831,6 +49268,10 @@ func (c FfiConverterSequenceGenesisObject) Lower(value []*GenesisObject) C.RustB
 	return LowerIntoRustBuffer[[]*GenesisObject](c, value)
 }
 
+func (c FfiConverterSequenceGenesisObject) LowerExternal(value []*GenesisObject) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*GenesisObject](c, value))
+}
+
 func (c FfiConverterSequenceGenesisObject) Write(writer io.Writer, value []*GenesisObject) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*GenesisObject is too large to fit into Int32")
@@ -47846,9 +49287,10 @@ type FfiDestroyerSequenceGenesisObject struct {}
 
 func (FfiDestroyerSequenceGenesisObject) Destroy(sequence []*GenesisObject) {
 	for _, value := range sequence {
-		FfiDestroyerGenesisObject{}.Destroy(value)
+		FfiDestroyerGenesisObject{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceInput struct{}
 
@@ -47874,6 +49316,10 @@ func (c FfiConverterSequenceInput) Lower(value []*Input) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Input](c, value)
 }
 
+func (c FfiConverterSequenceInput) LowerExternal(value []*Input) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Input](c, value))
+}
+
 func (c FfiConverterSequenceInput) Write(writer io.Writer, value []*Input) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Input is too large to fit into Int32")
@@ -47889,9 +49335,10 @@ type FfiDestroyerSequenceInput struct {}
 
 func (FfiDestroyerSequenceInput) Destroy(sequence []*Input) {
 	for _, value := range sequence {
-		FfiDestroyerInput{}.Destroy(value)
+		FfiDestroyerInput{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveArg struct{}
 
@@ -47917,6 +49364,10 @@ func (c FfiConverterSequenceMoveArg) Lower(value []*MoveArg) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*MoveArg](c, value)
 }
 
+func (c FfiConverterSequenceMoveArg) LowerExternal(value []*MoveArg) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*MoveArg](c, value))
+}
+
 func (c FfiConverterSequenceMoveArg) Write(writer io.Writer, value []*MoveArg) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*MoveArg is too large to fit into Int32")
@@ -47932,9 +49383,10 @@ type FfiDestroyerSequenceMoveArg struct {}
 
 func (FfiDestroyerSequenceMoveArg) Destroy(sequence []*MoveArg) {
 	for _, value := range sequence {
-		FfiDestroyerMoveArg{}.Destroy(value)
+		FfiDestroyerMoveArg{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveFunction struct{}
 
@@ -47960,6 +49412,10 @@ func (c FfiConverterSequenceMoveFunction) Lower(value []*MoveFunction) C.RustBuf
 	return LowerIntoRustBuffer[[]*MoveFunction](c, value)
 }
 
+func (c FfiConverterSequenceMoveFunction) LowerExternal(value []*MoveFunction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*MoveFunction](c, value))
+}
+
 func (c FfiConverterSequenceMoveFunction) Write(writer io.Writer, value []*MoveFunction) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*MoveFunction is too large to fit into Int32")
@@ -47975,9 +49431,10 @@ type FfiDestroyerSequenceMoveFunction struct {}
 
 func (FfiDestroyerSequenceMoveFunction) Destroy(sequence []*MoveFunction) {
 	for _, value := range sequence {
-		FfiDestroyerMoveFunction{}.Destroy(value)
+		FfiDestroyerMoveFunction{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMovePackage struct{}
 
@@ -48003,6 +49460,10 @@ func (c FfiConverterSequenceMovePackage) Lower(value []*MovePackage) C.RustBuffe
 	return LowerIntoRustBuffer[[]*MovePackage](c, value)
 }
 
+func (c FfiConverterSequenceMovePackage) LowerExternal(value []*MovePackage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*MovePackage](c, value))
+}
+
 func (c FfiConverterSequenceMovePackage) Write(writer io.Writer, value []*MovePackage) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*MovePackage is too large to fit into Int32")
@@ -48018,9 +49479,10 @@ type FfiDestroyerSequenceMovePackage struct {}
 
 func (FfiDestroyerSequenceMovePackage) Destroy(sequence []*MovePackage) {
 	for _, value := range sequence {
-		FfiDestroyerMovePackage{}.Destroy(value)
+		FfiDestroyerMovePackage{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveViewArg struct{}
 
@@ -48046,6 +49508,10 @@ func (c FfiConverterSequenceMoveViewArg) Lower(value []*MoveViewArg) C.RustBuffe
 	return LowerIntoRustBuffer[[]*MoveViewArg](c, value)
 }
 
+func (c FfiConverterSequenceMoveViewArg) LowerExternal(value []*MoveViewArg) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*MoveViewArg](c, value))
+}
+
 func (c FfiConverterSequenceMoveViewArg) Write(writer io.Writer, value []*MoveViewArg) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*MoveViewArg is too large to fit into Int32")
@@ -48061,9 +49527,10 @@ type FfiDestroyerSequenceMoveViewArg struct {}
 
 func (FfiDestroyerSequenceMoveViewArg) Destroy(sequence []*MoveViewArg) {
 	for _, value := range sequence {
-		FfiDestroyerMoveViewArg{}.Destroy(value)
+		FfiDestroyerMoveViewArg{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMultisigMember struct{}
 
@@ -48089,6 +49556,10 @@ func (c FfiConverterSequenceMultisigMember) Lower(value []*MultisigMember) C.Rus
 	return LowerIntoRustBuffer[[]*MultisigMember](c, value)
 }
 
+func (c FfiConverterSequenceMultisigMember) LowerExternal(value []*MultisigMember) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*MultisigMember](c, value))
+}
+
 func (c FfiConverterSequenceMultisigMember) Write(writer io.Writer, value []*MultisigMember) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*MultisigMember is too large to fit into Int32")
@@ -48104,9 +49575,10 @@ type FfiDestroyerSequenceMultisigMember struct {}
 
 func (FfiDestroyerSequenceMultisigMember) Destroy(sequence []*MultisigMember) {
 	for _, value := range sequence {
-		FfiDestroyerMultisigMember{}.Destroy(value)
+		FfiDestroyerMultisigMember{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMultisigMemberSignature struct{}
 
@@ -48132,6 +49604,10 @@ func (c FfiConverterSequenceMultisigMemberSignature) Lower(value []*MultisigMemb
 	return LowerIntoRustBuffer[[]*MultisigMemberSignature](c, value)
 }
 
+func (c FfiConverterSequenceMultisigMemberSignature) LowerExternal(value []*MultisigMemberSignature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*MultisigMemberSignature](c, value))
+}
+
 func (c FfiConverterSequenceMultisigMemberSignature) Write(writer io.Writer, value []*MultisigMemberSignature) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*MultisigMemberSignature is too large to fit into Int32")
@@ -48147,9 +49623,10 @@ type FfiDestroyerSequenceMultisigMemberSignature struct {}
 
 func (FfiDestroyerSequenceMultisigMemberSignature) Destroy(sequence []*MultisigMemberSignature) {
 	for _, value := range sequence {
-		FfiDestroyerMultisigMemberSignature{}.Destroy(value)
+		FfiDestroyerMultisigMemberSignature{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceNameRegistration struct{}
 
@@ -48175,6 +49652,10 @@ func (c FfiConverterSequenceNameRegistration) Lower(value []*NameRegistration) C
 	return LowerIntoRustBuffer[[]*NameRegistration](c, value)
 }
 
+func (c FfiConverterSequenceNameRegistration) LowerExternal(value []*NameRegistration) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*NameRegistration](c, value))
+}
+
 func (c FfiConverterSequenceNameRegistration) Write(writer io.Writer, value []*NameRegistration) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*NameRegistration is too large to fit into Int32")
@@ -48190,9 +49671,10 @@ type FfiDestroyerSequenceNameRegistration struct {}
 
 func (FfiDestroyerSequenceNameRegistration) Destroy(sequence []*NameRegistration) {
 	for _, value := range sequence {
-		FfiDestroyerNameRegistration{}.Destroy(value)
+		FfiDestroyerNameRegistration{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceObject struct{}
 
@@ -48218,6 +49700,10 @@ func (c FfiConverterSequenceObject) Lower(value []*Object) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*Object](c, value)
 }
 
+func (c FfiConverterSequenceObject) LowerExternal(value []*Object) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*Object](c, value))
+}
+
 func (c FfiConverterSequenceObject) Write(writer io.Writer, value []*Object) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*Object is too large to fit into Int32")
@@ -48233,9 +49719,10 @@ type FfiDestroyerSequenceObject struct {}
 
 func (FfiDestroyerSequenceObject) Destroy(sequence []*Object) {
 	for _, value := range sequence {
-		FfiDestroyerObject{}.Destroy(value)
+		FfiDestroyerObject{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceObjectId struct{}
 
@@ -48261,6 +49748,10 @@ func (c FfiConverterSequenceObjectId) Lower(value []*ObjectId) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*ObjectId](c, value)
 }
 
+func (c FfiConverterSequenceObjectId) LowerExternal(value []*ObjectId) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*ObjectId](c, value))
+}
+
 func (c FfiConverterSequenceObjectId) Write(writer io.Writer, value []*ObjectId) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*ObjectId is too large to fit into Int32")
@@ -48276,9 +49767,10 @@ type FfiDestroyerSequenceObjectId struct {}
 
 func (FfiDestroyerSequenceObjectId) Destroy(sequence []*ObjectId) {
 	for _, value := range sequence {
-		FfiDestroyerObjectId{}.Destroy(value)
+		FfiDestroyerObjectId{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequencePtbArgument struct{}
 
@@ -48304,6 +49796,10 @@ func (c FfiConverterSequencePtbArgument) Lower(value []*PtbArgument) C.RustBuffe
 	return LowerIntoRustBuffer[[]*PtbArgument](c, value)
 }
 
+func (c FfiConverterSequencePtbArgument) LowerExternal(value []*PtbArgument) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*PtbArgument](c, value))
+}
+
 func (c FfiConverterSequencePtbArgument) Write(writer io.Writer, value []*PtbArgument) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*PtbArgument is too large to fit into Int32")
@@ -48319,9 +49815,10 @@ type FfiDestroyerSequencePtbArgument struct {}
 
 func (FfiDestroyerSequencePtbArgument) Destroy(sequence []*PtbArgument) {
 	for _, value := range sequence {
-		FfiDestroyerPtbArgument{}.Destroy(value)
+		FfiDestroyerPtbArgument{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceSystemPackage struct{}
 
@@ -48347,6 +49844,10 @@ func (c FfiConverterSequenceSystemPackage) Lower(value []*SystemPackage) C.RustB
 	return LowerIntoRustBuffer[[]*SystemPackage](c, value)
 }
 
+func (c FfiConverterSequenceSystemPackage) LowerExternal(value []*SystemPackage) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*SystemPackage](c, value))
+}
+
 func (c FfiConverterSequenceSystemPackage) Write(writer io.Writer, value []*SystemPackage) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*SystemPackage is too large to fit into Int32")
@@ -48362,9 +49863,10 @@ type FfiDestroyerSequenceSystemPackage struct {}
 
 func (FfiDestroyerSequenceSystemPackage) Destroy(sequence []*SystemPackage) {
 	for _, value := range sequence {
-		FfiDestroyerSystemPackage{}.Destroy(value)
+		FfiDestroyerSystemPackage{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceTransactionEffects struct{}
 
@@ -48390,6 +49892,10 @@ func (c FfiConverterSequenceTransactionEffects) Lower(value []*TransactionEffect
 	return LowerIntoRustBuffer[[]*TransactionEffects](c, value)
 }
 
+func (c FfiConverterSequenceTransactionEffects) LowerExternal(value []*TransactionEffects) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*TransactionEffects](c, value))
+}
+
 func (c FfiConverterSequenceTransactionEffects) Write(writer io.Writer, value []*TransactionEffects) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*TransactionEffects is too large to fit into Int32")
@@ -48405,9 +49911,10 @@ type FfiDestroyerSequenceTransactionEffects struct {}
 
 func (FfiDestroyerSequenceTransactionEffects) Destroy(sequence []*TransactionEffects) {
 	for _, value := range sequence {
-		FfiDestroyerTransactionEffects{}.Destroy(value)
+		FfiDestroyerTransactionEffects{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceTypeTag struct{}
 
@@ -48433,6 +49940,10 @@ func (c FfiConverterSequenceTypeTag) Lower(value []*TypeTag) C.RustBuffer {
 	return LowerIntoRustBuffer[[]*TypeTag](c, value)
 }
 
+func (c FfiConverterSequenceTypeTag) LowerExternal(value []*TypeTag) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*TypeTag](c, value))
+}
+
 func (c FfiConverterSequenceTypeTag) Write(writer io.Writer, value []*TypeTag) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*TypeTag is too large to fit into Int32")
@@ -48448,9 +49959,10 @@ type FfiDestroyerSequenceTypeTag struct {}
 
 func (FfiDestroyerSequenceTypeTag) Destroy(sequence []*TypeTag) {
 	for _, value := range sequence {
-		FfiDestroyerTypeTag{}.Destroy(value)
+		FfiDestroyerTypeTag{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceUserSignature struct{}
 
@@ -48476,6 +49988,10 @@ func (c FfiConverterSequenceUserSignature) Lower(value []*UserSignature) C.RustB
 	return LowerIntoRustBuffer[[]*UserSignature](c, value)
 }
 
+func (c FfiConverterSequenceUserSignature) LowerExternal(value []*UserSignature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*UserSignature](c, value))
+}
+
 func (c FfiConverterSequenceUserSignature) Write(writer io.Writer, value []*UserSignature) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*UserSignature is too large to fit into Int32")
@@ -48491,9 +50007,10 @@ type FfiDestroyerSequenceUserSignature struct {}
 
 func (FfiDestroyerSequenceUserSignature) Destroy(sequence []*UserSignature) {
 	for _, value := range sequence {
-		FfiDestroyerUserSignature{}.Destroy(value)
+		FfiDestroyerUserSignature{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceValidatorExecutionTimeObservation struct{}
 
@@ -48519,6 +50036,10 @@ func (c FfiConverterSequenceValidatorExecutionTimeObservation) Lower(value []*Va
 	return LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value)
 }
 
+func (c FfiConverterSequenceValidatorExecutionTimeObservation) LowerExternal(value []*ValidatorExecutionTimeObservation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*ValidatorExecutionTimeObservation](c, value))
+}
+
 func (c FfiConverterSequenceValidatorExecutionTimeObservation) Write(writer io.Writer, value []*ValidatorExecutionTimeObservation) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*ValidatorExecutionTimeObservation is too large to fit into Int32")
@@ -48534,9 +50055,10 @@ type FfiDestroyerSequenceValidatorExecutionTimeObservation struct {}
 
 func (FfiDestroyerSequenceValidatorExecutionTimeObservation) Destroy(sequence []*ValidatorExecutionTimeObservation) {
 	for _, value := range sequence {
-		FfiDestroyerValidatorExecutionTimeObservation{}.Destroy(value)
+		FfiDestroyerValidatorExecutionTimeObservation{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceVersionAssignment struct{}
 
@@ -48562,6 +50084,10 @@ func (c FfiConverterSequenceVersionAssignment) Lower(value []*VersionAssignment)
 	return LowerIntoRustBuffer[[]*VersionAssignment](c, value)
 }
 
+func (c FfiConverterSequenceVersionAssignment) LowerExternal(value []*VersionAssignment) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]*VersionAssignment](c, value))
+}
+
 func (c FfiConverterSequenceVersionAssignment) Write(writer io.Writer, value []*VersionAssignment) {
 	if len(value) > math.MaxInt32 {
 		panic("[]*VersionAssignment is too large to fit into Int32")
@@ -48577,9 +50103,10 @@ type FfiDestroyerSequenceVersionAssignment struct {}
 
 func (FfiDestroyerSequenceVersionAssignment) Destroy(sequence []*VersionAssignment) {
 	for _, value := range sequence {
-		FfiDestroyerVersionAssignment{}.Destroy(value)
+		FfiDestroyerVersionAssignment{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceActiveJwk struct{}
 
@@ -48605,6 +50132,10 @@ func (c FfiConverterSequenceActiveJwk) Lower(value []ActiveJwk) C.RustBuffer {
 	return LowerIntoRustBuffer[[]ActiveJwk](c, value)
 }
 
+func (c FfiConverterSequenceActiveJwk) LowerExternal(value []ActiveJwk) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ActiveJwk](c, value))
+}
+
 func (c FfiConverterSequenceActiveJwk) Write(writer io.Writer, value []ActiveJwk) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ActiveJwk is too large to fit into Int32")
@@ -48620,9 +50151,10 @@ type FfiDestroyerSequenceActiveJwk struct {}
 
 func (FfiDestroyerSequenceActiveJwk) Destroy(sequence []ActiveJwk) {
 	for _, value := range sequence {
-		FfiDestroyerActiveJwk{}.Destroy(value)
+		FfiDestroyerActiveJwk{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceChangedObject struct{}
 
@@ -48648,6 +50180,10 @@ func (c FfiConverterSequenceChangedObject) Lower(value []ChangedObject) C.RustBu
 	return LowerIntoRustBuffer[[]ChangedObject](c, value)
 }
 
+func (c FfiConverterSequenceChangedObject) LowerExternal(value []ChangedObject) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ChangedObject](c, value))
+}
+
 func (c FfiConverterSequenceChangedObject) Write(writer io.Writer, value []ChangedObject) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ChangedObject is too large to fit into Int32")
@@ -48663,9 +50199,10 @@ type FfiDestroyerSequenceChangedObject struct {}
 
 func (FfiDestroyerSequenceChangedObject) Destroy(sequence []ChangedObject) {
 	for _, value := range sequence {
-		FfiDestroyerChangedObject{}.Destroy(value)
+		FfiDestroyerChangedObject{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceCoinInfo struct{}
 
@@ -48691,6 +50228,10 @@ func (c FfiConverterSequenceCoinInfo) Lower(value []CoinInfo) C.RustBuffer {
 	return LowerIntoRustBuffer[[]CoinInfo](c, value)
 }
 
+func (c FfiConverterSequenceCoinInfo) LowerExternal(value []CoinInfo) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]CoinInfo](c, value))
+}
+
 func (c FfiConverterSequenceCoinInfo) Write(writer io.Writer, value []CoinInfo) {
 	if len(value) > math.MaxInt32 {
 		panic("[]CoinInfo is too large to fit into Int32")
@@ -48706,9 +50247,10 @@ type FfiDestroyerSequenceCoinInfo struct {}
 
 func (FfiDestroyerSequenceCoinInfo) Destroy(sequence []CoinInfo) {
 	for _, value := range sequence {
-		FfiDestroyerCoinInfo{}.Destroy(value)
+		FfiDestroyerCoinInfo{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceDryRunEffect struct{}
 
@@ -48734,6 +50276,10 @@ func (c FfiConverterSequenceDryRunEffect) Lower(value []DryRunEffect) C.RustBuff
 	return LowerIntoRustBuffer[[]DryRunEffect](c, value)
 }
 
+func (c FfiConverterSequenceDryRunEffect) LowerExternal(value []DryRunEffect) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]DryRunEffect](c, value))
+}
+
 func (c FfiConverterSequenceDryRunEffect) Write(writer io.Writer, value []DryRunEffect) {
 	if len(value) > math.MaxInt32 {
 		panic("[]DryRunEffect is too large to fit into Int32")
@@ -48749,9 +50295,10 @@ type FfiDestroyerSequenceDryRunEffect struct {}
 
 func (FfiDestroyerSequenceDryRunEffect) Destroy(sequence []DryRunEffect) {
 	for _, value := range sequence {
-		FfiDestroyerDryRunEffect{}.Destroy(value)
+		FfiDestroyerDryRunEffect{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceDryRunMutation struct{}
 
@@ -48777,6 +50324,10 @@ func (c FfiConverterSequenceDryRunMutation) Lower(value []DryRunMutation) C.Rust
 	return LowerIntoRustBuffer[[]DryRunMutation](c, value)
 }
 
+func (c FfiConverterSequenceDryRunMutation) LowerExternal(value []DryRunMutation) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]DryRunMutation](c, value))
+}
+
 func (c FfiConverterSequenceDryRunMutation) Write(writer io.Writer, value []DryRunMutation) {
 	if len(value) > math.MaxInt32 {
 		panic("[]DryRunMutation is too large to fit into Int32")
@@ -48792,9 +50343,10 @@ type FfiDestroyerSequenceDryRunMutation struct {}
 
 func (FfiDestroyerSequenceDryRunMutation) Destroy(sequence []DryRunMutation) {
 	for _, value := range sequence {
-		FfiDestroyerDryRunMutation{}.Destroy(value)
+		FfiDestroyerDryRunMutation{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceDryRunReturn struct{}
 
@@ -48820,6 +50372,10 @@ func (c FfiConverterSequenceDryRunReturn) Lower(value []DryRunReturn) C.RustBuff
 	return LowerIntoRustBuffer[[]DryRunReturn](c, value)
 }
 
+func (c FfiConverterSequenceDryRunReturn) LowerExternal(value []DryRunReturn) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]DryRunReturn](c, value))
+}
+
 func (c FfiConverterSequenceDryRunReturn) Write(writer io.Writer, value []DryRunReturn) {
 	if len(value) > math.MaxInt32 {
 		panic("[]DryRunReturn is too large to fit into Int32")
@@ -48835,9 +50391,10 @@ type FfiDestroyerSequenceDryRunReturn struct {}
 
 func (FfiDestroyerSequenceDryRunReturn) Destroy(sequence []DryRunReturn) {
 	for _, value := range sequence {
-		FfiDestroyerDryRunReturn{}.Destroy(value)
+		FfiDestroyerDryRunReturn{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceDynamicFieldOutput struct{}
 
@@ -48863,6 +50420,10 @@ func (c FfiConverterSequenceDynamicFieldOutput) Lower(value []DynamicFieldOutput
 	return LowerIntoRustBuffer[[]DynamicFieldOutput](c, value)
 }
 
+func (c FfiConverterSequenceDynamicFieldOutput) LowerExternal(value []DynamicFieldOutput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]DynamicFieldOutput](c, value))
+}
+
 func (c FfiConverterSequenceDynamicFieldOutput) Write(writer io.Writer, value []DynamicFieldOutput) {
 	if len(value) > math.MaxInt32 {
 		panic("[]DynamicFieldOutput is too large to fit into Int32")
@@ -48878,9 +50439,10 @@ type FfiDestroyerSequenceDynamicFieldOutput struct {}
 
 func (FfiDestroyerSequenceDynamicFieldOutput) Destroy(sequence []DynamicFieldOutput) {
 	for _, value := range sequence {
-		FfiDestroyerDynamicFieldOutput{}.Destroy(value)
+		FfiDestroyerDynamicFieldOutput{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceEpoch struct{}
 
@@ -48906,6 +50468,10 @@ func (c FfiConverterSequenceEpoch) Lower(value []Epoch) C.RustBuffer {
 	return LowerIntoRustBuffer[[]Epoch](c, value)
 }
 
+func (c FfiConverterSequenceEpoch) LowerExternal(value []Epoch) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]Epoch](c, value))
+}
+
 func (c FfiConverterSequenceEpoch) Write(writer io.Writer, value []Epoch) {
 	if len(value) > math.MaxInt32 {
 		panic("[]Epoch is too large to fit into Int32")
@@ -48921,9 +50487,10 @@ type FfiDestroyerSequenceEpoch struct {}
 
 func (FfiDestroyerSequenceEpoch) Destroy(sequence []Epoch) {
 	for _, value := range sequence {
-		FfiDestroyerEpoch{}.Destroy(value)
+		FfiDestroyerEpoch{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceEvent struct{}
 
@@ -48949,6 +50516,10 @@ func (c FfiConverterSequenceEvent) Lower(value []Event) C.RustBuffer {
 	return LowerIntoRustBuffer[[]Event](c, value)
 }
 
+func (c FfiConverterSequenceEvent) LowerExternal(value []Event) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]Event](c, value))
+}
+
 func (c FfiConverterSequenceEvent) Write(writer io.Writer, value []Event) {
 	if len(value) > math.MaxInt32 {
 		panic("[]Event is too large to fit into Int32")
@@ -48964,9 +50535,10 @@ type FfiDestroyerSequenceEvent struct {}
 
 func (FfiDestroyerSequenceEvent) Destroy(sequence []Event) {
 	for _, value := range sequence {
-		FfiDestroyerEvent{}.Destroy(value)
+		FfiDestroyerEvent{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveEnum struct{}
 
@@ -48992,6 +50564,10 @@ func (c FfiConverterSequenceMoveEnum) Lower(value []MoveEnum) C.RustBuffer {
 	return LowerIntoRustBuffer[[]MoveEnum](c, value)
 }
 
+func (c FfiConverterSequenceMoveEnum) LowerExternal(value []MoveEnum) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveEnum](c, value))
+}
+
 func (c FfiConverterSequenceMoveEnum) Write(writer io.Writer, value []MoveEnum) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveEnum is too large to fit into Int32")
@@ -49007,9 +50583,10 @@ type FfiDestroyerSequenceMoveEnum struct {}
 
 func (FfiDestroyerSequenceMoveEnum) Destroy(sequence []MoveEnum) {
 	for _, value := range sequence {
-		FfiDestroyerMoveEnum{}.Destroy(value)
+		FfiDestroyerMoveEnum{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveEnumVariant struct{}
 
@@ -49035,6 +50612,10 @@ func (c FfiConverterSequenceMoveEnumVariant) Lower(value []MoveEnumVariant) C.Ru
 	return LowerIntoRustBuffer[[]MoveEnumVariant](c, value)
 }
 
+func (c FfiConverterSequenceMoveEnumVariant) LowerExternal(value []MoveEnumVariant) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveEnumVariant](c, value))
+}
+
 func (c FfiConverterSequenceMoveEnumVariant) Write(writer io.Writer, value []MoveEnumVariant) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveEnumVariant is too large to fit into Int32")
@@ -49050,9 +50631,10 @@ type FfiDestroyerSequenceMoveEnumVariant struct {}
 
 func (FfiDestroyerSequenceMoveEnumVariant) Destroy(sequence []MoveEnumVariant) {
 	for _, value := range sequence {
-		FfiDestroyerMoveEnumVariant{}.Destroy(value)
+		FfiDestroyerMoveEnumVariant{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveField struct{}
 
@@ -49078,6 +50660,10 @@ func (c FfiConverterSequenceMoveField) Lower(value []MoveField) C.RustBuffer {
 	return LowerIntoRustBuffer[[]MoveField](c, value)
 }
 
+func (c FfiConverterSequenceMoveField) LowerExternal(value []MoveField) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveField](c, value))
+}
+
 func (c FfiConverterSequenceMoveField) Write(writer io.Writer, value []MoveField) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveField is too large to fit into Int32")
@@ -49093,9 +50679,10 @@ type FfiDestroyerSequenceMoveField struct {}
 
 func (FfiDestroyerSequenceMoveField) Destroy(sequence []MoveField) {
 	for _, value := range sequence {
-		FfiDestroyerMoveField{}.Destroy(value)
+		FfiDestroyerMoveField{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveFunctionTypeParameter struct{}
 
@@ -49121,6 +50708,10 @@ func (c FfiConverterSequenceMoveFunctionTypeParameter) Lower(value []MoveFunctio
 	return LowerIntoRustBuffer[[]MoveFunctionTypeParameter](c, value)
 }
 
+func (c FfiConverterSequenceMoveFunctionTypeParameter) LowerExternal(value []MoveFunctionTypeParameter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveFunctionTypeParameter](c, value))
+}
+
 func (c FfiConverterSequenceMoveFunctionTypeParameter) Write(writer io.Writer, value []MoveFunctionTypeParameter) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveFunctionTypeParameter is too large to fit into Int32")
@@ -49136,9 +50727,10 @@ type FfiDestroyerSequenceMoveFunctionTypeParameter struct {}
 
 func (FfiDestroyerSequenceMoveFunctionTypeParameter) Destroy(sequence []MoveFunctionTypeParameter) {
 	for _, value := range sequence {
-		FfiDestroyerMoveFunctionTypeParameter{}.Destroy(value)
+		FfiDestroyerMoveFunctionTypeParameter{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveModuleQuery struct{}
 
@@ -49164,6 +50756,10 @@ func (c FfiConverterSequenceMoveModuleQuery) Lower(value []MoveModuleQuery) C.Ru
 	return LowerIntoRustBuffer[[]MoveModuleQuery](c, value)
 }
 
+func (c FfiConverterSequenceMoveModuleQuery) LowerExternal(value []MoveModuleQuery) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveModuleQuery](c, value))
+}
+
 func (c FfiConverterSequenceMoveModuleQuery) Write(writer io.Writer, value []MoveModuleQuery) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveModuleQuery is too large to fit into Int32")
@@ -49179,9 +50775,10 @@ type FfiDestroyerSequenceMoveModuleQuery struct {}
 
 func (FfiDestroyerSequenceMoveModuleQuery) Destroy(sequence []MoveModuleQuery) {
 	for _, value := range sequence {
-		FfiDestroyerMoveModuleQuery{}.Destroy(value)
+		FfiDestroyerMoveModuleQuery{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveStructQuery struct{}
 
@@ -49207,6 +50804,10 @@ func (c FfiConverterSequenceMoveStructQuery) Lower(value []MoveStructQuery) C.Ru
 	return LowerIntoRustBuffer[[]MoveStructQuery](c, value)
 }
 
+func (c FfiConverterSequenceMoveStructQuery) LowerExternal(value []MoveStructQuery) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveStructQuery](c, value))
+}
+
 func (c FfiConverterSequenceMoveStructQuery) Write(writer io.Writer, value []MoveStructQuery) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveStructQuery is too large to fit into Int32")
@@ -49222,9 +50823,10 @@ type FfiDestroyerSequenceMoveStructQuery struct {}
 
 func (FfiDestroyerSequenceMoveStructQuery) Destroy(sequence []MoveStructQuery) {
 	for _, value := range sequence {
-		FfiDestroyerMoveStructQuery{}.Destroy(value)
+		FfiDestroyerMoveStructQuery{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveStructTypeParameter struct{}
 
@@ -49250,6 +50852,10 @@ func (c FfiConverterSequenceMoveStructTypeParameter) Lower(value []MoveStructTyp
 	return LowerIntoRustBuffer[[]MoveStructTypeParameter](c, value)
 }
 
+func (c FfiConverterSequenceMoveStructTypeParameter) LowerExternal(value []MoveStructTypeParameter) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveStructTypeParameter](c, value))
+}
+
 func (c FfiConverterSequenceMoveStructTypeParameter) Write(writer io.Writer, value []MoveStructTypeParameter) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveStructTypeParameter is too large to fit into Int32")
@@ -49265,9 +50871,10 @@ type FfiDestroyerSequenceMoveStructTypeParameter struct {}
 
 func (FfiDestroyerSequenceMoveStructTypeParameter) Destroy(sequence []MoveStructTypeParameter) {
 	for _, value := range sequence {
-		FfiDestroyerMoveStructTypeParameter{}.Destroy(value)
+		FfiDestroyerMoveStructTypeParameter{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceObjectRef struct{}
 
@@ -49293,6 +50900,10 @@ func (c FfiConverterSequenceObjectRef) Lower(value []ObjectRef) C.RustBuffer {
 	return LowerIntoRustBuffer[[]ObjectRef](c, value)
 }
 
+func (c FfiConverterSequenceObjectRef) LowerExternal(value []ObjectRef) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ObjectRef](c, value))
+}
+
 func (c FfiConverterSequenceObjectRef) Write(writer io.Writer, value []ObjectRef) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ObjectRef is too large to fit into Int32")
@@ -49308,9 +50919,10 @@ type FfiDestroyerSequenceObjectRef struct {}
 
 func (FfiDestroyerSequenceObjectRef) Destroy(sequence []ObjectRef) {
 	for _, value := range sequence {
-		FfiDestroyerObjectRef{}.Destroy(value)
+		FfiDestroyerObjectRef{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceObjectReference struct{}
 
@@ -49336,6 +50948,10 @@ func (c FfiConverterSequenceObjectReference) Lower(value []ObjectReference) C.Ru
 	return LowerIntoRustBuffer[[]ObjectReference](c, value)
 }
 
+func (c FfiConverterSequenceObjectReference) LowerExternal(value []ObjectReference) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ObjectReference](c, value))
+}
+
 func (c FfiConverterSequenceObjectReference) Write(writer io.Writer, value []ObjectReference) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ObjectReference is too large to fit into Int32")
@@ -49351,9 +50967,10 @@ type FfiDestroyerSequenceObjectReference struct {}
 
 func (FfiDestroyerSequenceObjectReference) Destroy(sequence []ObjectReference) {
 	for _, value := range sequence {
-		FfiDestroyerObjectReference{}.Destroy(value)
+		FfiDestroyerObjectReference{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceOpenMoveType struct{}
 
@@ -49379,6 +50996,10 @@ func (c FfiConverterSequenceOpenMoveType) Lower(value []OpenMoveType) C.RustBuff
 	return LowerIntoRustBuffer[[]OpenMoveType](c, value)
 }
 
+func (c FfiConverterSequenceOpenMoveType) LowerExternal(value []OpenMoveType) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]OpenMoveType](c, value))
+}
+
 func (c FfiConverterSequenceOpenMoveType) Write(writer io.Writer, value []OpenMoveType) {
 	if len(value) > math.MaxInt32 {
 		panic("[]OpenMoveType is too large to fit into Int32")
@@ -49394,9 +51015,10 @@ type FfiDestroyerSequenceOpenMoveType struct {}
 
 func (FfiDestroyerSequenceOpenMoveType) Destroy(sequence []OpenMoveType) {
 	for _, value := range sequence {
-		FfiDestroyerOpenMoveType{}.Destroy(value)
+		FfiDestroyerOpenMoveType{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceProtocolConfigAttr struct{}
 
@@ -49422,6 +51044,10 @@ func (c FfiConverterSequenceProtocolConfigAttr) Lower(value []ProtocolConfigAttr
 	return LowerIntoRustBuffer[[]ProtocolConfigAttr](c, value)
 }
 
+func (c FfiConverterSequenceProtocolConfigAttr) LowerExternal(value []ProtocolConfigAttr) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ProtocolConfigAttr](c, value))
+}
+
 func (c FfiConverterSequenceProtocolConfigAttr) Write(writer io.Writer, value []ProtocolConfigAttr) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ProtocolConfigAttr is too large to fit into Int32")
@@ -49437,9 +51063,10 @@ type FfiDestroyerSequenceProtocolConfigAttr struct {}
 
 func (FfiDestroyerSequenceProtocolConfigAttr) Destroy(sequence []ProtocolConfigAttr) {
 	for _, value := range sequence {
-		FfiDestroyerProtocolConfigAttr{}.Destroy(value)
+		FfiDestroyerProtocolConfigAttr{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceProtocolConfigFeatureFlag struct{}
 
@@ -49465,6 +51092,10 @@ func (c FfiConverterSequenceProtocolConfigFeatureFlag) Lower(value []ProtocolCon
 	return LowerIntoRustBuffer[[]ProtocolConfigFeatureFlag](c, value)
 }
 
+func (c FfiConverterSequenceProtocolConfigFeatureFlag) LowerExternal(value []ProtocolConfigFeatureFlag) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ProtocolConfigFeatureFlag](c, value))
+}
+
 func (c FfiConverterSequenceProtocolConfigFeatureFlag) Write(writer io.Writer, value []ProtocolConfigFeatureFlag) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ProtocolConfigFeatureFlag is too large to fit into Int32")
@@ -49480,9 +51111,10 @@ type FfiDestroyerSequenceProtocolConfigFeatureFlag struct {}
 
 func (FfiDestroyerSequenceProtocolConfigFeatureFlag) Destroy(sequence []ProtocolConfigFeatureFlag) {
 	for _, value := range sequence {
-		FfiDestroyerProtocolConfigFeatureFlag{}.Destroy(value)
+		FfiDestroyerProtocolConfigFeatureFlag{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceSignedTransaction struct{}
 
@@ -49508,6 +51140,10 @@ func (c FfiConverterSequenceSignedTransaction) Lower(value []SignedTransaction) 
 	return LowerIntoRustBuffer[[]SignedTransaction](c, value)
 }
 
+func (c FfiConverterSequenceSignedTransaction) LowerExternal(value []SignedTransaction) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]SignedTransaction](c, value))
+}
+
 func (c FfiConverterSequenceSignedTransaction) Write(writer io.Writer, value []SignedTransaction) {
 	if len(value) > math.MaxInt32 {
 		panic("[]SignedTransaction is too large to fit into Int32")
@@ -49523,9 +51159,10 @@ type FfiDestroyerSequenceSignedTransaction struct {}
 
 func (FfiDestroyerSequenceSignedTransaction) Destroy(sequence []SignedTransaction) {
 	for _, value := range sequence {
-		FfiDestroyerSignedTransaction{}.Destroy(value)
+		FfiDestroyerSignedTransaction{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceTransactionDataEffects struct{}
 
@@ -49551,6 +51188,10 @@ func (c FfiConverterSequenceTransactionDataEffects) Lower(value []TransactionDat
 	return LowerIntoRustBuffer[[]TransactionDataEffects](c, value)
 }
 
+func (c FfiConverterSequenceTransactionDataEffects) LowerExternal(value []TransactionDataEffects) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]TransactionDataEffects](c, value))
+}
+
 func (c FfiConverterSequenceTransactionDataEffects) Write(writer io.Writer, value []TransactionDataEffects) {
 	if len(value) > math.MaxInt32 {
 		panic("[]TransactionDataEffects is too large to fit into Int32")
@@ -49566,9 +51207,10 @@ type FfiDestroyerSequenceTransactionDataEffects struct {}
 
 func (FfiDestroyerSequenceTransactionDataEffects) Destroy(sequence []TransactionDataEffects) {
 	for _, value := range sequence {
-		FfiDestroyerTransactionDataEffects{}.Destroy(value)
+		FfiDestroyerTransactionDataEffects{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceTypeOrigin struct{}
 
@@ -49594,6 +51236,10 @@ func (c FfiConverterSequenceTypeOrigin) Lower(value []TypeOrigin) C.RustBuffer {
 	return LowerIntoRustBuffer[[]TypeOrigin](c, value)
 }
 
+func (c FfiConverterSequenceTypeOrigin) LowerExternal(value []TypeOrigin) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]TypeOrigin](c, value))
+}
+
 func (c FfiConverterSequenceTypeOrigin) Write(writer io.Writer, value []TypeOrigin) {
 	if len(value) > math.MaxInt32 {
 		panic("[]TypeOrigin is too large to fit into Int32")
@@ -49609,9 +51255,10 @@ type FfiDestroyerSequenceTypeOrigin struct {}
 
 func (FfiDestroyerSequenceTypeOrigin) Destroy(sequence []TypeOrigin) {
 	for _, value := range sequence {
-		FfiDestroyerTypeOrigin{}.Destroy(value)
+		FfiDestroyerTypeOrigin{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceUnchangedSharedObject struct{}
 
@@ -49637,6 +51284,10 @@ func (c FfiConverterSequenceUnchangedSharedObject) Lower(value []UnchangedShared
 	return LowerIntoRustBuffer[[]UnchangedSharedObject](c, value)
 }
 
+func (c FfiConverterSequenceUnchangedSharedObject) LowerExternal(value []UnchangedSharedObject) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]UnchangedSharedObject](c, value))
+}
+
 func (c FfiConverterSequenceUnchangedSharedObject) Write(writer io.Writer, value []UnchangedSharedObject) {
 	if len(value) > math.MaxInt32 {
 		panic("[]UnchangedSharedObject is too large to fit into Int32")
@@ -49652,9 +51303,10 @@ type FfiDestroyerSequenceUnchangedSharedObject struct {}
 
 func (FfiDestroyerSequenceUnchangedSharedObject) Destroy(sequence []UnchangedSharedObject) {
 	for _, value := range sequence {
-		FfiDestroyerUnchangedSharedObject{}.Destroy(value)
+		FfiDestroyerUnchangedSharedObject{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceValidator struct{}
 
@@ -49680,6 +51332,10 @@ func (c FfiConverterSequenceValidator) Lower(value []Validator) C.RustBuffer {
 	return LowerIntoRustBuffer[[]Validator](c, value)
 }
 
+func (c FfiConverterSequenceValidator) LowerExternal(value []Validator) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]Validator](c, value))
+}
+
 func (c FfiConverterSequenceValidator) Write(writer io.Writer, value []Validator) {
 	if len(value) > math.MaxInt32 {
 		panic("[]Validator is too large to fit into Int32")
@@ -49695,9 +51351,10 @@ type FfiDestroyerSequenceValidator struct {}
 
 func (FfiDestroyerSequenceValidator) Destroy(sequence []Validator) {
 	for _, value := range sequence {
-		FfiDestroyerValidator{}.Destroy(value)
+		FfiDestroyerValidator{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceValidatorCommitteeMember struct{}
 
@@ -49723,6 +51380,10 @@ func (c FfiConverterSequenceValidatorCommitteeMember) Lower(value []ValidatorCom
 	return LowerIntoRustBuffer[[]ValidatorCommitteeMember](c, value)
 }
 
+func (c FfiConverterSequenceValidatorCommitteeMember) LowerExternal(value []ValidatorCommitteeMember) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]ValidatorCommitteeMember](c, value))
+}
+
 func (c FfiConverterSequenceValidatorCommitteeMember) Write(writer io.Writer, value []ValidatorCommitteeMember) {
 	if len(value) > math.MaxInt32 {
 		panic("[]ValidatorCommitteeMember is too large to fit into Int32")
@@ -49738,9 +51399,10 @@ type FfiDestroyerSequenceValidatorCommitteeMember struct {}
 
 func (FfiDestroyerSequenceValidatorCommitteeMember) Destroy(sequence []ValidatorCommitteeMember) {
 	for _, value := range sequence {
-		FfiDestroyerValidatorCommitteeMember{}.Destroy(value)
+		FfiDestroyerValidatorCommitteeMember{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceFeature struct{}
 
@@ -49766,6 +51428,10 @@ func (c FfiConverterSequenceFeature) Lower(value []Feature) C.RustBuffer {
 	return LowerIntoRustBuffer[[]Feature](c, value)
 }
 
+func (c FfiConverterSequenceFeature) LowerExternal(value []Feature) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]Feature](c, value))
+}
+
 func (c FfiConverterSequenceFeature) Write(writer io.Writer, value []Feature) {
 	if len(value) > math.MaxInt32 {
 		panic("[]Feature is too large to fit into Int32")
@@ -49781,9 +51447,10 @@ type FfiDestroyerSequenceFeature struct {}
 
 func (FfiDestroyerSequenceFeature) Destroy(sequence []Feature) {
 	for _, value := range sequence {
-		FfiDestroyerFeature{}.Destroy(value)
+		FfiDestroyerFeature{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceMoveAbility struct{}
 
@@ -49809,6 +51476,10 @@ func (c FfiConverterSequenceMoveAbility) Lower(value []MoveAbility) C.RustBuffer
 	return LowerIntoRustBuffer[[]MoveAbility](c, value)
 }
 
+func (c FfiConverterSequenceMoveAbility) LowerExternal(value []MoveAbility) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]MoveAbility](c, value))
+}
+
 func (c FfiConverterSequenceMoveAbility) Write(writer io.Writer, value []MoveAbility) {
 	if len(value) > math.MaxInt32 {
 		panic("[]MoveAbility is too large to fit into Int32")
@@ -49824,9 +51495,10 @@ type FfiDestroyerSequenceMoveAbility struct {}
 
 func (FfiDestroyerSequenceMoveAbility) Destroy(sequence []MoveAbility) {
 	for _, value := range sequence {
-		FfiDestroyerMoveAbility{}.Destroy(value)
+		FfiDestroyerMoveAbility{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterSequenceTypeValue struct{}
 
@@ -49852,6 +51524,10 @@ func (c FfiConverterSequenceTypeValue) Lower(value []Value) C.RustBuffer {
 	return LowerIntoRustBuffer[[]Value](c, value)
 }
 
+func (c FfiConverterSequenceTypeValue) LowerExternal(value []Value) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]Value](c, value))
+}
+
 func (c FfiConverterSequenceTypeValue) Write(writer io.Writer, value []Value) {
 	if len(value) > math.MaxInt32 {
 		panic("[]Value is too large to fit into Int32")
@@ -49867,9 +51543,10 @@ type FfiDestroyerSequenceTypeValue struct {}
 
 func (FfiDestroyerSequenceTypeValue) Destroy(sequence []Value) {
 	for _, value := range sequence {
-		FfiDestroyerTypeValue{}.Destroy(value)
+		FfiDestroyerTypeValue{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterMapStringSequenceString struct {}
 
@@ -49894,6 +51571,10 @@ func (c FfiConverterMapStringSequenceString) Lower(value map[string][]string) C.
 	return LowerIntoRustBuffer[map[string][]string](c, value)
 }
 
+func (c FfiConverterMapStringSequenceString) LowerExternal(value map[string][]string) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[map[string][]string](c, value))
+}
+
 func (_ FfiConverterMapStringSequenceString) Write(writer io.Writer, mapValue map[string][]string) {
 	if len(mapValue) > math.MaxInt32 {
 		panic("map[string][]string is too large to fit into Int32")
@@ -49911,9 +51592,10 @@ type FfiDestroyerMapStringSequenceString struct {}
 func (_ FfiDestroyerMapStringSequenceString) Destroy(mapValue map[string][]string) {
 	for key, value := range mapValue {
 		FfiDestroyerString{}.Destroy(key)
-		FfiDestroyerSequenceString{}.Destroy(value)
+		FfiDestroyerSequenceString{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterMapIdentifierBytes struct {}
 
@@ -49938,6 +51620,10 @@ func (c FfiConverterMapIdentifierBytes) Lower(value map[*Identifier][]byte) C.Ru
 	return LowerIntoRustBuffer[map[*Identifier][]byte](c, value)
 }
 
+func (c FfiConverterMapIdentifierBytes) LowerExternal(value map[*Identifier][]byte) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[map[*Identifier][]byte](c, value))
+}
+
 func (_ FfiConverterMapIdentifierBytes) Write(writer io.Writer, mapValue map[*Identifier][]byte) {
 	if len(mapValue) > math.MaxInt32 {
 		panic("map[*Identifier][]byte is too large to fit into Int32")
@@ -49955,9 +51641,10 @@ type FfiDestroyerMapIdentifierBytes struct {}
 func (_ FfiDestroyerMapIdentifierBytes) Destroy(mapValue map[*Identifier][]byte) {
 	for key, value := range mapValue {
 		FfiDestroyerIdentifier{}.Destroy(key)
-		FfiDestroyerBytes{}.Destroy(value)
+		FfiDestroyerBytes{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterMapObjectIdUpgradeInfo struct {}
 
@@ -49982,6 +51669,10 @@ func (c FfiConverterMapObjectIdUpgradeInfo) Lower(value map[*ObjectId]UpgradeInf
 	return LowerIntoRustBuffer[map[*ObjectId]UpgradeInfo](c, value)
 }
 
+func (c FfiConverterMapObjectIdUpgradeInfo) LowerExternal(value map[*ObjectId]UpgradeInfo) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[map[*ObjectId]UpgradeInfo](c, value))
+}
+
 func (_ FfiConverterMapObjectIdUpgradeInfo) Write(writer io.Writer, mapValue map[*ObjectId]UpgradeInfo) {
 	if len(mapValue) > math.MaxInt32 {
 		panic("map[*ObjectId]UpgradeInfo is too large to fit into Int32")
@@ -49999,9 +51690,10 @@ type FfiDestroyerMapObjectIdUpgradeInfo struct {}
 func (_ FfiDestroyerMapObjectIdUpgradeInfo) Destroy(mapValue map[*ObjectId]UpgradeInfo) {
 	for key, value := range mapValue {
 		FfiDestroyerObjectId{}.Destroy(key)
-		FfiDestroyerUpgradeInfo{}.Destroy(value)
+		FfiDestroyerUpgradeInfo{}.Destroy(value)	
 	}
 }
+
 
 type FfiConverterMapJwkIdJwk struct {}
 
@@ -50026,6 +51718,10 @@ func (c FfiConverterMapJwkIdJwk) Lower(value map[JwkId]Jwk) C.RustBuffer {
 	return LowerIntoRustBuffer[map[JwkId]Jwk](c, value)
 }
 
+func (c FfiConverterMapJwkIdJwk) LowerExternal(value map[JwkId]Jwk) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[map[JwkId]Jwk](c, value))
+}
+
 func (_ FfiConverterMapJwkIdJwk) Write(writer io.Writer, mapValue map[JwkId]Jwk) {
 	if len(mapValue) > math.MaxInt32 {
 		panic("map[JwkId]Jwk is too large to fit into Int32")
@@ -50043,9 +51739,10 @@ type FfiDestroyerMapJwkIdJwk struct {}
 func (_ FfiDestroyerMapJwkIdJwk) Destroy(mapValue map[JwkId]Jwk) {
 	for key, value := range mapValue {
 		FfiDestroyerJwkId{}.Destroy(key)
-		FfiDestroyerJwk{}.Destroy(value)
+		FfiDestroyerJwk{}.Destroy(value)	
 	}
 }
+
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -50055,6 +51752,7 @@ type Base64 = string
 type FfiConverterTypeBase64 = FfiConverterString
 type FfiDestroyerTypeBase64 = FfiDestroyerString
 var FfiConverterTypeBase64INSTANCE = FfiConverterString{}
+
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -50064,6 +51762,7 @@ type BigInt = string
 type FfiConverterTypeBigInt = FfiConverterString
 type FfiDestroyerTypeBigInt = FfiDestroyerString
 var FfiConverterTypeBigIntINSTANCE = FfiConverterString{}
+
 /**
  * Typealias from the type name used in the UDL file to the builtin type.  This
  * is needed because the UDL type name is used in function/method signatures.
@@ -50100,7 +51799,7 @@ func uniffiRustCallAsync[E any, T any, F any](
 	freeFunc rustFutureFreeFunc,
 ) (T, *E) {
 	defer freeFunc(rustFuture)
-
+	
 	pollResult := int8(-1)
 	waiter := make(chan int8, 1)
 
@@ -50119,9 +51818,9 @@ func uniffiRustCallAsync[E any, T any, F any](
 	var goValue T
 	var ffiValue F
 	var err *E
-
+	
 	ffiValue, err = rustCallWithError(errConverter, func(status *C.RustCallStatus) F {
-		return completeFunc(rustFuture, status)
+		return completeFunc(rustFuture, status)	
 	})
 	if err != nil {
 		return goValue, err
