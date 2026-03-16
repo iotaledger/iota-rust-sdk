@@ -563,7 +563,7 @@ pub struct MoveStruct {
 impl From<iota_sdk::types::MoveStruct> for MoveStruct {
     fn from(value: iota_sdk::types::MoveStruct) -> Self {
         Self {
-            struct_type: Arc::new(value.type_.into()),
+            struct_type: Arc::new(StructTag(iota_sdk::types::StructTag::from(value.type_))),
             version: Arc::new(value.version.into()),
             contents: value.contents,
         }
@@ -573,7 +573,7 @@ impl From<iota_sdk::types::MoveStruct> for MoveStruct {
 impl From<MoveStruct> for iota_sdk::types::MoveStruct {
     fn from(value: MoveStruct) -> Self {
         Self {
-            type_: value.struct_type.0.clone(),
+            type_: iota_sdk::types::MoveObjectType::from(value.struct_type.0.clone()),
             version: **value.version,
             contents: value.contents,
         }
@@ -706,7 +706,9 @@ impl ObjectType {
 
     #[uniffi::constructor]
     pub fn new_struct(struct_tag: &StructTag) -> Self {
-        Self(iota_sdk::types::ObjectType::Struct(struct_tag.0.clone()))
+        Self(iota_sdk::types::ObjectType::Struct(
+            iota_sdk::types::MoveObjectType::from(struct_tag.0.clone()),
+        ))
     }
 
     pub fn is_package(&self) -> bool {
@@ -718,15 +720,14 @@ impl ObjectType {
     }
 
     pub fn as_struct(&self) -> StructTag {
-        self.0.as_struct().clone().into()
+        StructTag(iota_sdk::types::StructTag::from(self.0.as_struct().clone()))
     }
 
     pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
         self.0
             .as_struct_opt()
             .cloned()
-            .map(Into::into)
-            .map(Arc::new)
+            .map(|t| Arc::new(StructTag(iota_sdk::types::StructTag::from(t))))
     }
 }
 

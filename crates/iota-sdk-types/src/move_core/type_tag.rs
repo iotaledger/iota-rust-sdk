@@ -147,6 +147,19 @@ impl TypeTag {
         Self::Signer
     }
 
+    /// Creates a new gas type tag (`0x2::iota::IOTA`)
+    pub fn gas() -> Self {
+        Self::Struct(Box::new(StructTag::new_gas()))
+    }
+
+    /// Checks if this is the gas type (`0x2::iota::IOTA`)
+    pub fn is_gas_type(&self) -> bool {
+        match self {
+            TypeTag::Struct(s) => s.is_gas(),
+            _ => false,
+        }
+    }
+
     /// Returns the string representation of this type tag using the
     /// canonical display, with or without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {

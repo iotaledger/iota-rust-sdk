@@ -5,7 +5,8 @@
 use std::collections::BTreeMap;
 
 use super::{
-    Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, UpgradeInfo, Version,
+    Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, TypeTag,
+    UpgradeInfo, Version,
 };
 
 /// Reference to an object
@@ -198,11 +199,7 @@ impl ObjectData {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
     /// The type of this object
-    #[cfg_attr(
-        feature = "serde",
-        serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
-    )]
-    pub type_: StructTag,
+    pub type_: MoveObjectType,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -217,26 +214,302 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
+/// Wrapper around StructTag with a space-efficient representation for common
+/// types like coins. The StructTag for a gas coin is 84 bytes, so using 1 byte
+/// instead is a win. The inner representation is private to prevent incorrectly
+/// constructing an `Other` instead of one of the specialized variants, e.g.
+/// `Other(StructTag::new_gas_coin())` instead of `GasCoin`
+#[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct MoveObjectType(MoveObjectType_);
+
+#[cfg(feature = "proptest")]
+impl proptest::arbitrary::Arbitrary for MoveObjectType {
+    type Parameters = ();
+    type Strategy =
+        proptest::strategy::MapInto<<StructTag as proptest::arbitrary::Arbitrary>::Strategy, Self>;
+
+    fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
+        use proptest::strategy::Strategy;
+        proptest::arbitrary::any::<StructTag>().prop_map_into()
+    }
+}
+
+/// Even though it is declared public, it is the "private", internal
+/// representation for `MoveObjectType`
+#[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub(crate) enum MoveObjectType_ {
+    /// A type that is not `0x2::coin::Coin<T>`
+    Other(Box<StructTag>),
+    /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
+    GasCoin,
+    /// A record of a staked IOTA coin (i.e., `0x3::staking_pool::StakedIota`)
+    StakedIota,
+    /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
+    /// 0x2::iota::IOTA`)
+    Coin(TypeTag),
+    // NOTE: if adding a new type here, and there are existing on-chain objects of that
+    // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
+    // to make sure the new type and Other(_) are interpreted consistently.
+}
+
+/// Delegates a boolean check to the inner `StructTag` for `Other` variants.
+/// Returns `false` for `GasCoin`, `StakedIota`, and `Coin` variants.
+macro_rules! delegate_other_check {
+    ($($(#[$meta:meta])* $method:ident),+ $(,)?) => {
+        $(
+            $(#[$meta])*
+            pub fn $method(&self) -> bool {
+                self.other().is_some_and(|s| s.$method())
+            }
+        )+
+    };
+    ($($(#[$meta:meta])* $method:ident => $struct_tag_method:ident),+ $(,)?) => {
+        $(
+            $(#[$meta])*
+            pub fn $method(&self) -> bool {
+                self.other().is_some_and(|s| s.$struct_tag_method())
+            }
+        )+
+    };
+}
+
+impl MoveObjectType {
+    pub fn gas_coin() -> Self {
+        Self(MoveObjectType_::GasCoin)
+    }
+
+    pub fn staked_iota() -> Self {
+        Self(MoveObjectType_::StakedIota)
+    }
+
+    pub fn coin(coin_type: TypeTag) -> Self {
+        Self(if coin_type.is_gas_type() {
+            MoveObjectType_::GasCoin
+        } else {
+            MoveObjectType_::Coin(coin_type)
+        })
+    }
+
+    /// Matches on the known variant, returning `coin` for `GasCoin`/`Coin`,
+    /// `staked` for `StakedIota`, and delegating to `other_fn` for `Other`.
+    fn match_type<T>(&self, coin: T, staked: T, other_fn: impl FnOnce(&StructTag) -> T) -> T {
+        match &self.0 {
+            MoveObjectType_::GasCoin | MoveObjectType_::Coin(_) => coin,
+            MoveObjectType_::StakedIota => staked,
+            MoveObjectType_::Other(s) => other_fn(s),
+        }
+    }
+
+    pub fn address(&self) -> Address {
+        self.match_type(Address::FRAMEWORK, Address::SYSTEM, |s| s.address())
+    }
+
+    pub fn module(&self) -> Identifier {
+        self.match_type(
+            Identifier::COIN_MODULE,
+            Identifier::STAKING_POOL_MODULE,
+            |s| s.module().clone(),
+        )
+    }
+
+    pub fn name(&self) -> Identifier {
+        self.match_type(Identifier::COIN, Identifier::STAKED_IOTA, |s| {
+            s.name().clone()
+        })
+    }
+
+    pub fn type_params(&self) -> Vec<TypeTag> {
+        match &self.0 {
+            MoveObjectType_::GasCoin => vec![TypeTag::gas()],
+            MoveObjectType_::StakedIota => vec![],
+            MoveObjectType_::Coin(inner) => vec![inner.clone()],
+            MoveObjectType_::Other(s) => s.type_params().to_vec(),
+        }
+    }
+
+    pub fn into_type_params(self) -> Vec<TypeTag> {
+        match self.0 {
+            MoveObjectType_::GasCoin => vec![TypeTag::gas()],
+            MoveObjectType_::StakedIota => vec![],
+            MoveObjectType_::Coin(inner) => vec![inner],
+            MoveObjectType_::Other(s) => s.type_params().to_vec(),
+        }
+    }
+
+    pub fn coin_type_opt(&self) -> Option<TypeTag> {
+        match &self.0 {
+            MoveObjectType_::GasCoin => Some(TypeTag::gas()),
+            MoveObjectType_::Coin(inner) => Some(inner.clone()),
+            MoveObjectType_::StakedIota | MoveObjectType_::Other(_) => None,
+        }
+    }
+
+    /// Return true if `self` is `0x2::coin::Coin<T>` for some T (note: T can be
+    /// IOTA)
+    pub fn is_coin(&self) -> bool {
+        matches!(&self.0, MoveObjectType_::GasCoin | MoveObjectType_::Coin(_))
+    }
+
+    /// Return true if `self` is 0x2::coin::Coin<0x2::iota::IOTA>
+    pub fn is_gas_coin(&self) -> bool {
+        matches!(&self.0, MoveObjectType_::GasCoin)
+    }
+
+    /// Return true if `self` is `0x2::coin::Coin<t>`
+    pub fn is_coin_t(&self, t: &TypeTag) -> bool {
+        match &self.0 {
+            MoveObjectType_::GasCoin => t.is_gas_type(),
+            MoveObjectType_::Coin(c) => t == c,
+            MoveObjectType_::StakedIota | MoveObjectType_::Other(_) => false,
+        }
+    }
+
+    pub fn is_staked_iota(&self) -> bool {
+        matches!(&self.0, MoveObjectType_::StakedIota)
+    }
+
+    delegate_other_check! {
+        is_coin_metadata,
+        is_coin_manager,
+        is_treasury_cap,
+        is_dynamic_field,
+        is_timelocked_balance,
+        is_timelocked_staked_iota,
+        is_alias_output,
+        is_basic_output,
+        is_nft_output,
+        is_authenticator_function_ref_v1,
+    }
+
+    delegate_other_check! {
+        is_timelock => is_time_lock,
+    }
+
+    pub fn is(&self, s: &StructTag) -> bool {
+        match &self.0 {
+            MoveObjectType_::GasCoin => s.is_gas_coin(),
+            MoveObjectType_::StakedIota => s.is_staked_iota(),
+            MoveObjectType_::Coin(inner) => s.is_coin() && inner == &s.type_params()[0],
+            MoveObjectType_::Other(o) => s == o.as_ref(),
+        }
+    }
+
+    pub fn other(&self) -> Option<&StructTag> {
+        if let MoveObjectType_::Other(s) = &self.0 {
+            Some(s)
+        } else {
+            None
+        }
+    }
+
+    /// Returns the string representation of this object's type using the
+    /// canonical display.
+    pub fn to_canonical_string(&self, with_prefix: bool) -> String {
+        StructTag::from(self.clone()).to_canonical_string(with_prefix)
+    }
+
+    pub fn timelocked_iota_balance() -> Self {
+        Self::from(StructTag::new_time_lock(StructTag::new_balance(
+            StructTag::new_gas(),
+        )))
+    }
+
+    pub fn timelocked_staked_iota() -> Self {
+        Self::from(StructTag::new_timelocked_staked_iota())
+    }
+
+    pub fn stardust_nft() -> Self {
+        Self::from(StructTag::new_nft())
+    }
+
+    delegate_other_check! {
+        is_regulated_coin_metadata,
+    }
+
+    delegate_other_check! {
+        is_coin_deny_cap_v1 => is_deny_cap_v1,
+    }
+}
+
+impl From<&StructTag> for MoveObjectType {
+    fn from(s: &StructTag) -> Self {
+        Self::from(s.clone())
+    }
+}
+
+impl From<StructTag> for MoveObjectType {
+    fn from(s: StructTag) -> Self {
+        Self(if s.is_gas_coin() {
+            MoveObjectType_::GasCoin
+        } else if s.is_coin() {
+            let Some(type_param) = s.into_parts().3.into_iter().next() else {
+                unreachable!("a coin has exactly one type parameter");
+            };
+            MoveObjectType_::Coin(type_param)
+        } else if s.is_staked_iota() {
+            MoveObjectType_::StakedIota
+        } else {
+            MoveObjectType_::Other(Box::new(s))
+        })
+    }
+}
+
+impl From<MoveObjectType> for StructTag {
+    fn from(t: MoveObjectType) -> Self {
+        match t.0 {
+            MoveObjectType_::GasCoin => StructTag::new_gas_coin(),
+            MoveObjectType_::StakedIota => StructTag::new_staked_iota(),
+            MoveObjectType_::Coin(inner) => StructTag::new_coin(inner),
+            MoveObjectType_::Other(s) => *s,
+        }
+    }
+}
+
+impl From<MoveObjectType> for TypeTag {
+    fn from(o: MoveObjectType) -> TypeTag {
+        let s: StructTag = o.into();
+        TypeTag::Struct(Box::new(s))
+    }
+}
+
+impl std::fmt::Display for MoveObjectType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s: StructTag = self.clone().into();
+        write!(f, "{s}")
+    }
+}
+
+impl std::str::FromStr for MoveObjectType {
+    type Err = crate::TypeParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let tag: StructTag = s.parse()?;
+        Ok(MoveObjectType::from(tag))
+    }
+}
+
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
     /// A Move struct of the given type
-    Struct(StructTag),
+    Struct(MoveObjectType),
 }
 
 impl ObjectType {
     crate::def_is!(Package);
 
-    crate::def_is_as_into_opt!(Struct(StructTag));
+    crate::def_is_as_into_opt!(Struct(MoveObjectType));
 }
 
 impl std::fmt::Display for ObjectType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             ObjectType::Package => write!(f, "Package"),
-            ObjectType::Struct(struct_tag) => write!(f, "Struct({struct_tag})"),
+            ObjectType::Struct(move_object_type) => write!(f, "Struct({move_object_type})"),
         }
     }
 }
@@ -447,7 +720,6 @@ mod serialization {
     use serde_with::{DeserializeAs, SerializeAs};
 
     use super::*;
-    use crate::TypeTag;
 
     #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq, Eq)]
     #[serde(rename = "Owner")]
@@ -521,105 +793,6 @@ mod serialization {
         }
     }
 
-    /// Wrapper around StructTag with a space-efficient representation for
-    /// common types like coins The StructTag for a gas coin is 84 bytes, so
-    /// using 1 byte instead is a win. The inner representation is private
-    /// to prevent incorrectly constructing an `Other` instead of one of the
-    /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
-    /// `GasCoin`
-    #[derive(serde::Deserialize)]
-    enum MoveStructType {
-        /// A type that is not `0x2::coin::Coin<T>`
-        Other(StructTag),
-        /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
-        GasCoin,
-        /// A record of a staked IOTA coin (i.e.,
-        /// `0x3::staking_pool::StakedIota`)
-        StakedIota,
-        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
-        /// 0x2::iota::IOTA`)
-        Coin(TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
-    }
-
-    /// See `MoveStructType`
-    #[derive(serde::Serialize)]
-    enum MoveStructTypeRef<'a> {
-        /// A type that is not `0x2::coin::Coin<T>`
-        Other(&'a StructTag),
-        /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
-        GasCoin,
-        /// A record of a staked IOTA coin (i.e.,
-        /// `0x3::staking_pool::StakedIota`)
-        StakedIota,
-        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
-        /// 0x2::iota::IOTA`)
-        Coin(&'a TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
-    }
-
-    impl MoveStructType {
-        fn into_struct_tag(self) -> StructTag {
-            match self {
-                MoveStructType::Other(tag) => tag,
-                MoveStructType::GasCoin => StructTag::new_gas_coin(),
-                MoveStructType::StakedIota => StructTag::new_staked_iota(),
-                MoveStructType::Coin(type_tag) => StructTag::new_coin(type_tag),
-            }
-        }
-    }
-
-    impl<'a> MoveStructTypeRef<'a> {
-        fn from_struct_tag(s: &'a StructTag) -> Self {
-            if let Some(coin_type) = s.coin_type_opt() {
-                if let TypeTag::Struct(s_inner) = coin_type
-                    && s_inner.address() == Address::FRAMEWORK
-                    && s_inner.module() == "iota"
-                    && s_inner.name() == "IOTA"
-                    && s_inner.type_params().is_empty()
-                {
-                    return Self::GasCoin;
-                }
-
-                Self::Coin(coin_type)
-            } else if s.address() == Address::SYSTEM
-                && s.module() == "staking_pool"
-                && s.name() == "StakedIota"
-                && s.type_params().is_empty()
-            {
-                Self::StakedIota
-            } else {
-                Self::Other(s)
-            }
-        }
-    }
-
-    pub(super) struct BinaryMoveStructType;
-
-    impl SerializeAs<StructTag> for BinaryMoveStructType {
-        fn serialize_as<S>(source: &StructTag, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            let move_object_type = MoveStructTypeRef::from_struct_tag(source);
-            move_object_type.serialize(serializer)
-        }
-    }
-
-    impl<'de> DeserializeAs<'de, StructTag> for BinaryMoveStructType {
-        fn deserialize_as<D>(deserializer: D) -> Result<StructTag, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let struct_type = MoveStructType::deserialize(deserializer)?;
-            Ok(struct_type.into_struct_tag())
-        }
-    }
-
     struct ReadableObjectType;
 
     impl SerializeAs<ObjectType> for ReadableObjectType {
@@ -629,7 +802,10 @@ mod serialization {
         {
             match source {
                 ObjectType::Package => "package".serialize(serializer),
-                ObjectType::Struct(s) => s.serialize(serializer),
+                ObjectType::Struct(move_type) => {
+                    let struct_tag = StructTag::from(move_type.clone());
+                    struct_tag.serialize(serializer)
+                }
             }
         }
     }
@@ -645,7 +821,7 @@ mod serialization {
             } else {
                 let struct_tag = StructTag::from_str(&s)
                     .map_err(|_| serde::de::Error::custom("invalid object type"))?;
-                Ok(ObjectType::Struct(struct_tag))
+                Ok(ObjectType::Struct(MoveObjectType::from(struct_tag)))
             }
         }
     }
@@ -1044,12 +1220,12 @@ mod serialization {
         fn obj() {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
-                    type_: StructTag::new(
+                    type_: MoveObjectType::from(StructTag::new(
                         Address::FRAMEWORK,
                         Identifier::new("bar").unwrap(),
                         Identifier::new("foo").unwrap(),
                         Vec::new(),
-                    ),
+                    )),
                     version: Version::from_u64(12),
                     contents: ObjectId::ZERO.into(),
                 }),

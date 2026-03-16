@@ -379,6 +379,7 @@ impl StructTag {
     );
     add_struct_tag_ctor!(STD, string::String);
     add_struct_tag_ctor!(@with_module STD, ascii::String);
+    add_struct_tag_ctor!(FRAMEWORK, coin::RegulatedCoinMetadata, coin::DenyCapV1);
     add_struct_tag_ctor_from_struct_tag!(
         FRAMEWORK,
         coin::CoinMetadata,
@@ -390,6 +391,32 @@ impl StructTag {
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, coin::Coin, balance::Balance, timelock::TimeLock);
     add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, dynamic_object_field::Wrapper);
     add_struct_tag_ctor_from_type_tag!(STD, option::Option);
+
+    // Stardust types
+    add_struct_tag_ctor!(
+        STARDUST,
+        alias_output::AliasOutput,
+        basic_output::BasicOutput,
+        nft_output::NftOutput,
+        nft::Nft
+    );
+
+    // Account abstraction types
+    add_struct_tag_ctor!(
+        FRAMEWORK,
+        authenticator_function::AuthenticatorFunctionRefV1
+    );
+
+    /// Checks if this is a `TimeLock<Balance<T>>` type
+    pub fn is_timelocked_balance(&self) -> bool {
+        if !self.is_time_lock() {
+            return false;
+        }
+        match &self.type_params()[0] {
+            TypeTag::Struct(tag) => tag.is_balance(),
+            _ => false,
+        }
+    }
 }
 
 impl std::fmt::Display for StructTag {
