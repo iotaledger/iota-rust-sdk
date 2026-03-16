@@ -18,7 +18,7 @@ impl MoveAuthenticator {
     crate::def_is_as_into_opt!(V1(MoveAuthenticatorV1));
 }
 
-/// Version 1 of the [`MoveAuthenticator`] data.
+/// Version 1 of the [`MoveAuthenticator`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
