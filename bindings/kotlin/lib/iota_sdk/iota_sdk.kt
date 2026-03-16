@@ -33509,7 +33509,7 @@ public object FfiConverterTypeMoveAuthenticatorBuilder: FfiConverter<MoveAuthent
 
 
 /**
- * Version 1 of the [`MoveAuthenticator`] data.
+ * Version 1 of the [`MoveAuthenticator`].
  */
 public interface MoveAuthenticatorV1Interface {
     
@@ -33525,7 +33525,7 @@ public interface MoveAuthenticatorV1Interface {
 }
 
 /**
- * Version 1 of the [`MoveAuthenticator`] data.
+ * Version 1 of the [`MoveAuthenticator`].
  */
 open class MoveAuthenticatorV1: Disposable, AutoCloseable, MoveAuthenticatorV1Interface
 {

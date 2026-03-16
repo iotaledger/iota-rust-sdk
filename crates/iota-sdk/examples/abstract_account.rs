@@ -10,8 +10,8 @@
 //     crypto::ed25519::Ed25519PrivateKey,
 //     graphql_client::{Client, WaitForTx, faucet::FaucetClient},
 //     transaction_builder::{
-//         MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, assigned,
-//     },
+//         MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder,
+// assigned,     },
 //     types::{Address, IdentifierRef, MovePackageData, ObjectId, ObjectOut},
 // };
 // use rand::rngs::OsRng;
@@ -21,7 +21,8 @@
 //     let client = Client::new_localnet();
 //     let account_address = Address::from(setup_account(&client).await?);
 //     let to_address =
-//         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+//         Address::from_str("
+// 0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 //
 //     // Fund the sender address for gas payment
 //     if FaucetClient::new_localnet()
@@ -32,12 +33,13 @@
 //         bail!("Failed to request coins from faucet");
 //     };
 //
-//     let mut builder = TransactionBuilder::new(account_address).with_client(&client);
-//     builder.send_iota(to_address, 5000000000u64);
+//     let mut builder =
+// TransactionBuilder::new(account_address).with_client(&client);     builder.
+// send_iota(to_address, 5000000000u64);
 //
-//     let move_authenticator = MoveAuthenticatorBuilder::new(account_address.into())
-//         .call_args(("hello", Shared(ObjectId::CLOCK)))
-//         .finish(&client)
+//     let move_authenticator =
+// MoveAuthenticatorBuilder::new(account_address.into())         .call_args(("
+// hello", Shared(ObjectId::CLOCK)))         .finish(&client)
 //         .await?;
 //
 //     let effects = builder
@@ -51,7 +53,8 @@
 //
 // async fn setup_account(client: &Client) -> Result<ObjectId> {
 //     // Parse the precompiled move package
-//     let package_data = serde_json::from_str::<MovePackageData>(PRECOMPILED_PACKAGE)?;
+//     let package_data =
+// serde_json::from_str::<MovePackageData>(PRECOMPILED_PACKAGE)?;
 //
 //     // Create a random private key to derive a sender address
 //     let private_key = Ed25519PrivateKey::generate(OsRng);
@@ -100,9 +103,9 @@
 //                     {
 //                         package_metadata_id.replace(object_id);
 //                     }
-//                     if object.as_struct().type_.name() == IdentifierRef::const_new("Account") {
-//                         account_id.replace(object_id);
-//                     }
+//                     if object.as_struct().type_.name() ==
+// IdentifierRef::const_new("Account") {                         
+// account_id.replace(object_id);                     }
 //                 }
 //             }
 //             _ => continue,
@@ -110,8 +113,9 @@
 //     }
 //
 //     let package_id = package_id.ok_or_eyre("Missing package id")?;
-//     let package_metadata_id = package_metadata_id.ok_or_eyre("Missing package metadata id")?;
-//     let account_id = account_id.ok_or_eyre("Missing account id")?;
+//     let package_metadata_id = package_metadata_id.ok_or_eyre("Missing package
+// metadata id")?;     let account_id = account_id.ok_or_eyre("Missing account
+// id")?;
 //
 //     println!("Package ID: {package_id}");
 //     println!("PackageMetadataV1 ID: {package_metadata_id}");
@@ -141,7 +145,14 @@
 //
 // /// The package below, compiled and exported using `iota move build
 // /// --dump-bytecode-as-base64``
-// const PRECOMPILED_PACKAGE: &str = r#"{"modules":["oRzrCwYAAAALAQAUAhQmAzorBGUGBWtPB7oBwAII+gNgBtoECRDjBCoKjQULDJgFQgAJAgkCCwINAg4CFgIXAhoCGwEKAAEMAAAAAgACAgIAAwMHAQgBBAQIAAUIBAAGBQgACAcCAAkGBwAAEwABAAAUAgEAAAwDAQABDwsBAQgDEAkKAQgFFQQFAAcYBwEBDAkZDA0ABgYEBgMGAggBBwgHAAQIAAYIBggICAgFBggACAgGCAQGCAIGCAcBBwgHAQgFAQgAAQkAAQsDAQgAAwYIBggICAgBCwMBCQACCQALAwEJAAEKAgEICAdBQ0NPVU5UB0FjY291bnQLQXV0aENvbnRleHQaQXV0aGVudGljYXRvckZ1bmN0aW9uUmVmVjEFQ2xvY2sRUGFja2FnZU1ldGFkYXRhVjEGU3RyaW5nCVR4Q29udGV4dANVSUQHYWNjb3VudAVhc2NpaQxhdXRoX2NvbnRleHQMYXV0aGVudGljYXRlFmF1dGhlbnRpY2F0b3JfZnVuY3Rpb24FY2xvY2sRY3JlYXRlX2FjY291bnRfdjEbY3JlYXRlX2F1dGhfZnVuY3Rpb25fcmVmX3YxC2R1bW15X2ZpZWxkAmlkBGluaXQJbGlua19hdXRoA25ldwZvYmplY3QQcGFja2FnZV9tZXRhZGF0YRNwdWJsaWNfc2hhcmVfb2JqZWN0BnN0cmluZwh0cmFuc2Zlcgp0eF9jb250ZXh0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCgIGBWhlbGxvDmlvdGE6Om1ldGFkYXRhGgEAAAAAAAAAEQEMYXV0aGVudGljYXRlAQABAAIBEggFAQIBEQEAAAAAAQULAREFEgA4AAIBAQAACAkLAQsCCwM4AQwECwALBDgCAgIBAAABCQsBBwARByEEBgUIBgAAAAAAAAAAJwIA"],"dependencies":["0x0000000000000000000000000000000000000000000000000000000000000002","0x0000000000000000000000000000000000000000000000000000000000000001"],"digest":[236,68,86,252,91,28,224,206,146,112,120,93,47,52,14,168,169,132,252,75,45,104,10,116,171,91,155,100,66,111,66,147]}"#;
+// const PRECOMPILED_PACKAGE: &str =
+// r#"{"modules":["
+// oRzrCwYAAAALAQAUAhQmAzorBGUGBWtPB7oBwAII+gNgBtoECRDjBCoKjQULDJgFQgAJAgkCCwINAg4CFgIXAhoCGwEKAAEMAAAAAgACAgIAAwMHAQgBBAQIAAUIBAAGBQgACAcCAAkGBwAAEwABAAAUAgEAAAwDAQABDwsBAQgDEAkKAQgFFQQFAAcYBwEBDAkZDA0ABgYEBgMGAggBBwgHAAQIAAYIBggICAgFBggACAgGCAQGCAIGCAcBBwgHAQgFAQgAAQkAAQsDAQgAAwYIBggICAgBCwMBCQACCQALAwEJAAEKAgEICAdBQ0NPVU5UB0FjY291bnQLQXV0aENvbnRleHQaQXV0aGVudGljYXRvckZ1bmN0aW9uUmVmVjEFQ2xvY2sRUGFja2FnZU1ldGFkYXRhVjEGU3RyaW5nCVR4Q29udGV4dANVSUQHYWNjb3VudAVhc2NpaQxhdXRoX2NvbnRleHQMYXV0aGVudGljYXRlFmF1dGhlbnRpY2F0b3JfZnVuY3Rpb24FY2xvY2sRY3JlYXRlX2FjY291bnRfdjEbY3JlYXRlX2F1dGhfZnVuY3Rpb25fcmVmX3YxC2R1bW15X2ZpZWxkAmlkBGluaXQJbGlua19hdXRoA25ldwZvYmplY3QQcGFja2FnZV9tZXRhZGF0YRNwdWJsaWNfc2hhcmVfb2JqZWN0BnN0cmluZwh0cmFuc2Zlcgp0eF9jb250ZXh0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCgIGBWhlbGxvDmlvdGE6Om1ldGFkYXRhGgEAAAAAAAAAEQEMYXV0aGVudGljYXRlAQABAAIBEggFAQIBEQEAAAAAAQULAREFEgA4AAIBAQAACAkLAQsCCwM4AQwECwALBDgCAgIBAAABCQsBBwARByEEBgUIBgAAAAAAAAAAJwIA"
+// ],"dependencies":["
+// 0x0000000000000000000000000000000000000000000000000000000000000002","
+// 0x0000000000000000000000000000000000000000000000000000000000000001"],"digest"
+// :[236,68,86,252,91,28,224,206,146,112,120,93,47,52,14,168,169,132,252,75,45,
+// 104,10,116,171,91,155,100,66,111,66,147]}"#;
 //
 // #[expect(unused)]
 // const PACKAGE: &str = r#"
@@ -158,19 +169,21 @@
 // public struct ACCOUNT has drop {}
 //
 // fun init(_otw: ACCOUNT, ctx: &mut TxContext) {
-//     // Shares the account object, anyone can claim it by calling the link_auth function
-//     transfer::public_share_object(Account {
+//     // Shares the account object, anyone can claim it by calling the
+// link_auth function     transfer::public_share_object(Account {
 //         id: object::new(ctx),
 //     });
 // }
 //
-// public fun link_auth(account: Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
-//     let authenticator = authenticator_function::create_auth_function_ref_v1<Account>(package, module_name, function_name);
-//     account::create_account_v1<Account>(account, authenticator);
-// }
+// public fun link_auth(account: Account, package: &PackageMetadataV1,
+// module_name: std::ascii::String, function_name: std::ascii::String) {     let
+// authenticator =
+// authenticator_function::create_auth_function_ref_v1<Account>(package,
+// module_name, function_name);     account::create_account_v1<Account>(account,
+// authenticator); }
 //
-// /// An unsecure example authenticator function that checks if the provided message is "hello".
-// #[authenticator]
+// /// An unsecure example authenticator function that checks if the provided
+// message is "hello". #[authenticator]
 // public fun authenticate(
 //     _account: &Account,
 //     msg: std::ascii::String,

@@ -12768,7 +12768,7 @@ public func FfiConverterTypeMoveAuthenticatorBuilder_lower(_ value: MoveAuthenti
 
 
 /**
- * Version 1 of the [`MoveAuthenticator`] data.
+ * Version 1 of the [`MoveAuthenticator`].
  */
 public protocol MoveAuthenticatorV1Protocol: AnyObject, Sendable {
     
@@ -12782,7 +12782,7 @@ public protocol MoveAuthenticatorV1Protocol: AnyObject, Sendable {
     
 }
 /**
- * Version 1 of the [`MoveAuthenticator`] data.
+ * Version 1 of the [`MoveAuthenticator`].
  */
 open class MoveAuthenticatorV1: MoveAuthenticatorV1Protocol, @unchecked Sendable {
     fileprivate let pointer: UnsafeMutableRawPointer!

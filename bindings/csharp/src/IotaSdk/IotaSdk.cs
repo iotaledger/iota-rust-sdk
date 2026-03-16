@@ -38068,7 +38068,7 @@ class FfiConverterTypeMoveAuthenticatorBuilder: FfiConverter<MoveAuthenticatorBu
 
 
 /// <summary>
-/// Version 1 of the [`MoveAuthenticator`] data.
+/// Version 1 of the [`MoveAuthenticator`].
 /// </summary>
 public interface IMoveAuthenticatorV1 {
     Address Address();
@@ -38077,7 +38077,7 @@ public interface IMoveAuthenticatorV1 {
     TypeTag[] TypeArgs();
 }
 /// <summary>
-/// Version 1 of the [`MoveAuthenticator`] data.
+/// Version 1 of the [`MoveAuthenticator`].
 /// </summary>
 public class MoveAuthenticatorV1 : IMoveAuthenticatorV1, IDisposable {
     protected IntPtr pointer;

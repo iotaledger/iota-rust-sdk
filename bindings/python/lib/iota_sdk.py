@@ -42822,7 +42822,7 @@ class _UniffiConverterTypeMoveAuthenticatorBuilder:
         buf.write_u64(cls.lower(value))
 class MoveAuthenticatorV1Protocol(typing.Protocol):
     """
-    Version 1 of the [`MoveAuthenticator`] data.
+    Version 1 of the [`MoveAuthenticator`].
     """
 
     def address(self, ):
@@ -42836,7 +42836,7 @@ class MoveAuthenticatorV1Protocol(typing.Protocol):
 # MoveAuthenticatorV1 is a Rust-only trait - it's a wrapper around a Rust implementation.
 class MoveAuthenticatorV1():
     """
-    Version 1 of the [`MoveAuthenticator`] data.
+    Version 1 of the [`MoveAuthenticator`].
     """
 
     _pointer: ctypes.c_void_p
