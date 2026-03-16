@@ -4,6 +4,7 @@ set -e
 
 CONFIG_PATH="./.github/actions/start-local-network/config.yaml"
 COMPOSE_PATH="./.github/actions/start-local-network/gas_station_compose.yml"
+COMPOSE_LOCAL_PATH="./.github/actions/start-local-network/gas_station_compose.local.yml"
 CONFIG_BACKUP="$CONFIG_PATH.backup"
 IOTA_LOG="iota_network.log"
 IOTA_BINARY="${2:-iota}"
@@ -25,7 +26,7 @@ if [ "$1" == "start" ]; then
 
     # Start IOTA network
     echo "Starting IOTA network..."
-    RUST_LOG="info,consensus=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql >> "$IOTA_LOG" 2>&1 &
+    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql >> "$IOTA_LOG" 2>&1 &
     IOTA_PID=$!
 
     # Use all 9's private key for gas station
@@ -35,14 +36,9 @@ if [ "$1" == "start" ]; then
     echo "Setting keypair in config..."
     sed -i.bak "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
 
-    # Get host IP to update fullnode-url
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        HOST_IP="host.docker.internal"
-    else
-        HOST_IP=$(hostname -I | awk '{print $1}')
-    fi
-    echo "Updating fullnode-url to use host IP: $HOST_IP"
-    sed -i.bak "s|http://localhost:9000|http://$HOST_IP:9000|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
+    # With host networking (see compose.local.yml), both Redis and the IOTA fullnode
+    # are accessible on localhost. Replace the Docker DNS name with localhost.
+    sed -i.bak "s|redis://redis:6379|redis://localhost:6379|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
 
     echo "Waiting for network to start and requesting faucet coins..."
     success=false
@@ -61,7 +57,7 @@ if [ "$1" == "start" ]; then
     echo "Starting Gas Station..."
     # Set gas station auth
     export GAS_STATION_AUTH=test
-    docker compose -f "$COMPOSE_PATH" -p start-local-network up -d
+    docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network up -d
 
     echo "Waiting for gas station to be ready..."
     success=false
@@ -91,7 +87,7 @@ elif [ "$1" == "stop" ]; then
     echo "Stopping Gas Station..."
     # Flush Redis data before stopping
     redis-cli FLUSHALL || echo "Could not flush Redis data"
-    docker compose -f "$COMPOSE_PATH" -p start-local-network down
+    docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network down
 
     # Remove Redis volume to clean persisted data
     echo "Removing Redis data volume..."
@@ -129,7 +125,7 @@ elif [ "$1" == "logs" ]; then
     fi
 
 elif [ "$1" == "gaslogs" ]; then
-    docker compose -f "$COMPOSE_PATH" -p start-local-network logs -f
+    docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network logs -f
 
 else
     echo "Usage: $0 start|stop|logs|gaslogs"
