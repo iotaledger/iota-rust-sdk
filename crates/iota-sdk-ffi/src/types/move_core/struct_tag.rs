@@ -210,5 +210,11 @@ export_struct_tag_from_struct_tag_ctors!(
     DisplayVersionUpdated,
 );
 
+impl From<iota_sdk::types::MoveObjectType> for StructTag {
+    fn from(value: iota_sdk::types::MoveObjectType) -> Self {
+        Self(iota_sdk::types::StructTag::from(value))
+    }
+}
+
 crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);
 crate::export_iota_types_objects_json_conversion!(Identifier, StructTag);
