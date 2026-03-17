@@ -235,7 +235,6 @@ impl proptest::arbitrary::Arbitrary for MoveObjectType {
     }
 }
 
-/// Even though it is declared public, it is the "private", internal
 /// representation for `MoveObjectType`
 #[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
