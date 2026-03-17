@@ -27,7 +27,7 @@ func addrFromHex(hex string) *iota_sdk.Address {
 
 func getObject(client *iota_sdk.GraphQlClient, objId *iota_sdk.ObjectId) *iota_sdk.Object {
 	obj, err := client.Object(objId, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get object: %v", err)
 	}
 	if obj == nil {
@@ -58,7 +58,7 @@ func main() {
 	gasCoin := getObject(client, gasCoinId).ObjectRef()
 
 	gasPrice, err := client.ReferenceGasPrice(nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
 	if gasPrice == nil {
@@ -78,7 +78,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := client.DryRunTx(txn, false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to transfer objects: %v", err)
 	}
 

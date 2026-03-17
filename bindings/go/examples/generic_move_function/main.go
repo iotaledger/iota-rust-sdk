@@ -53,7 +53,7 @@ func main() {
 	)
 
 	res, err := builder.DryRun(false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to call generic Move function: %v", err)
 	}
 

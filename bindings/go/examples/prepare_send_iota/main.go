@@ -28,7 +28,7 @@ func main() {
 	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
 
 	txn, err := builder.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -36,7 +36,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := client.DryRunTx(txn, false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to send IOTA: %v", err)
 	}
 

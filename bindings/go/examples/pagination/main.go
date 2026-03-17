@@ -25,7 +25,7 @@ func main() {
 			fmt.Printf("Fetching page with cursor: nil\n")
 		}
 		page, err := client.Objects(&iota_sdk.ObjectFilter{Owner: &address}, &iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Cursor: nextCursor, Limit: &limit})
-		if err.(*iota_sdk.SdkFfiError) != nil {
+		if err != nil {
 			log.Fatalf("Failed to get owned objects: %v", err)
 		}
 		for _, obj := range page.Data {

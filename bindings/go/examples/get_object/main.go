@@ -24,7 +24,7 @@ func main() {
 	objectID := objIdFromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
 	objOpt, err := client.Object(objectID, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get object contents: %v", err)
 	}
 	if objOpt == nil {

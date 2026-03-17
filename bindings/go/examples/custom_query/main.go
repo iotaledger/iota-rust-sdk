@@ -28,7 +28,7 @@ func main() {
 		Query: queryEpochDataStr,
 	}
 	res1, err := client.RunQuery(queryEpochData)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to run a query: %v", err)
 	}
 	fmt.Println(res1)
@@ -41,7 +41,7 @@ func main() {
 		Variables: &variables,
 	}
 	res2, err := client.RunQuery(queryEpochDataWithVariables)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to run a query with variables: %v", err)
 	}
 	fmt.Println(res2)
@@ -54,7 +54,7 @@ func main() {
 		Query: queryChainIdStr,
 	}
 	res3, err := client.RunQuery(queryChainId)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to run a query: %v", err)
 	}
 	fmt.Println(res3)

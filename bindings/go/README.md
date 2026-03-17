@@ -36,7 +36,7 @@ func main() {
 
 	// Query the chain ID
 	chainID, err := client.ChainId()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get chain ID: %v", err)
 	}
 	fmt.Println("Chain ID:", chainID)
