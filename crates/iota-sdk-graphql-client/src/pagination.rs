@@ -80,3 +80,84 @@ pub struct PaginationFilterResponse {
     pub first: Option<i32>,
     pub last: Option<i32>,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn sample_page_info() -> PageInfo {
+        PageInfo {
+            has_previous_page: false,
+            has_next_page: true,
+            start_cursor: Some("start".to_string()),
+            end_cursor: Some("end".to_string()),
+        }
+    }
+
+    #[test]
+    fn page_new_stores_data_and_info() {
+        let page: Page<i32> = Page::new(sample_page_info(), vec![1, 2, 3]);
+        assert_eq!(page.data().len(), 3);
+        assert!(page.page_info().has_next_page);
+    }
+
+    #[test]
+    fn page_is_empty_true_when_no_data() {
+        let page: Page<i32> = Page::new_empty();
+        assert!(page.is_empty());
+    }
+
+    #[test]
+    fn page_is_empty_false_when_has_data() {
+        let page = Page::new(PageInfo::default(), vec![42]);
+        assert!(!page.is_empty());
+    }
+
+    #[test]
+    fn page_new_empty_defaults() {
+        let page: Page<String> = Page::new_empty();
+        assert!(page.is_empty());
+        assert!(!page.page_info().has_next_page);
+        assert!(!page.page_info().has_previous_page);
+        assert!(page.page_info().start_cursor.is_none());
+        assert!(page.page_info().end_cursor.is_none());
+    }
+
+    #[test]
+    fn page_into_parts_decomposes() {
+        let page = Page::new(sample_page_info(), vec![10, 20]);
+        let (info, data) = page.into_parts();
+        assert_eq!(data, vec![10, 20]);
+        assert!(info.has_next_page);
+    }
+
+    #[test]
+    fn page_map_transforms_data() {
+        let page = Page::new(sample_page_info(), vec![1, 2, 3]);
+        let mapped = page.map(|x| x * 10);
+        assert_eq!(mapped.data(), &[10, 20, 30]);
+        // Page info is preserved
+        assert!(mapped.page_info().has_next_page);
+    }
+
+    #[test]
+    fn page_map_empty_page() {
+        let page: Page<i32> = Page::new_empty();
+        let mapped = page.map(|x| x.to_string());
+        assert!(mapped.is_empty());
+    }
+
+    #[test]
+    fn direction_default_is_forward() {
+        let dir = Direction::default();
+        assert!(matches!(dir, Direction::Forward));
+    }
+
+    #[test]
+    fn pagination_filter_default() {
+        let filter = PaginationFilter::default();
+        assert!(matches!(filter.direction, Direction::Forward));
+        assert!(filter.cursor.is_none());
+        assert!(filter.limit.is_none());
+    }
+}

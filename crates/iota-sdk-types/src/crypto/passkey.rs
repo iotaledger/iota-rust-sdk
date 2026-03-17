@@ -413,11 +413,130 @@ impl proptest::arbitrary::Arbitrary for PasskeyAuthenticator {
 mod tests {
     use crate::UserSignature;
 
+    const PASSKEY_B64: &str = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+
     #[test]
     fn base64_encoded_passkey_user_signature() {
-        let b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
-
-        let sig = UserSignature::from_base64(b64).unwrap();
+        let sig = UserSignature::from_base64(PASSKEY_B64).unwrap();
         assert!(matches!(sig, UserSignature::PasskeyAuthenticator(_)));
+    }
+
+    // --- Roundtrip serialization (exercises to_bytes + from_serialized_bytes) ---
+
+    #[test]
+    fn passkey_roundtrip_serialization() {
+        let sig = UserSignature::from_base64(PASSKEY_B64).unwrap();
+        if let UserSignature::PasskeyAuthenticator(passkey) = sig {
+            let bytes = passkey.to_bytes();
+            let recovered =
+                super::PasskeyAuthenticator::from_serialized_bytes(&bytes).unwrap();
+            assert_eq!(passkey, recovered);
+        } else {
+            panic!("expected passkey authenticator");
+        }
+    }
+
+    // --- from_serialized_bytes error paths ---
+
+    #[test]
+    fn passkey_from_serialized_bytes_empty() {
+        let result = super::PasskeyAuthenticator::from_serialized_bytes(&[]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn passkey_from_serialized_bytes_wrong_flag() {
+        // 0x00 is Ed25519 flag, not Passkey
+        let result = super::PasskeyAuthenticator::from_serialized_bytes(&[0x00]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn passkey_from_serialized_bytes_invalid_bcs() {
+        use crate::SignatureScheme;
+        let mut bytes = vec![SignatureScheme::PasskeyAuthenticator as u8];
+        bytes.extend_from_slice(&[0xff, 0xff, 0xff]);
+        let result = super::PasskeyAuthenticator::from_serialized_bytes(&bytes);
+        assert!(result.is_err());
+    }
+
+    // --- try_from_raw validation logic via new() ---
+
+    #[test]
+    fn passkey_new_rejects_ed25519_signature() {
+        use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
+
+        let sig = SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; 64]),
+            public_key: Ed25519PublicKey::new([0; 32]),
+        };
+        let json = r#"{"type":"webauthn.get","challenge":"AAAA","origin":"http://example.com"}"#
+            .to_string();
+        let result = super::PasskeyAuthenticator::new(vec![0; 37], json, sig);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn passkey_new_rejects_invalid_json() {
+        use crate::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
+
+        let sig = SimpleSignature::Secp256r1 {
+            signature: Secp256r1Signature::new([0; 64]),
+            public_key: Secp256r1PublicKey::new([0; 33]),
+        };
+        let result =
+            super::PasskeyAuthenticator::new(vec![0; 37], "not json".to_string(), sig);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn passkey_new_rejects_invalid_challenge_base64() {
+        use crate::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
+
+        let sig = SimpleSignature::Secp256r1 {
+            signature: Secp256r1Signature::new([0; 64]),
+            public_key: Secp256r1PublicKey::new([0; 33]),
+        };
+        // Valid JSON but challenge field has invalid base64url
+        let json =
+            r#"{"type":"webauthn.get","challenge":"!!!invalid!!!","origin":"http://example.com"}"#
+                .to_string();
+        let result = super::PasskeyAuthenticator::new(vec![0; 37], json, sig);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn passkey_new_valid_secp256r1() {
+        use crate::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
+
+        let sig = SimpleSignature::Secp256r1 {
+            signature: Secp256r1Signature::new([0; 64]),
+            public_key: Secp256r1PublicKey::new([0; 33]),
+        };
+        let json = r#"{"type":"webauthn.get","challenge":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","origin":"http://example.com"}"#
+            .to_string();
+        let result = super::PasskeyAuthenticator::new(vec![0; 37], json, sig);
+        assert!(result.is_some());
+        let passkey = result.unwrap();
+        assert!(!passkey.challenge().is_empty());
+        assert!(!passkey.client_data_json().is_empty());
+    }
+
+    // --- Parsed field validation ---
+
+    #[test]
+    fn passkey_challenge_is_decoded_from_client_data() {
+        let sig = UserSignature::from_base64(PASSKEY_B64).unwrap();
+        if let UserSignature::PasskeyAuthenticator(passkey) = sig {
+            // The challenge in the test data is all zeros (base64url "AAAA...AAA")
+            assert!(!passkey.challenge().is_empty());
+            // Verify the signature is secp256r1
+            assert!(matches!(
+                passkey.signature(),
+                crate::SimpleSignature::Secp256r1 { .. }
+            ));
+        } else {
+            panic!("expected passkey");
+        }
     }
 }

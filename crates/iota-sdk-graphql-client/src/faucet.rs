@@ -265,7 +265,7 @@ impl FaucetClient {
 
     /// Check the faucet request status.
     ///
-    /// Possible statuses are defined in: [`BatchSendStatusType`]
+    /// Possible statuses are defined in [`BatchSendStatusType`].
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = format!("{}v1/status/{}", self.faucet_url, id);
         info!("Checking status of faucet request: {status_url}");
@@ -280,5 +280,167 @@ impl FaucetClient {
         let json = response.json::<BatchStatusFaucetResponse>().await?;
 
         Ok(json.status)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- Constructor tests ---
+
+    #[test]
+    fn new_testnet_client() {
+        let client = FaucetClient::new_testnet();
+        assert_eq!(client.faucet_url.as_str(), "https://faucet.testnet.iota.cafe/");
+    }
+
+    #[test]
+    fn new_devnet_client() {
+        let client = FaucetClient::new_devnet();
+        assert_eq!(client.faucet_url.as_str(), "https://faucet.devnet.iota.cafe/");
+    }
+
+    #[test]
+    fn new_localnet_client() {
+        let client = FaucetClient::new_localnet();
+        assert_eq!(client.faucet_url.as_str(), "http://localhost:9123/");
+    }
+
+    #[test]
+    fn new_custom_url() {
+        let client = FaucetClient::new("http://my-faucet.example.com:5000");
+        assert_eq!(
+            client.faucet_url.as_str(),
+            "http://my-faucet.example.com:5000/"
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "Invalid faucet URL")]
+    fn new_invalid_url_panics() {
+        FaucetClient::new("not a valid url !@#$");
+    }
+
+    // --- Constants tests ---
+
+    #[test]
+    fn faucet_host_constants() {
+        assert_eq!(FAUCET_DEVNET_HOST, "https://faucet.devnet.iota.cafe");
+        assert_eq!(FAUCET_TESTNET_HOST, "https://faucet.testnet.iota.cafe");
+        assert_eq!(FAUCET_LOCAL_HOST, "http://localhost:9123");
+    }
+
+    #[test]
+    fn faucet_timeout_constant() {
+        assert_eq!(FAUCET_REQUEST_TIMEOUT, Duration::from_secs(120));
+    }
+
+    #[test]
+    fn faucet_poll_interval_constant() {
+        assert_eq!(FAUCET_POLL_INTERVAL, Duration::from_secs(2));
+    }
+
+    // --- FaucetError Display tests ---
+
+    #[test]
+    fn faucet_error_display_bad_gateway() {
+        let err = FaucetError::BadGateway;
+        assert_eq!(
+            err.to_string(),
+            "Cannot fetch request status due to a bad gateway."
+        );
+    }
+
+    #[test]
+    fn faucet_error_display_request() {
+        let err = FaucetError::Request("out of funds".to_string());
+        assert!(err.to_string().contains("out of funds"));
+    }
+
+    #[test]
+    fn faucet_error_display_too_many_requests() {
+        let err = FaucetError::TooManyRequests;
+        assert!(err.to_string().contains("too many requests"));
+    }
+
+    #[test]
+    fn faucet_error_display_unavailable() {
+        let err = FaucetError::Unavailable;
+        assert!(err.to_string().contains("overloaded or unavailable"));
+    }
+
+    #[test]
+    fn faucet_error_display_timed_out() {
+        let err = FaucetError::TimedOut;
+        assert_eq!(err.to_string(), "Faucet request timed out");
+    }
+
+    #[test]
+    fn faucet_error_display_status_code() {
+        let err = FaucetError::StatusCode(StatusCode::INTERNAL_SERVER_ERROR);
+        assert!(err.to_string().contains("500"));
+    }
+
+    // --- BatchSendStatusType tests ---
+
+    #[test]
+    fn batch_send_status_type_serde_roundtrip() {
+        let status = BatchSendStatusType::Succeeded;
+        let json = serde_json::to_string(&status).unwrap();
+        assert_eq!(json, "\"SUCCEEDED\"");
+        let parsed: BatchSendStatusType = serde_json::from_str(&json).unwrap();
+        assert_eq!(parsed, BatchSendStatusType::Succeeded);
+    }
+
+    #[test]
+    fn batch_send_status_type_in_progress_serde() {
+        let json = "\"INPROGRESS\"";
+        let parsed: BatchSendStatusType = serde_json::from_str(json).unwrap();
+        assert_eq!(parsed, BatchSendStatusType::InProgress);
+    }
+
+    #[test]
+    fn batch_send_status_type_discarded_serde() {
+        let json = "\"DISCARDED\"";
+        let parsed: BatchSendStatusType = serde_json::from_str(json).unwrap();
+        assert_eq!(parsed, BatchSendStatusType::Discarded);
+    }
+
+    // --- FaucetResponse deserialization tests ---
+
+    #[test]
+    fn faucet_response_with_task() {
+        let json = r#"{"task": "abc-123", "error": null}"#;
+        let resp: FaucetResponse = serde_json::from_str(json).unwrap();
+        assert_eq!(resp.task, Some("abc-123".to_string()));
+        assert!(resp.error.is_none());
+    }
+
+    #[test]
+    fn faucet_response_with_error() {
+        let json = r#"{"task": null, "error": "rate limited"}"#;
+        let resp: FaucetResponse = serde_json::from_str(json).unwrap();
+        assert!(resp.task.is_none());
+        assert_eq!(resp.error, Some("rate limited".to_string()));
+    }
+
+    // --- BatchStatusFaucetResponse tests ---
+
+    #[test]
+    fn batch_status_response_deserialization() {
+        let json = r#"{"status": {"status": "SUCCEEDED", "transferredGasObjects": null}, "error": null}"#;
+        let resp: BatchStatusFaucetResponse = serde_json::from_str(json).unwrap();
+        let status = resp.status.unwrap();
+        assert_eq!(status.status, BatchSendStatusType::Succeeded);
+        assert!(status.transferred_gas_objects.is_none());
+    }
+
+    #[test]
+    fn batch_status_response_with_error() {
+        let json = r#"{"status": null, "error": "something failed"}"#;
+        let resp: BatchStatusFaucetResponse = serde_json::from_str(json).unwrap();
+        assert!(resp.status.is_none());
+        assert_eq!(resp.error, Some("something failed".to_string()));
     }
 }

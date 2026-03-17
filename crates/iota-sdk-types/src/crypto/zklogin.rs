@@ -647,13 +647,16 @@ impl std::str::FromStr for Bn254FieldElement {
 mod tests {
     use std::str::FromStr;
 
+    use base64ct::Encoding;
     use num_bigint::BigUint;
     use proptest::prelude::*;
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use super::Bn254FieldElement;
+    use super::*;
+
+    // --- Bn254FieldElement ---
 
     #[test]
     fn unpadded_slice() {
@@ -664,6 +667,272 @@ mod tests {
         let mut seed = Bn254FieldElement([1; 32]);
         seed.0[0] = 0;
         assert_eq!(seed.unpadded(), [1; 31].as_slice());
+    }
+
+    #[test]
+    fn unpadded_all_zeros_returns_single_zero_byte() {
+        let seed = Bn254FieldElement::new([0; 32]);
+        assert_eq!(seed.unpadded().len(), 1);
+        assert_eq!(seed.unpadded()[0], 0);
+    }
+
+    #[test]
+    fn unpadded_no_leading_zeros() {
+        let mut bytes = [0u8; 32];
+        bytes[0] = 0xff;
+        let seed = Bn254FieldElement::new(bytes);
+        assert_eq!(seed.unpadded().len(), 32);
+    }
+
+    #[test]
+    fn unpadded_single_nonzero_at_end() {
+        let mut bytes = [0u8; 32];
+        bytes[31] = 42;
+        let seed = Bn254FieldElement::new(bytes);
+        assert_eq!(seed.unpadded(), &[42]);
+    }
+
+    #[test]
+    fn padded_always_32_bytes() {
+        let seed = Bn254FieldElement::new([0; 32]);
+        assert_eq!(seed.padded().len(), 32);
+    }
+
+    #[test]
+    fn from_str_radix_10_valid() {
+        let seed = Bn254FieldElement::from_str_radix_10("12345").unwrap();
+        assert_eq!(seed.to_string(), "12345");
+    }
+
+    #[test]
+    fn from_str_radix_10_zero() {
+        let seed = Bn254FieldElement::from_str_radix_10("0").unwrap();
+        assert_eq!(seed.to_string(), "0");
+    }
+
+    #[test]
+    fn from_str_radix_10_invalid() {
+        assert!(Bn254FieldElement::from_str_radix_10("not_a_number").is_err());
+    }
+
+    #[test]
+    fn from_str_roundtrip() {
+        let original = "999999999999999999";
+        let seed = Bn254FieldElement::from_str(original).unwrap();
+        assert_eq!(seed.to_string(), original);
+    }
+
+    #[test]
+    fn display_and_parse_error() {
+        let err = Bn254FieldElement::from_str("abc").unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("unable to parse"));
+    }
+
+    // --- ZkLoginPublicIdentifier ---
+
+    #[test]
+    fn zklogin_public_identifier_valid() {
+        let seed = Bn254FieldElement::new([1; 32]);
+        let id = ZkLoginPublicIdentifier::new("https://accounts.google.com".to_string(), seed);
+        assert!(id.is_some());
+        let id = id.unwrap();
+        assert_eq!(id.iss(), "https://accounts.google.com");
+    }
+
+    #[test]
+    fn zklogin_public_identifier_iss_too_long() {
+        let seed = Bn254FieldElement::new([1; 32]);
+        let long_iss = "a".repeat(256);
+        assert!(ZkLoginPublicIdentifier::new(long_iss, seed).is_none());
+    }
+
+    #[test]
+    fn zklogin_public_identifier_iss_at_limit() {
+        let seed = Bn254FieldElement::new([1; 32]);
+        let iss_255 = "a".repeat(255);
+        assert!(ZkLoginPublicIdentifier::new(iss_255, seed).is_some());
+    }
+
+    // --- ZkLoginClaim::verify_extended_claim ---
+
+    #[test]
+    fn verify_extended_claim_valid_iss() {
+        // This is the real base64url-encoded claim from the proptest Arbitrary impl
+        let claim = ZkLoginClaim {
+            value: "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw".to_owned(),
+            index_mod_4: 2,
+        };
+        let result = claim.verify_extended_claim("iss");
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "https://id.twitch.tv/oauth2");
+    }
+
+    #[test]
+    fn verify_extended_claim_invalid_base64_char() {
+        let claim = ZkLoginClaim {
+            value: "!!!invalid!!!".to_owned(),
+            index_mod_4: 0,
+        };
+        let result = claim.verify_extended_claim("iss");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn verify_extended_claim_too_short() {
+        let claim = ZkLoginClaim {
+            value: "a".to_owned(),
+            index_mod_4: 0,
+        };
+        let result = claim.verify_extended_claim("iss");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn verify_extended_claim_invalid_index_mod_4() {
+        let claim = ZkLoginClaim {
+            value: "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw".to_owned(),
+            index_mod_4: 3, // invalid: must be 0, 1, or 2
+        };
+        let result = claim.verify_extended_claim("iss");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn verify_extended_claim_missing_key() {
+        let claim = ZkLoginClaim {
+            value: "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw".to_owned(),
+            index_mod_4: 2,
+        };
+        // Looking for a key that doesn't exist
+        let result = claim.verify_extended_claim("nonexistent");
+        assert!(result.is_err());
+    }
+
+    // --- JwtHeader::from_base64 ---
+
+    #[test]
+    fn jwt_header_valid() {
+        // {"alg":"RS256","typ":"JWT","kid":"1"}
+        let header_b64 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ";
+        let header = JwtHeader::from_base64(header_b64).unwrap();
+        assert_eq!(header.alg, "RS256");
+        assert_eq!(header.kid, "1");
+        assert_eq!(header.typ.as_deref(), Some("JWT"));
+    }
+
+    #[test]
+    fn jwt_header_wrong_algorithm() {
+        // {"alg":"HS256","kid":"1"}
+        let header_b64 = "eyJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ";
+        let result = JwtHeader::from_base64(header_b64);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().0.contains("RS256"));
+    }
+
+    #[test]
+    fn jwt_header_invalid_base64() {
+        let result = JwtHeader::from_base64("!!!not-base64!!!");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn jwt_header_invalid_json() {
+        // Valid base64 but not valid JSON
+        let not_json = base64ct::Base64UrlUnpadded::encode_string(b"not json");
+        let result = JwtHeader::from_base64(&not_json);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn jwt_header_without_typ() {
+        // {"alg":"RS256","kid":"2"}
+        let header_b64 = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIifQ";
+        let header = JwtHeader::from_base64(header_b64).unwrap();
+        assert_eq!(header.kid, "2");
+        assert!(header.typ.is_none());
+    }
+
+    // --- ZkLoginInputs::new ---
+
+    fn make_proof() -> ZkLoginProof {
+        ZkLoginProof {
+            a: CircomG1([
+                Bn254FieldElement::new([0; 32]),
+                Bn254FieldElement::new([0; 32]),
+                Bn254FieldElement::new([0; 32]),
+            ]),
+            b: CircomG2([
+                [Bn254FieldElement::new([0; 32]), Bn254FieldElement::new([0; 32])],
+                [Bn254FieldElement::new([0; 32]), Bn254FieldElement::new([0; 32])],
+                [Bn254FieldElement::new([0; 32]), Bn254FieldElement::new([0; 32])],
+            ]),
+            c: CircomG1([
+                Bn254FieldElement::new([0; 32]),
+                Bn254FieldElement::new([0; 32]),
+                Bn254FieldElement::new([0; 32]),
+            ]),
+        }
+    }
+
+    #[test]
+    fn zklogin_inputs_new_valid() {
+        let claim = ZkLoginClaim {
+            value: "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw".to_owned(),
+            index_mod_4: 2,
+        };
+        let header_b64 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ".to_owned();
+        let seed = Bn254FieldElement::new([1; 32]);
+
+        let inputs = ZkLoginInputs::new(make_proof(), claim, header_b64, seed);
+        assert!(inputs.is_ok());
+        let inputs = inputs.unwrap();
+        assert_eq!(inputs.iss(), "https://id.twitch.tv/oauth2");
+        assert_eq!(inputs.jwk_id().kid, "1");
+        assert_eq!(inputs.jwk_id().iss, "https://id.twitch.tv/oauth2");
+    }
+
+    #[test]
+    fn zklogin_inputs_new_invalid_claim() {
+        let claim = ZkLoginClaim {
+            value: "!!!".to_owned(),
+            index_mod_4: 0,
+        };
+        let header_b64 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ".to_owned();
+        let seed = Bn254FieldElement::new([1; 32]);
+
+        assert!(ZkLoginInputs::new(make_proof(), claim, header_b64, seed).is_err());
+    }
+
+    #[test]
+    fn zklogin_inputs_new_invalid_header() {
+        let claim = ZkLoginClaim {
+            value: "wiaXNzIjoiaHR0cHM6Ly9pZC50d2l0Y2gudHYvb2F1dGgyIiw".to_owned(),
+            index_mod_4: 2,
+        };
+        // Invalid header
+        let header_b64 = "!!!".to_owned();
+        let seed = Bn254FieldElement::new([1; 32]);
+
+        assert!(ZkLoginInputs::new(make_proof(), claim, header_b64, seed).is_err());
+    }
+
+    #[test]
+    fn zklogin_inputs_new_iss_too_long() {
+        // Craft a claim that would produce an iss > 255 chars
+        // This is hard to do with real base64, so we test the iss length check
+        // indirectly via ZkLoginPublicIdentifier
+        let seed = Bn254FieldElement::new([1; 32]);
+        let long_iss = "a".repeat(256);
+        assert!(ZkLoginPublicIdentifier::new(long_iss, seed).is_none());
+    }
+
+    // --- InvalidZkLoginAuthenticatorError ---
+
+    #[test]
+    fn invalid_zklogin_error_display() {
+        let err = InvalidZkLoginAuthenticatorError("test error".to_string());
+        assert_eq!(err.to_string(), "invalid zklogin claim: test error");
     }
 
     #[proptest]

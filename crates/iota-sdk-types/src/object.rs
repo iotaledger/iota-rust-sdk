@@ -542,6 +542,591 @@ impl GenesisObject {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- ObjectReference tests ---
+
+    #[test]
+    fn object_reference_new_and_accessors() {
+        let obj_id = ObjectId::ZERO;
+        let version = 42u64;
+        let digest = Digest::ZERO;
+        let obj_ref = ObjectReference::new(obj_id, version, digest);
+        assert_eq!(*obj_ref.object_id(), obj_id);
+        assert_eq!(obj_ref.version(), version);
+        assert_eq!(*obj_ref.digest(), digest);
+    }
+
+    #[test]
+    fn object_reference_into_parts() {
+        let obj_id = ObjectId::ZERO;
+        let version = 7u64;
+        let digest = Digest::ZERO;
+        let obj_ref = ObjectReference::new(obj_id, version, digest);
+        let (id, v, d) = obj_ref.into_parts();
+        assert_eq!(id, obj_id);
+        assert_eq!(v, 7);
+        assert_eq!(d, digest);
+    }
+
+    #[test]
+    fn object_reference_clone_and_eq() {
+        let r1 = ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO);
+        let r2 = r1.clone();
+        assert_eq!(r1, r2);
+    }
+
+    #[test]
+    fn object_reference_ne_different_version() {
+        let r1 = ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO);
+        let r2 = ObjectReference::new(ObjectId::ZERO, 2, Digest::ZERO);
+        assert_ne!(r1, r2);
+    }
+
+    // --- Owner tests ---
+
+    #[test]
+    fn owner_display_address() {
+        let owner = Owner::Address(Address::ZERO);
+        let display = owner.to_string();
+        assert!(display.starts_with("Address("));
+    }
+
+    #[test]
+    fn owner_display_object() {
+        let owner = Owner::Object(ObjectId::ZERO);
+        let display = owner.to_string();
+        assert!(display.starts_with("Object("));
+    }
+
+    #[test]
+    fn owner_display_shared() {
+        let owner = Owner::Shared(5);
+        assert_eq!(owner.to_string(), "Shared(5)");
+    }
+
+    #[test]
+    fn owner_display_immutable() {
+        let owner = Owner::Immutable;
+        assert_eq!(owner.to_string(), "Immutable");
+    }
+
+    #[test]
+    fn owner_is_immutable() {
+        assert!(Owner::Immutable.is_immutable());
+        assert!(!Owner::Address(Address::ZERO).is_immutable());
+        assert!(!Owner::Object(ObjectId::ZERO).is_immutable());
+        assert!(!Owner::Shared(0).is_immutable());
+    }
+
+    #[test]
+    fn owner_is_address() {
+        assert!(Owner::Address(Address::ZERO).is_address());
+        assert!(!Owner::Object(ObjectId::ZERO).is_address());
+        assert!(!Owner::Immutable.is_address());
+    }
+
+    #[test]
+    fn owner_as_address() {
+        let addr = Address::ZERO;
+        let owner = Owner::Address(addr);
+        assert_eq!(*owner.as_address(), addr);
+    }
+
+    #[test]
+    fn owner_as_address_opt_none_for_immutable() {
+        assert!(Owner::Immutable.as_address_opt().is_none());
+    }
+
+    #[test]
+    fn owner_is_object() {
+        assert!(Owner::Object(ObjectId::ZERO).is_object());
+        assert!(!Owner::Address(Address::ZERO).is_object());
+    }
+
+    #[test]
+    fn owner_is_shared() {
+        assert!(Owner::Shared(0).is_shared());
+        assert!(!Owner::Address(Address::ZERO).is_shared());
+    }
+
+    #[test]
+    fn owner_as_shared() {
+        let owner = Owner::Shared(42);
+        assert_eq!(*owner.as_shared(), 42);
+    }
+
+    #[test]
+    fn owner_copy() {
+        let o1 = Owner::Immutable;
+        let o2 = o1; // Copy
+        assert_eq!(o1, o2);
+    }
+
+    // --- ObjectType tests ---
+
+    #[test]
+    fn object_type_display_package() {
+        assert_eq!(ObjectType::Package.to_string(), "Package");
+    }
+
+    #[test]
+    fn object_type_display_struct() {
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("module").unwrap(),
+            Identifier::new("Name").unwrap(),
+            Vec::new(),
+        );
+        let display = ObjectType::Struct(tag).to_string();
+        assert!(display.starts_with("Struct("));
+    }
+
+    #[test]
+    fn object_type_is_package() {
+        assert!(ObjectType::Package.is_package());
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("m").unwrap(),
+            Identifier::new("N").unwrap(),
+            Vec::new(),
+        );
+        assert!(!ObjectType::Struct(tag).is_package());
+    }
+
+    #[test]
+    fn object_type_is_struct() {
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("m").unwrap(),
+            Identifier::new("N").unwrap(),
+            Vec::new(),
+        );
+        assert!(ObjectType::Struct(tag).is_struct());
+        assert!(!ObjectType::Package.is_struct());
+    }
+
+    // --- ObjectData tests ---
+
+    #[test]
+    fn object_data_is_struct() {
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("m").unwrap(),
+            Identifier::new("N").unwrap(),
+            Vec::new(),
+        );
+        let data = ObjectData::Struct(MoveStruct {
+            type_: tag,
+            version: 1,
+            contents: vec![0u8; 32],
+        });
+        assert!(data.is_struct());
+        assert!(!data.is_package());
+    }
+
+    #[test]
+    fn object_data_is_package() {
+        let data = ObjectData::Package(MovePackage {
+            id: ObjectId::ZERO,
+            version: 1,
+            modules: std::collections::BTreeMap::new(),
+            type_origin_table: vec![],
+            linkage_table: std::collections::BTreeMap::new(),
+        });
+        assert!(data.is_package());
+        assert!(!data.is_struct());
+    }
+
+    // --- Object tests ---
+
+    fn make_struct_object() -> Object {
+        // Contents must start with 32 bytes of the object id
+        let mut contents = vec![0u8; 32];
+        contents.extend_from_slice(&[1, 2, 3, 4]);
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("mod").unwrap(),
+            Identifier::new("Ty").unwrap(),
+            Vec::new(),
+        );
+        Object::new(
+            ObjectData::Struct(MoveStruct {
+                type_: tag,
+                version: 5,
+                contents,
+            }),
+            Owner::Immutable,
+            Digest::ZERO,
+            100,
+        )
+    }
+
+    fn make_package_object() -> Object {
+        Object::new(
+            ObjectData::Package(MovePackage {
+                id: ObjectId::ZERO,
+                version: 3,
+                modules: std::collections::BTreeMap::new(),
+                type_origin_table: vec![],
+                linkage_table: std::collections::BTreeMap::new(),
+            }),
+            Owner::Immutable,
+            Digest::ZERO,
+            200,
+        )
+    }
+
+    #[test]
+    fn object_struct_object_id() {
+        let obj = make_struct_object();
+        assert_eq!(obj.object_id(), ObjectId::ZERO);
+    }
+
+    #[test]
+    fn object_package_object_id() {
+        let obj = make_package_object();
+        assert_eq!(obj.object_id(), ObjectId::ZERO);
+    }
+
+    #[test]
+    fn object_struct_version() {
+        let obj = make_struct_object();
+        assert_eq!(obj.version(), 5);
+    }
+
+    #[test]
+    fn object_package_version() {
+        let obj = make_package_object();
+        assert_eq!(obj.version(), 3);
+    }
+
+    #[test]
+    fn object_struct_type() {
+        let obj = make_struct_object();
+        assert!(obj.object_type().is_struct());
+    }
+
+    #[test]
+    fn object_package_type() {
+        let obj = make_package_object();
+        assert!(obj.object_type().is_package());
+    }
+
+    #[test]
+    fn object_as_struct_opt() {
+        let obj = make_struct_object();
+        assert!(obj.as_struct_opt().is_some());
+        assert!(obj.as_package_opt().is_none());
+    }
+
+    #[test]
+    fn object_as_package_opt() {
+        let obj = make_package_object();
+        assert!(obj.as_package_opt().is_some());
+        assert!(obj.as_struct_opt().is_none());
+    }
+
+    #[test]
+    #[should_panic(expected = "not a move package")]
+    fn object_as_package_panics_on_struct() {
+        let obj = make_struct_object();
+        obj.as_package();
+    }
+
+    #[test]
+    #[should_panic(expected = "not a move struct")]
+    fn object_as_struct_panics_on_package() {
+        let obj = make_package_object();
+        obj.as_struct();
+    }
+
+    #[test]
+    fn object_owner() {
+        let obj = make_struct_object();
+        assert_eq!(*obj.owner(), Owner::Immutable);
+    }
+
+    #[test]
+    fn object_previous_transaction() {
+        let obj = make_struct_object();
+        assert_eq!(obj.previous_transaction(), Digest::ZERO);
+    }
+
+    #[test]
+    fn object_storage_rebate() {
+        let obj = make_struct_object();
+        assert_eq!(obj.storage_rebate(), 100);
+    }
+
+    #[test]
+    fn object_data_accessor() {
+        let obj = make_struct_object();
+        assert!(matches!(obj.data(), ObjectData::Struct(_)));
+    }
+
+    // --- GenesisObject tests ---
+
+    #[test]
+    fn genesis_object_package() {
+        let data = ObjectData::Package(MovePackage {
+            id: ObjectId::ZERO,
+            version: 1,
+            modules: std::collections::BTreeMap::new(),
+            type_origin_table: vec![],
+            linkage_table: std::collections::BTreeMap::new(),
+        });
+        let go = GenesisObject::new(data, Owner::Immutable);
+        assert_eq!(go.object_id(), ObjectId::ZERO);
+        assert_eq!(go.version(), 1);
+        assert!(go.object_type().is_package());
+        assert_eq!(*go.owner(), Owner::Immutable);
+    }
+
+    #[test]
+    fn genesis_object_struct() {
+        let mut contents = vec![0u8; 32];
+        contents.push(0xff);
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("m").unwrap(),
+            Identifier::new("S").unwrap(),
+            Vec::new(),
+        );
+        let data = ObjectData::Struct(MoveStruct {
+            type_: tag,
+            version: 7,
+            contents,
+        });
+        let go = GenesisObject::new(data, Owner::Address(Address::ZERO));
+        assert_eq!(go.object_id(), ObjectId::ZERO);
+        assert_eq!(go.version(), 7);
+        assert!(go.object_type().is_struct());
+    }
+
+    #[test]
+    fn genesis_object_data_accessor() {
+        let data = ObjectData::Package(MovePackage {
+            id: ObjectId::ZERO,
+            version: 1,
+            modules: std::collections::BTreeMap::new(),
+            type_origin_table: vec![],
+            linkage_table: std::collections::BTreeMap::new(),
+        });
+        let go = GenesisObject::new(data.clone(), Owner::Immutable);
+        assert_eq!(*go.data(), data);
+    }
+
+    // --- id_opt tests ---
+
+    #[test]
+    fn id_opt_with_valid_contents() {
+        let contents = vec![0u8; 32];
+        let id = id_opt(&contents);
+        assert!(id.is_some());
+        assert_eq!(id.unwrap(), ObjectId::ZERO);
+    }
+
+    #[test]
+    fn id_opt_with_short_contents() {
+        let contents = vec![0u8; 31]; // too short
+        assert!(id_opt(&contents).is_none());
+    }
+
+    #[test]
+    fn id_opt_with_empty_contents() {
+        assert!(id_opt(&[]).is_none());
+    }
+
+    // --- Owner into_* and remaining as_* tests ---
+
+    #[test]
+    fn owner_as_object() {
+        let owner = Owner::Object(ObjectId::ZERO);
+        assert_eq!(*owner.as_object(), ObjectId::ZERO);
+    }
+
+    #[test]
+    fn owner_as_object_opt_none() {
+        assert!(Owner::Immutable.as_object_opt().is_none());
+        assert!(Owner::Address(Address::ZERO).as_object_opt().is_none());
+    }
+
+    #[test]
+    fn owner_as_shared_opt_some() {
+        let owner = Owner::Shared(10);
+        assert_eq!(*owner.as_shared_opt().unwrap(), 10);
+    }
+
+    #[test]
+    fn owner_as_shared_opt_none() {
+        assert!(Owner::Immutable.as_shared_opt().is_none());
+    }
+
+    #[test]
+    fn owner_into_address() {
+        let owner = Owner::Address(Address::ZERO);
+        assert_eq!(owner.into_address(), Address::ZERO);
+    }
+
+    #[test]
+    fn owner_into_address_opt_none() {
+        assert!(Owner::Immutable.into_address_opt().is_none());
+    }
+
+    #[test]
+    fn owner_into_object() {
+        let owner = Owner::Object(ObjectId::ZERO);
+        assert_eq!(owner.into_object(), ObjectId::ZERO);
+    }
+
+    #[test]
+    fn owner_into_object_opt_none() {
+        assert!(Owner::Immutable.into_object_opt().is_none());
+    }
+
+    #[test]
+    fn owner_into_shared() {
+        let owner = Owner::Shared(99);
+        assert_eq!(owner.into_shared(), 99);
+    }
+
+    #[test]
+    fn owner_into_shared_opt_none() {
+        assert!(Owner::Address(Address::ZERO).into_shared_opt().is_none());
+    }
+
+    // --- ObjectData as_*/into_* tests ---
+
+    fn make_struct_data() -> ObjectData {
+        let tag = StructTag::new(
+            Address::ZERO,
+            Identifier::new("m").unwrap(),
+            Identifier::new("N").unwrap(),
+            Vec::new(),
+        );
+        ObjectData::Struct(MoveStruct {
+            type_: tag,
+            version: 1,
+            contents: vec![0u8; 32],
+        })
+    }
+
+    fn make_package_data() -> ObjectData {
+        ObjectData::Package(MovePackage {
+            id: ObjectId::ZERO,
+            version: 1,
+            modules: std::collections::BTreeMap::new(),
+            type_origin_table: vec![],
+            linkage_table: std::collections::BTreeMap::new(),
+        })
+    }
+
+    #[test]
+    fn object_data_as_struct() {
+        let data = make_struct_data();
+        assert!(data.as_struct_opt().is_some());
+        assert!(data.as_package_opt().is_none());
+    }
+
+    #[test]
+    fn object_data_as_package() {
+        let data = make_package_data();
+        assert!(data.as_package_opt().is_some());
+        assert!(data.as_struct_opt().is_none());
+    }
+
+    #[test]
+    fn object_data_into_struct() {
+        let data = make_struct_data();
+        let s = data.into_struct();
+        assert_eq!(s.version, 1);
+    }
+
+    #[test]
+    fn object_data_into_struct_opt_none_for_package() {
+        let data = make_package_data();
+        assert!(data.into_struct_opt().is_none());
+    }
+
+    #[test]
+    fn object_data_into_package() {
+        let data = make_package_data();
+        let p = data.into_package();
+        assert_eq!(p.id, ObjectId::ZERO);
+    }
+
+    #[test]
+    fn object_data_into_package_opt_none_for_struct() {
+        let data = make_struct_data();
+        assert!(data.into_package_opt().is_none());
+    }
+
+    // --- ObjectType as_*/into_* tests ---
+
+    fn make_struct_tag() -> StructTag {
+        StructTag::new(
+            Address::ZERO,
+            Identifier::new("m").unwrap(),
+            Identifier::new("S").unwrap(),
+            Vec::new(),
+        )
+    }
+
+    #[test]
+    fn object_type_as_struct() {
+        let ot = ObjectType::Struct(make_struct_tag());
+        assert!(ot.as_struct_opt().is_some());
+    }
+
+    #[test]
+    fn object_type_as_struct_opt_none_for_package() {
+        assert!(ObjectType::Package.as_struct_opt().is_none());
+    }
+
+    #[test]
+    fn object_type_into_struct() {
+        let tag = make_struct_tag();
+        let ot = ObjectType::Struct(tag.clone());
+        assert_eq!(ot.into_struct(), tag);
+    }
+
+    #[test]
+    fn object_type_into_struct_opt_none_for_package() {
+        assert!(ObjectType::Package.into_struct_opt().is_none());
+    }
+
+    // --- ObjectReference Hash test ---
+
+    #[test]
+    fn object_reference_hash_eq() {
+        use std::collections::HashSet;
+        let r1 = ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO);
+        let r2 = ObjectReference::new(ObjectId::ZERO, 1, Digest::ZERO);
+        let mut set = HashSet::new();
+        set.insert(r1);
+        assert!(set.contains(&r2));
+    }
+
+    // --- Owner Ord test ---
+
+    #[test]
+    fn owner_ord() {
+        // Just verify Ord is implemented and doesn't panic
+        let owners = vec![
+            Owner::Immutable,
+            Owner::Address(Address::ZERO),
+            Owner::Object(ObjectId::ZERO),
+            Owner::Shared(0),
+        ];
+        let mut sorted = owners.clone();
+        sorted.sort();
+        assert_eq!(sorted.len(), 4);
+    }
+}
+
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

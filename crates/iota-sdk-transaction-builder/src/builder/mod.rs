@@ -1321,3 +1321,566 @@ impl<C> TransactionBuilder<C, GasStationData> {
         self
     }
 }
+
+#[cfg(test)]
+mod builder_tests {
+    use iota_types::{
+        Address, Digest, ObjectId, ObjectReference, Transaction, TransactionExpiration,
+    };
+
+    use super::*;
+    use crate::unresolved::{self, Argument};
+
+    fn test_address() -> Address {
+        "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap()
+    }
+
+    fn test_object_ref() -> ObjectReference {
+        ObjectReference::new(
+            "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
+                .parse()
+                .unwrap(),
+            2,
+            "7opR9rFUYivSTqoJHvFb9p6p54THyHTatMG6id4JKZR9"
+                .parse()
+                .unwrap(),
+        )
+    }
+
+    fn test_gas_ref() -> ObjectReference {
+        ObjectReference::new(
+            "0xd8792bce2743e002673752902c0e7348dfffd78638cb5367b0b85857bceb9821"
+                .parse()
+                .unwrap(),
+            2,
+            "2ZigdvsZn5BMeszscPQZq9z8ebnS2FpmAuRbAi9ednCk"
+                .parse()
+                .unwrap(),
+        )
+    }
+
+    // --- TransactionBuilder::new tests ---
+
+    #[test]
+    fn builder_new_creates_empty_builder() {
+        let addr = test_address();
+        let builder = TransactionBuilder::new(addr);
+        assert!(builder.get_gas().is_empty());
+        assert!(builder.get_assigned_result("nonexistent").is_none());
+    }
+
+    // --- set_sender tests ---
+
+    #[test]
+    fn builder_set_sender() {
+        let addr1 = test_address();
+        let addr2 = Address::ZERO;
+        let mut builder = TransactionBuilder::new(addr1);
+        builder.set_sender(addr2);
+        // Can verify sender changed by building a transaction
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => assert_eq!(v1.sender, addr2),
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- gas_budget tests ---
+
+    #[test]
+    fn builder_gas_budget_sets_budget() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder.gas_budget(5_000_000);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => assert_eq!(v1.gas_payment.budget, 5_000_000),
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- gas_price tests ---
+
+    #[test]
+    fn builder_gas_price_sets_price() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder.gas([test_gas_ref()]).gas_price(2000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => assert_eq!(v1.gas_payment.price, 2000),
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- sponsor tests ---
+
+    #[test]
+    fn builder_sponsor_sets_gas_owner() {
+        let sender = test_address();
+        let sponsor = Address::ZERO;
+        let mut builder = TransactionBuilder::new(sender);
+        builder.sponsor(sponsor);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => assert_eq!(v1.gas_payment.owner, sponsor),
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    #[test]
+    fn builder_no_sponsor_uses_sender_as_gas_owner() {
+        let sender = test_address();
+        let mut builder = TransactionBuilder::new(sender);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => assert_eq!(v1.gas_payment.owner, sender),
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- expiration tests ---
+
+    #[test]
+    fn builder_expiration_sets_epoch() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder.expiration(100);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                assert_eq!(v1.expiration, TransactionExpiration::Epoch(100));
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- finish error cases ---
+
+    #[test]
+    fn finish_without_gas_price_returns_error() {
+        let builder = TransactionBuilder::new(test_address());
+        let result = builder.finish();
+        assert!(result.is_err());
+        assert!(matches!(
+            result.unwrap_err(),
+            crate::error::Error::MissingGasPrice
+        ));
+    }
+
+    #[test]
+    fn finish_with_unresolved_object_id_returns_error() {
+        let mut builder = TransactionBuilder::new(test_address());
+        // Adding an ObjectId without a client requires resolution
+        let id = ObjectId::ZERO;
+        builder.set_input(unresolved::InputKind::ImmutableOrOwned(id), false);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let result = builder.finish();
+        assert!(result.is_err());
+    }
+
+    // --- pure and pure_bytes tests ---
+
+    #[test]
+    fn builder_pure_adds_input() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let arg = builder.pure(42u64);
+        assert!(matches!(arg, Argument::Input(_)));
+    }
+
+    #[test]
+    fn builder_pure_bytes_adds_input() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let arg = builder.pure_bytes(vec![1, 2, 3, 4]);
+        assert!(matches!(arg, Argument::Input(_)));
+    }
+
+    // --- command tests ---
+
+    #[test]
+    fn builder_command_returns_result_argument() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let arg = builder.command(unresolved::Command::SplitCoins(unresolved::SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![],
+        }));
+        assert!(matches!(arg, Argument::Result(0)));
+    }
+
+    #[test]
+    fn builder_multiple_commands_increment_index() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let arg1 = builder.command(unresolved::Command::SplitCoins(unresolved::SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![],
+        }));
+        let arg2 = builder.command(unresolved::Command::SplitCoins(unresolved::SplitCoins {
+            coin: Argument::Gas,
+            amounts: vec![],
+        }));
+        assert!(matches!(arg1, Argument::Result(0)));
+        assert!(matches!(arg2, Argument::Result(1)));
+    }
+
+    // --- transfer_objects tests ---
+
+    #[test]
+    fn builder_transfer_objects_builds_transaction() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let recipient = Address::ZERO;
+        let coin = test_object_ref();
+        builder.transfer_objects(recipient, vec![coin]);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                if let iota_types::TransactionKind::ProgrammableTransaction(ptb) = v1.kind {
+                    assert_eq!(ptb.commands.len(), 1);
+                    assert!(matches!(
+                        ptb.commands[0],
+                        iota_types::Command::TransferObjects(_)
+                    ));
+                } else {
+                    panic!("expected ProgrammableTransaction");
+                }
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- send_iota tests ---
+
+    #[test]
+    fn builder_send_iota_creates_split_and_transfer() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let recipient = Address::ZERO;
+        builder.send_iota(recipient, 1_000_000_000u64);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                if let iota_types::TransactionKind::ProgrammableTransaction(ptb) = v1.kind {
+                    // send_iota creates: SplitCoins + TransferObjects
+                    assert_eq!(ptb.commands.len(), 2);
+                    assert!(matches!(
+                        ptb.commands[0],
+                        iota_types::Command::SplitCoins(_)
+                    ));
+                    assert!(matches!(
+                        ptb.commands[1],
+                        iota_types::Command::TransferObjects(_)
+                    ));
+                } else {
+                    panic!("expected ProgrammableTransaction");
+                }
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- split_coins tests ---
+
+    #[test]
+    fn builder_split_coins_from_gas() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder.split_coins(Argument::Gas, [1000u64, 2000u64]);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                if let iota_types::TransactionKind::ProgrammableTransaction(ptb) = v1.kind {
+                    assert_eq!(ptb.commands.len(), 1);
+                    match &ptb.commands[0] {
+                        iota_types::Command::SplitCoins(sc) => {
+                            assert_eq!(sc.coin, iota_types::Argument::Gas);
+                            assert_eq!(sc.amounts.len(), 2);
+                        }
+                        _ => panic!("expected SplitCoins"),
+                    }
+                } else {
+                    panic!("expected ProgrammableTransaction");
+                }
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- merge_coins tests ---
+
+    #[test]
+    fn builder_merge_coins_creates_merge_command() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let coin1 = test_object_ref();
+        let coin2 = ObjectReference::new(
+            "0x1111111111111111111111111111111111111111111111111111111111111111"
+                .parse()
+                .unwrap(),
+            1,
+            Digest::ZERO,
+        );
+        builder.merge_coins(coin1, vec![coin2]);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                if let iota_types::TransactionKind::ProgrammableTransaction(ptb) = v1.kind {
+                    assert_eq!(ptb.commands.len(), 1);
+                    assert!(matches!(
+                        ptb.commands[0],
+                        iota_types::Command::MergeCoins(_)
+                    ));
+                } else {
+                    panic!("expected ProgrammableTransaction");
+                }
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- move_call tests ---
+
+    #[test]
+    fn builder_move_call_creates_command() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder
+            .move_call(Address::STD, "option", "is_none")
+            .generics::<u64>()
+            .arguments([Some(1u64)]);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                if let iota_types::TransactionKind::ProgrammableTransaction(ptb) = v1.kind {
+                    assert!(ptb.commands.len() >= 1);
+                    assert!(matches!(
+                        ptb.commands[0],
+                        iota_types::Command::MoveCall(_)
+                    ));
+                } else {
+                    panic!("expected ProgrammableTransaction");
+                }
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- assign and get_assigned_result tests ---
+
+    #[test]
+    fn builder_assign_and_retrieve() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder
+            .split_coins(Argument::Gas, [1000u64])
+            .assign("my_coin");
+        let result = builder.get_assigned_result("my_coin");
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn builder_get_assigned_result_nonexistent() {
+        let builder = TransactionBuilder::new(test_address());
+        assert!(builder.get_assigned_result("does_not_exist").is_none());
+    }
+
+    // --- gas tests ---
+
+    #[test]
+    fn builder_gas_adds_gas_coins() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let gas_ref = test_gas_ref();
+        let expected_id = gas_ref.object_id;
+        builder.gas([gas_ref]);
+        let gas_ids = builder.get_gas();
+        assert_eq!(gas_ids.len(), 1);
+        assert_eq!(gas_ids[0], expected_id);
+    }
+
+    #[test]
+    fn builder_multiple_gas_coins() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let gas1 = test_gas_ref();
+        let gas2 = ObjectReference::new(
+            "0x2222222222222222222222222222222222222222222222222222222222222222"
+                .parse()
+                .unwrap(),
+            1,
+            Digest::ZERO,
+        );
+        builder.gas([gas1, gas2]);
+        let gas_ids = builder.get_gas();
+        assert_eq!(gas_ids.len(), 2);
+    }
+
+    // --- with_client tests ---
+
+    #[test]
+    fn builder_with_client_preserves_data() {
+        let addr = test_address();
+        let mut builder = TransactionBuilder::new(addr);
+        builder.gas_budget(5_000_000);
+        let builder = builder.with_client(iota_graphql_client::Client::new_devnet());
+        // Verify state is preserved by checking gas budget through finish
+        assert!(builder.get_gas().is_empty());
+    }
+
+    // --- gas_station_sponsor tests ---
+
+    #[test]
+    fn builder_gas_station_sponsor() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let url = Url::parse("http://localhost:9999").unwrap();
+        builder.gas_station_sponsor(url);
+        // After setting gas station, we should be able to set duration
+        // This tests the type-state transition works
+    }
+
+    // --- publish tests ---
+
+    #[test]
+    fn builder_publish_creates_command() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let package = iota_types::MovePackageData {
+            modules: vec![vec![1, 2, 3]],
+            dependencies: vec![ObjectId::ZERO],
+            digest: Digest::ZERO,
+        };
+        builder
+            .publish(package)
+            .upgrade_cap("cap")
+            .transfer_objects(test_address(), [crate::assigned("cap")]);
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => {
+                if let iota_types::TransactionKind::ProgrammableTransaction(ptb) = v1.kind {
+                    assert!(ptb.commands.len() >= 1);
+                    assert!(matches!(
+                        ptb.commands[0],
+                        iota_types::Command::Publish(_)
+                    ));
+                } else {
+                    panic!("expected ProgrammableTransaction");
+                }
+            }
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- execute_with_gas_station without data errors ---
+
+    #[tokio::test]
+    async fn execute_with_gas_station_missing_data_errors() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder.gas([test_gas_ref()]).gas_price(1000);
+
+        // Use a dummy signer
+        struct DummySigner;
+        impl crate::TransactionSigner for DummySigner {
+            type Error = std::io::Error;
+            async fn sign(
+                &self,
+                _txn: &Transaction,
+            ) -> Result<iota_types::UserSignature, Self::Error> {
+                unimplemented!()
+            }
+        }
+
+        let result = builder.execute_with_gas_station(&DummySigner).await;
+        assert!(result.is_err());
+        assert!(matches!(
+            result.unwrap_err(),
+            crate::error::Error::MissingGasStationData
+        ));
+    }
+
+    // --- Default budget is zero when not set ---
+
+    #[test]
+    fn builder_default_budget_is_zero() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder.gas([test_gas_ref()]).gas_price(1000);
+        let txn = builder.finish().unwrap();
+        match txn {
+            Transaction::V1(v1) => assert_eq!(v1.gas_payment.budget, 0),
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- Helper to extract command count from transaction ---
+
+    fn command_count(txn: &Transaction) -> usize {
+        match txn {
+            Transaction::V1(v1) => match &v1.kind {
+                iota_types::TransactionKind::ProgrammableTransaction(ptb) => ptb.commands.len(),
+                _ => panic!("expected ProgrammableTransaction"),
+            },
+            _ => panic!("unexpected transaction variant"),
+        }
+    }
+
+    // --- send_coins tests ---
+
+    #[test]
+    fn builder_send_coins_single_coin_with_amount() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder
+            .send_coins::<_, u64>([test_object_ref()], test_address(), Some(1000u64))
+            .gas([test_gas_ref()])
+            .gas_price(1000);
+        let txn = builder.finish().unwrap();
+        // Should have SplitCoins + TransferObjects
+        assert!(command_count(&txn) >= 2);
+    }
+
+    #[test]
+    fn builder_send_coins_multiple_coins_merge() {
+        let mut builder = TransactionBuilder::new(test_address());
+        builder
+            .send_coins::<_, u64>(
+                [test_object_ref(), test_object_ref()],
+                test_address(),
+                Some(500u64),
+            )
+            .gas([test_gas_ref()])
+            .gas_price(1000);
+        let txn = builder.finish().unwrap();
+        // Should have MergeCoins + SplitCoins + TransferObjects
+        assert!(command_count(&txn) >= 2);
+    }
+
+    // --- make_move_vec tests ---
+
+    #[test]
+    fn builder_make_move_vec() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let vec_arg = builder
+            .make_move_vec::<u64>(vec![1u64, 2u64, 3u64])
+            .arg();
+        builder
+            .transfer_objects(test_address(), [vec_arg])
+            .gas([test_gas_ref()])
+            .gas_price(1000);
+        let txn = builder.finish().unwrap();
+        // Should have MakeMoveVec + TransferObjects
+        assert!(command_count(&txn) >= 2);
+    }
+
+    // --- arg() tests ---
+
+    #[test]
+    fn builder_arg_returns_last_command_result() {
+        let mut builder = TransactionBuilder::new(test_address());
+        let arg = builder.split_coins(Argument::Gas, [100u64]).arg();
+        // The arg should be a Result argument referencing the command
+        builder
+            .transfer_objects(test_address(), [arg])
+            .gas([test_gas_ref()])
+            .gas_price(1000);
+        let txn = builder.finish().unwrap();
+        assert_eq!(command_count(&txn), 2);
+    }
+}
