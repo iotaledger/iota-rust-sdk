@@ -706,7 +706,9 @@ impl ObjectType {
 
     #[uniffi::constructor]
     pub fn new_struct(struct_tag: &StructTag) -> Self {
-        Self(iota_sdk::types::ObjectType::Struct(struct_tag.0.clone().into()))
+        Self(iota_sdk::types::ObjectType::Struct(
+            struct_tag.0.clone().into(),
+        ))
     }
 
     pub fn is_package(&self) -> bool {
@@ -722,10 +724,7 @@ impl ObjectType {
     }
 
     pub fn as_struct_opt(&self) -> Option<Arc<StructTag>> {
-        self.0
-            .as_struct_opt()
-            .cloned()
-            .map(|t| Arc::new(t.into()))
+        self.0.as_struct_opt().cloned().map(|t| Arc::new(t.into()))
     }
 }
 
