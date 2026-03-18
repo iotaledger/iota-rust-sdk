@@ -706,12 +706,7 @@ impl Ord for ActiveJwk {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "schemars",
-    derive(schemars::JsonSchema),
-    schemars(tag = "kind", rename_all = "snake_case")
-)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
@@ -742,13 +737,7 @@ impl ConsensusDeterminedVersionAssignments {
 /// ```text
 /// cancelled-transaction = digest (vector version-assignment)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CancelledTransaction {
     pub digest: Digest,
@@ -760,24 +749,24 @@ pub struct CancelledTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form for this type is defined by the
+/// following ABNF:
 ///
 /// ```text
 /// version-assignment = object-id u64
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
-#[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct VersionAssignment {
     pub object_id: ObjectId,
-    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
-    #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
     pub version: Version,
+}
+
+impl VersionAssignment {
+    /// Creates a [`VersionAssignment`].
+    pub fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
 }
 
 /// V1 of the consensus commit prologue system transaction
@@ -790,12 +779,8 @@ pub struct VersionAssignment {
 /// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 digest
 ///                                consensus-determined-version-assignments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Serialize, serde::Deserialize),
-    serde(rename_all = "camelCase")
-)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ConsensusCommitPrologueV1 {
@@ -1185,13 +1170,6 @@ impl Input {
     /// Shared `Input` for the clock object.
     pub const CLOCK_MUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::CLOCK,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
-        mutable: true,
-    });
-
-    /// Shared `Input` for the authenticator state object.
-    pub const AUTHENTICATOR_STATE_MUTABLE: Self = Self::Shared(SharedObjectReference {
-        object_id: ObjectId::AUTHENTICATOR_STATE,
         initial_shared_version: Version::INITIAL_SHARED_VERSION,
         mutable: true,
     });
@@ -1866,6 +1844,10 @@ pub struct MoveCall {
     /// The package containing the module and function.
     pub package: ObjectId,
     /// The specific module in the package containing the function.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "serialization::deserialize_ident_unchecked")
+    )]
     pub module: Identifier,
     /// The function to be called.
     pub function: Identifier,
