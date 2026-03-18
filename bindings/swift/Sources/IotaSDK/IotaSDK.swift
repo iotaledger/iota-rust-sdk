@@ -12479,13 +12479,7 @@ public func FfiConverterTypeMoveArg_lower(_ value: MoveArg) -> UnsafeMutableRawP
  */
 public protocol MoveAuthenticatorProtocol: AnyObject, Sendable {
     
-    func address()  -> Address
-    
-    func callArgs()  -> [Input]
-    
-    func objectToAuthenticate()  -> Input
-    
-    func typeArgs()  -> [TypeTag]
+    func asV1()  -> MoveAuthenticatorV1
     
 }
 /**
@@ -12544,59 +12538,19 @@ open class MoveAuthenticator: MoveAuthenticatorProtocol, @unchecked Sendable {
     }
 
     
-    /**
-     * Create a new move authenticator from an immutable object.
-     */
-public static func newImmutable(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectReference) -> MoveAuthenticator  {
+public static func newV1(moveAuthenticatorV1: MoveAuthenticatorV1) -> MoveAuthenticator  {
     return try!  FfiConverterTypeMoveAuthenticator_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(
-        FfiConverterSequenceTypeInput.lower(callArgs),
-        FfiConverterSequenceTypeTypeTag.lower(typeArgs),
-        FfiConverterTypeObjectReference_lower(objectToAuthenticate),$0
-    )
-})
-}
-    
-    /**
-     * Create a new move authenticator from a shared object.
-     */
-public static func newShared(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectId, initialSharedVersion: UInt64) -> MoveAuthenticator  {
-    return try!  FfiConverterTypeMoveAuthenticator_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(
-        FfiConverterSequenceTypeInput.lower(callArgs),
-        FfiConverterSequenceTypeTypeTag.lower(typeArgs),
-        FfiConverterTypeObjectId_lower(objectToAuthenticate),
-        FfiConverterUInt64.lower(initialSharedVersion),$0
+    uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(
+        FfiConverterTypeMoveAuthenticatorV1_lower(moveAuthenticatorV1),$0
     )
 })
 }
     
 
     
-open func address() -> Address  {
-    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func callArgs() -> [Input]  {
-    return try!  FfiConverterSequenceTypeInput.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func objectToAuthenticate() -> Input  {
-    return try!  FfiConverterTypeInput_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(self.uniffiClonePointer(),$0
-    )
-})
-}
-    
-open func typeArgs() -> [TypeTag]  {
-    return try!  FfiConverterSequenceTypeTypeTag.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(self.uniffiClonePointer(),$0
+open func asV1() -> MoveAuthenticatorV1  {
+    return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -12806,6 +12760,188 @@ public func FfiConverterTypeMoveAuthenticatorBuilder_lift(_ pointer: UnsafeMutab
 #endif
 public func FfiConverterTypeMoveAuthenticatorBuilder_lower(_ value: MoveAuthenticatorBuilder) -> UnsafeMutableRawPointer {
     return FfiConverterTypeMoveAuthenticatorBuilder.lower(value)
+}
+
+
+
+
+
+
+/**
+ * Version 1 of the [`MoveAuthenticator`].
+ */
+public protocol MoveAuthenticatorV1Protocol: AnyObject, Sendable {
+    
+    func address()  -> Address
+    
+    func callArgs()  -> [Input]
+    
+    func objectToAuthenticate()  -> Input
+    
+    func typeArgs()  -> [TypeTag]
+    
+}
+/**
+ * Version 1 of the [`MoveAuthenticator`].
+ */
+open class MoveAuthenticatorV1: MoveAuthenticatorV1Protocol, @unchecked Sendable {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    // This constructor can be used to instantiate a fake object.
+    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    //
+    // - Warning:
+    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(self.pointer, $0) }
+    }
+    // No primary constructor declared for this class.
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(pointer, $0) }
+    }
+
+    
+    /**
+     * Create a new move authenticator from an immutable object.
+     */
+public static func newImmutable(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectReference) -> MoveAuthenticatorV1  {
+    return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(
+        FfiConverterSequenceTypeInput.lower(callArgs),
+        FfiConverterSequenceTypeTypeTag.lower(typeArgs),
+        FfiConverterTypeObjectReference_lower(objectToAuthenticate),$0
+    )
+})
+}
+    
+    /**
+     * Create a new move authenticator from a shared object.
+     */
+public static func newShared(callArgs: [Input], typeArgs: [TypeTag], objectToAuthenticate: ObjectId, initialSharedVersion: UInt64) -> MoveAuthenticatorV1  {
+    return try!  FfiConverterTypeMoveAuthenticatorV1_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(
+        FfiConverterSequenceTypeInput.lower(callArgs),
+        FfiConverterSequenceTypeTypeTag.lower(typeArgs),
+        FfiConverterTypeObjectId_lower(objectToAuthenticate),
+        FfiConverterUInt64.lower(initialSharedVersion),$0
+    )
+})
+}
+    
+
+    
+open func address() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func callArgs() -> [Input]  {
+    return try!  FfiConverterSequenceTypeInput.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func objectToAuthenticate() -> Input  {
+    return try!  FfiConverterTypeInput_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func typeArgs() -> [TypeTag]  {
+    return try!  FfiConverterSequenceTypeTypeTag.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeMoveAuthenticatorV1: FfiConverter {
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = MoveAuthenticatorV1
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> MoveAuthenticatorV1 {
+        return MoveAuthenticatorV1(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: MoveAuthenticatorV1) -> UnsafeMutableRawPointer {
+        return value.uniffiClonePointer()
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MoveAuthenticatorV1 {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: MoveAuthenticatorV1, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeMoveAuthenticatorV1_lift(_ pointer: UnsafeMutableRawPointer) throws -> MoveAuthenticatorV1 {
+    return try FfiConverterTypeMoveAuthenticatorV1.lift(pointer)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeMoveAuthenticatorV1_lower(_ value: MoveAuthenticatorV1) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeMoveAuthenticatorV1.lower(value)
 }
 
 
@@ -50144,19 +50280,22 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address() != 24164) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args() != 1111) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate() != 40516) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args() != 63576) {
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address() != 27475) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args() != 32545) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate() != 54331) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args() != 58370) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_movecall_arguments() != 17202) {
@@ -51590,13 +51729,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 19047) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1() != 64779) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() != 1961) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411) {

@@ -19,7 +19,7 @@ func main() {
 	}
 
 	page, err := client.DynamicFields(parentObjectId, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get dynamic fields: %v", err)
 	}
 

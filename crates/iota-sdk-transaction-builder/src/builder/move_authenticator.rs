@@ -5,7 +5,9 @@
 //! authenticator function in move which can authorize a transaction as part of
 //! Account Abstraction.
 
-use iota_types::{MoveAuthenticator, ObjectId, ObjectReference, Owner, TypeTag};
+use iota_types::{
+    MoveAuthenticator, MoveAuthenticatorV1, ObjectId, ObjectReference, Owner, TypeTag,
+};
 
 use crate::{
     ClientMethods, PTBArgumentList, error::Error, types::MoveTypes, unresolved::InputKind,
@@ -115,15 +117,17 @@ impl MoveAuthenticatorBuilder {
             })
         }
         Ok(match account.owner() {
-            Owner::Immutable => {
-                MoveAuthenticator::new_immutable(call_args, self.type_args, account.object_ref())
-            }
-            Owner::Shared(version) => MoveAuthenticator::new_shared(
+            Owner::Immutable => MoveAuthenticator::V1(MoveAuthenticatorV1::new_immutable(
+                call_args,
+                self.type_args,
+                account.object_ref(),
+            )),
+            Owner::Shared(version) => MoveAuthenticator::V1(MoveAuthenticatorV1::new_shared(
                 call_args,
                 self.type_args,
                 account.object_id(),
                 *version,
-            ),
+            )),
             _ => {
                 return Err(Error::InvalidMoveAuthAccount(
                     "account must be immutable or shared".to_owned(),
