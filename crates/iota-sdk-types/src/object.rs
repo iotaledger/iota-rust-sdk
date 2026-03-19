@@ -327,17 +327,17 @@ impl MoveStruct {
             .splice(ObjectId::LENGTH.., value.to_le_bytes());
     }
 
-    // /// Update the `timestamp_ms: u64` field of the `Clock` type.
-    // ///
-    // /// Panics if the object isn't a `Clock`.
-    // pub fn set_clock_timestamp_ms_unsafe(&mut self, timestamp_ms: u64) {
-    //     assert!(self.is_clock());
-    //     // 32 bytes for object ID, 8 for timestamp
-    //     assert!(self.contents.len() == 40);
+    /// Update the `timestamp_ms: u64` field of the `Clock` type.
+    ///
+    /// Panics if the object isn't a `Clock`.
+    pub fn set_clock_timestamp_ms_unsafe(&mut self, timestamp_ms: u64) {
+        assert!(self.is_clock());
+        // 32 bytes for object ID, 8 for timestamp
+        assert!(self.contents.len() == 40);
 
-    //     self.contents
-    //         .splice(ID_END_INDEX.., timestamp_ms.to_le_bytes());
-    // }
+        self.contents
+            .splice(ObjectId::LENGTH.., timestamp_ms.to_le_bytes());
+    }
 
     pub fn is_coin(&self) -> bool {
         self.type_.is_coin()
@@ -354,40 +354,6 @@ impl MoveStruct {
     pub fn version(&self) -> Version {
         self.version
     }
-
-    // /// Contents of the object that are specific to its type--i.e., not its ID
-    // /// and version, which all objects have For example if the object was
-    // /// declared as `struct S has key { id: ID, f1: u64, f2: bool },
-    // /// this returns the slice containing `f1` and `f2`.
-    // #[cfg(test)]
-    // pub fn type_specific_contents(&self) -> &[u8] {
-    //     &self.contents[ID_END_INDEX..]
-    // }
-
-    // fn update_contents_with_limit(
-    //     &mut self,
-    //     new_contents: Vec<u8>,
-    //     max_move_object_size: u64,
-    // ) -> Result<(), ExecutionError> {
-    //     if new_contents.len() as u64 > max_move_object_size {
-    //         return Err(ExecutionError::from_kind(
-    //             ExecutionErrorKind::ObjectTooBig {
-    //                 object_size: new_contents.len() as u64,
-    //                 max_object_size: max_move_object_size,
-    //             },
-    //         ));
-    //     }
-
-    //     #[cfg(debug_assertions)]
-    //     let old_id = self.id();
-    //     self.contents = new_contents;
-
-    //     // Update should not modify ID
-    //     #[cfg(debug_assertions)]
-    //     debug_assert_eq!(self.id(), old_id);
-
-    //     Ok(())
-    // }
 
     /// Sets the version of this object to a new value which is assumed to be
     /// higher (and checked to be higher in debug).
