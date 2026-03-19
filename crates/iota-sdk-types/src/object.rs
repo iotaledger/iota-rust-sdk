@@ -283,55 +283,6 @@ pub struct MoveStruct {
 }
 
 impl MoveStruct {
-    // /// Creates a new Move object of type `type_` with BCS encoded bytes in
-    // /// `contents`. It allows to set a `max_move_object_size` for that.
-    // pub fn new_from_execution_with_limit(
-    //     type_: MoveObjectType,
-    //     version: Version,
-    //     contents: Vec<u8>,
-    //     max_move_object_size: u64,
-    // ) -> Result<Self, ExecutionError> {
-    //     if contents.len() as u64 > max_move_object_size {
-    //         return Err(ExecutionError::from_kind(
-    //             ExecutionErrorKind::ObjectTooBig {
-    //                 object_size: contents.len() as u64,
-    //                 max_object_size: max_move_object_size,
-    //             },
-    //         ));
-    //     }
-    //     Ok(Self {
-    //         type_,
-    //         version,
-    //         contents,
-    //     })
-    // }
-
-    // pub fn new_gas_coin(version: Version, id: ObjectId, value: u64) -> Self {
-    //     // unwrap safe because coins are always smaller than the max object size
-    //     {
-    //         Self::new_from_execution_with_limit(
-    //             StructTag::new_gas_coin().into(),
-    //             version,
-    //             GasCoin::new(id, value).to_bcs_bytes(),
-    //             256,
-    //         )
-    //         .unwrap()
-    //     }
-    // }
-
-    // pub fn new_coin(coin_type: TypeTag, version: Version, id: ObjectId, value:
-    // u64) -> Self {     // unwrap safe because coins are always smaller than
-    // the max object size     {
-    //         Self::new_from_execution_with_limit(
-    //             MoveObjectType::coin(coin_type),
-    //             version,
-    //             Coin::new(id, value).to_bcs_bytes(),
-    //             256,
-    //         )
-    //         .unwrap()
-    //     }
-    // }
-
     pub fn type_(&self) -> &MoveObjectType {
         &self.type_
     }
@@ -351,8 +302,8 @@ impl MoveStruct {
 
     /// Return the `value: u64` field of a `Coin<T>` type.
     /// Useful for reading the coin without deserializing the object into a Move
-    /// value. It is the caller's responsibility to check that `self` is a coin,
-    /// this function may panic or do something unexpected otherwise.
+    /// value. It is the caller's responsibility to check that `self` is a coin.
+    /// This function may panic or do something unexpected otherwise.
     pub fn get_coin_value_unsafe(&self) -> u64 {
         debug_assert!(self.type_.is_coin());
         // 32 bytes for object ID, 8 for balance
@@ -362,18 +313,19 @@ impl MoveStruct {
         u64::from_le_bytes(<[u8; 8]>::try_from(&self.contents[ObjectId::LENGTH..]).unwrap())
     }
 
-    // /// Update the `value: u64` field of a `Coin<T>` type.
-    // /// Useful for updating the coin without deserializing the object into a
-    // /// Move value It is the caller's responsibility to check that `self` is
-    // /// a coin--this function may panic or do something unexpected
-    // /// otherwise.
-    // pub fn set_coin_value_unsafe(&mut self, value: u64) {
-    //     debug_assert!(self.type_.is_coin());
-    //     // 32 bytes for object ID, 8 for balance
-    //     debug_assert!(self.contents.len() == 40);
+    /// Update the `value: u64` field of a `Coin<T>` type.
+    /// Useful for updating the coin without deserializing the object into a
+    /// Move value. It is the caller's responsibility to check that `self` is a
+    /// coin.
+    /// This function may panic or do something unexpected otherwise.
+    pub fn set_coin_value_unsafe(&mut self, value: u64) {
+        debug_assert!(self.type_.is_coin());
+        // 32 bytes for object ID, 8 for balance
+        debug_assert!(self.contents.len() == 40);
 
-    //     self.contents.splice(ID_END_INDEX.., value.to_le_bytes());
-    // }
+        self.contents
+            .splice(ObjectId::LENGTH.., value.to_le_bytes());
+    }
 
     // /// Update the `timestamp_ms: u64` field of the `Clock` type.
     // ///
