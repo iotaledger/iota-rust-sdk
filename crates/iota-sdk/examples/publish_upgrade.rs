@@ -104,7 +104,7 @@ async fn main() -> Result<()> {
                 let Some(obj) = client.object(object_id, None).await? else {
                     bail!("Missing object {object_id}");
                 };
-                if obj.as_struct().type_ == StructTag::new_upgrade_cap() {
+                if obj.as_struct().type_ == StructTag::new_upgrade_cap().into() {
                     println!("UpgradeCap: {object_id}");
                     println!("UpgradeCapOwner: {}", owner.into_address());
                     upgrade_cap.replace(object_id);
