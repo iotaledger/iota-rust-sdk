@@ -247,7 +247,7 @@ where
 // Allow passing raw JSON values
 impl MoveViewArg for serde_json::Value {
     fn to_json(self) -> serde_json::Value {
-        self.clone()
+        self
     }
 }
 
