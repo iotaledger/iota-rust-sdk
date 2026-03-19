@@ -5,7 +5,8 @@
 use std::collections::BTreeMap;
 
 use super::{
-    Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, UpgradeInfo, Version,
+    Address, AddressParseError, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin,
+    TypeTag, UpgradeInfo, Version,
 };
 
 /// Reference to an object
@@ -339,30 +340,27 @@ impl MoveStruct {
         self.type_.is(s)
     }
 
-    // pub fn id(&self) -> ObjectId {
-    //     Self::id_opt(&self.contents).unwrap()
-    // }
+    pub fn id(&self) -> ObjectId {
+        Self::id_opt(&self.contents).unwrap()
+    }
 
-    // pub fn id_opt(contents: &[u8]) -> Result<ObjectId, ObjectIdParseError> {
-    //     if ID_END_INDEX > contents.len() {
-    //         return Err(ObjectIdParseError::TryFromSlice);
-    //     }
-    //     ObjectId::from_bytes(&contents[0..ID_END_INDEX])
-    //         .map_err(|_| ObjectIdParseError::TryFromSlice)
-    // }
+    // TODO unsure about this
+    pub fn id_opt(contents: &[u8]) -> Result<ObjectId, AddressParseError> {
+        ObjectId::from_bytes(contents)
+    }
 
-    // /// Return the `value: u64` field of a `Coin<T>` type.
-    // /// Useful for reading the coin without deserializing the object into a Move
-    // /// value It is the caller's responsibility to check that `self` is a
-    // /// coin--this function may panic or do something unexpected otherwise.
-    // pub fn get_coin_value_unsafe(&self) -> u64 {
-    //     debug_assert!(self.type_.is_coin());
-    //     // 32 bytes for object ID, 8 for balance
-    //     debug_assert!(self.contents.len() == 40);
+    /// Return the `value: u64` field of a `Coin<T>` type.
+    /// Useful for reading the coin without deserializing the object into a Move
+    /// value. It is the caller's responsibility to check that `self` is a coin,
+    /// this function may panic or do something unexpected otherwise.
+    pub fn get_coin_value_unsafe(&self) -> u64 {
+        debug_assert!(self.type_.is_coin());
+        // 32 bytes for object ID, 8 for balance
+        debug_assert!(self.contents.len() == 40);
 
-    //     // unwrap safe because we checked that it is a coin
-    //     u64::from_le_bytes(<[u8;
-    // 8]>::try_from(&self.contents[ID_END_INDEX..]).unwrap()) }
+        // unwrap safe because we checked that it is a coin
+        u64::from_le_bytes(<[u8; 8]>::try_from(&self.contents[ObjectId::LENGTH..]).unwrap())
+    }
 
     // /// Update the `value: u64` field of a `Coin<T>` type.
     // /// Useful for updating the coin without deserializing the object into a
@@ -475,9 +473,10 @@ impl MoveStruct {
         (self.type_, self.contents)
     }
 
-    // pub fn to_rust<'de, T: Deserialize<'de>>(&'de self) -> Option<T> {
-    //     bcs::from_bytes(self.contents()).ok()
-    // }
+    #[cfg(feature = "serde")]
+    pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Option<T> {
+        bcs::from_bytes(self.contents()).ok()
+    }
 
     /// Approximate size of the object in bytes. This is used for gas metering.
     /// For the type tag field, we serialize it on the spot to get the accurate
