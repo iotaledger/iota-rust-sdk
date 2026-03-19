@@ -281,6 +281,216 @@ pub struct MoveStruct {
     pub contents: Vec<u8>,
 }
 
+impl MoveStruct {
+    // /// Creates a new Move object of type `type_` with BCS encoded bytes in
+    // /// `contents`. It allows to set a `max_move_object_size` for that.
+    // pub fn new_from_execution_with_limit(
+    //     type_: MoveObjectType,
+    //     version: Version,
+    //     contents: Vec<u8>,
+    //     max_move_object_size: u64,
+    // ) -> Result<Self, ExecutionError> {
+    //     if contents.len() as u64 > max_move_object_size {
+    //         return Err(ExecutionError::from_kind(
+    //             ExecutionErrorKind::ObjectTooBig {
+    //                 object_size: contents.len() as u64,
+    //                 max_object_size: max_move_object_size,
+    //             },
+    //         ));
+    //     }
+    //     Ok(Self {
+    //         type_,
+    //         version,
+    //         contents,
+    //     })
+    // }
+
+    // pub fn new_gas_coin(version: Version, id: ObjectId, value: u64) -> Self {
+    //     // unwrap safe because coins are always smaller than the max object size
+    //     {
+    //         Self::new_from_execution_with_limit(
+    //             StructTag::new_gas_coin().into(),
+    //             version,
+    //             GasCoin::new(id, value).to_bcs_bytes(),
+    //             256,
+    //         )
+    //         .unwrap()
+    //     }
+    // }
+
+    // pub fn new_coin(coin_type: TypeTag, version: Version, id: ObjectId, value:
+    // u64) -> Self {     // unwrap safe because coins are always smaller than
+    // the max object size     {
+    //         Self::new_from_execution_with_limit(
+    //             MoveObjectType::coin(coin_type),
+    //             version,
+    //             Coin::new(id, value).to_bcs_bytes(),
+    //             256,
+    //         )
+    //         .unwrap()
+    //     }
+    // }
+
+    pub fn type_(&self) -> &MoveObjectType {
+        &self.type_
+    }
+
+    pub fn is_type(&self, s: &StructTag) -> bool {
+        self.type_.is(s)
+    }
+
+    // pub fn id(&self) -> ObjectId {
+    //     Self::id_opt(&self.contents).unwrap()
+    // }
+
+    // pub fn id_opt(contents: &[u8]) -> Result<ObjectId, ObjectIdParseError> {
+    //     if ID_END_INDEX > contents.len() {
+    //         return Err(ObjectIdParseError::TryFromSlice);
+    //     }
+    //     ObjectId::from_bytes(&contents[0..ID_END_INDEX])
+    //         .map_err(|_| ObjectIdParseError::TryFromSlice)
+    // }
+
+    // /// Return the `value: u64` field of a `Coin<T>` type.
+    // /// Useful for reading the coin without deserializing the object into a Move
+    // /// value It is the caller's responsibility to check that `self` is a
+    // /// coin--this function may panic or do something unexpected otherwise.
+    // pub fn get_coin_value_unsafe(&self) -> u64 {
+    //     debug_assert!(self.type_.is_coin());
+    //     // 32 bytes for object ID, 8 for balance
+    //     debug_assert!(self.contents.len() == 40);
+
+    //     // unwrap safe because we checked that it is a coin
+    //     u64::from_le_bytes(<[u8;
+    // 8]>::try_from(&self.contents[ID_END_INDEX..]).unwrap()) }
+
+    // /// Update the `value: u64` field of a `Coin<T>` type.
+    // /// Useful for updating the coin without deserializing the object into a
+    // /// Move value It is the caller's responsibility to check that `self` is
+    // /// a coin--this function may panic or do something unexpected
+    // /// otherwise.
+    // pub fn set_coin_value_unsafe(&mut self, value: u64) {
+    //     debug_assert!(self.type_.is_coin());
+    //     // 32 bytes for object ID, 8 for balance
+    //     debug_assert!(self.contents.len() == 40);
+
+    //     self.contents.splice(ID_END_INDEX.., value.to_le_bytes());
+    // }
+
+    // /// Update the `timestamp_ms: u64` field of the `Clock` type.
+    // ///
+    // /// Panics if the object isn't a `Clock`.
+    // pub fn set_clock_timestamp_ms_unsafe(&mut self, timestamp_ms: u64) {
+    //     assert!(self.is_clock());
+    //     // 32 bytes for object ID, 8 for timestamp
+    //     assert!(self.contents.len() == 40);
+
+    //     self.contents
+    //         .splice(ID_END_INDEX.., timestamp_ms.to_le_bytes());
+    // }
+
+    pub fn is_coin(&self) -> bool {
+        self.type_.is_coin()
+    }
+
+    pub fn is_staked_iota(&self) -> bool {
+        self.type_.is_staked_iota()
+    }
+
+    pub fn is_clock(&self) -> bool {
+        self.type_.is(&StructTag::new_clock())
+    }
+
+    pub fn version(&self) -> Version {
+        self.version
+    }
+
+    // /// Contents of the object that are specific to its type--i.e., not its ID
+    // /// and version, which all objects have For example if the object was
+    // /// declared as `struct S has key { id: ID, f1: u64, f2: bool },
+    // /// this returns the slice containing `f1` and `f2`.
+    // #[cfg(test)]
+    // pub fn type_specific_contents(&self) -> &[u8] {
+    //     &self.contents[ID_END_INDEX..]
+    // }
+
+    // fn update_contents_with_limit(
+    //     &mut self,
+    //     new_contents: Vec<u8>,
+    //     max_move_object_size: u64,
+    // ) -> Result<(), ExecutionError> {
+    //     if new_contents.len() as u64 > max_move_object_size {
+    //         return Err(ExecutionError::from_kind(
+    //             ExecutionErrorKind::ObjectTooBig {
+    //                 object_size: new_contents.len() as u64,
+    //                 max_object_size: max_move_object_size,
+    //             },
+    //         ));
+    //     }
+
+    //     #[cfg(debug_assertions)]
+    //     let old_id = self.id();
+    //     self.contents = new_contents;
+
+    //     // Update should not modify ID
+    //     #[cfg(debug_assertions)]
+    //     debug_assert_eq!(self.id(), old_id);
+
+    //     Ok(())
+    // }
+
+    /// Sets the version of this object to a new value which is assumed to be
+    /// higher (and checked to be higher in debug).
+    pub fn increment_version_to(&mut self, next: Version) {
+        debug_assert!(
+            self.version < next,
+            "Not an increment: {} to {next}",
+            self.version
+        );
+        self.version = next;
+    }
+
+    pub fn decrement_version_to(&mut self, prev: Version) {
+        debug_assert!(
+            prev < self.version,
+            "Not a decrement: {} to {prev}",
+            self.version
+        );
+        self.version = prev;
+    }
+
+    pub fn contents(&self) -> &[u8] {
+        &self.contents
+    }
+
+    pub fn into_contents(self) -> Vec<u8> {
+        self.contents
+    }
+
+    pub fn into_type(self) -> MoveObjectType {
+        self.type_
+    }
+
+    pub fn into_inner(self) -> (MoveObjectType, Vec<u8>) {
+        (self.type_, self.contents)
+    }
+
+    // pub fn to_rust<'de, T: Deserialize<'de>>(&'de self) -> Option<T> {
+    //     bcs::from_bytes(self.contents()).ok()
+    // }
+
+    /// Approximate size of the object in bytes. This is used for gas metering.
+    /// For the type tag field, we serialize it on the spot to get the accurate
+    /// size. This should not be very expensive since the type tag is
+    /// usually simple, and we only do this once per object being mutated.
+    pub fn object_size_for_gas_metering(&self) -> usize {
+        let serialized_type_tag_size =
+            bcs::serialized_size(&self.type_).expect("Serializing type tag should not fail");
+        // + 8 for `version`
+        self.contents.len() + serialized_type_tag_size + 8
+    }
+}
+
 /// Type of an IOTA object
 #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug)]
 pub enum ObjectType {
