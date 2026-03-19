@@ -35,7 +35,16 @@ jobs:
       - name: Install clang
         run: sudo apt-get install -y clang
 
-      - name: Run tests in wasm
-        run: RUSTFLAGS='-Dwarnings' make wasm
+      - name: Check that SDK crates compile to WASM
+        run: make wasm-check
+
+      - name: Install WASM bindings prerequisites
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.114
+          npm install -g pnpm@10
+
+      - name: Build WASM bindings
+        run: make wasm
 
       - run: make is-dirty

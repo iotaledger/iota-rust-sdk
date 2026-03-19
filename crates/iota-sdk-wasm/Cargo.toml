@@ -1,28 +1,10 @@
+# Placeholder — overwritten by `ubrn build web` (see bindings/wasm/ubrn.config.yaml).
+# Must exist so the workspace root can reference this member.
 [package]
 name = "iota-sdk-wasm"
 version = "0.0.0"
-edition = "2018"
+edition = "2021"
 publish = false
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-
-[features]
-default = []
-
-[dependencies]
-iota-sdk-ffi = { path = "../iota-sdk-ffi", default-features = false }
-# We want to ensure that the version of wasm-bindgen is selected by the
-# uniffi-runtime-javascript crate.
-# cargo is smart enough to do this if we don't put any further restrictions
-# on it.
-uniffi-runtime-javascript = { git = "https://github.com/jhugman/uniffi-bindgen-react-native", tag = "0.29.3-1", features = ["wasm32"] }
-wasm-bindgen = "*"
-
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-# getrandom 0.3 renamed the js feature to wasm_js
-getrandom = { version = "0.3", features = ["wasm_js"] }
-console_error_panic_hook = "0.1"
-
-# NOTE: Profile settings must be in the workspace root Cargo.toml.
-# Settings here are silently ignored by Cargo for workspace members.

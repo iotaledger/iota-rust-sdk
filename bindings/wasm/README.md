@@ -15,83 +15,51 @@ The pipeline has two steps:
 # WASM target
 rustup target add wasm32-unknown-unknown
 
-# Binding generator (must match uniffi 0.29)
-cargo install --git https://github.com/jhugman/uniffi-bindgen-react-native --tag 0.29.3-1
-
-# wasm-bindgen CLI (version must match the compiled-in library; check output of step 2)
-cargo install wasm-bindgen-cli --version 0.2.100
+# wasm-bindgen CLI (version must match the compiled-in library)
+cargo install wasm-bindgen-cli --version 0.2.114
 ```
 
-## Step 1 – Generate TypeScript bindings and Rust bridge
+The binding generator (`uniffi-bindgen-react-native`) is installed as an npm dependency and invoked via `npx`.
 
-First build `iota-sdk-ffi` for the native target so the generator can extract UniFFI metadata:
+## Build
+
+From the workspace root, run:
 
 ```bash
-cargo build -p iota-sdk-ffi
+make wasm
 ```
 
-Then run the generator from the workspace root (substitute `.dylib` on macOS):
+This single command performs all three stages (generate bindings, compile to WASM, bundle for browser) and works on both macOS and Linux without any manual changes. The output is `bindings/wasm/dist/iota-sdk.js` + `dist/index_bg.wasm`.
 
-```bash
-uniffi-bindgen-react-native generate wasm bindings \
-  --library target/debug/libiota_sdk_ffi.so \
-  --ts-dir bindings/wasm/src/ts \
-  --cpp-dir crates/iota-sdk-wasm/src
-```
+<details>
+<summary>What the build does (detailed steps)</summary>
 
-This writes:
+### Step 1 – Generate TypeScript bindings and Rust bridge
+
+Builds `iota-sdk-ffi` for the native target, then runs `uniffi-bindgen-react-native` to extract UniFFI metadata and emit:
 
 - `bindings/wasm/src/ts/iota_sdk_ffi.ts` – full TypeScript API (~45 k lines)
 - `crates/iota-sdk-wasm/src/iota_sdk_ffi_module.rs` – wasm-bindgen bridge
 
-## Step 2 – Compile to WASM and generate JS glue
+### Step 2 – Compile to WASM and generate JS glue
+
+Compiles `iota-sdk-wasm` to `wasm32-unknown-unknown` with the `wasm-release` profile, optionally runs `wasm-opt` (if installed via `binaryen`), then runs `wasm-bindgen` to emit the browser JS glue.
+
+### Step 3 – Bundle for the browser
+
+Runs the TypeScript fixer script, bundles everything into `dist/iota-sdk.js` via esbuild, and copies the WASM binary alongside it.
+
+</details>
+
+## Run the examples
+
+From the workspace root:
 
 ```bash
-RUSTFLAGS="-C link-arg=--export-table -C link-arg=--growable-table --cfg getrandom_backend=\"wasm_js\"" \
-  cargo build -p iota-sdk-wasm --target wasm32-unknown-unknown --profile wasm-release
+make wasm-example chain_id
 ```
 
-Output: `target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm`
-
-Optionally, run `wasm-opt` for further size reduction (install via `binaryen`):
-
-```bash
-wasm-opt -Oz --vacuum --strip-debug \
-  --enable-bulk-memory --enable-mutable-globals --enable-sign-ext --enable-nontrapping-float-to-int \
-  target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm \
-  -o target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm
-```
-
-Then generate the browser JS glue:
-
-```bash
-wasm-bindgen \
-  --target web \
-  --omit-default-module-path \
-  --out-name index \
-  --out-dir bindings/wasm/src/ts/wasm-bindgen \
-  target/wasm32-unknown-unknown/wasm-release/iota_sdk_wasm.wasm
-```
-
-## Step 3 – Bundle for the browser
-
-```bash
-cd bindings/wasm
-pnpm install
-pnpm run build
-```
-
-This fixes known issues in the generated TypeScript, bundles everything into `dist/iota-sdk.js` via esbuild, and copies the WASM binary alongside it.
-
-## Run the example
-
-Serve the directory with any HTTP server:
-
-```bash
-npx http-server . -c-1 -p 5173
-```
-
-Open `http://localhost:5173/examples/chain_id.html` in your browser.
+This starts a local dev server and serves the example at `http://localhost:5173/examples/chain_id.html`. List all available examples with `make wasm-examples`.
 
 ## Using the bindings
 
@@ -138,6 +106,6 @@ crates/
 ## Notes
 
 - The `async-compat` patch (`patches/async-compat/`) is required because `uniffi_core` depends on `async-compat`, which panics on wasm32 due to `std::time::Instant` and thread usage. The patch provides a transparent pass-through on wasm32.
-- The `fix-generated-typescript.mjs` script fixes known issues in the generated TypeScript: wrong `async public` method order, a generated `Object` class that shadows the built-in, and a reserved `arguments` parameter name.
+- The `fix-generated-typescript.mjs` script fixes known issues in the generated TypeScript: wrong `async public` method order, a generated `Object` class that shadows the built-in, a reserved `arguments` parameter name, redirecting `index.js` imports to `index_bg.js` (avoids WASM loader issues in esbuild), and stripping checksum validation (env stubs return 0).
 - Async operations use Tokio's minimal `macros` + `rt` feature set when compiled for WASM.
 - `getrandom` is configured with the `wasm_js` feature for browser-compatible randomness.
