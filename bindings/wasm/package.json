@@ -2,6 +2,11 @@
   "name": "iota-sdk-wasm",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iotaledger/iota-rust-sdk"
+  },
+  "browser": "src/ts/index.web.ts",
   "scripts": {
     "fix-generated": "node ./scripts/fix-generated-typescript.mjs",
     "build": "pnpm run fix-generated && mkdir -p dist && esbuild src/ts/index.web.ts --bundle --format=esm --outfile=dist/iota-sdk.js && cp src/ts/wasm-bindgen/index_bg.wasm dist/",

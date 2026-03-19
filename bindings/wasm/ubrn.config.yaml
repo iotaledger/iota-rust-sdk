@@ -1,0 +1,29 @@
+rust:
+  directory: ../../crates/iota-sdk-ffi
+  manifestPath: ../../crates/iota-sdk-ffi/Cargo.toml
+
+web:
+  # Use our existing wasm crate (already a Cargo workspace member).
+  workspace: true
+  manifestPath: ../../crates/iota-sdk-wasm/Cargo.toml
+  ts: ./src/ts
+  entrypoint: ./src/ts/index.web.ts
+  target: bundler
+
+  cargoExtras: []
+
+  # RUSTFLAGS for the wasm32 compilation.
+  rustflags:
+    - "-C"
+    - "link-arg=--export-table"
+    - "-C"
+    - "link-arg=--growable-table"
+    - "--cfg"
+    - 'getrandom_backend="wasm_js"'
+
+  # TOML patch merged into the generated wasm crate Cargo.toml.
+  manifestPatchFile: ./wasm-cargo-patch.toml
+
+# Protect our custom entrypoint from being overwritten.
+noOverwrite:
+  - "**/index.web.ts"

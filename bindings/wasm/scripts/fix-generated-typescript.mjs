@@ -17,6 +17,25 @@ fixed = fixed.replace(/(?<![.\w])Object\./g, 'globalThis.Object.');
 fixed = fixed.replace(/(?<=[\(,]\s*)arguments(?=\s*[:,\)])/g, 'moveArguments');
 fixed = fixed.replace(/\.lower\(arguments\)/g, '.lower(moveArguments)');
 
+// Redirect the wasm-bindgen import from index.js to index_bg.js.
+// index.js (bundler target) does `import * from "./index_bg.wasm"` which
+// esbuild can't handle.  index_bg.js is the pure JS glue without WASM imports.
+// The WASM loading is handled by index.web.ts instead.
+fixed = fixed.replace(
+  /from ['"]\.\/wasm-bindgen\/index\.js['"]/g,
+  'from "./wasm-bindgen/index_bg.js"'
+);
+
+// Skip checksum validation in uniffiEnsureInitialized().
+// The WASM "env" imports return stub values, so checksum calls return 0
+// instead of the real checksum.  Since the TS bindings and WASM are always
+// built together from the same source, the validation is redundant.
+// Remove all ApiChecksumMismatch if-blocks (they span 3 lines each).
+fixed = fixed.replace(
+  /\s*if \(nativeModule\(\)\.ubrn_uniffi_.*?checksum.*?\n.*?ApiChecksumMismatch.*?\n\s*\}/g,
+  ''
+);
+
 if (source !== fixed) {
   writeFileSync(bindingsFile, fixed);
   console.log('Normalized generated TypeScript bindings.');

@@ -38,13 +38,32 @@ package_%.json: crates/iota-sdk-transaction-builder/tests/%/Move.toml crates/iot
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p iota-sdk-transaction-builder
 
-.PHONY: wasm
-wasm: ## Build WASM modules
+# Verify that individual SDK crates compile to wasm32-unknown-unknown.
+# This is a quick compatibility check, not the full WASM bindings build.
+.PHONY: wasm-check
+wasm-check: ## Check that SDK crates compile to WASM
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
+
+# Build the full WASM bindings package for browsers.
+# Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile
+# to wasm32, and run wasm-bindgen. Then esbuild bundles into dist/.
+.PHONY: wasm
+wasm: ## Build WASM bindings for browsers
+	cd bindings/wasm && pnpm install && npx ubrn build web --config ubrn.config.yaml --profile wasm-release
+	@# Optionally run wasm-opt on the wasm-bindgen output for size reduction.
+	@if command -v wasm-opt >/dev/null 2>&1; then \
+		printf "Running wasm-opt for size reduction...\n"; \
+		wasm-opt -Oz --vacuum --strip-debug \
+			--enable-bulk-memory --enable-mutable-globals --enable-sign-ext --enable-nontrapping-float-to-int \
+			bindings/wasm/src/ts/wasm-bindgen/index_bg.wasm \
+			-o bindings/wasm/src/ts/wasm-bindgen/index_bg.wasm; \
+	fi
+	cd bindings/wasm && pnpm run build
+	@printf "WASM bindings built successfully in bindings/wasm/dist/\n"
 
 .PHONY: doc
 doc: ## Generate documentation
@@ -59,7 +78,7 @@ is-dirty: ## Checks if repository is dirty
 	@(test -z "$$(git diff)" || (git diff && false)) && (test -z "$$(git status --porcelain)" || (git status --porcelain && false))
 
 .PHONY: ci
-ci: check-features check-fmt test wasm ## Run the full CI process
+ci: check-features check-fmt test wasm-check ## Run the full CI process
 
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
@@ -83,6 +102,7 @@ bindings: ## Build all bindings
 	@$(MAKE) python
 	@$(MAKE) csharp
 	@$(MAKE) swift
+	@$(MAKE) wasm
 
 .PHONY: bindings-example
 bindings-example: ## Run a specific example for all bindings. Usage: make bindings-example example
@@ -116,15 +136,21 @@ bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) csharp-examples-format
 	@$(MAKE) swift-examples-format
 
-# Build ffi crate and detect platform
-define build_binding
-cargo build -p iota-sdk-ffi --lib --release; \
+# Detect the shared library extension for the current platform.
+# Used by binding targets that need to locate libiota_sdk_ffi.
+define detect_lib_ext
 case "$$(uname -s)" in \
 	Darwin)   LIB_EXT=".dylib" ;; \
 	Linux)    LIB_EXT=".so" ;; \
 	MINGW*|MSYS*|CYGWIN*|Windows_NT) LIB_EXT=".dll" ;; \
 	*)        echo "Unsupported platform"; exit 1 ;; \
 esac;
+endef
+
+# Build the FFI crate (release) and detect the library extension.
+define build_binding
+cargo build -p iota-sdk-ffi --lib --release; \
+$(detect_lib_ext)
 endef
 
 .PHONY: go
@@ -318,6 +344,21 @@ swift-examples-format-check: ## Check format of all Swift bindings examples
 .PHONY: swift-examples-format
 swift-examples-format: ## Format all Swift bindings examples
 	@swift-format format --recursive bindings/swift/examples --in-place
+
+# WASM examples are browser-based HTML files served via a local dev server.
+# "make wasm-example chain_id" serves the bindings/wasm directory and opens the example.
+.PHONY: wasm-example
+wasm-example: ## Serve a WASM example in the browser. Usage: make wasm-example chain_id
+%:
+	@true
+wasm-example:
+	@printf "\nServing WASM example \"$(word 2,$(MAKECMDGOALS))\" at http://localhost:5173/examples/$(word 2,$(MAKECMDGOALS)).html\n"
+	@cd bindings/wasm && pnpm run serve
+
+.PHONY: wasm-examples
+wasm-examples: ## List available WASM examples (browser-based, must be opened manually)
+	@printf "Available WASM examples (serve with 'make wasm-example <name>'):\n"
+	@find bindings/wasm/examples -name "*.html" -exec basename {} .html \; | sort
 
 .PHONY: example
 example: ## Run a specific Rust example. Usage: make example example
