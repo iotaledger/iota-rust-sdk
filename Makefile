@@ -331,11 +331,6 @@ examples: ## Run all Rust examples
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
-.PHONY: polling-indexer
-polling-indexer: ## Run the polling-indexer example (requires PostgreSQL)
-	@printf "\nRunning polling-indexer example\n"
-	@cargo run -p polling-indexer -- $(ARGS)
-
 .PHONY: rust-release-example
 rust-release-example: ## Run the Rust release example
 	@printf "\nRunning Rust release example\n"
