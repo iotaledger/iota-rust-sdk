@@ -359,22 +359,14 @@ pub trait FromMnemonic {
         Self: Sized;
 }
 
-#[cfg(all(
-    test,
-    feature = "mnemonic",
-    feature = "ed25519",
-    feature = "secp256k1",
-    feature = "secp256r1",
-    feature = "bech32"
-))]
+#[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::{
-        ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey, secp256r1::Secp256r1PrivateKey,
-    };
-
+    #[cfg(all(feature = "mnemonic", feature = "ed25519", feature = "bech32"))]
     #[test]
     fn test_mnemonics_ed25519() {
+        use super::*;
+        use crate::ed25519::Ed25519PrivateKey;
+
         const TEST_CASES: [[&str; 3]; 3] = [
             [
                 "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm",
@@ -400,8 +392,12 @@ mod tests {
         }
     }
 
+    #[cfg(all(feature = "mnemonic", feature = "secp256k1", feature = "bech32"))]
     #[test]
     fn test_mnemonics_secp256k1() {
+        use super::*;
+        use crate::secp256k1::Secp256k1PrivateKey;
+
         const TEST_CASES: [[&str; 3]; 3] = [
             [
                 "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm",
@@ -427,8 +423,12 @@ mod tests {
         }
     }
 
+    #[cfg(all(feature = "mnemonic", feature = "secp256r1", feature = "bech32"))]
     #[test]
     fn test_mnemonics_secp256r1() {
+        use super::*;
+        use crate::secp256r1::Secp256r1PrivateKey;
+
         const TEST_CASES: [[&str; 3]; 3] = [
             [
                 "act wing dilemma glory episode region allow mad tourist humble muffin oblige",
