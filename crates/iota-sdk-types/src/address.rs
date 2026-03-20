@@ -309,9 +309,7 @@ mod tests {
 
         #[proptest]
         fn roundtrip_display_fromstr(address: Address) {
-            let s = address.to_string();
-            let a = s.parse::<Address>().unwrap();
-            assert_eq!(address, a);
+            assert_eq!(address, address.to_string().parse().unwrap());
         }
     }
 
