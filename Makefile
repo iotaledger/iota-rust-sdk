@@ -325,7 +325,9 @@ example:
 
 .PHONY: examples
 examples: ## Run all Rust examples
-	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -not -path "*/release/*" -exec basename {} .rs \;); do \
+	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
+	@# that require external services (e.g. PostgreSQL). Run those separately.
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
