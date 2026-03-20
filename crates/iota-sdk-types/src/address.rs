@@ -301,11 +301,22 @@ impl schemars::JsonSchema for Address {
 
 #[cfg(test)]
 mod tests {
-    use test_strategy::proptest;
+    #[cfg(feature = "proptest")]
+    mod proptests {
+        use test_strategy::proptest;
+
+        use super::super::Address;
+
+        #[proptest]
+        fn roundtrip_display_fromstr(address: Address) {
+            assert_eq!(address, address.to_string().parse().unwrap());
+        }
+    }
+
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use super::*;
+    use super::{Address, AddressParseError};
 
     #[test]
     fn parse_address_with_0x_prefix() {
@@ -446,12 +457,5 @@ mod tests {
         println!("{:?}", bcs::to_bytes(&actual).unwrap());
         let a: Address = serde_json::from_str("\"0x2\"").unwrap();
         println!("{a}");
-    }
-
-    #[proptest]
-    fn roundtrip_display_fromstr(address: Address) {
-        let s = address.to_string();
-        let a = s.parse::<Address>().unwrap();
-        assert_eq!(address, a);
     }
 }
