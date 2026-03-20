@@ -7,13 +7,13 @@ use iota_sdk::graphql_client::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let events = client
         .events(
             EventFilter {
                 event_type: Some(
-                    "0xb9d617f24c84826bf660a2f4031951678cc80c264aebc4413459fb2a95ada9ba::registry::NameRecordAddedEvent"
+                    "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
                         .to_string(),
                 ),
                 ..Default::default()

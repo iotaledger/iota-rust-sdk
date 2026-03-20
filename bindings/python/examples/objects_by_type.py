@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     staked_iotas = await client.objects(filter=ObjectFilter(
         type_tag="0x3::staking_pool::StakedIota"))

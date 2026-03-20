@@ -37,7 +37,7 @@ func main() {
 	// Request funds from faucet
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWaitForFinalized(senderAddress, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
@@ -47,7 +47,7 @@ func main() {
 	signer := iota_sdk.NewTransactionSigner(&AsyncSigner{Key: privateKey})
 	waitFor := iota_sdk.WaitForTxFinalized
 	effects, err := builder.Execute(signer, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
 	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))

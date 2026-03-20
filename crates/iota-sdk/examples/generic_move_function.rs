@@ -8,7 +8,7 @@ use iota_sdk::{graphql_client::Client, transaction_builder::TransactionBuilder, 
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let sender = "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e".parse()?;
 

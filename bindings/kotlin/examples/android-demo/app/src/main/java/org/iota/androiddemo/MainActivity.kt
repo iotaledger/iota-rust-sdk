@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val chainId = withContext(Dispatchers.IO) {
-                    val client = GraphQlClient.newDevnet()
+                    val client = GraphQlClient.newTestnet()
                     client.chainId()
                 }
                 resultText.text = getString(R.string.chain_id_result, chainId)

@@ -23,11 +23,14 @@ bump_semver() {
     local bump="$2"
 
     # Parse version into components
-    local major minor patch pre_tag pre_num
-    if ! parse_version "$version" major minor patch pre_tag pre_num; then
+    local parsed
+    if ! parsed=$(parse_version "$version"); then
         echo "Invalid semver: $version" >&2
         return 1
     fi
+    local major minor patch pre_tag pre_num
+    read -r major minor patch pre_tag pre_num <<< "$parsed"
+    [[ "$pre_tag" == "-" ]] && pre_tag=""
 
     case "$bump" in
         major)
@@ -55,26 +58,26 @@ bump_semver() {
 
 parse_version() {
     local version="$1"
-    local -n major_ref="$2" minor_ref="$3" patch_ref="$4" pre_tag_ref="$5" pre_num_ref="$6"
 
     if [[ "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)(-(.+))?$ ]]; then
-        major_ref="${BASH_REMATCH[1]}"
-        minor_ref="${BASH_REMATCH[2]}"
-        patch_ref="${BASH_REMATCH[3]}"
-        local pre="${BASH_REMATCH[5]:-}"
+        local _major="${BASH_REMATCH[1]}"
+        local _minor="${BASH_REMATCH[2]}"
+        local _patch="${BASH_REMATCH[3]}"
+        local _pre="${BASH_REMATCH[5]:-}"
+        local _pre_tag=""
+        local _pre_num="0"
 
-        if [[ -n "$pre" ]]; then
-            if [[ "$pre" =~ ^([a-zA-Z-]+)\.([0-9]+)$ ]]; then
-                pre_tag_ref="${BASH_REMATCH[1]}"
-                pre_num_ref="${BASH_REMATCH[2]}"
+        if [[ -n "$_pre" ]]; then
+            if [[ "$_pre" =~ ^([a-zA-Z-]+)\.([0-9]+)$ ]]; then
+                _pre_tag="${BASH_REMATCH[1]}"
+                _pre_num="${BASH_REMATCH[2]}"
             else
-                echo "Invalid prerelease format: $pre" >&2
+                echo "Invalid prerelease format: $_pre" >&2
                 return 1
             fi
-        else
-            pre_tag_ref=""
-            pre_num_ref="0"
         fi
+
+        printf '%s\n' "$_major $_minor $_patch ${_pre_tag:--} $_pre_num"
         return 0
     else
         return 1
@@ -119,11 +122,14 @@ handle_prerelease() {
 semver_to_pep440() {
     local version="$1"
 
-    local major minor patch pre_tag pre_num
-    if ! parse_version "$version" major minor patch pre_tag pre_num; then
+    local parsed
+    if ! parsed=$(parse_version "$version"); then
         echo "Invalid semver: $version" >&2
         return 1
     fi
+    local major minor patch pre_tag pre_num
+    read -r major minor patch pre_tag pre_num <<< "$parsed"
+    [[ "$pre_tag" == "-" ]] && pre_tag=""
 
     local pep="$major.$minor.$patch"
     if [[ -n "$pre_tag" ]]; then

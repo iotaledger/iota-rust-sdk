@@ -5,7 +5,7 @@ use iota_sdk::graphql_client::{Client, error::Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_devnet();
+    let client = Client::new_testnet();
 
     let current_epoch = client.epoch(None).await?.unwrap();
     println!("Current epoch: {}", current_epoch.epoch_id);

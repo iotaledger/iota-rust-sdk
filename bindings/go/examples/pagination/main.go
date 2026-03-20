@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewDevnet()
-	address, err := iota_sdk.AddressFromHex("0x611830d3641a68f94a690dcc25d1f4b0dac948325ac18f6dd32564371735f32c")
+	client := iota_sdk.GraphQlClientNewTestnet()
+	address, err := iota_sdk.AddressFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
@@ -25,7 +25,7 @@ func main() {
 			fmt.Printf("Fetching page with cursor: nil\n")
 		}
 		page, err := client.Objects(&iota_sdk.ObjectFilter{Owner: &address}, &iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Cursor: nextCursor, Limit: &limit})
-		if err.(*iota_sdk.SdkFfiError) != nil {
+		if err != nil {
 			log.Fatalf("Failed to get owned objects: %v", err)
 		}
 		for _, obj := range page.Data {

@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
@@ -60,7 +59,7 @@ func main() {
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	faucetReceipt, err := faucet.RequestAndWaitForFinalized(sender, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
 	totalBalance := uint64(0)
@@ -75,14 +74,14 @@ func main() {
 	// Transfer the upgrade cap to the sender address
 	builderPublish.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 	txPublish, err := builderPublish.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
 	}
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Publishing package (dry run):")
 	resultPublish, err := client.DryRunTx(txPublish, false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
 	if resultPublish.Error != nil {
@@ -101,13 +100,10 @@ func main() {
 	}
 	waitFor := iota_sdk.WaitForTxFinalized
 	effectsPublish, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
-
-	// Wait some time for the indexer to process the tx
-	time.Sleep(3 * time.Second)
 
 	// Resolve UpgradeCap and PackageId via the client
 	var upgradeCap *iota_sdk.ObjectId
@@ -116,7 +112,7 @@ func main() {
 		if objectWrite, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
-			if err.(*iota_sdk.SdkFfiError) != nil {
+			if err != nil {
 				log.Fatalf("Failed to get object: %v", err)
 			}
 			obj := *objPtr
@@ -178,14 +174,14 @@ func main() {
 	)
 
 	txUpgrade, err := builderUpgrade.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to finish transaction: %v", err)
 	}
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Upgrading package (dry run):")
 	resultUpgrade, err := client.DryRunTx(txUpgrade, false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
 	if resultUpgrade.Error != nil {
@@ -203,13 +199,10 @@ func main() {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	effectsUpgrade, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
-
-	// Wait some time for the indexer to process the tx
-	time.Sleep(3 * time.Second)
 
 	// Print the new package version (should now be 2)
 	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects {
