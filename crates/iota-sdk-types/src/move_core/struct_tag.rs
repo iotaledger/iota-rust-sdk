@@ -199,6 +199,15 @@ impl StructTag {
         (self.address, self.module, self.name, self.type_params)
     }
 
+    /// Checks if this is a `TimeLock<Balance<T>>` for some T
+    pub fn is_timelocked_balance(&self) -> bool {
+        self.is_time_lock()
+            && matches!(
+                self.type_params.as_slice(),
+                [TypeTag::Struct(inner)] if inner.is_balance()
+            )
+    }
+
     /// Returns the string representation of this struct tag using the
     /// canonical display, with or without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
@@ -379,6 +388,7 @@ impl StructTag {
     );
     add_struct_tag_ctor!(STD, string::String);
     add_struct_tag_ctor!(@with_module STD, ascii::String);
+    add_struct_tag_ctor!(FRAMEWORK, coin::RegulatedCoinMetadata, coin::DenyCapV1);
     add_struct_tag_ctor_from_struct_tag!(
         FRAMEWORK,
         coin::CoinMetadata,
@@ -390,6 +400,18 @@ impl StructTag {
     add_struct_tag_ctor_from_type_tag!(FRAMEWORK, coin::Coin, balance::Balance, timelock::TimeLock);
     add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, dynamic_object_field::Wrapper);
     add_struct_tag_ctor_from_type_tag!(STD, option::Option);
+
+    /// Creates a new timelocked IOTA balance struct tag
+    /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
+    pub fn new_timelocked_gas_balance() -> Self {
+        Self::new_time_lock(Self::new_balance(Self::new_gas()))
+    }
+
+    /// Checks if this is a timelocked IOTA balance type
+    /// (`0x2::timelock::TimeLock<0x2::balance::Balance<0x2::iota::IOTA>>`)
+    pub fn is_timelocked_gas_balance(&self) -> bool {
+        *self == Self::new_timelocked_gas_balance()
+    }
 }
 
 impl std::fmt::Display for StructTag {

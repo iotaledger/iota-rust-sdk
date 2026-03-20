@@ -170,6 +170,74 @@ impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 }
 
+/// A [`StructTag`] with optimized BCS serialization for object types.
+///
+/// GasCoin, StakedIota, and Coin variants use compact enum encoding
+/// instead of the full StructTag representation.
+///
+/// # BCS
+///
+/// ```text
+/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+/// other-struct-type     = %x00 struct-tag
+/// gas-coin-type         = %x01
+/// staked-iota-type      = %x02
+/// coin-type             = %x03 type-tag
+/// ```
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct MoveObjectType(StructTag);
+
+impl MoveObjectType {
+    pub fn new(tag: StructTag) -> Self {
+        Self(tag)
+    }
+
+    pub fn into_inner(self) -> StructTag {
+        self.0
+    }
+}
+
+impl std::ops::Deref for MoveObjectType {
+    type Target = StructTag;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl From<StructTag> for MoveObjectType {
+    fn from(tag: StructTag) -> Self {
+        Self(tag)
+    }
+}
+
+impl From<MoveObjectType> for StructTag {
+    fn from(mot: MoveObjectType) -> Self {
+        mot.0
+    }
+}
+
+impl PartialEq<StructTag> for MoveObjectType {
+    fn eq(&self, other: &StructTag) -> bool {
+        &self.0 == other
+    }
+}
+
+impl std::fmt::Display for MoveObjectType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl std::str::FromStr for MoveObjectType {
+    type Err = crate::TypeParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        StructTag::from_str(s).map(Self)
+    }
+}
+
 /// A move struct
 ///
 /// # BCS
@@ -197,12 +265,8 @@ impl ObjectData {
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
-    /// The type of this object
-    #[cfg_attr(
-        feature = "serde",
-        serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
-    )]
-    pub type_: StructTag,
+    /// The type of this object. Uses optimized BCS serialization.
+    pub type_: MoveObjectType,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -310,7 +374,7 @@ impl Object {
     /// Return this object's type
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_.clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.type_).clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -423,7 +487,7 @@ impl GenesisObject {
 
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct(struct_.type_.clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.type_).clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -528,6 +592,7 @@ mod serialization {
     /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
     /// `GasCoin`
     #[derive(serde::Deserialize)]
+    #[serde(rename = "MoveObjectType")]
     enum MoveStructType {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
@@ -546,6 +611,7 @@ mod serialization {
 
     /// See `MoveStructType`
     #[derive(serde::Serialize)]
+    #[serde(rename = "MoveObjectType")]
     enum MoveStructTypeRef<'a> {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(&'a StructTag),
@@ -598,25 +664,29 @@ mod serialization {
         }
     }
 
-    pub(super) struct BinaryMoveStructType;
-
-    impl SerializeAs<StructTag> for BinaryMoveStructType {
-        fn serialize_as<S>(source: &StructTag, serializer: S) -> Result<S::Ok, S::Error>
+    impl Serialize for MoveObjectType {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
         {
-            let move_object_type = MoveStructTypeRef::from_struct_tag(source);
-            move_object_type.serialize(serializer)
+            if serializer.is_human_readable() {
+                self.0.serialize(serializer)
+            } else {
+                MoveStructTypeRef::from_struct_tag(&self.0).serialize(serializer)
+            }
         }
     }
 
-    impl<'de> DeserializeAs<'de, StructTag> for BinaryMoveStructType {
-        fn deserialize_as<D>(deserializer: D) -> Result<StructTag, D::Error>
+    impl<'de> Deserialize<'de> for MoveObjectType {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: Deserializer<'de>,
         {
-            let struct_type = MoveStructType::deserialize(deserializer)?;
-            Ok(struct_type.into_struct_tag())
+            if deserializer.is_human_readable() {
+                StructTag::deserialize(deserializer).map(Self)
+            } else {
+                MoveStructType::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
+            }
         }
     }
 
@@ -813,7 +883,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_,
+                            type_: type_.into(),
                             version,
                             contents,
                         })
@@ -967,7 +1037,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_,
+                            type_: type_.into(),
                             version,
                             contents,
                         })
@@ -1044,12 +1114,12 @@ mod serialization {
         fn obj() {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
-                    type_: StructTag::new(
+                    type_: MoveObjectType::new(StructTag::new(
                         Address::FRAMEWORK,
                         Identifier::new("bar").unwrap(),
                         Identifier::new("foo").unwrap(),
                         Vec::new(),
-                    ),
+                    )),
                     version: Version::from_u64(12),
                     contents: ObjectId::ZERO.into(),
                 }),
