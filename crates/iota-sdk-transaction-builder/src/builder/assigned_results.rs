@@ -26,7 +26,7 @@ impl AssignedResult for &str {
 
 impl AssignedResult for String {
     fn push_assigned_result(self, arg: Argument, ptb: &mut TransactionBuildData) {
-        ptb.assigned_results.insert(self.to_owned(), arg);
+        ptb.assigned_results.insert(self, arg);
     }
 }
 

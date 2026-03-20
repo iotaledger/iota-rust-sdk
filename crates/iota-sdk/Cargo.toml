@@ -11,6 +11,9 @@ description = "The official SDK for IOTA"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[lints]
+workspace = true
+
 [features]
 default = [
   "crypto",

@@ -14,6 +14,9 @@ path = "uniffi_bindgen.rs"
 name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
+[lints]
+workspace = true
+
 [dependencies]
 async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
