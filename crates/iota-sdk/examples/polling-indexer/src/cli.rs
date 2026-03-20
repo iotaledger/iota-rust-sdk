@@ -33,7 +33,6 @@ pub struct Cli {
 
     #[arg(
         long,
-        alias = "progress-file",
         help = "Progress row key in PostgreSQL table indexer_progress (default: polling-indexer)"
     )]
     pub progress_key: Option<String>,

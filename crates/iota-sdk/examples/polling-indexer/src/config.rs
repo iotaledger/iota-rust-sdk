@@ -29,7 +29,6 @@ struct FileConfig {
     db_url: Option<String>,
     /// Progress row key in the indexer_progress table.
     /// Example: "polling-indexer"
-    #[serde(alias = "progress_file")]
     progress_key: Option<String>,
     /// First checkpoint to index (inclusive).
     start_checkpoint: Option<u64>,
