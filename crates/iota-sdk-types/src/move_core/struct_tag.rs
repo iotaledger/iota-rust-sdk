@@ -199,7 +199,7 @@ impl StructTag {
         (self.address, self.module, self.name, self.type_params)
     }
 
-    /// Checks if this is a `TimeLock<Balance<T>>` for some T
+    /// Checks if this is a timelocked coin balance `TimeLock<Balance<T>>`
     pub fn is_timelocked_balance(&self) -> bool {
         self.is_time_lock()
             && matches!(

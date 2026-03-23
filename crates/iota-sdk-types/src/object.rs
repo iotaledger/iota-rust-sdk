@@ -213,8 +213,8 @@ impl From<StructTag> for MoveObjectType {
 }
 
 impl From<MoveObjectType> for StructTag {
-    fn from(mot: MoveObjectType) -> Self {
-        mot.0
+    fn from(obj_type: MoveObjectType) -> Self {
+        obj_type.0
     }
 }
 
