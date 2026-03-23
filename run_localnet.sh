@@ -36,9 +36,16 @@ if [ "$1" == "start" ]; then
     echo "Setting keypair in config..."
     sed -i.bak "s|<keypair>|$keyWithFlag|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
 
-    # With host networking (see compose.local.yml), both Redis and the IOTA fullnode
-    # are accessible on localhost. Replace the Docker DNS name with localhost.
-    sed -i.bak "s|redis://redis:6379|redis://localhost:6379|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
+    # On Linux, we use host networking (compose.local.yml) so both Redis and the
+    # IOTA fullnode are accessible on localhost. On macOS, Docker Desktop doesn't
+    # support host networking, so we use bridge networking with host.docker.internal.
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # Bridge networking: Redis is reachable via Docker DNS name, fullnode via host.docker.internal
+        sed -i.bak "s|http://localhost:9000|http://host.docker.internal:9000|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
+    else
+        # Host networking: everything is on localhost
+        sed -i.bak "s|redis://redis:6379|redis://localhost:6379|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
+    fi
 
     echo "Waiting for network to start..."
     success=false
@@ -58,14 +65,13 @@ if [ "$1" == "start" ]; then
         exit 1
     fi
 
-    echo "Setting up client environment..."
-    $IOTA_BINARY client -y new-env --alias localnet --rpc http://127.0.0.1:9000 --graphql http://0.0.0.0:9125 --faucet http://127.0.0.1:9123/v1/gas
-
     echo "Waiting for faucet to be ready..."
     success=false
     for i in {1..60}; do
         sleep 1
-        if $IOTA_BINARY client faucet --address $address >/dev/null 2>&1; then
+        if curl --silent --fail --location --request POST 'http://127.0.0.1:9123/gas' \
+            --header 'Content-Type: application/json' \
+            --data-raw "{\"FixedAmountRequest\":{\"recipient\":\"$address\"}}" >/dev/null 2>&1; then
             success=true
             break
         fi
@@ -80,7 +86,13 @@ if [ "$1" == "start" ]; then
     echo "Starting Gas Station..."
     # Set gas station auth
     export GAS_STATION_AUTH=test
-    docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network up -d
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS: use default bridge networking (host networking not supported by Docker Desktop)
+        docker compose -f "$COMPOSE_PATH" -p start-local-network up -d
+    else
+        # Linux: use host networking override
+        docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network up -d
+    fi
 
     echo "Waiting for gas station to be ready..."
     success=false
@@ -111,7 +123,11 @@ elif [ "$1" == "stop" ]; then
     echo "Stopping Gas Station..."
     # Flush Redis data before stopping
     redis-cli FLUSHALL || echo "Could not flush Redis data"
-    docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network down
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        docker compose -f "$COMPOSE_PATH" -p start-local-network down
+    else
+        docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network down
+    fi
 
     # Remove Redis volume to clean persisted data
     echo "Removing Redis data volume..."
@@ -149,7 +165,11 @@ elif [ "$1" == "logs" ]; then
     fi
 
 elif [ "$1" == "gaslogs" ]; then
-    docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network logs -f
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        docker compose -f "$COMPOSE_PATH" -p start-local-network logs -f
+    else
+        docker compose -f "$COMPOSE_PATH" -f "$COMPOSE_LOCAL_PATH" -p start-local-network logs -f
+    fi
 
 else
     echo "Usage: $0 start|stop|logs|gaslogs"
