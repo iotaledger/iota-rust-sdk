@@ -592,6 +592,7 @@ mod serialization {
     /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
     /// `GasCoin`
     #[derive(serde::Deserialize)]
+    #[serde(rename = "MoveObjectType")]
     enum MoveObjectTypeWrapper {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
