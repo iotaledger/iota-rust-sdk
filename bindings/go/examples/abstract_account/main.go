@@ -11,50 +11,48 @@ import (
 )
 
 func main() {
-	func main() {
-		client := iota_sdk.GraphQlClientNewLocalnet()
-		accountId, err := setupAccount(client)
-		if err != nil {
-			log.Fatalf("Failed to setup account: %v", err)
-		}
-	
-		fromAddress := accountId.ToAddress()
-		toAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
-		if err != nil {
-			log.Fatalf("Failed to parse recipient address: %v", err)
-		}
-	
-		// Fund the sender address for gas payment
-		faucet := iota_sdk.FaucetClientNewLocalnet()
-		_, err = faucet.RequestAndWaitForFinalized(fromAddress, client)
-		if err != nil {
-			log.Fatalf("Failed to request coins from faucet: %v", err)
-		}
-	
-		builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
-		builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
-	
-		moveAuthenticator, err := iota_sdk.NewMoveAuthenticatorBuilder(
-			accountId,
-			[]*iota_sdk.PtbArgument{
-				iota_sdk.PtbArgumentString("hello"),
-				iota_sdk.PtbArgumentShared(iota_sdk.ObjectIdClock()),
-			},
-			[]*iota_sdk.TypeTag{},
-		).Finish(client)
-		if err != nil {
-			log.Fatalf("Failed to finish move authenticator: %v", err)
-		}
-	
-		signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
-		waitFor := iota_sdk.WaitForTxFinalized
-		effects, err := builder.Execute(signer, &waitFor)
-		if err != nil {
-			log.Fatalf("Failed to execute transaction: %v", err)
-		}
-	
-		fmt.Printf("Sending IOTA via abstract account: %v\n", (*effects).AsV1().Status)
+	client := iota_sdk.GraphQlClientNewLocalnet()
+	accountId, err := setupAccount(client)
+	if err != nil {
+		log.Fatalf("Failed to setup account: %v", err)
 	}
+
+	fromAddress := accountId.ToAddress()
+	toAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
+	if err != nil {
+		log.Fatalf("Failed to parse recipient address: %v", err)
+	}
+
+	// Fund the sender address for gas payment
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	_, err = faucet.RequestAndWaitForFinalized(fromAddress, client)
+	if err != nil {
+		log.Fatalf("Failed to request coins from faucet: %v", err)
+	}
+
+	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
+	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
+
+	moveAuthenticator, err := iota_sdk.NewMoveAuthenticatorBuilder(
+		accountId,
+		[]*iota_sdk.PtbArgument{
+			iota_sdk.PtbArgumentString("hello"),
+			iota_sdk.PtbArgumentShared(iota_sdk.ObjectIdClock()),
+		},
+		[]*iota_sdk.TypeTag{},
+	).Finish(client)
+	if err != nil {
+		log.Fatalf("Failed to finish move authenticator: %v", err)
+	}
+
+	signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
+	waitFor := iota_sdk.WaitForTxFinalized
+	effects, err := builder.Execute(signer, &waitFor)
+	if err != nil {
+		log.Fatalf("Failed to execute transaction: %v", err)
+	}
+
+	fmt.Printf("Sending IOTA via abstract account: %v\n", (*effects).AsV1().Status)
 }
 
 func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
