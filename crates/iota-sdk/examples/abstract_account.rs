@@ -162,21 +162,19 @@ public struct Account has key, store {
 public struct ACCOUNT has drop {}
 
 fun init(_otw: ACCOUNT, ctx: &mut TxContext) {
-    // Shares the account object, anyone can claim it by calling the
-link_auth function     transfer::public_share_object(Account {
+    // Shares the account object, anyone can claim it by calling the link_auth function
+    transfer::public_share_object(Account {
         id: object::new(ctx),
     });
 }
 
-public fun link_auth(account: Account, package: &PackageMetadataV1,
-module_name: std::ascii::String, function_name: std::ascii::String) {     let
-authenticator =
-authenticator_function::create_auth_function_ref_v1<Account>(package,
-module_name, function_name);     account::create_account_v1<Account>(account,
-authenticator); }
+public fun link_auth(account: Account, package: &PackageMetadataV1, module_name: std::ascii::String, function_name: std::ascii::String) {
+    let authenticator = authenticator_function::create_auth_function_ref_v1<Account>(package, module_name, function_name);
+    account::create_account_v1<Account>(account, authenticator);
+}
 
-/// An unsecure example authenticator function that checks if the provided
-message is "hello". #[authenticator]
+/// An unsecure example authenticator function that checks if the provided message is "hello".
+#[authenticator]
 public fun authenticate(
     _account: &Account,
     msg: std::ascii::String,
