@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 
 use super::{
     Address, AddressParseError, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin,
-    TypeTag, UpgradeInfo, Version,
+    UpgradeInfo, Version,
 };
 
 /// Reference to an object
@@ -288,7 +288,7 @@ impl MoveStruct {
     }
 
     pub fn is_type(&self, s: &StructTag) -> bool {
-        self.type_.is(s)
+        &self.type_ == s
     }
 
     pub fn id(&self) -> ObjectId {
@@ -348,7 +348,7 @@ impl MoveStruct {
     }
 
     pub fn is_clock(&self) -> bool {
-        self.type_.is(&StructTag::new_clock())
+        self.type_.is_clock()
     }
 
     pub fn version(&self) -> Version {
