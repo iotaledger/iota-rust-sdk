@@ -32,6 +32,7 @@ runs:
         database_id=$(echo $nightly | jq '.databaseId')
         started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
         gh run download --repo iotaledger/iota $database_id -n "iota-nightly-$started_at-linux-x86_64"
+        tar -zxvf "iota-nightly-$started_at-linux-x86_64.tgz" ./iota
         tar -zxvf "iota-nightly-$started_at-linux-x86_64.tgz" ./iota-localnet
 
         # Uncomment when using a released build
@@ -41,6 +42,7 @@ runs:
         # wget -q $download_url -O iota.tgz
         # tar -zxvf iota.tgz ./iota
 
+        chmod +x ./iota
         chmod +x ./iota-localnet
         echo "Starting local network with a faucet, an indexer (port 5432) and GraphQL. Epoch duration is set to $EPOCH_DURATION_MS ms"
         echo "$(pwd)" >> $GITHUB_PATH
