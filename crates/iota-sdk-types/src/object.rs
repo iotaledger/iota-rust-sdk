@@ -592,8 +592,7 @@ mod serialization {
     /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
     /// `GasCoin`
     #[derive(serde::Deserialize)]
-    #[serde(rename = "MoveObjectType")]
-    enum MoveStructType {
+    enum MoveObjectTypeWrapper {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
         /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
@@ -609,10 +608,10 @@ mod serialization {
         // to make sure the new type and Other(_) are interpreted consistently.
     }
 
-    /// See `MoveStructType`
+    /// See `MoveObjectType`
     #[derive(serde::Serialize)]
     #[serde(rename = "MoveObjectType")]
-    enum MoveStructTypeRef<'a> {
+    enum MoveObjectTypeRef<'a> {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(&'a StructTag),
         /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
@@ -628,18 +627,18 @@ mod serialization {
         // to make sure the new type and Other(_) are interpreted consistently.
     }
 
-    impl MoveStructType {
+    impl MoveObjectTypeWrapper {
         fn into_struct_tag(self) -> StructTag {
             match self {
-                MoveStructType::Other(tag) => tag,
-                MoveStructType::GasCoin => StructTag::new_gas_coin(),
-                MoveStructType::StakedIota => StructTag::new_staked_iota(),
-                MoveStructType::Coin(type_tag) => StructTag::new_coin(type_tag),
+                MoveObjectTypeWrapper::Other(tag) => tag,
+                MoveObjectTypeWrapper::GasCoin => StructTag::new_gas_coin(),
+                MoveObjectTypeWrapper::StakedIota => StructTag::new_staked_iota(),
+                MoveObjectTypeWrapper::Coin(type_tag) => StructTag::new_coin(type_tag),
             }
         }
     }
 
-    impl<'a> MoveStructTypeRef<'a> {
+    impl<'a> MoveObjectTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
             if let Some(coin_type) = s.coin_type_opt() {
                 if let TypeTag::Struct(s_inner) = coin_type
@@ -672,7 +671,7 @@ mod serialization {
             if serializer.is_human_readable() {
                 self.0.serialize(serializer)
             } else {
-                MoveStructTypeRef::from_struct_tag(&self.0).serialize(serializer)
+                MoveObjectTypeRef::from_struct_tag(&self.0).serialize(serializer)
             }
         }
     }
@@ -685,7 +684,7 @@ mod serialization {
             if deserializer.is_human_readable() {
                 StructTag::deserialize(deserializer).map(Self)
             } else {
-                MoveStructType::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
+                MoveObjectTypeWrapper::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
             }
         }
     }
