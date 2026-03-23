@@ -129,7 +129,7 @@ impl std::fmt::Display for GasCostSummary {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "serde"))]
 mod tests {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
@@ -137,7 +137,6 @@ mod tests {
     use super::*;
 
     #[test]
-    #[cfg(feature = "serde")]
     fn formats() {
         let actual = GasCostSummary {
             computation_cost: 42,

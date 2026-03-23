@@ -47,7 +47,7 @@ func main() {
 	builder.GasStationSponsor(gasStationUrl, nil, &headers)
 
 	res, err := builder.Execute(signer, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}
 

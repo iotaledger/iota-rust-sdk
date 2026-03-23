@@ -14,7 +14,7 @@ func main() {
 
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
 	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
 	if len(stakedIotas.Data) == 0 {
@@ -26,7 +26,7 @@ func main() {
 	builder.Unstake(iota_sdk.PtbArgumentObjectId(stakedIota.ObjectId()))
 
 	res, err := builder.DryRun(false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to unstake: %v", err)
 	}
 

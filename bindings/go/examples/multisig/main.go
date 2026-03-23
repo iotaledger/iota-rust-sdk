@@ -67,7 +67,7 @@ func main() {
 	// 5. Fund the multisig address
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	_, err = faucet.RequestAndWaitForFinalized(multisigAddress, client)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
@@ -75,12 +75,12 @@ func main() {
 	builder := iota_sdk.NewTransactionBuilder(multisigAddress).WithClient(client)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
 	dryRunResult, err := client.DryRunTx(txn, false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}
 	if dryRunResult.Error != nil {
@@ -115,7 +115,7 @@ func main() {
 	// 9. Execute
 	userSignature := iota_sdk.UserSignatureNewMultisig(aggSig)
 	effects, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSignature}, txn, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
 	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))

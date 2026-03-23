@@ -48,7 +48,7 @@ func main() {
 	)
 
 	txn, err := builder.Finish()
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
@@ -56,7 +56,7 @@ func main() {
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
 	res, err := builder.DryRun(false)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to split coins: %v", err)
 	}
 

@@ -645,11 +645,41 @@ impl std::str::FromStr for Bn254FieldElement {
 
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
+    #[cfg(feature = "proptest")]
+    mod proptests {
+        use std::str::FromStr;
 
-    use num_bigint::BigUint;
-    use proptest::prelude::*;
-    use test_strategy::proptest;
+        use num_bigint::BigUint;
+        use proptest::prelude::*;
+        use test_strategy::proptest;
+
+        use super::super::Bn254FieldElement;
+
+        #[proptest]
+        fn dont_crash_on_large_inputs(
+            #[strategy(proptest::collection::vec(any::<u8>(), 33..1024))] bytes: Vec<u8>,
+        ) {
+            let big_int = BigUint::from_bytes_be(&bytes);
+            let radix10 = big_int.to_str_radix(10);
+
+            // doesn't crash
+            let _ = Bn254FieldElement::from_str(&radix10);
+        }
+
+        #[proptest]
+        fn valid_address_seeds(
+            #[strategy(proptest::collection::vec(any::<u8>(), 1..=32))] bytes: Vec<u8>,
+        ) {
+            let big_int = BigUint::from_bytes_be(&bytes);
+            let radix10 = big_int.to_str_radix(10);
+
+            let seed = Bn254FieldElement::from_str(&radix10).unwrap();
+            assert_eq!(radix10, seed.to_string());
+            // Ensure unpadded doesn't crash
+            seed.unpadded();
+        }
+    }
+
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -664,30 +694,6 @@ mod tests {
         let mut seed = Bn254FieldElement([1; 32]);
         seed.0[0] = 0;
         assert_eq!(seed.unpadded(), [1; 31].as_slice());
-    }
-
-    #[proptest]
-    fn dont_crash_on_large_inputs(
-        #[strategy(proptest::collection::vec(any::<u8>(), 33..1024))] bytes: Vec<u8>,
-    ) {
-        let big_int = BigUint::from_bytes_be(&bytes);
-        let radix10 = big_int.to_str_radix(10);
-
-        // doesn't crash
-        let _ = Bn254FieldElement::from_str(&radix10);
-    }
-
-    #[proptest]
-    fn valid_address_seeds(
-        #[strategy(proptest::collection::vec(any::<u8>(), 1..=32))] bytes: Vec<u8>,
-    ) {
-        let big_int = BigUint::from_bytes_be(&bytes);
-        let radix10 = big_int.to_str_radix(10);
-
-        let seed = Bn254FieldElement::from_str(&radix10).unwrap();
-        assert_eq!(radix10, seed.to_string());
-        // Ensure unpadded doesn't crash
-        seed.unpadded();
     }
 }
 

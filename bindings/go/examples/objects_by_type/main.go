@@ -15,7 +15,7 @@ func main() {
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
 	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType}, nil)
-	if err.(*iota_sdk.SdkFfiError) != nil {
+	if err != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}
 

@@ -138,7 +138,7 @@ kotlin: ## Build Kotlin bindings
 	@$(build_binding) \
 	cargo run --bin uniffi-bindgen -- generate --library "target/release/libiota_sdk_ffi$${LIB_EXT}" --language kotlin --out-dir bindings/kotlin/lib --no-format -c bindings/kotlin/uniffi.toml || exit $$?; \
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/kotlin/lib/
-	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 500 || exit $$?
+	@python3 bindings/kotlin/split_uniffi_interface.py --batch-size 600 || exit $$?
 	@mv bindings/kotlin/lib/iota_sdk/iota_sdk_ffi.kt bindings/kotlin/lib/iota_sdk/iota_sdk.kt
 
 .PHONY: python
@@ -325,7 +325,9 @@ example:
 
 .PHONY: examples
 examples: ## Run all Rust examples
-	@for example in $$(find crates/iota-sdk/examples -name "*.rs" -not -path "*/release/*" -exec basename {} .rs \;); do \
+	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
+	@# that require external services (e.g. PostgreSQL). Run those separately.
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 

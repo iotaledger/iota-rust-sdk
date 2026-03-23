@@ -3965,6 +3965,12 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -5290,15 +5296,17 @@ fun uniffi_iota_sdk_ffi_checksum_method_mergecoins_coin(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args(
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_movecall_arguments(
 ): Short
@@ -6254,11 +6262,13 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared(
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_movecall_new(
 ): Short
@@ -7818,18 +7828,10 @@ fun uniffi_iota_sdk_ffi_fn_clone_moveauthenticator(`ptr`: Pointer,uniffi_out_err
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_moveauthenticator(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(`moveAuthenticatorV1`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
-fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_moveauthenticatorbuilder(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -7838,6 +7840,22 @@ fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorbuilder_new(`accountId`:
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(`ptr`: Pointer,`client`: Pointer,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(`callArgs`: RustBuffer.ByValue,`typeArgs`: RustBuffer.ByValue,`objectToAuthenticate`: Pointer,`initialSharedVersion`: Long,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_clone_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_movecall(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9396,6 +9414,17 @@ fun uniffi_iota_sdk_ffi_fn_clone_usersignatureverifier(`ptr`: Pointer,uniffi_out
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_usersignatureverifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
+
+}
+
+internal interface UniffiLibBatch2 : Library {
+    companion object {
+        internal val INSTANCE: UniffiLibBatch2 by lazy {
+            val componentName = "iota_sdk_ffi"
+            loadIndirect<UniffiLibBatch2>(componentName)
+        }
+    }
+
 fun uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9596,17 +9625,6 @@ fun uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(uniffi_out_er
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
-
-}
-
-internal interface UniffiLibBatch2 : Library {
-    companion object {
-        internal val INSTANCE: UniffiLibBatch2 by lazy {
-            val componentName = "iota_sdk_ffi"
-            loadIndirect<UniffiLibBatch2>(componentName)
-        }
-    }
-
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_verify(`ptr`: Pointer,`message`: RustBuffer.ByValue,`authenticator`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Unit
 fun uniffi_iota_sdk_ffi_fn_method_zkloginverifier_with_jwks(`ptr`: Pointer,`jwks`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
@@ -12585,19 +12603,22 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_mergecoins_coins_to_merge() != 44350.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address() != 24164.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args() != 1111.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate() != 40516.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args() != 63576.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1() != 3713.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish() != 16948.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address() != 27475.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args() != 32545.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate() != 54331.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args() != 58370.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_movecall_arguments() != 17202.toShort()) {
@@ -14031,13 +14052,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movearg_u8_vec() != 4587.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable() != 19047.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared() != 5389.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1() != 64779.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new() != 1961.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable() != 32081.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared() != 22895.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411.toShort()) {
@@ -32969,13 +32993,7 @@ public object FfiConverterTypeMoveArg: FfiConverter<MoveArg, Pointer> {
  */
 public interface MoveAuthenticatorInterface {
     
-    fun `address`(): Address
-    
-    fun `callArgs`(): List<Input>
-    
-    fun `objectToAuthenticate`(): Input
-    
-    fun `typeArgs`(): List<TypeTag>
+    fun `asV1`(): MoveAuthenticatorV1
     
     companion object
 }
@@ -33068,47 +33086,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
         }
     }
 
-    override fun `address`(): Address {
-            return FfiConverterTypeAddress.lift(
+    override fun `asV1`(): MoveAuthenticatorV1 {
+            return FfiConverterTypeMoveAuthenticatorV1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `callArgs`(): List<Input> {
-            return FfiConverterSequenceTypeInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `objectToAuthenticate`(): Input {
-            return FfiConverterTypeInput.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(
-        it, _status)
-}
-    }
-    )
-    }
-    
-
-    override fun `typeArgs`(): List<TypeTag> {
-            return FfiConverterSequenceTypeTypeTag.lift(
-    callWithPointer {
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(
         it, _status)
 }
     }
@@ -33120,27 +33102,11 @@ open class MoveAuthenticator: Disposable, AutoCloseable, MoveAuthenticatorInterf
 
     
     companion object {
-        
-    /**
-     * Create a new move authenticator from an immutable object.
-     */ fun `newImmutable`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectReference): MoveAuthenticator {
+         fun `newV1`(`moveAuthenticatorV1`: MoveAuthenticatorV1): MoveAuthenticator {
             return FfiConverterTypeMoveAuthenticator.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(
-        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectReference.lower(`objectToAuthenticate`),_status)
-}
-    )
-    }
-    
-
-        
-    /**
-     * Create a new move authenticator from a shared object.
-     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticator {
-            return FfiConverterTypeMoveAuthenticator.lift(
-    uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(
-        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(
+        FfiConverterTypeMoveAuthenticatorV1.lower(`moveAuthenticatorV1`),_status)
 }
     )
     }
@@ -33437,6 +33403,317 @@ public object FfiConverterTypeMoveAuthenticatorBuilder: FfiConverter<MoveAuthent
     override fun allocationSize(value: MoveAuthenticatorBuilder) = 8UL
 
     override fun write(value: MoveAuthenticatorBuilder, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
+    }
+}
+
+
+// This template implements a class for working with a Rust struct via a Pointer/Arc<T>
+// to the live Rust struct on the other side of the FFI.
+//
+// Each instance implements core operations for working with the Rust `Arc<T>` and the
+// Kotlin Pointer to work with the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an instance is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so risks
+//     leaking the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
+//     is implemented to call the destructor when the Kotlin object becomes unreachable.
+//     This is done in a background thread. This is not a panacea, and client code should be aware that
+//      1. the thread may starve if some there are objects that have poorly performing
+//     `drop` methods or do significant work in their `drop` methods.
+//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
+//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// This makes a cleaner a better alternative to _not_ calling `destroy()` as
+// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
+// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
+// thread may be starved, and the app will leak memory.
+//
+// In this case, `destroy`ing manually may be a better solution.
+//
+// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
+// with Rust peers are reclaimed:
+//
+// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
+// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
+// 3. The memory is reclaimed when the process terminates.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+
+
+/**
+ * Version 1 of the [`MoveAuthenticator`].
+ */
+public interface MoveAuthenticatorV1Interface {
+    
+    fun `address`(): Address
+    
+    fun `callArgs`(): List<Input>
+    
+    fun `objectToAuthenticate`(): Input
+    
+    fun `typeArgs`(): List<TypeTag>
+    
+    companion object
+}
+
+/**
+ * Version 1 of the [`MoveAuthenticator`].
+ */
+open class MoveAuthenticatorV1: Disposable, AutoCloseable, MoveAuthenticatorV1Interface
+{
+
+    constructor(pointer: Pointer) {
+        this.pointer = pointer
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    /**
+     * This constructor can be used to instantiate a fake object. Only used for tests. Any
+     * attempt to actually use an object constructed this way will fail as there is no
+     * connected Rust object.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    constructor(noPointer: NoPointer) {
+        this.pointer = null
+        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(pointer))
+    }
+
+    protected val pointer: Pointer?
+    protected val cleanable: UniffiCleaner.Cleanable
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.uniffiClonePointer())
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                cleanable.clean()
+            }
+        }
+    }
+
+    // Use a static inner class instead of a closure so as not to accidentally
+    // capture `this` as part of the cleanable's action.
+    private class UniffiCleanAction(private val pointer: Pointer?) : Runnable {
+        override fun run() {
+            pointer?.let { ptr ->
+                uniffiRustCall { status ->
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(ptr, status)
+                }
+            }
+        }
+    }
+
+    fun uniffiClonePointer(): Pointer {
+        return uniffiRustCall() { status ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(pointer!!, status)
+        }
+    }
+
+    override fun `address`(): Address {
+            return FfiConverterTypeAddress.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `callArgs`(): List<Input> {
+            return FfiConverterSequenceTypeInput.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `objectToAuthenticate`(): Input {
+            return FfiConverterTypeInput.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    override fun `typeArgs`(): List<TypeTag> {
+            return FfiConverterSequenceTypeTypeTag.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(
+        it, _status)
+}
+    }
+    )
+    }
+    
+
+    
+
+    
+    companion object {
+        
+    /**
+     * Create a new move authenticator from an immutable object.
+     */ fun `newImmutable`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectReference): MoveAuthenticatorV1 {
+            return FfiConverterTypeMoveAuthenticatorV1.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectReference.lower(`objectToAuthenticate`),_status)
+}
+    )
+    }
+    
+
+        
+    /**
+     * Create a new move authenticator from a shared object.
+     */ fun `newShared`(`callArgs`: List<Input>, `typeArgs`: List<TypeTag>, `objectToAuthenticate`: ObjectId, `initialSharedVersion`: kotlin.ULong): MoveAuthenticatorV1 {
+            return FfiConverterTypeMoveAuthenticatorV1.lift(
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(
+        FfiConverterSequenceTypeInput.lower(`callArgs`),FfiConverterSequenceTypeTypeTag.lower(`typeArgs`),FfiConverterTypeObjectId.lower(`objectToAuthenticate`),FfiConverterULong.lower(`initialSharedVersion`),_status)
+}
+    )
+    }
+    
+
+        
+    }
+    
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveAuthenticatorV1: FfiConverter<MoveAuthenticatorV1, Pointer> {
+
+    override fun lower(value: MoveAuthenticatorV1): Pointer {
+        return value.uniffiClonePointer()
+    }
+
+    override fun lift(value: Pointer): MoveAuthenticatorV1 {
+        return MoveAuthenticatorV1(value)
+    }
+
+    override fun read(buf: ByteBuffer): MoveAuthenticatorV1 {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: MoveAuthenticatorV1) = 8UL
+
+    override fun write(value: MoveAuthenticatorV1, buf: ByteBuffer) {
         // The Rust code always expects pointers written as 8 bytes,
         // and will fail to compile if they don't fit.
         buf.putLong(Pointer.nativeValue(lower(value)))
@@ -55623,7 +55900,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
     constructor() :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_usersignatureverifier_new(
         _status)
 }
     )
@@ -55696,7 +55973,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeUserSignature.lower(`signature`),_status)
 }
     }
@@ -55707,7 +55984,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
             return FfiConverterTypeUserSignatureVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_with_zklogin_verifier(
         it, FfiConverterTypeZkloginVerifier.lower(`zkloginVerifier`),_status)
 }
     }
@@ -55719,7 +55996,7 @@ open class UserSignatureVerifier: Disposable, AutoCloseable, UserSignatureVerifi
             return FfiConverterOptionalTypeZkloginVerifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_usersignatureverifier_zklogin_verifier(
         it, _status)
 }
     }
@@ -55932,7 +56209,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
     constructor(`epoch`: kotlin.ULong, `signature`: Bls12381Signature, `bitmapBytes`: kotlin.ByteArray) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatoraggregatedsignature_new(
         FfiConverterULong.lower(`epoch`),FfiConverterTypeBls12381Signature.lower(`signature`),FfiConverterByteArray.lower(`bitmapBytes`),_status)
 }
     )
@@ -55988,7 +56265,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatoraggregatedsignature(ptr, status)
                 }
             }
         }
@@ -55996,7 +56273,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatoraggregatedsignature(pointer!!, status)
         }
     }
 
@@ -56005,7 +56282,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterByteArray.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_bitmap_bytes(
         it, _status)
 }
     }
@@ -56017,7 +56294,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_epoch(
         it, _status)
 }
     }
@@ -56029,7 +56306,7 @@ open class ValidatorAggregatedSignature: Disposable, AutoCloseable, ValidatorAgg
             return FfiConverterTypeBls12381Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatoraggregatedsignature_signature(
         it, _status)
 }
     }
@@ -56253,7 +56530,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureaggregator(ptr, status)
                 }
             }
         }
@@ -56261,7 +56538,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureaggregator(pointer!!, status)
         }
     }
 
@@ -56270,7 +56547,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_add_signature(
         it, FfiConverterTypeValidatorSignature.lower(`signature`),_status)
 }
     }
@@ -56281,7 +56558,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
             return FfiConverterTypeValidatorCommittee.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_committee(
         it, _status)
 }
     }
@@ -56294,7 +56571,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
             return FfiConverterTypeValidatorAggregatedSignature.lift(
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureaggregator_finish(
         it, _status)
 }
     }
@@ -56310,7 +56587,7 @@ open class ValidatorCommitteeSignatureAggregator: Disposable, AutoCloseable, Val
     @Throws(SdkFfiException::class) fun `newCheckpointSummary`(`committee`: ValidatorCommittee, `summary`: CheckpointSummary): ValidatorCommitteeSignatureAggregator {
             return FfiConverterTypeValidatorCommitteeSignatureAggregator.lift(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureaggregator_new_checkpoint_summary(
         FfiConverterTypeValidatorCommittee.lower(`committee`),FfiConverterTypeCheckpointSummary.lower(`summary`),_status)
 }
     )
@@ -56483,7 +56760,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
     constructor(`committee`: ValidatorCommittee) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorcommitteesignatureverifier_new(
         FfiConverterTypeValidatorCommittee.lower(`committee`),_status)
 }
     )
@@ -56539,7 +56816,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorcommitteesignatureverifier(ptr, status)
                 }
             }
         }
@@ -56547,7 +56824,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorcommitteesignatureverifier(pointer!!, status)
         }
     }
 
@@ -56555,7 +56832,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
             return FfiConverterTypeValidatorCommittee.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_committee(
         it, _status)
 }
     }
@@ -56568,7 +56845,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeValidatorSignature.lower(`signature`),_status)
 }
     }
@@ -56580,7 +56857,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_aggregated(
         it, FfiConverterByteArray.lower(`message`),FfiConverterTypeValidatorAggregatedSignature.lower(`signature`),_status)
 }
     }
@@ -56592,7 +56869,7 @@ open class ValidatorCommitteeSignatureVerifier: Disposable, AutoCloseable, Valid
         = 
     callWithPointer {
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorcommitteesignatureverifier_verify_checkpoint_summary(
         it, FfiConverterTypeCheckpointSummary.lower(`summary`),FfiConverterTypeValidatorAggregatedSignature.lower(`signature`),_status)
 }
     }
@@ -56790,7 +57067,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
     constructor(`validator`: Bls12381PublicKey, `duration`: java.time.Duration) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorexecutiontimeobservation_new(
         FfiConverterTypeBls12381PublicKey.lower(`validator`),FfiConverterDuration.lower(`duration`),_status)
 }
     )
@@ -56846,7 +57123,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorexecutiontimeobservation(ptr, status)
                 }
             }
         }
@@ -56854,7 +57131,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorexecutiontimeobservation(pointer!!, status)
         }
     }
 
@@ -56862,7 +57139,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
             return FfiConverterDuration.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_duration(
         it, _status)
 }
     }
@@ -56874,7 +57151,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
             return FfiConverterTypeBls12381PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_validator(
         it, _status)
 }
     }
@@ -56890,7 +57167,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_eq_eq(
         it, FfiConverterTypeValidatorExecutionTimeObservation.lower(`other`),_status)
 }
     }
@@ -56901,7 +57178,7 @@ open class ValidatorExecutionTimeObservation: Disposable, AutoCloseable, Validat
         return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorexecutiontimeobservation_uniffi_trait_hash(
         it, _status)
 }
     }
@@ -57099,7 +57376,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
     constructor(`epoch`: kotlin.ULong, `publicKey`: Bls12381PublicKey, `signature`: Bls12381Signature) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_validatorsignature_new(
         FfiConverterULong.lower(`epoch`),FfiConverterTypeBls12381PublicKey.lower(`publicKey`),FfiConverterTypeBls12381Signature.lower(`signature`),_status)
 }
     )
@@ -57155,7 +57432,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorsignature(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_validatorsignature(ptr, status)
                 }
             }
         }
@@ -57163,7 +57440,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_validatorsignature(pointer!!, status)
         }
     }
 
@@ -57171,7 +57448,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_epoch(
         it, _status)
 }
     }
@@ -57183,7 +57460,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterTypeBls12381PublicKey.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_public_key(
         it, _status)
 }
     }
@@ -57195,7 +57472,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
             return FfiConverterTypeBls12381Signature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_signature(
         it, _status)
 }
     }
@@ -57211,7 +57488,7 @@ open class ValidatorSignature: Disposable, AutoCloseable, ValidatorSignatureInte
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_validatorsignature_uniffi_trait_eq_eq(
         it, FfiConverterTypeValidatorSignature.lower(`other`),_status)
 }
     }
@@ -57404,7 +57681,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
     constructor(`objectId`: ObjectId, `version`: kotlin.ULong) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
         FfiConverterTypeObjectId.lower(`objectId`),FfiConverterULong.lower(`version`),_status)
 }
     )
@@ -57460,7 +57737,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_versionassignment(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_versionassignment(ptr, status)
                 }
             }
         }
@@ -57468,7 +57745,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_versionassignment(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_versionassignment(pointer!!, status)
         }
     }
 
@@ -57476,7 +57753,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
             return FfiConverterTypeObjectId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_object_id(
         it, _status)
 }
     }
@@ -57488,7 +57765,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_version(
         it, _status)
 }
     }
@@ -57504,7 +57781,7 @@ open class VersionAssignment: Disposable, AutoCloseable, VersionAssignmentInterf
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_versionassignment_uniffi_trait_eq_eq(
         it, FfiConverterTypeVersionAssignment.lower(`other`),_status)
 }
     }
@@ -57719,7 +57996,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
     constructor(`inputs`: ZkLoginInputs, `maxEpoch`: kotlin.ULong, `signature`: SimpleSignature) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginauthenticator_new(
         FfiConverterTypeZkLoginInputs.lower(`inputs`),FfiConverterULong.lower(`maxEpoch`),FfiConverterTypeSimpleSignature.lower(`signature`),_status)
 }
     )
@@ -57775,7 +58052,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginauthenticator(ptr, status)
                 }
             }
         }
@@ -57783,7 +58060,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginauthenticator(pointer!!, status)
         }
     }
 
@@ -57791,7 +58068,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterTypeZkLoginInputs.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_inputs(
         it, _status)
 }
     }
@@ -57803,7 +58080,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterULong.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_max_epoch(
         it, _status)
 }
     }
@@ -57815,7 +58092,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
             return FfiConverterTypeSimpleSignature.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_signature(
         it, _status)
 }
     }
@@ -57831,7 +58108,7 @@ open class ZkLoginAuthenticator: Disposable, AutoCloseable, ZkLoginAuthenticator
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginauthenticator_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginAuthenticator.lower(`other`),_status)
 }
     }
@@ -58042,7 +58319,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
     constructor(`proofPoints`: ZkLoginProof, `issBase64Details`: ZkLoginClaim, `headerBase64`: kotlin.String, `addressSeed`: Bn254FieldElement) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zklogininputs_new(
         FfiConverterTypeZkLoginProof.lower(`proofPoints`),FfiConverterTypeZkLoginClaim.lower(`issBase64Details`),FfiConverterString.lower(`headerBase64`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
 }
     )
@@ -58098,7 +58375,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zklogininputs(ptr, status)
                 }
             }
         }
@@ -58106,7 +58383,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zklogininputs(pointer!!, status)
         }
     }
 
@@ -58114,7 +58391,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeBn254FieldElement.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_address_seed(
         it, _status)
 }
     }
@@ -58126,7 +58403,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_header_base64(
         it, _status)
 }
     }
@@ -58138,7 +58415,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss(
         it, _status)
 }
     }
@@ -58150,7 +58427,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginClaim.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_iss_base64_details(
         it, _status)
 }
     }
@@ -58162,7 +58439,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeJwkId.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_jwk_id(
         it, _status)
 }
     }
@@ -58174,7 +58451,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginProof.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_proof_points(
         it, _status)
 }
     }
@@ -58186,7 +58463,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
             return FfiConverterTypeZkLoginPublicIdentifier.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_public_identifier(
         it, _status)
 }
     }
@@ -58202,7 +58479,7 @@ open class ZkLoginInputs: Disposable, AutoCloseable, ZkLoginInputsInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zklogininputs_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginInputs.lower(`other`),_status)
 }
     }
@@ -58397,7 +58674,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
     constructor(`a`: CircomG1, `b`: CircomG2, `c`: CircomG1) :
         this(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginproof_new(
         FfiConverterTypeCircomG1.lower(`a`),FfiConverterTypeCircomG2.lower(`b`),FfiConverterTypeCircomG1.lower(`c`),_status)
 }
     )
@@ -58453,7 +58730,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginproof(ptr, status)
                 }
             }
         }
@@ -58461,7 +58738,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginproof(pointer!!, status)
         }
     }
 
@@ -58469,7 +58746,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_a(
         it, _status)
 }
     }
@@ -58481,7 +58758,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG2.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_b(
         it, _status)
 }
     }
@@ -58493,7 +58770,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
             return FfiConverterTypeCircomG1.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_c(
         it, _status)
 }
     }
@@ -58509,7 +58786,7 @@ open class ZkLoginProof: Disposable, AutoCloseable, ZkLoginProofInterface
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginproof_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginProof.lower(`other`),_status)
 }
     }
@@ -58816,7 +59093,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
     constructor(`iss`: kotlin.String, `addressSeed`: Bn254FieldElement) :
         this(
     uniffiRustCallWithError(SdkFfiException) { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginpublicidentifier_new(
         FfiConverterString.lower(`iss`),FfiConverterTypeBn254FieldElement.lower(`addressSeed`),_status)
 }
     )
@@ -58872,7 +59149,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginpublicidentifier(ptr, status)
                 }
             }
         }
@@ -58880,7 +59157,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginpublicidentifier(pointer!!, status)
         }
     }
 
@@ -58888,7 +59165,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeBn254FieldElement.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_address_seed(
         it, _status)
 }
     }
@@ -58909,7 +59186,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterSequenceTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address(
         it, _status)
 }
     }
@@ -58929,7 +59206,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_padded(
         it, _status)
 }
     }
@@ -58950,7 +59227,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterTypeAddress.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_derive_address_unpadded(
         it, _status)
 }
     }
@@ -58962,7 +59239,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
             return FfiConverterString.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_iss(
         it, _status)
 }
     }
@@ -58978,7 +59255,7 @@ open class ZkLoginPublicIdentifier: Disposable, AutoCloseable, ZkLoginPublicIden
         return FfiConverterBoolean.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginpublicidentifier_uniffi_trait_eq_eq(
         it, FfiConverterTypeZkLoginPublicIdentifier.lower(`other`),_status)
 }
     }
@@ -59200,7 +59477,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
+                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_zkloginverifier(ptr, status)
                 }
             }
         }
@@ -59208,7 +59485,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
+            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_zkloginverifier(pointer!!, status)
         }
     }
 
@@ -59216,7 +59493,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
             return FfiConverterMapTypeJwkIdTypeJwk.lift(
     callWithPointer {
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_zkloginverifier_jwks(
         it, _status)
 }
     }
@@ -59259,7 +59536,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
      */ fun `newDev`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_dev(
         _status)
 }
     )
@@ -59269,7 +59546,7 @@ open class ZkloginVerifier: Disposable, AutoCloseable, ZkloginVerifierInterface
          fun `newMainnet`(): ZkloginVerifier {
             return FfiConverterTypeZkloginVerifier.lift(
     uniffiRustCall() { _status ->
-    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_zkloginverifier_new_mainnet(
         _status)
 }
     )
