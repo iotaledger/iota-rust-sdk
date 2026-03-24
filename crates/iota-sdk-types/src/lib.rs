@@ -161,7 +161,8 @@ pub use gas::GasCostSummary;
 pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
 pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
 pub use object::{
-    GenesisObject, MoveStruct, Object, ObjectData, ObjectReference, ObjectType, Owner,
+    GenesisObject, MoveObjectType, MoveStruct, Object, ObjectData, ObjectReference, ObjectType,
+    Owner,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
