@@ -28,23 +28,31 @@ runs:
         GH_TOKEN: ${{ github.token }}
       run: |
         # Uncomment when using a nightly build
-        # nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --event schedule --branch develop --limit 1 --json startedAt --json databaseId -q '.[0]')
-        # database_id=$(echo $nightly | jq '.databaseId')
-        # started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
-        # gh run download --repo iotaledger/iota $database_id -n "iota-nightly-$started_at-linux-x86_64"
-        # tar -zxvf "iota-nightly-$started_at-linux-x86_64.tgz" ./iota
+        nightly=$(gh run list --repo iotaledger/iota --workflow release.yml --status success --branch develop --limit 1 --json startedAt,databaseId,event -q '[.[] | select(.event == "schedule" or .event == "workflow_dispatch")] | first')
+        database_id=$(echo $nightly | jq '.databaseId')
+        event=$(echo $nightly | jq -r '.event')
+        if [ "$event" = "workflow_dispatch" ]; then
+          artifact_name="iota-develop-linux-x86_64"
+        else
+          started_at=$(echo $nightly | jq -r '.startedAt' | cut -dT -f1)
+          artifact_name="iota-nightly-$started_at-linux-x86_64"
+        fi
+        gh run download --repo iotaledger/iota $database_id -n "$artifact_name"
+        tar -zxvf "$artifact_name.tgz" ./iota
+        tar -zxvf "$artifact_name.tgz" ./iota-localnet
 
         # Uncomment when using a released build
-        ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
-        download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
-        echo "Downloading binary from $download_url"
-        wget -q $download_url -O iota.tgz
-        tar -zxvf iota.tgz ./iota
+        # ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+        # download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
+        # echo "Downloading binary from $download_url"
+        # wget -q $download_url -O iota.tgz
+        # tar -zxvf iota.tgz ./iota
 
         chmod +x ./iota
+        chmod +x ./iota-localnet
         echo "Starting local network with a faucet, an indexer (port 5432) and GraphQL. Epoch duration is set to $EPOCH_DURATION_MS ms"
         echo "$(pwd)" >> $GITHUB_PATH
-        ./iota start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
+        ./iota-localnet start --force-regenesis --with-faucet --with-indexer --with-graphql --pg-port 5432 --pg-db-name iota_indexer_v2 --epoch-duration-ms $EPOCH_DURATION_MS &
         sleep $((EPOCH_DURATION_MS / 1000)) # wait for the first epoch to end
 
     - name: Start gas station and request faucet coins
