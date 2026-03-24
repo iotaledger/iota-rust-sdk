@@ -689,6 +689,17 @@ fileprivate struct FfiConverterDuration: FfiConverterRustBuffer {
  */
 public protocol AddressProtocol: AnyObject, Sendable {
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    func nextLexicographical()  -> Address
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    func nextLexicographicalOpt()  -> Address?
+    
     func toBytes()  -> Data
     
     /**
@@ -697,13 +708,29 @@ public protocol AddressProtocol: AnyObject, Sendable {
      */
     func toCanonicalString(withPrefix: Bool)  -> String
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
     func toHex()  -> String
+    
+    /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+    func toRawHex()  -> String
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+    func toRawShortHex()  -> String
     
     /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-    func toShortString(withPrefix: Bool)  -> String
+    func toShortHex()  -> String
     
 }
 /**
@@ -798,6 +825,27 @@ open class Address: AddressProtocol, @unchecked Sendable {
     }
 
     
+public static func authenticatorState() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_authenticator_state($0
+    )
+})
+}
+    
+public static func clock() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_clock($0
+    )
+})
+}
+    
+public static func denyList() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_deny_list($0
+    )
+})
+}
+    
 public static func framework() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_address_framework($0
@@ -814,9 +862,9 @@ public static func fromBytes(bytes: Data)throws  -> Address  {
 }
     
     /**
-     * Parses an Address from a hex string, with or without a `0x` prefix.
-     * The string can be of variable length; if it's shorter than 64 hex
-     * characters, it will be left-padded with `0`s.
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
      */
 public static func fromHex(hex: String)throws  -> Address  {
     return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
@@ -826,9 +874,83 @@ public static func fromHex(hex: String)throws  -> Address  {
 })
 }
     
-public static func generate() -> Address  {
+    /**
+     * Parses an Address from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+public static func fromPrefixedHex(hex: String)throws  -> Address  {
+    return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an Address from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromPrefixedShortHex(hex: String)throws  -> Address  {
+    return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_address_from_prefixed_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an Address from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromShortHex(hex: String)throws  -> Address  {
+    return try  FfiConverterTypeAddress_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_address_from_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+public static func genesisBridge() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_address_generate($0
+    uniffi_iota_sdk_ffi_fn_constructor_address_genesis_bridge($0
+    )
+})
+}
+    
+public static func genesisIotaBridge() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_genesis_iota_bridge($0
+    )
+})
+}
+    
+public static func max() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_max($0
+    )
+})
+}
+    
+public static func random() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_random($0
+    )
+})
+}
+    
+public static func randomnessState() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_randomness_state($0
+    )
+})
+}
+    
+public static func stardust() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_stardust($0
     )
 })
 }
@@ -847,6 +969,13 @@ public static func system() -> Address  {
 })
 }
     
+public static func systemState() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_address_system_state($0
+    )
+})
+}
+    
 public static func zero() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_address_zero($0
@@ -855,6 +984,27 @@ public static func zero() -> Address  {
 }
     
 
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+open func nextLexicographical() -> Address  {
+    return try!  FfiConverterTypeAddress_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+open func nextLexicographicalOpt() -> Address?  {
+    return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_next_lexicographical_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
     
 open func toBytes() -> Data  {
     return try!  FfiConverterData.lift(try! rustCall() {
@@ -875,6 +1025,10 @@ open func toCanonicalString(withPrefix: Bool) -> String  {
 })
 }
     
+    /**
+     * Returns the string representation of this address in hex format with
+     * `0x` prefix.
+     */
 open func toHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_address_to_hex(self.uniffiClonePointer(),$0
@@ -883,13 +1037,34 @@ open func toHex() -> String  {
 }
     
     /**
+     * Returns the string representation of this address in hex format without
+     * `0x` prefix.
+     */
+open func toRawHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_to_raw_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the shortest possible string representation of the address (i.e.
+     * with leading zeroes trimmed), without `0x` prefix.
+     */
+open func toRawShortHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_address_to_raw_short_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Returns the shortest possible string representation of the address (i.e.
      * with leading zeroes trimmed).
      */
-open func toShortString(withPrefix: Bool) -> String  {
+open func toShortHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_address_to_short_string(self.uniffiClonePointer(),
-        FfiConverterBool.lower(withPrefix),$0
+    uniffi_iota_sdk_ffi_fn_method_address_to_short_hex(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -5765,9 +5940,32 @@ public func FfiConverterTypeConsensusDeterminedVersionAssignments_lower(_ value:
 public protocol DigestProtocol: AnyObject, Sendable {
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+    func isObjectAlive()  -> Bool
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+    func isObjectDeleted()  -> Bool
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+    func isObjectWrapped()  -> Bool
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
     func nextLexicographical()  -> Digest
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    func nextLexicographicalOpt()  -> Digest?
     
     func toBase58()  -> String
     
@@ -5856,9 +6054,9 @@ public static func fromBytes(bytes: Data)throws  -> Digest  {
 })
 }
     
-public static func generate() -> Digest  {
+public static func random() -> Digest  {
     return try!  FfiConverterTypeDigest_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_digest_generate($0
+    uniffi_iota_sdk_ffi_fn_constructor_digest_random($0
     )
 })
 }
@@ -5866,11 +6064,54 @@ public static func generate() -> Digest  {
 
     
     /**
+     * Returns whether the digest represents an object that is neither deleted
+     * nor wrapped
+     */
+open func isObjectAlive() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_is_object_alive(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns whether the digest represents a deleted object
+     */
+open func isObjectDeleted() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_is_object_deleted(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns whether the digest represents an object wrapped in another
+     * object.
+     */
+open func isObjectWrapped() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_is_object_wrapped(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Returns the next digest in byte-increasing order.
      */
 open func nextLexicographical() -> Digest  {
     return try!  FfiConverterTypeDigest_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+open func nextLexicographicalOpt() -> Digest?  {
+    return try!  FfiConverterOptionTypeDigest.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_digest_next_lexicographical_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -7672,7 +7913,7 @@ public protocol GenesisObjectProtocol: AnyObject, Sendable {
     
     func owner()  -> Owner
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -7778,8 +8019,8 @@ open func owner() -> Owner  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_genesisobject_version(self.uniffiClonePointer(),$0
     )
 })
@@ -8231,7 +8472,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    func moveObjectContents(objectId: ObjectId, version: UInt64?) async throws  -> Value?
+    func moveObjectContents(objectId: ObjectId, version: Version?) async throws  -> Value?
     
     /**
      * Return the BCS of an object that is a Move object.
@@ -8240,7 +8481,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    func moveObjectContentsBcs(objectId: ObjectId, version: UInt64?) async throws  -> Data?
+    func moveObjectContentsBcs(objectId: ObjectId, version: Version?) async throws  -> Data?
     
     /**
      * Execute a Move View Function.
@@ -8301,12 +8542,12 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-    func normalizedMoveFunction(package: Address, module: String, function: String, version: UInt64?) async throws  -> MoveFunction?
+    func normalizedMoveFunction(package: Address, module: String, function: String, version: Version?) async throws  -> MoveFunction?
     
     /**
      * Return the normalized Move module data for the provided module.
      */
-    func normalizedMoveModule(package: Address, module: String, version: UInt64?, paginationFilterEnums: PaginationFilter?, paginationFilterFriends: PaginationFilter?, paginationFilterFunctions: PaginationFilter?, paginationFilterStructs: PaginationFilter?) async throws  -> MoveModule?
+    func normalizedMoveModule(package: Address, module: String, version: Version?, paginationFilterEnums: PaginationFilter?, paginationFilterFriends: PaginationFilter?, paginationFilterFunctions: PaginationFilter?, paginationFilterStructs: PaginationFilter?) async throws  -> MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -8315,7 +8556,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-    func object(objectId: ObjectId, version: UInt64?) async throws  -> Object?
+    func object(objectId: ObjectId, version: Version?) async throws  -> Object?
     
     /**
      * Return the object's bcs content `Vec<u8>` based on the provided
@@ -8344,7 +8585,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-    func package(address: Address, version: UInt64?) async throws  -> MovePackage?
+    func package(address: Address, version: Version?) async throws  -> MovePackage?
     
     /**
      * Fetch the latest version of the package at address.
@@ -8358,7 +8599,7 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-    func packageVersions(address: Address, afterVersion: UInt64?, beforeVersion: UInt64?, paginationFilter: PaginationFilter?) async throws  -> MovePackagePage
+    func packageVersions(address: Address, afterVersion: Version?, beforeVersion: Version?, paginationFilter: PaginationFilter?) async throws  -> MovePackagePage
     
     /**
      * The Move packages that exist in the network, optionally filtered to be
@@ -9132,13 +9373,13 @@ open func maxPageSize()async throws  -> Int32  {
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-open func moveObjectContents(objectId: ObjectId, version: UInt64? = nil)async throws  -> Value?  {
+open func moveObjectContents(objectId: ObjectId, version: Version? = nil)async throws  -> Value?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9156,13 +9397,13 @@ open func moveObjectContents(objectId: ObjectId, version: UInt64? = nil)async th
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-open func moveObjectContentsBcs(objectId: ObjectId, version: UInt64? = nil)async throws  -> Data?  {
+open func moveObjectContentsBcs(objectId: ObjectId, version: Version? = nil)async throws  -> Data?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9262,13 +9503,13 @@ open func moveViewCallJson(functionName: String, typeArguments: [String]? = nil,
      * Return the normalized Move function data for the provided package,
      * module, and function.
      */
-open func normalizedMoveFunction(package: Address, module: String, function: String, version: UInt64? = nil)async throws  -> MoveFunction?  {
+open func normalizedMoveFunction(package: Address, module: String, function: String, version: Version? = nil)async throws  -> MoveFunction?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterString.lower(function),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterString.lower(function),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9282,13 +9523,13 @@ open func normalizedMoveFunction(package: Address, module: String, function: Str
     /**
      * Return the normalized Move module data for the provided module.
      */
-open func normalizedMoveModule(package: Address, module: String, version: UInt64? = nil, paginationFilterEnums: PaginationFilter? = nil, paginationFilterFriends: PaginationFilter? = nil, paginationFilterFunctions: PaginationFilter? = nil, paginationFilterStructs: PaginationFilter? = nil)async throws  -> MoveModule?  {
+open func normalizedMoveModule(package: Address, module: String, version: Version? = nil, paginationFilterEnums: PaginationFilter? = nil, paginationFilterFriends: PaginationFilter? = nil, paginationFilterFunctions: PaginationFilter? = nil, paginationFilterStructs: PaginationFilter? = nil)async throws  -> MoveModule?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterOptionUInt64.lower(version),FfiConverterOptionTypePaginationFilter.lower(paginationFilterEnums),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFriends),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFunctions),FfiConverterOptionTypePaginationFilter.lower(paginationFilterStructs)
+                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterOptionTypeVersion.lower(version),FfiConverterOptionTypePaginationFilter.lower(paginationFilterEnums),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFriends),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFunctions),FfiConverterOptionTypePaginationFilter.lower(paginationFilterStructs)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9306,13 +9547,13 @@ open func normalizedMoveModule(package: Address, module: String, version: UInt64
      * `Ok(None)`. Similarly, if this is not an object but an address, it
      * will return `Ok(None)`.
      */
-open func object(objectId: ObjectId, version: UInt64? = nil)async throws  -> Object?  {
+open func object(objectId: ObjectId, version: Version? = nil)async throws  -> Object?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeObjectId_lower(objectId),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9380,13 +9621,13 @@ open func objects(filter: ObjectFilter? = nil, paginationFilter: PaginationFilte
      * Note that this interpretation of version is different from a historical
      * object read (the interpretation of version for the object query).
      */
-open func package(address: Address, version: UInt64? = nil)async throws  -> MovePackage?  {
+open func package(address: Address, version: Version? = nil)async throws  -> MovePackage?  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_package(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(address),FfiConverterOptionUInt64.lower(version)
+                    FfiConverterTypeAddress_lower(address),FfiConverterOptionTypeVersion.lower(version)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9424,13 +9665,13 @@ open func packageLatest(address: Address)async throws  -> MovePackage?  {
      * package's original ID), optionally bounding the versions exclusively
      * from below with afterVersion, or from above with beforeVersion.
      */
-open func packageVersions(address: Address, afterVersion: UInt64? = nil, beforeVersion: UInt64? = nil, paginationFilter: PaginationFilter? = nil)async throws  -> MovePackagePage  {
+open func packageVersions(address: Address, afterVersion: Version? = nil, beforeVersion: Version? = nil, paginationFilter: PaginationFilter? = nil)async throws  -> MovePackagePage  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_iota_sdk_ffi_fn_method_graphqlclient_package_versions(
                     self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(address),FfiConverterOptionUInt64.lower(afterVersion),FfiConverterOptionUInt64.lower(beforeVersion),FfiConverterOptionTypePaginationFilter.lower(paginationFilter)
+                    FfiConverterTypeAddress_lower(address),FfiConverterOptionTypeVersion.lower(afterVersion),FfiConverterOptionTypeVersion.lower(beforeVersion),FfiConverterOptionTypePaginationFilter.lower(paginationFilter)
                 )
             },
             pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
@@ -9950,6 +10191,482 @@ public convenience init(identifier: String)throws  {
     }
 
     
+public static func addressKey() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_address_key($0
+    )
+})
+}
+    
+public static func asciiModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_ascii_module($0
+    )
+})
+}
+    
+public static func authenticatorState() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state($0
+    )
+})
+}
+    
+public static func authenticatorStateModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_authenticator_state_module($0
+    )
+})
+}
+    
+public static func bag() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_bag($0
+    )
+})
+}
+    
+public static func bagModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_bag_module($0
+    )
+})
+}
+    
+public static func balance() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_balance($0
+    )
+})
+}
+    
+public static func balanceModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_balance_module($0
+    )
+})
+}
+    
+public static func clock() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_clock($0
+    )
+})
+}
+    
+public static func clockModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_clock_module($0
+    )
+})
+}
+    
+public static func coin() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin($0
+    )
+})
+}
+    
+public static func coinManager() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager($0
+    )
+})
+}
+    
+public static func coinManagerModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_manager_module($0
+    )
+})
+}
+    
+public static func coinMetadata() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_metadata($0
+    )
+})
+}
+    
+public static func coinModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_coin_module($0
+    )
+})
+}
+    
+public static func config() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_config($0
+    )
+})
+}
+    
+public static func configKey() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_config_key($0
+    )
+})
+}
+    
+public static func configModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_config_module($0
+    )
+})
+}
+    
+public static func denyListModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_deny_list_module($0
+    )
+})
+}
+    
+public static func displayCreated() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_display_created($0
+    )
+})
+}
+    
+public static func displayModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_display_module($0
+    )
+})
+}
+    
+public static func dynamicFieldModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_field_module($0
+    )
+})
+}
+    
+public static func dynamicObjectFieldModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_dynamic_object_field_module($0
+    )
+})
+}
+    
+public static func field() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_field($0
+    )
+})
+}
+    
+public static func globalPauseKey() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_global_pause_key($0
+    )
+})
+}
+    
+public static func id() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_id($0
+    )
+})
+}
+    
+public static func iota() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota($0
+    )
+})
+}
+    
+public static func iotaModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_module($0
+    )
+})
+}
+    
+public static func iotaSystemAdminCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_admin_cap($0
+    )
+})
+}
+    
+public static func iotaSystemModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_module($0
+    )
+})
+}
+    
+public static func iotaSystemState() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state($0
+    )
+})
+}
+    
+public static func iotaSystemStateInnerModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_system_state_inner_module($0
+    )
+})
+}
+    
+public static func iotaTreasuryCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_iota_treasury_cap($0
+    )
+})
+}
+    
+public static func name() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_name($0
+    )
+})
+}
+    
+public static func nameModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_name_module($0
+    )
+})
+}
+    
+public static func objectBag() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag($0
+    )
+})
+}
+    
+public static func objectBagModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_object_bag_module($0
+    )
+})
+}
+    
+public static func objectModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_object_module($0
+    )
+})
+}
+    
+public static func option() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_option($0
+    )
+})
+}
+    
+public static func optionModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_option_module($0
+    )
+})
+}
+    
+public static func packageModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_package_module($0
+    )
+})
+}
+    
+public static func payModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_pay_module($0
+    )
+})
+}
+    
+public static func random() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_random($0
+    )
+})
+}
+    
+public static func randomModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_random_module($0
+    )
+})
+}
+    
+public static func receiving() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_receiving($0
+    )
+})
+}
+    
+public static func setting() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_setting($0
+    )
+})
+}
+    
+public static func stakedIota() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_staked_iota($0
+    )
+})
+}
+    
+public static func stakingPoolModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_staking_pool_module($0
+    )
+})
+}
+    
+public static func string() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_string($0
+    )
+})
+}
+    
+public static func stringModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_string_module($0
+    )
+})
+}
+    
+public static func systemAdminCapModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_system_admin_cap_module($0
+    )
+})
+}
+    
+public static func systemEpochInfoEvent() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_system_epoch_info_event($0
+    )
+})
+}
+    
+public static func timeLock() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_time_lock($0
+    )
+})
+}
+    
+public static func timelockModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_timelock_module($0
+    )
+})
+}
+    
+public static func timelockedStakedIota() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staked_iota($0
+    )
+})
+}
+    
+public static func timelockedStakingModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_timelocked_staking_module($0
+    )
+})
+}
+    
+public static func transferModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_transfer_module($0
+    )
+})
+}
+    
+public static func treasuryCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_treasury_cap($0
+    )
+})
+}
+    
+public static func txContext() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context($0
+    )
+})
+}
+    
+public static func txContextModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_tx_context_module($0
+    )
+})
+}
+    
+public static func uid() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_uid($0
+    )
+})
+}
+    
+public static func upgradeCap() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_cap($0
+    )
+})
+}
+    
+public static func upgradeReceipt() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_receipt($0
+    )
+})
+}
+    
+public static func upgradeTicket() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_upgrade_ticket($0
+    )
+})
+}
+    
+public static func urlModule() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_url_module($0
+    )
+})
+}
+    
+public static func urlType() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_url_type($0
+    )
+})
+}
+    
+public static func versionUpdated() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_version_updated($0
+    )
+})
+}
+    
+public static func wrapper() -> Identifier  {
+    return try!  FfiConverterTypeIdentifier_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_identifier_wrapper($0
+    )
+})
+}
+    
 
     
 open func asStr() -> String  {
@@ -10178,11 +10895,11 @@ public static func newReceiving(objectRef: ObjectReference) -> Input  {
     /**
      * A move object whose owner is "Shared"
      */
-public static func newShared(objectId: ObjectId, initialSharedVersion: UInt64, mutable: Bool) -> Input  {
+public static func newShared(objectId: ObjectId, initialSharedVersion: Version, mutable: Bool) -> Input  {
     return try!  FfiConverterTypeInput_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_input_new_shared(
         FfiConverterTypeObjectId_lower(objectId),
-        FfiConverterUInt64.lower(initialSharedVersion),
+        FfiConverterTypeVersion_lower(initialSharedVersion),
         FfiConverterBool.lower(mutable),$0
     )
 })
@@ -11048,6 +11765,14 @@ public static func address(address: Address) -> MoveArg  {
 public static func addressFromHex(hex: String)throws  -> MoveArg  {
     return try  FfiConverterTypeMoveArg_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+public static func addressFromShortHex(hex: String)throws  -> MoveArg  {
+    return try  FfiConverterTypeMoveArg_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_movearg_address_from_short_hex(
         FfiConverterString.lower(hex),$0
     )
 })
@@ -12242,7 +12967,7 @@ public protocol MovePackageProtocol: AnyObject, Sendable {
     
     func typeOriginTable()  -> [TypeOrigin]
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -12299,12 +13024,12 @@ open class MovePackage: MovePackageProtocol, @unchecked Sendable {
     public func uniffiClonePointer() -> UnsafeMutableRawPointer {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_movepackage(self.pointer, $0) }
     }
-public convenience init(id: ObjectId, version: UInt64, modules: [Identifier: Data], typeOriginTable: [TypeOrigin], linkageTable: [ObjectId: UpgradeInfo])throws  {
+public convenience init(id: ObjectId, version: Version, modules: [Identifier: Data], typeOriginTable: [TypeOrigin], linkageTable: [ObjectId: UpgradeInfo])throws  {
     let pointer =
         try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_movepackage_new(
         FfiConverterTypeObjectId_lower(id),
-        FfiConverterUInt64.lower(version),
+        FfiConverterTypeVersion_lower(version),
         FfiConverterDictionaryTypeIdentifierData.lower(modules),
         FfiConverterSequenceTypeTypeOrigin.lower(typeOriginTable),
         FfiConverterDictionaryTypeObjectIdTypeUpgradeInfo.lower(linkageTable),$0
@@ -12352,8 +13077,8 @@ open func typeOriginTable() -> [TypeOrigin]  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_movepackage_version(self.uniffiClonePointer(),$0
     )
 })
@@ -15113,7 +15838,7 @@ public protocol ObjectProtocol: AnyObject, Sendable {
     /**
      * Return this object's version
      */
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -15318,8 +16043,8 @@ open func storageRebate() -> UInt64  {
     /**
      * Return this object's version
      */
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_object_version(self.uniffiClonePointer(),$0
     )
 })
@@ -15683,6 +16408,17 @@ public protocol ObjectIdProtocol: AnyObject, Sendable {
      */
     func deriveDynamicChildId(keyTypeTag: TypeTag, keyBytes: Data)  -> ObjectId
     
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+    func nextLexicographical()  -> ObjectId
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+    func nextLexicographicalOpt()  -> ObjectId?
+    
     func toAddress()  -> Address
     
     func toBytes()  -> Data
@@ -15693,13 +16429,29 @@ public protocol ObjectIdProtocol: AnyObject, Sendable {
      */
     func toCanonicalString(withPrefix: Bool)  -> String
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
     func toHex()  -> String
+    
+    /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+    func toRawHex()  -> String
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+    func toRawShortHex()  -> String
     
     /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-    func toShortString(withPrefix: Bool)  -> String
+    func toShortHex()  -> String
     
 }
 /**
@@ -15772,9 +16524,23 @@ open class ObjectId: ObjectIdProtocol, @unchecked Sendable {
     }
 
     
+public static func authenticatorState() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_authenticator_state($0
+    )
+})
+}
+    
 public static func clock() -> ObjectId  {
     return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_clock($0
+    )
+})
+}
+    
+public static func denyList() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_deny_list($0
     )
 })
 }
@@ -15792,6 +16558,13 @@ public static func deriveId(digest: Digest, count: UInt64) -> ObjectId  {
 })
 }
     
+public static func framework() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_framework($0
+    )
+})
+}
+    
 public static func fromBytes(bytes: Data)throws  -> ObjectId  {
     return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_from_bytes(
@@ -15800,6 +16573,11 @@ public static func fromBytes(bytes: Data)throws  -> ObjectId  {
 })
 }
     
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with or without a `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
 public static func fromHex(hex: String)throws  -> ObjectId  {
     return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_from_hex(
@@ -15808,9 +16586,97 @@ public static func fromHex(hex: String)throws  -> ObjectId  {
 })
 }
     
+    /**
+     * Parses an ObjectId from a full-length hex string (64 hex characters),
+     * with a mandatory `0x` prefix. Will return an error if the string is not
+     * exactly 64 hex characters long (excluding the `0x` prefix).
+     */
+public static func fromPrefixedHex(hex: String)throws  -> ObjectId  {
+    return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an ObjectId from a hex string with a mandatory `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromPrefixedShortHex(hex: String)throws  -> ObjectId  {
+    return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_from_prefixed_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+    /**
+     * Parses an ObjectId from a hex string, with or without a `0x` prefix.
+     * The string can be of variable length; if it's shorter than 64 hex
+     * characters, it will be left-padded with `0`s.
+     */
+public static func fromShortHex(hex: String)throws  -> ObjectId  {
+    return try  FfiConverterTypeObjectId_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_from_short_hex(
+        FfiConverterString.lower(hex),$0
+    )
+})
+}
+    
+public static func genesisBridge() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_bridge($0
+    )
+})
+}
+    
+public static func genesisIotaBridge() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_genesis_iota_bridge($0
+    )
+})
+}
+    
+public static func max() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_max($0
+    )
+})
+}
+    
+public static func randomnessState() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_randomness_state($0
+    )
+})
+}
+    
+public static func stardust() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_stardust($0
+    )
+})
+}
+    
+public static func std() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_std($0
+    )
+})
+}
+    
 public static func system() -> ObjectId  {
     return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_objectid_system($0
+    )
+})
+}
+    
+public static func systemState() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_objectid_system_state($0
     )
 })
 }
@@ -15834,6 +16700,27 @@ open func deriveDynamicChildId(keyTypeTag: TypeTag, keyBytes: Data) -> ObjectId 
     uniffi_iota_sdk_ffi_fn_method_objectid_derive_dynamic_child_id(self.uniffiClonePointer(),
         FfiConverterTypeTypeTag_lower(keyTypeTag),
         FfiConverterData.lower(keyBytes),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order.
+     */
+open func nextLexicographical() -> ObjectId  {
+    return try!  FfiConverterTypeObjectId_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next digest in byte-increasing order, or `None` if the
+     * result would overflow.
+     */
+open func nextLexicographicalOpt() -> ObjectId?  {
+    return try!  FfiConverterOptionTypeObjectId.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_next_lexicographical_opt(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -15864,6 +16751,10 @@ open func toCanonicalString(withPrefix: Bool) -> String  {
 })
 }
     
+    /**
+     * Returns the string representation of this object id in hex format with
+     * `0x` prefix.
+     */
 open func toHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_objectid_to_hex(self.uniffiClonePointer(),$0
@@ -15872,13 +16763,34 @@ open func toHex() -> String  {
 }
     
     /**
+     * Returns the string representation of this object id in hex format
+     * without `0x` prefix.
+     */
+open func toRawHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the shortest possible string representation of the object id
+     * (i.e. with leading zeroes trimmed), without `0x` prefix.
+     */
+open func toRawShortHex() -> String  {
+    return try!  FfiConverterString.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_objectid_to_raw_short_hex(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
      * Returns the shortest possible string representation of the object ID
      * (i.e. with leading zeroes trimmed).
      */
-open func toShortString(withPrefix: Bool) -> String  {
+open func toShortHex() -> String  {
     return try!  FfiConverterString.lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_method_objectid_to_short_string(self.uniffiClonePointer(),
-        FfiConverterBool.lower(withPrefix),$0
+    uniffi_iota_sdk_ffi_fn_method_objectid_to_short_hex(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -16195,6 +17107,12 @@ public func FfiConverterTypeObjectType_lower(_ value: ObjectType) -> UnsafeMutab
  */
 public protocol OwnerProtocol: AnyObject, Sendable {
     
+    /**
+     * Returns an address if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */
+    func address()  -> Address?
+    
     func asAddress()  -> Address
     
     func asAddressOpt()  -> Address?
@@ -16203,9 +17121,9 @@ public protocol OwnerProtocol: AnyObject, Sendable {
     
     func asObjectOpt()  -> ObjectId?
     
-    func asShared()  -> UInt64
+    func asShared()  -> Version
     
-    func asSharedOpt()  -> UInt64?
+    func asSharedOpt()  -> Version?
     
     func isAddress()  -> Bool
     
@@ -16305,15 +17223,26 @@ public static func newObject(id: ObjectId) -> Owner  {
 })
 }
     
-public static func newShared(version: UInt64) -> Owner  {
+public static func newShared(version: Version) -> Owner  {
     return try!  FfiConverterTypeOwner_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_owner_new_shared(
-        FfiConverterUInt64.lower(version),$0
+        FfiConverterTypeVersion_lower(version),$0
     )
 })
 }
     
 
+    
+    /**
+     * Returns an address if this object is owned by an address or
+     * object, and None if it is shared or immutable.
+     */
+open func address() -> Address?  {
+    return try!  FfiConverterOptionTypeAddress.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_owner_address(self.uniffiClonePointer(),$0
+    )
+})
+}
     
 open func asAddress() -> Address  {
     return try!  FfiConverterTypeAddress_lift(try! rustCall() {
@@ -16343,15 +17272,15 @@ open func asObjectOpt() -> ObjectId?  {
 })
 }
     
-open func asShared() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func asShared() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared(self.uniffiClonePointer(),$0
     )
 })
 }
     
-open func asSharedOpt() -> UInt64?  {
-    return try!  FfiConverterOptionUInt64.lift(try! rustCall() {
+open func asSharedOpt() -> Version?  {
+    return try!  FfiConverterOptionTypeVersion.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_owner_as_shared_opt(self.uniffiClonePointer(),$0
     )
 })
@@ -21726,14 +22655,99 @@ public protocol StructTagProtocol: AnyObject, Sendable {
     func address()  -> Address
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
     func coinType()  -> TypeTag
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
     func coinTypeOpt()  -> TypeTag?
+    
+    func isAsciiString()  -> Bool
+    
+    func isAuthenticatorState()  -> Bool
+    
+    func isBag()  -> Bool
+    
+    func isBalance()  -> Bool
+    
+    func isClock()  -> Bool
+    
+    func isCoin()  -> Bool
+    
+    func isCoinManager()  -> Bool
+    
+    func isCoinMetadata()  -> Bool
+    
+    func isConfig()  -> Bool
+    
+    func isConfigSetting()  -> Bool
+    
+    func isDenyListAddressKey()  -> Bool
+    
+    func isDenyListConfigKey()  -> Bool
+    
+    func isDenyListGlobalPauseKey()  -> Bool
+    
+    func isDisplayCreated()  -> Bool
+    
+    func isDisplayVersionUpdated()  -> Bool
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+    func isDynamicField()  -> Bool
+    
+    func isDynamicObjectFieldWrapper()  -> Bool
+    
+    func isGas()  -> Bool
+    
+    func isGasCoin()  -> Bool
+    
+    func isId()  -> Bool
+    
+    func isIotaSystemAdminCap()  -> Bool
+    
+    func isIotaSystemState()  -> Bool
+    
+    func isIotaTreasuryCap()  -> Bool
+    
+    func isName()  -> Bool
+    
+    func isObjectBag()  -> Bool
+    
+    func isOption()  -> Bool
+    
+    func isRandom()  -> Bool
+    
+    func isStakedIota()  -> Bool
+    
+    func isString()  -> Bool
+    
+    func isSystemEpochInfoEvent()  -> Bool
+    
+    func isTimeLock()  -> Bool
+    
+    func isTimelockedStakedIota()  -> Bool
+    
+    func isTransferReceiving()  -> Bool
+    
+    func isTreasuryCap()  -> Bool
+    
+    func isTxContext()  -> Bool
+    
+    func isUid()  -> Bool
+    
+    func isUpgradeCap()  -> Bool
+    
+    func isUpgradeReceipt()  -> Bool
+    
+    func isUpgradeTicket()  -> Bool
+    
+    func isUrl()  -> Bool
     
     /**
      * Returns the module part of a `StructTag`
@@ -21839,6 +22853,20 @@ public static func newAsciiString() -> StructTag  {
 })
 }
     
+public static func newAuthenticatorState() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_authenticator_state($0
+    )
+})
+}
+    
+public static func newBag() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_bag($0
+    )
+})
+}
+    
 public static func newBalance(typeTag: TypeTag) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_balance(
@@ -21922,6 +22950,27 @@ public static func newDisplayCreated(structTag: StructTag) -> StructTag  {
 })
 }
     
+public static func newDisplayVersionUpdated(structTag: StructTag) -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_display_version_updated(
+        FfiConverterTypeStructTag_lower(structTag),$0
+    )
+})
+}
+    
+    /**
+     * Creates a new dynamic field struct tag
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+public static func newDynamicField(key: TypeTag, value: TypeTag) -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_field(
+        FfiConverterTypeTypeTag_lower(key),
+        FfiConverterTypeTypeTag_lower(value),$0
+    )
+})
+}
+    
 public static func newDynamicObjectFieldWrapper(typeTag: TypeTag) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_dynamic_object_field_wrapper(
@@ -21930,11 +22979,9 @@ public static func newDynamicObjectFieldWrapper(typeTag: TypeTag) -> StructTag  
 })
 }
     
-public static func newField(key: TypeTag, value: TypeTag) -> StructTag  {
+public static func newGas() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_field(
-        FfiConverterTypeTypeTag_lower(key),
-        FfiConverterTypeTypeTag_lower(value),$0
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_gas($0
     )
 })
 }
@@ -21949,13 +22996,6 @@ public static func newGasCoin() -> StructTag  {
 public static func newId() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_id($0
-    )
-})
-}
-    
-public static func newIotaCoinType() -> StructTag  {
-    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_iota_coin_type($0
     )
 })
 }
@@ -21985,6 +23025,28 @@ public static func newName(address: Address) -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_name(
         FfiConverterTypeAddress_lower(address),$0
+    )
+})
+}
+    
+public static func newObjectBag() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_object_bag($0
+    )
+})
+}
+    
+public static func newOption(typeTag: TypeTag) -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_option(
+        FfiConverterTypeTypeTag_lower(typeTag),$0
+    )
+})
+}
+    
+public static func newRandom() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_random($0
     )
 })
 }
@@ -22040,6 +23102,13 @@ public static func newTreasuryCap(structTag: StructTag) -> StructTag  {
 })
 }
     
+public static func newTxContext() -> StructTag  {
+    return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_tx_context($0
+    )
+})
+}
+    
 public static func newUid() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_structtag_new_uid($0
@@ -22068,10 +23137,9 @@ public static func newUpgradeTicket() -> StructTag  {
 })
 }
     
-public static func newVersionUpdated(structTag: StructTag) -> StructTag  {
+public static func newUrl() -> StructTag  {
     return try!  FfiConverterTypeStructTag_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_version_updated(
-        FfiConverterTypeStructTag_lower(structTag),$0
+    uniffi_iota_sdk_ffi_fn_constructor_structtag_new_url($0
     )
 })
 }
@@ -22089,7 +23157,8 @@ open func address() -> Address  {
 }
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, panics if this is not a
+     * Coin type
      */
 open func coinType() -> TypeTag  {
     return try!  FfiConverterTypeTypeTag_lift(try! rustCall() {
@@ -22099,11 +23168,295 @@ open func coinType() -> TypeTag  {
 }
     
     /**
-     * Checks if this is a Coin type
+     * Returns the coin type part of a `StructTag`, if this is a Coin type
      */
 open func coinTypeOpt() -> TypeTag?  {
     return try!  FfiConverterOptionTypeTypeTag.lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_structtag_coin_type_opt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isAsciiString() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_ascii_string(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isAuthenticatorState() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_authenticator_state(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isBag() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_bag(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isBalance() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_balance(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isClock() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_clock(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isCoin() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_coin(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isCoinManager() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_manager(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isCoinMetadata() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_coin_metadata(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isConfig() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_config(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isConfigSetting() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_config_setting(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDenyListAddressKey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_address_key(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDenyListConfigKey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_config_key(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDenyListGlobalPauseKey() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_deny_list_global_pause_key(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDisplayCreated() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_display_created(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDisplayVersionUpdated() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_display_version_updated(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this is a Dynamic Field type
+     * (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+     */
+open func isDynamicField() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_field(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isDynamicObjectFieldWrapper() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_dynamic_object_field_wrapper(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isGas() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_gas(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isGasCoin() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_gas_coin(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isId() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_id(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isIotaSystemAdminCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_admin_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isIotaSystemState() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_system_state(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isIotaTreasuryCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_iota_treasury_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isName() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_name(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isObjectBag() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_object_bag(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isOption() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_option(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isRandom() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_random(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isStakedIota() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_staked_iota(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isString() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_string(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isSystemEpochInfoEvent() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_system_epoch_info_event(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTimeLock() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_time_lock(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTimelockedStakedIota() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_timelocked_staked_iota(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTransferReceiving() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_transfer_receiving(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTreasuryCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_treasury_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isTxContext() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_tx_context(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUid() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_uid(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUpgradeCap() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_cap(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUpgradeReceipt() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_receipt(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUpgradeTicket() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_upgrade_ticket(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+open func isUrl() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_structtag_is_url(self.uniffiClonePointer(),$0
     )
 })
 }
@@ -22265,7 +23618,7 @@ public protocol SystemPackageProtocol: AnyObject, Sendable {
     
     func modules()  -> [Data]
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -22320,11 +23673,11 @@ open class SystemPackage: SystemPackageProtocol, @unchecked Sendable {
     public func uniffiClonePointer() -> UnsafeMutableRawPointer {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_systempackage(self.pointer, $0) }
     }
-public convenience init(version: UInt64, modules: [Data], dependencies: [ObjectId]) {
+public convenience init(version: Version, modules: [Data], dependencies: [ObjectId]) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_systempackage_new(
-        FfiConverterUInt64.lower(version),
+        FfiConverterTypeVersion_lower(version),
         FfiConverterSequenceData.lower(modules),
         FfiConverterSequenceTypeObjectId.lower(dependencies),$0
     )
@@ -22357,8 +23710,8 @@ open func modules() -> [Data]  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_systempackage_version(self.uniffiClonePointer(),$0
     )
 })
@@ -26855,6 +28208,334 @@ public func FfiConverterTypeValidatorSignature_lower(_ value: ValidatorSignature
 
 
 
+public protocol VersionProtocol: AnyObject, Sendable {
+    
+    /**
+     * Get the underlying u64 value of this version
+     */
+    func asU64()  -> UInt64
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+    func getCongestedVersionSuggestedGasPrice() throws  -> UInt64
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */
+    func isCancelled()  -> Bool
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */
+    func isCongested()  -> Bool
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */
+    func isValid()  -> Bool
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+    func next() throws  -> Version
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+    func previous() throws  -> Version
+    
+}
+open class Version: VersionProtocol, @unchecked Sendable {
+    fileprivate let pointer: UnsafeMutableRawPointer!
+
+    /// Used to instantiate a [FFIObject] without an actual pointer, for fakes in tests, mostly.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public struct NoPointer {
+        public init() {}
+    }
+
+    // TODO: We'd like this to be `private` but for Swifty reasons,
+    // we can't implement `FfiConverter` without making this `required` and we can't
+    // make it `required` without making it `public`.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    required public init(unsafeFromRawPointer pointer: UnsafeMutableRawPointer) {
+        self.pointer = pointer
+    }
+
+    // This constructor can be used to instantiate a fake object.
+    // - Parameter noPointer: Placeholder value so we can have a constructor separate from the default empty one that may be implemented for classes extending [FFIObject].
+    //
+    // - Warning:
+    //     Any object instantiated with this constructor cannot be passed to an actual Rust-backed object. Since there isn't a backing [Pointer] the FFI lower functions will crash.
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public init(noPointer: NoPointer) {
+        self.pointer = nil
+    }
+
+#if swift(>=5.8)
+    @_documentation(visibility: private)
+#endif
+    public func uniffiClonePointer() -> UnsafeMutableRawPointer {
+        return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_version(self.pointer, $0) }
+    }
+    // No primary constructor declared for this class.
+
+    deinit {
+        guard let pointer = pointer else {
+            return
+        }
+
+        try! rustCall { uniffi_iota_sdk_ffi_fn_free_version(pointer, $0) }
+    }
+
+    
+    /**
+     * Special version that is assigned to objects which are accessed
+     * immutably in a cancelled transaction.
+     */
+public static func cancelledRead() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_cancelled_read($0
+    )
+})
+}
+    
+    /**
+     * Special version that was assigned to congested objects which
+     * cause transaction cancellations. Note that this special version
+     * was only used prior to the introduction of a gas price feedback
+     * mechanism, but it is kept for backward compatibility.
+     */
+public static func congestedPriorToGasPriceFeedback() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_congested_prior_to_gas_price_feedback($0
+    )
+})
+}
+    
+    /**
+     * Create a new Version from a u64 value
+     */
+public static func fromU64(value: UInt64) -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_from_u64(
+        FfiConverterUInt64.lower(value),$0
+    )
+})
+}
+    
+    /**
+     * Returns a new version that is greater than all versions
+     * in `inputs`, assuming this operation will not overflow.
+     */
+public static func lamportIncrement(inputs: [Version])throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_version_lamport_increment(
+        FfiConverterSequenceTypeVersion.lower(inputs),$0
+    )
+})
+}
+    
+    /**
+     * An exclusive upper limit on a valid version: versions
+     * strictly smaller than this limit are valid versions.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     * Versions larger than this value are "special" and
+     * assigned to objects that appear in cancelled transactions.
+     */
+public static func maxValidExcl() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_max_valid_excl($0
+    )
+})
+}
+    
+    /**
+     * An inclusive lower limit on a valid version.
+     *
+     * A valid version means an object, which this version
+     * is assigned to, does not appear in a cancelled transaction.
+     */
+public static func minValidIncl() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_min_valid_incl($0
+    )
+})
+}
+    
+    /**
+     * Returns a special version used for congested shared objects:
+     * `Version::MIN_CONGESTED + suggested_gas_price`,
+     * where `suggested_gas_price` is embedded into a congested version
+     * to facilitate a gas price feedback mechanism for transactions
+     * cancelled due to shared object congestion.
+     */
+public static func newCongestedWithSuggestedGasPrice(suggestedGasPrice: UInt64)throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_constructor_version_new_congested_with_suggested_gas_price(
+        FfiConverterUInt64.lower(suggestedGasPrice),$0
+    )
+})
+}
+    
+public static func randomnessUnavailable() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_constructor_version_randomness_unavailable($0
+    )
+})
+}
+    
+
+    
+    /**
+     * Get the underlying u64 value of this version
+     */
+open func asU64() -> UInt64  {
+    return try!  FfiConverterUInt64.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_as_u64(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the `suggested_gas_price` embedded in this congested shared
+     * object version. The `suggested_gas_price` here is used for a
+     * gas price feedback mechanism for transactions cancelled due to
+     * shared object congestion.
+     */
+open func getCongestedVersionSuggestedGasPrice()throws  -> UInt64  {
+    return try  FfiConverterUInt64.lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_method_version_get_congested_version_suggested_gas_price(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this version is cancelled, i.e., the corresponding
+     * object appears in a cancelled transaction.
+     */
+open func isCancelled() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_is_cancelled(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Check if this version is congested, i.e., the corresponding
+     * object is the reason for transaction cancellation.
+     */
+open func isCongested() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_is_congested(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Checks if this version is valid, i.e., the corresponding
+     * object does not appear in a cancelled transaction.
+     */
+open func isValid() -> Bool  {
+    return try!  FfiConverterBool.lift(try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_version_is_valid(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the next version, or an error if overflow occurs.
+     */
+open func next()throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_method_version_next(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+    /**
+     * Returns the previous version, or an error if underflow occurs.
+     */
+open func previous()throws  -> Version  {
+    return try  FfiConverterTypeVersion_lift(try rustCallWithError(FfiConverterTypeSdkFfiError_lift) {
+    uniffi_iota_sdk_ffi_fn_method_version_previous(self.uniffiClonePointer(),$0
+    )
+})
+}
+    
+
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeVersion: FfiConverter {
+
+    typealias FfiType = UnsafeMutableRawPointer
+    typealias SwiftType = Version
+
+    public static func lift(_ pointer: UnsafeMutableRawPointer) throws -> Version {
+        return Version(unsafeFromRawPointer: pointer)
+    }
+
+    public static func lower(_ value: Version) -> UnsafeMutableRawPointer {
+        return value.uniffiClonePointer()
+    }
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> Version {
+        let v: UInt64 = try readInt(&buf)
+        // The Rust code won't compile if a pointer won't fit in a UInt64.
+        // We have to go via `UInt` because that's the thing that's the size of a pointer.
+        let ptr = UnsafeMutableRawPointer(bitPattern: UInt(truncatingIfNeeded: v))
+        if (ptr == nil) {
+            throw UniffiInternalError.unexpectedNullPointer
+        }
+        return try lift(ptr!)
+    }
+
+    public static func write(_ value: Version, into buf: inout [UInt8]) {
+        // This fiddling is because `Int` is the thing that's the same size as a pointer.
+        // The Rust code won't compile if a pointer won't fit in a `UInt64`.
+        writeInt(&buf, UInt64(bitPattern: Int64(Int(bitPattern: lower(value)))))
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeVersion_lift(_ pointer: UnsafeMutableRawPointer) throws -> Version {
+    return try FfiConverterTypeVersion.lift(pointer)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeVersion_lower(_ value: Version) -> UnsafeMutableRawPointer {
+    return FfiConverterTypeVersion.lower(value)
+}
+
+
+
+
+
+
 /**
  * Object version assignment from consensus
  *
@@ -26870,7 +28551,7 @@ public protocol VersionAssignmentProtocol: AnyObject, Sendable {
     
     func objectId()  -> ObjectId
     
-    func version()  -> UInt64
+    func version()  -> Version
     
 }
 /**
@@ -26923,12 +28604,12 @@ open class VersionAssignment: VersionAssignmentProtocol, @unchecked Sendable {
     public func uniffiClonePointer() -> UnsafeMutableRawPointer {
         return try! rustCall { uniffi_iota_sdk_ffi_fn_clone_versionassignment(self.pointer, $0) }
     }
-public convenience init(objectId: ObjectId, version: UInt64) {
+public convenience init(objectId: ObjectId, version: Version) {
     let pointer =
         try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_versionassignment_new(
         FfiConverterTypeObjectId_lower(objectId),
-        FfiConverterUInt64.lower(version),$0
+        FfiConverterTypeVersion_lower(version),$0
     )
 }
     self.init(unsafeFromRawPointer: pointer)
@@ -26952,8 +28633,8 @@ open func objectId() -> ObjectId  {
 })
 }
     
-open func version() -> UInt64  {
-    return try!  FfiConverterUInt64.lift(try! rustCall() {
+open func version() -> Version  {
+    return try!  FfiConverterTypeVersion_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_method_versionassignment_version(self.uniffiClonePointer(),$0
     )
 })
@@ -30000,7 +31681,7 @@ public struct MoveStruct {
      * input This is a lamport timestamp, not a sequentially increasing
      * version
      */
-    public var version: UInt64
+    public var version: Version
     /**
      * BCS bytes of a Move struct value
      */
@@ -30016,7 +31697,7 @@ public struct MoveStruct {
          * Number that increases each time a tx takes this object as a mutable
          * input This is a lamport timestamp, not a sequentially increasing
          * version
-         */version: UInt64, 
+         */version: Version, 
         /**
          * BCS bytes of a Move struct value
          */contents: Data) {
@@ -30040,14 +31721,14 @@ public struct FfiConverterTypeMoveStruct: FfiConverterRustBuffer {
         return
             try MoveStruct(
                 structType: FfiConverterTypeStructTag.read(from: &buf), 
-                version: FfiConverterUInt64.read(from: &buf), 
+                version: FfiConverterTypeVersion.read(from: &buf), 
                 contents: FfiConverterData.read(from: &buf)
         )
     }
 
     public static func write(_ value: MoveStruct, into buf: inout [UInt8]) {
         FfiConverterTypeStructTag.write(value.structType, into: &buf)
-        FfiConverterUInt64.write(value.version, into: &buf)
+        FfiConverterTypeVersion.write(value.version, into: &buf)
         FfiConverterData.write(value.contents, into: &buf)
     }
 }
@@ -30651,12 +32332,12 @@ public func FfiConverterTypeObjectRef_lower(_ value: ObjectRef) -> RustBuffer {
  */
 public struct ObjectReference {
     public var objectId: ObjectId
-    public var version: UInt64
+    public var version: Version
     public var digest: Digest
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(objectId: ObjectId, version: UInt64, digest: Digest) {
+    public init(objectId: ObjectId, version: Version, digest: Digest) {
         self.objectId = objectId
         self.version = version
         self.digest = digest
@@ -30677,14 +32358,14 @@ public struct FfiConverterTypeObjectReference: FfiConverterRustBuffer {
         return
             try ObjectReference(
                 objectId: FfiConverterTypeObjectId.read(from: &buf), 
-                version: FfiConverterUInt64.read(from: &buf), 
+                version: FfiConverterTypeVersion.read(from: &buf), 
                 digest: FfiConverterTypeDigest.read(from: &buf)
         )
     }
 
     public static func write(_ value: ObjectReference, into buf: inout [UInt8]) {
         FfiConverterTypeObjectId.write(value.objectId, into: &buf)
-        FfiConverterUInt64.write(value.version, into: &buf)
+        FfiConverterTypeVersion.write(value.version, into: &buf)
         FfiConverterTypeDigest.write(value.digest, into: &buf)
     }
 }
@@ -31343,7 +33024,7 @@ public struct RandomnessStateUpdate {
     /**
      * The initial version of the randomness object that it was shared at
      */
-    public var randomnessObjInitialSharedVersion: UInt64
+    public var randomnessObjInitialSharedVersion: Version
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
@@ -31359,7 +33040,7 @@ public struct RandomnessStateUpdate {
          */randomBytes: Data, 
         /**
          * The initial version of the randomness object that it was shared at
-         */randomnessObjInitialSharedVersion: UInt64) {
+         */randomnessObjInitialSharedVersion: Version) {
         self.epoch = epoch
         self.randomnessRound = randomnessRound
         self.randomBytes = randomBytes
@@ -31370,32 +33051,6 @@ public struct RandomnessStateUpdate {
 #if compiler(>=6)
 extension RandomnessStateUpdate: Sendable {}
 #endif
-
-
-extension RandomnessStateUpdate: Equatable, Hashable {
-    public static func ==(lhs: RandomnessStateUpdate, rhs: RandomnessStateUpdate) -> Bool {
-        if lhs.epoch != rhs.epoch {
-            return false
-        }
-        if lhs.randomnessRound != rhs.randomnessRound {
-            return false
-        }
-        if lhs.randomBytes != rhs.randomBytes {
-            return false
-        }
-        if lhs.randomnessObjInitialSharedVersion != rhs.randomnessObjInitialSharedVersion {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(epoch)
-        hasher.combine(randomnessRound)
-        hasher.combine(randomBytes)
-        hasher.combine(randomnessObjInitialSharedVersion)
-    }
-}
 
 
 
@@ -31409,7 +33064,7 @@ public struct FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer {
                 epoch: FfiConverterUInt64.read(from: &buf), 
                 randomnessRound: FfiConverterUInt64.read(from: &buf), 
                 randomBytes: FfiConverterData.read(from: &buf), 
-                randomnessObjInitialSharedVersion: FfiConverterUInt64.read(from: &buf)
+                randomnessObjInitialSharedVersion: FfiConverterTypeVersion.read(from: &buf)
         )
     }
 
@@ -31417,7 +33072,7 @@ public struct FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer {
         FfiConverterUInt64.write(value.epoch, into: &buf)
         FfiConverterUInt64.write(value.randomnessRound, into: &buf)
         FfiConverterData.write(value.randomBytes, into: &buf)
-        FfiConverterUInt64.write(value.randomnessObjInitialSharedVersion, into: &buf)
+        FfiConverterTypeVersion.write(value.randomnessObjInitialSharedVersion, into: &buf)
     }
 }
 
@@ -32084,7 +33739,7 @@ public struct TransactionEffectsV1 {
     /**
      * The version number of all the written Move objects by this transaction.
      */
-    public var lamportVersion: UInt64
+    public var lamportVersion: Version
     /**
      * Objects whose state are changed in the object store.
      */
@@ -32134,7 +33789,7 @@ public struct TransactionEffectsV1 {
          */dependencies: [Digest], 
         /**
          * The version number of all the written Move objects by this transaction.
-         */lamportVersion: UInt64, 
+         */lamportVersion: Version, 
         /**
          * Objects whose state are changed in the object store.
          */changedObjects: [ChangedObject], 
@@ -32185,7 +33840,7 @@ public struct FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer {
                 gasObjectIndex: FfiConverterOptionUInt32.read(from: &buf), 
                 eventsDigest: FfiConverterOptionTypeDigest.read(from: &buf), 
                 dependencies: FfiConverterSequenceTypeDigest.read(from: &buf), 
-                lamportVersion: FfiConverterUInt64.read(from: &buf), 
+                lamportVersion: FfiConverterTypeVersion.read(from: &buf), 
                 changedObjects: FfiConverterSequenceTypeChangedObject.read(from: &buf), 
                 unchangedSharedObjects: FfiConverterSequenceTypeUnchangedSharedObject.read(from: &buf), 
                 auxiliaryDataDigest: FfiConverterOptionTypeDigest.read(from: &buf)
@@ -32200,7 +33855,7 @@ public struct FfiConverterTypeTransactionEffectsV1: FfiConverterRustBuffer {
         FfiConverterOptionUInt32.write(value.gasObjectIndex, into: &buf)
         FfiConverterOptionTypeDigest.write(value.eventsDigest, into: &buf)
         FfiConverterSequenceTypeDigest.write(value.dependencies, into: &buf)
-        FfiConverterUInt64.write(value.lamportVersion, into: &buf)
+        FfiConverterTypeVersion.write(value.lamportVersion, into: &buf)
         FfiConverterSequenceTypeChangedObject.write(value.changedObjects, into: &buf)
         FfiConverterSequenceTypeUnchangedSharedObject.write(value.unchangedSharedObjects, into: &buf)
         FfiConverterOptionTypeDigest.write(value.auxiliaryDataDigest, into: &buf)
@@ -32427,7 +34082,9 @@ public func FfiConverterTypeTransactionsFilter_lower(_ value: TransactionsFilter
 
 
 /**
- * Identifies a struct and the module it was defined in
+ * Stores the origin of a data type where it first appeared in the version
+ * chain. A data type is identified by the name of the module and the name of
+ * the struct/enum in combination.
  *
  * # BCS
  *
@@ -32438,15 +34095,33 @@ public func FfiConverterTypeTransactionsFilter_lower(_ value: TransactionsFilter
  * ```
  */
 public struct TypeOrigin {
+    /**
+     * The name of the module the data type resides in.
+     */
     public var moduleName: Identifier
-    public var structName: Identifier
+    /**
+     * identifier.
+     */
+    public var datatypeName: Identifier
+    /**
+     * ID of the package, where the given type first appeared.
+     */
     public var package: ObjectId
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(moduleName: Identifier, structName: Identifier, package: ObjectId) {
+    public init(
+        /**
+         * The name of the module the data type resides in.
+         */moduleName: Identifier, 
+        /**
+         * identifier.
+         */datatypeName: Identifier, 
+        /**
+         * ID of the package, where the given type first appeared.
+         */package: ObjectId) {
         self.moduleName = moduleName
-        self.structName = structName
+        self.datatypeName = datatypeName
         self.package = package
     }
 }
@@ -32465,14 +34140,14 @@ public struct FfiConverterTypeTypeOrigin: FfiConverterRustBuffer {
         return
             try TypeOrigin(
                 moduleName: FfiConverterTypeIdentifier.read(from: &buf), 
-                structName: FfiConverterTypeIdentifier.read(from: &buf), 
+                datatypeName: FfiConverterTypeIdentifier.read(from: &buf), 
                 package: FfiConverterTypeObjectId.read(from: &buf)
         )
     }
 
     public static func write(_ value: TypeOrigin, into buf: inout [UInt8]) {
         FfiConverterTypeIdentifier.write(value.moduleName, into: &buf)
-        FfiConverterTypeIdentifier.write(value.structName, into: &buf)
+        FfiConverterTypeIdentifier.write(value.datatypeName, into: &buf)
         FfiConverterTypeObjectId.write(value.package, into: &buf)
     }
 }
@@ -32569,23 +34244,23 @@ public func FfiConverterTypeUnchangedSharedObject_lower(_ value: UnchangedShared
  */
 public struct UpgradeInfo {
     /**
-     * Id of the upgraded packages
+     * ID of the upgraded package
      */
     public var upgradedId: ObjectId
     /**
      * Version of the upgraded package
      */
-    public var upgradedVersion: UInt64
+    public var upgradedVersion: Version
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
     public init(
         /**
-         * Id of the upgraded packages
+         * ID of the upgraded package
          */upgradedId: ObjectId, 
         /**
          * Version of the upgraded package
-         */upgradedVersion: UInt64) {
+         */upgradedVersion: Version) {
         self.upgradedId = upgradedId
         self.upgradedVersion = upgradedVersion
     }
@@ -32605,13 +34280,13 @@ public struct FfiConverterTypeUpgradeInfo: FfiConverterRustBuffer {
         return
             try UpgradeInfo(
                 upgradedId: FfiConverterTypeObjectId.read(from: &buf), 
-                upgradedVersion: FfiConverterUInt64.read(from: &buf)
+                upgradedVersion: FfiConverterTypeVersion.read(from: &buf)
         )
     }
 
     public static func write(_ value: UpgradeInfo, into buf: inout [UInt8]) {
         FfiConverterTypeObjectId.write(value.upgradedId, into: &buf)
-        FfiConverterUInt64.write(value.upgradedVersion, into: &buf)
+        FfiConverterTypeVersion.write(value.upgradedVersion, into: &buf)
     }
 }
 
@@ -35603,7 +37278,7 @@ public enum ObjectIn {
     /**
      * The old version, digest and owner.
      */
-    case data(version: UInt64, digest: Digest, owner: Owner
+    case data(version: Version, digest: Digest, owner: Owner
     )
 }
 
@@ -35624,7 +37299,7 @@ public struct FfiConverterTypeObjectIn: FfiConverterRustBuffer {
         
         case 1: return .missing
         
-        case 2: return .data(version: try FfiConverterUInt64.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf), owner: try FfiConverterTypeOwner.read(from: &buf)
+        case 2: return .data(version: try FfiConverterTypeVersion.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf), owner: try FfiConverterTypeOwner.read(from: &buf)
         )
         
         default: throw UniffiInternalError.unexpectedEnumCase
@@ -35641,7 +37316,7 @@ public struct FfiConverterTypeObjectIn: FfiConverterRustBuffer {
         
         case let .data(version,digest,owner):
             writeInt(&buf, Int32(2))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             FfiConverterTypeDigest.write(digest, into: &buf)
             FfiConverterTypeOwner.write(owner, into: &buf)
             
@@ -35705,7 +37380,7 @@ public enum ObjectOut {
      * Packages writes need to be tracked separately with version because
      * we don't use lamport version for package publish and upgrades.
      */
-    case packageWrite(version: UInt64, digest: Digest
+    case packageWrite(version: Version, digest: Digest
     )
 }
 
@@ -35729,7 +37404,7 @@ public struct FfiConverterTypeObjectOut: FfiConverterRustBuffer {
         case 2: return .objectWrite(digest: try FfiConverterTypeDigest.read(from: &buf), owner: try FfiConverterTypeOwner.read(from: &buf)
         )
         
-        case 3: return .packageWrite(version: try FfiConverterUInt64.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
+        case 3: return .packageWrite(version: try FfiConverterTypeVersion.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
         )
         
         default: throw UniffiInternalError.unexpectedEnumCase
@@ -35752,7 +37427,7 @@ public struct FfiConverterTypeObjectOut: FfiConverterRustBuffer {
         
         case let .packageWrite(version,digest):
             writeInt(&buf, Int32(3))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             FfiConverterTypeDigest.write(digest, into: &buf)
             
         }
@@ -36558,23 +38233,23 @@ public enum UnchangedSharedKind {
      * ObjectDigest for protocol correctness, but it will make it easier to
      * verify untrusted read.
      */
-    case readOnlyRoot(version: UInt64, digest: Digest
+    case readOnlyRoot(version: Version, digest: Digest
     )
     /**
      * Deleted shared objects that appear mutably/owned in the input.
      */
-    case mutateDeleted(version: UInt64
+    case mutateDeleted(version: Version
     )
     /**
      * Deleted shared objects that appear as read-only in the input.
      */
-    case readDeleted(version: UInt64
+    case readDeleted(version: Version
     )
     /**
      * Shared objects in cancelled transaction. The sequence number embed
      * cancellation reason.
      */
-    case cancelled(version: UInt64
+    case cancelled(version: Version
     )
     /**
      * Read of a per-epoch config object that should remain the same during an
@@ -36598,16 +38273,16 @@ public struct FfiConverterTypeUnchangedSharedKind: FfiConverterRustBuffer {
         let variant: Int32 = try readInt(&buf)
         switch variant {
         
-        case 1: return .readOnlyRoot(version: try FfiConverterUInt64.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
+        case 1: return .readOnlyRoot(version: try FfiConverterTypeVersion.read(from: &buf), digest: try FfiConverterTypeDigest.read(from: &buf)
         )
         
-        case 2: return .mutateDeleted(version: try FfiConverterUInt64.read(from: &buf)
+        case 2: return .mutateDeleted(version: try FfiConverterTypeVersion.read(from: &buf)
         )
         
-        case 3: return .readDeleted(version: try FfiConverterUInt64.read(from: &buf)
+        case 3: return .readDeleted(version: try FfiConverterTypeVersion.read(from: &buf)
         )
         
-        case 4: return .cancelled(version: try FfiConverterUInt64.read(from: &buf)
+        case 4: return .cancelled(version: try FfiConverterTypeVersion.read(from: &buf)
         )
         
         case 5: return .perEpochConfig
@@ -36622,23 +38297,23 @@ public struct FfiConverterTypeUnchangedSharedKind: FfiConverterRustBuffer {
         
         case let .readOnlyRoot(version,digest):
             writeInt(&buf, Int32(1))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             FfiConverterTypeDigest.write(digest, into: &buf)
             
         
         case let .mutateDeleted(version):
             writeInt(&buf, Int32(2))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             
         
         case let .readDeleted(version):
             writeInt(&buf, Int32(3))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             
         
         case let .cancelled(version):
             writeInt(&buf, Int32(4))
-            FfiConverterUInt64.write(version, into: &buf)
+            FfiConverterTypeVersion.write(version, into: &buf)
             
         
         case .perEpochConfig:
@@ -45436,10 +47111,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_address_to_canonical_string() != 50168) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 22032) {
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_hex() != 2770) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_address_to_short_string() != 56908) {
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_raw_hex() != 32277) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_raw_short_hex() != 57104) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_address_to_short_hex() != 9559) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_argument_get_nested_result() != 53358) {
@@ -45754,7 +47435,19 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_consensusdeterminedversionassignments_is_cancelled_transactions() != 10241) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_is_object_alive() != 57678) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_is_object_deleted() != 32964) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_is_object_wrapped() != 15502) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical() != 53914) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_digest_next_lexicographical_opt() != 23877) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_digest_to_base58() != 54638) {
@@ -45862,7 +47555,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_genesisobject_owner() != 50201) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 36305) {
+    if (uniffi_iota_sdk_ffi_checksum_method_genesisobject_version() != 26576) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_genesistransaction_events() != 64664) {
@@ -45946,10 +47639,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_max_page_size() != 44733) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 40412) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents() != 42627) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 16500) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742) {
@@ -45958,13 +47651,13 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 13444) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 1782) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 56456) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object_bcs() != 29653) {
@@ -45973,13 +47666,13 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_objects() != 14040) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 7913) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package() != 2773) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_latest() != 55024) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 34213) {
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_package_versions() != 15150) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_packages() != 45891) {
@@ -46123,7 +47816,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_movepackage_type_origin_table() != 7308) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 22970) {
+    if (uniffi_iota_sdk_ffi_checksum_method_movepackage_version() != 7483) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_movepackagedata_dependencies() != 61113) {
@@ -46330,7 +48023,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_object_storage_rebate() != 24969) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_object_version() != 18433) {
+    if (uniffi_iota_sdk_ffi_checksum_method_object_version() != 59848) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objectdata_as_package_opt() != 50334) {
@@ -46348,6 +48041,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_derive_dynamic_child_id() != 47819) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical() != 15534) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_next_lexicographical_opt() != 278) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_address() != 21880) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -46357,10 +48056,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_canonical_string() != 62489) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 4418) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_hex() != 13326) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_string() != 63526) {
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_hex() != 56907) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_raw_short_hex() != 17836) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_objectid_to_short_hex() != 29478) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_as_struct() != 15094) {
@@ -46375,6 +48080,9 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_objecttype_is_struct() != 33698) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_address() != 46638) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_address() != 19200) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -46387,10 +48095,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_owner_as_object_opt() != 17159) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 56096) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared() != 17030) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 4209) {
+    if (uniffi_iota_sdk_ffi_checksum_method_owner_as_shared_opt() != 58784) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_owner_is_address() != 26982) {
@@ -46711,10 +48419,130 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_structtag_address() != 20393) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 37745) {
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type() != 64023) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 65306) {
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_coin_type_opt() != 46821) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_ascii_string() != 768) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_authenticator_state() != 10185) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_bag() != 46309) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_balance() != 61723) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_clock() != 5225) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin() != 61913) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_manager() != 52348) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_coin_metadata() != 34817) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_config() != 41259) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_config_setting() != 27038) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_address_key() != 64455) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_config_key() != 30183) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_deny_list_global_pause_key() != 4914) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_created() != 21370) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_display_version_updated() != 3726) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_field() != 59690) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_dynamic_object_field_wrapper() != 8218) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas() != 56237) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_gas_coin() != 20314) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_id() != 41991) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_admin_cap() != 56508) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_system_state() != 60130) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_iota_treasury_cap() != 32639) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_name() != 5722) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_object_bag() != 8625) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_option() != 10696) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_random() != 4566) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_staked_iota() != 19914) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_string() != 21518) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_system_epoch_info_event() != 20500) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_time_lock() != 6190) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_timelocked_staked_iota() != 14954) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_transfer_receiving() != 5695) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_treasury_cap() != 65088) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_tx_context() != 18584) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_uid() != 1904) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_cap() != 64642) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_receipt() != 4130) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_upgrade_ticket() != 6624) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_structtag_is_url() != 59887) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_structtag_module() != 28022) {
@@ -46735,7 +48563,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_systempackage_modules() != 23597) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 39738) {
+    if (uniffi_iota_sdk_ffi_checksum_method_systempackage_version() != 53823) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_transaction_as_v1() != 53004) {
@@ -47029,10 +48857,31 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_validatorsignature_signature() != 58273) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_as_u64() != 37415) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_get_congested_version_suggested_gas_price() != 50172) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_is_cancelled() != 7823) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_is_congested() != 54746) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_is_valid() != 4593) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_next() != 46748) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_version_previous() != 59091) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_object_id() != 50440) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 51219) {
+    if (uniffi_iota_sdk_ffi_checksum_method_versionassignment_version() != 9820) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_framework() != 52951) {
@@ -47041,16 +48890,43 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_bytes() != 58901) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 38044) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_hex() != 59948) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_address_generate() != 48865) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_hex() != 61183) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_prefixed_short_hex() != 62018) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_from_short_hex() != 60759) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_bridge() != 48414) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_genesis_iota_bridge() != 43861) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_max() != 5717) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_random() != 55074) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_randomness_state() != 62353) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_stardust() != 7116) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_std() != 28998) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_system() != 4297) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_address_system_state() != 26799) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_address_zero() != 46553) {
@@ -47155,7 +49031,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_digest_from_bytes() != 65530) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_digest_generate() != 8094) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_digest_random() != 18621) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_ed25519privatekey_from_bech32() != 16842) {
@@ -47254,7 +49130,211 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_graphqlclient_new_testnet() != 48529) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_address_key() != 24161) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_ascii_module() != 21861) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state() != 16216) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_authenticator_state_module() != 64126) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag() != 48457) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_bag_module() != 54361) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance() != 45299) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_balance_module() != 34758) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock() != 54114) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_clock_module() != 45072) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin() != 52194) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager() != 49557) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_manager_module() != 55970) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_metadata() != 40674) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_coin_module() != 34814) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_config() != 4576) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_key() != 17555) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_config_module() != 11061) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_deny_list_module() != 25060) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_created() != 25565) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_display_module() != 18646) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_field_module() != 44243) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_dynamic_object_field_module() != 43439) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_field() != 36751) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_global_pause_key() != 59135) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_id() != 9401) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota() != 34383) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_module() != 20466) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_admin_cap() != 27582) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_module() != 34279) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state() != 22040) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_system_state_inner_module() != 21899) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_iota_treasury_cap() != 12741) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_name() != 13462) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_name_module() != 11183) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_new() != 9398) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag() != 36980) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_bag_module() != 59882) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_object_module() != 16938) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_option() != 5076) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_option_module() != 36087) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_package_module() != 762) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_pay_module() != 31781) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_random() != 50490) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_random_module() != 5588) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_receiving() != 44248) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_setting() != 47313) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_staked_iota() != 39180) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_staking_pool_module() != 45878) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_string() != 22623) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_string_module() != 48728) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_admin_cap_module() != 43315) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_system_epoch_info_event() != 17381) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_time_lock() != 63781) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelock_module() != 25559) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staked_iota() != 44822) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_timelocked_staking_module() != 27461) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_transfer_module() != 617) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_treasury_cap() != 21659) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context() != 53898) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_tx_context_module() != 6086) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_uid() != 39877) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_cap() != 16692) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_receipt() != 32459) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_upgrade_ticket() != 3228) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_module() != 18366) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_url_type() != 23055) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_version_updated() != 55018) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_identifier_wrapper() != 61185) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_immutable_or_owned() != 33908) {
@@ -47266,7 +49346,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_receiving() != 28060) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 61970) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_input_new_shared() != 48143) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_intent_from_bytes() != 49795) {
@@ -47300,6 +49380,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_hex() != 44452) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_from_short_hex() != 35587) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movearg_address_vec() != 6097) {
@@ -47386,7 +49469,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_movecall_new() != 30411) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 17506) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_movepackage_new() != 31500) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_movepackagedata_from_base64() != 61420) {
@@ -47473,19 +49556,58 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct() != 1861) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_authenticator_state() != 13697) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_clock() != 14732) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_deny_list() != 39911) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_derive_id() != 16970) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_framework() != 24526) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_bytes() != 41789) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 30954) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_hex() != 39262) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_hex() != 58728) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_prefixed_short_hex() != 12289) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_from_short_hex() != 24855) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_bridge() != 44008) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_genesis_iota_bridge() != 39804) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_max() != 27865) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_randomness_state() != 39736) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_stardust() != 21114) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_std() != 6468) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_system() != 9600) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_system_state() != 17627) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_objectid_zero() != 40526) {
@@ -47506,7 +49628,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_owner_new_object() != 381) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 36753) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_owner_new_shared() != 22241) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_ptbargument_address() != 14619) {
@@ -47782,6 +49904,12 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_ascii_string() != 60972) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_authenticator_state() != 59432) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_bag() != 17783) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_balance() != 10874) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47815,19 +49943,22 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_created() != 24465) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_display_version_updated() != 52216) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_field() != 51044) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_dynamic_object_field_wrapper() != 48905) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_field() != 4196) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas() != 58980) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_gas_coin() != 5754) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_id() != 62017) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_coin_type() != 44499) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_iota_system_admin_cap() != 5595) {
@@ -47840,6 +49971,15 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_name() != 26361) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_object_bag() != 12890) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_option() != 36037) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_random() != 25141) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_staked_iota() != 60970) {
@@ -47863,6 +50003,9 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_treasury_cap() != 2523) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_tx_context() != 39269) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_uid() != 54533) {
         return InitializationResult.apiChecksumMismatch
     }
@@ -47875,10 +50018,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_upgrade_ticket() != 43936) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_version_updated() != 40840) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_structtag_new_url() != 23915) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 25070) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_systempackage_new() != 23944) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transaction_from_base64() != 30255) {
@@ -48016,7 +50159,31 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_validatorsignature_new() != 2599) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 14186) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_cancelled_read() != 19561) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_congested_prior_to_gas_price_feedback() != 34609) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_from_u64() != 29677) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_lamport_increment() != 45842) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_max_valid_excl() != 16135) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_min_valid_incl() != 30140) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_new_congested_with_suggested_gas_price() != 14) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_version_randomness_unavailable() != 14185) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_constructor_versionassignment_new() != 50135) {
         return InitializationResult.apiChecksumMismatch
     }
 
