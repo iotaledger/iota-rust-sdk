@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 
 use super::{
     Address, AddressParseError, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin,
-    UpgradeInfo, Version,
+    TypeTag, UpgradeInfo, Version,
 };
 
 /// Reference to an object
@@ -385,6 +385,10 @@ impl MoveStruct {
 
     pub fn into_type(self) -> MoveObjectType {
         self.type_
+    }
+
+    pub fn type_tag(&self) -> TypeTag {
+        TypeTag::Struct(Box::new(self.type_().clone().into()))
     }
 
     pub fn into_inner(self) -> (MoveObjectType, Vec<u8>) {
