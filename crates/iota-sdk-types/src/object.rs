@@ -297,7 +297,12 @@ impl MoveStruct {
 
     // TODO unsure about this
     pub fn id_opt(contents: &[u8]) -> Result<ObjectId, AddressParseError> {
-        ObjectId::from_bytes(contents)
+        if contents.len() < ObjectId::LENGTH {
+            return Err(AddressParseError::InvalidByteLength {
+                actual: contents.len(),
+            });
+        }
+        ObjectId::from_bytes(&contents[0..ObjectId::LENGTH])
     }
 
     /// Return the `value: u64` field of a `Coin<T>` type.
