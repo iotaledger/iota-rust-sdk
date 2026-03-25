@@ -114,10 +114,10 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Return the normalized Move function data for the provided package,
+    /// Return Move schema function data for the provided package,
     /// module, and function.
     #[uniffi::method(default(version = None))]
-    pub async fn normalized_move_function(
+    pub async fn move_schema_function(
         &self,
         package: &Address,
         module: &str,
@@ -128,13 +128,13 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .normalized_move_function(**package, module, function, version)
+            .move_schema_function(**package, module, function, version)
             .await?
             .map(Into::into)
             .map(Arc::new))
     }
 
-    /// Return the normalized Move module data for the provided module.
+    /// Return Move schema module data for the provided module.
     // TODO: do we want to self paginate everything and return all the data, or keep pagination
     // options?
     #[allow(clippy::too_many_arguments)]
@@ -145,7 +145,7 @@ impl GraphQLClient {
         pagination_filter_functions = None,
         pagination_filter_structs = None,
     ))]
-    pub async fn normalized_move_module(
+    pub async fn move_schema_module(
         &self,
         package: &Address,
         module: &str,
@@ -159,7 +159,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .normalized_move_module(
+            .move_schema_module(
                 **package,
                 module,
                 version,

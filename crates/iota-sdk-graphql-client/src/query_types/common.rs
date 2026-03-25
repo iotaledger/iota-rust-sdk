@@ -38,7 +38,7 @@ pub struct DateTime(pub String);
 pub struct MoveData(pub serde_json::Value);
 
 // ===========================================================================
-// Shared Fragment Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone, Copy)]

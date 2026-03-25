@@ -18,7 +18,7 @@ use crate::{
     pagination::{Page, PaginationFilter},
     query_types::{
         IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
-        IotaNamesDefaultNameQuery, IotaNamesDefaultNameQueryArgs, IotaNamesRegistrationsQuery,
+        IotaNamesDefaultNameLookup, IotaNamesDefaultNameQueryArgs, IotaNamesRegistrationsLookup,
         IotaNamesRegistrationsQueryArgs, ResolveIotaNamesAddressQuery,
         ResolveIotaNamesAddressQueryArgs,
     },
@@ -61,7 +61,7 @@ impl Client {
 
         let IotaNamesAddressRegistrationsQuery {
             address:
-                Some(IotaNamesRegistrationsQuery {
+                Some(IotaNamesRegistrationsLookup {
                     iota_names_registrations,
                 }),
         } = response
@@ -93,7 +93,7 @@ impl Client {
 
         let IotaNamesAddressDefaultNameQuery {
             address:
-                Some(IotaNamesDefaultNameQuery {
+                Some(IotaNamesDefaultNameLookup {
                     iota_names_default_name: Some(name),
                 }),
         } = response

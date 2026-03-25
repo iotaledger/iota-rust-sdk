@@ -10,7 +10,7 @@ use super::transaction::TransactionBlock;
 use crate::query_types::{Address, Base64, MoveType, ObjectId, schema};
 
 // ===========================================================================
-// Dry Run Queries
+// Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -21,7 +21,7 @@ pub struct DryRunQuery {
 }
 
 // ===========================================================================
-// Dry Run Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -88,7 +88,7 @@ pub struct ResultArg {
 }
 
 // ===========================================================================
-// Dry Run Query Args
+// Query Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]

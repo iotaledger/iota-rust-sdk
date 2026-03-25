@@ -17,7 +17,7 @@ pub struct ServiceConfigQuery {
 }
 
 // ===========================================================================
-// Service Config Types
+// Types
 // ===========================================================================
 
 // Information about the configuration of the GraphQL service.

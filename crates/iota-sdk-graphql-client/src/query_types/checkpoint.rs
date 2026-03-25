@@ -14,7 +14,7 @@ use crate::{
 };
 
 // ===========================================================================
-// Checkpoint Queries
+// Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -71,7 +71,7 @@ pub struct CheckpointsQueryArgs<'a> {
 }
 
 // ===========================================================================
-// Checkpoint Query Args
+// Query Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -86,7 +86,7 @@ pub struct CheckpointId {
     pub sequence_number: Option<u64>,
 }
 // ===========================================================================
-// Checkpoint Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]

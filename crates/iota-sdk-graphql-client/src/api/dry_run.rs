@@ -11,7 +11,7 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 use crate::{
     Client, DryRunEffect, DryRunResult,
     error::Result,
-    query_types::{DryRunQuery, DryRunQueryArgs, TransactionMetadata},
+    query_types::{DryRunQuery, DryRunQueryArgs, ObjectRef, TransactionMetadata},
 };
 
 impl Client {

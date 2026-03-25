@@ -6,10 +6,12 @@ use std::{str::FromStr, sync::Arc};
 use base64ct::Encoding;
 use iota_sdk::{
     graphql_client::query_types::{
-        Base64, DateTime, GQLAddress, MoveData, MoveModuleQuery, MovePackage, MoveType,
+        Base64, DateTime, GQLAddress, MoveData, MoveModuleRef, MoveType,
     },
     types::{Identifier, StructTag},
 };
+
+use crate::graphql::query_types::MovePackageRef;
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -78,11 +80,12 @@ impl From<Event> for iota_sdk::types::Event {
 impl From<Event> for iota_sdk::graphql_client::query_types::Event {
     fn from(value: Event) -> Self {
         Self {
-            sending_module: Some(MoveModuleQuery {
-                package: MovePackage {
-                    address: iota_sdk::types::Address::from(**value.package_id),
+            sending_module: Some(MoveModuleRef {
+                package: MovePackageRef {
+                    address: Arc::new(Address(iota_sdk::types::Address::from(**value.package_id))),
                     bcs: None,
-                },
+                }
+                .into(),
                 name: value.module.clone(),
             }),
             sender: Some(GQLAddress {

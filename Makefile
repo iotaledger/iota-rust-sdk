@@ -11,6 +11,10 @@ check-features: ## Check feature flags for crates
 check-fmt: ## Check code formatting
 	cargo +nightly fmt -- --check
 
+.PHONY: check-graphql-naming-policy
+check-graphql-naming-policy: ## Check GraphQL naming and module-policy guardrails
+	bash scripts/check-graphql-naming-policy.sh
+
 .PHONY: fmt
 fmt: ## Format code
 	cargo +nightly fmt

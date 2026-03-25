@@ -19,11 +19,11 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        ExecuteTransactionQuery, ExecuteTransactionQueryArgs, TransactionBlockCheckpointQuery,
-        TransactionBlockEffectsQuery, TransactionBlockFilter, TransactionBlockIndexedQuery,
-        TransactionBlockQuery, TransactionBlockQueryArgs, TransactionBlockWithEffectsQuery,
-        TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-        TransactionBlocksWithEffectsQuery,
+        ExecuteTransactionMutation, ExecuteTransactionMutationArgs,
+        TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
+        TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockQueryArgs,
+        TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
+        TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
     },
     streams::stream_paginated_query,
 };
@@ -247,7 +247,7 @@ impl Client {
         wait_for: impl Into<Option<WaitForTx>>,
     ) -> Result<TransactionEffects> {
         let wait_for = wait_for.into();
-        let operation = ExecuteTransactionQuery::build(ExecuteTransactionQueryArgs {
+        let operation = ExecuteTransactionMutation::build(ExecuteTransactionMutationArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
             tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(tx).unwrap().as_ref()),
         });

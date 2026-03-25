@@ -5224,13 +5224,13 @@ fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs(
 ): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function(
+): Short
+fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module(
+): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function(
-): Short
-fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object(
 ): Short
@@ -7614,13 +7614,13 @@ fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents(`ptr`: Poin
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
+): Long
+fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`paginationFilterEnums`: RustBuffer.ByValue,`paginationFilterFriends`: RustBuffer.ByValue,`paginationFilterFunctions`: RustBuffer.ByValue,`paginationFilterStructs`: RustBuffer.ByValue,
+): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(`ptr`: Pointer,`functionName`: RustBuffer.ByValue,`typeArguments`: RustBuffer.ByValue,`arguments`: RustBuffer.ByValue,
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`function`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,
-): Long
-fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(`ptr`: Pointer,`package`: Pointer,`module`: RustBuffer.ByValue,`version`: RustBuffer.ByValue,`paginationFilterEnums`: RustBuffer.ByValue,`paginationFilterFriends`: RustBuffer.ByValue,`paginationFilterFunctions`: RustBuffer.ByValue,`paginationFilterStructs`: RustBuffer.ByValue,
 ): Long
 fun uniffi_iota_sdk_ffi_fn_method_graphqlclient_object(`ptr`: Pointer,`objectId`: Pointer,`version`: RustBuffer.ByValue,
 ): Long
@@ -12495,16 +12495,16 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function() != 21880.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module() != 1743.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965.toShort()) {
-        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    }
-    if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424.toShort()) {
@@ -28845,6 +28845,17 @@ public interface GraphQlClientInterface {
     suspend fun `moveObjectContentsBcs`(`objectId`: ObjectId, `version`: kotlin.ULong? = null): kotlin.ByteArray?
     
     /**
+     * Return Move schema function data for the provided package,
+     * module, and function.
+     */
+    suspend fun `moveSchemaFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
+    
+    /**
+     * Return Move schema module data for the provided module.
+     */
+    suspend fun `moveSchemaModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
+    
+    /**
      * Execute a Move View Function.
      *
      * A View Function is a function in a Move module with a return type that
@@ -28898,17 +28909,6 @@ public interface GraphQlClientInterface {
      * or an error.
      */
     suspend fun `moveViewCallJson`(`functionName`: kotlin.String, `typeArguments`: List<kotlin.String>? = null, `arguments`: List<Value>? = null): MoveViewResult
-    
-    /**
-     * Return the normalized Move function data for the provided package,
-     * module, and function.
-     */
-    suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong? = null): MoveFunction?
-    
-    /**
-     * Return the normalized Move module data for the provided module.
-     */
-    suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong? = null, `paginationFilterEnums`: PaginationFilter? = null, `paginationFilterFriends`: PaginationFilter? = null, `paginationFilterFunctions`: PaginationFilter? = null, `paginationFilterStructs`: PaginationFilter? = null): MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -29872,6 +29872,55 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
 
     
     /**
+     * Return Move schema function data for the provided package,
+     * module, and function.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveSchemaFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function(
+                thisPtr,
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterOptionalTypeMoveFunction.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
+     * Return Move schema module data for the provided module.
+     */
+    @Throws(SdkFfiException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `moveSchemaModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
+        return uniffiRustCallAsync(
+        callWithPointer { thisPtr ->
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module(
+                thisPtr,
+                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
+            )
+        },
+        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterOptionalTypeMoveModule.lift(it) },
+        // Error FFI converter
+        SdkFfiException.ErrorHandler,
+    )
+    }
+
+    
+    /**
      * Execute a Move View Function.
      *
      * A View Function is a function in a Move module with a return type that
@@ -29958,55 +30007,6 @@ open class GraphQlClient: Disposable, AutoCloseable, GraphQlClientInterface
         { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
         // lift function
         { FfiConverterTypeMoveViewResult.lift(it) },
-        // Error FFI converter
-        SdkFfiException.ErrorHandler,
-    )
-    }
-
-    
-    /**
-     * Return the normalized Move function data for the provided package,
-     * module, and function.
-     */
-    @Throws(SdkFfiException::class)
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveFunction`(`package`: Address, `module`: kotlin.String, `function`: kotlin.String, `version`: kotlin.ULong?) : MoveFunction? {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-                thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterString.lower(`function`),FfiConverterOptionalULong.lower(`version`),
-            )
-        },
-        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
-        // lift function
-        { FfiConverterOptionalTypeMoveFunction.lift(it) },
-        // Error FFI converter
-        SdkFfiException.ErrorHandler,
-    )
-    }
-
-    
-    /**
-     * Return the normalized Move module data for the provided module.
-     */
-    @Throws(SdkFfiException::class)
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `normalizedMoveModule`(`package`: Address, `module`: kotlin.String, `version`: kotlin.ULong?, `paginationFilterEnums`: PaginationFilter?, `paginationFilterFriends`: PaginationFilter?, `paginationFilterFunctions`: PaginationFilter?, `paginationFilterStructs`: PaginationFilter?) : MoveModule? {
-        return uniffiRustCallAsync(
-        callWithPointer { thisPtr ->
-            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-                thisPtr,
-                FfiConverterTypeAddress.lower(`package`),FfiConverterString.lower(`module`),FfiConverterOptionalULong.lower(`version`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterEnums`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFriends`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterFunctions`),FfiConverterOptionalTypePaginationFilter.lower(`paginationFilterStructs`),
-            )
-        },
-        { future, callback, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, callback, continuation) },
-        { future, continuation -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, continuation) },
-        { future -> UniffiLibBatch2.INSTANCE.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future) },
-        // lift function
-        { FfiConverterOptionalTypeMoveModule.lift(it) },
         // Error FFI converter
         SdkFfiException.ErrorHandler,
     )
@@ -61772,7 +61772,7 @@ public object FfiConverterTypeMoveModule: FfiConverterRustBuffer<MoveModule> {
 
 
 data class MoveModuleConnection (
-    var `nodes`: List<MoveModuleQuery>, 
+    var `nodes`: List<MoveModuleRef>, 
     var `pageInfo`: PageInfo
 ) : Disposable {
     
@@ -61794,26 +61794,26 @@ data class MoveModuleConnection (
 public object FfiConverterTypeMoveModuleConnection: FfiConverterRustBuffer<MoveModuleConnection> {
     override fun read(buf: ByteBuffer): MoveModuleConnection {
         return MoveModuleConnection(
-            FfiConverterSequenceTypeMoveModuleQuery.read(buf),
+            FfiConverterSequenceTypeMoveModuleRef.read(buf),
             FfiConverterTypePageInfo.read(buf),
         )
     }
 
     override fun allocationSize(value: MoveModuleConnection) = (
-            FfiConverterSequenceTypeMoveModuleQuery.allocationSize(value.`nodes`) +
+            FfiConverterSequenceTypeMoveModuleRef.allocationSize(value.`nodes`) +
             FfiConverterTypePageInfo.allocationSize(value.`pageInfo`)
     )
 
     override fun write(value: MoveModuleConnection, buf: ByteBuffer) {
-            FfiConverterSequenceTypeMoveModuleQuery.write(value.`nodes`, buf)
+            FfiConverterSequenceTypeMoveModuleRef.write(value.`nodes`, buf)
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
     }
 }
 
 
 
-data class MoveModuleQuery (
-    var `package`: MovePackageQuery, 
+data class MoveModuleRef (
+    var `package`: MovePackageRef, 
     var `name`: kotlin.String
 ) : Disposable {
     
@@ -61832,21 +61832,21 @@ data class MoveModuleQuery (
 /**
  * @suppress
  */
-public object FfiConverterTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModuleQuery> {
-    override fun read(buf: ByteBuffer): MoveModuleQuery {
-        return MoveModuleQuery(
-            FfiConverterTypeMovePackageQuery.read(buf),
+public object FfiConverterTypeMoveModuleRef: FfiConverterRustBuffer<MoveModuleRef> {
+    override fun read(buf: ByteBuffer): MoveModuleRef {
+        return MoveModuleRef(
+            FfiConverterTypeMovePackageRef.read(buf),
             FfiConverterString.read(buf),
         )
     }
 
-    override fun allocationSize(value: MoveModuleQuery) = (
-            FfiConverterTypeMovePackageQuery.allocationSize(value.`package`) +
+    override fun allocationSize(value: MoveModuleRef) = (
+            FfiConverterTypeMovePackageRef.allocationSize(value.`package`) +
             FfiConverterString.allocationSize(value.`name`)
     )
 
-    override fun write(value: MoveModuleQuery, buf: ByteBuffer) {
-            FfiConverterTypeMovePackageQuery.write(value.`package`, buf)
+    override fun write(value: MoveModuleRef, buf: ByteBuffer) {
+            FfiConverterTypeMovePackageRef.write(value.`package`, buf)
             FfiConverterString.write(value.`name`, buf)
     }
 }
@@ -61932,7 +61932,7 @@ public object FfiConverterTypeMovePackagePage: FfiConverterRustBuffer<MovePackag
 
 
 
-data class MovePackageQuery (
+data class MovePackageRef (
     var `address`: Address, 
     var `bcs`: Base64? = null
 ) : Disposable {
@@ -61952,22 +61952,62 @@ data class MovePackageQuery (
 /**
  * @suppress
  */
-public object FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer<MovePackageQuery> {
-    override fun read(buf: ByteBuffer): MovePackageQuery {
-        return MovePackageQuery(
+public object FfiConverterTypeMovePackageRef: FfiConverterRustBuffer<MovePackageRef> {
+    override fun read(buf: ByteBuffer): MovePackageRef {
+        return MovePackageRef(
             FfiConverterTypeAddress.read(buf),
             FfiConverterOptionalTypeBase64.read(buf),
         )
     }
 
-    override fun allocationSize(value: MovePackageQuery) = (
+    override fun allocationSize(value: MovePackageRef) = (
             FfiConverterTypeAddress.allocationSize(value.`address`) +
             FfiConverterOptionalTypeBase64.allocationSize(value.`bcs`)
     )
 
-    override fun write(value: MovePackageQuery, buf: ByteBuffer) {
+    override fun write(value: MovePackageRef, buf: ByteBuffer) {
             FfiConverterTypeAddress.write(value.`address`, buf)
             FfiConverterOptionalTypeBase64.write(value.`bcs`, buf)
+    }
+}
+
+
+
+data class MoveSchemaStruct (
+    var `abilities`: List<MoveAbility>? = null, 
+    var `name`: kotlin.String, 
+    var `fields`: List<MoveField>? = null, 
+    var `typeParameters`: List<MoveStructTypeParameter>? = null
+) {
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeMoveSchemaStruct: FfiConverterRustBuffer<MoveSchemaStruct> {
+    override fun read(buf: ByteBuffer): MoveSchemaStruct {
+        return MoveSchemaStruct(
+            FfiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalSequenceTypeMoveField.read(buf),
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: MoveSchemaStruct) = (
+            FfiConverterOptionalSequenceTypeMoveAbility.allocationSize(value.`abilities`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalSequenceTypeMoveField.allocationSize(value.`fields`) +
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.allocationSize(value.`typeParameters`)
+    )
+
+    override fun write(value: MoveSchemaStruct, buf: ByteBuffer) {
+            FfiConverterOptionalSequenceTypeMoveAbility.write(value.`abilities`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalSequenceTypeMoveField.write(value.`fields`, buf)
+            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.`typeParameters`, buf)
     }
 }
 
@@ -62052,7 +62092,7 @@ public object FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
 
 data class MoveStructConnection (
     var `pageInfo`: PageInfo, 
-    var `nodes`: List<MoveStructQuery>
+    var `nodes`: List<MoveSchemaStruct>
 ) {
     
     companion object
@@ -62065,58 +62105,18 @@ public object FfiConverterTypeMoveStructConnection: FfiConverterRustBuffer<MoveS
     override fun read(buf: ByteBuffer): MoveStructConnection {
         return MoveStructConnection(
             FfiConverterTypePageInfo.read(buf),
-            FfiConverterSequenceTypeMoveStructQuery.read(buf),
+            FfiConverterSequenceTypeMoveSchemaStruct.read(buf),
         )
     }
 
     override fun allocationSize(value: MoveStructConnection) = (
             FfiConverterTypePageInfo.allocationSize(value.`pageInfo`) +
-            FfiConverterSequenceTypeMoveStructQuery.allocationSize(value.`nodes`)
+            FfiConverterSequenceTypeMoveSchemaStruct.allocationSize(value.`nodes`)
     )
 
     override fun write(value: MoveStructConnection, buf: ByteBuffer) {
             FfiConverterTypePageInfo.write(value.`pageInfo`, buf)
-            FfiConverterSequenceTypeMoveStructQuery.write(value.`nodes`, buf)
-    }
-}
-
-
-
-data class MoveStructQuery (
-    var `abilities`: List<MoveAbility>? = null, 
-    var `name`: kotlin.String, 
-    var `fields`: List<MoveField>? = null, 
-    var `typeParameters`: List<MoveStructTypeParameter>? = null
-) {
-    
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeMoveStructQuery: FfiConverterRustBuffer<MoveStructQuery> {
-    override fun read(buf: ByteBuffer): MoveStructQuery {
-        return MoveStructQuery(
-            FfiConverterOptionalSequenceTypeMoveAbility.read(buf),
-            FfiConverterString.read(buf),
-            FfiConverterOptionalSequenceTypeMoveField.read(buf),
-            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
-        )
-    }
-
-    override fun allocationSize(value: MoveStructQuery) = (
-            FfiConverterOptionalSequenceTypeMoveAbility.allocationSize(value.`abilities`) +
-            FfiConverterString.allocationSize(value.`name`) +
-            FfiConverterOptionalSequenceTypeMoveField.allocationSize(value.`fields`) +
-            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.allocationSize(value.`typeParameters`)
-    )
-
-    override fun write(value: MoveStructQuery, buf: ByteBuffer) {
-            FfiConverterOptionalSequenceTypeMoveAbility.write(value.`abilities`, buf)
-            FfiConverterString.write(value.`name`, buf)
-            FfiConverterOptionalSequenceTypeMoveField.write(value.`fields`, buf)
-            FfiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.`typeParameters`, buf)
+            FfiConverterSequenceTypeMoveSchemaStruct.write(value.`nodes`, buf)
     }
 }
 
@@ -71462,24 +71462,24 @@ public object FfiConverterSequenceTypeMoveFunctionTypeParameter: FfiConverterRus
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<List<MoveModuleQuery>> {
-    override fun read(buf: ByteBuffer): List<MoveModuleQuery> {
+public object FfiConverterSequenceTypeMoveModuleRef: FfiConverterRustBuffer<List<MoveModuleRef>> {
+    override fun read(buf: ByteBuffer): List<MoveModuleRef> {
         val len = buf.getInt()
-        return List<MoveModuleQuery>(len) {
-            FfiConverterTypeMoveModuleQuery.read(buf)
+        return List<MoveModuleRef>(len) {
+            FfiConverterTypeMoveModuleRef.read(buf)
         }
     }
 
-    override fun allocationSize(value: List<MoveModuleQuery>): ULong {
+    override fun allocationSize(value: List<MoveModuleRef>): ULong {
         val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeMoveModuleQuery.allocationSize(it) }.sum()
+        val sizeForItems = value.map { FfiConverterTypeMoveModuleRef.allocationSize(it) }.sum()
         return sizeForLength + sizeForItems
     }
 
-    override fun write(value: List<MoveModuleQuery>, buf: ByteBuffer) {
+    override fun write(value: List<MoveModuleRef>, buf: ByteBuffer) {
         buf.putInt(value.size)
         value.iterator().forEach {
-            FfiConverterTypeMoveModuleQuery.write(it, buf)
+            FfiConverterTypeMoveModuleRef.write(it, buf)
         }
     }
 }
@@ -71490,24 +71490,24 @@ public object FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<Li
 /**
  * @suppress
  */
-public object FfiConverterSequenceTypeMoveStructQuery: FfiConverterRustBuffer<List<MoveStructQuery>> {
-    override fun read(buf: ByteBuffer): List<MoveStructQuery> {
+public object FfiConverterSequenceTypeMoveSchemaStruct: FfiConverterRustBuffer<List<MoveSchemaStruct>> {
+    override fun read(buf: ByteBuffer): List<MoveSchemaStruct> {
         val len = buf.getInt()
-        return List<MoveStructQuery>(len) {
-            FfiConverterTypeMoveStructQuery.read(buf)
+        return List<MoveSchemaStruct>(len) {
+            FfiConverterTypeMoveSchemaStruct.read(buf)
         }
     }
 
-    override fun allocationSize(value: List<MoveStructQuery>): ULong {
+    override fun allocationSize(value: List<MoveSchemaStruct>): ULong {
         val sizeForLength = 4UL
-        val sizeForItems = value.map { FfiConverterTypeMoveStructQuery.allocationSize(it) }.sum()
+        val sizeForItems = value.map { FfiConverterTypeMoveSchemaStruct.allocationSize(it) }.sum()
         return sizeForLength + sizeForItems
     }
 
-    override fun write(value: List<MoveStructQuery>, buf: ByteBuffer) {
+    override fun write(value: List<MoveSchemaStruct>, buf: ByteBuffer) {
         buf.putInt(value.size)
         value.iterator().forEach {
-            FfiConverterTypeMoveStructQuery.write(it, buf)
+            FfiConverterTypeMoveSchemaStruct.write(it, buf)
         }
     }
 }

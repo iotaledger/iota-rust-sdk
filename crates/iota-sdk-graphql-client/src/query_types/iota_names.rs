@@ -11,7 +11,7 @@ use crate::{
 };
 
 // ===========================================================================
-// IOTA Names Queries
+// Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -26,7 +26,7 @@ pub struct ResolveIotaNamesAddressQuery {
 }
 
 // ===========================================================================
-// IOTA Names Query Args
+// Query Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -42,7 +42,7 @@ pub struct ResolveIotaNamesAddressQueryArgs {
 )]
 pub struct IotaNamesAddressRegistrationsQuery {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesRegistrationsQuery>,
+    pub address: Option<IotaNamesRegistrationsLookup>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -53,7 +53,7 @@ pub struct IotaNamesAddressRegistrationsQuery {
 )]
 pub struct IotaNamesAddressDefaultNameQuery {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesDefaultNameQuery>,
+    pub address: Option<IotaNamesDefaultNameLookup>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -62,7 +62,7 @@ pub struct IotaNamesAddressDefaultNameQuery {
     graphql_type = "Address",
     variables = "IotaNamesRegistrationsQueryArgs"
 )]
-pub struct IotaNamesRegistrationsQuery {
+pub struct IotaNamesRegistrationsLookup {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub iota_names_registrations: NameRegistrationConnection,
 }
@@ -82,7 +82,7 @@ pub struct IotaNamesRegistrationsQueryArgs {
     graphql_type = "Address",
     variables = "IotaNamesDefaultNameQueryArgs"
 )]
-pub struct IotaNamesDefaultNameQuery {
+pub struct IotaNamesDefaultNameLookup {
     #[arguments(format: $format)]
     pub iota_names_default_name: Option<String>,
 }
@@ -94,7 +94,7 @@ pub struct IotaNamesDefaultNameQueryArgs {
 }
 
 // ===========================================================================
-// IOTA Names Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]

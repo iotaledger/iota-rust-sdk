@@ -9421,6 +9421,17 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
     func moveObjectContentsBcs(objectId: ObjectId, version: UInt64?) async throws  -> Data?
     
     /**
+     * Return Move schema function data for the provided package,
+     * module, and function.
+     */
+    func moveSchemaFunction(package: Address, module: String, function: String, version: UInt64?) async throws  -> MoveFunction?
+    
+    /**
+     * Return Move schema module data for the provided module.
+     */
+    func moveSchemaModule(package: Address, module: String, version: UInt64?, paginationFilterEnums: PaginationFilter?, paginationFilterFriends: PaginationFilter?, paginationFilterFunctions: PaginationFilter?, paginationFilterStructs: PaginationFilter?) async throws  -> MoveModule?
+    
+    /**
      * Execute a Move View Function.
      *
      * A View Function is a function in a Move module with a return type that
@@ -9474,17 +9485,6 @@ public protocol GraphQlClientProtocol: AnyObject, Sendable {
      * or an error.
      */
     func moveViewCallJson(functionName: String, typeArguments: [String]?, arguments: [Value]?) async throws  -> MoveViewResult
-    
-    /**
-     * Return the normalized Move function data for the provided package,
-     * module, and function.
-     */
-    func normalizedMoveFunction(package: Address, module: String, function: String, version: UInt64?) async throws  -> MoveFunction?
-    
-    /**
-     * Return the normalized Move module data for the provided module.
-     */
-    func normalizedMoveModule(package: Address, module: String, version: UInt64?, paginationFilterEnums: PaginationFilter?, paginationFilterFriends: PaginationFilter?, paginationFilterFunctions: PaginationFilter?, paginationFilterStructs: PaginationFilter?) async throws  -> MoveModule?
     
     /**
      * Return an object based on the provided `Address`.
@@ -10352,6 +10352,47 @@ open func moveObjectContentsBcs(objectId: ObjectId, version: UInt64? = nil)async
 }
     
     /**
+     * Return Move schema function data for the provided package,
+     * module, and function.
+     */
+open func moveSchemaFunction(package: Address, module: String, function: String, version: UInt64? = nil)async throws  -> MoveFunction?  {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function(
+                    self.uniffiClonePointer(),
+                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterString.lower(function),FfiConverterOptionUInt64.lower(version)
+                )
+            },
+            pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            completeFunc: ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            freeFunc: ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            liftFunc: FfiConverterOptionTypeMoveFunction.lift,
+            errorHandler: FfiConverterTypeSdkFfiError_lift
+        )
+}
+    
+    /**
+     * Return Move schema module data for the provided module.
+     */
+open func moveSchemaModule(package: Address, module: String, version: UInt64? = nil, paginationFilterEnums: PaginationFilter? = nil, paginationFilterFriends: PaginationFilter? = nil, paginationFilterFunctions: PaginationFilter? = nil, paginationFilterStructs: PaginationFilter? = nil)async throws  -> MoveModule?  {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module(
+                    self.uniffiClonePointer(),
+                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterOptionUInt64.lower(version),FfiConverterOptionTypePaginationFilter.lower(paginationFilterEnums),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFriends),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFunctions),FfiConverterOptionTypePaginationFilter.lower(paginationFilterStructs)
+                )
+            },
+            pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            completeFunc: ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            freeFunc: ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            liftFunc: FfiConverterOptionTypeMoveModule.lift,
+            errorHandler: FfiConverterTypeSdkFfiError_lift
+        )
+}
+    
+    /**
      * Execute a Move View Function.
      *
      * A View Function is a function in a Move module with a return type that
@@ -10432,47 +10473,6 @@ open func moveViewCallJson(functionName: String, typeArguments: [String]? = nil,
             completeFunc: ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
             freeFunc: ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             liftFunc: FfiConverterTypeMoveViewResult_lift,
-            errorHandler: FfiConverterTypeSdkFfiError_lift
-        )
-}
-    
-    /**
-     * Return the normalized Move function data for the provided package,
-     * module, and function.
-     */
-open func normalizedMoveFunction(package: Address, module: String, function: String, version: UInt64? = nil)async throws  -> MoveFunction?  {
-    return
-        try  await uniffiRustCallAsync(
-            rustFutureFunc: {
-                uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-                    self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterString.lower(function),FfiConverterOptionUInt64.lower(version)
-                )
-            },
-            pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            completeFunc: ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            freeFunc: ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
-            liftFunc: FfiConverterOptionTypeMoveFunction.lift,
-            errorHandler: FfiConverterTypeSdkFfiError_lift
-        )
-}
-    
-    /**
-     * Return the normalized Move module data for the provided module.
-     */
-open func normalizedMoveModule(package: Address, module: String, version: UInt64? = nil, paginationFilterEnums: PaginationFilter? = nil, paginationFilterFriends: PaginationFilter? = nil, paginationFilterFunctions: PaginationFilter? = nil, paginationFilterStructs: PaginationFilter? = nil)async throws  -> MoveModule?  {
-    return
-        try  await uniffiRustCallAsync(
-            rustFutureFunc: {
-                uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-                    self.uniffiClonePointer(),
-                    FfiConverterTypeAddress_lower(package),FfiConverterString.lower(module),FfiConverterOptionUInt64.lower(version),FfiConverterOptionTypePaginationFilter.lower(paginationFilterEnums),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFriends),FfiConverterOptionTypePaginationFilter.lower(paginationFilterFunctions),FfiConverterOptionTypePaginationFilter.lower(paginationFilterStructs)
-                )
-            },
-            pollFunc: ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            completeFunc: ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            freeFunc: ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
-            liftFunc: FfiConverterOptionTypeMoveModule.lift,
             errorHandler: FfiConverterTypeSdkFfiError_lift
         )
 }
@@ -32827,12 +32827,12 @@ public func FfiConverterTypeMoveModule_lower(_ value: MoveModule) -> RustBuffer 
 
 
 public struct MoveModuleConnection {
-    public var nodes: [MoveModuleQuery]
+    public var nodes: [MoveModuleRef]
     public var pageInfo: PageInfo
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(nodes: [MoveModuleQuery], pageInfo: PageInfo) {
+    public init(nodes: [MoveModuleRef], pageInfo: PageInfo) {
         self.nodes = nodes
         self.pageInfo = pageInfo
     }
@@ -32851,13 +32851,13 @@ public struct FfiConverterTypeMoveModuleConnection: FfiConverterRustBuffer {
     public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MoveModuleConnection {
         return
             try MoveModuleConnection(
-                nodes: FfiConverterSequenceTypeMoveModuleQuery.read(from: &buf), 
+                nodes: FfiConverterSequenceTypeMoveModuleRef.read(from: &buf), 
                 pageInfo: FfiConverterTypePageInfo.read(from: &buf)
         )
     }
 
     public static func write(_ value: MoveModuleConnection, into buf: inout [UInt8]) {
-        FfiConverterSequenceTypeMoveModuleQuery.write(value.nodes, into: &buf)
+        FfiConverterSequenceTypeMoveModuleRef.write(value.nodes, into: &buf)
         FfiConverterTypePageInfo.write(value.pageInfo, into: &buf)
     }
 }
@@ -32878,20 +32878,20 @@ public func FfiConverterTypeMoveModuleConnection_lower(_ value: MoveModuleConnec
 }
 
 
-public struct MoveModuleQuery {
-    public var package: MovePackageQuery
+public struct MoveModuleRef {
+    public var package: MovePackageRef
     public var name: String
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(package: MovePackageQuery, name: String) {
+    public init(package: MovePackageRef, name: String) {
         self.package = package
         self.name = name
     }
 }
 
 #if compiler(>=6)
-extension MoveModuleQuery: Sendable {}
+extension MoveModuleRef: Sendable {}
 #endif
 
 
@@ -32899,17 +32899,17 @@ extension MoveModuleQuery: Sendable {}
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public struct FfiConverterTypeMoveModuleQuery: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MoveModuleQuery {
+public struct FfiConverterTypeMoveModuleRef: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MoveModuleRef {
         return
-            try MoveModuleQuery(
-                package: FfiConverterTypeMovePackageQuery.read(from: &buf), 
+            try MoveModuleRef(
+                package: FfiConverterTypeMovePackageRef.read(from: &buf), 
                 name: FfiConverterString.read(from: &buf)
         )
     }
 
-    public static func write(_ value: MoveModuleQuery, into buf: inout [UInt8]) {
-        FfiConverterTypeMovePackageQuery.write(value.package, into: &buf)
+    public static func write(_ value: MoveModuleRef, into buf: inout [UInt8]) {
+        FfiConverterTypeMovePackageRef.write(value.package, into: &buf)
         FfiConverterString.write(value.name, into: &buf)
     }
 }
@@ -32918,15 +32918,15 @@ public struct FfiConverterTypeMoveModuleQuery: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterTypeMoveModuleQuery_lift(_ buf: RustBuffer) throws -> MoveModuleQuery {
-    return try FfiConverterTypeMoveModuleQuery.lift(buf)
+public func FfiConverterTypeMoveModuleRef_lift(_ buf: RustBuffer) throws -> MoveModuleRef {
+    return try FfiConverterTypeMoveModuleRef.lift(buf)
 }
 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterTypeMoveModuleQuery_lower(_ value: MoveModuleQuery) -> RustBuffer {
-    return FfiConverterTypeMoveModuleQuery.lower(value)
+public func FfiConverterTypeMoveModuleRef_lower(_ value: MoveModuleRef) -> RustBuffer {
+    return FfiConverterTypeMoveModuleRef.lower(value)
 }
 
 
@@ -33061,7 +33061,7 @@ public func FfiConverterTypeMovePackagePage_lower(_ value: MovePackagePage) -> R
 }
 
 
-public struct MovePackageQuery {
+public struct MovePackageRef {
     public var address: Address
     public var bcs: Base64?
 
@@ -33074,7 +33074,7 @@ public struct MovePackageQuery {
 }
 
 #if compiler(>=6)
-extension MovePackageQuery: Sendable {}
+extension MovePackageRef: Sendable {}
 #endif
 
 
@@ -33082,16 +33082,16 @@ extension MovePackageQuery: Sendable {}
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public struct FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MovePackageQuery {
+public struct FfiConverterTypeMovePackageRef: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MovePackageRef {
         return
-            try MovePackageQuery(
+            try MovePackageRef(
                 address: FfiConverterTypeAddress.read(from: &buf), 
                 bcs: FfiConverterOptionTypeBase64.read(from: &buf)
         )
     }
 
-    public static func write(_ value: MovePackageQuery, into buf: inout [UInt8]) {
+    public static func write(_ value: MovePackageRef, into buf: inout [UInt8]) {
         FfiConverterTypeAddress.write(value.address, into: &buf)
         FfiConverterOptionTypeBase64.write(value.bcs, into: &buf)
     }
@@ -33101,15 +33101,101 @@ public struct FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer {
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterTypeMovePackageQuery_lift(_ buf: RustBuffer) throws -> MovePackageQuery {
-    return try FfiConverterTypeMovePackageQuery.lift(buf)
+public func FfiConverterTypeMovePackageRef_lift(_ buf: RustBuffer) throws -> MovePackageRef {
+    return try FfiConverterTypeMovePackageRef.lift(buf)
 }
 
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-public func FfiConverterTypeMovePackageQuery_lower(_ value: MovePackageQuery) -> RustBuffer {
-    return FfiConverterTypeMovePackageQuery.lower(value)
+public func FfiConverterTypeMovePackageRef_lower(_ value: MovePackageRef) -> RustBuffer {
+    return FfiConverterTypeMovePackageRef.lower(value)
+}
+
+
+public struct MoveSchemaStruct {
+    public var abilities: [MoveAbility]?
+    public var name: String
+    public var fields: [MoveField]?
+    public var typeParameters: [MoveStructTypeParameter]?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(abilities: [MoveAbility]? = nil, name: String, fields: [MoveField]? = nil, typeParameters: [MoveStructTypeParameter]? = nil) {
+        self.abilities = abilities
+        self.name = name
+        self.fields = fields
+        self.typeParameters = typeParameters
+    }
+}
+
+#if compiler(>=6)
+extension MoveSchemaStruct: Sendable {}
+#endif
+
+
+extension MoveSchemaStruct: Equatable, Hashable {
+    public static func ==(lhs: MoveSchemaStruct, rhs: MoveSchemaStruct) -> Bool {
+        if lhs.abilities != rhs.abilities {
+            return false
+        }
+        if lhs.name != rhs.name {
+            return false
+        }
+        if lhs.fields != rhs.fields {
+            return false
+        }
+        if lhs.typeParameters != rhs.typeParameters {
+            return false
+        }
+        return true
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(abilities)
+        hasher.combine(name)
+        hasher.combine(fields)
+        hasher.combine(typeParameters)
+    }
+}
+
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeMoveSchemaStruct: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MoveSchemaStruct {
+        return
+            try MoveSchemaStruct(
+                abilities: FfiConverterOptionSequenceTypeMoveAbility.read(from: &buf), 
+                name: FfiConverterString.read(from: &buf), 
+                fields: FfiConverterOptionSequenceTypeMoveField.read(from: &buf), 
+                typeParameters: FfiConverterOptionSequenceTypeMoveStructTypeParameter.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: MoveSchemaStruct, into buf: inout [UInt8]) {
+        FfiConverterOptionSequenceTypeMoveAbility.write(value.abilities, into: &buf)
+        FfiConverterString.write(value.name, into: &buf)
+        FfiConverterOptionSequenceTypeMoveField.write(value.fields, into: &buf)
+        FfiConverterOptionSequenceTypeMoveStructTypeParameter.write(value.typeParameters, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeMoveSchemaStruct_lift(_ buf: RustBuffer) throws -> MoveSchemaStruct {
+    return try FfiConverterTypeMoveSchemaStruct.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeMoveSchemaStruct_lower(_ value: MoveSchemaStruct) -> RustBuffer {
+    return FfiConverterTypeMoveSchemaStruct.lower(value)
 }
 
 
@@ -33213,11 +33299,11 @@ public func FfiConverterTypeMoveStruct_lower(_ value: MoveStruct) -> RustBuffer 
 
 public struct MoveStructConnection {
     public var pageInfo: PageInfo
-    public var nodes: [MoveStructQuery]
+    public var nodes: [MoveSchemaStruct]
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(pageInfo: PageInfo, nodes: [MoveStructQuery]) {
+    public init(pageInfo: PageInfo, nodes: [MoveSchemaStruct]) {
         self.pageInfo = pageInfo
         self.nodes = nodes
     }
@@ -33255,13 +33341,13 @@ public struct FfiConverterTypeMoveStructConnection: FfiConverterRustBuffer {
         return
             try MoveStructConnection(
                 pageInfo: FfiConverterTypePageInfo.read(from: &buf), 
-                nodes: FfiConverterSequenceTypeMoveStructQuery.read(from: &buf)
+                nodes: FfiConverterSequenceTypeMoveSchemaStruct.read(from: &buf)
         )
     }
 
     public static func write(_ value: MoveStructConnection, into buf: inout [UInt8]) {
         FfiConverterTypePageInfo.write(value.pageInfo, into: &buf)
-        FfiConverterSequenceTypeMoveStructQuery.write(value.nodes, into: &buf)
+        FfiConverterSequenceTypeMoveSchemaStruct.write(value.nodes, into: &buf)
     }
 }
 
@@ -33278,92 +33364,6 @@ public func FfiConverterTypeMoveStructConnection_lift(_ buf: RustBuffer) throws 
 #endif
 public func FfiConverterTypeMoveStructConnection_lower(_ value: MoveStructConnection) -> RustBuffer {
     return FfiConverterTypeMoveStructConnection.lower(value)
-}
-
-
-public struct MoveStructQuery {
-    public var abilities: [MoveAbility]?
-    public var name: String
-    public var fields: [MoveField]?
-    public var typeParameters: [MoveStructTypeParameter]?
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(abilities: [MoveAbility]? = nil, name: String, fields: [MoveField]? = nil, typeParameters: [MoveStructTypeParameter]? = nil) {
-        self.abilities = abilities
-        self.name = name
-        self.fields = fields
-        self.typeParameters = typeParameters
-    }
-}
-
-#if compiler(>=6)
-extension MoveStructQuery: Sendable {}
-#endif
-
-
-extension MoveStructQuery: Equatable, Hashable {
-    public static func ==(lhs: MoveStructQuery, rhs: MoveStructQuery) -> Bool {
-        if lhs.abilities != rhs.abilities {
-            return false
-        }
-        if lhs.name != rhs.name {
-            return false
-        }
-        if lhs.fields != rhs.fields {
-            return false
-        }
-        if lhs.typeParameters != rhs.typeParameters {
-            return false
-        }
-        return true
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(abilities)
-        hasher.combine(name)
-        hasher.combine(fields)
-        hasher.combine(typeParameters)
-    }
-}
-
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeMoveStructQuery: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> MoveStructQuery {
-        return
-            try MoveStructQuery(
-                abilities: FfiConverterOptionSequenceTypeMoveAbility.read(from: &buf), 
-                name: FfiConverterString.read(from: &buf), 
-                fields: FfiConverterOptionSequenceTypeMoveField.read(from: &buf), 
-                typeParameters: FfiConverterOptionSequenceTypeMoveStructTypeParameter.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: MoveStructQuery, into buf: inout [UInt8]) {
-        FfiConverterOptionSequenceTypeMoveAbility.write(value.abilities, into: &buf)
-        FfiConverterString.write(value.name, into: &buf)
-        FfiConverterOptionSequenceTypeMoveField.write(value.fields, into: &buf)
-        FfiConverterOptionSequenceTypeMoveStructTypeParameter.write(value.typeParameters, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeMoveStructQuery_lift(_ buf: RustBuffer) throws -> MoveStructQuery {
-    return try FfiConverterTypeMoveStructQuery.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeMoveStructQuery_lower(_ value: MoveStructQuery) -> RustBuffer {
-    return FfiConverterTypeMoveStructQuery.lower(value)
 }
 
 
@@ -43114,23 +43114,23 @@ fileprivate struct FfiConverterSequenceTypeMoveFunctionTypeParameter: FfiConvert
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-fileprivate struct FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer {
-    typealias SwiftType = [MoveModuleQuery]
+fileprivate struct FfiConverterSequenceTypeMoveModuleRef: FfiConverterRustBuffer {
+    typealias SwiftType = [MoveModuleRef]
 
-    public static func write(_ value: [MoveModuleQuery], into buf: inout [UInt8]) {
+    public static func write(_ value: [MoveModuleRef], into buf: inout [UInt8]) {
         let len = Int32(value.count)
         writeInt(&buf, len)
         for item in value {
-            FfiConverterTypeMoveModuleQuery.write(item, into: &buf)
+            FfiConverterTypeMoveModuleRef.write(item, into: &buf)
         }
     }
 
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [MoveModuleQuery] {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [MoveModuleRef] {
         let len: Int32 = try readInt(&buf)
-        var seq = [MoveModuleQuery]()
+        var seq = [MoveModuleRef]()
         seq.reserveCapacity(Int(len))
         for _ in 0 ..< len {
-            seq.append(try FfiConverterTypeMoveModuleQuery.read(from: &buf))
+            seq.append(try FfiConverterTypeMoveModuleRef.read(from: &buf))
         }
         return seq
     }
@@ -43139,23 +43139,23 @@ fileprivate struct FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuff
 #if swift(>=5.8)
 @_documentation(visibility: private)
 #endif
-fileprivate struct FfiConverterSequenceTypeMoveStructQuery: FfiConverterRustBuffer {
-    typealias SwiftType = [MoveStructQuery]
+fileprivate struct FfiConverterSequenceTypeMoveSchemaStruct: FfiConverterRustBuffer {
+    typealias SwiftType = [MoveSchemaStruct]
 
-    public static func write(_ value: [MoveStructQuery], into buf: inout [UInt8]) {
+    public static func write(_ value: [MoveSchemaStruct], into buf: inout [UInt8]) {
         let len = Int32(value.count)
         writeInt(&buf, len)
         for item in value {
-            FfiConverterTypeMoveStructQuery.write(item, into: &buf)
+            FfiConverterTypeMoveSchemaStruct.write(item, into: &buf)
         }
     }
 
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [MoveStructQuery] {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> [MoveSchemaStruct] {
         let len: Int32 = try readInt(&buf)
-        var seq = [MoveStructQuery]()
+        var seq = [MoveSchemaStruct]()
         seq.reserveCapacity(Int(len))
         for _ in 0 ..< len {
-            seq.append(try FfiConverterTypeMoveStructQuery.read(from: &buf))
+            seq.append(try FfiConverterTypeMoveSchemaStruct.read(from: &buf))
         }
         return seq
     }
@@ -50172,16 +50172,16 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694) {
         return InitializationResult.apiChecksumMismatch
     }
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function() != 21880) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module() != 1743) {
+        return InitializationResult.apiChecksumMismatch
+    }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965) {
-        return InitializationResult.apiChecksumMismatch
-    }
-    if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424) {

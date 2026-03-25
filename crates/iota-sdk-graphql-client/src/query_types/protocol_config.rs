@@ -7,7 +7,7 @@
 use crate::query_types::schema;
 
 // ===========================================================================
-// Protocol Config Queries
+// Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -31,7 +31,7 @@ pub struct ProtocolConfigQueryArgs {
 }
 
 // ===========================================================================
-// Protocol Config Types
+// Types
 // ===========================================================================
 
 /// Information about the configuration of the protocol.

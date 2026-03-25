@@ -7,7 +7,7 @@
 use crate::query_types::{Base64, BigInt, GQLAddress, MoveObject, ObjectId, PageInfo, schema};
 
 // ===========================================================================
-// Active Validators Queries
+// Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -22,7 +22,7 @@ pub struct ActiveValidatorsQuery {
 }
 
 // ===========================================================================
-// Active Validators Query Args
+// Query Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -35,7 +35,7 @@ pub struct ActiveValidatorsQueryArgs<'a> {
 }
 
 // ===========================================================================
-// Active Validators Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -45,7 +45,7 @@ pub struct ActiveValidatorsQueryArgs<'a> {
     variables = "ActiveValidatorsQueryArgs"
 )]
 pub struct EpochValidator {
-    pub validator_set: Option<ValidatorSetQuery>,
+    pub validator_set: Option<ActiveValidatorSet>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -54,7 +54,7 @@ pub struct EpochValidator {
     graphql_type = "ValidatorSet",
     variables = "ActiveValidatorsQueryArgs"
 )]
-pub struct ValidatorSetQuery {
+pub struct ActiveValidatorSet {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub active_validators: ValidatorConnection,
 }

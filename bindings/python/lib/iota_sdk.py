@@ -1699,13 +1699,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs() != 49694:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function() != 21880:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module() != 1743:
+        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call() != 52742:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json() != 5635:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function() != 16965:
-        raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module() != 51355:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object() != 27424:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -5604,6 +5604,25 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs.
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_object_contents_bcs.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function.restype = ctypes.c_uint64
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module.argtypes = (
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+    _UniffiRustBuffer,
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call.argtypes = (
     ctypes.c_void_p,
     _UniffiRustBuffer,
@@ -5618,25 +5637,6 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json.argty
     _UniffiRustBuffer,
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function.restype = ctypes.c_uint64
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module.argtypes = (
-    ctypes.c_void_p,
-    ctypes.c_void_p,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-    _UniffiRustBuffer,
-)
-_UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_object.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -15205,18 +15205,18 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_content
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_object_contents_bcs.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module.argtypes = (
+)
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module.argtypes = (
-)
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_object.restype = ctypes.c_uint16
@@ -20345,9 +20345,9 @@ class _UniffiConverterTypeMoveModule(_UniffiConverterRustBuffer):
 
 
 class MoveModuleConnection:
-    nodes: "typing.List[MoveModuleQuery]"
+    nodes: "typing.List[MoveModuleRef]"
     page_info: "PageInfo"
-    def __init__(self, *, nodes: "typing.List[MoveModuleQuery]", page_info: "PageInfo"):
+    def __init__(self, *, nodes: "typing.List[MoveModuleRef]", page_info: "PageInfo"):
         self.nodes = nodes
         self.page_info = page_info
 
@@ -20365,30 +20365,30 @@ class _UniffiConverterTypeMoveModuleConnection(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
         return MoveModuleConnection(
-            nodes=_UniffiConverterSequenceTypeMoveModuleQuery.read(buf),
+            nodes=_UniffiConverterSequenceTypeMoveModuleRef.read(buf),
             page_info=_UniffiConverterTypePageInfo.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterSequenceTypeMoveModuleQuery.check_lower(value.nodes)
+        _UniffiConverterSequenceTypeMoveModuleRef.check_lower(value.nodes)
         _UniffiConverterTypePageInfo.check_lower(value.page_info)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterSequenceTypeMoveModuleQuery.write(value.nodes, buf)
+        _UniffiConverterSequenceTypeMoveModuleRef.write(value.nodes, buf)
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
 
 
-class MoveModuleQuery:
-    package: "MovePackageQuery"
+class MoveModuleRef:
+    package: "MovePackageRef"
     name: "str"
-    def __init__(self, *, package: "MovePackageQuery", name: "str"):
+    def __init__(self, *, package: "MovePackageRef", name: "str"):
         self.package = package
         self.name = name
 
     def __str__(self):
-        return "MoveModuleQuery(package={}, name={})".format(self.package, self.name)
+        return "MoveModuleRef(package={}, name={})".format(self.package, self.name)
 
     def __eq__(self, other):
         if self.package != other.package:
@@ -20397,22 +20397,22 @@ class MoveModuleQuery:
             return False
         return True
 
-class _UniffiConverterTypeMoveModuleQuery(_UniffiConverterRustBuffer):
+class _UniffiConverterTypeMoveModuleRef(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
-        return MoveModuleQuery(
-            package=_UniffiConverterTypeMovePackageQuery.read(buf),
+        return MoveModuleRef(
+            package=_UniffiConverterTypeMovePackageRef.read(buf),
             name=_UniffiConverterString.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
-        _UniffiConverterTypeMovePackageQuery.check_lower(value.package)
+        _UniffiConverterTypeMovePackageRef.check_lower(value.package)
         _UniffiConverterString.check_lower(value.name)
 
     @staticmethod
     def write(value, buf):
-        _UniffiConverterTypeMovePackageQuery.write(value.package, buf)
+        _UniffiConverterTypeMovePackageRef.write(value.package, buf)
         _UniffiConverterString.write(value.name, buf)
 
 
@@ -20497,7 +20497,7 @@ class _UniffiConverterTypeMovePackagePage(_UniffiConverterRustBuffer):
         _UniffiConverterSequenceTypeMovePackage.write(value.data, buf)
 
 
-class MovePackageQuery:
+class MovePackageRef:
     address: "Address"
     bcs: "typing.Optional[Base64]"
     def __init__(self, *, address: "Address", bcs: "typing.Optional[Base64]" = _DEFAULT):
@@ -20508,7 +20508,7 @@ class MovePackageQuery:
             self.bcs = bcs
 
     def __str__(self):
-        return "MovePackageQuery(address={}, bcs={})".format(self.address, self.bcs)
+        return "MovePackageRef(address={}, bcs={})".format(self.address, self.bcs)
 
     def __eq__(self, other):
         if self.address != other.address:
@@ -20517,10 +20517,10 @@ class MovePackageQuery:
             return False
         return True
 
-class _UniffiConverterTypeMovePackageQuery(_UniffiConverterRustBuffer):
+class _UniffiConverterTypeMovePackageRef(_UniffiConverterRustBuffer):
     @staticmethod
     def read(buf):
-        return MovePackageQuery(
+        return MovePackageRef(
             address=_UniffiConverterTypeAddress.read(buf),
             bcs=_UniffiConverterOptionalTypeBase64.read(buf),
         )
@@ -20534,6 +20534,65 @@ class _UniffiConverterTypeMovePackageQuery(_UniffiConverterRustBuffer):
     def write(value, buf):
         _UniffiConverterTypeAddress.write(value.address, buf)
         _UniffiConverterOptionalTypeBase64.write(value.bcs, buf)
+
+
+class MoveSchemaStruct:
+    abilities: "typing.Optional[typing.List[MoveAbility]]"
+    name: "str"
+    fields: "typing.Optional[typing.List[MoveField]]"
+    type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
+    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]" = _DEFAULT, name: "str", fields: "typing.Optional[typing.List[MoveField]]" = _DEFAULT, type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]" = _DEFAULT):
+        if abilities is _DEFAULT:
+            self.abilities = None
+        else:
+            self.abilities = abilities
+        self.name = name
+        if fields is _DEFAULT:
+            self.fields = None
+        else:
+            self.fields = fields
+        if type_parameters is _DEFAULT:
+            self.type_parameters = None
+        else:
+            self.type_parameters = type_parameters
+
+    def __str__(self):
+        return "MoveSchemaStruct(abilities={}, name={}, fields={}, type_parameters={})".format(self.abilities, self.name, self.fields, self.type_parameters)
+
+    def __eq__(self, other):
+        if self.abilities != other.abilities:
+            return False
+        if self.name != other.name:
+            return False
+        if self.fields != other.fields:
+            return False
+        if self.type_parameters != other.type_parameters:
+            return False
+        return True
+
+class _UniffiConverterTypeMoveSchemaStruct(_UniffiConverterRustBuffer):
+    @staticmethod
+    def read(buf):
+        return MoveSchemaStruct(
+            abilities=_UniffiConverterOptionalSequenceTypeMoveAbility.read(buf),
+            name=_UniffiConverterString.read(buf),
+            fields=_UniffiConverterOptionalSequenceTypeMoveField.read(buf),
+            type_parameters=_UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
+        )
+
+    @staticmethod
+    def check_lower(value):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.check_lower(value.abilities)
+        _UniffiConverterString.check_lower(value.name)
+        _UniffiConverterOptionalSequenceTypeMoveField.check_lower(value.fields)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.check_lower(value.type_parameters)
+
+    @staticmethod
+    def write(value, buf):
+        _UniffiConverterOptionalSequenceTypeMoveAbility.write(value.abilities, buf)
+        _UniffiConverterString.write(value.name, buf)
+        _UniffiConverterOptionalSequenceTypeMoveField.write(value.fields, buf)
+        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.type_parameters, buf)
 
 
 class MoveStruct:
@@ -20616,8 +20675,8 @@ class _UniffiConverterTypeMoveStruct(_UniffiConverterRustBuffer):
 
 class MoveStructConnection:
     page_info: "PageInfo"
-    nodes: "typing.List[MoveStructQuery]"
-    def __init__(self, *, page_info: "PageInfo", nodes: "typing.List[MoveStructQuery]"):
+    nodes: "typing.List[MoveSchemaStruct]"
+    def __init__(self, *, page_info: "PageInfo", nodes: "typing.List[MoveSchemaStruct]"):
         self.page_info = page_info
         self.nodes = nodes
 
@@ -20636,77 +20695,18 @@ class _UniffiConverterTypeMoveStructConnection(_UniffiConverterRustBuffer):
     def read(buf):
         return MoveStructConnection(
             page_info=_UniffiConverterTypePageInfo.read(buf),
-            nodes=_UniffiConverterSequenceTypeMoveStructQuery.read(buf),
+            nodes=_UniffiConverterSequenceTypeMoveSchemaStruct.read(buf),
         )
 
     @staticmethod
     def check_lower(value):
         _UniffiConverterTypePageInfo.check_lower(value.page_info)
-        _UniffiConverterSequenceTypeMoveStructQuery.check_lower(value.nodes)
+        _UniffiConverterSequenceTypeMoveSchemaStruct.check_lower(value.nodes)
 
     @staticmethod
     def write(value, buf):
         _UniffiConverterTypePageInfo.write(value.page_info, buf)
-        _UniffiConverterSequenceTypeMoveStructQuery.write(value.nodes, buf)
-
-
-class MoveStructQuery:
-    abilities: "typing.Optional[typing.List[MoveAbility]]"
-    name: "str"
-    fields: "typing.Optional[typing.List[MoveField]]"
-    type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]"
-    def __init__(self, *, abilities: "typing.Optional[typing.List[MoveAbility]]" = _DEFAULT, name: "str", fields: "typing.Optional[typing.List[MoveField]]" = _DEFAULT, type_parameters: "typing.Optional[typing.List[MoveStructTypeParameter]]" = _DEFAULT):
-        if abilities is _DEFAULT:
-            self.abilities = None
-        else:
-            self.abilities = abilities
-        self.name = name
-        if fields is _DEFAULT:
-            self.fields = None
-        else:
-            self.fields = fields
-        if type_parameters is _DEFAULT:
-            self.type_parameters = None
-        else:
-            self.type_parameters = type_parameters
-
-    def __str__(self):
-        return "MoveStructQuery(abilities={}, name={}, fields={}, type_parameters={})".format(self.abilities, self.name, self.fields, self.type_parameters)
-
-    def __eq__(self, other):
-        if self.abilities != other.abilities:
-            return False
-        if self.name != other.name:
-            return False
-        if self.fields != other.fields:
-            return False
-        if self.type_parameters != other.type_parameters:
-            return False
-        return True
-
-class _UniffiConverterTypeMoveStructQuery(_UniffiConverterRustBuffer):
-    @staticmethod
-    def read(buf):
-        return MoveStructQuery(
-            abilities=_UniffiConverterOptionalSequenceTypeMoveAbility.read(buf),
-            name=_UniffiConverterString.read(buf),
-            fields=_UniffiConverterOptionalSequenceTypeMoveField.read(buf),
-            type_parameters=_UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.read(buf),
-        )
-
-    @staticmethod
-    def check_lower(value):
-        _UniffiConverterOptionalSequenceTypeMoveAbility.check_lower(value.abilities)
-        _UniffiConverterString.check_lower(value.name)
-        _UniffiConverterOptionalSequenceTypeMoveField.check_lower(value.fields)
-        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.check_lower(value.type_parameters)
-
-    @staticmethod
-    def write(value, buf):
-        _UniffiConverterOptionalSequenceTypeMoveAbility.write(value.abilities, buf)
-        _UniffiConverterString.write(value.name, buf)
-        _UniffiConverterOptionalSequenceTypeMoveField.write(value.fields, buf)
-        _UniffiConverterOptionalSequenceTypeMoveStructTypeParameter.write(value.type_parameters, buf)
+        _UniffiConverterSequenceTypeMoveSchemaStruct.write(value.nodes, buf)
 
 
 class MoveStructTypeParameter:
@@ -31020,18 +31020,18 @@ class _UniffiConverterSequenceTypeMoveFunctionTypeParameter(_UniffiConverterRust
 
 
 
-class _UniffiConverterSequenceTypeMoveModuleQuery(_UniffiConverterRustBuffer):
+class _UniffiConverterSequenceTypeMoveModuleRef(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
         for item in value:
-            _UniffiConverterTypeMoveModuleQuery.check_lower(item)
+            _UniffiConverterTypeMoveModuleRef.check_lower(item)
 
     @classmethod
     def write(cls, value, buf):
         items = len(value)
         buf.write_i32(items)
         for item in value:
-            _UniffiConverterTypeMoveModuleQuery.write(item, buf)
+            _UniffiConverterTypeMoveModuleRef.write(item, buf)
 
     @classmethod
     def read(cls, buf):
@@ -31040,23 +31040,23 @@ class _UniffiConverterSequenceTypeMoveModuleQuery(_UniffiConverterRustBuffer):
             raise InternalError("Unexpected negative sequence length")
 
         return [
-            _UniffiConverterTypeMoveModuleQuery.read(buf) for i in range(count)
+            _UniffiConverterTypeMoveModuleRef.read(buf) for i in range(count)
         ]
 
 
 
-class _UniffiConverterSequenceTypeMoveStructQuery(_UniffiConverterRustBuffer):
+class _UniffiConverterSequenceTypeMoveSchemaStruct(_UniffiConverterRustBuffer):
     @classmethod
     def check_lower(cls, value):
         for item in value:
-            _UniffiConverterTypeMoveStructQuery.check_lower(item)
+            _UniffiConverterTypeMoveSchemaStruct.check_lower(item)
 
     @classmethod
     def write(cls, value, buf):
         items = len(value)
         buf.write_i32(items)
         for item in value:
-            _UniffiConverterTypeMoveStructQuery.write(item, buf)
+            _UniffiConverterTypeMoveSchemaStruct.write(item, buf)
 
     @classmethod
     def read(cls, buf):
@@ -31065,7 +31065,7 @@ class _UniffiConverterSequenceTypeMoveStructQuery(_UniffiConverterRustBuffer):
             raise InternalError("Unexpected negative sequence length")
 
         return [
-            _UniffiConverterTypeMoveStructQuery.read(buf) for i in range(count)
+            _UniffiConverterTypeMoveSchemaStruct.read(buf) for i in range(count)
         ]
 
 
@@ -39375,6 +39375,19 @@ class GraphQlClientProtocol(typing.Protocol):
         """
 
         raise NotImplementedError
+    def move_schema_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
+        """
+        Return Move schema function data for the provided package,
+        module, and function.
+        """
+
+        raise NotImplementedError
+    def move_schema_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
+        """
+        Return Move schema module data for the provided module.
+        """
+
+        raise NotImplementedError
     def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT):
         """
         Execute a Move View Function.
@@ -39429,19 +39442,6 @@ class GraphQlClientProtocol(typing.Protocol):
         # Returns
         A `MoveViewResult` containing either execution results (return values)
         or an error.
-        """
-
-        raise NotImplementedError
-    def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT):
-        """
-        Return the normalized Move function data for the provided package,
-        module, and function.
-        """
-
-        raise NotImplementedError
-    def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT):
-        """
-        Return the normalized Move module data for the provided module.
         """
 
         raise NotImplementedError
@@ -40530,6 +40530,96 @@ _UniffiConverterTypeSdkFfiError,
 
 
 
+    async def move_schema_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
+        """
+        Return Move schema function data for the provided package,
+        module, and function.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(package)
+        
+        _UniffiConverterString.check_lower(module)
+        
+        _UniffiConverterString.check_lower(function)
+        
+        if version is _DEFAULT:
+            version = None
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(package),
+        _UniffiConverterString.lower(module),
+        _UniffiConverterString.lower(function),
+        _UniffiConverterOptionalUInt64.lower(version)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMoveFunction.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
+    async def move_schema_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
+        """
+        Return Move schema module data for the provided module.
+        """
+
+        _UniffiConverterTypeAddress.check_lower(package)
+        
+        _UniffiConverterString.check_lower(module)
+        
+        if version is _DEFAULT:
+            version = None
+        _UniffiConverterOptionalUInt64.check_lower(version)
+        
+        if pagination_filter_enums is _DEFAULT:
+            pagination_filter_enums = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_enums)
+        
+        if pagination_filter_friends is _DEFAULT:
+            pagination_filter_friends = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_friends)
+        
+        if pagination_filter_functions is _DEFAULT:
+            pagination_filter_functions = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_functions)
+        
+        if pagination_filter_structs is _DEFAULT:
+            pagination_filter_structs = None
+        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_structs)
+        
+        return await _uniffi_rust_call_async(
+            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module(
+                self._uniffi_clone_pointer(), 
+        _UniffiConverterTypeAddress.lower(package),
+        _UniffiConverterString.lower(module),
+        _UniffiConverterOptionalUInt64.lower(version),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_enums),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_friends),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_functions),
+        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_structs)
+            ),
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
+            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
+            # lift function
+            _UniffiConverterOptionalTypeMoveModule.lift,
+            
+    # Error FFI converter
+_UniffiConverterTypeSdkFfiError,
+
+        )
+
+
+
     async def move_view_call(self, function_name: "str",type_arguments: "typing.Union[object, typing.Optional[typing.List[TypeTag]]]" = _DEFAULT,arguments: "typing.Union[object, typing.Optional[typing.List[MoveViewArg]]]" = _DEFAULT) -> "MoveViewResult":
         """
         Execute a Move View Function.
@@ -40637,96 +40727,6 @@ _UniffiConverterTypeSdkFfiError,
             _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
             # lift function
             _UniffiConverterTypeMoveViewResult.lift,
-            
-    # Error FFI converter
-_UniffiConverterTypeSdkFfiError,
-
-        )
-
-
-
-    async def normalized_move_function(self, package: "Address",module: "str",function: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT) -> "typing.Optional[MoveFunction]":
-        """
-        Return the normalized Move function data for the provided package,
-        module, and function.
-        """
-
-        _UniffiConverterTypeAddress.check_lower(package)
-        
-        _UniffiConverterString.check_lower(module)
-        
-        _UniffiConverterString.check_lower(function)
-        
-        if version is _DEFAULT:
-            version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
-        
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(
-                self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeAddress.lower(package),
-        _UniffiConverterString.lower(module),
-        _UniffiConverterString.lower(function),
-        _UniffiConverterOptionalUInt64.lower(version)
-            ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
-            # lift function
-            _UniffiConverterOptionalTypeMoveFunction.lift,
-            
-    # Error FFI converter
-_UniffiConverterTypeSdkFfiError,
-
-        )
-
-
-
-    async def normalized_move_module(self, package: "Address",module: "str",version: "typing.Union[object, typing.Optional[int]]" = _DEFAULT,pagination_filter_enums: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_friends: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_functions: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT,pagination_filter_structs: "typing.Union[object, typing.Optional[PaginationFilter]]" = _DEFAULT) -> "typing.Optional[MoveModule]":
-        """
-        Return the normalized Move module data for the provided module.
-        """
-
-        _UniffiConverterTypeAddress.check_lower(package)
-        
-        _UniffiConverterString.check_lower(module)
-        
-        if version is _DEFAULT:
-            version = None
-        _UniffiConverterOptionalUInt64.check_lower(version)
-        
-        if pagination_filter_enums is _DEFAULT:
-            pagination_filter_enums = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_enums)
-        
-        if pagination_filter_friends is _DEFAULT:
-            pagination_filter_friends = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_friends)
-        
-        if pagination_filter_functions is _DEFAULT:
-            pagination_filter_functions = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_functions)
-        
-        if pagination_filter_structs is _DEFAULT:
-            pagination_filter_structs = None
-        _UniffiConverterOptionalTypePaginationFilter.check_lower(pagination_filter_structs)
-        
-        return await _uniffi_rust_call_async(
-            _UniffiLib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(
-                self._uniffi_clone_pointer(), 
-        _UniffiConverterTypeAddress.lower(package),
-        _UniffiConverterString.lower(module),
-        _UniffiConverterOptionalUInt64.lower(version),
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_enums),
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_friends),
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_functions),
-        _UniffiConverterOptionalTypePaginationFilter.lower(pagination_filter_structs)
-            ),
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer,
-            _UniffiLib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer,
-            # lift function
-            _UniffiConverterOptionalTypeMoveModule.lift,
             
     # Error FFI converter
 _UniffiConverterTypeSdkFfiError,
@@ -62037,13 +62037,13 @@ __all__ = [
     "MoveLocation",
     "MoveModule",
     "MoveModuleConnection",
-    "MoveModuleQuery",
+    "MoveModuleRef",
     "MoveObject",
     "MovePackagePage",
-    "MovePackageQuery",
+    "MovePackageRef",
+    "MoveSchemaStruct",
     "MoveStruct",
     "MoveStructConnection",
-    "MoveStructQuery",
     "MoveStructTypeParameter",
     "MoveViewResult",
     "NameRegistrationPage",

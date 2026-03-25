@@ -6,7 +6,7 @@
 use crate::query_types::{JsonValue, schema};
 
 // ===========================================================================
-// Move View Call Queries
+// Queries
 // ===========================================================================
 
 /// GraphQL query for executing a Move View Function.
@@ -35,7 +35,7 @@ pub struct MoveViewCallQuery {
 }
 
 // ===========================================================================
-// Move View Call Query Args
+// Query Args
 // ===========================================================================
 
 /// Arguments for the Move View Call GraphQL query.
@@ -55,7 +55,7 @@ pub struct MoveViewCallQueryArgs {
 }
 
 // ===========================================================================
-// Move View Call Types
+// Types
 // ===========================================================================
 
 /// The result of executing a Move View Function.

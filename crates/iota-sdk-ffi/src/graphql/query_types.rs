@@ -1105,6 +1105,72 @@ impl From<MoveModuleRef> for iota_sdk::graphql_client::query_types::MoveModuleRe
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // === MovePackageRef bidirectional conversions ===
+
+    #[test]
+    fn move_package_ref_from_graphql_roundtrip() {
+        use iota_sdk::graphql_client::query_types::MovePackage as GqlMovePackage;
+
+        // Construct Base64 directly from a String to avoid needing PartialEq
+        let address: iota_types::Address = "0x1".parse().unwrap();
+        let gql = GqlMovePackage {
+            address,
+            bcs: Some(Base64("YWJjZA==".to_string())), // "abcd" in base64
+        };
+
+        let ffi: MovePackageRef = gql.clone().into();
+        let roundtrip: iota_sdk::graphql_client::query_types::MovePackage = ffi.into();
+
+        assert_eq!(roundtrip.address, address);
+        // Compare Base64 inner strings instead of whole structs
+        assert_eq!(roundtrip.bcs.as_ref().map(|b| b.0.as_str()), gql.bcs.as_ref().map(|b| b.0.as_str()));
+    }
+
+    #[test]
+    fn move_package_ref_from_graphql_none_bcs() {
+        use iota_sdk::graphql_client::query_types::MovePackage as GqlMovePackage;
+
+        let address: iota_types::Address = "0xCAFEBABE".parse().unwrap();
+        let gql = GqlMovePackage {
+            address,
+            bcs: None,
+        };
+
+        let ffi: MovePackageRef = gql.clone().into();
+        let roundtrip: iota_sdk::graphql_client::query_types::MovePackage = ffi.into();
+
+        assert_eq!(roundtrip.address, address);
+        assert!(roundtrip.bcs.is_none());
+    }
+
+    // === MoveModuleRef bidirectional conversions ===
+
+    #[test]
+    fn move_module_ref_from_graphql_roundtrip() {
+        use iota_sdk::graphql_client::query_types::MoveModuleRef as GqlMoveModuleRef;
+        use iota_sdk::graphql_client::query_types::MovePackage as GqlMovePackage;
+
+        let address: iota_types::Address = "0x2".parse().unwrap();
+        let gql = GqlMoveModuleRef {
+            package: GqlMovePackage {
+                address,
+                bcs: None,
+            },
+            name: "my_module".to_string(),
+        };
+
+        let ffi: MoveModuleRef = gql.clone().into();
+        let roundtrip: iota_sdk::graphql_client::query_types::MoveModuleRef = ffi.into();
+
+        assert_eq!(roundtrip.package.address, address);
+        assert_eq!(roundtrip.name, "my_module");
+    }
+}
+
 #[uniffi::remote(Record)]
 pub struct MoveStructTypeParameter {
     pub constraints: Vec<MoveAbility>,

@@ -3963,36 +3963,6 @@ static class _UniFFILib {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     static _UniFFILib() {
         _UniFFILib.uniffiCheckContractApiVersion();
@@ -5706,19 +5676,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function(IntPtr @ptr,IntPtr @package,RustBuffer @module,RustBuffer @function,RustBuffer @version
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module(IntPtr @ptr,IntPtr @package,RustBuffer @module,RustBuffer @version,RustBuffer @paginationFilterEnums,RustBuffer @paginationFilterFriends,RustBuffer @paginationFilterFunctions,RustBuffer @paginationFilterStructs
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call(IntPtr @ptr,RustBuffer @functionName,RustBuffer @typeArguments,RustBuffer @arguments
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_view_call_json(IntPtr @ptr,RustBuffer @functionName,RustBuffer @typeArguments,RustBuffer @arguments
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(IntPtr @ptr,IntPtr @package,RustBuffer @module,RustBuffer @function,RustBuffer @version
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(IntPtr @ptr,IntPtr @package,RustBuffer @module,RustBuffer @version,RustBuffer @paginationFilterEnums,RustBuffer @paginationFilterFriends,RustBuffer @paginationFilterFunctions,RustBuffer @paginationFilterStructs
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6134,11 +6104,27 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(IntPtr @moveAuthenticatorV1,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(RustBuffer @callArgs,RustBuffer @typeArgs,RustBuffer @objectToAuthenticate,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(RustBuffer @callArgs,RustBuffer @typeArgs,IntPtr @objectToAuthenticate,ulong @initialSharedVersion,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6155,38 +6141,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticatorbuilder_finish(IntPtr @ptr,IntPtr @client
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(RustBuffer @callArgs,RustBuffer @typeArgs,RustBuffer @objectToAuthenticate,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(RustBuffer @callArgs,RustBuffer @typeArgs,IntPtr @objectToAuthenticate,ulong @initialSharedVersion,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(IntPtr @ptr,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -6934,7 +6888,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(RustBuffer @moveStruct,ref UniffiRustCallStatus _uniffi_out_err
+    public static extern IntPtr uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_runtime_move_struct(RustBuffer @moveStruct,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -10554,22 +10508,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_move_struct_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_multisig_aggregated_signature_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -10722,22 +10660,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_object_reference_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_object_to_bcs(IntPtr @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -10839,6 +10761,22 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -11146,22 +11084,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_type_origin_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_type_tag_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
     );
 
@@ -11279,22 +11201,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr uniffi_iota_sdk_ffi_fn_func_upgrade_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(RustBuffer @bcs,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_json(RustBuffer @json,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern RustBuffer uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_json(RustBuffer @data,ref UniffiRustCallStatus _uniffi_out_err
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -12542,22 +12448,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_move_struct_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_move_struct_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_move_struct_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_move_struct_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs(
     );
 
@@ -12710,22 +12600,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_object_reference_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_object_reference_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_object_reference_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_object_reference_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_object_to_bcs(
     );
 
@@ -12827,6 +12701,22 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_from_bcs(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_from_json(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_to_bcs(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -13134,22 +13024,6 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_type_origin_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_type_origin_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_type_origin_to_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs(
     );
 
@@ -13267,22 +13141,6 @@ static class _UniFFILib {
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_func_upgrade_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_bcs(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_json(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14182,19 +14040,19 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -14326,27 +14184,23 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -16258,19 +16112,15 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable(
+    );
+
+    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable(
-    );
-
-    [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -16390,7 +16240,7 @@ static class _UniFFILib {
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
-    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct(
+    public static extern ushort uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_runtime_move_struct(
     );
 
     [DllImport("iota_sdk_ffi", CallingConvention = CallingConvention.Cdecl)]
@@ -18426,30 +18276,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_move_struct_from_bcs();
-            if (checksum != 25715) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_move_struct_from_bcs` checksum `25715`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_move_struct_from_json();
-            if (checksum != 38200) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_move_struct_from_json` checksum `38200`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_move_struct_to_bcs();
-            if (checksum != 9518) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_move_struct_to_bcs` checksum `9518`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_move_struct_to_json();
-            if (checksum != 34559) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_move_struct_to_json` checksum `34559`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs();
             if (checksum != 56951) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_multisig_aggregated_signature_from_bcs` checksum `56951`, library returned `{checksum}`");
@@ -18678,30 +18504,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_object_reference_from_bcs();
-            if (checksum != 2613) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_object_reference_from_bcs` checksum `2613`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_object_reference_from_json();
-            if (checksum != 5254) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_object_reference_from_json` checksum `5254`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_object_reference_to_bcs();
-            if (checksum != 50964) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_object_reference_to_bcs` checksum `50964`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_object_reference_to_json();
-            if (checksum != 2887) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_object_reference_to_json` checksum `2887`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_object_to_bcs();
             if (checksum != 59689) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_object_to_bcs` checksum `59689`, library returned `{checksum}`");
@@ -18855,6 +18657,30 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json();
             if (checksum != 8065) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_randomness_state_update_to_json` checksum `8065`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_from_bcs();
+            if (checksum != 6863) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_from_bcs` checksum `6863`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_from_json();
+            if (checksum != 32508) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_from_json` checksum `32508`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_to_bcs();
+            if (checksum != 56159) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_to_bcs` checksum `56159`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_to_json();
+            if (checksum != 27847) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_runtime_move_struct_to_json` checksum `27847`, library returned `{checksum}`");
             }
         }
         {
@@ -19314,30 +19140,6 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_type_origin_from_bcs();
-            if (checksum != 63210) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_type_origin_from_bcs` checksum `63210`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_type_origin_from_json();
-            if (checksum != 33178) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_type_origin_from_json` checksum `33178`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs();
-            if (checksum != 62869) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_type_origin_to_bcs` checksum `62869`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_type_origin_to_json();
-            if (checksum != 37099) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_type_origin_to_json` checksum `37099`, library returned `{checksum}`");
-            }
-        }
-        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs();
             if (checksum != 31167) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_type_tag_from_bcs` checksum `31167`, library returned `{checksum}`");
@@ -19515,30 +19317,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_upgrade_from_json();
             if (checksum != 44433) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_upgrade_from_json` checksum `44433`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_bcs();
-            if (checksum != 58871) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_bcs` checksum `58871`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_json();
-            if (checksum != 60702) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_upgrade_info_from_json` checksum `60702`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_bcs();
-            if (checksum != 8867) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_bcs` checksum `8867`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_json();
-            if (checksum != 13396) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_func_upgrade_info_to_json` checksum `13396`, library returned `{checksum}`");
             }
         }
         {
@@ -20886,6 +20664,18 @@ static class _UniFFILib {
             }
         }
         {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function();
+            if (checksum != 21880) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_function` checksum `21880`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module();
+            if (checksum != 1743) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_schema_module` checksum `1743`, library returned `{checksum}`");
+            }
+        }
+        {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call();
             if (checksum != 52742) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call` checksum `52742`, library returned `{checksum}`");
@@ -20895,18 +20685,6 @@ static class _UniFFILib {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json();
             if (checksum != 5635) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_move_view_call_json` checksum `5635`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function();
-            if (checksum != 16965) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_function` checksum `16965`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module();
-            if (checksum != 51355) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_normalized_move_module` checksum `51355`, library returned `{checksum}`");
             }
         }
         {
@@ -21025,20 +20803,20 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions();
-            if (checksum != 20537) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions` checksum `20537`, library returned `{checksum}`");
+            if (checksum != 51471) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions` checksum `51471`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects();
-            if (checksum != 46218) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects` checksum `46218`, library returned `{checksum}`");
+            if (checksum != 51767) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_data_effects` checksum `51767`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects();
-            if (checksum != 25858) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects` checksum `25858`, library returned `{checksum}`");
+            if (checksum != 23146) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_graphqlclient_transactions_effects` checksum `23146`, library returned `{checksum}`");
             }
         }
         {
@@ -21102,39 +20880,33 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1();
-            if (checksum != 3713) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_as_v1` checksum `3713`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address();
+            if (checksum != 24164) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_address` checksum `24164`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args();
+            if (checksum != 1111) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_call_args` checksum `1111`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate();
+            if (checksum != 40516) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_object_to_authenticate` checksum `40516`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args();
+            if (checksum != 63576) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticator_type_args` checksum `63576`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish();
             if (checksum != 16948) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorbuilder_finish` checksum `16948`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address();
-            if (checksum != 27475) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_address` checksum `27475`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args();
-            if (checksum != 32545) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_call_args` checksum `32545`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate();
-            if (checksum != 54331) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_object_to_authenticate` checksum `54331`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args();
-            if (checksum != 58370) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_moveauthenticatorv1_type_args` checksum `58370`, library returned `{checksum}`");
             }
         }
         {
@@ -21595,14 +21367,14 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct();
-            if (checksum != 5928) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_object_as_struct` checksum `5928`, library returned `{checksum}`");
+            if (checksum != 60989) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_object_as_struct` checksum `60989`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt();
-            if (checksum != 49657) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt` checksum `49657`, library returned `{checksum}`");
+            if (checksum != 63483) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_object_as_struct_opt` checksum `63483`, library returned `{checksum}`");
             }
         }
         {
@@ -21667,8 +21439,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt();
-            if (checksum != 8956) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt` checksum `8956`, library returned `{checksum}`");
+            if (checksum != 54540) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_as_struct_opt` checksum `54540`, library returned `{checksum}`");
             }
         }
         {
@@ -21679,8 +21451,8 @@ static class _UniFFILib {
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct();
-            if (checksum != 58579) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct` checksum `58579`, library returned `{checksum}`");
+            if (checksum != 45458) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_method_objectdata_is_struct` checksum `45458`, library returned `{checksum}`");
             }
         }
         {
@@ -24000,27 +23772,21 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1();
-            if (checksum != 64779) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_v1` checksum `64779`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable();
+            if (checksum != 19047) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_immutable` checksum `19047`, library returned `{checksum}`");
+            }
+        }
+        {
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared();
+            if (checksum != 5389) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticator_new_shared` checksum `5389`, library returned `{checksum}`");
             }
         }
         {
             var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new();
             if (checksum != 1961) {
                 throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorbuilder_new` checksum `1961`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable();
-            if (checksum != 32081) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_immutable` checksum `32081`, library returned `{checksum}`");
-            }
-        }
-        {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared();
-            if (checksum != 22895) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_moveauthenticatorv1_new_shared` checksum `22895`, library returned `{checksum}`");
             }
         }
         {
@@ -24198,9 +23964,9 @@ static class _UniFFILib {
             }
         }
         {
-            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct();
-            if (checksum != 1861) {
-                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_move_struct` checksum `1861`, library returned `{checksum}`");
+            var checksum = _UniFFILib.uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_runtime_move_struct();
+            if (checksum != 49604) {
+                throw new UniffiContractChecksumException($"IotaSdk: uniffi bindings expected function `uniffi_iota_sdk_ffi_checksum_constructor_objectdata_new_runtime_move_struct` checksum `49604`, library returned `{checksum}`");
             }
         }
         {
@@ -34467,6 +34233,17 @@ public interface IGraphQlClient {
     /// <exception cref="SdkFfiException"></exception>
     Task<byte[]?> MoveObjectContentsBcs(ObjectId @objectId, ulong? @version = null);
     /// <summary>
+    /// Return Move schema function data for the provided package,
+    /// module, and function.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    Task<MoveFunction?> MoveSchemaFunction(Address @package, string @module, string @function, ulong? @version = null);
+    /// <summary>
+    /// Return Move schema module data for the provided module.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    Task<MoveModule?> MoveSchemaModule(Address @package, string @module, ulong? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null);
+    /// <summary>
     /// Execute a Move View Function.
     ///
     /// A View Function is a function in a Move module with a return type that
@@ -34521,17 +34298,6 @@ public interface IGraphQlClient {
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
     Task<MoveViewResult> MoveViewCallJson(string @functionName, string[]? @typeArguments = null, Value[]? @arguments = null);
-    /// <summary>
-    /// Return the normalized Move function data for the provided package,
-    /// module, and function.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    Task<MoveFunction?> NormalizedMoveFunction(Address @package, string @module, string @function, ulong? @version = null);
-    /// <summary>
-    /// Return the normalized Move module data for the provided module.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    Task<MoveModule?> NormalizedMoveModule(Address @package, string @module, ulong? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null);
     /// <summary>
     /// Return an object based on the provided `Address`.
     ///
@@ -34668,18 +34434,18 @@ public interface IGraphQlClient {
     /// Get a page of transactions based on the provided filters.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<SignedTransactionPage> Transactions(TransactionsFilter? @filter = null, PaginationFilter? @paginationFilter = null);
+    Task<SignedTransactionPage> Transactions(TransactionBlockFilter? @filter = null, PaginationFilter? @paginationFilter = null);
     /// <summary>
     /// Get a page of transactions' data and effects based on the provided
     /// filters.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<TransactionDataEffectsPage> TransactionsDataEffects(TransactionsFilter? @filter = null, PaginationFilter? @paginationFilter = null);
+    Task<TransactionDataEffectsPage> TransactionsDataEffects(TransactionBlockFilter? @filter = null, PaginationFilter? @paginationFilter = null);
     /// <summary>
     /// Get a page of transactions' effects based on the provided filters.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    Task<TransactionEffectsPage> TransactionsEffects(TransactionsFilter? @filter = null, PaginationFilter? @paginationFilter = null);
+    Task<TransactionEffectsPage> TransactionsEffects(TransactionBlockFilter? @filter = null, PaginationFilter? @paginationFilter = null);
     /// <summary>
     /// Wait for the indexing (on the node, not the indexer) or finalization of
     /// a transaction by its digest. An optional timeout can be provided,
@@ -35523,6 +35289,57 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     }
     
     /// <summary>
+    /// Return Move schema function data for the provided package,
+    /// module, and function.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public async Task<MoveFunction?> MoveSchemaFunction(Address @package, string @module, string @function, ulong? @version = null) {
+    return await _UniFFIAsync.UniffiRustCallAsync(
+        // Get rust future
+        CallWithPointer(thisPtr => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_function(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterString.INSTANCE.Lower(@function), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
+        }),
+        // Poll
+        (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
+        // Complete
+        (IntPtr future, ref UniffiRustCallStatus status) => {
+            return _UniFFILib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, ref status);
+        },
+        // Free
+        (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future),
+        // Lift
+        (result) => FfiConverterOptionalTypeMoveFunction.INSTANCE.Lift(result),
+        // Error
+        FfiConverterTypeSdkFfiError.INSTANCE
+    );
+    }
+    
+    /// <summary>
+    /// Return Move schema module data for the provided module.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public async Task<MoveModule?> MoveSchemaModule(Address @package, string @module, ulong? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null) {
+    return await _UniFFIAsync.UniffiRustCallAsync(
+        // Get rust future
+        CallWithPointer(thisPtr => {
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_move_schema_module(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterOptionalUInt64.INSTANCE.Lower(@version), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterEnums), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFriends), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFunctions), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterStructs));
+        }),
+        // Poll
+        (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
+        // Complete
+        (IntPtr future, ref UniffiRustCallStatus status) => {
+            return _UniFFILib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, ref status);
+        },
+        // Free
+        (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future),
+        // Lift
+        (result) => FfiConverterOptionalTypeMoveModule.INSTANCE.Lift(result),
+        // Error
+        FfiConverterTypeSdkFfiError.INSTANCE
+    );
+    }
+    
+    /// <summary>
     /// Execute a Move View Function.
     ///
     /// A View Function is a function in a Move module with a return type that
@@ -35612,57 +35429,6 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
         (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future),
         // Lift
         (result) => FfiConverterTypeMoveViewResult.INSTANCE.Lift(result),
-        // Error
-        FfiConverterTypeSdkFfiError.INSTANCE
-    );
-    }
-    
-    /// <summary>
-    /// Return the normalized Move function data for the provided package,
-    /// module, and function.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public async Task<MoveFunction?> NormalizedMoveFunction(Address @package, string @module, string @function, ulong? @version = null) {
-    return await _UniFFIAsync.UniffiRustCallAsync(
-        // Get rust future
-        CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_function(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterString.INSTANCE.Lower(@function), FfiConverterOptionalUInt64.INSTANCE.Lower(@version));
-        }),
-        // Poll
-        (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
-        // Complete
-        (IntPtr future, ref UniffiRustCallStatus status) => {
-            return _UniFFILib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, ref status);
-        },
-        // Free
-        (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future),
-        // Lift
-        (result) => FfiConverterOptionalTypeMoveFunction.INSTANCE.Lift(result),
-        // Error
-        FfiConverterTypeSdkFfiError.INSTANCE
-    );
-    }
-    
-    /// <summary>
-    /// Return the normalized Move module data for the provided module.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public async Task<MoveModule?> NormalizedMoveModule(Address @package, string @module, ulong? @version = null, PaginationFilter? @paginationFilterEnums = null, PaginationFilter? @paginationFilterFriends = null, PaginationFilter? @paginationFilterFunctions = null, PaginationFilter? @paginationFilterStructs = null) {
-    return await _UniFFIAsync.UniffiRustCallAsync(
-        // Get rust future
-        CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_normalized_move_module(thisPtr, FfiConverterTypeAddress.INSTANCE.Lower(@package), FfiConverterString.INSTANCE.Lower(@module), FfiConverterOptionalUInt64.INSTANCE.Lower(@version), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterEnums), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFriends), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterFunctions), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilterStructs));
-        }),
-        // Poll
-        (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
-        // Complete
-        (IntPtr future, ref UniffiRustCallStatus status) => {
-            return _UniFFILib.ffi_iota_sdk_ffi_rust_future_complete_rust_buffer(future, ref status);
-        },
-        // Free
-        (IntPtr future) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_free_rust_buffer(future),
-        // Lift
-        (result) => FfiConverterOptionalTypeMoveModule.INSTANCE.Lift(result),
         // Error
         FfiConverterTypeSdkFfiError.INSTANCE
     );
@@ -36180,11 +35946,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// Get a page of transactions based on the provided filters.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<SignedTransactionPage> Transactions(TransactionsFilter? @filter = null, PaginationFilter? @paginationFilter = null) {
+    public async Task<SignedTransactionPage> Transactions(TransactionBlockFilter? @filter = null, PaginationFilter? @paginationFilter = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(thisPtr, FfiConverterOptionalTypeTransactionsFilter.INSTANCE.Lower(@filter), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions(thisPtr, FfiConverterOptionalTypeTransactionBlockFilter.INSTANCE.Lower(@filter), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -36206,11 +35972,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// filters.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<TransactionDataEffectsPage> TransactionsDataEffects(TransactionsFilter? @filter = null, PaginationFilter? @paginationFilter = null) {
+    public async Task<TransactionDataEffectsPage> TransactionsDataEffects(TransactionBlockFilter? @filter = null, PaginationFilter? @paginationFilter = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(thisPtr, FfiConverterOptionalTypeTransactionsFilter.INSTANCE.Lower(@filter), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_data_effects(thisPtr, FfiConverterOptionalTypeTransactionBlockFilter.INSTANCE.Lower(@filter), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -36231,11 +35997,11 @@ public class GraphQlClient : IGraphQlClient, IDisposable {
     /// Get a page of transactions' effects based on the provided filters.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public async Task<TransactionEffectsPage> TransactionsEffects(TransactionsFilter? @filter = null, PaginationFilter? @paginationFilter = null) {
+    public async Task<TransactionEffectsPage> TransactionsEffects(TransactionBlockFilter? @filter = null, PaginationFilter? @paginationFilter = null) {
     return await _UniFFIAsync.UniffiRustCallAsync(
         // Get rust future
         CallWithPointer(thisPtr => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(thisPtr, FfiConverterOptionalTypeTransactionsFilter.INSTANCE.Lower(@filter), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
+            return _UniFFILib.uniffi_iota_sdk_ffi_fn_method_graphqlclient_transactions_effects(thisPtr, FfiConverterOptionalTypeTransactionBlockFilter.INSTANCE.Lower(@filter), FfiConverterOptionalTypePaginationFilter.INSTANCE.Lower(@paginationFilter));
         }),
         // Poll
         (IntPtr future, IntPtr continuation, IntPtr data) => _UniFFILib.ffi_iota_sdk_ffi_rust_future_poll_rust_buffer(future, continuation, data),
@@ -37762,7 +37528,10 @@ class FfiConverterTypeMoveArg: FfiConverter<MoveArg, IntPtr> {
 /// authentication flow.
 /// </summary>
 public interface IMoveAuthenticator {
-    MoveAuthenticatorV1 AsV1();
+    Address Address();
+    Input[] CallArgs();
+    Input ObjectToAuthenticate();
+    TypeTag[] TypeArgs();
 }
 /// <summary>
 /// MoveAuthenticator is a signature variant that enables a method of
@@ -37859,20 +37628,57 @@ public class MoveAuthenticator : IMoveAuthenticator, IDisposable {
     }
 
     
-    public MoveAuthenticatorV1 AsV1() {
-        return CallWithPointer(thisPtr => FfiConverterTypeMoveAuthenticatorV1.INSTANCE.Lift(
+    public Address Address() {
+        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_as_v1(thisPtr,  ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_address(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Input[] CallArgs() {
+        return CallWithPointer(thisPtr => FfiConverterSequenceTypeInput.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_call_args(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public Input ObjectToAuthenticate() {
+        return CallWithPointer(thisPtr => FfiConverterTypeInput.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_object_to_authenticate(thisPtr,  ref _status)
+)));
+    }
+    
+    
+    public TypeTag[] TypeArgs() {
+        return CallWithPointer(thisPtr => FfiConverterSequenceTypeTypeTag.INSTANCE.Lift(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticator_type_args(thisPtr,  ref _status)
 )));
     }
     
     
 
     
-    public static MoveAuthenticator NewV1(MoveAuthenticatorV1 @moveAuthenticatorV1) {
+    /// <summary>
+    /// Create a new move authenticator from an immutable object.
+    /// </summary>
+    public static MoveAuthenticator NewImmutable(Input[] @callArgs, TypeTag[] @typeArgs, ObjectReference @objectToAuthenticate) {
         return new MoveAuthenticator(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_v1(FfiConverterTypeMoveAuthenticatorV1.INSTANCE.Lower(@moveAuthenticatorV1), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_immutable(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectReference.INSTANCE.Lower(@objectToAuthenticate), ref _status)
+));
+    }
+    
+    /// <summary>
+    /// Create a new move authenticator from a shared object.
+    /// </summary>
+    public static MoveAuthenticator NewShared(Input[] @callArgs, TypeTag[] @typeArgs, ObjectId @objectToAuthenticate, ulong @initialSharedVersion) {
+        return new MoveAuthenticator(
+    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticator_new_shared(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectId.INSTANCE.Lower(@objectToAuthenticate), FfiConverterUInt64.INSTANCE.Lower(@initialSharedVersion), ref _status)
 ));
     }
     
@@ -38061,190 +37867,6 @@ class FfiConverterTypeMoveAuthenticatorBuilder: FfiConverter<MoveAuthenticatorBu
     }
 
     public override void Write(MoveAuthenticatorBuilder value, BigEndianStream stream) {
-        stream.WriteLong(Lower(value).ToInt64());
-    }
-}
-
-
-
-/// <summary>
-/// Version 1 of the [`MoveAuthenticator`].
-/// </summary>
-public interface IMoveAuthenticatorV1 {
-    Address Address();
-    Input[] CallArgs();
-    Input ObjectToAuthenticate();
-    TypeTag[] TypeArgs();
-}
-/// <summary>
-/// Version 1 of the [`MoveAuthenticator`].
-/// </summary>
-public class MoveAuthenticatorV1 : IMoveAuthenticatorV1, IDisposable {
-    protected IntPtr pointer;
-    private int _wasDestroyed = 0;
-    private long _callCounter = 1;
-
-    public MoveAuthenticatorV1(IntPtr pointer) {
-        this.pointer = pointer;
-    }
-
-    ~MoveAuthenticatorV1() {
-        Destroy();
-    }
-
-    protected void FreeRustArcPtr() {
-        _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            _UniFFILib.uniffi_iota_sdk_ffi_fn_free_moveauthenticatorv1(this.pointer, ref status);
-        });
-    }
-
-    protected IntPtr CloneRustArcPtr() {
-        return _UniffiHelpers.RustCall((ref UniffiRustCallStatus status) => {
-            return _UniFFILib.uniffi_iota_sdk_ffi_fn_clone_moveauthenticatorv1(this.pointer, ref status);
-        });
-    }
-
-    public void Destroy()
-    {
-        // Only allow a single call to this method.
-        if (Interlocked.CompareExchange(ref _wasDestroyed, 1, 0) == 0)
-        {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (Interlocked.Decrement(ref _callCounter) == 0)
-            {
-                FreeRustArcPtr();
-            }
-        }
-    }
-
-    public void Dispose()
-    {
-        Destroy();
-        GC.SuppressFinalize(this); // Suppress finalization to avoid unnecessary GC overhead.
-    }
-
-    private void IncrementCallCounter() 
-    {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        long count;
-        do
-        {
-            count = Interlocked.Read(ref _callCounter);
-            if (count == 0L) throw new System.ObjectDisposedException(string.Format("'{0}' object has already been destroyed", this.GetType().Name));
-            if (count == long.MaxValue) throw new System.OverflowException(string.Format("'{0}' call counter would overflow", this.GetType().Name));
-
-        } while (Interlocked.CompareExchange(ref _callCounter, count + 1, count) != count);
-    }
-
-    private void DecrementCallCounter() 
-    {
-        // This decrement always matches the increment we performed above.
-        if (Interlocked.Decrement(ref _callCounter) == 0) {
-            FreeRustArcPtr();
-        }
-    }
-
-    internal void CallWithPointer(Action<IntPtr> action)
-    {
-        IncrementCallCounter();
-        try {
-            action(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    internal T CallWithPointer<T>(Func<IntPtr, T> func)
-    {   
-        IncrementCallCounter();
-        try {
-            return func(CloneRustArcPtr());
-        }
-        finally {
-            DecrementCallCounter();
-        }
-    }
-
-    
-    public Address Address() {
-        return CallWithPointer(thisPtr => FfiConverterTypeAddress.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_address(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Input[] CallArgs() {
-        return CallWithPointer(thisPtr => FfiConverterSequenceTypeInput.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_call_args(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public Input ObjectToAuthenticate() {
-        return CallWithPointer(thisPtr => FfiConverterTypeInput.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_object_to_authenticate(thisPtr,  ref _status)
-)));
-    }
-    
-    
-    public TypeTag[] TypeArgs() {
-        return CallWithPointer(thisPtr => FfiConverterSequenceTypeTypeTag.INSTANCE.Lift(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_method_moveauthenticatorv1_type_args(thisPtr,  ref _status)
-)));
-    }
-    
-    
-
-    
-    /// <summary>
-    /// Create a new move authenticator from an immutable object.
-    /// </summary>
-    public static MoveAuthenticatorV1 NewImmutable(Input[] @callArgs, TypeTag[] @typeArgs, ObjectReference @objectToAuthenticate) {
-        return new MoveAuthenticatorV1(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_immutable(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectReference.INSTANCE.Lower(@objectToAuthenticate), ref _status)
-));
-    }
-    
-    /// <summary>
-    /// Create a new move authenticator from a shared object.
-    /// </summary>
-    public static MoveAuthenticatorV1 NewShared(Input[] @callArgs, TypeTag[] @typeArgs, ObjectId @objectToAuthenticate, ulong @initialSharedVersion) {
-        return new MoveAuthenticatorV1(
-    _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_moveauthenticatorv1_new_shared(FfiConverterSequenceTypeInput.INSTANCE.Lower(@callArgs), FfiConverterSequenceTypeTypeTag.INSTANCE.Lower(@typeArgs), FfiConverterTypeObjectId.INSTANCE.Lower(@objectToAuthenticate), FfiConverterUInt64.INSTANCE.Lower(@initialSharedVersion), ref _status)
-));
-    }
-    
-    
-}
-class FfiConverterTypeMoveAuthenticatorV1: FfiConverter<MoveAuthenticatorV1, IntPtr> {
-    public static FfiConverterTypeMoveAuthenticatorV1 INSTANCE = new FfiConverterTypeMoveAuthenticatorV1();
-
-
-    public override IntPtr Lower(MoveAuthenticatorV1 value) {
-        return value.CallWithPointer(thisPtr => thisPtr);
-    }
-
-    public override MoveAuthenticatorV1 Lift(IntPtr value) {
-        return new MoveAuthenticatorV1(value);
-    }
-
-    public override MoveAuthenticatorV1 Read(BigEndianStream stream) {
-        return Lift(new IntPtr(stream.ReadLong()));
-    }
-
-    public override int AllocationSize(MoveAuthenticatorV1 value) {
-        return 8;
-    }
-
-    public override void Write(MoveAuthenticatorV1 value, BigEndianStream stream) {
         stream.WriteLong(Lower(value).ToInt64());
     }
 }
@@ -41509,11 +41131,11 @@ public interface IObject: IEquatable<Object> {
     /// <summary>
     /// Interpret this object as a move struct
     /// </summary>
-    MoveStruct AsStruct();
+    RuntimeMoveStruct AsStruct();
     /// <summary>
     /// Try to interpret this object as a move struct
     /// </summary>
-    MoveStruct? AsStructOpt();
+    RuntimeMoveStruct? AsStructOpt();
     /// <summary>
     /// Return this object's data
     /// </summary>
@@ -41686,8 +41308,8 @@ public class Object : IObject, IDisposable {
     /// <summary>
     /// Interpret this object as a move struct
     /// </summary>
-    public MoveStruct AsStruct() {
-        return CallWithPointer(thisPtr => FfiConverterTypeMoveStruct.INSTANCE.Lift(
+    public RuntimeMoveStruct AsStruct() {
+        return CallWithPointer(thisPtr => FfiConverterTypeRuntimeMoveStruct.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_object_as_struct(thisPtr,  ref _status)
 )));
@@ -41697,8 +41319,8 @@ public class Object : IObject, IDisposable {
     /// <summary>
     /// Try to interpret this object as a move struct
     /// </summary>
-    public MoveStruct? AsStructOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeMoveStruct.INSTANCE.Lift(
+    public RuntimeMoveStruct? AsStructOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeRuntimeMoveStruct.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_object_as_struct_opt(thisPtr,  ref _status)
 )));
@@ -41872,15 +41494,15 @@ public interface IObjectData: IEquatable<ObjectData> {
     /// </summary>
     MovePackage? AsPackageOpt();
     /// <summary>
-    /// Try to interpret this object as a `MoveStruct`
+    /// Try to interpret this object as a `RuntimeMoveStruct`
     /// </summary>
-    MoveStruct? AsStructOpt();
+    RuntimeMoveStruct? AsStructOpt();
     /// <summary>
     /// Return whether this object is a `MovePackage`
     /// </summary>
     bool IsPackage();
     /// <summary>
-    /// Return whether this object is a `MoveStruct`
+    /// Return whether this object is a `RuntimeMoveStruct`
     /// </summary>
     bool IsStruct();
 }
@@ -41999,10 +41621,10 @@ public class ObjectData : IObjectData, IDisposable {
     
     
     /// <summary>
-    /// Try to interpret this object as a `MoveStruct`
+    /// Try to interpret this object as a `RuntimeMoveStruct`
     /// </summary>
-    public MoveStruct? AsStructOpt() {
-        return CallWithPointer(thisPtr => FfiConverterOptionalTypeMoveStruct.INSTANCE.Lift(
+    public RuntimeMoveStruct? AsStructOpt() {
+        return CallWithPointer(thisPtr => FfiConverterOptionalTypeRuntimeMoveStruct.INSTANCE.Lift(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_method_objectdata_as_struct_opt(thisPtr,  ref _status)
 )));
@@ -42021,7 +41643,7 @@ public class ObjectData : IObjectData, IDisposable {
     
     
     /// <summary>
-    /// Return whether this object is a `MoveStruct`
+    /// Return whether this object is a `RuntimeMoveStruct`
     /// </summary>
     public bool IsStruct() {
         return CallWithPointer(thisPtr => FfiConverterBoolean.INSTANCE.Lift(
@@ -42063,12 +41685,12 @@ public class ObjectData : IObjectData, IDisposable {
     }
     
     /// <summary>
-    /// Create an `ObjectData` from a `MoveStruct`
+    /// Create an `ObjectData` from a `RuntimeMoveStruct`
     /// </summary>
-    public static ObjectData NewMoveStruct(MoveStruct @moveStruct) {
+    public static ObjectData NewRuntimeMoveStruct(RuntimeMoveStruct @moveStruct) {
         return new ObjectData(
     _UniffiHelpers.RustCall( (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_move_struct(FfiConverterTypeMoveStruct.INSTANCE.Lower(@moveStruct), ref _status)
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_constructor_objectdata_new_runtime_move_struct(FfiConverterTypeRuntimeMoveStruct.INSTANCE.Lower(@moveStruct), ref _status)
 ));
     }
     
@@ -57249,7 +56871,7 @@ class FfiConverterTypeMoveModule: FfiConverterRustBuffer<MoveModule> {
 
 
 public record MoveModuleConnection (
-    MoveModuleQuery[] @nodes, 
+    MoveModuleRef[] @nodes, 
     PageInfo @pageInfo
 ) : IDisposable {
     public void Dispose() {
@@ -57264,27 +56886,27 @@ class FfiConverterTypeMoveModuleConnection: FfiConverterRustBuffer<MoveModuleCon
 
     public override MoveModuleConnection Read(BigEndianStream stream) {
         return new MoveModuleConnection(
-            @nodes: FfiConverterSequenceTypeMoveModuleQuery.INSTANCE.Read(stream),
+            @nodes: FfiConverterSequenceTypeMoveModuleRef.INSTANCE.Read(stream),
             @pageInfo: FfiConverterTypePageInfo.INSTANCE.Read(stream)
         );
     }
 
     public override int AllocationSize(MoveModuleConnection value) {
         return 0
-            + FfiConverterSequenceTypeMoveModuleQuery.INSTANCE.AllocationSize(value.@nodes)
+            + FfiConverterSequenceTypeMoveModuleRef.INSTANCE.AllocationSize(value.@nodes)
             + FfiConverterTypePageInfo.INSTANCE.AllocationSize(value.@pageInfo);
     }
 
     public override void Write(MoveModuleConnection value, BigEndianStream stream) {
-            FfiConverterSequenceTypeMoveModuleQuery.INSTANCE.Write(value.@nodes, stream);
+            FfiConverterSequenceTypeMoveModuleRef.INSTANCE.Write(value.@nodes, stream);
             FfiConverterTypePageInfo.INSTANCE.Write(value.@pageInfo, stream);
     }
 }
 
 
 
-public record MoveModuleQuery (
-    MovePackageQuery @package, 
+public record MoveModuleRef (
+    MovePackageRef @package, 
     string @name
 ) : IDisposable {
     public void Dispose() {
@@ -57294,24 +56916,24 @@ public record MoveModuleQuery (
     }
 }
 
-class FfiConverterTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModuleQuery> {
-    public static FfiConverterTypeMoveModuleQuery INSTANCE = new FfiConverterTypeMoveModuleQuery();
+class FfiConverterTypeMoveModuleRef: FfiConverterRustBuffer<MoveModuleRef> {
+    public static FfiConverterTypeMoveModuleRef INSTANCE = new FfiConverterTypeMoveModuleRef();
 
-    public override MoveModuleQuery Read(BigEndianStream stream) {
-        return new MoveModuleQuery(
-            @package: FfiConverterTypeMovePackageQuery.INSTANCE.Read(stream),
+    public override MoveModuleRef Read(BigEndianStream stream) {
+        return new MoveModuleRef(
+            @package: FfiConverterTypeMovePackageRef.INSTANCE.Read(stream),
             @name: FfiConverterString.INSTANCE.Read(stream)
         );
     }
 
-    public override int AllocationSize(MoveModuleQuery value) {
+    public override int AllocationSize(MoveModuleRef value) {
         return 0
-            + FfiConverterTypeMovePackageQuery.INSTANCE.AllocationSize(value.@package)
+            + FfiConverterTypeMovePackageRef.INSTANCE.AllocationSize(value.@package)
             + FfiConverterString.INSTANCE.AllocationSize(value.@name);
     }
 
-    public override void Write(MoveModuleQuery value, BigEndianStream stream) {
-            FfiConverterTypeMovePackageQuery.INSTANCE.Write(value.@package, stream);
+    public override void Write(MoveModuleRef value, BigEndianStream stream) {
+            FfiConverterTypeMovePackageRef.INSTANCE.Write(value.@package, stream);
             FfiConverterString.INSTANCE.Write(value.@name, stream);
     }
 }
@@ -57396,7 +57018,7 @@ class FfiConverterTypeMovePackagePage: FfiConverterRustBuffer<MovePackagePage> {
 
 
 
-public record MovePackageQuery (
+public record MovePackageRef (
     Address @address, 
     Base64? @bcs = null
 ) : IDisposable {
@@ -57407,137 +57029,25 @@ public record MovePackageQuery (
     }
 }
 
-class FfiConverterTypeMovePackageQuery: FfiConverterRustBuffer<MovePackageQuery> {
-    public static FfiConverterTypeMovePackageQuery INSTANCE = new FfiConverterTypeMovePackageQuery();
+class FfiConverterTypeMovePackageRef: FfiConverterRustBuffer<MovePackageRef> {
+    public static FfiConverterTypeMovePackageRef INSTANCE = new FfiConverterTypeMovePackageRef();
 
-    public override MovePackageQuery Read(BigEndianStream stream) {
-        return new MovePackageQuery(
+    public override MovePackageRef Read(BigEndianStream stream) {
+        return new MovePackageRef(
             @address: FfiConverterTypeAddress.INSTANCE.Read(stream),
             @bcs: FfiConverterOptionalTypeBase64.INSTANCE.Read(stream)
         );
     }
 
-    public override int AllocationSize(MovePackageQuery value) {
+    public override int AllocationSize(MovePackageRef value) {
         return 0
             + FfiConverterTypeAddress.INSTANCE.AllocationSize(value.@address)
             + FfiConverterOptionalTypeBase64.INSTANCE.AllocationSize(value.@bcs);
     }
 
-    public override void Write(MovePackageQuery value, BigEndianStream stream) {
+    public override void Write(MovePackageRef value, BigEndianStream stream) {
             FfiConverterTypeAddress.INSTANCE.Write(value.@address, stream);
             FfiConverterOptionalTypeBase64.INSTANCE.Write(value.@bcs, stream);
-    }
-}
-
-
-
-/// <summary>
-/// A move struct
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-move-struct = compressed-struct-tag bool u64 object-contents
-///
-/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-/// other-struct-type     = %x00 struct-tag
-/// gas-coin-type         = %x01
-/// staked-iota-type      = %x02
-/// coin-type             = %x03 type-tag
-///
-/// ; first 32 bytes of the contents are the object's object-id
-/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
-/// ```
-/// </summary>
-/// <param name="struct_type">
-/// The type of this object
-/// </param>
-/// <param name="version">
-/// Number that increases each time a tx takes this object as a mutable
-/// input This is a lamport timestamp, not a sequentially increasing
-/// version
-/// </param>
-/// <param name="contents">
-/// BCS bytes of a Move struct value
-/// </param>
-public record MoveStruct (
-    /// <summary>
-    /// The type of this object
-    /// </summary>
-    StructTag @structType, 
-    /// <summary>
-    /// Number that increases each time a tx takes this object as a mutable
-    /// input This is a lamport timestamp, not a sequentially increasing
-    /// version
-    /// </summary>
-    ulong @version, 
-    /// <summary>
-    /// BCS bytes of a Move struct value
-    /// </summary>
-    byte[] @contents
-) : IDisposable {
-    public void Dispose() {
-    FFIObjectUtil.DisposeAll(
-            this.@structType,
-            this.@version,
-            this.@contents);
-    }
-}
-
-class FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
-    public static FfiConverterTypeMoveStruct INSTANCE = new FfiConverterTypeMoveStruct();
-
-    public override MoveStruct Read(BigEndianStream stream) {
-        return new MoveStruct(
-            @structType: FfiConverterTypeStructTag.INSTANCE.Read(stream),
-            @version: FfiConverterUInt64.INSTANCE.Read(stream),
-            @contents: FfiConverterByteArray.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(MoveStruct value) {
-        return 0
-            + FfiConverterTypeStructTag.INSTANCE.AllocationSize(value.@structType)
-            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@version)
-            + FfiConverterByteArray.INSTANCE.AllocationSize(value.@contents);
-    }
-
-    public override void Write(MoveStruct value, BigEndianStream stream) {
-            FfiConverterTypeStructTag.INSTANCE.Write(value.@structType, stream);
-            FfiConverterUInt64.INSTANCE.Write(value.@version, stream);
-            FfiConverterByteArray.INSTANCE.Write(value.@contents, stream);
-    }
-}
-
-
-
-public record MoveStructConnection (
-    PageInfo @pageInfo, 
-    MoveStructQuery[] @nodes
-) {
-}
-
-class FfiConverterTypeMoveStructConnection: FfiConverterRustBuffer<MoveStructConnection> {
-    public static FfiConverterTypeMoveStructConnection INSTANCE = new FfiConverterTypeMoveStructConnection();
-
-    public override MoveStructConnection Read(BigEndianStream stream) {
-        return new MoveStructConnection(
-            @pageInfo: FfiConverterTypePageInfo.INSTANCE.Read(stream),
-            @nodes: FfiConverterSequenceTypeMoveStructQuery.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(MoveStructConnection value) {
-        return 0
-            + FfiConverterTypePageInfo.INSTANCE.AllocationSize(value.@pageInfo)
-            + FfiConverterSequenceTypeMoveStructQuery.INSTANCE.AllocationSize(value.@nodes);
-    }
-
-    public override void Write(MoveStructConnection value, BigEndianStream stream) {
-            FfiConverterTypePageInfo.INSTANCE.Write(value.@pageInfo, stream);
-            FfiConverterSequenceTypeMoveStructQuery.INSTANCE.Write(value.@nodes, stream);
     }
 }
 
@@ -57548,7 +57058,7 @@ class FfiConverterTypeMoveStructConnection: FfiConverterRustBuffer<MoveStructCon
 /// of a C# syntax limitation. Use named parameters for compatibility with
 /// future ordering changes.
 /// </remarks>
-public record MoveStructQuery (
+public record MoveStruct (
     string @name, 
     MoveAbility[]? @abilities = null, 
     MoveField[]? @fields = null, 
@@ -57556,11 +57066,11 @@ public record MoveStructQuery (
 ) {
 }
 
-class FfiConverterTypeMoveStructQuery: FfiConverterRustBuffer<MoveStructQuery> {
-    public static FfiConverterTypeMoveStructQuery INSTANCE = new FfiConverterTypeMoveStructQuery();
+class FfiConverterTypeMoveStruct: FfiConverterRustBuffer<MoveStruct> {
+    public static FfiConverterTypeMoveStruct INSTANCE = new FfiConverterTypeMoveStruct();
 
-    public override MoveStructQuery Read(BigEndianStream stream) {
-        return new MoveStructQuery(
+    public override MoveStruct Read(BigEndianStream stream) {
+        return new MoveStruct(
             @abilities: FfiConverterOptionalSequenceTypeMoveAbility.INSTANCE.Read(stream),
             @name: FfiConverterString.INSTANCE.Read(stream),
             @fields: FfiConverterOptionalSequenceTypeMoveField.INSTANCE.Read(stream),
@@ -57568,7 +57078,7 @@ class FfiConverterTypeMoveStructQuery: FfiConverterRustBuffer<MoveStructQuery> {
         );
     }
 
-    public override int AllocationSize(MoveStructQuery value) {
+    public override int AllocationSize(MoveStruct value) {
         return 0
             + FfiConverterOptionalSequenceTypeMoveAbility.INSTANCE.AllocationSize(value.@abilities)
             + FfiConverterString.INSTANCE.AllocationSize(value.@name)
@@ -57576,11 +57086,41 @@ class FfiConverterTypeMoveStructQuery: FfiConverterRustBuffer<MoveStructQuery> {
             + FfiConverterOptionalSequenceTypeMoveStructTypeParameter.INSTANCE.AllocationSize(value.@typeParameters);
     }
 
-    public override void Write(MoveStructQuery value, BigEndianStream stream) {
+    public override void Write(MoveStruct value, BigEndianStream stream) {
             FfiConverterOptionalSequenceTypeMoveAbility.INSTANCE.Write(value.@abilities, stream);
             FfiConverterString.INSTANCE.Write(value.@name, stream);
             FfiConverterOptionalSequenceTypeMoveField.INSTANCE.Write(value.@fields, stream);
             FfiConverterOptionalSequenceTypeMoveStructTypeParameter.INSTANCE.Write(value.@typeParameters, stream);
+    }
+}
+
+
+
+public record MoveStructConnection (
+    PageInfo @pageInfo, 
+    MoveStruct[] @nodes
+) {
+}
+
+class FfiConverterTypeMoveStructConnection: FfiConverterRustBuffer<MoveStructConnection> {
+    public static FfiConverterTypeMoveStructConnection INSTANCE = new FfiConverterTypeMoveStructConnection();
+
+    public override MoveStructConnection Read(BigEndianStream stream) {
+        return new MoveStructConnection(
+            @pageInfo: FfiConverterTypePageInfo.INSTANCE.Read(stream),
+            @nodes: FfiConverterSequenceTypeMoveStruct.INSTANCE.Read(stream)
+        );
+    }
+
+    public override int AllocationSize(MoveStructConnection value) {
+        return 0
+            + FfiConverterTypePageInfo.INSTANCE.AllocationSize(value.@pageInfo)
+            + FfiConverterSequenceTypeMoveStruct.INSTANCE.AllocationSize(value.@nodes);
+    }
+
+    public override void Write(MoveStructConnection value, BigEndianStream stream) {
+            FfiConverterTypePageInfo.INSTANCE.Write(value.@pageInfo, stream);
+            FfiConverterSequenceTypeMoveStruct.INSTANCE.Write(value.@nodes, stream);
     }
 }
 
@@ -58297,6 +57837,88 @@ class FfiConverterTypeRandomnessStateUpdate: FfiConverterRustBuffer<RandomnessSt
 
 
 
+/// <summary>
+/// A move struct
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// object-move-struct = compressed-struct-tag bool u64 object-contents
+///
+/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
+/// other-struct-type     = %x00 struct-tag
+/// gas-coin-type         = %x01
+/// staked-iota-type      = %x02
+/// coin-type             = %x03 type-tag
+///
+/// ; first 32 bytes of the contents are the object's object-id
+/// object-contents = uleb128 (object-id *OCTET) ; length followed by contents
+/// ```
+/// </summary>
+/// <param name="struct_type">
+/// The type of this object
+/// </param>
+/// <param name="version">
+/// Number that increases each time a tx takes this object as a mutable
+/// input This is a lamport timestamp, not a sequentially increasing
+/// version
+/// </param>
+/// <param name="contents">
+/// BCS bytes of a Move struct value
+/// </param>
+public record RuntimeMoveStruct (
+    /// <summary>
+    /// The type of this object
+    /// </summary>
+    StructTag @structType, 
+    /// <summary>
+    /// Number that increases each time a tx takes this object as a mutable
+    /// input This is a lamport timestamp, not a sequentially increasing
+    /// version
+    /// </summary>
+    ulong @version, 
+    /// <summary>
+    /// BCS bytes of a Move struct value
+    /// </summary>
+    byte[] @contents
+) : IDisposable {
+    public void Dispose() {
+    FFIObjectUtil.DisposeAll(
+            this.@structType,
+            this.@version,
+            this.@contents);
+    }
+}
+
+class FfiConverterTypeRuntimeMoveStruct: FfiConverterRustBuffer<RuntimeMoveStruct> {
+    public static FfiConverterTypeRuntimeMoveStruct INSTANCE = new FfiConverterTypeRuntimeMoveStruct();
+
+    public override RuntimeMoveStruct Read(BigEndianStream stream) {
+        return new RuntimeMoveStruct(
+            @structType: FfiConverterTypeStructTag.INSTANCE.Read(stream),
+            @version: FfiConverterUInt64.INSTANCE.Read(stream),
+            @contents: FfiConverterByteArray.INSTANCE.Read(stream)
+        );
+    }
+
+    public override int AllocationSize(RuntimeMoveStruct value) {
+        return 0
+            + FfiConverterTypeStructTag.INSTANCE.AllocationSize(value.@structType)
+            + FfiConverterUInt64.INSTANCE.AllocationSize(value.@version)
+            + FfiConverterByteArray.INSTANCE.AllocationSize(value.@contents);
+    }
+
+    public override void Write(RuntimeMoveStruct value, BigEndianStream stream) {
+            FfiConverterTypeStructTag.INSTANCE.Write(value.@structType, stream);
+            FfiConverterUInt64.INSTANCE.Write(value.@version, stream);
+            FfiConverterByteArray.INSTANCE.Write(value.@contents, stream);
+    }
+}
+
+
+
 /// <param name="default_page_size">
 /// Default number of elements allowed on a single page of a connection.
 /// </param>
@@ -58575,6 +58197,86 @@ class FfiConverterTypeSignedTransactionPage: FfiConverterRustBuffer<SignedTransa
     public override void Write(SignedTransactionPage value, BigEndianStream stream) {
             FfiConverterTypePageInfo.INSTANCE.Write(value.@pageInfo, stream);
             FfiConverterSequenceTypeSignedTransaction.INSTANCE.Write(value.@data, stream);
+    }
+}
+
+
+
+public record TransactionBlockFilter (
+    string? @function = null, 
+    TransactionBlockKindInput? @kind = null, 
+    ulong? @afterCheckpoint = null, 
+    ulong? @atCheckpoint = null, 
+    ulong? @beforeCheckpoint = null, 
+    Address? @signAddress = null, 
+    Address? @recvAddress = null, 
+    ObjectId? @inputObject = null, 
+    ObjectId? @changedObject = null, 
+    string[]? @transactionIds = null, 
+    ObjectId? @wrappedOrDeletedObject = null
+) : IDisposable {
+    public void Dispose() {
+    FFIObjectUtil.DisposeAll(
+            this.@function,
+            this.@kind,
+            this.@afterCheckpoint,
+            this.@atCheckpoint,
+            this.@beforeCheckpoint,
+            this.@signAddress,
+            this.@recvAddress,
+            this.@inputObject,
+            this.@changedObject,
+            this.@transactionIds,
+            this.@wrappedOrDeletedObject);
+    }
+}
+
+class FfiConverterTypeTransactionBlockFilter: FfiConverterRustBuffer<TransactionBlockFilter> {
+    public static FfiConverterTypeTransactionBlockFilter INSTANCE = new FfiConverterTypeTransactionBlockFilter();
+
+    public override TransactionBlockFilter Read(BigEndianStream stream) {
+        return new TransactionBlockFilter(
+            @function: FfiConverterOptionalString.INSTANCE.Read(stream),
+            @kind: FfiConverterOptionalTypeTransactionBlockKindInput.INSTANCE.Read(stream),
+            @afterCheckpoint: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
+            @atCheckpoint: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
+            @beforeCheckpoint: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
+            @signAddress: FfiConverterOptionalTypeAddress.INSTANCE.Read(stream),
+            @recvAddress: FfiConverterOptionalTypeAddress.INSTANCE.Read(stream),
+            @inputObject: FfiConverterOptionalTypeObjectId.INSTANCE.Read(stream),
+            @changedObject: FfiConverterOptionalTypeObjectId.INSTANCE.Read(stream),
+            @transactionIds: FfiConverterOptionalSequenceString.INSTANCE.Read(stream),
+            @wrappedOrDeletedObject: FfiConverterOptionalTypeObjectId.INSTANCE.Read(stream)
+        );
+    }
+
+    public override int AllocationSize(TransactionBlockFilter value) {
+        return 0
+            + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@function)
+            + FfiConverterOptionalTypeTransactionBlockKindInput.INSTANCE.AllocationSize(value.@kind)
+            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@afterCheckpoint)
+            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@atCheckpoint)
+            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@beforeCheckpoint)
+            + FfiConverterOptionalTypeAddress.INSTANCE.AllocationSize(value.@signAddress)
+            + FfiConverterOptionalTypeAddress.INSTANCE.AllocationSize(value.@recvAddress)
+            + FfiConverterOptionalTypeObjectId.INSTANCE.AllocationSize(value.@inputObject)
+            + FfiConverterOptionalTypeObjectId.INSTANCE.AllocationSize(value.@changedObject)
+            + FfiConverterOptionalSequenceString.INSTANCE.AllocationSize(value.@transactionIds)
+            + FfiConverterOptionalTypeObjectId.INSTANCE.AllocationSize(value.@wrappedOrDeletedObject);
+    }
+
+    public override void Write(TransactionBlockFilter value, BigEndianStream stream) {
+            FfiConverterOptionalString.INSTANCE.Write(value.@function, stream);
+            FfiConverterOptionalTypeTransactionBlockKindInput.INSTANCE.Write(value.@kind, stream);
+            FfiConverterOptionalUInt64.INSTANCE.Write(value.@afterCheckpoint, stream);
+            FfiConverterOptionalUInt64.INSTANCE.Write(value.@atCheckpoint, stream);
+            FfiConverterOptionalUInt64.INSTANCE.Write(value.@beforeCheckpoint, stream);
+            FfiConverterOptionalTypeAddress.INSTANCE.Write(value.@signAddress, stream);
+            FfiConverterOptionalTypeAddress.INSTANCE.Write(value.@recvAddress, stream);
+            FfiConverterOptionalTypeObjectId.INSTANCE.Write(value.@inputObject, stream);
+            FfiConverterOptionalTypeObjectId.INSTANCE.Write(value.@changedObject, stream);
+            FfiConverterOptionalSequenceString.INSTANCE.Write(value.@transactionIds, stream);
+            FfiConverterOptionalTypeObjectId.INSTANCE.Write(value.@wrappedOrDeletedObject, stream);
     }
 }
 
@@ -58989,86 +58691,6 @@ class FfiConverterTypeTransactionSignerFnOutput: FfiConverterRustBuffer<Transact
 
     public override void Write(TransactionSignerFnOutput value, BigEndianStream stream) {
             FfiConverterTypeUserSignature.INSTANCE.Write(value.@signature, stream);
-    }
-}
-
-
-
-public record TransactionsFilter (
-    string? @function = null, 
-    TransactionBlockKindInput? @kind = null, 
-    ulong? @afterCheckpoint = null, 
-    ulong? @atCheckpoint = null, 
-    ulong? @beforeCheckpoint = null, 
-    Address? @signAddress = null, 
-    Address? @recvAddress = null, 
-    ObjectId? @inputObject = null, 
-    ObjectId? @changedObject = null, 
-    string[]? @transactionIds = null, 
-    ObjectId? @wrappedOrDeletedObject = null
-) : IDisposable {
-    public void Dispose() {
-    FFIObjectUtil.DisposeAll(
-            this.@function,
-            this.@kind,
-            this.@afterCheckpoint,
-            this.@atCheckpoint,
-            this.@beforeCheckpoint,
-            this.@signAddress,
-            this.@recvAddress,
-            this.@inputObject,
-            this.@changedObject,
-            this.@transactionIds,
-            this.@wrappedOrDeletedObject);
-    }
-}
-
-class FfiConverterTypeTransactionsFilter: FfiConverterRustBuffer<TransactionsFilter> {
-    public static FfiConverterTypeTransactionsFilter INSTANCE = new FfiConverterTypeTransactionsFilter();
-
-    public override TransactionsFilter Read(BigEndianStream stream) {
-        return new TransactionsFilter(
-            @function: FfiConverterOptionalString.INSTANCE.Read(stream),
-            @kind: FfiConverterOptionalTypeTransactionBlockKindInput.INSTANCE.Read(stream),
-            @afterCheckpoint: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
-            @atCheckpoint: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
-            @beforeCheckpoint: FfiConverterOptionalUInt64.INSTANCE.Read(stream),
-            @signAddress: FfiConverterOptionalTypeAddress.INSTANCE.Read(stream),
-            @recvAddress: FfiConverterOptionalTypeAddress.INSTANCE.Read(stream),
-            @inputObject: FfiConverterOptionalTypeObjectId.INSTANCE.Read(stream),
-            @changedObject: FfiConverterOptionalTypeObjectId.INSTANCE.Read(stream),
-            @transactionIds: FfiConverterOptionalSequenceString.INSTANCE.Read(stream),
-            @wrappedOrDeletedObject: FfiConverterOptionalTypeObjectId.INSTANCE.Read(stream)
-        );
-    }
-
-    public override int AllocationSize(TransactionsFilter value) {
-        return 0
-            + FfiConverterOptionalString.INSTANCE.AllocationSize(value.@function)
-            + FfiConverterOptionalTypeTransactionBlockKindInput.INSTANCE.AllocationSize(value.@kind)
-            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@afterCheckpoint)
-            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@atCheckpoint)
-            + FfiConverterOptionalUInt64.INSTANCE.AllocationSize(value.@beforeCheckpoint)
-            + FfiConverterOptionalTypeAddress.INSTANCE.AllocationSize(value.@signAddress)
-            + FfiConverterOptionalTypeAddress.INSTANCE.AllocationSize(value.@recvAddress)
-            + FfiConverterOptionalTypeObjectId.INSTANCE.AllocationSize(value.@inputObject)
-            + FfiConverterOptionalTypeObjectId.INSTANCE.AllocationSize(value.@changedObject)
-            + FfiConverterOptionalSequenceString.INSTANCE.AllocationSize(value.@transactionIds)
-            + FfiConverterOptionalTypeObjectId.INSTANCE.AllocationSize(value.@wrappedOrDeletedObject);
-    }
-
-    public override void Write(TransactionsFilter value, BigEndianStream stream) {
-            FfiConverterOptionalString.INSTANCE.Write(value.@function, stream);
-            FfiConverterOptionalTypeTransactionBlockKindInput.INSTANCE.Write(value.@kind, stream);
-            FfiConverterOptionalUInt64.INSTANCE.Write(value.@afterCheckpoint, stream);
-            FfiConverterOptionalUInt64.INSTANCE.Write(value.@atCheckpoint, stream);
-            FfiConverterOptionalUInt64.INSTANCE.Write(value.@beforeCheckpoint, stream);
-            FfiConverterOptionalTypeAddress.INSTANCE.Write(value.@signAddress, stream);
-            FfiConverterOptionalTypeAddress.INSTANCE.Write(value.@recvAddress, stream);
-            FfiConverterOptionalTypeObjectId.INSTANCE.Write(value.@inputObject, stream);
-            FfiConverterOptionalTypeObjectId.INSTANCE.Write(value.@changedObject, stream);
-            FfiConverterOptionalSequenceString.INSTANCE.Write(value.@transactionIds, stream);
-            FfiConverterOptionalTypeObjectId.INSTANCE.Write(value.@wrappedOrDeletedObject, stream);
     }
 }
 
@@ -64379,37 +64001,6 @@ class FfiConverterOptionalTypeMoveModule: FfiConverterRustBuffer<MoveModule?> {
 
 
 
-class FfiConverterOptionalTypeMoveStruct: FfiConverterRustBuffer<MoveStruct?> {
-    public static FfiConverterOptionalTypeMoveStruct INSTANCE = new FfiConverterOptionalTypeMoveStruct();
-
-    public override MoveStruct? Read(BigEndianStream stream) {
-        if (stream.ReadByte() == 0) {
-            return null;
-        }
-        return FfiConverterTypeMoveStruct.INSTANCE.Read(stream);
-    }
-
-    public override int AllocationSize(MoveStruct? value) {
-        if (value == null) {
-            return 1;
-        } else {
-            return 1 + FfiConverterTypeMoveStruct.INSTANCE.AllocationSize((MoveStruct)value);
-        }
-    }
-
-    public override void Write(MoveStruct? value, BigEndianStream stream) {
-        if (value == null) {
-            stream.WriteByte(0);
-        } else {
-            stream.WriteByte(1);
-            FfiConverterTypeMoveStruct.INSTANCE.Write((MoveStruct)value, stream);
-        }
-    }
-}
-
-
-
-
 class FfiConverterOptionalTypeMoveStructConnection: FfiConverterRustBuffer<MoveStructConnection?> {
     public static FfiConverterOptionalTypeMoveStructConnection INSTANCE = new FfiConverterOptionalTypeMoveStructConnection();
 
@@ -64565,6 +64156,37 @@ class FfiConverterOptionalTypeProtocolConfigs: FfiConverterRustBuffer<ProtocolCo
 
 
 
+class FfiConverterOptionalTypeRuntimeMoveStruct: FfiConverterRustBuffer<RuntimeMoveStruct?> {
+    public static FfiConverterOptionalTypeRuntimeMoveStruct INSTANCE = new FfiConverterOptionalTypeRuntimeMoveStruct();
+
+    public override RuntimeMoveStruct? Read(BigEndianStream stream) {
+        if (stream.ReadByte() == 0) {
+            return null;
+        }
+        return FfiConverterTypeRuntimeMoveStruct.INSTANCE.Read(stream);
+    }
+
+    public override int AllocationSize(RuntimeMoveStruct? value) {
+        if (value == null) {
+            return 1;
+        } else {
+            return 1 + FfiConverterTypeRuntimeMoveStruct.INSTANCE.AllocationSize((RuntimeMoveStruct)value);
+        }
+    }
+
+    public override void Write(RuntimeMoveStruct? value, BigEndianStream stream) {
+        if (value == null) {
+            stream.WriteByte(0);
+        } else {
+            stream.WriteByte(1);
+            FfiConverterTypeRuntimeMoveStruct.INSTANCE.Write((RuntimeMoveStruct)value, stream);
+        }
+    }
+}
+
+
+
+
 class FfiConverterOptionalTypeSignedTransaction: FfiConverterRustBuffer<SignedTransaction?> {
     public static FfiConverterOptionalTypeSignedTransaction INSTANCE = new FfiConverterOptionalTypeSignedTransaction();
 
@@ -64596,6 +64218,37 @@ class FfiConverterOptionalTypeSignedTransaction: FfiConverterRustBuffer<SignedTr
 
 
 
+class FfiConverterOptionalTypeTransactionBlockFilter: FfiConverterRustBuffer<TransactionBlockFilter?> {
+    public static FfiConverterOptionalTypeTransactionBlockFilter INSTANCE = new FfiConverterOptionalTypeTransactionBlockFilter();
+
+    public override TransactionBlockFilter? Read(BigEndianStream stream) {
+        if (stream.ReadByte() == 0) {
+            return null;
+        }
+        return FfiConverterTypeTransactionBlockFilter.INSTANCE.Read(stream);
+    }
+
+    public override int AllocationSize(TransactionBlockFilter? value) {
+        if (value == null) {
+            return 1;
+        } else {
+            return 1 + FfiConverterTypeTransactionBlockFilter.INSTANCE.AllocationSize((TransactionBlockFilter)value);
+        }
+    }
+
+    public override void Write(TransactionBlockFilter? value, BigEndianStream stream) {
+        if (value == null) {
+            stream.WriteByte(0);
+        } else {
+            stream.WriteByte(1);
+            FfiConverterTypeTransactionBlockFilter.INSTANCE.Write((TransactionBlockFilter)value, stream);
+        }
+    }
+}
+
+
+
+
 class FfiConverterOptionalTypeTransactionDataEffects: FfiConverterRustBuffer<TransactionDataEffects?> {
     public static FfiConverterOptionalTypeTransactionDataEffects INSTANCE = new FfiConverterOptionalTypeTransactionDataEffects();
 
@@ -64620,37 +64273,6 @@ class FfiConverterOptionalTypeTransactionDataEffects: FfiConverterRustBuffer<Tra
         } else {
             stream.WriteByte(1);
             FfiConverterTypeTransactionDataEffects.INSTANCE.Write((TransactionDataEffects)value, stream);
-        }
-    }
-}
-
-
-
-
-class FfiConverterOptionalTypeTransactionsFilter: FfiConverterRustBuffer<TransactionsFilter?> {
-    public static FfiConverterOptionalTypeTransactionsFilter INSTANCE = new FfiConverterOptionalTypeTransactionsFilter();
-
-    public override TransactionsFilter? Read(BigEndianStream stream) {
-        if (stream.ReadByte() == 0) {
-            return null;
-        }
-        return FfiConverterTypeTransactionsFilter.INSTANCE.Read(stream);
-    }
-
-    public override int AllocationSize(TransactionsFilter? value) {
-        if (value == null) {
-            return 1;
-        } else {
-            return 1 + FfiConverterTypeTransactionsFilter.INSTANCE.AllocationSize((TransactionsFilter)value);
-        }
-    }
-
-    public override void Write(TransactionsFilter? value, BigEndianStream stream) {
-        if (value == null) {
-            stream.WriteByte(0);
-        } else {
-            stream.WriteByte(1);
-            FfiConverterTypeTransactionsFilter.INSTANCE.Write((TransactionsFilter)value, stream);
         }
     }
 }
@@ -67656,24 +67278,24 @@ class FfiConverterSequenceTypeMoveFunctionTypeParameter: FfiConverterRustBuffer<
 
 
 
-class FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModuleQuery[]> {
-    public static FfiConverterSequenceTypeMoveModuleQuery INSTANCE = new FfiConverterSequenceTypeMoveModuleQuery();
+class FfiConverterSequenceTypeMoveModuleRef: FfiConverterRustBuffer<MoveModuleRef[]> {
+    public static FfiConverterSequenceTypeMoveModuleRef INSTANCE = new FfiConverterSequenceTypeMoveModuleRef();
 
-    public override MoveModuleQuery[]  Read(BigEndianStream stream) {
+    public override MoveModuleRef[]  Read(BigEndianStream stream) {
         var length = stream.ReadInt();
         if (length == 0) {
             return [];
         }
 
-        var result = new MoveModuleQuery[(length)];
-        var readFn = FfiConverterTypeMoveModuleQuery.INSTANCE.Read;
+        var result = new MoveModuleRef[(length)];
+        var readFn = FfiConverterTypeMoveModuleRef.INSTANCE.Read;
         for (int i = 0; i < length; i++) {
             result[i] = readFn(stream);
         }
         return result;
     }
 
-    public override int AllocationSize(MoveModuleQuery[]  value) {
+    public override int AllocationSize(MoveModuleRef[]  value) {
         var sizeForLength = 4;
 
         // details/1-empty-list-as-default-method-parameter.md
@@ -67681,12 +67303,12 @@ class FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModule
             return sizeForLength;
         }
 
-        var allocationSizeFn = FfiConverterTypeMoveModuleQuery.INSTANCE.AllocationSize;
+        var allocationSizeFn = FfiConverterTypeMoveModuleRef.INSTANCE.AllocationSize;
         var sizeForItems = value.Sum(item => allocationSizeFn(item));
         return sizeForLength + sizeForItems;
     }
 
-    public override void Write(MoveModuleQuery[] value, BigEndianStream stream) {
+    public override void Write(MoveModuleRef[] value, BigEndianStream stream) {
         // details/1-empty-list-as-default-method-parameter.md
         if (value == null) {
             stream.WriteInt(0);
@@ -67694,7 +67316,7 @@ class FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModule
         }
 
         stream.WriteInt(value.Length);
-        var writerFn = FfiConverterTypeMoveModuleQuery.INSTANCE.Write;
+        var writerFn = FfiConverterTypeMoveModuleRef.INSTANCE.Write;
         value.ForEach(item => writerFn(item, stream));
     }
 }
@@ -67702,24 +67324,24 @@ class FfiConverterSequenceTypeMoveModuleQuery: FfiConverterRustBuffer<MoveModule
 
 
 
-class FfiConverterSequenceTypeMoveStructQuery: FfiConverterRustBuffer<MoveStructQuery[]> {
-    public static FfiConverterSequenceTypeMoveStructQuery INSTANCE = new FfiConverterSequenceTypeMoveStructQuery();
+class FfiConverterSequenceTypeMoveStruct: FfiConverterRustBuffer<MoveStruct[]> {
+    public static FfiConverterSequenceTypeMoveStruct INSTANCE = new FfiConverterSequenceTypeMoveStruct();
 
-    public override MoveStructQuery[]  Read(BigEndianStream stream) {
+    public override MoveStruct[]  Read(BigEndianStream stream) {
         var length = stream.ReadInt();
         if (length == 0) {
             return [];
         }
 
-        var result = new MoveStructQuery[(length)];
-        var readFn = FfiConverterTypeMoveStructQuery.INSTANCE.Read;
+        var result = new MoveStruct[(length)];
+        var readFn = FfiConverterTypeMoveStruct.INSTANCE.Read;
         for (int i = 0; i < length; i++) {
             result[i] = readFn(stream);
         }
         return result;
     }
 
-    public override int AllocationSize(MoveStructQuery[]  value) {
+    public override int AllocationSize(MoveStruct[]  value) {
         var sizeForLength = 4;
 
         // details/1-empty-list-as-default-method-parameter.md
@@ -67727,12 +67349,12 @@ class FfiConverterSequenceTypeMoveStructQuery: FfiConverterRustBuffer<MoveStruct
             return sizeForLength;
         }
 
-        var allocationSizeFn = FfiConverterTypeMoveStructQuery.INSTANCE.AllocationSize;
+        var allocationSizeFn = FfiConverterTypeMoveStruct.INSTANCE.AllocationSize;
         var sizeForItems = value.Sum(item => allocationSizeFn(item));
         return sizeForLength + sizeForItems;
     }
 
-    public override void Write(MoveStructQuery[] value, BigEndianStream stream) {
+    public override void Write(MoveStruct[] value, BigEndianStream stream) {
         // details/1-empty-list-as-default-method-parameter.md
         if (value == null) {
             stream.WriteInt(0);
@@ -67740,7 +67362,7 @@ class FfiConverterSequenceTypeMoveStructQuery: FfiConverterRustBuffer<MoveStruct
         }
 
         stream.WriteInt(value.Length);
-        var writerFn = FfiConverterTypeMoveStructQuery.INSTANCE.Write;
+        var writerFn = FfiConverterTypeMoveStruct.INSTANCE.Write;
         value.ForEach(item => writerFn(item, stream));
     }
 }
@@ -71275,54 +70897,6 @@ public static class Iota {
     /// Create this type from BCS encoded bytes.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public static MoveStruct MoveStructFromBcs(byte[] @bcs) {
-        return FfiConverterTypeMoveStruct.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_move_struct_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static MoveStruct MoveStructFromJson(string @json) {
-        return FfiConverterTypeMoveStruct.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_move_struct_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] MoveStructToBcs(MoveStruct @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_move_struct_to_bcs(FfiConverterTypeMoveStruct.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string MoveStructToJson(MoveStruct @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_move_struct_to_json(FfiConverterTypeMoveStruct.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
     public static MultisigAggregatedSignature MultisigAggregatedSignatureFromBcs(byte[] @bcs) {
         return FfiConverterTypeMultisigAggregatedSignature.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
@@ -71776,54 +71350,6 @@ public static class Iota {
 
 
     /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ObjectReference ObjectReferenceFromBcs(byte[] @bcs) {
-        return FfiConverterTypeObjectReference.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_object_reference_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static ObjectReference ObjectReferenceFromJson(string @json) {
-        return FfiConverterTypeObjectReference.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_object_reference_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] ObjectReferenceToBcs(ObjectReference @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_object_reference_to_bcs(FfiConverterTypeObjectReference.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string ObjectReferenceToJson(ObjectReference @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_object_reference_to_json(FfiConverterTypeObjectReference.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
     /// Convert this type to BCS encoded bytes.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
@@ -72131,6 +71657,54 @@ public static class Iota {
         return FfiConverterString.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_randomness_state_update_to_json(FfiConverterTypeRandomnessStateUpdate.INSTANCE.Lower(@data), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Create this type from BCS encoded bytes.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static RuntimeMoveStruct RuntimeMoveStructFromBcs(byte[] @bcs) {
+        return FfiConverterTypeRuntimeMoveStruct.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Create this type from JSON encoded string.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static RuntimeMoveStruct RuntimeMoveStructFromJson(string @json) {
+        return FfiConverterTypeRuntimeMoveStruct.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Convert this type to BCS encoded bytes.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static byte[] RuntimeMoveStructToBcs(RuntimeMoveStruct @data) {
+        return FfiConverterByteArray.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_to_bcs(FfiConverterTypeRuntimeMoveStruct.INSTANCE.Lower(@data), ref _status)
+));
+    }
+
+
+    /// <summary>
+    /// Convert this type to JSON encoded string.
+    /// </summary>
+    /// <exception cref="SdkFfiException"></exception>
+    public static string RuntimeMoveStructToJson(RuntimeMoveStruct @data) {
+        return FfiConverterString.INSTANCE.Lift(
+    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
+    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_runtime_move_struct_to_json(FfiConverterTypeRuntimeMoveStruct.INSTANCE.Lower(@data), ref _status)
 ));
     }
 
@@ -73051,54 +72625,6 @@ public static class Iota {
     /// Create this type from BCS encoded bytes.
     /// </summary>
     /// <exception cref="SdkFfiException"></exception>
-    public static TypeOrigin TypeOriginFromBcs(byte[] @bcs) {
-        return FfiConverterTypeTypeOrigin.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_type_origin_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static TypeOrigin TypeOriginFromJson(string @json) {
-        return FfiConverterTypeTypeOrigin.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_type_origin_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] TypeOriginToBcs(TypeOrigin @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_type_origin_to_bcs(FfiConverterTypeTypeOrigin.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string TypeOriginToJson(TypeOrigin @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_type_origin_to_json(FfiConverterTypeTypeOrigin.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
     public static TypeTag TypeTagFromBcs(byte[] @bcs) {
         return FfiConverterTypeTypeTag.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
@@ -73451,54 +72977,6 @@ public static class Iota {
         return FfiConverterTypeUpgrade.INSTANCE.Lift(
     _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
     _UniFFILib.uniffi_iota_sdk_ffi_fn_func_upgrade_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static UpgradeInfo UpgradeInfoFromBcs(byte[] @bcs) {
-        return FfiConverterTypeUpgradeInfo.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_bcs(FfiConverterByteArray.INSTANCE.Lower(@bcs), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Create this type from JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static UpgradeInfo UpgradeInfoFromJson(string @json) {
-        return FfiConverterTypeUpgradeInfo.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_upgrade_info_from_json(FfiConverterString.INSTANCE.Lower(@json), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to BCS encoded bytes.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static byte[] UpgradeInfoToBcs(UpgradeInfo @data) {
-        return FfiConverterByteArray.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_bcs(FfiConverterTypeUpgradeInfo.INSTANCE.Lower(@data), ref _status)
-));
-    }
-
-
-    /// <summary>
-    /// Convert this type to JSON encoded string.
-    /// </summary>
-    /// <exception cref="SdkFfiException"></exception>
-    public static string UpgradeInfoToJson(UpgradeInfo @data) {
-        return FfiConverterString.INSTANCE.Lift(
-    _UniffiHelpers.RustCallWithError(FfiConverterTypeSdkFfiError.INSTANCE, (ref UniffiRustCallStatus _status) =>
-    _UniFFILib.uniffi_iota_sdk_ffi_fn_func_upgrade_info_to_json(FfiConverterTypeUpgradeInfo.INSTANCE.Lower(@data), ref _status)
 ));
     }
 

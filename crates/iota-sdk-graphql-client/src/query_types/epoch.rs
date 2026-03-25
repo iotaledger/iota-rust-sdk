@@ -7,7 +7,7 @@
 use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 
 // ===========================================================================
-// Epoch Queries
+// Queries
 // ===========================================================================
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochQueryArgs")]
@@ -47,7 +47,7 @@ pub struct EpochSummary {
 }
 
 // ===========================================================================
-// Epoch Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug, Clone)]

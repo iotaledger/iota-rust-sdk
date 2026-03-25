@@ -32,6 +32,9 @@ jobs:
       - name: rustfmt
         run: make check-fmt
 
+      - name: graphql naming policy
+        run: make check-graphql-naming-policy
+
       - name: clippy
         if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
         run: make clippy

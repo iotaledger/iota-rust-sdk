@@ -736,3 +736,100 @@ crate::export_iota_types_objects_json_conversion!(
     Owner,
     GenesisObject
 );
+
+#[cfg(test)]
+mod runtime_move_struct_tests {
+    use crate::types::object::*;
+
+    // Use fully-qualified paths to avoid `StructTag` name collision between
+    // `crate::types::StructTag` (FFI wrapper) and `iota_types::StructTag` (the actual type).
+    type TestStructTag = iota_types::type_tag::StructTag;
+
+    // === Bi-directional From conversions ===
+
+    #[test]
+    fn runtime_move_struct_from_types_roundtrip() {
+        let original = iota_sdk::types::MoveStruct {
+            type_: TestStructTag::new_gas_coin(),
+            version: 42,
+            contents: vec![0xDE, 0xAD, 0xBE, 0xEF],
+        };
+
+        let ffi: RuntimeMoveStruct = original.clone().into();
+        let roundtrip: iota_sdk::types::MoveStruct = ffi.into();
+
+        assert_eq!(roundtrip.type_, original.type_);
+        assert_eq!(roundtrip.version, original.version);
+        assert_eq!(roundtrip.contents, original.contents);
+    }
+
+    #[test]
+    fn runtime_move_struct_from_types_preserves_empty_contents() {
+        let original = iota_sdk::types::MoveStruct {
+            type_: TestStructTag::new_gas_coin(),
+            version: 0,
+            contents: vec![],
+        };
+
+        let ffi: RuntimeMoveStruct = original.clone().into();
+        let roundtrip: iota_sdk::types::MoveStruct = ffi.into();
+
+        assert!(roundtrip.contents.is_empty());
+    }
+
+    // === BCS round-trip ===
+
+    #[test]
+    fn runtime_move_struct_bcs_roundtrip() {
+        let original = iota_sdk::types::MoveStruct {
+            type_: TestStructTag::new_gas_coin(),
+            version: 0,
+            contents: vec![],
+        };
+
+        let encoded = runtime_move_struct_to_bcs(original.clone().into()).unwrap();
+        let decoded = runtime_move_struct_from_bcs(encoded).unwrap();
+        let roundtrip: iota_sdk::types::MoveStruct = decoded.into();
+
+        assert_eq!(roundtrip.type_, original.type_);
+        assert_eq!(roundtrip.version, original.version);
+        assert_eq!(roundtrip.contents, original.contents);
+    }
+
+    #[test]
+    fn runtime_move_struct_bcs_invalid_input() {
+        let result = runtime_move_struct_from_bcs(vec![0xFF, 0xFF, 0xFF]);
+        assert!(
+            result.is_err(),
+            "invalid BCS bytes should produce an error"
+        );
+    }
+
+    // === JSON round-trip ===
+
+    #[test]
+    fn runtime_move_struct_json_roundtrip() {
+        let original = iota_sdk::types::MoveStruct {
+            type_: TestStructTag::new_iota_coin_type(),
+            version: 1,
+            contents: vec![42],
+        };
+
+        let encoded = runtime_move_struct_to_json(original.clone().into()).unwrap();
+        let decoded = runtime_move_struct_from_json(&encoded).unwrap();
+        let roundtrip: iota_sdk::types::MoveStruct = decoded.into();
+
+        assert_eq!(roundtrip.type_, original.type_);
+        assert_eq!(roundtrip.version, original.version);
+        assert_eq!(roundtrip.contents, original.contents);
+    }
+
+    #[test]
+    fn runtime_move_struct_json_invalid_input() {
+        let result = runtime_move_struct_from_json("not valid json {{{");
+        assert!(
+            result.is_err(),
+            "invalid JSON should produce an error"
+        );
+    }
+}

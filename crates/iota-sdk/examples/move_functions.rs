@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
 
     for (module_id, _) in package.modules {
         let Some(module) = client
-            .normalized_move_module(
+            .move_schema_module(
                 package_address,
                 module_id.as_str(),
                 None,

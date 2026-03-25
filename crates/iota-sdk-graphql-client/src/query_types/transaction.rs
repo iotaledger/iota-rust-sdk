@@ -15,7 +15,7 @@ use crate::{
 };
 
 // ===========================================================================
-// Transaction Block(s) Queries
+// Queries
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -106,7 +106,7 @@ pub struct TransactionBlocksEffectsQuery {
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
 // ===========================================================================
-// Transaction Block(s) Query Args
+// Query Args
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -124,7 +124,7 @@ pub struct TransactionBlocksQueryArgs {
 }
 
 // ===========================================================================
-// Transaction Block(s) Types
+// Types
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -280,15 +280,15 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
 #[cynic(
     schema = "rpc",
     graphql_type = "Mutation",
-    variables = "ExecuteTransactionQueryArgs"
+    variables = "ExecuteTransactionMutationArgs"
 )]
-pub struct ExecuteTransactionQuery {
+pub struct ExecuteTransactionMutation {
     #[arguments(signatures: $signatures, txBytes: $tx_bytes)]
     pub execute_transaction_block: ExecutionResult,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ExecuteTransactionQueryArgs {
+pub struct ExecuteTransactionMutationArgs {
     pub signatures: Vec<String>,
     pub tx_bytes: String,
 }
