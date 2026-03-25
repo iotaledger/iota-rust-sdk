@@ -28,7 +28,7 @@ func main() {
 	pkg := *packageOpt
 
 	for moduleId := range pkg.Modules() {
-		moduleOpt, err := client.NormalizedMoveModule(
+		moduleOpt, err := client.MoveSchemaModule(
 			packageAddress,
 			moduleId.AsStr(),
 			nil,

@@ -17,7 +17,7 @@ async def main():
         raise Exception("missing package")
 
     for module_id in package.modules():
-        module = await client.normalized_move_module(
+        module = await client.move_schema_module(
             package_address,
             module_id.as_str(),
         )

@@ -8,10 +8,10 @@ use iota_sdk::graphql_client::{
     pagination::{Direction, PaginationFilter},
     query_types::{
         Base64, BigInt, Feature, MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant,
-        MoveField, MoveFunctionTypeParameter, MoveObject, MoveStructConnection, MoveStructQuery,
-        MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo, ProtocolConfigAttr,
-        ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig, TransactionBlockKindInput,
-        ValidatorCredentials,
+        MoveField, MoveFunctionTypeParameter, MoveObject, MoveStruct,
+        MoveStructConnection, MoveStructTypeParameter, MoveVisibility, OpenMoveType, PageInfo,
+        ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs, ServiceConfig,
+        TransactionBlockKindInput, ValidatorCredentials,
     },
 };
 
@@ -101,7 +101,7 @@ impl From<TransactionDataEffects> for iota_sdk::graphql_client::TransactionDataE
 }
 
 #[derive(uniffi::Record)]
-pub struct TransactionsFilter {
+pub struct TransactionBlockFilter {
     #[uniffi(default = None)]
     pub function: Option<String>,
     #[uniffi(default = None)]
@@ -126,7 +126,7 @@ pub struct TransactionsFilter {
     pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::TransactionBlockFilter> for TransactionsFilter {
+impl From<iota_sdk::graphql_client::query_types::TransactionBlockFilter> for TransactionBlockFilter {
     fn from(value: iota_sdk::graphql_client::query_types::TransactionBlockFilter) -> Self {
         Self {
             function: value.function,
@@ -147,8 +147,8 @@ impl From<iota_sdk::graphql_client::query_types::TransactionBlockFilter> for Tra
     }
 }
 
-impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionBlockFilter {
-    fn from(value: TransactionsFilter) -> Self {
+impl From<TransactionBlockFilter> for iota_sdk::graphql_client::query_types::TransactionBlockFilter {
+    fn from(value: TransactionBlockFilter) -> Self {
         Self {
             function: value.function,
             kind: value.kind,
@@ -1034,7 +1034,7 @@ impl From<MoveModule> for iota_sdk::graphql_client::query_types::MoveModule {
 
 #[derive(uniffi::Record)]
 pub struct MoveModuleConnection {
-    pub nodes: Vec<MoveModuleQuery>,
+    pub nodes: Vec<MoveModuleRef>,
     pub page_info: PageInfo,
 }
 
@@ -1057,13 +1057,13 @@ impl From<MoveModuleConnection> for iota_sdk::graphql_client::query_types::MoveM
 }
 
 #[derive(uniffi::Record)]
-pub struct MovePackage {
+pub struct MovePackageRef {
     pub address: Arc<Address>,
     #[uniffi(default = None)]
     pub bcs: Option<Base64>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MovePackage> for MovePackage {
+impl From<iota_sdk::graphql_client::query_types::MovePackage> for MovePackageRef {
     fn from(value: iota_sdk::graphql_client::query_types::MovePackage) -> Self {
         Self {
             address: Arc::new(value.address.into()),
@@ -1072,8 +1072,8 @@ impl From<iota_sdk::graphql_client::query_types::MovePackage> for MovePackage {
     }
 }
 
-impl From<MovePackage> for iota_sdk::graphql_client::query_types::MovePackage {
-    fn from(value: MovePackage) -> Self {
+impl From<MovePackageRef> for iota_sdk::graphql_client::query_types::MovePackage {
+    fn from(value: MovePackageRef) -> Self {
         Self {
             address: (**value.address),
             bcs: value.bcs,
@@ -1082,13 +1082,13 @@ impl From<MovePackage> for iota_sdk::graphql_client::query_types::MovePackage {
 }
 
 #[derive(uniffi::Record)]
-pub struct MoveModuleQuery {
-    pub package: MovePackage,
+pub struct MoveModuleRef {
+    pub package: MovePackageRef,
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for MoveModuleQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MoveModuleRef> for MoveModuleRef {
+    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleRef) -> Self {
         Self {
             package: value.package.into(),
             name: value.name,
@@ -1096,8 +1096,8 @@ impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for MoveModule
     }
 }
 
-impl From<MoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModuleQuery {
-    fn from(value: MoveModuleQuery) -> Self {
+impl From<MoveModuleRef> for iota_sdk::graphql_client::query_types::MoveModuleRef {
+    fn from(value: MoveModuleRef) -> Self {
         Self {
             package: value.package.into(),
             name: value.name,
@@ -1120,7 +1120,7 @@ pub struct MoveField {
 }
 
 #[uniffi::remote(Record)]
-pub struct MoveStructQuery {
+pub struct MoveStruct {
     #[uniffi(default = None)]
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
@@ -1133,7 +1133,7 @@ pub struct MoveStructQuery {
 #[uniffi::remote(Record)]
 pub struct MoveStructConnection {
     pub page_info: PageInfo,
-    pub nodes: Vec<MoveStructQuery>,
+    pub nodes: Vec<MoveStruct>,
 }
 
 #[derive(uniffi::Record)]

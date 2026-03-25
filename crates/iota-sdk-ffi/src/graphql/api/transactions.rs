@@ -12,7 +12,7 @@ use crate::{
     graphql::{
         client::GraphQLClient,
         pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
-        query_types::{TransactionDataEffects, TransactionsFilter},
+        query_types::{TransactionBlockFilter, TransactionDataEffects},
     },
     types::{
         digest::Digest,
@@ -94,7 +94,7 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: Option<TransactionBlockFilter>,
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
@@ -114,7 +114,7 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_effects(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: Option<TransactionBlockFilter>,
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
@@ -135,7 +135,7 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<TransactionsFilter>,
+        filter: Option<TransactionBlockFilter>,
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self

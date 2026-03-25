@@ -19,7 +19,7 @@ class Program
 
         foreach (var moduleId in package.Modules())
         {
-            var module = await client.NormalizedMoveModule(packageAddress, moduleId.Key.AsStr());
+            var module = await client.MoveSchemaModule(packageAddress, moduleId.Key.AsStr());
             if (module == null)
             {
                 Console.WriteLine($"module `{moduleId.Key.AsStr()}` not found");
