@@ -419,12 +419,14 @@ mod input_argument {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     enum ObjectArg {
         ImmutableOrOwned(ObjectReference),
         Shared {

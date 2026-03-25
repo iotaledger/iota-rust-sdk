@@ -23,12 +23,14 @@ pub type Version = u64;
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ObjectReference {
     /// The object id of this object.
     pub object_id: ObjectId,
     /// The version of this object.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     /// The digest of this object.
     pub digest: Digest,
@@ -97,6 +99,7 @@ impl ObjectReference {
 )]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum Owner {
     /// Object is exclusively owned by a single address, and is mutable.
@@ -108,6 +111,7 @@ pub enum Owner {
         /// The version at which the object became shared
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+        #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
         Version,
     ),
     /// Object is immutable, and hence ownership doesn't matter.
@@ -147,6 +151,7 @@ impl std::fmt::Display for Owner {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 // TODO think about hiding this type and not exposing it
 pub enum ObjectData {
     /// An object whose governing logic lives in a published Move module
@@ -176,6 +181,7 @@ impl ObjectData {
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MovePackage {
     /// Address or Id of this package
     pub id: ObjectId,
@@ -191,6 +197,7 @@ pub struct MovePackage {
     /// In all cases, packages are referred to by move calls using just their
     /// ID, and they are always loaded at their latest version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     /// Set of modules defined by this package
     #[cfg_attr(
@@ -231,6 +238,7 @@ pub struct MovePackage {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct TypeOrigin {
     pub module_name: Identifier,
     pub struct_name: Identifier,
@@ -250,12 +258,14 @@ pub struct TypeOrigin {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct UpgradeInfo {
     /// Id of the upgraded packages
     pub upgraded_id: ObjectId,
     /// Version of the upgraded package
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub upgraded_version: Version,
 }
 
@@ -281,17 +291,20 @@ pub struct UpgradeInfo {
 // TODO hand-roll a Deserialize impl to enforce that an objectid is present
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveStruct {
     /// The type of this object
     #[cfg_attr(
         feature = "serde",
         serde(with = "::serde_with::As::<serialization::BinaryMoveStructType>")
     )]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "compressed-struct-tag"))]
     pub type_: StructTag,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub version: Version,
     /// BCS bytes of a Move struct value
     #[cfg_attr(
@@ -482,6 +495,7 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct GenesisObject {
     pub data: ObjectData,
     pub owner: Owner,
@@ -541,6 +555,8 @@ mod serialization {
     /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
     /// `GasCoin`
     #[derive(serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "compressed-struct-tag"))]
     enum MoveStructType {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),

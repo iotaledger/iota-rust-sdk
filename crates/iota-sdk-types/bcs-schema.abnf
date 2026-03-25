@@ -1,0 +1,262 @@
+; Auto-generated BCS schema definitions
+; Do not edit manually
+
+active-jwk = jwk-id   ; jwk-id
+             jwk      ; jwk
+             u64      ; epoch
+
+address = 32OCTET
+
+argument = %x00   ; Gas
+         / %x01 u16   ; Input
+         / %x02 u16   ; Result
+         / %x03 u16 u16   ; NestedResult
+
+authenticator-state-expire = u64   ; min-epoch
+                             u64   ; authenticator-obj-initial-shared-version
+
+authenticator-state-update-v1 = u64                   ; epoch
+                                u64                   ; round
+                                (vector active-jwk)   ; new-active-jwks
+                                u64                   ; authenticator-obj-initial-shared-version
+
+call-arg = %x00 bytes   ; Pure
+         / %x01 object-arg   ; Object
+
+cancelled-transaction = digest                        ; digest
+                        (vector version-assignment)   ; version-assignments
+
+change-epoch = u64                       ; epoch
+               u64                       ; protocol-version
+               u64                       ; storage-charge
+               u64                       ; computation-charge
+               u64                       ; storage-rebate
+               u64                       ; non-refundable-storage-fee
+               u64                       ; epoch-start-timestamp-ms
+               (vector system-package)   ; system-packages
+
+change-epoch-v2 = u64                       ; epoch
+                  u64                       ; protocol-version
+                  u64                       ; storage-charge
+                  u64                       ; computation-charge
+                  u64                       ; computation-charge-burned
+                  u64                       ; storage-rebate
+                  u64                       ; non-refundable-storage-fee
+                  u64                       ; epoch-start-timestamp-ms
+                  (vector system-package)   ; system-packages
+
+change-epoch-v3 = u64                       ; epoch
+                  u64                       ; protocol-version
+                  u64                       ; storage-charge
+                  u64                       ; computation-charge
+                  u64                       ; computation-charge-burned
+                  u64                       ; storage-rebate
+                  u64                       ; non-refundable-storage-fee
+                  u64                       ; epoch-start-timestamp-ms
+                  (vector system-package)   ; system-packages
+                  (vector u64)              ; eligible-active-validators
+
+change-epoch-v4 = u64                       ; epoch
+                  u64                       ; protocol-version
+                  u64                       ; storage-charge
+                  u64                       ; computation-charge
+                  u64                       ; computation-charge-burned
+                  u64                       ; storage-rebate
+                  u64                       ; non-refundable-storage-fee
+                  u64                       ; epoch-start-timestamp-ms
+                  (vector system-package)   ; system-packages
+                  (vector u64)              ; eligible-active-validators
+                  (vector u64)              ; scores
+                  bool                      ; adjust-rewards-by-score
+
+command = %x00 move-call   ; MoveCall
+        / %x01 transfer-objects   ; TransferObjects
+        / %x02 split-coins   ; SplitCoins
+        / %x03 merge-coins   ; MergeCoins
+        / %x04 publish   ; Publish
+        / %x05 make-move-vector   ; MakeMoveVector
+        / %x06 upgrade   ; Upgrade
+
+compressed-struct-tag = %x00 struct-tag   ; Other
+                      / %x01   ; GasCoin
+                      / %x02   ; StakedIota
+                      / %x03 type-tag   ; Coin
+
+consensus-commit-prologue-v1 = u64                                        ; epoch
+                               u64                                        ; round
+                               (option u64)                               ; sub-dag-index
+                               u64                                        ; commit-timestamp-ms
+                               digest                                     ; consensus-commit-digest
+                               consensus-determined-version-assignments   ; consensus-determined-version-assignments
+
+consensus-determined-version-assignments = %x00 (vector cancelled-transaction)   ; CancelledTransactions
+
+digest = %x20 32OCTET
+
+end-of-epoch-transaction-kind = %x00 change-epoch   ; ChangeEpoch
+                              / %x01 change-epoch-v2   ; ChangeEpochV2
+                              / %x02 change-epoch-v3   ; ChangeEpochV3
+                              / %x03 change-epoch-v4   ; ChangeEpochV4
+                              / %x04   ; AuthenticatorStateCreate
+                              / %x05 authenticator-state-expire   ; AuthenticatorStateExpire
+
+event = object-id    ; package-id
+        identifier   ; module
+        address      ; sender
+        struct-tag   ; type-
+        bytes        ; contents
+
+execution-time-observation = execution-time-observation-key                  ; key
+                             (vector validator-execution-time-observation)   ; observations
+
+execution-time-observation-key = %x00 object-id string string (vector type-tag)   ; MoveEntryPoint
+                               / %x01   ; TransferObjects
+                               / %x02   ; SplitCoins
+                               / %x03   ; MergeCoins
+                               / %x04   ; Publish
+                               / %x05   ; MakeMoveVec
+                               / %x06   ; Upgrade
+
+execution-time-observations = %x00 (vector execution-time-observation)   ; V1
+
+gas-cost-summary = u64   ; computation-cost
+                   u64   ; computation-cost-burned
+                   u64   ; storage-cost
+                   u64   ; storage-rebate
+                   u64   ; non-refundable-storage-fee
+
+gas-payment = (vector object-reference)   ; objects
+              address                     ; owner
+              u64                         ; price
+              u64                         ; budget
+
+genesis-object = object-data   ; data
+                 owner         ; owner
+
+genesis-transaction = (vector genesis-object)   ; objects
+                      (vector event)            ; events
+
+identifier = string
+
+input = call-arg
+
+jwk = string   ; kty
+      string   ; e
+      string   ; n
+      string   ; alg
+
+jwk-id = string   ; iss
+         string   ; kid
+
+make-move-vector = (option type-tag)   ; type-
+                   (vector argument)   ; elements
+
+merge-coins = argument            ; coin
+              (vector argument)   ; coins-to-merge
+
+move-call = object-id           ; package
+            identifier          ; module
+            identifier          ; function
+            (vector type-tag)   ; type-arguments
+            (vector argument)   ; arguments
+
+move-package = object-id                      ; id
+               u64                            ; version
+               (map identifier bytes)         ; modules
+               (vector type-origin)           ; type-origin-table
+               (map object-id upgrade-info)   ; linkage-table
+
+move-struct = compressed-struct-tag   ; type-
+              u64                     ; version
+              bytes                   ; contents
+
+object-arg = %x00 object-reference   ; ImmutableOrOwned
+           / %x01 object-id u64 bool   ; Shared
+           / %x02 object-reference   ; Receiving
+
+object-data = %x00 move-struct   ; Struct
+            / %x01 move-package   ; Package
+
+object-id = address
+
+object-reference = object-id   ; object-id
+                   u64         ; version
+                   digest      ; digest
+
+owner = %x00 address   ; Address
+      / %x01 object-id   ; Object
+      / %x02 u64   ; Shared
+      / %x03   ; Immutable
+
+programmable-transaction = (vector input)     ; inputs
+                           (vector command)   ; commands
+
+publish = (vector bytes)       ; modules
+          (vector object-id)   ; dependencies
+
+randomness-state-update = u64     ; epoch
+                          u64     ; randomness-round
+                          bytes   ; random-bytes
+                          u64     ; randomness-obj-initial-shared-version
+
+split-coins = argument            ; coin
+              (vector argument)   ; amounts
+
+struct-tag = address             ; address
+             identifier          ; module
+             identifier          ; name
+             (vector type-tag)   ; type-params
+
+system-package = u64                  ; version
+                 (vector bytes)       ; modules
+                 (vector object-id)   ; dependencies
+
+transaction = %x00 transaction-v1   ; V1
+
+transaction-expiration = %x00   ; None
+                       / %x01 u64   ; Epoch
+
+transaction-kind = %x00 programmable-transaction   ; ProgrammableTransaction
+                 / %x01 genesis-transaction   ; Genesis
+                 / %x02 consensus-commit-prologue-v1   ; ConsensusCommitPrologueV1
+                 / %x03 authenticator-state-update-v1   ; AuthenticatorStateUpdateV1
+                 / %x04 (vector end-of-epoch-transaction-kind)   ; EndOfEpoch
+                 / %x05 randomness-state-update   ; RandomnessStateUpdate
+
+transaction-v1 = transaction-kind         ; kind
+                 address                  ; sender
+                 gas-payment              ; gas-payment
+                 transaction-expiration   ; expiration
+
+transfer-objects = (vector argument)   ; objects
+                   argument            ; address
+
+type-origin = identifier   ; module-name
+              identifier   ; struct-name
+              object-id    ; package
+
+type-tag = %x00   ; U8
+         / %x01   ; U16
+         / %x02   ; U32
+         / %x03   ; U64
+         / %x04   ; U128
+         / %x05   ; U256
+         / %x06   ; Bool
+         / %x07   ; Address
+         / %x08   ; Signer
+         / %x09 type-tag   ; Vector
+         / %x0a struct-tag   ; Struct
+
+upgrade = (vector bytes)       ; modules
+          (vector object-id)   ; dependencies
+          object-id            ; package
+          argument             ; ticket
+
+upgrade-info = object-id   ; upgraded-id
+               u64         ; upgraded-version
+
+validator-execution-time-observation = 96OCTET   ; validator
+                                       u64 u32   ; duration
+
+version-assignment = object-id   ; object-id
+                     u64         ; version

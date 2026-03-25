@@ -27,6 +27,7 @@ rustdoc-args = [
 
 [features]
 default = []
+bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = [
   "dep:serde",
   "dep:serde_with",
@@ -66,12 +67,18 @@ schemars = { version = "0.8.21", optional = true }
 # RNG support
 rand_core = { workspace = true, optional = true }
 
+# BCS schema generation
+iota-bcs-schema = { workspace = true, optional = true }
+
 # Hash support
 blake2 = { version = "0.10.6", optional = true }
 
 # proptest support
 proptest = { workspace = true, default-features = false, features = ["std"], optional = true }
 test-strategy = { workspace = true, optional = true }
+
+[build-dependencies]
+filetime = "0.2"
 
 [dev-dependencies]
 bcs.workspace = true

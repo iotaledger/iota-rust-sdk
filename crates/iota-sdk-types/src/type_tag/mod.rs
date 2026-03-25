@@ -43,6 +43,7 @@ use super::Address;
 /// ```
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub enum TypeTag {
     U8,
     U16,
@@ -222,6 +223,8 @@ impl std::error::Error for TypeParseError {}
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "string"))]
 pub struct Identifier(
     #[cfg_attr(
         feature = "proptest",
@@ -500,6 +503,7 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct StructTag {
     address: Address,
     module: Identifier,
