@@ -1389,46 +1389,6 @@ impl Command {
             ticket,
         })
     }
-
-    pub fn non_system_packages_to_be_published(&self) -> Option<&Vec<Vec<u8>>> {
-        match self {
-            Command::Publish(cmd) => Some(&cmd.modules),
-            Command::Upgrade(cmd) => Some(&cmd.modules),
-            Command::MoveCall(_)
-            | Command::TransferObjects(_)
-            | Command::SplitCoins(_)
-            | Command::MergeCoins(_)
-            | Command::MakeMoveVector(_) => None,
-        }
-    }
-
-    pub fn is_input_arg_used(&self, input_arg: u16) -> bool {
-        match self {
-            Command::MoveCall(c) => c.is_input_arg_used(input_arg),
-            Command::TransferObjects(TransferObjects {
-                objects: args,
-                address: arg,
-            })
-            | Command::MergeCoins(MergeCoins {
-                coins_to_merge: args,
-                coin: arg,
-            })
-            | Command::SplitCoins(SplitCoins {
-                amounts: args,
-                coin: arg,
-            }) => args
-                .iter()
-                .chain(iter::once(arg))
-                .any(|arg| matches!(arg, Argument::Input(input) if *input == input_arg)),
-            Command::MakeMoveVector(MakeMoveVector { elements, .. }) => elements
-                .iter()
-                .any(|arg| matches!(arg, Argument::Input(input) if *input == input_arg)),
-            Command::Upgrade(Upgrade { ticket, .. }) => {
-                matches!(ticket, Argument::Input(input) if *input == input_arg)
-            }
-            Command::Publish(_) => false,
-        }
-    }
 }
 
 pub fn write_sep<T: core::fmt::Display>(
@@ -1857,12 +1817,4 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
-}
-
-impl MoveCall {
-    fn is_input_arg_used(&self, arg: u16) -> bool {
-        self.arguments
-            .iter()
-            .any(|a| matches!(a, Argument::Input(inp) if *inp == arg))
-    }
 }
