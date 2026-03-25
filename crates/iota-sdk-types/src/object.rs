@@ -304,7 +304,7 @@ impl MoveStruct {
     /// Useful for reading the coin without deserializing the object into a Move
     /// value. It is the caller's responsibility to check that `self` is a coin.
     /// This function may panic or do something unexpected otherwise.
-    pub fn get_coin_value_unsafe(&self) -> u64 {
+    pub fn get_coin_value_unchecked(&self) -> u64 {
         debug_assert!(self.type_.is_coin());
         // 32 bytes for object ID, 8 for balance
         debug_assert!(self.contents.len() == 40);
@@ -318,7 +318,7 @@ impl MoveStruct {
     /// Move value. It is the caller's responsibility to check that `self` is a
     /// coin.
     /// This function may panic or do something unexpected otherwise.
-    pub fn set_coin_value_unsafe(&mut self, value: u64) {
+    pub fn set_coin_value_unchecked(&mut self, value: u64) {
         debug_assert!(self.type_.is_coin());
         // 32 bytes for object ID, 8 for balance
         debug_assert!(self.contents.len() == 40);
@@ -330,7 +330,7 @@ impl MoveStruct {
     /// Update the `timestamp_ms: u64` field of the `Clock` type.
     ///
     /// Panics if the object isn't a `Clock`.
-    pub fn set_clock_timestamp_ms_unsafe(&mut self, timestamp_ms: u64) {
+    pub fn set_clock_timestamp_ms_unchecked(&mut self, timestamp_ms: u64) {
         assert!(self.is_clock());
         // 32 bytes for object ID, 8 for timestamp
         assert!(self.contents.len() == 40);
