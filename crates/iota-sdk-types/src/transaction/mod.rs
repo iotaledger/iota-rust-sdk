@@ -1334,6 +1334,7 @@ impl Command {
         Upgrade,
     );
 
+    /// Create a command to call a Move function.
     pub fn new_move_call(
         package: ObjectId,
         module: Identifier,
@@ -1350,14 +1351,17 @@ impl Command {
         })
     }
 
+    /// Create a command to transfer objects to an address.
     pub fn new_transfer_objects(objects: Vec<Argument>, address: Argument) -> Self {
         Command::TransferObjects(TransferObjects { objects, address })
     }
 
+    /// Create a command to split a coin into multiple coins by amounts.
     pub fn new_split_coins(coin: Argument, amounts: Vec<Argument>) -> Self {
         Command::SplitCoins(SplitCoins { coin, amounts })
     }
 
+    /// Create a command to merge multiple coins into one.
     pub fn new_merge_coins(coin: Argument, coins_to_merge: Vec<Argument>) -> Self {
         Command::MergeCoins(MergeCoins {
             coin,
@@ -1365,6 +1369,7 @@ impl Command {
         })
     }
 
+    /// Create a command to publish a new Move package.
     pub fn new_publish(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
         Command::Publish(Publish {
             modules,
@@ -1372,10 +1377,12 @@ impl Command {
         })
     }
 
+    /// Create a command to construct a Move vector from elements.
     pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
         Command::MakeMoveVector(MakeMoveVector { type_, elements })
     }
 
+    /// Create a command to upgrade an existing Move package.
     pub fn new_upgrade(
         modules: Vec<Vec<u8>>,
         dependencies: Vec<ObjectId>,
