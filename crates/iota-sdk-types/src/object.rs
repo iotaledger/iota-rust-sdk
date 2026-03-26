@@ -2,11 +2,11 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use super::{Address, Digest, MovePackage, ObjectId, StructTag, Version};
+#[cfg(feature = "serde")]
+use super::{Identifier, TypeOrigin, UpgradeInfo};
+#[cfg(feature = "serde")]
 use std::collections::BTreeMap;
-
-use super::{
-    Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, UpgradeInfo, Version,
-};
 
 /// Reference to an object
 ///
