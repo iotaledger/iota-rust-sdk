@@ -307,18 +307,6 @@ impl MoveStruct {
         ObjectId::from_bytes(&contents[0..ObjectId::LENGTH]).ok()
     }
 
-    pub fn is_coin(&self) -> bool {
-        self.object_type.is_coin()
-    }
-
-    pub fn is_staked_iota(&self) -> bool {
-        self.object_type.is_staked_iota()
-    }
-
-    pub fn is_clock(&self) -> bool {
-        self.object_type.is_clock()
-    }
-
     pub fn version(&self) -> Version {
         self.version
     }
