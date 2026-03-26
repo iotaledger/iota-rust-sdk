@@ -267,7 +267,7 @@ impl std::str::FromStr for MoveObjectType {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
     /// The type of this object. Uses optimized BCS serialization.
-    pub type_: MoveObjectType,
+    pub object_type: MoveObjectType,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -283,12 +283,12 @@ pub struct MoveStruct {
 }
 
 impl MoveStruct {
-    pub fn type_(&self) -> &MoveObjectType {
-        &self.type_
+    pub fn object_type(&self) -> &MoveObjectType {
+        &self.object_type
     }
 
     pub fn is_type(&self, s: &StructTag) -> bool {
-        &self.type_ == s
+        &self.object_type == s
     }
 
     pub fn id(&self) -> ObjectId {
@@ -305,55 +305,16 @@ impl MoveStruct {
         ObjectId::from_bytes(&contents[0..ObjectId::LENGTH])
     }
 
-    /// Return the `value: u64` field of a `Coin<T>` type.
-    /// Useful for reading the coin without deserializing the object into a Move
-    /// value. It is the caller's responsibility to check that `self` is a coin.
-    /// This function may panic or do something unexpected otherwise.
-    pub fn get_coin_value_unchecked(&self) -> u64 {
-        debug_assert!(self.type_.is_coin());
-        // 32 bytes for object ID, 8 for balance
-        debug_assert!(self.contents.len() == 40);
-
-        // unwrap safe because we checked that it is a coin
-        u64::from_le_bytes(<[u8; 8]>::try_from(&self.contents[ObjectId::LENGTH..]).unwrap())
-    }
-
-    /// Update the `value: u64` field of a `Coin<T>` type.
-    /// Useful for updating the coin without deserializing the object into a
-    /// Move value. It is the caller's responsibility to check that `self` is a
-    /// coin.
-    /// This function may panic or do something unexpected otherwise.
-    pub fn set_coin_value_unchecked(&mut self, value: u64) {
-        debug_assert!(self.type_.is_coin());
-        // 32 bytes for object ID, 8 for balance
-        debug_assert!(self.contents.len() == 40);
-
-        self.contents
-            .splice(ObjectId::LENGTH.., value.to_le_bytes());
-    }
-
-    /// Update the `timestamp_ms: u64` field of the `Clock` type.
-    ///
-    /// Panics if the object isn't a `Clock`.
-    pub fn set_clock_timestamp_ms_unchecked(&mut self, timestamp_ms: u64) {
-        assert!(self.is_clock());
-        // 32 bytes for object ID, 8 for timestamp
-        assert!(self.contents.len() == 40);
-
-        self.contents
-            .splice(ObjectId::LENGTH.., timestamp_ms.to_le_bytes());
-    }
-
     pub fn is_coin(&self) -> bool {
-        self.type_.is_coin()
+        self.object_type.is_coin()
     }
 
     pub fn is_staked_iota(&self) -> bool {
-        self.type_.is_staked_iota()
+        self.object_type.is_staked_iota()
     }
 
     pub fn is_clock(&self) -> bool {
-        self.type_.is_clock()
+        self.object_type.is_clock()
     }
 
     pub fn version(&self) -> Version {
@@ -388,32 +349,21 @@ impl MoveStruct {
         self.contents
     }
 
-    pub fn into_type(self) -> MoveObjectType {
-        self.type_
+    pub fn into_object_type(self) -> MoveObjectType {
+        self.object_type
     }
 
     pub fn type_tag(&self) -> TypeTag {
-        TypeTag::Struct(Box::new(self.type_().clone().into()))
+        TypeTag::Struct(Box::new(self.object_type().clone().into()))
     }
 
     pub fn into_inner(self) -> (MoveObjectType, Vec<u8>) {
-        (self.type_, self.contents)
+        (self.object_type, self.contents)
     }
 
     #[cfg(feature = "serde")]
     pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Option<T> {
         bcs::from_bytes(self.contents()).ok()
-    }
-
-    /// Approximate size of the object in bytes. This is used for gas metering.
-    /// For the type tag field, we serialize it on the spot to get the accurate
-    /// size. This should not be very expensive since the type tag is
-    /// usually simple, and we only do this once per object being mutated.
-    pub fn object_size_for_gas_metering(&self) -> usize {
-        let serialized_type_tag_size =
-            bcs::serialized_size(&self.type_).expect("Serializing type tag should not fail");
-        // + 8 for `version`
-        self.contents.len() + serialized_type_tag_size + 8
     }
 }
 
@@ -510,7 +460,7 @@ impl Object {
     /// Return this object's type
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.type_).clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.object_type).clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -623,7 +573,7 @@ impl GenesisObject {
 
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.type_).clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.object_type).clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -1010,7 +960,7 @@ mod serialization {
                         linkage_table,
                     }),
                     (
-                        ObjectType::Struct(type_),
+                        ObjectType::Struct(tag),
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
@@ -1019,7 +969,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_: type_.into(),
+                            object_type: tag.into(),
                             version,
                             contents,
                         })
@@ -1164,7 +1114,7 @@ mod serialization {
                         linkage_table,
                     }),
                     (
-                        ObjectType::Struct(type_),
+                        ObjectType::Struct(tag),
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
@@ -1173,7 +1123,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_: type_.into(),
+                            object_type: tag.into(),
                             version,
                             contents,
                         })
@@ -1250,7 +1200,7 @@ mod serialization {
         fn obj() {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
-                    type_: MoveObjectType::new(StructTag::new(
+                    object_type: MoveObjectType::new(StructTag::new(
                         Address::FRAMEWORK,
                         Identifier::new("bar").unwrap(),
                         Identifier::new("foo").unwrap(),
