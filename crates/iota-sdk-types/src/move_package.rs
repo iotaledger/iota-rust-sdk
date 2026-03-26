@@ -3,9 +3,10 @@
 
 use std::collections::BTreeMap;
 
+#[cfg(feature = "hash")]
+use crate::hash::Hasher;
 use crate::{
     Digest, ExecutionError, Identifier, ObjectId,
-    hash::Hasher,
     version::{Version, VersionError},
 };
 
@@ -138,7 +139,7 @@ pub struct TypeOrigin {
     /// The name of the data type. Either refers to an enum or a struct
     /// identifier.
     // `struct_name` alias to support backwards compatibility with the old name
-    #[serde(alias = "struct_name")]
+    #[cfg_attr(feature = "serde", serde(alias = "struct_name"))]
     pub datatype_name: Identifier,
     /// ID of the package, where the given type first appeared.
     pub package: ObjectId,
@@ -236,6 +237,7 @@ impl MovePackage {
     }
 
     /// Calculate the digest of the [MovePackage].
+    #[cfg(feature = "hash")]
     pub fn digest(&self) -> Digest {
         Self::compute_digest_for_modules_and_deps(
             self.modules.values(),
@@ -248,6 +250,7 @@ impl MovePackage {
     /// It is important that this function is shared across both the calculation
     /// of the digest for the package, and the calculation of the digest
     /// on-chain.
+    #[cfg(feature = "hash")]
     pub fn compute_digest_for_modules_and_deps<'a>(
         modules: impl IntoIterator<Item = &'a Vec<u8>>,
         object_ids: impl IntoIterator<Item = &'a ObjectId>,
