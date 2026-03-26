@@ -913,7 +913,7 @@ impl SharedObjectReference {
 /// command-make-move-vector    = %d05 make-move-vector
 /// command-upgrade             = %d06 upgrade
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -959,6 +959,201 @@ impl Command {
         MakeMoveVector,
         Upgrade,
     );
+
+    /// Create a command to call a Move function.
+    pub fn new_move_call(
+        package: ObjectId,
+        module: Identifier,
+        function: Identifier,
+        type_arguments: Vec<TypeTag>,
+        arguments: Vec<Argument>,
+    ) -> Self {
+        Command::MoveCall(MoveCall {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        })
+    }
+
+    /// Create a command to transfer objects to an address.
+    pub fn new_transfer_objects(objects: Vec<Argument>, address: Argument) -> Self {
+        Command::TransferObjects(TransferObjects { objects, address })
+    }
+
+    /// Create a command to split a coin into multiple coins by amounts.
+    pub fn new_split_coins(coin: Argument, amounts: Vec<Argument>) -> Self {
+        Command::SplitCoins(SplitCoins { coin, amounts })
+    }
+
+    /// Create a command to merge multiple coins into one.
+    pub fn new_merge_coins(coin: Argument, coins_to_merge: Vec<Argument>) -> Self {
+        Command::MergeCoins(MergeCoins {
+            coin,
+            coins_to_merge,
+        })
+    }
+
+    /// Create a command to publish a new Move package.
+    pub fn new_publish(modules: Vec<Vec<u8>>, dependencies: Vec<ObjectId>) -> Self {
+        Command::Publish(Publish {
+            modules,
+            dependencies,
+        })
+    }
+
+    /// Create a command to construct a Move vector from elements.
+    pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    }
+
+    /// Create a command to upgrade an existing Move package.
+    pub fn new_upgrade(
+        modules: Vec<Vec<u8>>,
+        dependencies: Vec<ObjectId>,
+        package: ObjectId,
+        ticket: Argument,
+    ) -> Self {
+        Command::Upgrade(Upgrade {
+            modules,
+            dependencies,
+            package,
+            ticket,
+        })
+    }
+}
+
+pub fn write_sep<T: core::fmt::Display>(
+    f: &mut core::fmt::Formatter<'_>,
+    items: impl IntoIterator<Item = T>,
+    delimiters: Option<(&str, &str)>,
+    sep: &str,
+) -> std::fmt::Result {
+    let mut xs = items.into_iter();
+    let Some(x) = xs.next() else {
+        return Ok(());
+    };
+    if let Some((l, _)) = delimiters {
+        write!(f, "{l}")?;
+    }
+    write!(f, "{x}")?;
+    for x in xs {
+        write!(f, "{sep}{x}")?;
+    }
+    if let Some((_, r)) = delimiters {
+        write!(f, "{r}")?;
+    }
+    Ok(())
+}
+
+impl core::fmt::Display for MoveCall {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            package,
+            module,
+            function,
+            type_arguments,
+            arguments,
+        } = self;
+        write!(f, "MoveCall(")?;
+        write!(f, "{package}::{module}::{function}")?;
+        if !type_arguments.is_empty() {
+            write_sep(f, type_arguments, Some(("<", ">")), ",")?;
+        }
+        write_sep(f, arguments, Some(("(", ")")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for TransferObjects {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { objects, address } = self;
+
+        write!(f, "TransferObjects(")?;
+        write_sep(f, objects, Some(("[", "]")), ",")?;
+        write!(f, ",{address})")
+    }
+}
+
+impl core::fmt::Display for SplitCoins {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { coin, amounts } = self;
+
+        write!(f, "SplitCoins({coin},")?;
+        write_sep(f, amounts, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for MergeCoins {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            coin,
+            coins_to_merge,
+        } = self;
+
+        write!(f, "MergeCoins({coin},")?;
+        write_sep(f, coins_to_merge, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Publish {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { dependencies, .. } = self;
+
+        write!(f, "Publish(_,")?;
+        write_sep(f, dependencies, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for MakeMoveVector {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self { type_, elements } = self;
+
+        write!(f, "MakeMoveVector(")?;
+        if let Some(ty) = type_ {
+            write!(f, "Some({ty})")?;
+        } else {
+            write!(f, "None")?;
+        }
+        write!(f, ",")?;
+        write_sep(f, elements, Some(("[", "]")), ",")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Upgrade {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            dependencies,
+            package,
+            ticket,
+            ..
+        } = self;
+
+        write!(f, "Upgrade(_,")?;
+        write_sep(f, dependencies, Some(("[", "]")), ",")?;
+        write!(f, ", {package}")?;
+        write!(f, ", {ticket}")?;
+        write!(f, ")")
+    }
+}
+
+impl core::fmt::Display for Command {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Command::MoveCall(cmd) => write!(f, "{cmd}"),
+            Command::TransferObjects(cmd) => write!(f, "{cmd}"),
+            Command::SplitCoins(cmd) => write!(f, "{cmd}"),
+            Command::MergeCoins(cmd) => write!(f, "{cmd}"),
+            Command::Publish(cmd) => write!(f, "{cmd}"),
+            Command::MakeMoveVector(cmd) => write!(f, "{cmd}"),
+            Command::Upgrade(cmd) => write!(f, "{cmd}"),
+        }
+    }
 }
 
 /// Command to transfer ownership of a set of objects to an address
@@ -970,7 +1165,7 @@ impl Command {
 /// ```text
 /// transfer-objects = (vector argument) argument
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -991,7 +1186,7 @@ pub struct TransferObjects {
 /// ```text
 /// split-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1012,7 +1207,7 @@ pub struct SplitCoins {
 /// ```text
 /// merge-coins = argument (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1036,7 +1231,7 @@ pub struct MergeCoins {
 /// publish = (vector bytes)        ; the serialized move modules
 ///           (vector object-id)    ; the set of package dependencies
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1062,7 +1257,7 @@ pub struct Publish {
 /// ```text
 /// make-move-vector = (option type-tag) (vector argument)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1090,7 +1285,7 @@ pub struct MakeMoveVector {
 ///           object-id             ; package-id of the package
 ///           argument              ; upgrade ticket
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1225,7 +1420,7 @@ impl Argument {
 ///             (vector type-tag)   ; type arguments, if any
 ///             (vector argument)   ; input arguments
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
