@@ -352,7 +352,7 @@ impl MoveStruct {
     }
 
     pub fn type_tag(&self) -> TypeTag {
-        TypeTag::Struct(Box::new(self.struct_tag().clone().into()))
+        TypeTag::Struct(Box::new(self.struct_tag().clone()))
     }
 
     pub fn into_parts(self) -> (MoveObjectType, Version, Vec<u8>) {
