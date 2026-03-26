@@ -357,8 +357,8 @@ impl MoveStruct {
         TypeTag::Struct(Box::new(self.object_type().clone().into()))
     }
 
-    pub fn into_inner(self) -> (MoveObjectType, Vec<u8>) {
-        (self.object_type, self.contents)
+    pub fn into_parts(self) -> (MoveObjectType, Version, Vec<u8>) {
+        (self.object_type, self.version, self.contents)
     }
 
     #[cfg(feature = "serde")]
