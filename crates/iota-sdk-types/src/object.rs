@@ -284,6 +284,10 @@ pub struct MoveStruct {
 }
 
 impl MoveStruct {
+    pub fn object_type(&self) -> &MoveObjectType {
+        &self.object_type
+    }
+
     pub fn struct_tag(&self) -> &StructTag {
         &self.object_type
     }
