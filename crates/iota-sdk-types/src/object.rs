@@ -284,11 +284,11 @@ pub struct MoveStruct {
 }
 
 impl MoveStruct {
-    pub fn object_type(&self) -> &MoveObjectType {
+    pub fn struct_tag(&self) -> &StructTag {
         &self.object_type
     }
 
-    pub fn is_type(&self, s: &StructTag) -> bool {
+    pub fn is_struct_tag(&self, s: &StructTag) -> bool {
         &self.object_type == s
     }
 
@@ -347,12 +347,8 @@ impl MoveStruct {
         self.contents
     }
 
-    pub fn into_object_type(self) -> MoveObjectType {
-        self.object_type
-    }
-
     pub fn type_tag(&self) -> TypeTag {
-        TypeTag::Struct(Box::new(self.object_type().clone().into()))
+        TypeTag::Struct(Box::new(self.struct_tag().clone().into()))
     }
 
     pub fn into_parts(self) -> (MoveObjectType, Version, Vec<u8>) {
