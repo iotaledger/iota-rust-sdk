@@ -5,8 +5,8 @@
 use std::collections::BTreeMap;
 
 use super::{
-    Address, AddressParseError, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin,
-    TypeTag, UpgradeInfo, Version,
+    Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, TypeTag,
+    UpgradeInfo, Version,
 };
 
 /// Reference to an object
@@ -259,6 +259,7 @@ impl std::str::FromStr for MoveObjectType {
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 // TODO hand-roll a Deserialize impl to enforce that an objectid is present
+// https://github.com/iotaledger/iota-rust-sdk/issues/1043
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -295,14 +296,11 @@ impl MoveStruct {
         Self::id_opt(&self.contents).unwrap()
     }
 
-    // TODO unsure about this
-    pub fn id_opt(contents: &[u8]) -> Result<ObjectId, AddressParseError> {
+    pub fn id_opt(contents: &[u8]) -> Option<ObjectId> {
         if contents.len() < ObjectId::LENGTH {
-            return Err(AddressParseError::InvalidByteLength {
-                actual: contents.len(),
-            });
+            return None;
         }
-        ObjectId::from_bytes(&contents[0..ObjectId::LENGTH])
+        ObjectId::from_bytes(&contents[0..ObjectId::LENGTH]).ok()
     }
 
     pub fn is_coin(&self) -> bool {
