@@ -1,0 +1,40 @@
+[package]
+name = "iota_defi_examples"
+version = "0.1.0"
+edition = "2021"
+description = "Rust SDK examples for IOTA Move DeFi Starter Kit"
+authors = ["Claw"]
+license = "Apache-2.0"
+
+[dependencies]
+iota-sdk = { git = "https://github.com/iotaledger/iota-rust-sdk", branch = "develop" }
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+thiserror = "1.0"
+log = "0.4"
+env_logger = "0.11"
+
+[[example]]
+name = "deploy_and_init"
+path = "examples/deploy_and_init.rs"
+
+[[example]]
+name = "supply_and_borrow"
+path = "examples/supply_and_borrow.rs"
+
+[[example]]
+name = "flash_loan_exec"
+path = "examples/flash_loan_exec.rs"
+
+[[example]]
+name = "query_pool_state"
+path = "examples/query_pool_state.rs"
+
+[[example]]
+name = "monitor_events"
+path = "examples/monitor_events.rs"
+
+[dev-dependencies]
+tempfile = "3.0"

@@ -1,0 +1,56 @@
+# IOTA Move DeFi Starter Kit - Docker开发环境
+# 基于Ubuntu 22.04，包含Rust、Sui CLI和所有开发工具
+
+FROM ubuntu:22.04 AS builder
+
+# 设置非交互式安装环境
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    libclang-dev \
+    clang \
+    lld \
+    cmake \
+    && rm -rf /var/lib/apt/lists/*
+
+# 安装Rust工具链
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable \
+    && rustup default stable \
+    && rustup component add rustfmt clippy
+
+# 安装Sui CLI (mainnet-v1.67.3)
+RUN SUI_VERSION="mainnet-v1.67.3" \
+    && SUI_TAR="sui-$SUI_VERSION-ubuntu-x86_64.tgz" \
+    && curl -L -o "/tmp/$SUI_TAR" "https://github.com/MystenLabs/sui/releases/download/$SUI_VERSION/sui-$SUI_VERSION-ubuntu-x86_64.tgz" \
+    && tar -xzf "/tmp/$SUI_TAR" -C /tmp \
+    && cp "/tmp/target/release/sui" /usr/local/bin/sui \
+    && chmod +x /usr/local/bin/sui \
+    && rm -f "/tmp/$SUI_TAR"
+
+# 验证安装
+RUN sui --version && rustc --version && cargo --version
+
+# 创建工作目录
+WORKDIR /workspace
+
+# 复制项目文件
+COPY . /workspace/
+
+# 设置环境变量
+ENV SUI_NETWORK=testnet
+ENV MOVE_HOME=/workspace/.move
+
+# 创建Move依赖缓存目录
+RUN mkdir -p /workspace/.move
+
+# 默认命令：构建Move合约
+CMD ["bash", "-c", "cd move_contracts && for dir in lending_pool flash_loan oracle_integration liquidation; do echo 'Building $dir...'; cd $dir && sui move build && cd ..; done"]

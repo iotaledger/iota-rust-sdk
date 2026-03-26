@@ -1,0 +1,66 @@
+# IOTA Move DeFi Starter Kit - Docker开发环境 (Alpine优化版)
+# 使用Alpine Linux + Rust官方镜像，最小化体积
+
+# 第一阶段：构建环境
+FROM rust:alpine AS builder
+
+# 安装构建依赖
+RUN apk add --no-cache \
+    git \
+    curl \
+    build-base \
+    cmake \
+    clang \
+    lld \
+    openssl-dev \
+    linux-headers \
+    perl
+
+# 配置Git代理
+RUN git config --global url."https://ghproxy.com/https://github.com/".insteadOf "https://github.com/"
+
+# 安装Sui CLI (mainnet-v1.67.3)
+RUN SUI_VERSION="mainnet-v1.67.3" \
+    && SUI_TAR="sui-$SUI_VERSION-ubuntu-x86_64.tgz" \
+    && curl -L -o "/tmp/$SUI_TAR" "https://ghproxy.com/https://github.com/MystenLabs/sui/releases/download/$SUI_VERSION/sui-$SUI_VERSION-ubuntu-x86_64.tgz" \
+    && tar -xzf "/tmp/$SUI_TAR" -C /tmp \
+    && cp "/tmp/target/release/sui" /usr/local/bin/sui \
+    && chmod +x /usr/local/bin/sui \
+    && rm -f "/tmp/$SUI_TAR"
+
+# 验证安装
+RUN sui --version && rustc --version && cargo --version
+
+# 第二阶段：运行环境
+FROM alpine:latest
+
+# 安装运行时依赖
+RUN apk add --no-cache \
+    libgcc \
+    openssl \
+    ca-certificates \
+    bash
+
+# 从构建阶段复制二进制文件
+COPY --from=builder /usr/local/bin/sui /usr/local/bin/sui
+COPY --from=builder /usr/local/cargo /usr/local/cargo
+COPY --from=builder /usr/local/rustup /usr/local/rustup
+
+# 设置环境变量
+ENV PATH="/usr/local/cargo/bin:/usr/local/rustup/bin:$PATH"
+ENV SUI_NETWORK=testnet
+ENV MOVE_HOME=/workspace/.move
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo
+
+# 创建工作目录
+WORKDIR /workspace
+
+# 复制项目文件
+COPY . /workspace/
+
+# 创建Move依赖缓存目录
+RUN mkdir -p /workspace/.move
+
+# 默认命令：构建Move合约
+CMD ["bash", "-c", "cd move_contracts && for dir in lending_pool flash_loan oracle_integration liquidation; do echo 'Building $dir...'; cd $dir && sui move build && cd ..; done"]

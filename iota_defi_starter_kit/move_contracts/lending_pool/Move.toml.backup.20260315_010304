@@ -1,0 +1,9 @@
+[package]
+name = "lending_pool"
+version = "0.1.0"
+
+[addresses]
+lending_pool = "0x0"
+
+[dev-addresses]
+lending_pool = "0x0"

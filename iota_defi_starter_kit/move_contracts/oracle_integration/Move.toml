@@ -1,0 +1,11 @@
+[package]
+name = "oracle_integration"
+version = "0.1.0"
+
+[addresses]
+oracle_integration = "0x0"
+
+[dev-addresses]
+oracle_integration = "0x0"
+[dependencies]
+Sui = { local = "../../sui_framework/sui-framework" }

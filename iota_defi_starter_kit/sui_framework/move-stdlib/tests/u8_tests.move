@@ -1,0 +1,211 @@
+// Copyright (c) Mysten Labs, Inc.
+// SPDX-License-Identifier: Apache-2.0
+
+#[test_only]
+module std::u8_tests;
+
+use std::integer_tests;
+use std::unit_test::assert_eq;
+
+const BIT_SIZE: u8 = 8;
+const MAX: u8 = 0xFF;
+const MAX_PRED: u8 = MAX - 1;
+
+const CASES: vector<u8> = vector[
+    0,
+    1,
+    10,
+    11,
+    100,
+    111,
+    1 << (BIT_SIZE / 2 - 1),
+    (1 << (BIT_SIZE / 2 - 1)) + 1,
+    1 << (BIT_SIZE - 1),
+    (1 << (BIT_SIZE - 1)) + 1,
+    MAX / 2,
+    (MAX / 2) + 1,
+    MAX_PRED,
+    MAX,
+];
+
+#[test]
+fun test_bitwise_not() {
+    integer_tests::test_bitwise_not!(MAX, CASES);
+}
+
+#[test]
+fun test_max() {
+    integer_tests::test_max!(MAX, CASES);
+}
+
+#[test]
+fun test_min() {
+    integer_tests::test_min!(MAX, CASES);
+}
+
+#[test]
+fun test_diff() {
+    integer_tests::test_diff!(MAX, CASES);
+}
+
+#[test]
+fun test_divide_and_round_up() {
+    integer_tests::test_divide_and_round_up!(MAX, CASES);
+}
+
+#[test, expected_failure(arithmetic_error, location = std::u8)]
+fun test_divide_and_round_up_error() {
+    1u8.divide_and_round_up(0);
+}
+
+#[test]
+fun test_pow() {
+    integer_tests::test_pow!(MAX, CASES);
+}
+
+#[test, expected_failure(arithmetic_error, location = std::u8)]
+fun test_pow_overflow() {
+    255u8.pow(255);
+}
+
+#[test]
+fun test_sqrt() {
+    integer_tests::test_sqrt!(MAX, CASES, vector[0, 2, 5, 8, 11, 14]);
+}
+
+#[test]
+fun test_to_string() {
+    integer_tests::test_to_string!<u8>();
+    assert_eq!((MAX / 2).to_string(), b"127".to_string());
+    assert_eq!((MAX / 2 + 1).to_string(), b"128".to_string());
+    assert_eq!(MAX_PRED.to_string(), b"254".to_string());
+    assert_eq!(MAX.to_string(), b"255".to_string());
+}
+
+#[test]
+fun test_dos() {
+    let mut sum = 0u16;
+    255u8.do_eq!(|i| sum = sum + (i as u16));
+    assert_eq!(sum, 32640);
+    integer_tests::test_dos!(MAX, CASES);
+}
+
+#[test]
+fun test_checked_add() {
+    integer_tests::test_checked_add!(MAX, CASES);
+}
+
+#[test]
+fun test_checked_sub() {
+    integer_tests::test_checked_sub!(MAX, CASES);
+}
+
+#[test]
+fun test_checked_mul() {
+    integer_tests::test_checked_mul!(MAX, CASES);
+}
+
+#[test]
+fun test_checked_div() {
+    integer_tests::test_checked_div!(MAX, CASES);
+}
+
+#[test]
+fun test_saturating_add() {
+    integer_tests::test_saturating_add!(MAX, CASES);
+}
+
+#[test]
+fun test_saturating_sub() {
+    integer_tests::test_saturating_sub!(MAX, CASES);
+}
+
+#[test]
+fun test_saturating_mul() {
+    integer_tests::test_saturating_mul!(MAX, CASES);
+}
+
+#[test]
+fun test_checked_shl() {
+    integer_tests::test_checked_shl!(MAX, BIT_SIZE);
+}
+
+#[test]
+fun test_checked_shr() {
+    integer_tests::test_checked_shr!(MAX, BIT_SIZE);
+}
+
+#[test]
+fun test_lossless_shl() {
+    integer_tests::test_lossless_shl!(MAX, BIT_SIZE);
+}
+
+#[test]
+fun test_lossless_shr() {
+    integer_tests::test_lossless_shr!(MAX, BIT_SIZE);
+}
+
+#[test]
+fun test_lossless_div() {
+    integer_tests::test_lossless_div!(MAX, CASES);
+}
+
+#[test]
+fun exhaustive_test_add() {
+    let max = MAX as u16;
+    0u16.range_do_eq!(max, |i| {
+        let mut overflown = false;
+        'inner: {
+            0u16.range_do_eq!(i, |j| {
+                let i_u8 = i as u8;
+                let j_u8 = j as u8;
+                let sum = i + j;
+                if (sum > max) {
+                    assert_eq!(i_u8.checked_add(j_u8), option::none());
+                    assert_eq!(i_u8.saturating_add(j_u8), MAX);
+                    assert_eq!(j_u8.checked_add(i_u8), option::none());
+                    assert_eq!(j_u8.saturating_add(i_u8), MAX);
+                    if (overflown) return 'inner;
+                    // iterate once more after the first overflow
+                    overflown = true;
+                } else {
+                    let sum_u8 = sum as u8;
+                    assert_eq!(i_u8.checked_add(j_u8), option::some(sum_u8));
+                    assert_eq!(i_u8.saturating_add(j_u8), sum_u8);
+                    assert_eq!(j_u8.checked_add(i_u8), option::some(sum_u8));
+                    assert_eq!(j_u8.saturating_add(i_u8), sum_u8);
+                }
+            })
+        }
+    });
+}
+
+#[test]
+fun exhaustive_test_mul() {
+    let max = MAX as u16;
+    0u16.range_do_eq!(max, |i| {
+        let mut overflown = false;
+        'inner: {
+            0u16.range_do_eq!(i, |j| {
+                let i_u8 = i as u8;
+                let j_u8 = j as u8;
+                let prod = i * j;
+                if (prod > max) {
+                    assert_eq!(i_u8.checked_mul(j_u8), option::none());
+                    assert_eq!(i_u8.saturating_mul(j_u8), MAX);
+                    assert_eq!(j_u8.checked_mul(i_u8), option::none());
+                    assert_eq!(j_u8.saturating_mul(i_u8), MAX);
+                    if (overflown) return 'inner;
+                    // iterate once more after the first overflow
+                    overflown = true;
+                } else {
+                    let prod_u8 = prod as u8;
+                    assert_eq!(i_u8.checked_mul(j_u8), option::some(prod_u8));
+                    assert_eq!(i_u8.saturating_mul(j_u8), prod_u8);
+                    assert_eq!(j_u8.checked_mul(i_u8), option::some(prod_u8));
+                    assert_eq!(j_u8.saturating_mul(i_u8), prod_u8);
+                }
+            })
+        };
+    });
+}

@@ -1,0 +1,11 @@
+[package]
+name = "liquidation"
+version = "0.1.0"
+
+[addresses]
+liquidation = "0x0"
+
+[dev-addresses]
+liquidation = "0x0"
+[dependencies]
+Sui = { local = "../../sui_framework/sui-framework" }

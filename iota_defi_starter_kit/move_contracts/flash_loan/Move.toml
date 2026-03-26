@@ -1,0 +1,11 @@
+[package]
+name = "flash_loan"
+version = "0.1.0"
+
+[addresses]
+flash_loan = "0x0"
+
+[dev-addresses]
+flash_loan = "0x0"
+[dependencies]
+Sui = { local = "../../sui_framework/sui-framework" }

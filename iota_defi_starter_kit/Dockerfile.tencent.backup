@@ -1,0 +1,71 @@
+# IOTA Move DeFi Starter Kit - Docker开发环境 (阿里云优化版)
+# 使用阿里云Ubuntu镜像和镜像源加速构建
+
+FROM mirror.ccs.tencentyun.com/library/ubuntu:22.04 AS builder
+
+# 设置非交互式安装环境
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+
+# 配置腾讯云apt镜像源
+RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    libclang-dev \
+    clang \
+    lld \
+    cmake \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# 配置Rust国内镜像
+RUN echo '[source.crates-io]' > /tmp/cargo-config && \
+    echo 'replace-with = "tuna"' >> /tmp/cargo-config && \
+    echo '[source.tuna]' >> /tmp/cargo-config && \
+    echo 'registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"' >> /tmp/cargo-config
+
+# 安装Rust工具链 (使用国内镜像)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable \
+    && rustup default stable \
+    && rustup component add rustfmt clippy \
+    && mv /tmp/cargo-config /usr/local/cargo/config
+
+# 配置Git代理 (使用ghproxy)
+RUN git config --global url."https://ghproxy.com/https://github.com/".insteadOf "https://github.com/"
+
+# 安装Sui CLI (mainnet-v1.67.3) - 使用阿里云镜像加速
+RUN SUI_VERSION="mainnet-v1.67.3" \
+    && SUI_TAR="sui-$SUI_VERSION-ubuntu-x86_64.tgz" \
+    && curl -L -o "/tmp/$SUI_TAR" "https://ghproxy.com/https://github.com/MystenLabs/sui/releases/download/$SUI_VERSION/sui-$SUI_VERSION-ubuntu-x86_64.tgz" \
+    && tar -xzf "/tmp/$SUI_TAR" -C /tmp \
+    && cp "/tmp/target/release/sui" /usr/local/bin/sui \
+    && chmod +x /usr/local/bin/sui \
+    && rm -f "/tmp/$SUI_TAR"
+
+# 验证安装
+RUN sui --version && rustc --version && cargo --version
+
+# 创建工作目录
+WORKDIR /workspace
+
+# 复制项目文件
+COPY . /workspace/
+
+# 设置环境变量
+ENV SUI_NETWORK=testnet
+ENV MOVE_HOME=/workspace/.move
+
+# 创建Move依赖缓存目录
+RUN mkdir -p /workspace/.move
+
+# 默认命令：构建Move合约
+CMD ["bash", "-c", "cd move_contracts && for dir in lending_pool flash_loan oracle_integration liquidation; do echo 'Building $dir...'; cd $dir && sui move build && cd ..; done"]

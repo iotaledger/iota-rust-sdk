@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # 开发环境服务
+  sui-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iota-defi-dev
+    volumes:
+      - .:/workspace
+      - sui-cache:/workspace/.move
+      - cargo-cache:/usr/local/cargo/registry
+      - rustup-cache:/usr/local/rustup
+    working_dir: /workspace
+    environment:
+      - SUI_NETWORK=testnet
+      - RUST_BACKTRACE=full
+    stdin_open: true
+    tty: true
+    command: bash
+
+  # 测试网络模拟器（可选）
+  sui-testnet:
+    image: mysten/sui-node:latest
+    container_name: sui-local-testnet
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+      - "9184:9184"
+    environment:
+      - SUI_NETWORK=local
+    volumes:
+      - sui-node-data:/sui/suidb
+
+volumes:
+  sui-cache:
+  cargo-cache:
+  rustup-cache:
+  sui-node-data:
