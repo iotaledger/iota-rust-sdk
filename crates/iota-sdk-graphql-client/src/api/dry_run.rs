@@ -24,7 +24,7 @@ impl Client {
     /// checks.
     pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
         let Transaction::V1(v1) = tx else {
-            unimplemented!("a new enum variant was added and needs to be handled")
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
         let gas_objects = v1
             .gas_payment
