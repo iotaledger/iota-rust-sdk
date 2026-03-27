@@ -170,21 +170,6 @@ pub enum ObjectData {
 impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
 
-    // TODO add mut versions into the macro?
-    pub fn as_struct_mut_opt(&mut self) -> Option<&mut MoveStruct> {
-        match self {
-            Self::Struct(m) => Some(m),
-            Self::Package(_) => None,
-        }
-    }
-
-    pub fn as_package_mut_opt(&mut self) -> Option<&mut MovePackage> {
-        match self {
-            Self::Struct(_) => None,
-            Self::Package(p) => Some(p),
-        }
-    }
-
     pub fn object_type(&self) -> Option<&MoveObjectType> {
         match self {
             Self::Struct(m) => Some(m.object_type()),
