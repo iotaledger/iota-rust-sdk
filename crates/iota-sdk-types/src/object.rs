@@ -284,22 +284,27 @@ pub struct MoveStruct {
 }
 
 impl MoveStruct {
+    /// Returns the type of this Move object.
     pub fn object_type(&self) -> &MoveObjectType {
         &self.object_type
     }
 
+    /// Returns the object type as a [`StructTag`] reference.
     pub fn struct_tag(&self) -> &StructTag {
         &self.object_type
     }
 
+    /// Returns `true` if the object's type matches the given [`StructTag`].
     pub fn is_struct_tag(&self, s: &StructTag) -> bool {
         &self.object_type == s
     }
 
+    /// Returns the object's ID, extracted from the BCS-encoded contents.
     pub fn id(&self) -> ObjectId {
         Self::id_opt(&self.contents).unwrap()
     }
 
+    /// Tries to extract an [`ObjectId`] from the leading bytes of `contents`.
     pub fn id_opt(contents: &[u8]) -> Option<ObjectId> {
         if contents.len() < ObjectId::LENGTH {
             return None;
@@ -307,6 +312,7 @@ impl MoveStruct {
         ObjectId::from_bytes(&contents[0..ObjectId::LENGTH]).ok()
     }
 
+    /// Returns the version (lamport timestamp) of this object.
     pub fn version(&self) -> Version {
         self.version
     }
@@ -322,6 +328,7 @@ impl MoveStruct {
         self.version = next;
     }
 
+    /// Sets the version to a lower value (checked in debug).
     pub fn decrement_version_to(&mut self, prev: Version) {
         debug_assert!(
             prev < self.version,
@@ -331,22 +338,27 @@ impl MoveStruct {
         self.version = prev;
     }
 
+    /// Returns the raw BCS-encoded contents of this object.
     pub fn contents(&self) -> &[u8] {
         &self.contents
     }
 
+    /// Consumes the object and returns the raw BCS-encoded contents.
     pub fn into_contents(self) -> Vec<u8> {
         self.contents
     }
 
+    /// Returns the object type as a [`TypeTag`].
     pub fn type_tag(&self) -> TypeTag {
         TypeTag::Struct(Box::new(self.struct_tag().clone()))
     }
 
+    /// Consumes the object and returns its type, version, and raw contents.
     pub fn into_parts(self) -> (MoveObjectType, Version, Vec<u8>) {
         (self.object_type, self.version, self.contents)
     }
 
+    /// Deserializes the BCS-encoded contents into a Rust type.
     #[cfg(feature = "serde")]
     pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Option<T> {
         bcs::from_bytes(self.contents()).ok()
