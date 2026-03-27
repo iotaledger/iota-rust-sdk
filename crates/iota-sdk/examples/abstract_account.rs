@@ -93,12 +93,13 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
                 let object = client.object(object_id, None).await?;
 
                 if let Some(object) = object {
-                    if object.as_struct().type_.name()
+                    if object.as_struct().object_type.name()
                         == &Identifier::from_static("PackageMetadataV1")
                     {
                         package_metadata_id.replace(object_id);
                     }
-                    if object.as_struct().type_.name() == &Identifier::from_static("Account") {
+                    if object.as_struct().object_type.name() == &Identifier::from_static("Account")
+                    {
                         account_id.replace(object_id);
                     }
                 }
