@@ -33,7 +33,6 @@ serde = [
   "dep:bcs",
   "dep:serde_json",
   "roaring/std",
-  "dep:itertools",
   "dep:serde_repr",
 ]
 schemars = ["serde", "dep:schemars", "dep:serde_json"]
@@ -48,6 +47,7 @@ bs58 = "0.5.1"
 bytestring = "1.5.0"
 derive_more = { version = "2.1.1", features = ["full"] }
 hex.workspace = true
+itertools.workspace = true
 paste.workspace = true
 roaring.workspace = true
 strum = { workspace = true, features = ["derive"] }
@@ -56,7 +56,6 @@ winnow = "0.7"
 
 # Serialization and Deserialization support
 bcs = { workspace = true, optional = true }
-itertools = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }

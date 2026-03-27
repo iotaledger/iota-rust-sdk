@@ -2,11 +2,12 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#[cfg(feature = "serde")]
 use std::collections::BTreeMap;
 
-use super::{
-    Address, Digest, Identifier, MovePackage, ObjectId, StructTag, TypeOrigin, UpgradeInfo, Version,
-};
+use super::{Address, Digest, MovePackage, ObjectId, StructTag, TypeTag, Version};
+#[cfg(feature = "serde")]
+use super::{Identifier, TypeOrigin, UpgradeInfo};
 
 /// Reference to an object
 ///
@@ -258,6 +259,7 @@ impl std::str::FromStr for MoveObjectType {
 /// ```
 #[derive(Eq, PartialEq, Debug, Clone, Hash)]
 // TODO hand-roll a Deserialize impl to enforce that an objectid is present
+// https://github.com/iotaledger/iota-rust-sdk/issues/1043
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -266,7 +268,7 @@ impl std::str::FromStr for MoveObjectType {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveStruct {
     /// The type of this object. Uses optimized BCS serialization.
-    pub type_: MoveObjectType,
+    pub object_type: MoveObjectType,
     /// Number that increases each time a tx takes this object as a mutable
     /// input This is a lamport timestamp, not a sequentially increasing
     /// version
@@ -279,6 +281,67 @@ pub struct MoveStruct {
     )]
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(32..=1024).lift()))]
     pub contents: Vec<u8>,
+}
+
+impl MoveStruct {
+    /// Returns the type of this Move object.
+    pub fn object_type(&self) -> &MoveObjectType {
+        &self.object_type
+    }
+
+    /// Returns the object type as a [`StructTag`] reference.
+    pub fn struct_tag(&self) -> &StructTag {
+        &self.object_type
+    }
+
+    /// Returns `true` if the object's type matches the given [`StructTag`].
+    pub fn is_struct_tag(&self, s: &StructTag) -> bool {
+        &self.object_type == s
+    }
+
+    /// Returns the object's ID, extracted from the BCS-encoded contents.
+    pub fn id(&self) -> ObjectId {
+        Self::id_opt(&self.contents).unwrap()
+    }
+
+    /// Tries to extract an [`ObjectId`] from the leading bytes of `contents`.
+    pub fn id_opt(contents: &[u8]) -> Option<ObjectId> {
+        if contents.len() < ObjectId::LENGTH {
+            return None;
+        }
+        ObjectId::from_bytes(&contents[0..ObjectId::LENGTH]).ok()
+    }
+
+    /// Returns the version (lamport timestamp) of this object.
+    pub fn version(&self) -> Version {
+        self.version
+    }
+
+    /// Returns the raw BCS-encoded contents of this object.
+    pub fn contents(&self) -> &[u8] {
+        &self.contents
+    }
+
+    /// Consumes the object and returns the raw BCS-encoded contents.
+    pub fn into_contents(self) -> Vec<u8> {
+        self.contents
+    }
+
+    /// Returns the object type as a [`TypeTag`].
+    pub fn type_tag(&self) -> TypeTag {
+        TypeTag::Struct(Box::new(self.struct_tag().clone()))
+    }
+
+    /// Consumes the object and returns its type, version, and raw contents.
+    pub fn into_parts(self) -> (MoveObjectType, Version, Vec<u8>) {
+        (self.object_type, self.version, self.contents)
+    }
+
+    /// Deserializes the BCS-encoded contents into a Rust type.
+    #[cfg(feature = "serde")]
+    pub fn to_rust<'de, T: serde::Deserialize<'de>>(&'de self) -> Option<T> {
+        bcs::from_bytes(self.contents()).ok()
+    }
 }
 
 /// Type of an IOTA object
@@ -374,7 +437,7 @@ impl Object {
     /// Return this object's type
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.type_).clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.object_type).clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -487,7 +550,7 @@ impl GenesisObject {
 
     pub fn object_type(&self) -> ObjectType {
         match &self.data {
-            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.type_).clone()),
+            ObjectData::Struct(struct_) => ObjectType::Struct((*struct_.object_type).clone()),
             ObjectData::Package(_) => ObjectType::Package,
         }
     }
@@ -874,7 +937,7 @@ mod serialization {
                         linkage_table,
                     }),
                     (
-                        ObjectType::Struct(type_),
+                        ObjectType::Struct(tag),
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
@@ -883,7 +946,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_: type_.into(),
+                            object_type: tag.into(),
                             version,
                             contents,
                         })
@@ -1028,7 +1091,7 @@ mod serialization {
                         linkage_table,
                     }),
                     (
-                        ObjectType::Struct(type_),
+                        ObjectType::Struct(tag),
                         ReadableObjectData::Move(ReadableMoveStruct { contents }),
                     ) => {
                         // check id matches in contents
@@ -1037,7 +1100,7 @@ mod serialization {
                         }
 
                         ObjectData::Struct(MoveStruct {
-                            type_: type_.into(),
+                            object_type: tag.into(),
                             version,
                             contents,
                         })
@@ -1114,7 +1177,7 @@ mod serialization {
         fn obj() {
             let o = Object {
                 data: ObjectData::Struct(MoveStruct {
-                    type_: MoveObjectType::new(StructTag::new(
+                    object_type: MoveObjectType::new(StructTag::new(
                         Address::FRAMEWORK,
                         Identifier::new("bar").unwrap(),
                         Identifier::new("foo").unwrap(),
