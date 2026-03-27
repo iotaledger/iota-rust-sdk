@@ -317,27 +317,6 @@ impl MoveStruct {
         self.version
     }
 
-    /// Sets the version of this object to a new value which is assumed to be
-    /// higher (and checked to be higher in debug).
-    pub fn increment_version_to(&mut self, next: Version) {
-        debug_assert!(
-            self.version < next,
-            "Not an increment: {} to {next}",
-            self.version
-        );
-        self.version = next;
-    }
-
-    /// Sets the version to a lower value (checked in debug).
-    pub fn decrement_version_to(&mut self, prev: Version) {
-        debug_assert!(
-            prev < self.version,
-            "Not a decrement: {} to {prev}",
-            self.version
-        );
-        self.version = prev;
-    }
-
     /// Returns the raw BCS-encoded contents of this object.
     pub fn contents(&self) -> &[u8] {
         &self.contents
