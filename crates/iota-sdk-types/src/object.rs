@@ -543,7 +543,7 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```text
 /// genesis-object = object-data owner
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
     pub data: ObjectData,
@@ -583,6 +583,12 @@ impl GenesisObject {
     pub fn data(&self) -> &ObjectData {
         &self.data
     }
+
+    // pub fn id(&self) -> ObjectID {
+    //     match self {
+    //         GenesisObject::RawObject { data, .. } => data.id(),
+    //     }
+    // }
 }
 
 // TODO improve ser/de to do borrowing to avoid clones where possible
