@@ -1042,6 +1042,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "GenesisObject")]
     enum BinaryGenesisObject {
         RawObject { data: ObjectData, owner: Owner },
     }
