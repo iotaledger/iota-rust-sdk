@@ -309,7 +309,22 @@ macro_rules! def_is_as_into_opt {
         }
 
         #[inline]
+        pub fn [< as_ $rename _mut >](&mut self) -> &mut $inner {
+            self.[< as_ $rename _mut_opt >]().expect(&format!("not a {}", stringify!($variant)))
+        }
+
+        #[inline]
         pub fn [< as_ $rename _opt >](&self) -> Option<&$inner> {
+            #[allow(irrefutable_let_patterns)]
+            if let Self::$variant(inner) = self {
+                Some(inner)
+            } else {
+                None
+            }
+        }
+
+        #[inline]
+        pub fn [< as_ $rename _mut_opt >](&mut self) -> Option<&mut $inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(inner)
