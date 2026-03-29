@@ -169,6 +169,27 @@ pub enum ObjectData {
 
 impl ObjectData {
     crate::def_is_as_into_opt!(Struct(MoveStruct), Package(MovePackage));
+
+    pub fn object_type(&self) -> Option<&MoveObjectType> {
+        match self {
+            Self::Struct(m) => Some(m.object_type()),
+            Self::Package(_) => None,
+        }
+    }
+
+    pub fn struct_tag(&self) -> Option<StructTag> {
+        match self {
+            Self::Struct(m) => Some(m.struct_tag().clone()),
+            Self::Package(_) => None,
+        }
+    }
+
+    pub fn id(&self) -> ObjectId {
+        match self {
+            Self::Struct(v) => v.id(),
+            Self::Package(m) => m.id(),
+        }
+    }
 }
 
 /// A [`StructTag`] with optimized BCS serialization for object types.
