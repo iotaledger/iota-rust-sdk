@@ -584,11 +584,9 @@ impl GenesisObject {
         &self.data
     }
 
-    // pub fn id(&self) -> ObjectID {
-    //     match self {
-    //         GenesisObject::RawObject { data, .. } => data.id(),
-    //     }
-    // }
+    pub fn id(&self) -> ObjectId {
+        self.data.id()
+    }
 }
 
 // TODO improve ser/de to do borrowing to avoid clones where possible
