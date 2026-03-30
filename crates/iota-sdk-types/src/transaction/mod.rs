@@ -200,7 +200,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %x07 consensus-commit-prologue-v2
 ///                     =/ %x08 consensus-commit-prologue-v3
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 pub enum TransactionKind {
