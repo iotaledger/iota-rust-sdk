@@ -547,7 +547,7 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```text
 /// genesis-object = %d00 object-data owner   ; RawObject
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
     pub data: ObjectData,
@@ -586,6 +586,10 @@ impl GenesisObject {
 
     pub fn data(&self) -> &ObjectData {
         &self.data
+    }
+
+    pub fn id(&self) -> ObjectId {
+        self.data.id()
     }
 }
 
@@ -976,6 +980,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "GenesisObject")]
     #[cfg_attr(
         feature = "bcs-schema",
         derive(iota_bcs_schema::BcsSchema),
