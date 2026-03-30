@@ -4,13 +4,22 @@
 import iota_sdk.Address
 import iota_sdk.Direction
 import iota_sdk.GraphQlClient
+import iota_sdk.MoveAbility
 import iota_sdk.MovePackage
 import iota_sdk.ObjectFilter
+import iota_sdk.ObjectId
+import iota_sdk.ObjectOut
 import iota_sdk.PaginationFilter
+import iota_sdk.StructTag
+import iota_sdk.TransactionsFilter
+import iota_sdk.Value
 import kotlinx.coroutines.runBlocking
 
 private fun forwardPage(cursor: String? = null): PaginationFilter =
     PaginationFilter(direction = Direction.FORWARD, cursor = cursor)
+
+private fun formatFunctionSignature(signature: String, packagePrefix: String): String =
+    signature.replace("$packagePrefix::", "")
 
 private suspend fun fetchPackageVersions(
     client: GraphQlClient,
@@ -32,13 +41,26 @@ private suspend fun fetchPackageVersions(
     return versions.sortedBy { it.version().toLong() }
 }
 
-private suspend fun printObjectSamples(client: GraphQlClient, typeTag: String, isGeneric: Boolean) {
+private suspend fun printObjectSamples(
+    client: GraphQlClient,
+    typeTag: String,
+    hasKeyAbility: Boolean,
+    isGeneric: Boolean,
+) {
+    if (!hasKeyAbility) {
+        return
+    }
+
     if (isGeneric) {
         println("    sample objects: skipped for generic type")
         return
     }
 
-    val objects = client.objects(ObjectFilter(typeTag = typeTag), forwardPage())
+    val objects =
+        client.objects(
+            ObjectFilter(typeTag = typeTag),
+            PaginationFilter(direction = Direction.FORWARD, limit = 3),
+        )
 
     if (objects.data.isEmpty()) {
         println("    sample objects: none found")
@@ -52,6 +74,53 @@ private suspend fun printObjectSamples(client: GraphQlClient, typeTag: String, i
     if (objects.pageInfo.hasNextPage) {
         println("      - ...")
     }
+}
+
+private fun formatPolicyName(policy: Int): String =
+    when (policy) {
+        0 -> "Compatible"
+        128 -> "Additive"
+        192 -> "Dependency-only"
+        else -> "Unknown ($policy)"
+    }
+
+private fun extractPolicy(contents: Value): Int? =
+    Regex("\"policy\"\\s*:\\s*(?:\"(\\d+)\"|(\\d+))")
+        .find(contents)
+        ?.groupValues
+        ?.drop(1)
+        ?.firstOrNull { it.isNotEmpty() }
+        ?.toIntOrNull()
+
+private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
+    val page =
+        client.transactionsEffects(
+            TransactionsFilter(changedObject = packageId),
+            PaginationFilter(direction = Direction.FORWARD, limit = 1),
+        )
+
+    for (effects in page.data) {
+        val effectsV1 = effects.asV1()
+        for (changedObj in effectsV1.changedObjects) {
+            if (changedObj.outputState !is ObjectOut.ObjectWrite) {
+                continue
+            }
+
+            val obj = client.`object`(changedObj.objectId, effectsV1.lamportVersion) ?: continue
+            if (obj.asStructOpt()?.structType == StructTag.newUpgradeCap()) {
+                return changedObj.objectId
+            }
+        }
+    }
+
+    return null
+}
+
+private suspend fun currentPackagePolicy(client: GraphQlClient, packageId: ObjectId): String {
+    val upgradeCapId = resolveUpgradeCapId(client, packageId) ?: return "Unavailable"
+    val contents = client.moveObjectContents(upgradeCapId, null) ?: return "Unavailable"
+    val policy = extractPolicy(contents) ?: return "Unavailable"
+    return formatPolicyName(policy)
 }
 
 fun main(args: Array<String>) = runBlocking {
@@ -77,6 +146,7 @@ fun main(args: Array<String>) = runBlocking {
         println("Resolved package id: $packagePrefix")
         println("Resolved version: ${pkg.version()}")
         println("Latest version: ${latestPackage.version()} (${latestPackage.id().toHex()})")
+        println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
         println()
 
         println("Versions:")
@@ -135,7 +205,9 @@ fun main(args: Array<String>) = runBlocking {
             } else {
                 println("  functions:")
                 for (function in functions.nodes) {
-                    println("    - ${function.toString()}")
+                    println(
+                        "    - ${formatFunctionSignature(function.toString(), packagePrefix)}"
+                    )
                 }
                 if (functions.pageInfo.hasNextPage) {
                     println("    - ...")
@@ -150,10 +222,11 @@ fun main(args: Array<String>) = runBlocking {
                 for (structType in structs.nodes) {
                     val typeTag = "$packagePrefix::$moduleName::${structType.name}"
                     println("    - $typeTag")
+                    val hasKeyAbility = structType.abilities?.contains(MoveAbility.KEY) == true
                     val isGeneric =
                         structType.typeParameters != null &&
                             structType.typeParameters!!.isNotEmpty()
-                    printObjectSamples(client, typeTag, isGeneric)
+                    printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
                 }
                 if (structs.pageInfo.hasNextPage) {
                     println("    - ...")

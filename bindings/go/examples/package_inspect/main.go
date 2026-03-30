@@ -4,10 +4,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
@@ -22,6 +24,10 @@ func forwardPage(cursor *string) *iota_sdk.PaginationFilter {
 		Direction: iota_sdk.DirectionForward,
 		Cursor:    cursor,
 	}
+}
+
+func formatFunctionSignature(signature string, packagePrefix string) string {
+	return strings.ReplaceAll(signature, packagePrefix+"::", "")
 }
 
 func fetchPackageVersions(client *iota_sdk.GraphQlClient, packageAddress *iota_sdk.Address) ([]*iota_sdk.MovePackage, error) {
@@ -48,15 +54,23 @@ func fetchPackageVersions(client *iota_sdk.GraphQlClient, packageAddress *iota_s
 	return versions, nil
 }
 
-func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, isGeneric bool) {
+func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, hasKeyAbility bool, isGeneric bool) {
+	if !hasKeyAbility {
+		return
+	}
+
 	if isGeneric {
 		fmt.Println("    sample objects: skipped for generic type")
 		return
 	}
 
+	limit := int32(3)
 	objects, err := client.Objects(
 		&iota_sdk.ObjectFilter{TypeTag: stringPtr(typeTag)},
-		forwardPage(nil),
+		&iota_sdk.PaginationFilter{
+			Direction: iota_sdk.DirectionForward,
+			Limit:     &limit,
+		},
 	)
 	if err != nil {
 		log.Fatalf("Failed to fetch sample objects for %s: %v", typeTag, err)
@@ -74,6 +88,110 @@ func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, isGeneri
 	if objects.PageInfo.HasNextPage {
 		fmt.Println("      - ...")
 	}
+}
+
+func formatPolicyName(policy uint8) string {
+	switch policy {
+	case 0:
+		return "Compatible"
+	case 128:
+		return "Additive"
+	case 192:
+		return "Dependency-only"
+	default:
+		return fmt.Sprintf("Unknown (%d)", policy)
+	}
+}
+
+func extractPolicy(contents string) (uint8, bool) {
+	var raw map[string]json.RawMessage
+	if err := json.Unmarshal([]byte(contents), &raw); err != nil {
+		return 0, false
+	}
+
+	policyRaw, ok := raw["policy"]
+	if !ok {
+		return 0, false
+	}
+
+	var number uint8
+	if err := json.Unmarshal(policyRaw, &number); err == nil {
+		return number, true
+	}
+
+	var text string
+	if err := json.Unmarshal(policyRaw, &text); err == nil {
+		parsed, err := strconv.ParseUint(text, 10, 8)
+		if err == nil {
+			return uint8(parsed), true
+		}
+	}
+
+	return 0, false
+}
+
+func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (*iota_sdk.ObjectId, error) {
+	limit := int32(1)
+	page, err := client.TransactionsEffects(
+		&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+		&iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Limit: &limit},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, effects := range page.Data {
+		effectsV1 := effects.AsV1()
+		writtenVersion := effectsV1.LamportVersion
+		for _, changedObj := range effectsV1.ChangedObjects {
+			if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); !ok {
+				continue
+			}
+
+			objPtr, err := client.Object(changedObj.ObjectId, &writtenVersion)
+			if err != nil {
+				return nil, err
+			}
+
+			if objPtr == nil {
+				continue
+			}
+
+			obj := *objPtr
+			if obj.AsStructOpt() != nil {
+				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
+				if obj.AsStruct().StructType.Eq(upgradeCapType) {
+					return changedObj.ObjectId, nil
+				}
+			}
+		}
+	}
+
+	return nil, nil
+}
+
+func currentPackagePolicy(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (string, error) {
+	upgradeCapID, err := resolveUpgradeCapID(client, packageID)
+	if err != nil {
+		return "", err
+	}
+	if upgradeCapID == nil {
+		return "Unavailable", nil
+	}
+
+	contents, err := client.MoveObjectContents(upgradeCapID, nil)
+	if err != nil {
+		return "", err
+	}
+	if contents == nil {
+		return "Unavailable", nil
+	}
+
+	if policy, ok := extractPolicy(*contents); ok {
+		return formatPolicyName(policy), nil
+	}
+
+	return "Unavailable", nil
 }
 
 func main() {
@@ -118,6 +236,11 @@ func main() {
 	fmt.Println("Resolved package id:", packagePrefix)
 	fmt.Println("Resolved version:", pkg.Version())
 	fmt.Printf("Latest version: %d (%s)\n", latest.Version(), latest.Id().ToHex())
+	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
+	if err != nil {
+		log.Fatalf("Failed to get current package policy: %v", err)
+	}
+	fmt.Println("Current package policy:", currentPolicy)
 	fmt.Println()
 
 	fmt.Println("Versions:")
@@ -196,7 +319,7 @@ func main() {
 		} else {
 			fmt.Println("  functions:")
 			for _, function := range module.Functions.Nodes {
-				fmt.Printf("    - %s\n", function.String())
+				fmt.Printf("    - %s\n", formatFunctionSignature(function.String(), packagePrefix))
 			}
 			if module.Functions.PageInfo.HasNextPage {
 				fmt.Println("    - ...")
@@ -211,8 +334,17 @@ func main() {
 				typeTag := fmt.Sprintf("%s::%s::%s", packagePrefix, moduleName, structType.Name)
 				fmt.Println("    -", typeTag)
 
+				hasKeyAbility := false
+				if structType.Abilities != nil {
+					for _, ability := range *structType.Abilities {
+						if ability == iota_sdk.MoveAbilityKey {
+							hasKeyAbility = true
+							break
+						}
+					}
+				}
 				isGeneric := structType.TypeParameters != nil && len(*structType.TypeParameters) > 0
-				printObjectSamples(client, typeTag, isGeneric)
+				printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
 			}
 			if module.Structs.PageInfo.HasNextPage {
 				fmt.Println("    - ...")

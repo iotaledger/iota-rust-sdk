@@ -8,6 +8,10 @@ private func forwardPage(cursor: String? = nil) -> PaginationFilter {
   PaginationFilter(direction: .forward, cursor: cursor)
 }
 
+private func formatFunctionSignature(_ signature: String, packagePrefix: String) -> String {
+  signature.replacingOccurrences(of: "\(packagePrefix)::", with: "")
+}
+
 private func fetchPackageVersions(client: GraphQlClient, packageAddress: Address) async throws
   -> [MovePackage]
 {
@@ -33,8 +37,13 @@ private func fetchPackageVersions(client: GraphQlClient, packageAddress: Address
 private func printObjectSamples(
   client: GraphQlClient,
   typeTag: String,
+  hasKeyAbility: Bool,
   isGeneric: Bool
 ) async throws {
+  if !hasKeyAbility {
+    return
+  }
+
   if isGeneric {
     print("    sample objects: skipped for generic type")
     return
@@ -42,7 +51,7 @@ private func printObjectSamples(
 
   let objects = try await client.objects(
     filter: ObjectFilter(typeTag: typeTag),
-    paginationFilter: forwardPage()
+    paginationFilter: PaginationFilter(direction: .forward, limit: 3)
   )
 
   if objects.data.isEmpty {
@@ -57,6 +66,85 @@ private func printObjectSamples(
   if objects.pageInfo.hasNextPage {
     print("      - ...")
   }
+}
+
+private func formatPolicyName(_ policy: UInt8) -> String {
+  switch policy {
+  case 0:
+    return "Compatible"
+  case 128:
+    return "Additive"
+  case 192:
+    return "Dependency-only"
+  default:
+    return "Unknown (\(policy))"
+  }
+}
+
+private func extractPolicy(contents: Value) -> UInt8? {
+  guard
+    let data = contents.data(using: .utf8),
+    let rawJson = try? JSONSerialization.jsonObject(with: data),
+    let json = rawJson as? [String: Any],
+    let rawPolicy = json["policy"]
+  else {
+    return nil
+  }
+
+  if let number = rawPolicy as? NSNumber {
+    return number.uint8Value
+  }
+  if let text = rawPolicy as? String {
+    return UInt8(text)
+  }
+
+  return nil
+}
+
+private func resolveUpgradeCapId(
+  client: GraphQlClient,
+  packageId: ObjectId
+) async throws -> ObjectId? {
+  let page = try await client.transactionsEffects(
+    filter: TransactionsFilter(changedObject: packageId),
+    paginationFilter: PaginationFilter(direction: .forward, limit: 1)
+  )
+
+  for effects in page.data {
+    let effectsV1 = effects.asV1()
+    for changedObj in effectsV1.changedObjects {
+      guard case .objectWrite = changedObj.outputState else {
+        continue
+      }
+
+      if let object = try await client.object(
+        objectId: changedObj.objectId,
+        version: effectsV1.lamportVersion
+      ),
+        object.asStructOpt()?.structType == StructTag.newUpgradeCap()
+      {
+        return changedObj.objectId
+      }
+    }
+  }
+
+  return nil
+}
+
+private func currentPackagePolicy(
+  client: GraphQlClient,
+  packageId: ObjectId
+) async throws -> String {
+  guard let upgradeCapId = try await resolveUpgradeCapId(client: client, packageId: packageId)
+  else {
+    return "Unavailable"
+  }
+
+  guard let contents = try await client.moveObjectContents(objectId: upgradeCapId) else {
+    return "Unavailable"
+  }
+
+  return extractPolicy(contents: contents).map(formatPolicyName) ?? "Unavailable"
 }
 
 @main
@@ -93,6 +181,7 @@ struct PackageInspectExample {
     print("Resolved package id: \(packagePrefix)")
     print("Resolved version: \(package.version())")
     print("Latest version: \(latestPackage.version()) (\(latestPackage.id().toHex()))")
+    print("Current package policy: \(try await currentPackagePolicy(client: client, packageId: package.id()))")
     print()
 
     print("Versions:")
@@ -147,7 +236,7 @@ struct PackageInspectExample {
       if let functions = module.functions, !functions.nodes.isEmpty {
         print("  functions:")
         for function in functions.nodes {
-          print("    - \(function)")
+          print("    - \(formatFunctionSignature(String(describing: function), packagePrefix: packagePrefix))")
         }
         if functions.pageInfo.hasNextPage {
           print("    - ...")
@@ -161,8 +250,14 @@ struct PackageInspectExample {
         for structType in structs.nodes {
           let typeTag = "\(packagePrefix)::\(moduleName)::\(structType.name)"
           print("    - \(typeTag)")
+          let hasKeyAbility = (structType.abilities ?? []).contains(.key)
           let isGeneric = !(structType.typeParameters ?? []).isEmpty
-          try await printObjectSamples(client: client, typeTag: typeTag, isGeneric: isGeneric)
+          try await printObjectSamples(
+            client: client,
+            typeTag: typeTag,
+            hasKeyAbility: hasKeyAbility,
+            isGeneric: isGeneric
+          )
         }
         if structs.pageInfo.hasNextPage {
           print("    - ...")

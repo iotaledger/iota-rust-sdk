@@ -6,11 +6,11 @@ use std::env;
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
-        Client,
         pagination::{Direction, PaginationFilter},
-        query_types::ObjectFilter,
+        query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
+        Client,
     },
-    types::{Address, MovePackage},
+    types::{Address, MovePackage, ObjectId, StructTag, UpgradePolicy},
 };
 
 fn forward_page(cursor: Option<String>) -> PaginationFilter {
@@ -19,6 +19,10 @@ fn forward_page(cursor: Option<String>) -> PaginationFilter {
         cursor,
         limit: None,
     }
+}
+
+fn format_function_signature(signature: &str, package_type_prefix: &str) -> String {
+    signature.replace(&format!("{package_type_prefix}::"), "")
 }
 
 async fn fetch_package_versions(
@@ -46,7 +50,16 @@ async fn fetch_package_versions(
     Ok(packages)
 }
 
-async fn print_object_samples(client: &Client, type_tag: &str, is_generic: bool) -> Result<()> {
+async fn print_object_samples(
+    client: &Client,
+    type_tag: &str,
+    has_key_ability: bool,
+    is_generic: bool,
+) -> Result<()> {
+    if !has_key_ability {
+        return Ok(());
+    }
+
     if is_generic {
         println!("    sample objects: skipped for generic type");
         return Ok(());
@@ -58,7 +71,10 @@ async fn print_object_samples(client: &Client, type_tag: &str, is_generic: bool)
                 type_: Some(type_tag.to_owned()),
                 ..Default::default()
             },
-            forward_page(None),
+            PaginationFilter {
+                limit: Some(3),
+                ..forward_page(None)
+            },
         )
         .await?;
 
@@ -79,6 +95,81 @@ async fn print_object_samples(client: &Client, type_tag: &str, is_generic: bool)
     }
 
     Ok(())
+}
+
+fn format_policy_name(policy: u8) -> String {
+    match UpgradePolicy::try_from(policy) {
+        Ok(UpgradePolicy::Compatible) => "Compatible".to_owned(),
+        Ok(UpgradePolicy::Additive) => "Additive".to_owned(),
+        Ok(UpgradePolicy::DepOnly) => "Dependency-only".to_owned(),
+        Ok(_) | Err(()) => format!("Unknown ({policy})"),
+    }
+}
+
+fn extract_policy_value(contents: &serde_json::Value) -> Option<u8> {
+    match contents.get("policy")? {
+        serde_json::Value::Number(number) => {
+            number.as_u64().and_then(|value| u8::try_from(value).ok())
+        }
+        serde_json::Value::String(value) => value.parse().ok(),
+        _ => None,
+    }
+}
+
+async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result<Option<ObjectId>> {
+    let effects_page = client
+        .transactions_effects(
+            TransactionsFilter {
+                changed_object: Some(package_id),
+                ..Default::default()
+            },
+            PaginationFilter {
+                direction: Direction::Forward,
+                cursor: None,
+                limit: Some(1),
+            },
+        )
+        .await?;
+
+    for effects in effects_page.data {
+        let effects_v1 = effects.as_v1();
+
+        for changed_object in &effects_v1.changed_objects {
+            if !changed_object.output_state.is_object_write() {
+                continue;
+            }
+
+            let Some(object) = client
+                .object(changed_object.object_id, Some(effects_v1.lamport_version))
+                .await?
+            else {
+                continue;
+            };
+
+            if object
+                .as_struct_opt()
+                .is_some_and(|move_struct| move_struct.type_ == StructTag::new_upgrade_cap())
+            {
+                return Ok(Some(changed_object.object_id));
+            }
+        }
+    }
+
+    Ok(None)
+}
+
+async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result<String> {
+    let Some(upgrade_cap_id) = resolve_upgrade_cap_id(client, package_id).await? else {
+        return Ok("Unavailable".to_owned());
+    };
+
+    let Some(contents) = client.move_object_contents(upgrade_cap_id, None).await? else {
+        return Ok("Unavailable".to_owned());
+    };
+
+    Ok(extract_policy_value(&contents)
+        .map(format_policy_name)
+        .unwrap_or_else(|| "Unavailable".to_owned()))
 }
 
 #[tokio::main]
@@ -106,6 +197,10 @@ async fn main() -> Result<()> {
     println!(
         "Latest version: {} ({})",
         latest_package.version, latest_package.id
+    );
+    println!(
+        "Current package policy: {}",
+        current_package_policy(&client, package.id).await?
     );
     println!();
 
@@ -185,7 +280,10 @@ async fn main() -> Result<()> {
             } else {
                 println!("  functions:");
                 for function in &functions.nodes {
-                    println!("    - {function}");
+                    println!(
+                        "    - {}",
+                        format_function_signature(&function.to_string(), &package_type_prefix)
+                    );
                 }
                 if functions.page_info.has_next_page {
                     println!("    - ...");
@@ -204,11 +302,17 @@ async fn main() -> Result<()> {
                     let type_tag =
                         format!("{package_type_prefix}::{module_name}::{}", struct_.name);
                     println!("    - {type_tag}");
+                    let has_key_ability = struct_.abilities.as_ref().is_some_and(|abilities| {
+                        abilities
+                            .iter()
+                            .any(|ability| matches!(ability, MoveAbility::Key))
+                    });
                     let is_generic = struct_
                         .type_parameters
                         .as_ref()
                         .is_some_and(|parameters| !parameters.is_empty());
-                    print_object_samples(&client, &type_tag, is_generic).await?;
+                    print_object_samples(&client, &type_tag, has_key_ability, is_generic)
+                        .await?;
                 }
                 if structs.page_info.has_next_page {
                     println!("    - ...");

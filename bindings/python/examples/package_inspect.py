@@ -4,6 +4,7 @@
 from lib.iota_sdk import *
 
 import asyncio
+import json
 import sys
 
 
@@ -12,6 +13,10 @@ def forward_page(cursor=None):
         direction=Direction.FORWARD,
         cursor=cursor,
     )
+
+
+def format_function_signature(signature, package_prefix):
+    return signature.replace(f"{package_prefix}::", "")
 
 
 async def fetch_package_versions(client, package_address):
@@ -33,14 +38,17 @@ async def fetch_package_versions(client, package_address):
     return versions
 
 
-async def print_object_samples(client, type_tag, is_generic):
+async def print_object_samples(client, type_tag, has_key_ability, is_generic):
+    if not has_key_ability:
+        return
+
     if is_generic:
         print("    sample objects: skipped for generic type")
         return
 
     objects = await client.objects(
         ObjectFilter(type_tag=type_tag),
-        forward_page(),
+        PaginationFilter(direction=Direction.FORWARD, limit=3),
     )
 
     if len(objects.data) == 0:
@@ -52,6 +60,60 @@ async def print_object_samples(client, type_tag, is_generic):
         print(f"      - {obj.object_id().to_hex()} (version {obj.version()})")
     if objects.page_info.has_next_page:
         print("      - ...")
+
+
+def format_policy_name(policy):
+    return {
+        0: "Compatible",
+        128: "Additive",
+        192: "Dependency-only",
+    }.get(policy, f"Unknown ({policy})")
+
+
+def extract_policy(contents):
+    try:
+        policy = json.loads(contents).get("policy")
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return None
+
+    if isinstance(policy, str):
+        return int(policy) if policy.isdigit() else None
+    if isinstance(policy, int):
+        return policy
+    return None
+
+
+async def resolve_upgrade_cap_id(client, package_id):
+    page = await client.transactions_effects(
+        TransactionsFilter(changed_object=package_id),
+        PaginationFilter(direction=Direction.FORWARD, limit=1),
+    )
+
+    for effects in page.data:
+        effects_v1 = effects.as_v1()
+        for changed_obj in effects_v1.changed_objects:
+            if not changed_obj.output_state.is_object_write():
+                continue
+
+            obj = await client.object(changed_obj.object_id, effects_v1.lamport_version)
+            if obj is not None and obj.as_struct_opt() is not None:
+                if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
+                    return changed_obj.object_id
+
+    return None
+
+
+async def current_package_policy(client, package_id):
+    upgrade_cap_id = await resolve_upgrade_cap_id(client, package_id)
+    if upgrade_cap_id is None:
+        return "Unavailable"
+
+    contents = await client.move_object_contents(upgrade_cap_id)
+    if contents is None:
+        return "Unavailable"
+
+    policy = extract_policy(contents)
+    return format_policy_name(policy) if policy is not None else "Unavailable"
 
 
 async def main():
@@ -79,6 +141,7 @@ async def main():
     print(
         f"Latest version: {latest_package.version()} ({latest_package.id().to_hex()})"
     )
+    print(f"Current package policy: {await current_package_policy(client, package.id())}")
     print()
 
     print("Versions:")
@@ -133,7 +196,9 @@ async def main():
         else:
             print("  functions:")
             for function in module.functions.nodes:
-                print(f"    - {str(function)}")
+                print(
+                    f"    - {format_function_signature(str(function), package_prefix)}"
+                )
             if module.functions.page_info.has_next_page:
                 print("    - ...")
 
@@ -144,11 +209,17 @@ async def main():
             for struct_ in module.structs.nodes:
                 type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
                 print(f"    - {type_tag}")
+                has_key_ability = (
+                    struct_.abilities is not None
+                    and MoveAbility.KEY in struct_.abilities
+                )
                 is_generic = (
                     struct_.type_parameters is not None
                     and len(struct_.type_parameters) > 0
                 )
-                await print_object_samples(client, type_tag, is_generic)
+                await print_object_samples(
+                    client, type_tag, has_key_ability, is_generic
+                )
             if module.structs.page_info.has_next_page:
                 print("    - ...")
 

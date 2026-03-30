@@ -1,12 +1,16 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+using System.Text.Json;
 using IotaSdk;
 
 class Program
 {
     static PaginationFilter ForwardPage(string? cursor = null) =>
         new(Direction.Forward, cursor: cursor);
+
+    static string FormatFunctionSignature(string signature, string packagePrefix) =>
+        signature.Replace($"{packagePrefix}::", string.Empty);
 
     static async Task<List<MovePackage>> FetchPackageVersions(
         GraphQlClient client,
@@ -41,9 +45,15 @@ class Program
     static async Task PrintObjectSamples(
         GraphQlClient client,
         string typeTag,
+        bool hasKeyAbility,
         bool isGeneric
     )
     {
+        if (!hasKeyAbility)
+        {
+            return;
+        }
+
         if (isGeneric)
         {
             Console.WriteLine("    sample objects: skipped for generic type");
@@ -52,7 +62,7 @@ class Program
 
         var objects = await client.Objects(
             new ObjectFilter(typeTag: typeTag),
-            ForwardPage()
+            new PaginationFilter(Direction.Forward, limit: 3)
         );
 
         if (objects.data.Length == 0)
@@ -70,6 +80,93 @@ class Program
         {
             Console.WriteLine("      - ...");
         }
+    }
+
+    static string FormatPolicyName(byte policy) =>
+        policy switch
+        {
+            0 => "Compatible",
+            128 => "Additive",
+            192 => "Dependency-only",
+            _ => $"Unknown ({policy})"
+        };
+
+    static bool TryExtractPolicy(string contents, out byte policy)
+    {
+        try
+        {
+            using var json = JsonDocument.Parse(contents);
+            if (!json.RootElement.TryGetProperty("policy", out var rawPolicy))
+            {
+                policy = 0;
+                return false;
+            }
+
+            if (rawPolicy.ValueKind == JsonValueKind.Number)
+            {
+                return rawPolicy.TryGetByte(out policy);
+            }
+
+            if (rawPolicy.ValueKind == JsonValueKind.String)
+            {
+                return byte.TryParse(rawPolicy.GetString(), out policy);
+            }
+        }
+        catch (JsonException)
+        {
+        }
+
+        policy = 0;
+        return false;
+    }
+
+    static async Task<ObjectId?> ResolveUpgradeCapId(GraphQlClient client, ObjectId packageId)
+    {
+        var page = await client.TransactionsEffects(
+            new TransactionsFilter(changedObject: packageId),
+            new PaginationFilter(Direction.Forward, limit: 1)
+        );
+
+        foreach (var effects in page.data)
+        {
+            var effectsV1 = effects.AsV1();
+            foreach (var changedObj in effectsV1.changedObjects)
+            {
+                if (changedObj.outputState is not ObjectOut.ObjectWrite)
+                {
+                    continue;
+                }
+
+                var obj = await client.Object(changedObj.objectId, effectsV1.lamportVersion);
+                if (
+                    obj?.AsStructOpt()?.structType?.Equals(StructTag.NewUpgradeCap()) == true
+                )
+                {
+                    return changedObj.objectId;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    static async Task<string> CurrentPackagePolicy(GraphQlClient client, ObjectId packageId)
+    {
+        var upgradeCapId = await ResolveUpgradeCapId(client, packageId);
+        if (upgradeCapId == null)
+        {
+            return "Unavailable";
+        }
+
+        var contents = await client.MoveObjectContents(upgradeCapId, null);
+        if (contents == null)
+        {
+            return "Unavailable";
+        }
+
+        return TryExtractPolicy(contents, out var policy)
+            ? FormatPolicyName(policy)
+            : "Unavailable";
     }
 
     static async Task Main(string[] args)
@@ -105,6 +202,9 @@ class Program
         Console.WriteLine($"Resolved version: {package.Version()}");
         Console.WriteLine(
             $"Latest version: {latestPackage.Version()} ({latestPackage.Id().ToHex()})"
+        );
+        Console.WriteLine(
+            $"Current package policy: {await CurrentPackagePolicy(client, package.Id())}"
         );
         Console.WriteLine();
 
@@ -181,7 +281,9 @@ class Program
                 Console.WriteLine("  functions:");
                 foreach (var function in module.functions.nodes)
                 {
-                    Console.WriteLine($"    - {function}");
+                    Console.WriteLine(
+                        $"    - {FormatFunctionSignature(function.ToString(), packagePrefix)}"
+                    );
                 }
                 if (module.functions.pageInfo.hasNextPage)
                 {
@@ -201,10 +303,13 @@ class Program
                     var typeTag = $"{packagePrefix}::{moduleName}::{structType.name}";
                     Console.WriteLine($"    - {typeTag}");
 
+                    var hasKeyAbility =
+                        structType.abilities != null
+                        && structType.abilities.Contains(MoveAbility.Key);
                     var isGeneric =
                         structType.typeParameters != null
                         && structType.typeParameters.Length > 0;
-                    await PrintObjectSamples(client, typeTag, isGeneric);
+                    await PrintObjectSamples(client, typeTag, hasKeyAbility, isGeneric);
                 }
                 if (module.structs.pageInfo.hasNextPage)
                 {
