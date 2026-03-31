@@ -234,6 +234,36 @@ impl TransactionKind {
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     }
+
+    /// Create a [`TransactionKind::ProgrammableTransaction`].
+    pub fn new_programmable_transaction(tx: ProgrammableTransaction) -> Self {
+        Self::ProgrammableTransaction(tx)
+    }
+
+    /// Create a [`TransactionKind::Genesis`].
+    pub fn new_genesis(tx: GenesisTransaction) -> Self {
+        Self::Genesis(tx)
+    }
+
+    /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
+    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(tx)
+    }
+
+    /// Create a [`TransactionKind::AuthenticatorStateUpdateV1`].
+    pub fn new_authenticator_state_update_v1(tx: AuthenticatorStateUpdateV1) -> Self {
+        Self::AuthenticatorStateUpdateV1(tx)
+    }
+
+    /// Create a [`TransactionKind::EndOfEpoch`].
+    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(tx)
+    }
+
+    /// Create a [`TransactionKind::RandomnessStateUpdate`].
+    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(tx)
+    }
 }
 
 impl core::fmt::Display for TransactionKind {
