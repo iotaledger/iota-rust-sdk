@@ -22,6 +22,8 @@
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "bytes"))]
 pub struct Bls12381PublicKey(
     #[cfg_attr(
         feature = "serde",
@@ -129,6 +131,8 @@ impl std::fmt::Debug for Bls12381PublicKey {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "48OCTET"))]
 pub struct Bls12381Signature(
     #[cfg_attr(
         feature = "serde",

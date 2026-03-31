@@ -31,6 +31,7 @@ pub type ProtocolVersion = u64;
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum CheckpointCommitment {
     /// An Elliptic Curve Multiset Hash attesting to the set of Objects that
@@ -64,6 +65,7 @@ impl CheckpointCommitment {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct EndOfEpochData {
     /// The set of Validators that will be in the ValidatorCommittee for the
     /// next epoch.
@@ -71,6 +73,7 @@ pub struct EndOfEpochData {
     /// The protocol version that is in effect during the next epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub next_epoch_protocol_version: ProtocolVersion,
     /// Commitments to epoch specific state (e.g. live object set)
     pub epoch_commitments: Vec<CheckpointCommitment>,
@@ -121,12 +124,15 @@ pub struct EndOfEpochData {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointSummary {
     /// Epoch that this checkpoint belongs to.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     /// The height of this checkpoint.
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub sequence_number: CheckpointSequenceNumber,
     /// Total number of transactions committed since genesis, including those in
     /// this checkpoint.
@@ -146,6 +152,7 @@ pub struct CheckpointSummary {
     /// subsequent checkpoints can have same timestamp if they originate
     /// from the same underlining consensus commit
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::U64"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub timestamp_ms: CheckpointTimestamp,
     /// Commitments to checkpoint-specific state.
     #[cfg_attr(
@@ -171,6 +178,7 @@ pub struct CheckpointSummary {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SignedCheckpointSummary {
     pub checkpoint: CheckpointSummary,
     pub signature: ValidatorAggregatedSignature,
@@ -197,6 +205,7 @@ pub struct SignedCheckpointSummary {
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointContents(
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub  Vec<CheckpointTransactionInfo>,
@@ -221,6 +230,7 @@ impl CheckpointContents {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointTransactionInfo {
     pub transaction: Digest,
     pub effects: Digest,
@@ -232,6 +242,7 @@ pub struct CheckpointTransactionInfo {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointData {
     pub checkpoint_summary: SignedCheckpointSummary,
     pub checkpoint_contents: CheckpointContents,
@@ -243,6 +254,7 @@ pub struct CheckpointData {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointTransaction {
     /// The input Transaction
     #[cfg_attr(
@@ -250,6 +262,7 @@ pub struct CheckpointTransaction {
         serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "SignedTransaction"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "signed-transaction"))]
     pub transaction: SignedTransaction,
     /// The effects produced by executing this transaction
     pub effects: TransactionEffects,

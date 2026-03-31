@@ -20,6 +20,10 @@ authenticator-state-update-v1 = u64                   ; epoch
                                 (vector active-jwk)   ; new-active-jwks
                                 u64                   ; authenticator-obj-initial-shared-version
 
+bls12381-public-key = bytes
+
+bls12381-signature = 48OCTET
+
 call-arg = %x00 bytes   ; Pure
          / %x01 object-arg   ; Object
 
@@ -69,6 +73,40 @@ change-epoch-v4 = u64                       ; epoch
                   (vector u64)              ; scores
                   bool                      ; adjust-rewards-by-score
 
+changed-object = object-id      ; object-id
+                 object-in      ; input-state
+                 object-out     ; output-state
+                 id-operation   ; id-operation
+
+checkpoint-commitment = %x00 digest   ; EcmhLiveObjectSet
+
+checkpoint-contents = (vector checkpoint-transaction-info)
+
+checkpoint-data = signed-checkpoint-summary         ; checkpoint-summary
+                  checkpoint-contents               ; checkpoint-contents
+                  (vector checkpoint-transaction)   ; transactions
+
+checkpoint-summary = u64                              ; epoch
+                     u64                              ; sequence-number
+                     u64                              ; network-total-transactions
+                     digest                           ; content-digest
+                     (option digest)                  ; previous-digest
+                     gas-cost-summary                 ; epoch-rolling-gas-cost-summary
+                     u64                              ; timestamp-ms
+                     (vector checkpoint-commitment)   ; checkpoint-commitments
+                     (option end-of-epoch-data)       ; end-of-epoch-data
+                     bytes                            ; version-specific-data
+
+checkpoint-transaction = signed-transaction            ; transaction
+                         transaction-effects           ; effects
+                         (option transaction-events)   ; events
+                         (vector object)               ; input-objects
+                         (vector object)               ; output-objects
+
+checkpoint-transaction-info = digest                    ; transaction
+                              digest                    ; effects
+                              (vector user-signature)   ; signatures
+
 command = %x00 move-call   ; MoveCall
         / %x01 transfer-objects   ; TransferObjects
         / %x02 split-coins   ; SplitCoins
@@ -76,6 +114,20 @@ command = %x00 move-call   ; MoveCall
         / %x04 publish   ; Publish
         / %x05 make-move-vector   ; MakeMoveVector
         / %x06 upgrade   ; Upgrade
+
+command-argument-error = %x00   ; TypeMismatch
+                       / %x01   ; InvalidBcsBytes
+                       / %x02   ; InvalidUsageOfPureArgument
+                       / %x03   ; InvalidArgumentToPrivateEntryFunction
+                       / %x04 u16   ; IndexOutOfBounds
+                       / %x05 u16 u16   ; SecondaryIndexOutOfBounds
+                       / %x06 u16   ; InvalidResultArity
+                       / %x07   ; InvalidGasCoinUsage
+                       / %x08   ; InvalidValueUsage
+                       / %x09   ; InvalidObjectByValue
+                       / %x0a   ; InvalidObjectByMutRef
+                       / %x0b   ; SharedObjectOperationNotAllowed
+                       / %x0c   ; InvalidArgumentArity
 
 compressed-struct-tag = %x00 struct-tag   ; Other
                       / %x01   ; GasCoin
@@ -93,6 +145,11 @@ consensus-determined-version-assignments = %x00 (vector cancelled-transaction)  
 
 digest = %x20 32OCTET
 
+end-of-epoch-data = (vector validator-committee-member)   ; next-epoch-committee
+                    u64                                   ; next-epoch-protocol-version
+                    (vector checkpoint-commitment)        ; epoch-commitments
+                    i64                                   ; epoch-supply-change
+
 end-of-epoch-transaction-kind = %x00 change-epoch   ; ChangeEpoch
                               / %x01 change-epoch-v2   ; ChangeEpochV2
                               / %x02 change-epoch-v3   ; ChangeEpochV3
@@ -105,6 +162,49 @@ event = object-id    ; package-id
         address      ; sender
         struct-tag   ; type-
         bytes        ; contents
+
+execution-error = %x00   ; InsufficientGas
+                / %x01   ; InvalidGasObject
+                / %x02   ; InvariantViolation
+                / %x03   ; FeatureNotYetSupported
+                / %x04 u64 u64   ; ObjectTooBig
+                / %x05 u64 u64   ; PackageTooBig
+                / %x06 object-id   ; CircularObjectOwnership
+                / %x07   ; InsufficientCoinBalance
+                / %x08   ; CoinBalanceOverflow
+                / %x09   ; PublishErrorNonZeroAddress
+                / %x0a   ; IotaMoveVerificationError
+                / %x0b (option move-location)   ; MovePrimitiveRuntimeError
+                / %x0c move-location u64   ; MoveAbort
+                / %x0d   ; VmVerificationOrDeserializationError
+                / %x0e   ; VmInvariantViolation
+                / %x0f   ; FunctionNotFound
+                / %x10   ; ArityMismatch
+                / %x11   ; TypeArityMismatch
+                / %x12   ; NonEntryFunctionInvoked
+                / %x13 u16 command-argument-error   ; CommandArgumentError
+                / %x14 u16 type-argument-error   ; TypeArgumentError
+                / %x15 u16 u16   ; UnusedValueWithoutDrop
+                / %x16 u16   ; InvalidPublicFunctionReturnType
+                / %x17   ; InvalidTransferObject
+                / %x18 u64 u64   ; EffectsTooLarge
+                / %x19   ; PublishUpgradeMissingDependency
+                / %x1a   ; PublishUpgradeDependencyDowngrade
+                / %x1b package-upgrade-error   ; PackageUpgradeError
+                / %x1c u64 u64   ; WrittenObjectsTooLarge
+                / %x1d   ; CertificateDenied
+                / %x1e   ; IotaMoveVerificationTimeout
+                / %x1f   ; SharedObjectOperationNotAllowed
+                / %x20   ; InputObjectDeleted
+                / %x21 (vector object-id)   ; ExecutionCancelledDueToSharedObjectCongestion
+                / %x22 (vector object-id) u64   ; ExecutionCancelledDueToSharedObjectCongestionV2
+                / %x23 address string   ; AddressDeniedForCoin
+                / %x24 string   ; CoinTypeGlobalPause
+                / %x25   ; ExecutionCancelledDueToRandomnessUnavailable
+                / %x26   ; InvalidLinkage
+
+execution-status = %x00   ; Success
+                 / %x01 execution-error (option u64)   ; Failure
 
 execution-time-observation = execution-time-observation-key                  ; key
                              (vector validator-execution-time-observation)   ; observations
@@ -136,9 +236,23 @@ genesis-object = object-data   ; data
 genesis-transaction = (vector genesis-object)   ; objects
                       (vector event)            ; events
 
+id-operation = %x00   ; None
+             / %x01   ; Created
+             / %x02   ; Deleted
+
 identifier = string
 
 input = call-arg
+
+intent = intent-scope     ; scope
+         intent-version   ; version
+         intent-app-id    ; app-id
+
+intent-app-id = u8
+
+intent-scope = u8
+
+intent-version = u8
 
 jwk = string   ; kty
       string   ; e
@@ -160,6 +274,12 @@ move-call = object-id           ; package
             (vector type-tag)   ; type-arguments
             (vector argument)   ; arguments
 
+move-location = object-id             ; package
+                identifier            ; module
+                u16                   ; function
+                u16                   ; instruction
+                (option identifier)   ; function-name
+
 move-package = object-id                      ; id
                u64                            ; version
                (map identifier bytes)         ; modules
@@ -170,6 +290,11 @@ move-struct = compressed-struct-tag   ; type-
               u64                     ; version
               bytes                   ; contents
 
+object = object-data   ; data
+         owner         ; owner
+         digest        ; previous-transaction
+         u64           ; storage-rebate
+
 object-arg = %x00 object-reference   ; ImmutableOrOwned
            / %x01 object-id u64 bool   ; Shared
            / %x02 object-reference   ; Receiving
@@ -179,6 +304,13 @@ object-data = %x00 move-struct   ; Struct
 
 object-id = address
 
+object-in = %x00   ; Missing
+          / %x01 u64 digest owner   ; Data
+
+object-out = %x00   ; Missing
+           / %x01 digest owner   ; ObjectWrite
+           / %x02 u64 digest   ; PackageWrite
+
 object-reference = object-id   ; object-id
                    u64         ; version
                    digest      ; digest
@@ -187,6 +319,13 @@ owner = %x00 address   ; Address
       / %x01 object-id   ; Object
       / %x02 u64   ; Shared
       / %x03   ; Immutable
+
+package-upgrade-error = %x00 object-id   ; UnableToFetchPackage
+                      / %x01 object-id   ; NotAPackage
+                      / %x02   ; IncompatibleUpgrade
+                      / %x03 digest   ; DigestDoesNotMatch
+                      / %x04 u8   ; UnknownUpgradePolicy
+                      / %x05 object-id object-id   ; PackageIdDoesNotMatch
 
 programmable-transaction = (vector input)     ; inputs
                            (vector command)   ; commands
@@ -198,6 +337,12 @@ randomness-state-update = u64     ; epoch
                           u64     ; randomness-round
                           bytes   ; random-bytes
                           u64     ; randomness-obj-initial-shared-version
+
+signed-checkpoint-summary = checkpoint-summary               ; checkpoint
+                            validator-aggregated-signature   ; signature
+
+signed-transaction = transaction               ; transaction
+                     (vector user-signature)   ; signatures
 
 split-coins = argument            ; coin
               (vector argument)   ; amounts
@@ -212,6 +357,22 @@ system-package = u64                  ; version
                  (vector object-id)   ; dependencies
 
 transaction = %x00 transaction-v1   ; V1
+
+transaction-effects = %x00 transaction-effects-v1   ; V1
+
+transaction-effects-v1 = execution-status                   ; status
+                         u64                                ; epoch
+                         gas-cost-summary                   ; gas-used
+                         digest                             ; transaction-digest
+                         (option u32)                       ; gas-object-index
+                         (option digest)                    ; events-digest
+                         (vector digest)                    ; dependencies
+                         u64                                ; lamport-version
+                         (vector changed-object)            ; changed-objects
+                         (vector unchanged-shared-object)   ; unchanged-shared-objects
+                         (option digest)                    ; auxiliary-data-digest
+
+transaction-events = (vector event)
 
 transaction-expiration = %x00   ; None
                        / %x01 u64   ; Epoch
@@ -231,6 +392,9 @@ transaction-v1 = transaction-kind         ; kind
 transfer-objects = (vector argument)   ; objects
                    argument            ; address
 
+type-argument-error = %x00   ; TypeNotFound
+                    / %x01   ; ConstraintNotSatisfied
+
 type-origin = identifier   ; module-name
               identifier   ; struct-name
               object-id    ; package
@@ -247,6 +411,15 @@ type-tag = %x00   ; Bool
          / %x09   ; U32
          / %x0a   ; U256
 
+unchanged-shared-kind = %x00 u64 digest   ; ReadOnlyRoot
+                      / %x01 u64   ; MutateDeleted
+                      / %x02 u64   ; ReadDeleted
+                      / %x03 u64   ; Cancelled
+                      / %x04   ; PerEpochConfig
+
+unchanged-shared-object = object-id               ; object-id
+                          unchanged-shared-kind   ; kind
+
 upgrade = (vector bytes)       ; modules
           (vector object-id)   ; dependencies
           object-id            ; package
@@ -254,6 +427,18 @@ upgrade = (vector bytes)       ; modules
 
 upgrade-info = object-id   ; upgraded-id
                u64         ; upgraded-version
+
+user-signature = bytes
+
+validator-aggregated-signature = u64                  ; epoch
+                                 bls12381-signature   ; signature
+                                 bytes                ; bitmap
+
+validator-committee = u64                                   ; epoch
+                      (vector validator-committee-member)   ; members
+
+validator-committee-member = bls12381-public-key   ; public-key
+                             u64                   ; stake
 
 validator-execution-time-observation = 96OCTET   ; validator
                                        u64 u32   ; duration

@@ -17,6 +17,7 @@ use super::{Address, Digest, Identifier, ObjectId};
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
@@ -149,6 +150,7 @@ impl ExecutionStatus {
     schemars(tag = "error", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
@@ -336,6 +338,7 @@ impl ExecutionError {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveLocation {
     /// The package id
     pub package: ObjectId,
@@ -390,6 +393,7 @@ pub struct MoveLocation {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
@@ -473,6 +477,7 @@ impl CommandArgumentError {
     schemars(tag = "kind", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
@@ -526,6 +531,7 @@ impl PackageUpgradeError {
     schemars(rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified

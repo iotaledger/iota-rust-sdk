@@ -309,6 +309,8 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// the completely serialized signature.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "bytes"))]
 #[non_exhaustive]
 pub enum UserSignature {
     Simple(SimpleSignature),

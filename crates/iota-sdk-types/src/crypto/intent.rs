@@ -43,6 +43,7 @@ pub enum IntentError {
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Intent {
     pub scope: IntentScope,
     pub version: IntentVersion,
@@ -149,6 +150,8 @@ impl FromStr for Intent {
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
 )]
 #[repr(u8)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "u8"))]
 #[non_exhaustive]
 pub enum IntentScope {
     TransactionData = 0,         // Used for a user signature on a transaction data.
@@ -208,6 +211,8 @@ impl TryFrom<u8> for IntentScope {
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
 )]
 #[repr(u8)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "u8"))]
 #[non_exhaustive]
 pub enum IntentVersion {
     V0 = 0,
@@ -247,6 +252,8 @@ impl TryFrom<u8> for IntentVersion {
     derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr)
 )]
 #[repr(u8)]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "u8"))]
 #[non_exhaustive]
 pub enum IntentAppId {
     Iota = 0,

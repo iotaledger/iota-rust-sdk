@@ -350,6 +350,7 @@ impl std::fmt::Display for ObjectType {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Object {
     /// The meat of the object
     pub data: ObjectData,
