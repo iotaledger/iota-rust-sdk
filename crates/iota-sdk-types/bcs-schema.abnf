@@ -235,17 +235,17 @@ type-origin = identifier   ; module-name
               identifier   ; struct-name
               object-id    ; package
 
-type-tag = %x00   ; U8
-         / %x01   ; U16
-         / %x02   ; U32
-         / %x03   ; U64
-         / %x04   ; U128
-         / %x05   ; U256
-         / %x06   ; Bool
-         / %x07   ; Address
-         / %x08   ; Signer
-         / %x09 type-tag   ; Vector
-         / %x0a struct-tag   ; Struct
+type-tag = %x00   ; Bool
+         / %x01   ; U8
+         / %x02   ; U64
+         / %x03   ; U128
+         / %x04   ; Address
+         / %x05   ; Signer
+         / %x06 type-tag   ; Vector
+         / %x07 struct-tag   ; Struct
+         / %x08   ; U16
+         / %x09   ; U32
+         / %x0a   ; U256
 
 upgrade = (vector bytes)       ; modules
           (vector object-id)   ; dependencies

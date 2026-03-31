@@ -28,6 +28,10 @@ struct FieldAttrs {
     as_type: Option<String>,
 }
 
+struct VariantAttrs {
+    as_type: Option<String>,
+}
+
 fn parse_type_attrs(input: &DeriveInput) -> syn::Result<TypeAttrs> {
     let mut attrs = TypeAttrs {
         name: None,
@@ -50,6 +54,26 @@ fn parse_type_attrs(input: &DeriveInput) -> syn::Result<TypeAttrs> {
                 Ok(())
             } else {
                 Err(meta.error("expected `name` or `definition`"))
+            }
+        })?;
+    }
+    Ok(attrs)
+}
+
+fn parse_variant_attrs(variant: &syn::Variant) -> syn::Result<VariantAttrs> {
+    let mut attrs = VariantAttrs { as_type: None };
+    for attr in &variant.attrs {
+        if !attr.path().is_ident("bcs_schema") {
+            continue;
+        }
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("as_type") {
+                let value = meta.value()?;
+                let s: syn::LitStr = value.parse()?;
+                attrs.as_type = Some(s.value());
+                Ok(())
+            } else {
+                Err(meta.error("expected `as_type`"))
             }
         })?;
     }
@@ -350,9 +374,18 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
     for (idx, variant) in data.variants.iter().enumerate() {
         let variant_name = &variant.ident;
         let prefix = format!("%x{:02x}", idx);
+        let va = parse_variant_attrs(variant)?;
 
         let fields_str = match &variant.fields {
-            Fields::Unit => String::new(),
+            Fields::Unit => {
+                // A variant-level as_type allows specifying payload for unit
+                // variants that carry data only on the wire (e.g. repr-enum
+                // mirrors used for BCS schema generation).
+                match &va.as_type {
+                    Some(t) => format!(" {t}"),
+                    None => String::new(),
+                }
+            }
             Fields::Unnamed(fields) => {
                 let mut types = Vec::new();
                 for f in &fields.unnamed {
