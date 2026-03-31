@@ -19819,6 +19819,14 @@ open func inputs() -> [Input]  {
 }
         )
     }
+    open var description: String {
+        return try!  FfiConverterString.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(self.uniffiClonePointer(),$0
+    )
+}
+        )
+    }
     public static func == (self: ProgrammableTransaction, other: ProgrammableTransaction) -> Bool {
         return try!  FfiConverterBool.lift(
             try! rustCall() {
@@ -19828,10 +19836,21 @@ open func inputs() -> [Input]  {
 }
         )
     }
+    open func hash(into hasher: inout Hasher) {
+        let val = try!  FfiConverterUInt64.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(self.uniffiClonePointer(),$0
+    )
+}
+        )
+        hasher.combine(val)
+    }
 
 }
 extension ProgrammableTransaction: CustomDebugStringConvertible {}
+extension ProgrammableTransaction: CustomStringConvertible {}
 extension ProgrammableTransaction: Equatable {}
+extension ProgrammableTransaction: Hashable {}
 
 
 #if swift(>=5.8)
@@ -26239,6 +26258,14 @@ public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> Transa
 }
         )
     }
+    open var description: String {
+        return try!  FfiConverterString.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(self.uniffiClonePointer(),$0
+    )
+}
+        )
+    }
     public static func == (self: TransactionKind, other: TransactionKind) -> Bool {
         return try!  FfiConverterBool.lift(
             try! rustCall() {
@@ -26248,10 +26275,21 @@ public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> Transa
 }
         )
     }
+    open func hash(into hasher: inout Hasher) {
+        let val = try!  FfiConverterUInt64.lift(
+            try! rustCall() {
+    uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(self.uniffiClonePointer(),$0
+    )
+}
+        )
+        hasher.combine(val)
+    }
 
 }
 extension TransactionKind: CustomDebugStringConvertible {}
+extension TransactionKind: CustomStringConvertible {}
 extension TransactionKind: Equatable {}
+extension TransactionKind: Hashable {}
 
 
 #if swift(>=5.8)

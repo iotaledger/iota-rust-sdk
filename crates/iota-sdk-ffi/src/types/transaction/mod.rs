@@ -216,8 +216,8 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///                     =/ %x07 consensus-commit-prologue-v2
 ///                     =/ %x08 consensus-commit-prologue-v3
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::Display, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 
 #[uniffi::export]
@@ -273,8 +273,8 @@ impl TransactionKind {
 /// ```text
 /// ptb = (vector input) (vector command)
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::Display, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct ProgrammableTransaction(pub iota_sdk::types::ProgrammableTransaction);
 
 #[uniffi::export]

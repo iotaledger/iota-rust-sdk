@@ -8690,6 +8690,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_de
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -8702,6 +8707,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_publish.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10681,6 +10691,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10693,6 +10708,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsigner.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -50204,6 +50224,15 @@ class ProgrammableTransaction():
 
 
 
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, ProgrammableTransaction):
             return NotImplemented
@@ -50217,6 +50246,15 @@ class ProgrammableTransaction():
 
         return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
         _UniffiConverterTypeProgrammableTransaction.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -56416,6 +56454,15 @@ class TransactionKind():
 
 
 
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, TransactionKind):
             return NotImplemented
@@ -56429,6 +56476,15 @@ class TransactionKind():
 
         return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
         _UniffiConverterTypeTransactionKind.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 

@@ -4305,6 +4305,10 @@ internal open class UniffiVTableCallbackInterfaceTransactionSignerFn(
 
 
 
+
+
+
+
 // For large crates we prevent `MethodTooLargeException` (see #2340)
 // N.B. the name of the extension is very misleading, since it is 
 // rather `InterfaceTooLargeException`, caused by too many methods 
@@ -9376,10 +9380,14 @@ fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_inputs(`ptr`: Pointer,
 ): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_publish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_publish(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -9616,6 +9624,10 @@ fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_eq_ne(`ptr`: P
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1signature_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Long
+fun uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Pointer
+fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Unit
 fun uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn(`vtable`: UniffiVTableCallbackInterfaceTransactionSignerFn,
 ): Unit
 
@@ -9629,10 +9641,6 @@ internal interface UniffiLibBatch2 : Library {
         }
     }
 
-fun uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Pointer
-fun uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): Unit
 fun uniffi_iota_sdk_ffi_fn_constructor_secp256r1verifier_new(uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_secp256r1verifier_verify_simple(`ptr`: Pointer,`message`: RustBuffer.ByValue,`signature`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -10147,10 +10155,14 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_upda
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): RustBuffer.ByValue
+fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): RustBuffer.ByValue
 fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
 fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne(`ptr`: Pointer,`other`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Byte
+fun uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+): Long
 fun uniffi_iota_sdk_ffi_fn_clone_transactionsigner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_free_transactionsigner(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -45696,6 +45708,17 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
     
 
     
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
     
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -45710,6 +45733,16 @@ open class ProgrammableTransaction: Disposable, AutoCloseable, ProgrammableTrans
     )
     }
     
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     
@@ -49377,7 +49410,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
         override fun run() {
             pointer?.let { ptr ->
                 uniffiRustCall { status ->
-                    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(ptr, status)
+                    UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_free_secp256r1verifier(ptr, status)
                 }
             }
         }
@@ -49385,7 +49418,7 @@ open class Secp256r1Verifier: Disposable, AutoCloseable, Secp256r1VerifierInterf
 
     fun uniffiClonePointer(): Pointer {
         return uniffiRustCall() { status ->
-            UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer!!, status)
+            UniffiLib.INSTANCE.uniffi_iota_sdk_ffi_fn_clone_secp256r1verifier(pointer!!, status)
         }
     }
 
@@ -55532,6 +55565,17 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
     }
 
     
+    override fun toString(): String {
+        return FfiConverterString.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(
+        it, _status)
+}
+    }
+    )
+    }
+    
     
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -55546,6 +55590,16 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
     )
     }
     
+    override fun hashCode(): Int {
+        return FfiConverterULong.lift(
+    callWithPointer {
+    uniffiRustCall() { _status ->
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(
+        it, _status)
+}
+    }
+    ).toInt()
+    }
 
     
     companion object {
