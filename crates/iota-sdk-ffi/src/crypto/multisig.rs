@@ -6,7 +6,6 @@ use std::{borrow::Cow, sync::Arc};
 use iota_sdk::crypto::Verifier;
 
 use crate::{
-    crypto::zklogin::ZkloginVerifier,
     error::Result,
     types::{
         crypto::multisig::{MultisigAggregatedSignature, MultisigCommittee},
@@ -26,22 +25,29 @@ impl MultisigVerifier {
         Self(iota_sdk::crypto::multisig::MultisigVerifier::new())
     }
 
-    pub fn with_zklogin_verifier(&self, zklogin_verifier: &ZkloginVerifier) -> Self {
+    pub fn verify(&self, message: &[u8], signature: &MultisigAggregatedSignature) -> Result<()> {
+        Ok(self.0.verify(message, &signature.0)?)
+    }
+}
+
+#[cfg(feature = "zklogin")]
+#[uniffi::export]
+impl MultisigVerifier {
+    pub fn with_zklogin_verifier(
+        &self,
+        zklogin_verifier: &crate::crypto::zklogin::ZkloginVerifier,
+    ) -> Self {
         let mut verifier = self.0.clone();
         verifier.with_zklogin_verifier(zklogin_verifier.0.clone());
         Self(verifier)
     }
 
-    pub fn zklogin_verifier(&self) -> Option<Arc<ZkloginVerifier>> {
+    pub fn zklogin_verifier(&self) -> Option<Arc<crate::crypto::zklogin::ZkloginVerifier>> {
         self.0
             .zklogin_verifier()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
-    }
-
-    pub fn verify(&self, message: &[u8], signature: &MultisigAggregatedSignature) -> Result<()> {
-        Ok(self.0.verify(message, &signature.0)?)
     }
 }
 
@@ -57,22 +63,29 @@ impl UserSignatureVerifier {
         Self(iota_sdk::crypto::multisig::UserSignatureVerifier::new())
     }
 
-    pub fn with_zklogin_verifier(&self, zklogin_verifier: &ZkloginVerifier) -> Self {
+    pub fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
+        Ok(self.0.verify(message, &signature.0)?)
+    }
+}
+
+#[cfg(feature = "zklogin")]
+#[uniffi::export]
+impl UserSignatureVerifier {
+    pub fn with_zklogin_verifier(
+        &self,
+        zklogin_verifier: &crate::crypto::zklogin::ZkloginVerifier,
+    ) -> Self {
         let mut verifier = self.0.clone();
         verifier.with_zklogin_verifier(zklogin_verifier.0.clone());
         Self(verifier)
     }
 
-    pub fn zklogin_verifier(&self) -> Option<Arc<ZkloginVerifier>> {
+    pub fn zklogin_verifier(&self) -> Option<Arc<crate::crypto::zklogin::ZkloginVerifier>> {
         self.0
             .zklogin_verifier()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
-    }
-
-    pub fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        Ok(self.0.verify(message, &signature.0)?)
     }
 }
 

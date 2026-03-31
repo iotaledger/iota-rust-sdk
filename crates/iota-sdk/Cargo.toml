@@ -21,9 +21,7 @@ default = [
   "secp256r1",
   "passkey",
   "secp256k1",
-  "zklogin",
   "pem",
-  "bls12381",
   "bech32",
   "mnemonic",
   "graphql",
@@ -32,8 +30,6 @@ default = [
   "serde",
   "rand",
   "hash",
-  "proptest",
-  "schemars",
 ]
 
 # Crypto
