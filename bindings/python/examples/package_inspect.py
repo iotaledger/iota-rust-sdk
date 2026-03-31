@@ -7,6 +7,9 @@ import asyncio
 import json
 import sys
 
+FRAMEWORK_PACKAGE_ID = Address.framework().to_hex()
+HEX_DIGITS = set("0123456789abcdefABCDEF")
+
 
 def forward_page(cursor=None):
     return PaginationFilter(
@@ -15,8 +18,35 @@ def forward_page(cursor=None):
     )
 
 
+def shorten_package_ids(signature):
+    parts = []
+    index = 0
+
+    while index < len(signature):
+        if signature.startswith("0x", index):
+            end = index + 2
+            while end < len(signature) and signature[end] in HEX_DIGITS:
+                end += 1
+
+            if end > index + 2:
+                candidate = signature[index:end]
+                try:
+                    parts.append(Address.from_hex(candidate).to_short_string(True))
+                    index = end
+                    continue
+                except Exception:
+                    parts.append(candidate)
+                    index = end
+                    continue
+
+        parts.append(signature[index])
+        index += 1
+
+    return "".join(parts)
+
+
 def format_function_signature(signature, package_prefix):
-    return signature.replace(f"{package_prefix}::", "")
+    return shorten_package_ids(signature.replace(f"{package_prefix}::", ""))
 
 
 async def fetch_package_versions(client, package_address):
@@ -103,13 +133,161 @@ async def resolve_upgrade_cap_id(client, package_id):
     return None
 
 
+def same_object_id(left, right):
+    return isinstance(left, str) and left.casefold() == right.casefold()
+
+
+def programmable_transaction_json(tx):
+    tx_v1 = json.loads(transaction_to_json(tx)).get("1")
+    if not isinstance(tx_v1, dict):
+        return None
+
+    kind = tx_v1.get("kind")
+    if not isinstance(kind, dict) or kind.get("kind") != "programmable_transaction":
+        return None
+
+    return kind
+
+
+def is_package_make_immutable_call(command):
+    return (
+        isinstance(command, dict)
+        and command.get("command") == "move_call"
+        and same_object_id(command.get("package"), FRAMEWORK_PACKAGE_ID)
+        and command.get("module") == "package"
+        and command.get("function") == "make_immutable"
+    )
+
+
+def input_matches_object_id(input_, object_id):
+    return (
+        isinstance(input_, dict)
+        and input_.get("type") in {"immutable_or_owned", "receiving", "shared"}
+        and same_object_id(input_.get("object_id"), object_id)
+    )
+
+
+def publishes_package_as_immutable(tx):
+    programmable_tx = programmable_transaction_json(tx)
+    if programmable_tx is None:
+        return False
+
+    commands = programmable_tx.get("commands")
+    if not isinstance(commands, list):
+        return False
+
+    publish_indexes = [
+        index
+        for index, command in enumerate(commands)
+        if isinstance(command, dict) and command.get("command") == "publish"
+    ]
+    if len(publish_indexes) != 1:
+        return False
+
+    publish_index = publish_indexes[0]
+    for command in commands[publish_index + 1 :]:
+        if not is_package_make_immutable_call(command):
+            continue
+
+        arguments = command.get("arguments")
+        if (
+            isinstance(arguments, list)
+            and len(arguments) == 1
+            and arguments[0] == {"result": publish_index}
+        ):
+            return True
+
+    return False
+
+
+def uses_upgrade_cap_for_make_immutable(tx, upgrade_cap_id):
+    programmable_tx = programmable_transaction_json(tx)
+    if programmable_tx is None:
+        return False
+
+    inputs = programmable_tx.get("inputs")
+    commands = programmable_tx.get("commands")
+    if not isinstance(inputs, list) or not isinstance(commands, list):
+        return False
+
+    upgrade_cap_inputs = [
+        index
+        for index, input_ in enumerate(inputs)
+        if input_matches_object_id(input_, upgrade_cap_id.to_hex())
+    ]
+    if len(upgrade_cap_inputs) == 0:
+        return False
+
+    for command in commands:
+        if not is_package_make_immutable_call(command):
+            continue
+
+        arguments = command.get("arguments")
+        if not isinstance(arguments, list) or len(arguments) != 1:
+            continue
+
+        argument = arguments[0]
+        if (
+            isinstance(argument, dict)
+            and isinstance(argument.get("input"), int)
+            and argument["input"] in upgrade_cap_inputs
+        ):
+            return True
+
+    return False
+
+
+async def was_package_published_as_immutable(client, package_id):
+    cursor = None
+
+    while True:
+        page = await client.transactions_data_effects(
+            TransactionsFilter(changed_object=package_id),
+            forward_page(cursor),
+        )
+
+        for tx_data in page.data:
+            if publishes_package_as_immutable(tx_data.tx.transaction):
+                return True
+
+        if page.page_info.has_next_page:
+            cursor = page.page_info.end_cursor
+        else:
+            return False
+
+
+async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
+    cursor = None
+
+    while True:
+        page = await client.transactions_data_effects(
+            TransactionsFilter(input_object=upgrade_cap_id),
+            forward_page(cursor),
+        )
+
+        for tx_data in page.data:
+            if uses_upgrade_cap_for_make_immutable(
+                tx_data.tx.transaction, upgrade_cap_id
+            ):
+                return True
+
+        if page.page_info.has_next_page:
+            cursor = page.page_info.end_cursor
+        else:
+            return False
+
+
 async def current_package_policy(client, package_id):
     upgrade_cap_id = await resolve_upgrade_cap_id(client, package_id)
     if upgrade_cap_id is None:
+        if await was_package_published_as_immutable(client, package_id):
+            return "Immutable"
         return "Unavailable"
 
     contents = await client.move_object_contents(upgrade_cap_id)
     if contents is None:
+        if await was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
+            return "Immutable"
         return "Unavailable"
 
     policy = extract_policy(contents)

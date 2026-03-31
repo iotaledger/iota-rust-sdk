@@ -4,12 +4,57 @@
 import Foundation
 import IotaSDK
 
+private let frameworkPackageId = Address.framework().toHex()
+
 private func forwardPage(cursor: String? = nil) -> PaginationFilter {
   PaginationFilter(direction: .forward, cursor: cursor)
 }
 
+private func isHexDigit(_ character: Character) -> Bool {
+  character.unicodeScalars.allSatisfy { scalar in
+    switch scalar.value {
+    case 48...57, 65...70, 97...102:
+      return true
+    default:
+      return false
+    }
+  }
+}
+
+private func shortenPackageIds(_ signature: String) -> String {
+  var shortened = ""
+  shortened.reserveCapacity(signature.count)
+
+  var index = signature.startIndex
+  while index < signature.endIndex {
+    let nextIndex = signature.index(after: index)
+    if signature[index] == "0", nextIndex < signature.endIndex, signature[nextIndex] == "x" {
+      var end = signature.index(after: nextIndex)
+      while end < signature.endIndex, isHexDigit(signature[end]) {
+        end = signature.index(after: end)
+      }
+
+      if end > signature.index(after: nextIndex) {
+        let candidate = String(signature[index..<end])
+        if let address = try? Address.fromHex(hex: candidate) {
+          shortened += address.toShortString(withPrefix: true)
+        } else {
+          shortened += candidate
+        }
+        index = end
+        continue
+      }
+    }
+
+    shortened.append(signature[index])
+    index = nextIndex
+  }
+
+  return shortened
+}
+
 private func formatFunctionSignature(_ signature: String, packagePrefix: String) -> String {
-  signature.replacingOccurrences(of: "\(packagePrefix)::", with: "")
+  shortenPackageIds(signature.replacingOccurrences(of: "\(packagePrefix)::", with: ""))
 }
 
 private func fetchPackageVersions(client: GraphQlClient, packageAddress: Address) async throws
@@ -131,16 +176,186 @@ private func resolveUpgradeCapId(
   return nil
 }
 
+private func sameObjectId(_ left: String?, _ right: String?) -> Bool {
+  guard let left, let right else {
+    return false
+  }
+
+  return left.caseInsensitiveCompare(right) == .orderedSame
+}
+
+private func programmableTransactionJson(_ tx: Transaction) throws -> [String: Any]? {
+  guard
+    let data = try transactionToJson(data: tx).data(using: .utf8),
+    let rawJson = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+    let txV1 = rawJson["1"] as? [String: Any],
+    let kind = txV1["kind"] as? [String: Any],
+    let kindName = kind["kind"] as? String,
+    kindName == "programmable_transaction"
+  else {
+    return nil
+  }
+
+  return kind
+}
+
+private func isPackageMakeImmutableCall(_ command: [String: Any]) -> Bool {
+  sameObjectId(command["package"] as? String, frameworkPackageId)
+    && command["command"] as? String == "move_call"
+    && command["module"] as? String == "package"
+    && command["function"] as? String == "make_immutable"
+}
+
+private func inputMatchesObjectId(_ input: [String: Any], objectId: String) -> Bool {
+  guard
+    let inputType = input["type"] as? String,
+    ["immutable_or_owned", "receiving", "shared"].contains(inputType)
+  else {
+    return false
+  }
+
+  return sameObjectId(input["object_id"] as? String, objectId)
+}
+
+private func publishesPackageAsImmutable(_ tx: Transaction) throws -> Bool {
+  guard
+    let programmableTx = try programmableTransactionJson(tx),
+    let commands = programmableTx["commands"] as? [[String: Any]]
+  else {
+    return false
+  }
+
+  let publishIndexes = commands.enumerated().compactMap { index, command in
+    command["command"] as? String == "publish" ? index : nil
+  }
+  guard publishIndexes.count == 1, let publishIndex = publishIndexes.first else {
+    return false
+  }
+
+  for command in commands.dropFirst(publishIndex + 1) {
+    guard
+      isPackageMakeImmutableCall(command),
+      let arguments = command["arguments"] as? [Any],
+      arguments.count == 1,
+      let argument = arguments[0] as? [String: Any],
+      let result = argument["result"] as? NSNumber,
+      result.intValue == publishIndex
+    else {
+      continue
+    }
+
+    return true
+  }
+
+  return false
+}
+
+private func usesUpgradeCapForMakeImmutable(
+  _ tx: Transaction,
+  upgradeCapId: ObjectId
+) throws -> Bool {
+  guard
+    let programmableTx = try programmableTransactionJson(tx),
+    let inputs = programmableTx["inputs"] as? [[String: Any]],
+    let commands = programmableTx["commands"] as? [[String: Any]]
+  else {
+    return false
+  }
+
+  let upgradeCapInputs = inputs.enumerated().compactMap { index, input in
+    inputMatchesObjectId(input, objectId: upgradeCapId.toHex()) ? index : nil
+  }
+  guard !upgradeCapInputs.isEmpty else {
+    return false
+  }
+
+  for command in commands {
+    guard
+      isPackageMakeImmutableCall(command),
+      let arguments = command["arguments"] as? [Any],
+      arguments.count == 1,
+      let argument = arguments[0] as? [String: Any],
+      let input = argument["input"] as? NSNumber,
+      upgradeCapInputs.contains(input.intValue)
+    else {
+      continue
+    }
+
+    return true
+  }
+
+  return false
+}
+
+private func wasPackagePublishedAsImmutable(
+  client: GraphQlClient,
+  packageId: ObjectId
+) async throws -> Bool {
+  var cursor: String?
+
+  while true {
+    let page = try await client.transactionsDataEffects(
+      filter: TransactionsFilter(changedObject: packageId),
+      paginationFilter: forwardPage(cursor: cursor)
+    )
+
+    for txData in page.data {
+      if try publishesPackageAsImmutable(txData.tx.transaction) {
+        return true
+      }
+    }
+
+    if !page.pageInfo.hasNextPage {
+      return false
+    }
+
+    cursor = page.pageInfo.endCursor
+  }
+}
+
+private func wasUpgradeCapUsedForMakeImmutable(
+  client: GraphQlClient,
+  upgradeCapId: ObjectId
+) async throws -> Bool {
+  var cursor: String?
+
+  while true {
+    let page = try await client.transactionsDataEffects(
+      filter: TransactionsFilter(inputObject: upgradeCapId),
+      paginationFilter: forwardPage(cursor: cursor)
+    )
+
+    for txData in page.data {
+      if try usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId: upgradeCapId)
+      {
+        return true
+      }
+    }
+
+    if !page.pageInfo.hasNextPage {
+      return false
+    }
+
+    cursor = page.pageInfo.endCursor
+  }
+}
+
 private func currentPackagePolicy(
   client: GraphQlClient,
   packageId: ObjectId
 ) async throws -> String {
   guard let upgradeCapId = try await resolveUpgradeCapId(client: client, packageId: packageId)
   else {
+    if try await wasPackagePublishedAsImmutable(client: client, packageId: packageId) {
+      return "Immutable"
+    }
     return "Unavailable"
   }
 
   guard let contents = try await client.moveObjectContents(objectId: upgradeCapId) else {
+    if try await wasUpgradeCapUsedForMakeImmutable(client: client, upgradeCapId: upgradeCapId) {
+      return "Immutable"
+    }
     return "Unavailable"
   }
 

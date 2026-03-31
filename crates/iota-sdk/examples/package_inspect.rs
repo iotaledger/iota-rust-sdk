@@ -10,7 +10,9 @@ use iota_sdk::{
         query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
         Client,
     },
-    types::{Address, MovePackage, ObjectId, StructTag, UpgradePolicy},
+    types::{
+        Address, Input, MoveCall, MovePackage, ObjectId, StructTag, Transaction, UpgradePolicy,
+    },
 };
 
 fn forward_page(cursor: Option<String>) -> PaginationFilter {
@@ -21,8 +23,38 @@ fn forward_page(cursor: Option<String>) -> PaginationFilter {
     }
 }
 
+fn shorten_package_ids(signature: &str) -> String {
+    let mut shortened = String::with_capacity(signature.len());
+    let bytes = signature.as_bytes();
+    let mut index = 0;
+
+    while index < bytes.len() {
+        if bytes[index] == b'0' && bytes.get(index + 1) == Some(&b'x') {
+            let mut end = index + 2;
+            while bytes.get(end).is_some_and(u8::is_ascii_hexdigit) {
+                end += 1;
+            }
+
+            if end > index + 2 {
+                let candidate = &signature[index..end];
+                match Address::from_hex(candidate) {
+                    Ok(address) => shortened.push_str(&address.to_short_string(true)),
+                    Err(_) => shortened.push_str(candidate),
+                }
+                index = end;
+                continue;
+            }
+        }
+
+        shortened.push(char::from(bytes[index]));
+        index += 1;
+    }
+
+    shortened
+}
+
 fn format_function_signature(signature: &str, package_type_prefix: &str) -> String {
-    signature.replace(&format!("{package_type_prefix}::"), "")
+    shorten_package_ids(&signature.replace(&format!("{package_type_prefix}::"), ""))
 }
 
 async fn fetch_package_versions(
@@ -158,13 +190,185 @@ async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result
     Ok(None)
 }
 
+fn is_package_make_immutable_call(move_call: &MoveCall) -> bool {
+    move_call.package == ObjectId::from(Address::FRAMEWORK)
+        && move_call.module.as_str() == "package"
+        && move_call.function.as_str() == "make_immutable"
+}
+
+fn publishes_package_as_immutable(tx: &Transaction) -> bool {
+    let Some(programmable_tx) = tx
+        .as_v1_opt()
+        .and_then(|tx_v1| tx_v1.kind.as_programmable_transaction_opt())
+    else {
+        return false;
+    };
+
+    let publish_indexes = programmable_tx
+        .commands
+        .iter()
+        .enumerate()
+        .filter_map(|(index, command)| {
+            command
+                .is_publish()
+                .then(|| u16::try_from(index).ok())
+                .flatten()
+        })
+        .collect::<Vec<_>>();
+
+    let [publish_index] = publish_indexes.as_slice() else {
+        return false;
+    };
+
+    programmable_tx
+        .commands
+        .iter()
+        .skip(usize::from(*publish_index) + 1)
+        .any(|command| {
+            command.as_move_call_opt().is_some_and(|move_call| {
+                is_package_make_immutable_call(move_call)
+                    && move_call.arguments.len() == 1
+                    && move_call.arguments[0].as_result_opt() == Some(*publish_index)
+            })
+        })
+}
+
+fn upgrade_cap_input_indexes(tx: &Transaction, upgrade_cap_id: ObjectId) -> Vec<u16> {
+    let Some(programmable_tx) = tx
+        .as_v1_opt()
+        .and_then(|tx_v1| tx_v1.kind.as_programmable_transaction_opt())
+    else {
+        return Vec::new();
+    };
+
+    programmable_tx
+        .inputs
+        .iter()
+        .enumerate()
+        .filter_map(|(index, input)| {
+            let matches_upgrade_cap = match input {
+                Input::ImmutableOrOwned(object_ref) | Input::Receiving(object_ref) => {
+                    object_ref.object_id == upgrade_cap_id
+                }
+                Input::Shared { object_id, .. } => *object_id == upgrade_cap_id,
+                Input::Pure { .. } => false,
+                _ => false,
+            };
+
+            matches_upgrade_cap
+                .then(|| u16::try_from(index).ok())
+                .flatten()
+        })
+        .collect()
+}
+
+fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectId) -> bool {
+    let Some(programmable_tx) = tx
+        .as_v1_opt()
+        .and_then(|tx_v1| tx_v1.kind.as_programmable_transaction_opt())
+    else {
+        return false;
+    };
+
+    let upgrade_cap_inputs = upgrade_cap_input_indexes(tx, upgrade_cap_id);
+    if upgrade_cap_inputs.is_empty() {
+        return false;
+    }
+
+    programmable_tx.commands.iter().any(|command| {
+        command.as_move_call_opt().is_some_and(|move_call| {
+            is_package_make_immutable_call(move_call)
+                && move_call.arguments.len() == 1
+                && move_call.arguments[0]
+                    .as_input_opt()
+                    .is_some_and(|input_index| upgrade_cap_inputs.contains(&input_index))
+        })
+    })
+}
+
+async fn was_package_published_as_immutable(
+    client: &Client,
+    package_id: ObjectId,
+) -> Result<bool> {
+    let mut cursor = None;
+
+    loop {
+        let page = client
+            .transactions_data_effects(
+                TransactionsFilter {
+                    changed_object: Some(package_id),
+                    ..Default::default()
+                },
+                forward_page(cursor.clone()),
+            )
+            .await?;
+
+        if page
+            .data
+            .iter()
+            .any(|tx_data| publishes_package_as_immutable(&tx_data.tx.transaction))
+        {
+            return Ok(true);
+        }
+
+        if page.page_info.has_next_page {
+            cursor = page.page_info.end_cursor;
+        } else {
+            return Ok(false);
+        }
+    }
+}
+
+async fn was_upgrade_cap_used_for_make_immutable(
+    client: &Client,
+    upgrade_cap_id: ObjectId,
+) -> Result<bool> {
+    let mut cursor = None;
+
+    loop {
+        let page = client
+            .transactions_data_effects(
+                TransactionsFilter {
+                    input_object: Some(upgrade_cap_id),
+                    ..Default::default()
+                },
+                forward_page(cursor.clone()),
+            )
+            .await?;
+
+        if page.data.iter().any(|tx_data| {
+            uses_upgrade_cap_for_make_immutable(&tx_data.tx.transaction, upgrade_cap_id)
+        }) {
+            return Ok(true);
+        }
+
+        if page.page_info.has_next_page {
+            cursor = page.page_info.end_cursor;
+        } else {
+            return Ok(false);
+        }
+    }
+}
+
 async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result<String> {
     let Some(upgrade_cap_id) = resolve_upgrade_cap_id(client, package_id).await? else {
-        return Ok("Unavailable".to_owned());
+        return Ok(
+            if was_package_published_as_immutable(client, package_id).await? {
+                "Immutable".to_owned()
+            } else {
+                "Unavailable".to_owned()
+            },
+        );
     };
 
     let Some(contents) = client.move_object_contents(upgrade_cap_id, None).await? else {
-        return Ok("Unavailable".to_owned());
+        return Ok(
+            if was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id).await? {
+                "Immutable".to_owned()
+            } else {
+                "Unavailable".to_owned()
+            },
+        );
     };
 
     Ok(extract_policy_value(&contents)
@@ -311,8 +515,7 @@ async fn main() -> Result<()> {
                         .type_parameters
                         .as_ref()
                         .is_some_and(|parameters| !parameters.is_empty());
-                    print_object_samples(&client, &type_tag, has_key_ability, is_generic)
-                        .await?;
+                    print_object_samples(&client, &type_tag, has_key_ability, is_generic).await?;
                 }
                 if structs.page_info.has_next_page {
                     println!("    - ...");

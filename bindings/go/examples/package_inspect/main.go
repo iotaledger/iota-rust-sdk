@@ -15,6 +15,42 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
+var frameworkPackageID = func() string {
+	return iota_sdk.AddressFramework().ToHex()
+}()
+
+type transactionEnvelopeJSON struct {
+	V1 *transactionV1JSON `json:"1"`
+}
+
+type transactionV1JSON struct {
+	Kind json.RawMessage `json:"kind"`
+}
+
+type programmableTransactionJSON struct {
+	Kind     string            `json:"kind"`
+	Inputs   []json.RawMessage `json:"inputs"`
+	Commands []json.RawMessage `json:"commands"`
+}
+
+type commandJSON struct {
+	Command   string            `json:"command"`
+	Package   string            `json:"package"`
+	Module    string            `json:"module"`
+	Function  string            `json:"function"`
+	Arguments []json.RawMessage `json:"arguments"`
+}
+
+type argumentJSON struct {
+	Input  *uint16 `json:"input"`
+	Result *uint16 `json:"result"`
+}
+
+type inputJSON struct {
+	Type     string `json:"type"`
+	ObjectID string `json:"object_id"`
+}
+
 func stringPtr(value string) *string {
 	return &value
 }
@@ -26,8 +62,44 @@ func forwardPage(cursor *string) *iota_sdk.PaginationFilter {
 	}
 }
 
+func shortenPackageIDs(signature string) string {
+	var shortened strings.Builder
+	shortened.Grow(len(signature))
+
+	for index := 0; index < len(signature); {
+		if signature[index] == '0' && index+1 < len(signature) && signature[index+1] == 'x' {
+			end := index + 2
+			for end < len(signature) {
+				character := signature[end]
+				if (character < '0' || character > '9') &&
+					(character < 'a' || character > 'f') &&
+					(character < 'A' || character > 'F') {
+					break
+				}
+				end++
+			}
+
+			if end > index+2 {
+				candidate := signature[index:end]
+				if address, err := iota_sdk.AddressFromHex(candidate); err == nil {
+					shortened.WriteString(address.ToShortString(true))
+				} else {
+					shortened.WriteString(candidate)
+				}
+				index = end
+				continue
+			}
+		}
+
+		shortened.WriteByte(signature[index])
+		index++
+	}
+
+	return shortened.String()
+}
+
 func formatFunctionSignature(signature string, packagePrefix string) string {
-	return strings.ReplaceAll(signature, packagePrefix+"::", "")
+	return shortenPackageIDs(strings.ReplaceAll(signature, packagePrefix+"::", ""))
 }
 
 func fetchPackageVersions(client *iota_sdk.GraphQlClient, packageAddress *iota_sdk.Address) ([]*iota_sdk.MovePackage, error) {
@@ -170,12 +242,210 @@ func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Obj
 	return nil, nil
 }
 
+func sameObjectID(left string, right string) bool {
+	return strings.EqualFold(left, right)
+}
+
+func programmableTransactionFromTransaction(tx *iota_sdk.Transaction) (*programmableTransactionJSON, error) {
+	jsonString, err := iota_sdk.TransactionToJson(tx)
+	if err != nil {
+		return nil, err
+	}
+
+	var envelope transactionEnvelopeJSON
+	if err := json.Unmarshal([]byte(jsonString), &envelope); err != nil {
+		return nil, err
+	}
+	if envelope.V1 == nil {
+		return nil, nil
+	}
+
+	var programmableTx programmableTransactionJSON
+	if err := json.Unmarshal(envelope.V1.Kind, &programmableTx); err != nil {
+		return nil, err
+	}
+	if programmableTx.Kind != "programmable_transaction" {
+		return nil, nil
+	}
+
+	return &programmableTx, nil
+}
+
+func isPackageMakeImmutableCall(command *commandJSON) bool {
+	return command.Command == "move_call" &&
+		sameObjectID(command.Package, frameworkPackageID) &&
+		command.Module == "package" &&
+		command.Function == "make_immutable"
+}
+
+func inputMatchesObjectID(rawInput json.RawMessage, objectID string) bool {
+	var input inputJSON
+	if err := json.Unmarshal(rawInput, &input); err != nil {
+		return false
+	}
+
+	switch input.Type {
+	case "immutable_or_owned", "receiving", "shared":
+		return sameObjectID(input.ObjectID, objectID)
+	default:
+		return false
+	}
+}
+
+func publishesPackageAsImmutable(tx *iota_sdk.Transaction) (bool, error) {
+	programmableTx, err := programmableTransactionFromTransaction(tx)
+	if err != nil || programmableTx == nil {
+		return false, err
+	}
+
+	var publishIndexes []uint16
+	for index, rawCommand := range programmableTx.Commands {
+		var command commandJSON
+		if err := json.Unmarshal(rawCommand, &command); err != nil {
+			return false, err
+		}
+		if command.Command == "publish" {
+			publishIndexes = append(publishIndexes, uint16(index))
+		}
+	}
+	if len(publishIndexes) != 1 {
+		return false, nil
+	}
+
+	publishIndex := publishIndexes[0]
+	for _, rawCommand := range programmableTx.Commands[int(publishIndex)+1:] {
+		var command commandJSON
+		if err := json.Unmarshal(rawCommand, &command); err != nil {
+			return false, err
+		}
+		if !isPackageMakeImmutableCall(&command) || len(command.Arguments) != 1 {
+			continue
+		}
+
+		var argument argumentJSON
+		if err := json.Unmarshal(command.Arguments[0], &argument); err != nil {
+			continue
+		}
+		if argument.Result != nil && *argument.Result == publishIndex {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+func usesUpgradeCapForMakeImmutable(tx *iota_sdk.Transaction, upgradeCapID *iota_sdk.ObjectId) (bool, error) {
+	programmableTx, err := programmableTransactionFromTransaction(tx)
+	if err != nil || programmableTx == nil {
+		return false, err
+	}
+
+	var upgradeCapInputs []uint16
+	for index, rawInput := range programmableTx.Inputs {
+		if inputMatchesObjectID(rawInput, upgradeCapID.ToHex()) {
+			upgradeCapInputs = append(upgradeCapInputs, uint16(index))
+		}
+	}
+	if len(upgradeCapInputs) == 0 {
+		return false, nil
+	}
+
+	for _, rawCommand := range programmableTx.Commands {
+		var command commandJSON
+		if err := json.Unmarshal(rawCommand, &command); err != nil {
+			return false, err
+		}
+		if !isPackageMakeImmutableCall(&command) || len(command.Arguments) != 1 {
+			continue
+		}
+
+		var argument argumentJSON
+		if err := json.Unmarshal(command.Arguments[0], &argument); err != nil {
+			continue
+		}
+		if argument.Input == nil {
+			continue
+		}
+
+		for _, inputIndex := range upgradeCapInputs {
+			if *argument.Input == inputIndex {
+				return true, nil
+			}
+		}
+	}
+
+	return false, nil
+}
+
+func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (bool, error) {
+	var cursor *string
+
+	for {
+		page, err := client.TransactionsDataEffects(
+			&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+			forwardPage(cursor),
+		)
+		if err != nil {
+			return false, err
+		}
+
+		for _, txData := range page.Data {
+			madeImmutable, err := publishesPackageAsImmutable(txData.Tx.Transaction)
+			if err != nil {
+				return false, err
+			}
+			if madeImmutable {
+				return true, nil
+			}
+		}
+
+		if !page.PageInfo.HasNextPage {
+			return false, nil
+		}
+		cursor = page.PageInfo.EndCursor
+	}
+}
+
+func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCapID *iota_sdk.ObjectId) (bool, error) {
+	var cursor *string
+
+	for {
+		page, err := client.TransactionsDataEffects(
+			&iota_sdk.TransactionsFilter{InputObject: &upgradeCapID},
+			forwardPage(cursor),
+		)
+		if err != nil {
+			return false, err
+		}
+
+		for _, txData := range page.Data {
+			madeImmutable, err := usesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapID)
+			if err != nil {
+				return false, err
+			}
+			if madeImmutable {
+				return true, nil
+			}
+		}
+
+		if !page.PageInfo.HasNextPage {
+			return false, nil
+		}
+		cursor = page.PageInfo.EndCursor
+	}
+}
+
 func currentPackagePolicy(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (string, error) {
 	upgradeCapID, err := resolveUpgradeCapID(client, packageID)
 	if err != nil {
 		return "", err
 	}
 	if upgradeCapID == nil {
+		if immutable, err := wasPackagePublishedAsImmutable(client, packageID); err != nil {
+			return "", err
+		} else if immutable {
+			return "Immutable", nil
+		}
 		return "Unavailable", nil
 	}
 
@@ -184,6 +454,11 @@ func currentPackagePolicy(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Ob
 		return "", err
 	}
 	if contents == nil {
+		if immutable, err := wasUpgradeCapUsedForMakeImmutable(client, upgradeCapID); err != nil {
+			return "", err
+		} else if immutable {
+			return "Immutable", nil
+		}
 		return "Unavailable", nil
 	}
 

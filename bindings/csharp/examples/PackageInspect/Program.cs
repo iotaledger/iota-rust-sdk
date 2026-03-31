@@ -1,16 +1,69 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+using System.Text;
 using System.Text.Json;
 using IotaSdk;
 
 class Program
 {
+    static readonly string FrameworkPackageId = CreateFrameworkPackageId();
+
     static PaginationFilter ForwardPage(string? cursor = null) =>
         new(Direction.Forward, cursor: cursor);
 
+    static string CreateFrameworkPackageId()
+    {
+        using var framework = Address.Framework();
+        return framework.ToHex();
+    }
+
+    static string ShortenPackageIds(string signature)
+    {
+        var shortened = new StringBuilder(signature.Length);
+        var index = 0;
+
+        while (index < signature.Length)
+        {
+            if (
+                index + 2 <= signature.Length
+                && signature[index] == '0'
+                && signature[index + 1] == 'x'
+            )
+            {
+                var end = index + 2;
+                while (end < signature.Length && Uri.IsHexDigit(signature[end]))
+                {
+                    end++;
+                }
+
+                if (end > index + 2)
+                {
+                    var candidate = signature[index..end];
+                    try
+                    {
+                        using var address = Address.FromHex(candidate);
+                        shortened.Append(address.ToShortString(true));
+                    }
+                    catch (SdkFfiException)
+                    {
+                        shortened.Append(candidate);
+                    }
+
+                    index = end;
+                    continue;
+                }
+            }
+
+            shortened.Append(signature[index]);
+            index++;
+        }
+
+        return shortened.ToString();
+    }
+
     static string FormatFunctionSignature(string signature, string packagePrefix) =>
-        signature.Replace($"{packagePrefix}::", string.Empty);
+        ShortenPackageIds(signature.Replace($"{packagePrefix}::", string.Empty));
 
     static async Task<List<MovePackage>> FetchPackageVersions(
         GraphQlClient client,
@@ -150,17 +203,252 @@ class Program
         return null;
     }
 
+    static bool SameObjectId(string? left, string? right) =>
+        left != null
+        && right != null
+        && string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
+
+    static bool TryGetProgrammableTransaction(Transaction tx, out JsonElement programmableTx)
+    {
+        using var json = JsonDocument.Parse(Iota.TransactionToJson(tx));
+        programmableTx = default;
+
+        if (
+            !json.RootElement.TryGetProperty("1", out var txV1)
+            || txV1.ValueKind != JsonValueKind.Object
+            || !txV1.TryGetProperty("kind", out var kind)
+            || kind.ValueKind != JsonValueKind.Object
+            || !kind.TryGetProperty("kind", out var kindName)
+            || kindName.GetString() != "programmable_transaction"
+        )
+        {
+            return false;
+        }
+
+        programmableTx = kind.Clone();
+        return true;
+    }
+
+    static bool IsPackageMakeImmutableCall(JsonElement command) =>
+        command.ValueKind == JsonValueKind.Object
+        && command.TryGetProperty("command", out var commandName)
+        && commandName.GetString() == "move_call"
+        && command.TryGetProperty("package", out var package)
+        && SameObjectId(package.GetString(), FrameworkPackageId)
+        && command.TryGetProperty("module", out var module)
+        && module.GetString() == "package"
+        && command.TryGetProperty("function", out var function)
+        && function.GetString() == "make_immutable";
+
+    static bool InputMatchesObjectId(JsonElement input, string objectId)
+    {
+        if (
+            input.ValueKind != JsonValueKind.Object
+            || !input.TryGetProperty("type", out var type)
+            || !input.TryGetProperty("object_id", out var inputObjectId)
+        )
+        {
+            return false;
+        }
+
+        return type.GetString() switch
+        {
+            "immutable_or_owned" or "receiving" or "shared" => SameObjectId(
+                inputObjectId.GetString(),
+                objectId
+            ),
+            _ => false
+        };
+    }
+
+    static bool PublishesPackageAsImmutable(Transaction tx)
+    {
+        if (
+            !TryGetProgrammableTransaction(tx, out var programmableTx)
+            || !programmableTx.TryGetProperty("commands", out var commandsElement)
+            || commandsElement.ValueKind != JsonValueKind.Array
+        )
+        {
+            return false;
+        }
+
+        var commands = commandsElement.EnumerateArray().ToArray();
+        var publishIndexes = commands
+            .Select((command, index) => new { command, index })
+            .Where(entry =>
+                entry.command.ValueKind == JsonValueKind.Object
+                && entry.command.TryGetProperty("command", out var commandName)
+                && commandName.GetString() == "publish"
+            )
+            .Select(entry => entry.index)
+            .ToArray();
+        if (publishIndexes.Length != 1)
+        {
+            return false;
+        }
+
+        var publishIndex = publishIndexes[0];
+        foreach (var command in commands.Skip(publishIndex + 1))
+        {
+            if (
+                !IsPackageMakeImmutableCall(command)
+                || !command.TryGetProperty("arguments", out var argumentsElement)
+                || argumentsElement.ValueKind != JsonValueKind.Array
+            )
+            {
+                continue;
+            }
+
+            var arguments = argumentsElement.EnumerateArray().ToArray();
+            if (
+                arguments.Length == 1
+                && arguments[0].ValueKind == JsonValueKind.Object
+                && arguments[0].TryGetProperty("result", out var result)
+                && result.TryGetInt32(out var resultIndex)
+                && resultIndex == publishIndex
+            )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static bool UsesUpgradeCapForMakeImmutable(Transaction tx, ObjectId upgradeCapId)
+    {
+        if (
+            !TryGetProgrammableTransaction(tx, out var programmableTx)
+            || !programmableTx.TryGetProperty("inputs", out var inputsElement)
+            || inputsElement.ValueKind != JsonValueKind.Array
+            || !programmableTx.TryGetProperty("commands", out var commandsElement)
+            || commandsElement.ValueKind != JsonValueKind.Array
+        )
+        {
+            return false;
+        }
+
+        var upgradeCapInputs = inputsElement
+            .EnumerateArray()
+            .Select((input, index) => new { input, index })
+            .Where(entry => InputMatchesObjectId(entry.input, upgradeCapId.ToHex()))
+            .Select(entry => entry.index)
+            .ToHashSet();
+        if (upgradeCapInputs.Count == 0)
+        {
+            return false;
+        }
+
+        foreach (var command in commandsElement.EnumerateArray())
+        {
+            if (
+                !IsPackageMakeImmutableCall(command)
+                || !command.TryGetProperty("arguments", out var argumentsElement)
+                || argumentsElement.ValueKind != JsonValueKind.Array
+            )
+            {
+                continue;
+            }
+
+            var arguments = argumentsElement.EnumerateArray().ToArray();
+            if (
+                arguments.Length == 1
+                && arguments[0].ValueKind == JsonValueKind.Object
+                && arguments[0].TryGetProperty("input", out var input)
+                && input.TryGetInt32(out var inputIndex)
+                && upgradeCapInputs.Contains(inputIndex)
+            )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static async Task<bool> WasPackagePublishedAsImmutable(
+        GraphQlClient client,
+        ObjectId packageId
+    )
+    {
+        string? cursor = null;
+
+        while (true)
+        {
+            var page = await client.TransactionsDataEffects(
+                new TransactionsFilter(changedObject: packageId),
+                ForwardPage(cursor)
+            );
+
+            foreach (var txData in page.data)
+            {
+                if (PublishesPackageAsImmutable(txData.tx.transaction))
+                {
+                    return true;
+                }
+            }
+
+            if (!page.pageInfo.hasNextPage)
+            {
+                return false;
+            }
+
+            cursor = page.pageInfo.endCursor;
+        }
+    }
+
+    static async Task<bool> WasUpgradeCapUsedForMakeImmutable(
+        GraphQlClient client,
+        ObjectId upgradeCapId
+    )
+    {
+        string? cursor = null;
+
+        while (true)
+        {
+            var page = await client.TransactionsDataEffects(
+                new TransactionsFilter(inputObject: upgradeCapId),
+                ForwardPage(cursor)
+            );
+
+            foreach (var txData in page.data)
+            {
+                if (UsesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId))
+                {
+                    return true;
+                }
+            }
+
+            if (!page.pageInfo.hasNextPage)
+            {
+                return false;
+            }
+
+            cursor = page.pageInfo.endCursor;
+        }
+    }
+
     static async Task<string> CurrentPackagePolicy(GraphQlClient client, ObjectId packageId)
     {
         var upgradeCapId = await ResolveUpgradeCapId(client, packageId);
         if (upgradeCapId == null)
         {
+            if (await WasPackagePublishedAsImmutable(client, packageId))
+            {
+                return "Immutable";
+            }
+
             return "Unavailable";
         }
 
         var contents = await client.MoveObjectContents(upgradeCapId, null);
         if (contents == null)
         {
+            if (await WasUpgradeCapUsedForMakeImmutable(client, upgradeCapId))
+            {
+                return "Immutable";
+            }
+
             return "Unavailable";
         }
 

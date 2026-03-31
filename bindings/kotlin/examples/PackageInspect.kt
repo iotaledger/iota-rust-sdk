@@ -11,15 +11,59 @@ import iota_sdk.ObjectId
 import iota_sdk.ObjectOut
 import iota_sdk.PaginationFilter
 import iota_sdk.StructTag
+import iota_sdk.Transaction
 import iota_sdk.TransactionsFilter
 import iota_sdk.Value
+import iota_sdk.transactionToJson
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 private fun forwardPage(cursor: String? = null): PaginationFilter =
     PaginationFilter(direction = Direction.FORWARD, cursor = cursor)
 
+private val frameworkPackageId = Address.framework().toHex()
+private val jsonParser = Json { ignoreUnknownKeys = true }
+
+private fun shortenPackageIds(signature: String): String {
+    val shortened = StringBuilder(signature.length)
+    var index = 0
+
+    while (index < signature.length) {
+        if (
+            signature[index] == '0' &&
+                index + 1 < signature.length &&
+                signature[index + 1] == 'x'
+        ) {
+            var end = index + 2
+            while (end < signature.length && signature[end].digitToIntOrNull(16) != null) {
+                end++
+            }
+
+            if (end > index + 2) {
+                val candidate = signature.substring(index, end)
+                val shortAddress =
+                    runCatching { Address.fromHex(candidate).toShortString(true) }.getOrNull()
+                shortened.append(shortAddress ?: candidate)
+                index = end
+                continue
+            }
+        }
+
+        shortened.append(signature[index])
+        index++
+    }
+
+    return shortened.toString()
+}
+
 private fun formatFunctionSignature(signature: String, packagePrefix: String): String =
-    signature.replace("$packagePrefix::", "")
+    shortenPackageIds(signature.replace("$packagePrefix::", ""))
 
 private suspend fun fetchPackageVersions(
     client: GraphQlClient,
@@ -116,9 +160,161 @@ private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: Object
     return null
 }
 
+private fun sameObjectId(left: String?, right: String?): Boolean =
+    left != null && right != null && left.equals(right, ignoreCase = true)
+
+private fun programmableTransactionJson(tx: Transaction): JsonObject? {
+    val root = jsonParser.parseToJsonElement(transactionToJson(tx)).jsonObject
+    val txV1 = root["1"]?.jsonObject ?: return null
+    val kind = txV1["kind"]?.jsonObject ?: return null
+    return kind.takeIf { it["kind"]?.jsonPrimitive?.contentOrNull == "programmable_transaction" }
+}
+
+private fun isPackageMakeImmutableCall(command: JsonObject): Boolean =
+    command["command"]?.jsonPrimitive?.contentOrNull == "move_call" &&
+        sameObjectId(command["package"]?.jsonPrimitive?.contentOrNull, frameworkPackageId) &&
+        command["module"]?.jsonPrimitive?.contentOrNull == "package" &&
+        command["function"]?.jsonPrimitive?.contentOrNull == "make_immutable"
+
+private fun inputMatchesObjectId(input: JsonObject, objectId: String): Boolean =
+    input["type"]?.jsonPrimitive?.contentOrNull in
+        setOf("immutable_or_owned", "receiving", "shared") &&
+        sameObjectId(input["object_id"]?.jsonPrimitive?.contentOrNull, objectId)
+
+private fun publishesPackageAsImmutable(tx: Transaction): Boolean {
+    val programmableTx = programmableTransactionJson(tx) ?: return false
+    val commands = programmableTx["commands"] as? JsonArray ?: return false
+
+    val publishIndexes =
+        commands.mapIndexedNotNull { index, command ->
+            val commandObject = command as? JsonObject ?: return@mapIndexedNotNull null
+            if (commandObject["command"]?.jsonPrimitive?.contentOrNull == "publish") {
+                index
+            } else {
+                null
+            }
+        }
+    if (publishIndexes.size != 1) {
+        return false
+    }
+
+    val publishIndex = publishIndexes.single()
+    for (command in commands.drop(publishIndex + 1)) {
+        val commandObject = command as? JsonObject ?: continue
+        val arguments = commandObject["arguments"] as? JsonArray ?: continue
+        if (!isPackageMakeImmutableCall(commandObject) || arguments.size != 1) {
+            continue
+        }
+
+        val argument = arguments.first() as? JsonObject ?: continue
+        if (argument["result"]?.jsonPrimitive?.intOrNull == publishIndex) {
+            return true
+        }
+    }
+
+    return false
+}
+
+private fun usesUpgradeCapForMakeImmutable(tx: Transaction, upgradeCapId: ObjectId): Boolean {
+    val programmableTx = programmableTransactionJson(tx) ?: return false
+    val inputs = programmableTx["inputs"] as? JsonArray ?: return false
+    val commands = programmableTx["commands"] as? JsonArray ?: return false
+
+    val upgradeCapInputs =
+        inputs.mapIndexedNotNull { index, input ->
+            val inputObject = input as? JsonObject ?: return@mapIndexedNotNull null
+            if (inputMatchesObjectId(inputObject, upgradeCapId.toHex())) {
+                index
+            } else {
+                null
+            }
+        }
+    if (upgradeCapInputs.isEmpty()) {
+        return false
+    }
+
+    for (command in commands) {
+        val commandObject = command as? JsonObject ?: continue
+        val arguments = commandObject["arguments"] as? JsonArray ?: continue
+        if (!isPackageMakeImmutableCall(commandObject) || arguments.size != 1) {
+            continue
+        }
+
+        val argument = arguments.first() as? JsonObject ?: continue
+        val inputIndex = argument["input"]?.jsonPrimitive?.intOrNull ?: continue
+        if (inputIndex in upgradeCapInputs) {
+            return true
+        }
+    }
+
+    return false
+}
+
+private suspend fun wasPackagePublishedAsImmutable(
+    client: GraphQlClient,
+    packageId: ObjectId,
+): Boolean {
+    var cursor: String? = null
+
+    while (true) {
+        val page =
+            client.transactionsDataEffects(
+                TransactionsFilter(changedObject = packageId),
+                forwardPage(cursor),
+            )
+
+        for (txData in page.data) {
+            if (publishesPackageAsImmutable(txData.tx.transaction)) {
+                return true
+            }
+        }
+
+        if (!page.pageInfo.hasNextPage) {
+            return false
+        }
+
+        cursor = page.pageInfo.endCursor
+    }
+}
+
+private suspend fun wasUpgradeCapUsedForMakeImmutable(
+    client: GraphQlClient,
+    upgradeCapId: ObjectId,
+): Boolean {
+    var cursor: String? = null
+
+    while (true) {
+        val page =
+            client.transactionsDataEffects(
+                TransactionsFilter(inputObject = upgradeCapId),
+                forwardPage(cursor),
+            )
+
+        for (txData in page.data) {
+            if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId)) {
+                return true
+            }
+        }
+
+        if (!page.pageInfo.hasNextPage) {
+            return false
+        }
+
+        cursor = page.pageInfo.endCursor
+    }
+}
+
 private suspend fun currentPackagePolicy(client: GraphQlClient, packageId: ObjectId): String {
-    val upgradeCapId = resolveUpgradeCapId(client, packageId) ?: return "Unavailable"
-    val contents = client.moveObjectContents(upgradeCapId, null) ?: return "Unavailable"
+    val upgradeCapId = resolveUpgradeCapId(client, packageId)
+    if (upgradeCapId == null) {
+        return if (wasPackagePublishedAsImmutable(client, packageId)) "Immutable" else "Unavailable"
+    }
+
+    val contents = client.moveObjectContents(upgradeCapId, null)
+    if (contents == null) {
+        return if (wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId)) "Immutable" else "Unavailable"
+    }
+
     val policy = extractPolicy(contents) ?: return "Unavailable"
     return formatPolicyName(policy)
 }
