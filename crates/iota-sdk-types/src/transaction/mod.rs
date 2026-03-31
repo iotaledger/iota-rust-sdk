@@ -236,6 +236,37 @@ impl TransactionKind {
     }
 }
 
+impl core::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        // let mut writer = String::new();
+        match &self {
+            Self::ProgrammableTransaction(p) => {
+                writeln!(f, "Transaction Kind : Programmable")?;
+                write!(f, "{p}")
+            }
+            Self::Genesis(_) => writeln!(f, "Transaction Kind : Genesis"),
+            Self::ConsensusCommitPrologueV1(p) => {
+                writeln!(f, "Transaction Kind : Consensus Commit Prologue V1")?;
+                writeln!(f, "Timestamp : {}", p.commit_timestamp_ms)?;
+                writeln!(f, "Consensus Digest: {}", p.consensus_commit_digest)?;
+                writeln!(
+                    f,
+                    "Consensus determined version assignment: {:?}",
+                    p.consensus_determined_version_assignments
+                )
+            }
+            Self::AuthenticatorStateUpdateV1(_) => {
+                writeln!(f, "Transaction Kind : Authenticator State Update")
+            }
+            Self::EndOfEpoch(_) => writeln!(f, "Transaction Kind : End of Epoch Transaction"),
+            Self::RandomnessStateUpdate(_) => {
+                writeln!(f, "Transaction Kind : Randomness State Update")
+            }
+        }
+        // write!(f, "{writer}")
+    }
+}
+
 /// Operation run at the end of an epoch
 ///
 /// # BCS
@@ -1120,6 +1151,17 @@ pub struct ProgrammableTransaction {
     pub commands: Vec<Command>,
 }
 
+impl core::fmt::Display for ProgrammableTransaction {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let ProgrammableTransaction { inputs, commands } = self;
+        writeln!(f, "Inputs: {inputs:?}")?;
+        writeln!(f, "Commands: [")?;
+        for c in commands {
+            writeln!(f, "  {c},")?;
+        }
+        writeln!(f, "]")
+    }
+}
 /// An input to a user transaction
 ///
 /// # BCS
