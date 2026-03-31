@@ -197,10 +197,10 @@ execution-error = %x00   ; InsufficientGas
                 / %x1f   ; SharedObjectOperationNotAllowed
                 / %x20   ; InputObjectDeleted
                 / %x21 (vector object-id)   ; ExecutionCancelledDueToSharedObjectCongestion
-                / %x22 (vector object-id) u64   ; ExecutionCancelledDueToSharedObjectCongestionV2
-                / %x23 address string   ; AddressDeniedForCoin
-                / %x24 string   ; CoinTypeGlobalPause
-                / %x25   ; ExecutionCancelledDueToRandomnessUnavailable
+                / %x22 address string   ; AddressDeniedForCoin
+                / %x23 string   ; CoinTypeGlobalPause
+                / %x24   ; ExecutionCancelledDueToRandomnessUnavailable
+                / %x25 (vector object-id) u64   ; ExecutionCancelledDueToSharedObjectCongestionV2
                 / %x26   ; InvalidLinkage
 
 execution-status = %x00   ; Success

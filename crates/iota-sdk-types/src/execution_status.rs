@@ -150,7 +150,6 @@ impl ExecutionStatus {
     schemars(tag = "error", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ExecutionError {
     /// Insufficient Gas
@@ -750,6 +749,8 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "execution-error"))]
     enum BinaryExecutionError {
         InsufficientGas,
         InvalidGasObject,
@@ -832,6 +833,16 @@ mod serialization {
             suggested_gas_price: u64,
         },
         InvalidLinkage,
+    }
+
+    #[cfg(feature = "bcs-schema")]
+    impl iota_bcs_schema::BcsSchema for ExecutionError {
+        fn schema_name() -> &'static str {
+            <BinaryExecutionError as iota_bcs_schema::BcsSchema>::schema_name()
+        }
+        fn schema_definition() -> &'static str {
+            <BinaryExecutionError as iota_bcs_schema::BcsSchema>::schema_definition()
+        }
     }
 
     impl Serialize for ExecutionError {
