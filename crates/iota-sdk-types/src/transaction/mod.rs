@@ -205,7 +205,7 @@ pub struct RandomnessStateUpdate {
 #[non_exhaustive]
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
-    ProgrammableTransaction(ProgrammableTransaction),
+    Programmable(ProgrammableTransaction),
     /// Transaction used to initialize the chain state.
     ///
     /// Only valid if in the genesis checkpoint (0) and if this is the very
@@ -224,20 +224,20 @@ pub enum TransactionKind {
 
 impl TransactionKind {
     crate::def_is_as_into_opt! {
-        ProgrammableTransaction,
         ConsensusCommitPrologueV1,
         AuthenticatorStateUpdateV1,
         RandomnessStateUpdate,
     }
 
     crate::def_is_as_into_opt! {
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     }
 
     /// Create a [`TransactionKind::ProgrammableTransaction`].
-    pub fn new_programmable_transaction(tx: ProgrammableTransaction) -> Self {
-        Self::ProgrammableTransaction(tx)
+    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
+        Self::Programmable(tx)
     }
 
     /// Create a [`TransactionKind::Genesis`].
@@ -264,13 +264,29 @@ impl TransactionKind {
     pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
         Self::RandomnessStateUpdate(tx)
     }
+
+    /// Returns the number of commands, or 0 if it is a system transaction.
+    pub fn num_commands(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 0,
+        }
+    }
+
+    /// Returns the number of transactions, or 1 if it is a system transaction.
+    pub fn num_transactions(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 1,
+        }
+    }
 }
 
 impl core::fmt::Display for TransactionKind {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         // let mut writer = String::new();
         match &self {
-            Self::ProgrammableTransaction(p) => {
+            Self::Programmable(p) => {
                 writeln!(f, "Transaction Kind : Programmable")?;
                 write!(f, "{p}")
             }

@@ -26247,9 +26247,9 @@ public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
     /**
      * Create a [`TransactionKind`] for a programmable transaction.
      */
-public static func newProgrammableTransaction(tx: ProgrammableTransaction) -> TransactionKind  {
+public static func newProgrammable(tx: ProgrammableTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
-    uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(
         FfiConverterTypeProgrammableTransaction_lower(tx),$0
     )
 })
@@ -54343,7 +54343,7 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 28717) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257) {

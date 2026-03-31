@@ -13669,11 +13669,11 @@ func uniffiCheckChecksums() {
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable()
 	})
-	if checksum != 28717 {
+	if checksum != 7296 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable: UniFFI API checksum mismatch")
 	}
 	}
 	{
@@ -36509,9 +36509,9 @@ func TransactionKindNewGenesis(tx *GenesisTransaction) *TransactionKind {
 }
 
 // Create a [`TransactionKind`] for a programmable transaction.
-func TransactionKindNewProgrammableTransaction(tx *ProgrammableTransaction) *TransactionKind {
+func TransactionKindNewProgrammable(tx *ProgrammableTransaction) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(FfiConverterProgrammableTransactionINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(FfiConverterProgrammableTransactionINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 

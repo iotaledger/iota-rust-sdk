@@ -224,8 +224,10 @@ pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 impl TransactionKind {
     /// Create a [`TransactionKind`] for a programmable transaction.
     #[uniffi::constructor]
-    pub fn new_programmable_transaction(tx: &ProgrammableTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_programmable_transaction(tx.0.clone()))
+    pub fn new_programmable(tx: &ProgrammableTransaction) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_programmable(
+            tx.0.clone(),
+        ))
     }
 
     /// Create a [`TransactionKind`] for a genesis transaction.

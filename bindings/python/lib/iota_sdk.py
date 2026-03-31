@@ -3413,7 +3413,7 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 28717:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -10676,11 +10676,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -18865,9 +18865,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_e
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_uint16
@@ -56444,7 +56444,7 @@ class TransactionKind():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_programmable_transaction(cls, tx: "ProgrammableTransaction"):
+    def new_programmable(cls, tx: "ProgrammableTransaction"):
         """
         Create a [`TransactionKind`] for a programmable transaction.
         """
@@ -56452,7 +56452,7 @@ class TransactionKind():
         _UniffiConverterTypeProgrammableTransaction.check_lower(tx)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable,
         _UniffiConverterTypeProgrammableTransaction.lower(tx))
         return cls._make_instance_(pointer)
 

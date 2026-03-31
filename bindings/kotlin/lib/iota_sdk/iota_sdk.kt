@@ -7276,7 +7276,7 @@ fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis(
 ): Short
-fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction(
+fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable(
 ): Short
 fun uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update(
 ): Short
@@ -10149,7 +10149,7 @@ fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(`tx`: Ru
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
-fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
+fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(`tx`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(`tx`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
@@ -16082,7 +16082,7 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 28717.toShort()) {
+    if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257.toShort()) {
@@ -55658,10 +55658,10 @@ open class TransactionKind: Disposable, AutoCloseable, TransactionKindInterface
         
     /**
      * Create a [`TransactionKind`] for a programmable transaction.
-     */ fun `newProgrammableTransaction`(`tx`: ProgrammableTransaction): TransactionKind {
+     */ fun `newProgrammable`(`tx`: ProgrammableTransaction): TransactionKind {
             return FfiConverterTypeTransactionKind.lift(
     uniffiRustCall() { _status ->
-    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
+    UniffiLibBatch2.INSTANCE.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(
         FfiConverterTypeProgrammableTransaction.lower(`tx`),_status)
 }
     )
