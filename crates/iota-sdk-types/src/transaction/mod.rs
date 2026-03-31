@@ -265,6 +265,18 @@ impl TransactionKind {
         Self::RandomnessStateUpdate(tx)
     }
 
+    /// Returns `true` if this is a system transaction.
+    pub fn is_system(&self) -> bool {
+        match self {
+            TransactionKind::Genesis(_)
+            | TransactionKind::ConsensusCommitPrologueV1(_)
+            | TransactionKind::AuthenticatorStateUpdateV1(_)
+            | TransactionKind::RandomnessStateUpdate(_)
+            | TransactionKind::EndOfEpoch(_) => true,
+            TransactionKind::Programmable(_) => false,
+        }
+    }
+
     /// Returns the number of commands, or 0 if it is a system transaction.
     pub fn num_commands(&self) -> usize {
         match self {
