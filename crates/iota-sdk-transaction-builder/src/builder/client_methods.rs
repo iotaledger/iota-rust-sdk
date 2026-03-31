@@ -232,7 +232,6 @@ impl ClientMethods for iota_graphql_client::Client {
         tx: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        // Forward to the inherent method on Client
         (*self).dry_run_tx(tx, skip_checks).await
     }
 
