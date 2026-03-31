@@ -26200,6 +26200,9 @@ open class TransactionKind: TransactionKindProtocol, @unchecked Sendable {
     }
 
     
+    /**
+     * Create a [`TransactionKind`] for an authenticator state update v1.
+     */
 public static func newAuthenticatorStateUpdateV1(tx: AuthenticatorStateUpdateV1) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_authenticator_state_update_v1(
@@ -26208,6 +26211,9 @@ public static func newAuthenticatorStateUpdateV1(tx: AuthenticatorStateUpdateV1)
 })
 }
     
+    /**
+     * Create a [`TransactionKind`] for a consensus commit prologue v1.
+     */
 public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(
@@ -26216,6 +26222,9 @@ public static func newConsensusCommitPrologueV1(tx: ConsensusCommitPrologueV1) -
 })
 }
     
+    /**
+     * Create a [`TransactionKind`] for an end of epoch transaction.
+     */
 public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(
@@ -26224,6 +26233,9 @@ public static func newEndOfEpoch(tx: [EndOfEpochTransactionKind]) -> Transaction
 })
 }
     
+    /**
+     * Create a [`TransactionKind`] for a genesis transaction.
+     */
 public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(
@@ -26232,6 +26244,9 @@ public static func newGenesis(tx: GenesisTransaction) -> TransactionKind  {
 })
 }
     
+    /**
+     * Create a [`TransactionKind`] for a programmable transaction.
+     */
 public static func newProgrammableTransaction(tx: ProgrammableTransaction) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(
@@ -26240,6 +26255,9 @@ public static func newProgrammableTransaction(tx: ProgrammableTransaction) -> Tr
 })
 }
     
+    /**
+     * Create a [`TransactionKind`] for a randomness state update.
+     */
 public static func newRandomnessStateUpdate(tx: RandomnessStateUpdate) -> TransactionKind  {
     return try!  FfiConverterTypeTransactionKind_lift(try! rustCall() {
     uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(
@@ -54313,22 +54331,22 @@ private let initializationResult: InitializationResult = {
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionevents_new() != 1310) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() != 29264) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_authenticator_state_update_v1() != 28570) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 53312) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 44556) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 52798) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 45541) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 9153) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 28717) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051) {
+    if (uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863) {
