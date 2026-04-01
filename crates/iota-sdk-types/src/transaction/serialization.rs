@@ -17,6 +17,7 @@ mod transaction_kind {
 
     #[derive(serde::Serialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "TransactionKind")]
     enum ReadableTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
@@ -57,6 +58,7 @@ mod transaction_kind {
     }
 
     #[derive(serde::Serialize)]
+    #[serde(rename = "TransactionKind")]
     enum BinaryTransactionKindRef<'a> {
         ProgrammableTransaction(&'a ProgrammableTransaction),
         Genesis(&'a GenesisTransaction),
@@ -66,6 +68,7 @@ mod transaction_kind {
         RandomnessStateUpdate(&'a RandomnessStateUpdate),
     }
     #[derive(serde::Deserialize)]
+    #[serde(rename = "TransactionKind")]
     enum BinaryTransactionKind {
         ProgrammableTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
