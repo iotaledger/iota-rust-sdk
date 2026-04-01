@@ -235,7 +235,7 @@ impl TransactionKind {
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     }
 
-    /// Create a [`TransactionKind::ProgrammableTransaction`].
+    /// Create a [`TransactionKind::Programmable`].
     pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
         Self::Programmable(tx)
     }
