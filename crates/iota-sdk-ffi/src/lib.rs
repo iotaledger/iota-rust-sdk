@@ -11,6 +11,7 @@ use base64ct::Encoding;
 
 mod macros;
 
+#[cfg(feature = "crypto")]
 pub mod crypto;
 pub mod error;
 pub mod graphql;
