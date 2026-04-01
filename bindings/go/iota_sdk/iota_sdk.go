@@ -12645,7 +12645,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1()
 	})
-	if checksum != 27756 {
+	if checksum != 53312 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1: UniFFI API checksum mismatch")
 	}
@@ -12654,7 +12654,7 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch()
 	})
-	if checksum != 44556 {
+	if checksum != 48667 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch: UniFFI API checksum mismatch")
 	}
@@ -12663,25 +12663,25 @@ func uniffiCheckChecksums() {
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis()
 	})
-	if checksum != 45541 {
+	if checksum != 50492 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
-		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction()
+		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable()
 	})
-	if checksum != 9153 {
+	if checksum != 7296 {
 		// If this happens try cleaning and rebuilding your project
-		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction: UniFFI API checksum mismatch")
+		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable: UniFFI API checksum mismatch")
 	}
 	}
 	{
 	checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 		return C.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update()
 	})
-	if checksum != 37051 {
+	if checksum != 13257 {
 		// If this happens try cleaning and rebuilding your project
 		panic("iota_sdk_ffi: uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update: UniFFI API checksum mismatch")
 	}
@@ -29093,6 +29093,19 @@ func (_self *ProgrammableTransaction) DebugString() string {
 
 
 
+func (_self *ProgrammableTransaction) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*ProgrammableTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
 func (_self *ProgrammableTransaction) Eq(other *ProgrammableTransaction) bool {
 	_pointer := _self.ffiObject.incrementPointer("*ProgrammableTransaction")
 	defer _self.ffiObject.decrementPointer()
@@ -29108,6 +29121,17 @@ func (_self *ProgrammableTransaction) Ne(other *ProgrammableTransaction) bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne(
 		_pointer,FfiConverterProgrammableTransactionINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *ProgrammableTransaction) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*ProgrammableTransaction")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
 	}))
 }
 
@@ -34570,30 +34594,35 @@ type TransactionKind struct {
 }
 
 
+// Create a [`TransactionKind`] for a consensus commit prologue v1.
 func TransactionKindNewConsensusCommitPrologueV1(tx *ConsensusCommitPrologueV1) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_consensus_commit_prologue_v1(FfiConverterConsensusCommitPrologueV1INSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
+// Create a [`TransactionKind`] for an authenticator state update v1.
 func TransactionKindNewEndOfEpoch(tx []*EndOfEpochTransactionKind) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_end_of_epoch(FfiConverterSequenceEndOfEpochTransactionKindINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
+// Create a [`TransactionKind`] for a genesis transaction.
 func TransactionKindNewGenesis(tx *GenesisTransaction) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis(FfiConverterGenesisTransactionINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
-func TransactionKindNewProgrammableTransaction(tx *ProgrammableTransaction) *TransactionKind {
+// Create a [`TransactionKind`] for a programmable transaction.
+func TransactionKindNewProgrammable(tx *ProgrammableTransaction) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
-		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction(FfiConverterProgrammableTransactionINSTANCE.Lower(tx),_uniffiStatus)
+		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable(FfiConverterProgrammableTransactionINSTANCE.Lower(tx),_uniffiStatus)
 	}))
 }
 
+// Create a [`TransactionKind`] for a randomness state update.
 func TransactionKindNewRandomnessStateUpdate(tx RandomnessStateUpdate) *TransactionKind {
 	return FfiConverterTransactionKindINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update(FfiConverterRandomnessStateUpdateINSTANCE.Lower(tx),_uniffiStatus)
@@ -34608,6 +34637,19 @@ func (_self *TransactionKind) DebugString() string {
 	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
 		return GoRustBuffer {
 		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug(
+		_pointer,_uniffiStatus),
+	}
+	}))
+}
+
+
+
+func (_self *TransactionKind) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer {
+		inner: C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display(
 		_pointer,_uniffiStatus),
 	}
 	}))
@@ -34630,6 +34672,17 @@ func (_self *TransactionKind) Ne(other *TransactionKind) bool {
 	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
 		return C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne(
 		_pointer,FfiConverterTransactionKindINSTANCE.Lower(other),_uniffiStatus)
+	}))
+}
+
+
+
+func (_self *TransactionKind) Hash() uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*TransactionKind")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash(
+		_pointer,_uniffiStatus)
 	}))
 }
 
