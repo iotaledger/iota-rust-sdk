@@ -181,13 +181,13 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum TransactionKind {
     /// A user transaction comprised of a list of native commands and move calls
-    ProgrammableTransaction(ProgrammableTransaction),
+    Programmable(ProgrammableTransaction),
     /// Transaction used to initialize the chain state.
     ///
     /// Only valid if in the genesis checkpoint (0) and if this is the very
@@ -206,14 +206,99 @@ pub enum TransactionKind {
 
 impl TransactionKind {
     crate::def_is_as_into_opt! {
-        ProgrammableTransaction,
         ConsensusCommitPrologueV1,
         RandomnessStateUpdate,
     }
 
     crate::def_is_as_into_opt! {
+        Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+    }
+
+    /// Create a [`TransactionKind::Programmable`].
+    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
+        Self::Programmable(tx)
+    }
+
+    /// Create a [`TransactionKind::Genesis`].
+    pub fn new_genesis(tx: GenesisTransaction) -> Self {
+        Self::Genesis(tx)
+    }
+
+    /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
+    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(tx)
+    }
+
+    /// Create a [`TransactionKind::EndOfEpoch`].
+    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(tx)
+    }
+
+    /// Create a [`TransactionKind::RandomnessStateUpdate`].
+    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(tx)
+    }
+
+    /// Returns `true` if this is a system transaction.
+    pub fn is_system(&self) -> bool {
+        match self {
+            TransactionKind::Genesis(_)
+            | TransactionKind::ConsensusCommitPrologueV1(_)
+            | TransactionKind::AuthenticatorStateUpdateV1Deprecated
+            | TransactionKind::RandomnessStateUpdate(_)
+            | TransactionKind::EndOfEpoch(_) => true,
+            TransactionKind::Programmable(_) => false,
+        }
+    }
+
+    /// Returns the number of commands, or 0 if it is a system transaction.
+    pub fn num_commands(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 0,
+        }
+    }
+
+    /// Returns the number of transactions, or 1 if it is a system transaction.
+    pub fn num_transactions(&self) -> usize {
+        match self {
+            TransactionKind::Programmable(pt) => pt.commands.len(),
+            _ => 1,
+        }
+    }
+}
+
+impl core::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match &self {
+            Self::Programmable(p) => {
+                writeln!(f, "Transaction Kind : Programmable")?;
+                write!(f, "{p}")
+            }
+            Self::Genesis(_) => writeln!(f, "Transaction Kind : Genesis"),
+            Self::ConsensusCommitPrologueV1(p) => {
+                writeln!(f, "Transaction Kind : Consensus Commit Prologue V1")?;
+                writeln!(f, "Timestamp : {}", p.commit_timestamp_ms)?;
+                writeln!(f, "Consensus Digest: {}", p.consensus_commit_digest)?;
+                writeln!(
+                    f,
+                    "Consensus determined version assignment: {:?}",
+                    p.consensus_determined_version_assignments
+                )
+            }
+            Self::AuthenticatorStateUpdateV1Deprecated => {
+                writeln!(
+                    f,
+                    "Transaction Kind : Authenticator State Update (Deprecated)"
+                )
+            }
+            Self::EndOfEpoch(_) => writeln!(f, "Transaction Kind : End of Epoch Transaction"),
+            Self::RandomnessStateUpdate(_) => {
+                writeln!(f, "Transaction Kind : Randomness State Update")
+            }
+        }
     }
 }
 
@@ -746,6 +831,17 @@ pub struct ProgrammableTransaction {
     pub commands: Vec<Command>,
 }
 
+impl core::fmt::Display for ProgrammableTransaction {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let ProgrammableTransaction { inputs, commands } = self;
+        writeln!(f, "Inputs: {inputs:?}")?;
+        writeln!(f, "Commands: [")?;
+        for c in commands {
+            writeln!(f, "  {c},")?;
+        }
+        writeln!(f, "]")
+    }
+}
 /// An input to a user transaction
 ///
 /// # BCS

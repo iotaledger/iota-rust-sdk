@@ -866,7 +866,7 @@ impl<L> TransactionBuilder<(), L> {
             .map(|c| c.resolve(&input_map))
             .collect();
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
                 inputs,
                 commands,
             }),
@@ -1108,7 +1108,7 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
-            kind: iota_types::TransactionKind::ProgrammableTransaction(ProgrammableTransaction {
+            kind: iota_types::TransactionKind::Programmable(ProgrammableTransaction {
                 inputs,
                 commands,
             }),

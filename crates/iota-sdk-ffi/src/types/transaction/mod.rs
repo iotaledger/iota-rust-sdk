@@ -212,43 +212,44 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::Display, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 
 #[uniffi::export]
 impl TransactionKind {
+    /// Create a [`TransactionKind`] for a programmable transaction.
     #[uniffi::constructor]
-    pub fn new_programmable_transaction(tx: &ProgrammableTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::ProgrammableTransaction(
+    pub fn new_programmable(tx: &ProgrammableTransaction) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_programmable(
             tx.0.clone(),
         ))
     }
 
+    /// Create a [`TransactionKind`] for a genesis transaction.
     #[uniffi::constructor]
     pub fn new_genesis(tx: &GenesisTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::Genesis(tx.0.clone()))
+        Self(iota_sdk::types::TransactionKind::new_genesis(tx.0.clone()))
     }
 
+    /// Create a [`TransactionKind`] for a consensus commit prologue v1.
     #[uniffi::constructor]
     pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
-        Self(iota_sdk::types::TransactionKind::ConsensusCommitPrologueV1(
-            tx.0.clone(),
-        ))
+        Self(iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(tx.0.clone()))
     }
 
+    /// Create a [`TransactionKind`] for an authenticator state update v1.
     #[uniffi::constructor]
     pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
-        Self(iota_sdk::types::TransactionKind::EndOfEpoch(
+        Self(iota_sdk::types::TransactionKind::new_end_of_epoch(
             tx.into_iter().map(|tx| tx.0.clone()).collect(),
         ))
     }
 
+    /// Create a [`TransactionKind`] for a randomness state update.
     #[uniffi::constructor]
     pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::RandomnessStateUpdate(
-            tx.into(),
-        ))
+        Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))
     }
 }
 
@@ -264,8 +265,8 @@ impl TransactionKind {
 /// ```text
 /// ptb = (vector input) (vector command)
 /// ```
-#[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
-#[uniffi::export(Debug, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash, derive_more::Display, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct ProgrammableTransaction(pub iota_sdk::types::ProgrammableTransaction);
 
 #[uniffi::export]

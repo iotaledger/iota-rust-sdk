@@ -3173,13 +3173,13 @@ def _uniffi_check_api_checksums(lib):
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_consensus_commit_prologue_v1() != 27756:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 44556:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_epoch() != 52798:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 45541:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis() != 50492:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction() != 9153:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable() != 7296:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
-    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 37051:
+    if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update() != 13257:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     if lib.uniffi_iota_sdk_ffi_checksum_constructor_transactionsigner_from_ed25519() != 15863:
         raise InternalError("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
@@ -8166,6 +8166,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_de
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_eq.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -8178,6 +8183,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_publish.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10137,11 +10147,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis.argtyp
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_genesis.restype = ctypes.c_void_p
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
 )
-_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction.restype = ctypes.c_void_p
+_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable.restype = ctypes.c_void_p
 _UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_randomness_state_update.argtypes = (
     _UniffiRustBuffer,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -10152,6 +10162,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug.restype = _UniffiRustBuffer
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display.restype = _UniffiRustBuffer
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_eq.argtypes = (
     ctypes.c_void_p,
     ctypes.c_void_p,
@@ -10164,6 +10179,11 @@ _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne.argt
     ctypes.POINTER(_UniffiRustCallStatus),
 )
 _UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne.restype = ctypes.c_int8
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash.argtypes = (
+    ctypes.c_void_p,
+    ctypes.POINTER(_UniffiRustCallStatus),
+)
+_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash.restype = ctypes.c_uint64
 _UniffiLib.uniffi_iota_sdk_ffi_fn_clone_transactionsigner.argtypes = (
     ctypes.c_void_p,
     ctypes.POINTER(_UniffiRustCallStatus),
@@ -17296,9 +17316,9 @@ _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_end_of_e
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_genesis.restype = ctypes.c_uint16
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction.argtypes = (
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable.argtypes = (
 )
-_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable_transaction.restype = ctypes.c_uint16
+_UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_programmable.restype = ctypes.c_uint16
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.argtypes = (
 )
 _UniffiLib.uniffi_iota_sdk_ffi_checksum_constructor_transactionkind_new_randomness_state_update.restype = ctypes.c_uint16
@@ -47194,6 +47214,15 @@ class ProgrammableTransaction():
 
 
 
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_display,self._uniffi_clone_pointer(),)
+        )
+
+
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, ProgrammableTransaction):
             return NotImplemented
@@ -47207,6 +47236,15 @@ class ProgrammableTransaction():
 
         return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
         _UniffiConverterTypeProgrammableTransaction.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_programmabletransaction_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
@@ -53339,6 +53377,10 @@ class TransactionKind():
         return inst
     @classmethod
     def new_consensus_commit_prologue_v1(cls, tx: "ConsensusCommitPrologueV1"):
+        """
+        Create a [`TransactionKind`] for a consensus commit prologue v1.
+        """
+
         _UniffiConverterTypeConsensusCommitPrologueV1.check_lower(tx)
         
         # Call the (fallible) function before creating any half-baked object instances.
@@ -53348,6 +53390,10 @@ class TransactionKind():
 
     @classmethod
     def new_end_of_epoch(cls, tx: "typing.List[EndOfEpochTransactionKind]"):
+        """
+        Create a [`TransactionKind`] for an end of epoch transaction.
+        """
+
         _UniffiConverterSequenceTypeEndOfEpochTransactionKind.check_lower(tx)
         
         # Call the (fallible) function before creating any half-baked object instances.
@@ -53357,6 +53403,10 @@ class TransactionKind():
 
     @classmethod
     def new_genesis(cls, tx: "GenesisTransaction"):
+        """
+        Create a [`TransactionKind`] for a genesis transaction.
+        """
+
         _UniffiConverterTypeGenesisTransaction.check_lower(tx)
         
         # Call the (fallible) function before creating any half-baked object instances.
@@ -53365,16 +53415,24 @@ class TransactionKind():
         return cls._make_instance_(pointer)
 
     @classmethod
-    def new_programmable_transaction(cls, tx: "ProgrammableTransaction"):
+    def new_programmable(cls, tx: "ProgrammableTransaction"):
+        """
+        Create a [`TransactionKind`] for a programmable transaction.
+        """
+
         _UniffiConverterTypeProgrammableTransaction.check_lower(tx)
         
         # Call the (fallible) function before creating any half-baked object instances.
-        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable_transaction,
+        pointer = _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_constructor_transactionkind_new_programmable,
         _UniffiConverterTypeProgrammableTransaction.lower(tx))
         return cls._make_instance_(pointer)
 
     @classmethod
     def new_randomness_state_update(cls, tx: "RandomnessStateUpdate"):
+        """
+        Create a [`TransactionKind`] for a randomness state update.
+        """
+
         _UniffiConverterTypeRandomnessStateUpdate.check_lower(tx)
         
         # Call the (fallible) function before creating any half-baked object instances.
@@ -53387,6 +53445,15 @@ class TransactionKind():
     def __repr__(self, ) -> "str":
         return _UniffiConverterString.lift(
             _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_debug,self._uniffi_clone_pointer(),)
+        )
+
+
+
+
+
+    def __str__(self, ) -> "str":
+        return _UniffiConverterString.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_display,self._uniffi_clone_pointer(),)
         )
 
 
@@ -53404,6 +53471,15 @@ class TransactionKind():
 
         return _UniffiConverterBool.lift(_uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_eq_ne,self._uniffi_clone_pointer(),
         _UniffiConverterTypeTransactionKind.lower(other)))
+
+
+    def __hash__(self, ) -> "int":
+        return _UniffiConverterUInt64.lift(
+            _uniffi_rust_call(_UniffiLib.uniffi_iota_sdk_ffi_fn_method_transactionkind_uniffi_trait_hash,self._uniffi_clone_pointer(),)
+        )
+
+
+
 
 
 
