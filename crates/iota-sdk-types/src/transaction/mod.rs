@@ -296,7 +296,6 @@ impl TransactionKind {
 
 impl core::fmt::Display for TransactionKind {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        // let mut writer = String::new();
         match &self {
             Self::Programmable(p) => {
                 writeln!(f, "Transaction Kind : Programmable")?;
@@ -321,7 +320,6 @@ impl core::fmt::Display for TransactionKind {
                 writeln!(f, "Transaction Kind : Randomness State Update")
             }
         }
-        // write!(f, "{writer}")
     }
 }
 
