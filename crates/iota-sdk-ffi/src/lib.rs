@@ -10,6 +10,7 @@
 use base64ct::Encoding;
 
 mod macros;
+pub(crate) mod thread_safety;
 
 #[cfg(feature = "crypto")]
 pub mod crypto;

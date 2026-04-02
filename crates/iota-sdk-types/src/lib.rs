@@ -181,7 +181,7 @@ pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
 };
 
-#[cfg(all(test, feature = "serde", feature = "proptest"))]
+#[cfg(all(test, feature = "serde", feature = "schemars", feature = "proptest"))]
 mod serialization_proptests;
 
 #[macro_export]

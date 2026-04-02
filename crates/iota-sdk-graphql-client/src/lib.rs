@@ -18,7 +18,7 @@ mod test_utils;
 
 // Re-export types used by query_types module internally
 pub use api::transactions::WaitForTx;
-pub use client::Client;
+pub use client::{Client, GraphQlRequestResult, RequestInspector};
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
