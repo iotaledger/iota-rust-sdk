@@ -19,5 +19,9 @@ test:
 wasm:
 	CC=clang wasm-pack test -r --node --all-features
 
+.PHONY: check-graphql-naming-policy
+check-graphql-naming-policy: ## Check GraphQL naming and module-policy guardrails
+	bash scripts/check-naming-policy.sh
+
 %:
 	$(MAKE) -C ../.. $@

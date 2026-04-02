@@ -13,7 +13,7 @@ check-fmt: ## Check code formatting
 
 .PHONY: check-graphql-naming-policy
 check-graphql-naming-policy: ## Check GraphQL naming and module-policy guardrails
-	bash scripts/check-graphql-naming-policy.sh
+	$(MAKE) -C crates/iota-sdk-graphql-client check-graphql-naming-policy
 
 .PHONY: fmt
 fmt: ## Format code
