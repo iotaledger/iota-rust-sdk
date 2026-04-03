@@ -6,7 +6,7 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
     ObjectReference, ProtocolVersion, TypeTag, UserSignature, Version,
 };
-use crate::crypto::RandomnessRound;
+use crate::{crypto::RandomnessRound, utils::write_sep};
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -1121,29 +1121,6 @@ impl Command {
             ticket,
         })
     }
-}
-
-pub fn write_sep<T: core::fmt::Display>(
-    f: &mut core::fmt::Formatter<'_>,
-    items: impl IntoIterator<Item = T>,
-    delimiters: Option<(&str, &str)>,
-    sep: &str,
-) -> std::fmt::Result {
-    let mut xs = items.into_iter();
-    let Some(x) = xs.next() else {
-        return Ok(());
-    };
-    if let Some((l, _)) = delimiters {
-        write!(f, "{l}")?;
-    }
-    write!(f, "{x}")?;
-    for x in xs {
-        write!(f, "{sep}{x}")?;
-    }
-    if let Some((_, r)) = delimiters {
-        write!(f, "{r}")?;
-    }
-    Ok(())
 }
 
 impl core::fmt::Display for MoveCall {
