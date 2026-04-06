@@ -317,7 +317,8 @@ impl MultisigCommittee {
     /// `Address` governed by this committee.
     #[uniffi::constructor]
     pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Self {
-        Self(iota_sdk::types::MultisigCommittee::new(
+        // TODO
+        Self(iota_sdk::types::MultisigCommittee::insecure_new(
             members.into_iter().map(|m| m.0.clone()).collect(),
             threshold,
         ))

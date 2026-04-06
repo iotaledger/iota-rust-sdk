@@ -193,11 +193,11 @@ impl MultisigCommittee {
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
-    pub fn new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
+    pub fn new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Result<Self, Infallible> {
         let committee = Self::insecure_new(members, threshold);
 
         if committee.is_valid() {
-            committee
+            Ok(committee)
         } else {
             panic!("Invalid multisig committee construction")
 
