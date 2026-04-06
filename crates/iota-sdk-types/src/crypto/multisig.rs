@@ -2,7 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::convert::Infallible;
+use std::{
+    convert::Infallible,
+    hash::{Hash, Hasher},
+};
 
 use once_cell::sync::OnceCell;
 
@@ -331,6 +334,12 @@ impl AsRef<[u8]> for MultisigAggregatedSignature {
                 Ok(bytes)
             })
             .expect("OnceCell invariant violated")
+    }
+}
+
+impl Hash for MultisigAggregatedSignature {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.as_ref().hash(state);
     }
 }
 
