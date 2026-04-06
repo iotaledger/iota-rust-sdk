@@ -21,8 +21,8 @@ pub use intent::{
 };
 pub use move_authenticator::{MoveAuthenticator, MoveAuthenticatorV1};
 pub use multisig::{
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberPublicKey,
-    MultisigMemberSignature,
+    BitmapUnit, MultisigAggregatedSignature, MultisigCommittee, MultisigMember,
+    MultisigMemberPublicKey, MultisigMemberSignature, ThresholdUnit, WeightUnit,
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
 pub use randomness_round::RandomnessRound;
