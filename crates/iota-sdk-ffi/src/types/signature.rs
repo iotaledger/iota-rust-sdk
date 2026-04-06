@@ -161,20 +161,20 @@ impl UserSignature {
         self.0.as_multisig().clone().into()
     }
 
-    pub fn is_zklogin_authenticator(&self) -> bool {
-        self.0.is_zklogin_authenticator()
+    pub fn is_zk_login_authenticator(&self) -> bool {
+        self.0.is_zk_login_authenticator()
     }
 
-    pub fn as_zklogin_authenticator_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
+    pub fn as_zk_login_authenticator_opt(&self) -> Option<Arc<ZkLoginAuthenticator>> {
         self.0
-            .as_zklogin_authenticator_opt()
+            .as_zk_login_authenticator_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn as_zklogin_authenticator(&self) -> ZkLoginAuthenticator {
-        self.0.as_zklogin_authenticator().clone().into()
+    pub fn as_zk_login_authenticator(&self) -> ZkLoginAuthenticator {
+        self.0.as_zk_login_authenticator().clone().into()
     }
 
     pub fn is_passkey_authenticator(&self) -> bool {

@@ -318,43 +318,26 @@ pub enum UserSignature {
     MoveAuthenticator(MoveAuthenticator),
 }
 
+impl AsRef<[u8]> for UserSignature {
+    fn as_ref(&self) -> &[u8] {
+        match self {
+            UserSignature::Simple(s) => s.as_ref(),
+            UserSignature::Multisig(s) => s.as_ref(),
+            UserSignature::ZkLoginAuthenticator(s) => s.as_ref(),
+            UserSignature::PasskeyAuthenticator(s) => s.as_ref(),
+            UserSignature::MoveAuthenticator(s) => s.as_ref(),
+        }
+    }
+}
+
 impl UserSignature {
     crate::def_is_as_into_opt!(
         Simple(SimpleSignature),
         Multisig(MultisigAggregatedSignature),
+        ZkLoginAuthenticator(Box<ZkLoginAuthenticator>),
         PasskeyAuthenticator(PasskeyAuthenticator),
         MoveAuthenticator(MoveAuthenticator)
     );
-
-    pub fn is_zklogin_authenticator(&self) -> bool {
-        matches!(self, Self::ZkLoginAuthenticator(_))
-    }
-
-    pub fn as_zklogin_authenticator_opt(&self) -> Option<&ZkLoginAuthenticator> {
-        if let Self::ZkLoginAuthenticator(auth) = self {
-            Some(auth)
-        } else {
-            None
-        }
-    }
-
-    pub fn as_zklogin_authenticator(&self) -> &ZkLoginAuthenticator {
-        self.as_zklogin_authenticator_opt()
-            .expect("not a ZkLogin authenticator")
-    }
-
-    pub fn into_zklogin_authenticator_opt(self) -> Option<ZkLoginAuthenticator> {
-        if let Self::ZkLoginAuthenticator(auth) = self {
-            Some(*auth)
-        } else {
-            None
-        }
-    }
-
-    pub fn into_zklogin_authenticator(self) -> ZkLoginAuthenticator {
-        self.into_zklogin_authenticator_opt()
-            .expect("not a ZkLogin authenticator")
-    }
 
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
