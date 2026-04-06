@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use once_cell::sync::OnceCell;
+
 use super::{
     Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
     Secp256r1Signature, SignatureScheme,
@@ -255,6 +257,14 @@ pub struct MultisigAggregatedSignature {
     /// The public key encoded with each public key with its signature scheme
     /// used along with the corresponding weight.
     committee: MultisigCommittee,
+    /// A bytes representation of [struct MultiSig]. This helps with
+    /// implementing [trait AsRef<[u8]>].
+    #[cfg_attr(feature = "schemars", schemars(skip))]
+    #[cfg_attr(
+        feature = "proptest",
+        strategy(proptest::strategy::Just(OnceCell::new()))
+    )]
+    bytes: OnceCell<Vec<u8>>,
 }
 
 impl MultisigAggregatedSignature {
@@ -274,6 +284,7 @@ impl MultisigAggregatedSignature {
             signatures,
             bitmap,
             committee,
+            bytes: OnceCell::new(),
         }
     }
 
@@ -414,6 +425,7 @@ mod serialization {
                     signatures: readable.signatures,
                     bitmap: readable.bitmap,
                     committee: readable.committee,
+                    bytes: OnceCell::new(),
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
@@ -455,6 +467,7 @@ mod serialization {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
+                    bytes: OnceCell::new(),
                 })
             } else {
                 Err(SignatureFromBytesError::new("invalid multisig"))
