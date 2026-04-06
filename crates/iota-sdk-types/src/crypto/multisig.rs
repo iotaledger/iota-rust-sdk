@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+// TODO sort out overlap with iota-sdk-crypto's multisig module
+
 use std::{
     convert::Infallible,
     hash::{Hash, Hasher},
@@ -427,6 +429,10 @@ impl MultisigAggregatedSignature {
     pub fn committee(&self) -> &MultisigCommittee {
         &self.committee
     }
+
+    pub fn has_scheme_signatures(&self, scheme: SignatureScheme) -> bool {
+        self.signatures.iter().any(|s| s.scheme() == scheme)
+    }
 }
 
 impl PartialEq for MultisigAggregatedSignature {
@@ -515,6 +521,15 @@ impl MultisigMemberSignature {
         // Ok(MultisigMemberPublicKey::ZkLogin(
         // authenticator.to_public_identifier(),         )),
         //     }
+    }
+
+    pub fn scheme(&self) -> SignatureScheme {
+        match self {
+            Self::Ed25519(_) => SignatureScheme::Ed25519,
+            Self::Secp256k1(_) => SignatureScheme::Secp256k1,
+            Self::Secp256r1(_) => SignatureScheme::Secp256r1,
+            Self::ZkLogin(_) => SignatureScheme::ZkLoginAuthenticator,
+        }
     }
 }
 
