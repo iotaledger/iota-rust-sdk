@@ -595,6 +595,7 @@ mod serialization {
 
     #[derive(serde::Serialize, serde::Deserialize)]
     #[serde(tag = "kind", rename_all = "snake_case")]
+    #[serde(rename = "UnchangedSharedKind")]
     enum ReadableUnchangedSharedKind {
         ReadOnlyRoot {
             #[serde(with = "crate::_serde::ReadableDisplay")]
@@ -617,6 +618,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "UnchangedSharedKind")]
     enum BinaryUnchangedSharedKind {
         ReadOnlyRoot { version: Version, digest: Digest },
         MutateDeleted { version: Version },
