@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::convert::Infallible;
+
 use once_cell::sync::OnceCell;
 
 use super::{
@@ -307,12 +309,30 @@ impl MultisigAggregatedSignature {
 impl PartialEq for MultisigAggregatedSignature {
     fn eq(&self, other: &Self) -> bool {
         self.bitmap == other.bitmap
-            && self.signatures == other.signatures
             && self.committee == other.committee
+            && self.signatures == other.signatures
     }
 }
 
 impl Eq for MultisigAggregatedSignature {}
+
+/// This initialize the underlying bytes representation of MultiSig.
+/// It encodes [struct MultiSig] as the MultiSig flag (0x03) concat with the bcs
+/// bytes of [struct MultiSig] i.e. `flag || bcs_bytes(MultiSig)`.
+impl AsRef<[u8]> for MultisigAggregatedSignature {
+    fn as_ref(&self) -> &[u8] {
+        self.bytes
+            // TODO Infallible?
+            .get_or_try_init::<_, Infallible>(|| {
+                let as_bytes = bcs::to_bytes(self).expect("BCS serialization should not fail");
+                let mut bytes = Vec::with_capacity(1 + as_bytes.len());
+                bytes.push(SignatureScheme::Multisig as u8);
+                bytes.extend_from_slice(as_bytes.as_slice());
+                Ok(bytes)
+            })
+            .expect("OnceCell invariant violated")
+    }
+}
 
 /// A signature from a member of a multisig committee.
 ///
