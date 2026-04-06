@@ -66,17 +66,6 @@ pub enum MultisigMemberPublicKey {
     Passkey(PasskeyPublicKey),
 }
 
-impl AsRef<[u8]> for MultisigMemberPublicKey {
-    fn as_ref(&self) -> &[u8] {
-        match self {
-            Self::Ed25519(pk) => pk.as_ref(),
-            Self::Secp256k1(pk) => pk.as_ref(),
-            Self::Secp256r1(pk) => pk.as_ref(),
-            Self::ZkLogin(_) => panic!(),
-        }
-    }
-}
-
 impl MultisigMemberPublicKey {
     crate::def_is_as_into_opt!(
         Ed25519(Ed25519PublicKey),
@@ -98,6 +87,17 @@ impl MultisigMemberPublicKey {
                 SignatureScheme::ZkLoginAuthenticatorDeprecated
             }
             MultisigMemberPublicKey::Passkey(passkey_public_key) => passkey_public_key.scheme(),
+        }
+    }
+}
+
+impl AsRef<[u8]> for MultisigMemberPublicKey {
+    fn as_ref(&self) -> &[u8] {
+        match self {
+            Self::Ed25519(pk) => pk.as_ref(),
+            Self::Secp256k1(pk) => pk.as_ref(),
+            Self::Secp256r1(pk) => pk.as_ref(),
+            Self::ZkLogin(_) => panic!(),
         }
     }
 }
@@ -178,44 +178,34 @@ pub struct MultisigCommittee {
     threshold: ThresholdUnit,
 }
 
-impl From<&MultisigCommittee> for Address {
-    /// Derive a IotaAddress from [struct MultiSigPublicKey]. A MultiSig address
-    /// is defined as the 32-byte Blake2b hash of serializing the flag, the
-    /// threshold, concatenation of all n flag, public keys and
-    /// its weight. `flag_MultiSig || threshold || flag_1 || pk_1 || weight_1
-    /// || ... || flag_n || pk_n || weight_n`.
-    ///
-    /// When flag_i is ZkLogin, pk_i refers to [struct ZkLoginPublicIdentifier]
-    /// derived from padded address seed in bytes and iss.
-    fn from(multisig_pk: &MultisigCommittee) -> Self {
-        let mut hasher = DefaultHash::default();
-        hasher.update([SignatureScheme::Multisig as u8]);
-        hasher.update(multisig_pk.threshold().to_le_bytes());
-        multisig_pk.members().iter().for_each(|member| {
-            match member.public_key().scheme() {
-                SignatureScheme::Ed25519 => (),
-                scheme => hasher.update([scheme as u8]),
-            };
-            // TODO do we want this method?
-            // member
-            //     .public_key()
-            //     .scheme()
-            //     .update_hasher_with_flag(&mut hasher);
-            hasher.update(member.public_key().as_ref());
-            hasher.update(member.weight().to_le_bytes());
-        });
-        Address::new(hasher.finalize().into_inner())
-    }
-}
-
 impl MultisigCommittee {
+    /// Construct a new committee from a list of `MultisigMember`s and a
+    /// `threshold` without validating the result.
+    ///
+    /// Note that the order of the members is significant towards deriving the
+    /// `Address` governed by this committee.
+    pub fn insecure_new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
+        Self { members, threshold }
+    }
+
     /// Construct a new committee from a list of `MultisigMember`s and a
     /// `threshold`.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
     pub fn new(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
-        Self { members, threshold }
+        let committee = Self::insecure_new(members, threshold);
+
+        if committee.is_valid() {
+            committee
+        } else {
+            panic!("Invalid multisig committee construction")
+
+            // TODO
+            //         return Err(IotaError::InvalidSignature {
+            //     error: "Invalid multisig public key
+            // construction".to_string(), });
+        }
     }
 
     /// The members of the committee
@@ -234,6 +224,14 @@ impl MultisigCommittee {
         SignatureScheme::Multisig
     }
 
+    /// Get the index of a public key in the committee, if it is a member.
+    pub fn get_public_key_index(&self, pk: &MultisigMemberPublicKey) -> Option<u8> {
+        self.members
+            .iter()
+            .position(|member| &member.public_key == pk)
+            .map(|x| x as u8)
+    }
+
     /// Checks if the Committee is valid.
     ///
     /// A valid committee is one that:
@@ -241,8 +239,7 @@ impl MultisigCommittee {
     ///  - Has at least one member
     ///  - Has at most ten members
     ///  - No member has weight 0
-    ///  - the sum of the weights of all members must be larger than the
-    ///    threshold
+    ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
     pub fn is_valid(&self) -> bool {
         self.threshold != 0
@@ -261,6 +258,36 @@ impl MultisigCommittee {
                     .skip(i + 1)
                     .any(|m| member.public_key == m.public_key)
             })
+    }
+}
+
+impl From<&MultisigCommittee> for Address {
+    /// Derive a IotaAddress from [struct MultiSigPublicKey]. A MultiSig address
+    /// is defined as the 32-byte Blake2b hash of serializing the flag, the
+    /// threshold, concatenation of all n flag, public keys and
+    /// its weight. `flag_MultiSig || threshold || flag_1 || pk_1 || weight_1
+    /// || ... || flag_n || pk_n || weight_n`.
+    ///
+    /// When flag_i is ZkLogin, pk_i refers to [struct ZkLoginPublicIdentifier]
+    /// derived from padded address seed in bytes and iss.
+    fn from(committee: &MultisigCommittee) -> Self {
+        let mut hasher = DefaultHash::default();
+        hasher.update([committee.scheme() as u8]);
+        hasher.update(committee.threshold().to_le_bytes());
+        committee.members().iter().for_each(|member| {
+            match member.public_key().scheme() {
+                SignatureScheme::Ed25519 => (),
+                scheme => hasher.update([scheme as u8]),
+            };
+            // TODO do we want this method?
+            // member
+            //     .public_key()
+            //     .scheme()
+            //     .update_hasher_with_flag(&mut hasher);
+            hasher.update(member.public_key().as_ref());
+            hasher.update(member.weight().to_le_bytes());
+        });
+        Address::new(hasher.finalize().into_inner())
     }
 }
 
@@ -407,6 +434,7 @@ impl Hash for MultisigAggregatedSignature {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
+// TODO why not a regular signature?
 pub enum MultisigMemberSignature {
     Ed25519(Ed25519Signature),
     Secp256k1(Secp256k1Signature),
