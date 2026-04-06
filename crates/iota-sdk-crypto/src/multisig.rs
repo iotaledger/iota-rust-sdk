@@ -342,9 +342,9 @@ impl MultisigAggregator {
         );
 
         Ok(MultisigAggregatedSignature::new(
-            self.committee.clone(),
             signatures,
             bitmap,
+            self.committee.clone(),
         ))
     }
 }

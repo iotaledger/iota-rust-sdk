@@ -249,14 +249,14 @@ impl MultisigAggregatedSignature {
     /// and that it's position in the provided bitmap is set.
     #[uniffi::constructor]
     pub fn new(
-        committee: &MultisigCommittee,
         signatures: Vec<Arc<MultisigMemberSignature>>,
         bitmap: u16,
+        committee: &MultisigCommittee,
     ) -> Self {
         Self(iota_sdk::types::MultisigAggregatedSignature::new(
-            committee.0.clone(),
             signatures.into_iter().map(|s| s.0.clone()).collect(),
             bitmap,
+            committee.0.clone(),
         ))
     }
 

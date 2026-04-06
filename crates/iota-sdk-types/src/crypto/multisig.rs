@@ -24,6 +24,8 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 // TODO validate sigs
 // const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
+pub enum MultisigError {}
+
 /// Enum of valid public keys for multisig committee members
 ///
 /// # BCS
@@ -349,10 +351,11 @@ impl MultisigAggregatedSignature {
     /// the caller to ensure that the provided signature list is in the same
     /// order as it's corresponding member in the provided committee
     /// and that it's position in the provided bitmap is set.
+    // TODO rename to insecure?
     pub fn new(
-        committee: MultisigCommittee,
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
+        committee: MultisigCommittee,
     ) -> Self {
         Self {
             signatures,
@@ -360,6 +363,54 @@ impl MultisigAggregatedSignature {
             committee,
             bytes: OnceCell::new(),
         }
+    }
+
+    /// This combines a list of [enum Signature] `flag || signature || pk` to a
+    /// MultiSig. The order of full_sigs must be the same as the order of
+    /// public keys in [enum MultiSigPublicKey]. e.g. for [pk1, pk2, pk3,
+    /// pk4, pk5], [sig1, sig2, sig5] is valid, but [sig2, sig1, sig5] is
+    /// invalid.
+    // TODO keep this name or rename to new?
+    pub fn combine(
+        signatures: Vec<MultisigMemberSignature>,
+        committee: MultisigCommittee,
+    ) -> Result<Self, MultisigError> {
+        if !committee.is_valid() {
+            //     .map_err(|_| MultisigError::InvalidSignature {
+            //     error: "Invalid multisig public key".to_string(),
+            // })?;
+        }
+
+        if signatures.len() > committee.members.len() || signatures.is_empty() {
+            // return Err(MultisigError::InvalidSignature {
+            //     error: "Invalid number of signatures".to_string(),
+            // });
+        }
+
+        let mut bitmap = 0;
+        // TODO do we actually need this vec?
+        let mut sigs = Vec::with_capacity(signatures.len());
+        for signature in signatures {
+            let pk = signature.to_public_key()?;
+            let index = committee.get_public_key_index(&pk).unwrap();
+            // .ok_or(MultisigError::IncorrectSigner {
+            //     error: format!("pk does not exist: {pk:?}"),
+            // })?;
+            if bitmap & (1 << index) != 0 {
+                // return Err(MultisigError::InvalidSignature {
+                //     error: "Duplicate public key".to_string(),
+                // });
+            }
+            bitmap |= 1 << index;
+            sigs.push(signature);
+        }
+
+        Ok(MultisigAggregatedSignature {
+            signatures: sigs,
+            bitmap,
+            committee,
+            bytes: OnceCell::new(),
+        })
     }
 
     /// The list of signatures from committee members
@@ -450,6 +501,21 @@ impl MultisigMemberSignature {
         Secp256r1(Secp256r1Signature),
         Passkey(PasskeyAuthenticator),
     );
+
+    fn to_public_key(&self) -> Result<MultisigMemberPublicKey, MultisigError> {
+        panic!();
+        //     match self {
+        //         Self::Ed25519(sig) =>
+        // Ok(MultisigMemberPublicKey::Ed25519(sig.to_public_key())),
+        //         Self::Secp256k1(sig) =>
+        // Ok(MultisigMemberPublicKey::Secp256k1(sig.to_public_key())),
+        //         Self::Secp256r1(sig) =>
+        // Ok(MultisigMemberPublicKey::Secp256r1(sig.to_public_key())),
+        //         Self::ZkLogin(authenticator) =>
+        // Ok(MultisigMemberPublicKey::ZkLogin(
+        // authenticator.to_public_identifier(),         )),
+        //     }
+    }
 }
 
 #[cfg(feature = "serde")]
