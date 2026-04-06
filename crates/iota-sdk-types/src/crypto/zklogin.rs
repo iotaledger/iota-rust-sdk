@@ -24,7 +24,7 @@ use crate::{checkpoint::EpochId, u256::U256};
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginAuthenticator {
@@ -50,7 +50,7 @@ pub struct ZkLoginAuthenticator {
 ///                  string              ; base64url-unpadded encoded JwtHeader
 ///                  bn254-field-element ; address_seed
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ZkLoginInputs {
     proof_points: ZkLoginProof,
     iss_base64_details: ZkLoginClaim,
@@ -188,7 +188,7 @@ impl proptest::arbitrary::Arbitrary for ZkLoginInputs {
 /// ```text
 /// zklogin-claim = string u8
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
@@ -352,7 +352,7 @@ impl ZkLoginClaim {
 
 /// Struct that represents a standard JWT header according to
 /// https://openid.net/specs/openid-connect-core-1_0.html
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct JwtHeader {
     alg: String,
     kid: String,
@@ -394,7 +394,7 @@ impl JwtHeader {
 /// ```text
 /// zklogin-proof = circom-g1 circom-g2 circom-g1
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -416,7 +416,7 @@ pub struct ZkLoginProof {
 /// ```text
 /// circom-g1 = %x03 3(bn254-field-element)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG1(pub [Bn254FieldElement; 3]);
@@ -433,7 +433,7 @@ pub struct CircomG1(pub [Bn254FieldElement; 3]);
 /// ```text
 /// circom-g2 = %x03 3(%x02 2(bn254-field-element))
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
@@ -490,7 +490,7 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 /// ```
 ///
 /// [`Address`]: crate::Address
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct ZkLoginPublicIdentifier {
@@ -577,7 +577,7 @@ pub struct JwkId {
 /// ```text
 /// bn254-field-element = *DIGIT ; which is then interpreted as a radix10 encoded 32-byte value
 /// ```
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct Bn254FieldElement(

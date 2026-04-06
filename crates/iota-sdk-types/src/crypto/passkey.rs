@@ -31,7 +31,7 @@ use super::{Secp256r1PublicKey, Secp256r1Signature, SimpleSignature};
 /// signature is ever embedded in another structure it generally is serialized
 /// as `bytes` meaning it has a length prefix that defines the length of
 /// the completely serialized signature.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PasskeyAuthenticator {
     /// The secp256r1 public key for this passkey.
     public_key: Secp256r1PublicKey,

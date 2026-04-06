@@ -7,7 +7,7 @@ use crate::{Address, Input, ObjectId, ObjectReference, TypeTag, Version};
 /// authentication through Move code. This type represents the data received
 /// by the Move authenticate function during the Account Abstraction
 /// authentication flow.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveAuthenticator {
     /// Input objects or primitive values
