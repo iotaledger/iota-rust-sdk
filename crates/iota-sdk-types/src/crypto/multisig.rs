@@ -14,7 +14,7 @@ use super::{
     Secp256r1Signature, SignatureScheme,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
-use crate::PublicKeyExt;
+use crate::{Address, PublicKeyExt, hash::Hasher as DefaultHash};
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -57,12 +57,24 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
+// TODO why is this not just PublicKey?
 pub enum MultisigMemberPublicKey {
     Ed25519(Ed25519PublicKey),
     Secp256k1(Secp256k1PublicKey),
     Secp256r1(Secp256r1PublicKey),
     ZkLoginDeprecated,
     Passkey(PasskeyPublicKey),
+}
+
+impl AsRef<[u8]> for MultisigMemberPublicKey {
+    fn as_ref(&self) -> &[u8] {
+        match self {
+            Self::Ed25519(pk) => pk.as_ref(),
+            Self::Secp256k1(pk) => pk.as_ref(),
+            Self::Secp256r1(pk) => pk.as_ref(),
+            Self::ZkLogin(_) => panic!(),
+        }
+    }
 }
 
 impl MultisigMemberPublicKey {
@@ -164,6 +176,36 @@ pub struct MultisigCommittee {
     /// If the total weight of the public keys corresponding to verified
     /// signatures is larger than threshold, the Multisig is verified.
     threshold: ThresholdUnit,
+}
+
+impl From<&MultisigCommittee> for Address {
+    /// Derive a IotaAddress from [struct MultiSigPublicKey]. A MultiSig address
+    /// is defined as the 32-byte Blake2b hash of serializing the flag, the
+    /// threshold, concatenation of all n flag, public keys and
+    /// its weight. `flag_MultiSig || threshold || flag_1 || pk_1 || weight_1
+    /// || ... || flag_n || pk_n || weight_n`.
+    ///
+    /// When flag_i is ZkLogin, pk_i refers to [struct ZkLoginPublicIdentifier]
+    /// derived from padded address seed in bytes and iss.
+    fn from(multisig_pk: &MultisigCommittee) -> Self {
+        let mut hasher = DefaultHash::default();
+        hasher.update([SignatureScheme::Multisig as u8]);
+        hasher.update(multisig_pk.threshold().to_le_bytes());
+        multisig_pk.members().iter().for_each(|member| {
+            match member.public_key().scheme() {
+                SignatureScheme::Ed25519 => (),
+                scheme => hasher.update([scheme as u8]),
+            };
+            // TODO do we want this method?
+            // member
+            //     .public_key()
+            //     .scheme()
+            //     .update_hasher_with_flag(&mut hasher);
+            hasher.update(member.public_key().as_ref());
+            hasher.update(member.weight().to_le_bytes());
+        });
+        Address::new(hasher.finalize().into_inner())
+    }
 }
 
 impl MultisigCommittee {
