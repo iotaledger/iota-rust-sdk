@@ -433,6 +433,14 @@ impl MultisigAggregatedSignature {
     pub fn has_scheme_signatures(&self, scheme: SignatureScheme) -> bool {
         self.signatures.iter().any(|s| s.scheme() == scheme)
     }
+
+    pub fn get_scheme_signatures(&self, scheme: SignatureScheme) -> Vec<MultisigMemberSignature> {
+        self.signatures
+            .iter()
+            .filter(|s| s.scheme() == scheme)
+            .cloned()
+            .collect()
+    }
 }
 
 impl PartialEq for MultisigAggregatedSignature {
