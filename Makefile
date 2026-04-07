@@ -64,6 +64,14 @@ ci: check-features check-fmt test wasm ## Run the full CI process
 .PHONY: ci-full
 ci-full: ci doc ## Run the full CI process and generate documentation
 
+.PHONY: cargo-sort
+cargo-sort: ## Sort and consolidate Cargo.toml dependencies
+	cd scripts/cargo_sort && ./run_consolidate.sh
+
+.PHONY: check-cargo-sort
+check-cargo-sort: ## Check Cargo.toml sorting (used in CI)
+	cd scripts/cargo_sort && ./run_consolidate.sh --skip-dprint
+
 .PHONY: clean
 clean: ## Clean build artifacts
 	cargo clean
