@@ -541,19 +541,17 @@ func main() {
 	if len(linkageTable) == 0 {
 		fmt.Println("- none")
 	} else {
-		originalIDs := make([]*iota_sdk.ObjectId, 0, len(linkageTable))
-		for originalID := range linkageTable {
-			originalIDs = append(originalIDs, originalID)
+		upgrades := make([]iota_sdk.UpgradeInfo, 0, len(linkageTable))
+		for _, upgrade := range linkageTable {
+			upgrades = append(upgrades, upgrade)
 		}
-		sort.Slice(originalIDs, func(i, j int) bool {
-			return originalIDs[i].ToHex() < originalIDs[j].ToHex()
+		sort.Slice(upgrades, func(i, j int) bool {
+			return upgrades[i].UpgradedId.ToHex() < upgrades[j].UpgradedId.ToHex()
 		})
 
-		for _, originalID := range originalIDs {
-			upgrade := linkageTable[originalID]
+		for _, upgrade := range upgrades {
 			fmt.Printf(
-				"- %s -> %s @ v%d\n",
-				originalID.ToHex(),
+				"- %s @ v%d\n",
 				upgrade.UpgradedId.ToHex(),
 				upgrade.UpgradedVersion,
 			)

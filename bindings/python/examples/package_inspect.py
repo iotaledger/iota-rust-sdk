@@ -341,12 +341,10 @@ async def main():
     if len(linkage_table) == 0:
         print("- none")
     else:
-        for original_id, upgrade in sorted(
-            linkage_table.items(), key=lambda entry: entry[0].to_hex()
+        for upgrade in sorted(
+            linkage_table.values(), key=lambda item: item.upgraded_id.to_hex()
         ):
-            print(
-                f"- {original_id.to_hex()} -> {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version}"
-            )
+            print(f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version}")
     print()
 
     print("Modules, functions, and types:")

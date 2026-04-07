@@ -432,17 +432,14 @@ async fn main() -> Result<()> {
     println!();
 
     println!("Dependencies:");
-    let mut dependencies = package.linkage_table.iter().collect::<Vec<_>>();
-    dependencies.sort_by_key(|(original_id, _)| original_id.to_hex());
+    let mut dependencies = package.linkage_table.values().collect::<Vec<_>>();
+    dependencies.sort_by_key(|upgrade| upgrade.upgraded_id.to_hex());
 
     if dependencies.is_empty() {
         println!("- none");
     } else {
-        for (original_id, upgrade) in dependencies {
-            println!(
-                "- {} -> {} @ v{}",
-                original_id, upgrade.upgraded_id, upgrade.upgraded_version
-            );
+        for upgrade in dependencies {
+            println!("- {} @ v{}", upgrade.upgraded_id, upgrade.upgraded_version);
         }
     }
     println!();

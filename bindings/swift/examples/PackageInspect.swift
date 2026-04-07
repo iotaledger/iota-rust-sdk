@@ -415,14 +415,14 @@ struct PackageInspectExample {
     print()
 
     print("Dependencies:")
-    let dependencies = package.linkageTable().sorted { $0.key.toHex() < $1.key.toHex() }
+    let dependencies = package.linkageTable().values.sorted {
+      $0.upgradedId.toHex() < $1.upgradedId.toHex()
+    }
     if dependencies.isEmpty {
       print("- none")
     } else {
-      for (originalId, upgrade) in dependencies {
-        print(
-          "- \(originalId.toHex()) -> \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion)"
-        )
+      for upgrade in dependencies {
+        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion)")
       }
     }
     print()

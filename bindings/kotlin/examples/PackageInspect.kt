@@ -361,14 +361,12 @@ fun main(args: Array<String>) = runBlocking {
         println()
 
         println("Dependencies:")
-        val linkageTable = pkg.linkageTable().toList().sortedBy { it.first.toHex() }
+        val linkageTable = pkg.linkageTable().values.sortedBy { it.upgradedId.toHex() }
         if (linkageTable.isEmpty()) {
             println("- none")
         } else {
-            for ((originalId, upgrade) in linkageTable) {
-                println(
-                    "- ${originalId.toHex()} -> ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion}"
-                )
+            for (upgrade in linkageTable) {
+                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion}")
             }
         }
         println()

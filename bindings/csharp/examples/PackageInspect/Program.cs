@@ -517,7 +517,8 @@ class Program
         Console.WriteLine("Dependencies:");
         var dependencies = package
             .LinkageTable()
-            .OrderBy(entry => entry.Key.ToHex())
+            .Select(entry => entry.Value)
+            .OrderBy(upgrade => upgrade.upgradedId.ToHex())
             .ToArray();
         if (dependencies.Length == 0)
         {
@@ -527,9 +528,7 @@ class Program
         {
             foreach (var dependency in dependencies)
             {
-                Console.WriteLine(
-                    $"- {dependency.Key.ToHex()} -> {dependency.Value.upgradedId.ToHex()} @ v{dependency.Value.upgradedVersion}"
-                );
+                Console.WriteLine($"- {dependency.upgradedId.ToHex()} @ v{dependency.upgradedVersion}");
             }
         }
         Console.WriteLine();
