@@ -20,7 +20,7 @@ impl MultisigVerifier {
         Default::default()
     }
 
-    fn verify_member_signature(
+    pub fn verify_member_signature(
         &self,
         message: &[u8],
         member_public_key: &MultisigMemberPublicKey,
