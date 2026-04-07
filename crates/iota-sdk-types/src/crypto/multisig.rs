@@ -434,6 +434,7 @@ impl MultisigAggregatedSignature {
         self.signatures.iter().any(|s| s.scheme() == scheme)
     }
 
+    // TODO meh, returns a generic thing
     pub fn get_scheme_signatures(&self, scheme: SignatureScheme) -> Vec<MultisigMemberSignature> {
         self.signatures
             .iter()
