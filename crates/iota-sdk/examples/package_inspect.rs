@@ -447,7 +447,7 @@ async fn main() -> Result<()> {
     }
     println!();
 
-    println!("Modules, functions, and types:");
+    println!("Package contents:");
     let module_page = forward_page(None);
     let package_type_prefix = package.id.to_hex();
 
