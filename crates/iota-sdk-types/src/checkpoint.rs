@@ -584,12 +584,18 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[serde(tag = "type", rename_all = "snake_case")]
+    #[serde(
+        rename = "CheckpointCommitment",
+        tag = "type",
+        rename_all = "snake_case"
+    )]
+
     enum ReadableCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "CheckpointCommitment")]
     enum BinaryCommitment {
         EcmhLiveObjectSet { digest: Digest },
     }
