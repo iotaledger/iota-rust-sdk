@@ -20,8 +20,11 @@
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "%x20 32OCTET"))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "%x20 32OCTET")
+)]
 pub struct Digest(
     #[cfg_attr(feature = "serde", serde(with = "DigestSerialization"))]
     #[cfg_attr(feature = "schemars", schemars(with = "crate::_schemars::Base58"))]

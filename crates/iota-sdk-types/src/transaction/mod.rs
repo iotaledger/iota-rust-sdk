@@ -932,8 +932,11 @@ pub struct ProgrammableTransaction {
     schemars(tag = "type", rename_all = "snake_case")
 )]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "call-arg"))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "call-arg")
+)]
 #[non_exhaustive]
 pub enum Input {
     /// A move value serialized as BCS.

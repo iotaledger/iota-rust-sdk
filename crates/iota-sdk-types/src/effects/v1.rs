@@ -286,7 +286,7 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out = %x00             ; Missing
+/// object-out = %x00                ; Missing
 ///            / %x01 digest owner   ; ObjectWrite
 ///            / %x02 u64 digest     ; PackageWrite
 /// ```

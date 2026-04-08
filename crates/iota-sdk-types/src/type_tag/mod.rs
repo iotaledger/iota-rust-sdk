@@ -17,17 +17,17 @@ use super::Address;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// type-tag = %x00           ; Bool
-///          / %x01           ; U8
-///          / %x02           ; U64
-///          / %x03           ; U128
-///          / %x04           ; Address
-///          / %x05           ; Signer
-///          / %x06 type-tag  ; Vector
+/// type-tag = %x00            ; Bool
+///          / %x01            ; U8
+///          / %x02            ; U64
+///          / %x03            ; U128
+///          / %x04            ; Address
+///          / %x05            ; Signer
+///          / %x06 type-tag   ; Vector
 ///          / %x07 struct-tag ; Struct
-///          / %x08           ; U16
-///          / %x09           ; U32
-///          / %x0a           ; U256
+///          / %x08            ; U16
+///          / %x09            ; U32
+///          / %x0a            ; U256
 /// ```
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -210,8 +210,11 @@ impl std::error::Error for TypeParseError {}
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "string"))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "string")
+)]
 pub struct Identifier(
     #[cfg_attr(
         feature = "proptest",

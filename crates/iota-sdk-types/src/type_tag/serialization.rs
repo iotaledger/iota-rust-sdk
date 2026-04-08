@@ -31,8 +31,11 @@ impl<'de> Deserialize<'de> for Identifier {
 /// the Rust [`TypeTag`] enum declaration order. This type is also used to
 /// generate the ABNF schema via [`BcsSchema`](iota_bcs_schema::BcsSchema).
 #[repr(u32)]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(name = "type-tag"))]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(name = "type-tag")
+)]
 enum SerializedTypeTagVariant {
     Bool = 0,
     U8 = 1,

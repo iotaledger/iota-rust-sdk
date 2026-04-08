@@ -533,16 +533,22 @@ mod serialization {
     }
 
     #[derive(serde::Deserialize)]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "checkpoint-contents-v1"))]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "checkpoint-contents-v1")
+    )]
     struct BinaryContentsV1 {
         digests: Vec<ExecutionDigests>,
         signatures: Vec<Vec<UserSignature>>,
     }
 
     #[derive(serde::Deserialize)]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "checkpoint-contents"))]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "checkpoint-contents")
+    )]
     enum BinaryContents {
         V1(
             #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "checkpoint-contents-v1"))]
