@@ -40,6 +40,10 @@ jobs:
         if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
         run: make doc
 
+      - name: BCS schema
+        if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+        run: BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema
+
       - run: make is-dirty
 
   cargo-deny:
