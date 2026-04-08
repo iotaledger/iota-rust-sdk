@@ -540,17 +540,6 @@ mod serialization {
         signatures: Vec<Vec<UserSignature>>,
     }
 
-    #[cfg(feature = "bcs-schema")]
-    impl iota_bcs_schema::BcsSchema for CheckpointContents {
-        fn schema_name() -> &'static str {
-            BinaryContentsV1::schema_name()
-        }
-
-        fn schema_definition() -> &'static str {
-            BinaryContentsV1::schema_definition()
-        }
-    }
-
     #[derive(serde::Deserialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "checkpoint-contents"))]

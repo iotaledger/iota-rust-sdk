@@ -1,137 +1,462 @@
-use std::collections::BTreeMap;
+use proc_macro::TokenStream;
+use proc_macro2::TokenStream as TokenStream2;
+use quote::quote;
+use syn::{
+    Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type, parse_macro_input,
+};
 
-pub use iota_bcs_schema_derive::BcsSchema;
-
-/// Trait for types that have a BCS schema definition.
-///
-/// When derived, the proc macro generates an ABNF-like definition for the type
-/// and appends it to a schema file (`bcs-schema.abnf` in the crate root by
-/// default, overridable via the `BCS_SCHEMA_FILE` environment variable).
-///
-/// **All field types must also implement `BcsSchema`.** If a field's type does
-/// not, compilation will fail. For type aliases (e.g. `type Version = u64`),
-/// use `#[bcs_schema(as_type = "u64")]` on the field to bypass the check and
-/// provide the correct schema type.
-///
-/// # Attributes
-///
-/// ## Type-level
-///
-/// - `#[bcs_schema(name = "custom-name")]` — override the ABNF rule name
-///   (defaults to kebab-case of the Rust type name).
-/// - `#[bcs_schema(definition = "32OCTET")]` — override the entire right-hand
-///   side of the rule. Useful for newtypes wrapping fixed-size byte arrays
-///   where the size is a const expression (`[u8; Self::LENGTH]`). When used,
-///   field types are **not** checked for `BcsSchema`.
-///
-/// ## Field-level
-///
-/// - `#[bcs_schema(skip)]` — omit this field from the schema (no bound check).
-/// - `#[bcs_schema(as_type = "u64")]` — override the schema type for this field
-///   (no bound check on the original Rust type). Useful for type aliases like
-///   `Version = u64`.
-///
-/// # Examples
-///
-/// ```ignore
-/// use iota_bcs_schema::BcsSchema;
-///
-/// #[derive(BcsSchema)]
-/// #[bcs_schema(definition = "32OCTET")]
-/// pub struct Address([u8; 32]);
-///
-/// #[derive(BcsSchema)]
-/// pub struct ObjectReference {
-///     pub object_id: ObjectId,
-///     #[bcs_schema(as_type = "u64")]
-///     pub version: Version,
-///     pub digest: Digest,
-/// }
-///
-/// #[derive(BcsSchema)]
-/// pub enum TransactionExpiration {
-///     None,
-///     Epoch(#[bcs_schema(as_type = "u64")] EpochId),
-/// }
-/// ```
-pub trait BcsSchema {
-    /// The ABNF rule name for this type (kebab-case).
-    fn schema_name() -> &'static str;
-    /// The full ABNF rule definition for this type.
-    fn schema_definition() -> &'static str;
+#[proc_macro_derive(BcsSchema, attributes(bcs_schema))]
+pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    match expand(&input) {
+        Ok(ts) => ts.into(),
+        Err(e) => e.to_compile_error().into(),
+    }
 }
 
 // ---------------------------------------------------------------------------
-// Blanket impls for primitives and standard containers
+// Attribute parsing
 // ---------------------------------------------------------------------------
 
-macro_rules! impl_primitive {
-    ($($ty:ty => $name:literal),* $(,)?) => {
-        $(
-            impl BcsSchema for $ty {
-                fn schema_name() -> &'static str { $name }
-                fn schema_definition() -> &'static str { concat!($name, " = <primitive>") }
-            }
-        )*
+struct TypeAttrs {
+    name: Option<String>,
+    definition: Option<String>,
+}
+
+struct FieldAttrs {
+    skip: bool,
+    as_type: Option<String>,
+}
+
+struct VariantAttrs {
+    as_type: Option<String>,
+}
+
+fn parse_type_attrs(input: &DeriveInput) -> syn::Result<TypeAttrs> {
+    let mut attrs = TypeAttrs {
+        name: None,
+        definition: None,
     };
+    for attr in &input.attrs {
+        if !attr.path().is_ident("bcs_schema") {
+            continue;
+        }
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("name") {
+                let value = meta.value()?;
+                let s: syn::LitStr = value.parse()?;
+                attrs.name = Some(s.value());
+                Ok(())
+            } else if meta.path.is_ident("definition") {
+                let value = meta.value()?;
+                let s: syn::LitStr = value.parse()?;
+                attrs.definition = Some(s.value());
+                Ok(())
+            } else {
+                Err(meta.error("expected `name` or `definition`"))
+            }
+        })?;
+    }
+    Ok(attrs)
 }
 
-impl_primitive! {
-    u8 => "u8",
-    u16 => "u16",
-    u32 => "u32",
-    u64 => "u64",
-    u128 => "u128",
-    i8 => "i8",
-    i16 => "i16",
-    i32 => "i32",
-    i64 => "i64",
-    i128 => "i128",
-    bool => "bool",
-    String => "string",
+fn parse_variant_attrs(variant: &syn::Variant) -> syn::Result<VariantAttrs> {
+    let mut attrs = VariantAttrs { as_type: None };
+    for attr in &variant.attrs {
+        if !attr.path().is_ident("bcs_schema") {
+            continue;
+        }
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("as_type") {
+                let value = meta.value()?;
+                let s: syn::LitStr = value.parse()?;
+                attrs.as_type = Some(s.value());
+                Ok(())
+            } else {
+                Err(meta.error("expected `as_type`"))
+            }
+        })?;
+    }
+    Ok(attrs)
 }
 
-impl<T: BcsSchema> BcsSchema for Vec<T> {
-    fn schema_name() -> &'static str {
-        "vector"
+fn parse_field_attrs(field: &syn::Field) -> syn::Result<FieldAttrs> {
+    let mut attrs = FieldAttrs {
+        skip: false,
+        as_type: None,
+    };
+    for attr in &field.attrs {
+        if !attr.path().is_ident("bcs_schema") {
+            continue;
+        }
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("skip") {
+                attrs.skip = true;
+                Ok(())
+            } else if meta.path.is_ident("as_type") {
+                let value = meta.value()?;
+                let s: syn::LitStr = value.parse()?;
+                attrs.as_type = Some(s.value());
+                Ok(())
+            } else {
+                Err(meta.error("expected `skip` or `as_type`"))
+            }
+        })?;
     }
-    fn schema_definition() -> &'static str {
-        "vector = <container>"
+    Ok(attrs)
+}
+
+// ---------------------------------------------------------------------------
+// Type → ABNF mapping
+// ---------------------------------------------------------------------------
+
+fn type_to_schema(ty: &Type) -> String {
+    match ty {
+        Type::Path(type_path) => {
+            let seg = match type_path.path.segments.last() {
+                Some(s) => s,
+                None => return "unknown".into(),
+            };
+            let name = seg.ident.to_string();
+            match name.as_str() {
+                "u8" | "u16" | "u32" | "u64" | "u128" | "i8" | "i16" | "i32" | "i64" | "i128"
+                | "bool" => name,
+                "str" | "String" => "string".into(),
+                "Vec" => match extract_single_generic(seg) {
+                    Some(inner) if matches_type_name(&inner, "u8") => "bytes".into(),
+                    Some(inner) => format!("(vector {})", type_to_schema(&inner)),
+                    None => "vector".into(),
+                },
+                "Option" => match extract_single_generic(seg) {
+                    Some(inner) => format!("(option {})", type_to_schema(&inner)),
+                    None => "option".into(),
+                },
+                "Box" => match extract_single_generic(seg) {
+                    Some(inner) => type_to_schema(&inner),
+                    None => "unknown".into(),
+                },
+                "BTreeMap" | "HashMap" => match extract_two_generics(seg) {
+                    Some((k, v)) => {
+                        format!("(map {} {})", type_to_schema(&k), type_to_schema(&v))
+                    }
+                    None => "map".into(),
+                },
+                other => to_kebab_case(other),
+            }
+        }
+        Type::Array(arr) => {
+            let elem = type_to_schema(&arr.elem);
+            if elem == "u8" {
+                if let Expr::Lit(expr_lit) = &arr.len {
+                    if let Lit::Int(lit_int) = &expr_lit.lit {
+                        return format!("{}OCTET", lit_int.base10_digits());
+                    }
+                }
+                // Non-literal length — user should use #[bcs_schema(definition = "...")]
+                "OCTET*".into()
+            } else {
+                format!("(array {})", elem)
+            }
+        }
+        Type::Tuple(tuple) if tuple.elems.is_empty() => "unit".into(),
+        Type::Tuple(tuple) => {
+            let elems: Vec<String> = tuple.elems.iter().map(type_to_schema).collect();
+            format!("({})", elems.join(" "))
+        }
+        _ => "unknown".into(),
     }
 }
 
-impl<T: BcsSchema> BcsSchema for Option<T> {
-    fn schema_name() -> &'static str {
-        "option"
+fn extract_single_generic(seg: &syn::PathSegment) -> Option<Type> {
+    if let PathArguments::AngleBracketed(args) = &seg.arguments {
+        if let Some(GenericArgument::Type(ty)) = args.args.first() {
+            return Some(ty.clone());
+        }
     }
-    fn schema_definition() -> &'static str {
-        "option = <container>"
+    None
+}
+
+fn extract_two_generics(seg: &syn::PathSegment) -> Option<(Type, Type)> {
+    if let PathArguments::AngleBracketed(args) = &seg.arguments {
+        let mut iter = args.args.iter();
+        if let (Some(GenericArgument::Type(k)), Some(GenericArgument::Type(v))) =
+            (iter.next(), iter.next())
+        {
+            return Some((k.clone(), v.clone()));
+        }
+    }
+    None
+}
+
+fn matches_type_name(ty: &Type, name: &str) -> bool {
+    if let Type::Path(p) = ty {
+        if let Some(seg) = p.path.segments.last() {
+            return seg.ident == name;
+        }
+    }
+    false
+}
+
+// ---------------------------------------------------------------------------
+// CamelCase → kebab-case
+// ---------------------------------------------------------------------------
+
+fn to_kebab_case(s: &str) -> String {
+    let mut result = String::with_capacity(s.len() + 4);
+    let chars: Vec<char> = s.chars().collect();
+    for (i, &ch) in chars.iter().enumerate() {
+        if ch.is_uppercase() {
+            if i > 0 {
+                let prev_upper = chars[i - 1].is_uppercase();
+                let next_lower = i + 1 < chars.len() && chars[i + 1].is_lowercase();
+                if !prev_upper || next_lower {
+                    result.push('-');
+                }
+            }
+            for lower in ch.to_lowercase() {
+                result.push(lower);
+            }
+        } else {
+            result.push(ch);
+        }
+    }
+    result
+}
+
+// ---------------------------------------------------------------------------
+// Schema generation for structs
+// ---------------------------------------------------------------------------
+
+fn gen_struct(schema_name: &str, data: &syn::DataStruct) -> syn::Result<String> {
+    match &data.fields {
+        Fields::Named(fields) => {
+            let mut parts: Vec<(String, String)> = Vec::new(); // (type_schema, field_name)
+            for field in &fields.named {
+                let fa = parse_field_attrs(field)?;
+                if fa.skip {
+                    continue;
+                }
+                let type_str = fa.as_type.unwrap_or_else(|| type_to_schema(&field.ty));
+                let name = field.ident.as_ref().unwrap().to_string().replace('_', "-");
+                parts.push((type_str, name));
+            }
+
+            if parts.is_empty() {
+                return Ok(format!("{schema_name} = unit"));
+            }
+            if parts.len() == 1 {
+                let (ty, nm) = &parts[0];
+                return Ok(format!("{schema_name} = {ty}   ; {nm}"));
+            }
+
+            let max_type_len = parts.iter().map(|(t, _)| t.len()).max().unwrap_or(0);
+            let indent = " ".repeat(schema_name.len() + 3); // "name = " prefix width
+            let lines: Vec<String> = parts
+                .iter()
+                .enumerate()
+                .map(|(i, (ty, name))| {
+                    let pad = " ".repeat(max_type_len - ty.len());
+                    if i == 0 {
+                        format!("{schema_name} = {ty}{pad}   ; {name}")
+                    } else {
+                        format!("{indent}{ty}{pad}   ; {name}")
+                    }
+                })
+                .collect();
+            Ok(lines.join("\n"))
+        }
+        Fields::Unnamed(fields) => {
+            if fields.unnamed.len() == 1 {
+                let field = &fields.unnamed[0];
+                let fa = parse_field_attrs(field)?;
+                let type_str = fa.as_type.unwrap_or_else(|| type_to_schema(&field.ty));
+                Ok(format!("{schema_name} = {type_str}"))
+            } else {
+                let mut types = Vec::new();
+                for field in &fields.unnamed {
+                    let fa = parse_field_attrs(field)?;
+                    types.push(fa.as_type.unwrap_or_else(|| type_to_schema(&field.ty)));
+                }
+                Ok(format!("{schema_name} = {}", types.join(" ")))
+            }
+        }
+        Fields::Unit => Ok(format!("{schema_name} = unit")),
     }
 }
 
-impl<T: BcsSchema> BcsSchema for Box<T> {
-    fn schema_name() -> &'static str {
-        "box"
+// ---------------------------------------------------------------------------
+// Schema generation for enums
+// ---------------------------------------------------------------------------
+
+fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
+    let mut lines = Vec::new();
+    let indent = " ".repeat(schema_name.len() + 1);
+
+    for (idx, variant) in data.variants.iter().enumerate() {
+        let variant_name = &variant.ident;
+        let prefix = format!("%x{:02x}", idx);
+        let va = parse_variant_attrs(variant)?;
+
+        let fields_str = match &variant.fields {
+            Fields::Unit => {
+                // A variant-level as_type allows specifying payload for unit
+                // variants that carry data only on the wire (e.g. repr-enum
+                // mirrors used for BCS schema generation).
+                match &va.as_type {
+                    Some(t) => format!(" {t}"),
+                    None => String::new(),
+                }
+            }
+            Fields::Unnamed(fields) => {
+                let mut types = Vec::new();
+                for f in &fields.unnamed {
+                    let fa = parse_field_attrs(f)?;
+                    types.push(fa.as_type.unwrap_or_else(|| type_to_schema(&f.ty)));
+                }
+                format!(" {}", types.join(" "))
+            }
+            Fields::Named(fields) => {
+                let mut types = Vec::new();
+                for f in &fields.named {
+                    let fa = parse_field_attrs(f)?;
+                    if fa.skip {
+                        continue;
+                    }
+                    types.push(fa.as_type.unwrap_or_else(|| type_to_schema(&f.ty)));
+                }
+                if types.is_empty() {
+                    String::new()
+                } else {
+                    format!(" {}", types.join(" "))
+                }
+            }
+        };
+
+        let comment = format!("   ; {variant_name}");
+
+        if idx == 0 {
+            lines.push(format!("{schema_name} = {prefix}{fields_str}{comment}"));
+        } else {
+            lines.push(format!("{indent}/ {prefix}{fields_str}{comment}"));
+        }
     }
-    fn schema_definition() -> &'static str {
-        "box = <transparent>"
-    }
+
+    Ok(lines.join("\n"))
 }
 
-impl<K: BcsSchema, V: BcsSchema> BcsSchema for BTreeMap<K, V> {
-    fn schema_name() -> &'static str {
-        "map"
+// ---------------------------------------------------------------------------
+// File writing
+// ---------------------------------------------------------------------------
+
+fn schema_file_path() -> std::path::PathBuf {
+    if let Ok(p) = std::env::var("BCS_SCHEMA_FILE") {
+        return std::path::PathBuf::from(p);
     }
-    fn schema_definition() -> &'static str {
-        "map = <container>"
-    }
+    let manifest = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".into());
+    std::path::PathBuf::from(manifest).join("bcs-schema.abnf")
 }
 
-impl<const N: usize> BcsSchema for [u8; N] {
-    fn schema_name() -> &'static str {
-        "octet-array"
+fn write_schema_entry(schema_name: &str, definition: &str) {
+    let path = schema_file_path();
+    let content = std::fs::read_to_string(&path).unwrap_or_default();
+
+    // Parse existing entries — each entry is separated by a blank line.
+    let mut entries: Vec<(String, String)> = Vec::new();
+    for block in content.split("\n\n") {
+        let trimmed = block.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        // Skip header comments (lines that are only comments with no rule)
+        if !trimmed.contains('=') {
+            continue;
+        }
+        // Extract the rule name: text before the first " ="
+        let rule_name = if let Some(idx) = trimmed.find(" =") {
+            trimmed[..idx].trim().to_string()
+        } else if let Some(idx) = trimmed.find('=') {
+            trimmed[..idx].trim().to_string()
+        } else {
+            continue;
+        };
+        entries.push((rule_name, trimmed.to_string()));
     }
-    fn schema_definition() -> &'static str {
-        "octet-array = <fixed-bytes>"
+
+    // Replace existing entry or append
+    let mut found = false;
+    for entry in &mut entries {
+        if entry.0 == schema_name {
+            entry.1 = definition.to_string();
+            found = true;
+            break;
+        }
+    }
+    if !found {
+        entries.push((schema_name.to_string(), definition.to_string()));
+    }
+
+    // Sort by rule name for deterministic output regardless of expansion order.
+    entries.sort_by(|(a, _), (b, _)| a.cmp(b));
+
+    // Reconstruct the file
+    let mut output =
+        String::from("; Auto-generated BCS schema definitions\n; Do not edit manually\n");
+    for (_, def) in &entries {
+        output.push('\n');
+        output.push_str(def);
+        output.push('\n');
+    }
+
+    // Best-effort write — don't break compilation if it fails
+    let _ = std::fs::write(&path, output);
+}
+
+// ---------------------------------------------------------------------------
+// Main expansion
+// ---------------------------------------------------------------------------
+
+fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
+    let type_attrs = parse_type_attrs(input)?;
+    let ident = &input.ident;
+    let schema_name = type_attrs
+        .name
+        .unwrap_or_else(|| to_kebab_case(&ident.to_string()));
+
+    let definition = match type_attrs.definition {
+        Some(def) => format!("{schema_name} = {def}"),
+        None => match &input.data {
+            Data::Struct(data) => gen_struct(&schema_name, data)?,
+            Data::Enum(data) => gen_enum(&schema_name, data)?,
+            Data::Union(_) => {
+                return Err(syn::Error::new_spanned(
+                    ident,
+                    "BcsSchema cannot be derived for unions",
+                ));
+            }
+        },
+    };
+
+    // Write the definition to the schema file as a side-effect of expansion.
+    write_schema_entry(&schema_name, &definition);
+
+    Ok(quote! {})
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn kebab_case() {
+        assert_eq!(to_kebab_case("Address"), "address");
+        assert_eq!(to_kebab_case("ObjectId"), "object-id");
+        assert_eq!(to_kebab_case("GasCostSummary"), "gas-cost-summary");
+        assert_eq!(to_kebab_case("TransactionV1"), "transaction-v1");
+        assert_eq!(to_kebab_case("ObjectID"), "object-id");
+        assert_eq!(to_kebab_case("BTreeMap"), "b-tree-map");
     }
 }

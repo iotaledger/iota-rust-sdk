@@ -49,16 +49,6 @@ enum SerializedTypeTagVariant {
     U256 = 10,
 }
 
-#[cfg(feature = "bcs-schema")]
-impl iota_bcs_schema::BcsSchema for TypeTag {
-    fn schema_name() -> &'static str {
-        SerializedTypeTagVariant::schema_name()
-    }
-    fn schema_definition() -> &'static str {
-        SerializedTypeTagVariant::schema_definition()
-    }
-}
-
 impl SerializedTypeTagVariant {
     fn new(variant: u32) -> Result<Self, u32> {
         Ok(match variant {

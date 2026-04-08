@@ -934,17 +934,6 @@ mod serialization {
         }
     }
 
-    #[cfg(feature = "bcs-schema")]
-    impl iota_bcs_schema::BcsSchema for GenesisObject {
-        fn schema_name() -> &'static str {
-            BinaryGenesisObject::schema_name()
-        }
-
-        fn schema_definition() -> &'static str {
-            BinaryGenesisObject::schema_definition()
-        }
-    }
-
     impl Serialize for GenesisObject {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where

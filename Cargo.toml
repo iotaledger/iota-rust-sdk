@@ -2,7 +2,6 @@
 resolver = "2"
 members = [
   "crates/iota-bcs-schema",
-  "crates/iota-bcs-schema-derive",
   "crates/iota-sdk",
   "crates/iota-sdk-crypto",
   "crates/iota-sdk-ffi",

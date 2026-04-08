@@ -835,16 +835,6 @@ mod serialization {
         InvalidLinkage,
     }
 
-    #[cfg(feature = "bcs-schema")]
-    impl iota_bcs_schema::BcsSchema for ExecutionError {
-        fn schema_name() -> &'static str {
-            <BinaryExecutionError as iota_bcs_schema::BcsSchema>::schema_name()
-        }
-        fn schema_definition() -> &'static str {
-            <BinaryExecutionError as iota_bcs_schema::BcsSchema>::schema_definition()
-        }
-    }
-
     impl Serialize for ExecutionError {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
