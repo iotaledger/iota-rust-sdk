@@ -1132,7 +1132,11 @@ impl<C: ClientMethods, L> TransactionBuilder<C, L> {
             let Transaction::V1(txn) = &mut txn else {
                 unimplemented!("a new enum variant was added and needs to be handled")
             };
-            txn.gas_payment.budget = budget
+            // The network enforces a minimum gas budget of base_tx_cost_fixed
+            // (1000) * gas_price. The dry-run estimate can return a value below
+            // this minimum, so we clamp it.
+            let min_budget = txn.gas_payment.price.saturating_mul(1000);
+            txn.gas_payment.budget = budget.max(min_budget);
         }
 
         Ok(txn)

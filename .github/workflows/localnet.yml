@@ -1,0 +1,72 @@
+name: Localnet
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: localnet-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+
+jobs:
+  diff:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    outputs:
+      isLocalnet: ${{ steps.diff.outputs.isLocalnet }}
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Detect Changes
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        id: diff
+        with:
+          filters: |
+            isLocalnet:
+              - ".github/workflows/localnet.yml"
+              - ".github/actions/start-local-network/**"
+              - "run_localnet.sh"
+
+  run-localnet:
+    if: (!cancelled() && needs.diff.outputs.isLocalnet == 'true')
+    needs: diff
+    runs-on: ubuntu-latest
+    env:
+      IOTA_BINARY_VERSION: "v1.16.2"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Get the IOTA binary
+        run: |
+          ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
+          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
+          echo "Downloading binary from $download_url"
+          wget -q $download_url -O iota.tgz
+          tar -zxvf iota.tgz ./iota
+          chmod +x ./iota
+
+      - name: Start local network
+        run: ./run_localnet.sh start ./iota
+
+      - name: Verify IOTA node is responding
+        run: |
+          curl -sf -X POST http://localhost:9000 \
+            -H 'Content-Type: application/json' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"iota_getLatestCheckpointSequenceNumber"}' \
+            | jq .
+
+      - name: Verify gas station is responding
+        run: curl -sf http://localhost:9527/version
+
+      - name: Verify GraphQL is responding
+        run: |
+          curl -sf -X POST http://localhost:9125 \
+            -H 'Content-Type: application/json' \
+            -d '{"query":"{ chainIdentifier }"}' \
+            | jq .
+
+      - name: Stop local network
+        if: always()
+        run: ./run_localnet.sh stop ./iota
