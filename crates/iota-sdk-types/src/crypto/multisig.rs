@@ -24,7 +24,7 @@ pub type BitmapUnit = u16;
 
 const MAX_COMMITTEE_SIZE: usize = 10;
 // TODO validate sigs
-// const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
+const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
 pub enum MultisigError {}
 
@@ -377,6 +377,7 @@ impl MultisigAggregatedSignature {
         signatures: Vec<MultisigMemberSignature>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
+        // TODO call is_valid?
         if !committee.is_valid() {
             //     .map_err(|_| MultisigError::InvalidSignature {
             //     error: "Invalid multisig public key".to_string(),
@@ -413,6 +414,16 @@ impl MultisigAggregatedSignature {
             committee,
             bytes: OnceCell::new(),
         })
+    }
+
+    pub fn is_valid(&self) -> bool {
+        if self.signatures.len() > self.committee.members.len()
+            || self.signatures.is_empty()
+            || self.bitmap > MAX_BITMAP_VALUE
+        {
+            return false;
+        }
+        self.committee.is_valid()
     }
 
     /// The list of signatures from committee members
@@ -651,14 +662,17 @@ mod serialization {
             }
 
             if let Ok(multisig) = bcs::from_bytes::<Multisig>(&bytes[1..]) {
-                // TODO
-                // multisig.init_and_validate()
-                Ok(Self {
+                let multisig = Self {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,
                     committee: multisig.committee,
                     bytes: OnceCell::new(),
-                })
+                };
+                if multisig.is_valid() {
+                    Ok(multisig)
+                } else {
+                    Err(SignatureFromBytesError::new("invalid multisig"))
+                }
             } else {
                 Err(SignatureFromBytesError::new("invalid multisig"))
             }
