@@ -114,6 +114,12 @@ impl AsRef<[u8]> for MultisigMemberPublicKey {
     }
 }
 
+impl From<&MultisigMemberPublicKey> for Address {
+    fn from(pk: &MultisigMemberPublicKey) -> Self {
+        pk.derive_address()
+    }
+}
+
 /// A member in a multisig committee
 ///
 /// # BCS
