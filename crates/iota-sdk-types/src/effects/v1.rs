@@ -580,6 +580,7 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[serde(rename = "UnchangedSharedKind")]
     enum BinaryUnchangedSharedKind {
         ReadOnlyRoot { version: Version, digest: Digest },
         MutateDeleted { version: Version },
