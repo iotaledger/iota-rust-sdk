@@ -72,6 +72,10 @@ clean: ## Clean build artifacts
 clean-all: clean ## Clean all generated files, including those ignored by Git. Force removal.
 	git clean -dXf
 
+.PHONY: install-uniffi-bindgen-go
+install-uniffi-bindgen-go: ## Install uniffi-bindgen-go
+	cargo install uniffi-bindgen-go --git https://github.com/NordSecurity/uniffi-bindgen-go --tag v0.5.0+v0.29.5
+
 .PHONY: bindings
 bindings: ## Build all bindings
 	@$(MAKE) go

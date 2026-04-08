@@ -40,7 +40,7 @@ serde = [
 schemars = ["serde", "dep:schemars", "dep:serde_json"]
 rand = ["dep:rand_core"]
 hash = ["dep:blake2"]
-proptest = ["dep:proptest", "dep:test-strategy", "serde", "schemars"]
+proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 
 [dependencies]
 base64ct = { workspace = true, features = ["alloc"] }
