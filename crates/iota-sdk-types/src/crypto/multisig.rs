@@ -59,7 +59,7 @@ pub enum MultisigError {}
 ///                     (secp256k1-flag secp256k1-public-key) /
 ///                     (secp256r1-flag secp256r1-public-key)
 /// ```
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 // TODO why is this not just PublicKey?
@@ -138,8 +138,11 @@ pub struct MultisigMember {
 
 impl MultisigMember {
     /// Construct a new member from a `MultisigMemberPublicKey` and a `weight`.
-    pub fn new(public_key: MultisigMemberPublicKey, weight: WeightUnit) -> Self {
-        Self { public_key, weight }
+    pub fn new(public_key: impl Into<MultisigMemberPublicKey>, weight: WeightUnit) -> Self {
+        Self {
+            public_key: public_key.into(),
+            weight,
+        }
     }
 
     /// This member's public key.
