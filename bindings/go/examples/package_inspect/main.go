@@ -556,7 +556,7 @@ func main() {
 	}
 	fmt.Println()
 
-	fmt.Println("Modules, functions, and types:")
+	fmt.Println("Package contents:")
 	moduleNames := make([]string, 0, len(pkg.Modules()))
 	for moduleID := range pkg.Modules() {
 		moduleNames = append(moduleNames, moduleID.AsStr())

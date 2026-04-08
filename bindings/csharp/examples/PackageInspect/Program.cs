@@ -529,7 +529,7 @@ class Program
         }
         Console.WriteLine();
 
-        Console.WriteLine("Modules, functions, and types:");
+        Console.WriteLine("Package contents:");
         var moduleNames = package
             .Modules()
             .Keys

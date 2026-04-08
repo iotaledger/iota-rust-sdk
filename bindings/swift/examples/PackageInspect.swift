@@ -423,7 +423,7 @@ struct PackageInspectExample {
     }
     print()
 
-    print("Modules, functions, and types:")
+    print("Package contents:")
     let moduleNames = package.modules().keys.map { $0.asStr() }.sorted()
     for moduleName in moduleNames {
       print("Module: \(moduleName)")

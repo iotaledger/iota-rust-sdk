@@ -343,7 +343,7 @@ async def main():
             print(f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version}")
     print()
 
-    print("Modules, functions, and types:")
+    print("Package contents:")
     module_names = sorted(module_id.as_str() for module_id in package.modules().keys())
 
     for module_name in module_names:

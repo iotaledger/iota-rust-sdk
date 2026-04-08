@@ -367,7 +367,7 @@ fun main(args: Array<String>) = runBlocking {
         }
         println()
 
-        println("Modules, functions, and types:")
+        println("Package contents:")
         val moduleNames = pkg.modules().keys.map { it.asStr() }.sorted()
         for (moduleName in moduleNames) {
             println("Module: $moduleName")
