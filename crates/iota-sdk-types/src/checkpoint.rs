@@ -57,9 +57,10 @@ impl CheckpointCommitment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
-///                     u64                                 ; next_epoch_protocol_version
-///                     (vector checkpoint-commitment)      ; epoch_commitments
+/// end-of-epoch-data = (vector validator-committee-member)   ; next-epoch-committee
+///                     u64                                   ; next-epoch-protocol-version
+///                     (vector checkpoint-commitment)        ; epoch-commitments
+///                     i64                                   ; epoch-supply-change
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

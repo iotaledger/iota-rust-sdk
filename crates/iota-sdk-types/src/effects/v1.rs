@@ -15,17 +15,17 @@ use crate::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// effects-v1 = execution-status
-///              u64                                ; epoch
-///              gas-cost-summary
-///              digest                             ; transaction digest
-///              (option u32)                       ; gas object index
-///              (option digest)                    ; events digest
-///              (vector digest)                    ; list of transaction dependencies
-///              u64                                ; lamport version
-///              (vector changed-object)
-///              (vector unchanged-shared-object)
-///              (option digest)                    ; auxiliary data digest
+/// transaction-effects-v1 = execution-status                   ; status
+///                          u64                                ; epoch
+///                          gas-cost-summary                   ; gas-used
+///                          digest                             ; transaction-digest
+///                          (option u32)                       ; gas-object-index
+///                          (option digest)                    ; events-digest
+///                          (vector digest)                    ; dependencies
+///                          u64                                ; lamport-version
+///                          (vector changed-object)            ; changed-objects
+///                          (vector unchanged-shared-object)   ; unchanged-shared-objects
+///                          (option digest)                    ; auxiliary-data-digest
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -125,7 +125,8 @@ pub struct ChangedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object = object-id unchanged-shared-object-kind
+/// unchanged-shared-object = object-id               ; object-id
+///                           unchanged-shared-kind   ; kind
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -144,17 +145,11 @@ pub struct UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object-kind =  read-only-root
-///                              =/ mutate-deleted
-///                              =/ read-deleted
-///                              =/ cancelled
-///                              =/ per-epoch-config
-///
-/// read-only-root      = %x00 u64 digest
-/// mutate-deleted      = %x01 u64
-/// read-deleted        = %x02 u64
-/// cancelled           = %x03 u64
-/// per-epoch-config    = %x04
+/// unchanged-shared-kind = %x00 u64 digest   ; ReadOnlyRoot
+///                       / %x01 u64           ; MutateDeleted
+///                       / %x02 u64           ; ReadDeleted
+///                       / %x03 u64           ; Cancelled
+///                       / %x04               ; PerEpochConfig
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -220,10 +215,8 @@ impl UnchangedSharedKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = object-in-missing / object-in-data
-///
-/// object-in-missing = %x00
-/// object-in-data    = %x01 u64 digest owner
+/// object-in = %x00           ; Missing
+///           / %x01 u64 digest owner   ; Data
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -293,14 +286,9 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out  =  object-out-missing
-///             =/ object-out-object-write
-///             =/ object-out-package-write
-///
-///
-/// object-out-missing        = %x00
-/// object-out-object-write   = %x01 digest owner
-/// object-out-package-write  = %x02 version digest
+/// object-out = %x00             ; Missing
+///            / %x01 digest owner   ; ObjectWrite
+///            / %x02 u64 digest     ; PackageWrite
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -385,13 +373,9 @@ impl ObjectOut {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// id-operation =  id-operation-none
-///              =/ id-operation-created
-///              =/ id-operation-deleted
-///
-/// id-operation-none       = %x00
-/// id-operation-created    = %x01
-/// id-operation-deleted    = %x02
+/// id-operation = %x00   ; None
+///              / %x01   ; Created
+///              / %x02   ; Deleted
 /// ```
 #[derive(Eq, PartialEq, Copy, Clone, Debug)]
 #[cfg_attr(
