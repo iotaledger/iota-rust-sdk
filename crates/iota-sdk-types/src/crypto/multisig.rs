@@ -360,7 +360,7 @@ impl MultisigAggregatedSignature {
     /// invalid.
     // TODO keep this name or rename to new?
     pub fn combine(
-        signatures: Vec<impl Into<MultisigMemberSignature>>,
+        signatures: Vec<MultisigMemberSignature>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
         // TODO call is_valid?
@@ -380,7 +380,6 @@ impl MultisigAggregatedSignature {
         // TODO do we actually need this vec?
         let mut sigs = Vec::with_capacity(signatures.len());
         for signature in signatures {
-            let signature = signature.into();
             let pk = signature.to_public_key()?;
             let index = committee.get_public_key_index(&pk).unwrap();
             // .ok_or(MultisigError::IncorrectSigner {

@@ -20,6 +20,7 @@ const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
 /// IOTA's binary representation of a `Digest` is prefixed with its length
 /// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
 /// compact 32 bytes.
+// TODO deref not needed?
 #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, PartialOrd, Ord, derive_more::Deref)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
