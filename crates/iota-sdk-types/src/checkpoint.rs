@@ -206,6 +206,14 @@ pub struct SignedCheckpointSummary {
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+// The binary format serializes as a single-variant enum with discriminant
+// %x00 (V1), followed by two parallel vectors: one of execution-digests
+// (transaction + effects digest pairs) and one of per-transaction signature
+// lists.
+#[cfg_attr(
+    feature = "bcs-schema",
+    bcs_schema(definition = "%x00 (vector (digest digest)) (vector (vector user-signature))")
+)]
 pub struct CheckpointContents(
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub  Vec<CheckpointTransactionInfo>,
@@ -230,7 +238,6 @@ impl CheckpointContents {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct CheckpointTransactionInfo {
     pub transaction: Digest,
     pub effects: Digest,
@@ -262,7 +269,13 @@ pub struct CheckpointTransaction {
         serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
     )]
     #[cfg_attr(feature = "schemars", schemars(with = "SignedTransaction"))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "signed-transaction"))]
+    // SignedTransactionWithIntentMessage serializes with a version byte of 0,
+    // then a 4-tuple (scope=TransactionData, version=V0, app_id=Iota, Transaction), then
+    // Vec<UserSignature>.
+    #[cfg_attr(
+        feature = "bcs-schema",
+        bcs_schema(as_type = "%x01 %x00 %x00 %x00 transaction (vector user-signature)")
+    )]
     pub transaction: SignedTransaction,
     /// The effects produced by executing this transaction
     pub effects: TransactionEffects,

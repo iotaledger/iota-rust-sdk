@@ -23,7 +23,7 @@
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "bytes"))]
+#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "%x60 96OCTET"))]
 pub struct Bls12381PublicKey(
     #[cfg_attr(
         feature = "serde",

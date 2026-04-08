@@ -20,7 +20,7 @@ authenticator-state-update-v1 = u64                   ; epoch
                                 (vector active-jwk)   ; new-active-jwks
                                 u64                   ; authenticator-obj-initial-shared-version
 
-bls12381-public-key = bytes
+bls12381-public-key = %x60 96OCTET
 
 bls12381-signature = 48OCTET
 
@@ -80,7 +80,7 @@ changed-object = object-id      ; object-id
 
 checkpoint-commitment = %x00 digest   ; EcmhLiveObjectSet
 
-checkpoint-contents = (vector checkpoint-transaction-info)
+checkpoint-contents = %x00 (vector (digest digest)) (vector (vector user-signature))
 
 checkpoint-data = signed-checkpoint-summary         ; checkpoint-summary
                   checkpoint-contents               ; checkpoint-contents
@@ -97,15 +97,11 @@ checkpoint-summary = u64                              ; epoch
                      (option end-of-epoch-data)       ; end-of-epoch-data
                      bytes                            ; version-specific-data
 
-checkpoint-transaction = signed-transaction            ; transaction
-                         transaction-effects           ; effects
-                         (option transaction-events)   ; events
-                         (vector object)               ; input-objects
-                         (vector object)               ; output-objects
-
-checkpoint-transaction-info = digest                    ; transaction
-                              digest                    ; effects
-                              (vector user-signature)   ; signatures
+checkpoint-transaction = %x01 %x00 %x00 %x00 transaction (vector user-signature)   ; transaction
+                         transaction-effects                                       ; effects
+                         (option transaction-events)                               ; events
+                         (vector object)                                           ; input-objects
+                         (vector object)                                           ; output-objects
 
 command = %x00 move-call   ; MoveCall
         / %x01 transfer-objects   ; TransferObjects
@@ -230,8 +226,7 @@ gas-payment = (vector object-reference)   ; objects
               u64                         ; price
               u64                         ; budget
 
-genesis-object = object-data   ; data
-                 owner         ; owner
+genesis-object = %x00 object-data owner
 
 genesis-transaction = (vector genesis-object)   ; objects
                       (vector event)            ; events

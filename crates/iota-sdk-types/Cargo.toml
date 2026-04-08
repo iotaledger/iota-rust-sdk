@@ -86,6 +86,7 @@ eyre.workspace = true
 jsonschema = { version = "0.20", default-features = false }
 num-bigint = "0.4.6"
 paste.workspace = true
+rand.workspace = true
 serde_json.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
