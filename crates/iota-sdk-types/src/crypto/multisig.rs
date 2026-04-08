@@ -27,6 +27,8 @@ const MAX_COMMITTEE_SIZE: usize = 10;
 // TODO validate sigs
 const MAX_BITMAP_VALUE: BitmapUnit = 0b1111111111;
 
+#[derive(Debug, thiserror::Error)]
+// TODO reuse another type?
 pub enum MultisigError {}
 
 /// Enum of valid public keys for multisig committee members
