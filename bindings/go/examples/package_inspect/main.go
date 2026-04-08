@@ -496,7 +496,7 @@ func main() {
 		log.Fatalf("Failed to get latest package: %v", err)
 	}
 	if latestOpt == nil {
-		log.Fatal("Missing latest package")
+		log.Fatal("missing latest package")
 	}
 	latest := *latestOpt
 
