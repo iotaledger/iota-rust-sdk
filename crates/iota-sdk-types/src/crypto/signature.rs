@@ -370,9 +370,7 @@ mod serialization {
             buf
         }
 
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
@@ -593,7 +591,7 @@ mod serialization {
             } else {
                 let bytes: std::borrow::Cow<'de, [u8]> =
                     std::borrow::Cow::deserialize(deserializer)?;
-                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
+                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
@@ -619,7 +617,7 @@ mod serialization {
             base64ct::Base64::encode_string(&self.to_bytes())
         }
 
-        fn from_serialized_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
 
             let flag =
@@ -631,11 +629,11 @@ mod serialization {
                 SignatureScheme::Ed25519
                 | SignatureScheme::Secp256k1
                 | SignatureScheme::Secp256r1 => {
-                    let simple = SimpleSignature::from_serialized_bytes(bytes)?;
+                    let simple = SimpleSignature::from_bytes(bytes)?;
                     Ok(Self::Simple(simple))
                 }
                 SignatureScheme::Multisig => {
-                    let multisig = MultisigAggregatedSignature::from_serialized_bytes(bytes)?;
+                    let multisig = MultisigAggregatedSignature::from_bytes(bytes)?;
                     Ok(Self::Multisig(multisig))
                 }
                 SignatureScheme::Bls12381 => Err(SignatureFromBytesError::new(
@@ -645,18 +643,14 @@ mod serialization {
                     Ok(Self::ZkLoginAuthenticatorDeprecated)
                 }
                 SignatureScheme::PasskeyAuthenticator => {
-                    let passkey = PasskeyAuthenticator::from_serialized_bytes(bytes)?;
+                    let passkey = PasskeyAuthenticator::from_bytes(bytes)?;
                     Ok(Self::PasskeyAuthenticator(passkey))
                 }
                 SignatureScheme::MoveAuthenticator => {
-                    let move_auth = MoveAuthenticator::from_serialized_bytes(bytes)?;
+                    let move_auth = MoveAuthenticator::from_bytes(bytes)?;
                     Ok(Self::MoveAuthenticator(move_auth))
                 }
             }
-        }
-
-        pub fn from_bytes(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
         }
 
         pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
@@ -664,7 +658,7 @@ mod serialization {
             use serde::de::Error;
 
             let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
-            Self::from_bytes(&bytes)
+            Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
         }
     }
 
@@ -807,7 +801,7 @@ mod serialization {
 
                 let bytes: std::borrow::Cow<'de, [u8]> =
                     serde_with::Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
+                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }

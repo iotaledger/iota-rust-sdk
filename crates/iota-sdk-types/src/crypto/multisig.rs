@@ -557,6 +557,7 @@ mod serialization {
     };
 
     #[derive(serde::Deserialize)]
+    // TODO is this really needed?
     pub struct Multisig {
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
@@ -618,7 +619,7 @@ mod serialization {
                 })
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes).map_err(serde::de::Error::custom)
+                Self::from_bytes(bytes).map_err(serde::de::Error::custom)
             }
         }
     }
@@ -637,21 +638,21 @@ mod serialization {
             buf
         }
 
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
                     SignatureFromBytesError::new("missing signature scheme flag")
                 })?)
                 .map_err(SignatureFromBytesError::new)?;
+
             if flag != SignatureScheme::Multisig {
                 return Err(SignatureFromBytesError::new("invalid multisig flag"));
             }
-            let bcs_bytes = &bytes[1..];
 
-            if let Ok(multisig) = bcs::from_bytes::<Multisig>(bcs_bytes) {
+            if let Ok(multisig) = bcs::from_bytes::<Multisig>(&bytes[1..]) {
+                // TODO
+                // multisig.init_and_validate()
                 Ok(Self {
                     signatures: multisig.signatures,
                     bitmap: multisig.bitmap,

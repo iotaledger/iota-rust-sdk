@@ -181,7 +181,7 @@ mod serialization {
                 Self::try_from_raw(authenticator)
             } else {
                 let bytes: Cow<'de, [u8]> = Bytes::deserialize_as(deserializer)?;
-                Self::from_serialized_bytes(bytes)
+                Self::from_bytes(bytes)
             }
             .map_err(serde::de::Error::custom)
         }
@@ -244,9 +244,7 @@ mod serialization {
             })
         }
 
-        pub fn from_serialized_bytes(
-            bytes: impl AsRef<[u8]>,
-        ) -> Result<Self, SignatureFromBytesError> {
+        pub fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, SignatureFromBytesError> {
             let bytes = bytes.as_ref();
             let flag =
                 SignatureScheme::from_byte(*bytes.first().ok_or_else(|| {
