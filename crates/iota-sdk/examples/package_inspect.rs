@@ -395,9 +395,6 @@ async fn main() -> Result<()> {
         .ok_or_eyre("missing latest package")?;
     let versions = fetch_package_versions(&client, package_address).await?;
 
-    println!("Requested package id: {package_id}");
-    println!("Resolved package id: {}", package.id);
-    println!("Resolved version: {}", package.version);
     println!(
         "Latest version: {} ({})",
         latest_package.version, latest_package.id

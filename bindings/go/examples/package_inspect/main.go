@@ -507,9 +507,6 @@ func main() {
 
 	packagePrefix := pkg.Id().ToHex()
 
-	fmt.Println("Requested package id:", packageID)
-	fmt.Println("Resolved package id:", packagePrefix)
-	fmt.Println("Resolved version:", pkg.Version())
 	fmt.Printf("Latest version: %d (%s)\n", latest.Version(), latest.Id().ToHex())
 	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
 	if err != nil {

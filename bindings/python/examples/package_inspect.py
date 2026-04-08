@@ -312,10 +312,6 @@ async def main():
 
     versions = await fetch_package_versions(client, package_address)
     package_prefix = package.id().to_hex()
-
-    print(f"Requested package id: {package_id}")
-    print(f"Resolved package id: {package_prefix}")
-    print(f"Resolved version: {package.version()}")
     print(
         f"Latest version: {latest_package.version()} ({latest_package.id().to_hex()})"
     )

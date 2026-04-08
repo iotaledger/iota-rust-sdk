@@ -391,10 +391,6 @@ struct PackageInspectExample {
 
     let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
     let packagePrefix = package.id().toHex()
-
-    print("Requested package id: \(packageId)")
-    print("Resolved package id: \(packagePrefix)")
-    print("Resolved version: \(package.version())")
     print("Latest version: \(latestPackage.version()) (\(latestPackage.id().toHex()))")
     print("Current package policy: \(try await currentPackagePolicy(client: client, packageId: package.id()))")
     print()

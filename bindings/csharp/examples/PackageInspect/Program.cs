@@ -484,10 +484,6 @@ class Program
 
         var versions = await FetchPackageVersions(client, packageAddress);
         var packagePrefix = package.Id().ToHex();
-
-        Console.WriteLine($"Requested package id: {packageId}");
-        Console.WriteLine($"Resolved package id: {packagePrefix}");
-        Console.WriteLine($"Resolved version: {package.Version()}");
         Console.WriteLine(
             $"Latest version: {latestPackage.Version()} ({latestPackage.Id().ToHex()})"
         );
