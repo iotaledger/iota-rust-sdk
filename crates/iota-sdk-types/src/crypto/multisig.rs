@@ -17,7 +17,7 @@ use super::{
     Secp256r1Signature, SignatureScheme,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
 };
-use crate::PublicKeyExt;
+use crate::{Address, PublicKeyExt};
 
 pub type WeightUnit = u8;
 pub type ThresholdUnit = u16;
@@ -272,6 +272,12 @@ impl MultisigCommittee {
                     .skip(i + 1)
                     .any(|m| member.public_key == m.public_key)
             })
+    }
+}
+
+impl From<&MultisigCommittee> for Address {
+    fn from(committee: &MultisigCommittee) -> Self {
+        committee.derive_address()
     }
 }
 
