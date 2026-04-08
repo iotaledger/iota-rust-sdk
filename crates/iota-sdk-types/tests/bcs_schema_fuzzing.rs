@@ -34,7 +34,7 @@ enum Expr {
     FixedBytes(usize),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone)]
 enum PrimKind {
     U8,
     U16,
@@ -242,7 +242,7 @@ const MAX_DEPTH: usize = 8;
 
 /// Rule-name → generator overrides used for types whose BCS deserializer
 /// applies semantic validation (e.g. scheme bytes, bitmap magic).
-type Overrides = HashMap<&'static str, fn(&mut StdRng) -> Vec<u8>>;
+type Overrides = HashMap<&'static str, fn(&mut TestHarness) -> Vec<u8>>;
 
 fn encode_uleb128(mut n: u64) -> Vec<u8> {
     let mut out = Vec::new();
@@ -258,224 +258,6 @@ fn encode_uleb128(mut n: u64) -> Vec<u8> {
         }
     }
     out
-}
-
-/// Generate a valid `checkpoint-contents` in BCS wire form.
-///
-/// The binary format is: `%x00` (V1 discriminant) + two parallel vectors of
-/// the *same* length. The deserializer enforces this length invariant, so the
-/// two vectors must be generated in sync.
-fn gen_checkpoint_contents(rng: &mut StdRng) -> Vec<u8> {
-    let count = (rng.next_u32() as usize) % 6;
-    let mut out = vec![0x00]; // V1 enum discriminant
-    // First vector: (digest, digest) pairs — one pair per transaction
-    out.extend(encode_uleb128(count as u64));
-    for _ in 0..count {
-        // Each digest = %x20 32OCTET
-        out.push(0x20);
-        let mut buf = [0u8; 32];
-        rng.fill_bytes(&mut buf);
-        out.extend_from_slice(&buf);
-        out.push(0x20);
-        rng.fill_bytes(&mut buf);
-        out.extend_from_slice(&buf);
-    }
-    // Second vector: (vector user-signature) — same count
-    out.extend(encode_uleb128(count as u64));
-    for _ in 0..count {
-        let n_sigs = (rng.next_u32() as usize) % 4;
-        out.extend(encode_uleb128(n_sigs as u64));
-        for _ in 0..n_sigs {
-            out.extend(gen_user_signature(rng));
-        }
-    }
-    out
-}
-
-/// Generate a valid `user-signature` in BCS wire form.
-///
-/// BCS `bytes` = ULEB128(97) + [0x00 scheme flag] + [64 Ed25519 sig] + [32
-/// pubkey].
-fn gen_user_signature(rng: &mut StdRng) -> Vec<u8> {
-    const PAYLOAD_LEN: usize = 1 + 64 + 32; // scheme byte + sig + pubkey
-    let mut out = encode_uleb128(PAYLOAD_LEN as u64);
-    out.push(0x00); // Ed25519 scheme flag
-    let mut buf = vec![0u8; 64 + 32];
-    rng.fill_bytes(&mut buf);
-    out.extend(buf);
-    out
-}
-
-/// Generate a valid `validator-aggregated-signature` in BCS wire form.
-///
-/// Layout: u64 epoch + 48OCTET bls-sig + BCS-bytes(roaring bitmap).
-/// Uses an empty RoaringBitmap so the bitmap deserialization always succeeds.
-fn gen_validator_aggregated_signature(rng: &mut StdRng) -> Vec<u8> {
-    let mut out = rng.next_u64().to_le_bytes().to_vec(); // epoch u64
-    let mut sig = vec![0u8; 48];
-    rng.fill_bytes(&mut sig);
-    out.extend(sig); // bls12381-signature = 48OCTET (no length prefix)
-    // serialize empty RoaringBitmap then wrap as BCS bytes
-    let bitmap = roaring::RoaringBitmap::new();
-    let mut bitmap_bytes = Vec::new();
-    bitmap
-        .serialize_into(&mut bitmap_bytes)
-        .expect("roaring serialize");
-    out.extend(encode_uleb128(bitmap_bytes.len() as u64));
-    out.extend(bitmap_bytes);
-    out
-}
-
-fn generate(
-    rule: &str,
-    grammar: &HashMap<String, Expr>,
-    overrides: &Overrides,
-    rng: &mut StdRng,
-) -> Vec<u8> {
-    if let Some(f) = overrides.get(rule) {
-        return f(rng);
-    }
-    let expr = grammar
-        .get(rule)
-        .unwrap_or_else(|| panic!("unknown rule: {rule}"));
-    gen_expr(expr, grammar, overrides, rng, 0)
-}
-
-fn gen_expr(
-    expr: &Expr,
-    grammar: &HashMap<String, Expr>,
-    overrides: &Overrides,
-    rng: &mut StdRng,
-    depth: usize,
-) -> Vec<u8> {
-    let minimal = depth > MAX_DEPTH;
-    match expr {
-        Expr::Empty => vec![],
-        Expr::Concat(parts) => {
-            let mut out = Vec::new();
-            for p in parts {
-                out.extend(gen_expr(p, grammar, overrides, rng, depth));
-            }
-            out
-        }
-        Expr::Alt(alts) => {
-            let idx = if minimal {
-                0
-            } else {
-                (rng.next_u64() as usize) % alts.len()
-            };
-            gen_expr(&alts[idx], grammar, overrides, rng, depth)
-        }
-        Expr::Literal(b) => vec![*b],
-        Expr::RuleRef(name) => {
-            if let Some(f) = overrides.get(name.as_str()) {
-                return f(rng);
-            }
-            let child = grammar
-                .get(name.as_str())
-                .unwrap_or_else(|| panic!("unknown rule: {name}"));
-            gen_expr(child, grammar, overrides, rng, depth + 1)
-        }
-        Expr::Prim(p) => gen_prim(p, rng),
-        Expr::Vector(inner) => {
-            // Keep vectors small: 0-5 elements normally, 0 in minimal mode
-            let count: usize = if minimal {
-                0
-            } else {
-                (rng.next_u32() as usize) % 6
-            };
-            let mut out = encode_uleb128(count as u64);
-            for _ in 0..count {
-                out.extend(gen_expr(inner, grammar, overrides, rng, depth));
-            }
-            out
-        }
-        Expr::Opt(inner) => {
-            let some = !minimal && (rng.next_u32() & 1 == 0);
-            if some {
-                let mut out = vec![0x01];
-                out.extend(gen_expr(inner, grammar, overrides, rng, depth));
-                out
-            } else {
-                vec![0x00]
-            }
-        }
-        Expr::Map(k_expr, v_expr) => {
-            let count: usize = if minimal {
-                0
-            } else {
-                (rng.next_u32() as usize) % 4
-            };
-            let mut pairs: Vec<(Vec<u8>, Vec<u8>)> = (0..count)
-                .map(|_| {
-                    (
-                        gen_expr(k_expr, grammar, overrides, rng, depth),
-                        gen_expr(v_expr, grammar, overrides, rng, depth),
-                    )
-                })
-                .collect();
-            // BCS requires maps to be in canonical (lexicographic) key order
-            // and keys must be unique.
-            pairs.sort_by(|(a, _), (b, _)| a.cmp(b));
-            pairs.dedup_by(|(a, _), (b, _)| a == b);
-            let actual = pairs.len();
-            let mut out = encode_uleb128(actual as u64);
-            for (k, v) in pairs {
-                out.extend(k);
-                out.extend(v);
-            }
-            out
-        }
-        Expr::FixedBytes(n) => {
-            let mut bytes = vec![0u8; *n];
-            rng.fill_bytes(&mut bytes);
-            bytes
-        }
-    }
-}
-
-fn gen_prim(p: &PrimKind, rng: &mut StdRng) -> Vec<u8> {
-    match p {
-        PrimKind::U8 => (rng.next_u32() as u8).to_le_bytes().to_vec(),
-        PrimKind::U16 => (rng.next_u32() as u16).to_le_bytes().to_vec(),
-        PrimKind::U32 => rng.next_u32().to_le_bytes().to_vec(),
-        PrimKind::U64 => rng.next_u64().to_le_bytes().to_vec(),
-        PrimKind::U128 => {
-            let lo = rng.next_u64() as u128;
-            let hi = rng.next_u64() as u128;
-            ((hi << 64) | lo).to_le_bytes().to_vec()
-        }
-        PrimKind::I64 => (rng.next_u64() as i64).to_le_bytes().to_vec(),
-        PrimKind::Bool => vec![rng.next_u32() as u8 & 1],
-        PrimKind::Bytes => {
-            let len = (rng.next_u32() as usize) % 17; // 0..=16
-            let mut out = encode_uleb128(len as u64);
-            let mut content = vec![0u8; len];
-            rng.fill_bytes(&mut content);
-            out.extend(content);
-            out
-        }
-        PrimKind::Str => {
-            // Non-empty ASCII identifier (a-z first char, then a-z0-9_).
-            // BCS strings are UTF-8; Move Identifier validation requires non-empty
-            // strings starting with a letter.  This conservative generation avoids
-            // TypeParseError rejections that would mask real format bugs.
-            let len = 1 + (rng.next_u32() as usize) % 16; // 1..=16
-            let mut out = encode_uleb128(len as u64);
-            // First character: always a letter
-            out.push(b'a' + (rng.next_u32() as u8 % 26));
-            // Remaining characters: letter, digit, or underscore
-            for _ in 1..len {
-                let ch = match rng.next_u32() % 3 {
-                    0 => b'a' + (rng.next_u32() as u8 % 26),
-                    1 => b'0' + (rng.next_u32() as u8 % 10),
-                    _ => b'_',
-                };
-                out.push(ch);
-            }
-            out
-        }
-    }
 }
 
 // ─── Test harness
@@ -504,11 +286,15 @@ impl TestHarness {
         // The override generators are wired into gen_expr so they fire whenever the
         // named rule is referenced at any depth, fixing all cascade types too.
         let mut overrides: Overrides = Default::default();
-        overrides.insert("checkpoint-contents", gen_checkpoint_contents);
-        overrides.insert("user-signature", gen_user_signature);
+        overrides.insert("checkpoint-contents", Self::gen_checkpoint_contents);
+        overrides.insert("user-signature", Self::gen_user_signature);
         overrides.insert(
             "validator-aggregated-signature",
-            gen_validator_aggregated_signature,
+            Self::gen_validator_aggregated_signature,
+        );
+        overrides.insert(
+            "checkpoint-transaction",
+            Self::generate_checkpoint_transaction,
         );
 
         Self {
@@ -519,37 +305,281 @@ impl TestHarness {
         }
     }
 
-    /// Generate `$iters` byte sequences conforming to `rule` and assert that
-    /// `bcs::from_bytes::<$ty>` accepts each one.
-    /// Failures are collected into a vector rather than panicking immediately,
-    /// so the full test can run to completion.
+    fn generate(&mut self, rule: &str) -> Vec<u8> {
+        if let Some(f) = self.overrides.get(rule) {
+            return f(self);
+        }
+        let expr = self
+            .grammar
+            .get(rule)
+            .cloned()
+            .unwrap_or_else(|| panic!("unknown rule: {rule}"));
+        self.gen_expr(expr, 0)
+    }
+
+    /// Generate a valid `checkpoint-transaction` in BCS wire form.
+    fn generate_checkpoint_transaction(&mut self) -> Vec<u8> {
+        let mut out = Vec::new();
+        // Intent
+        out.push(0x01); // V1 enum discriminant
+        out.push(0x00); // Intent scope = TransactionData
+        out.push(0x00); // Intent version = V0
+        out.push(0x00); // Intent app ID = Iota
+
+        // Signed Transaction
+        out.extend(self.generate("signed-transaction"));
+        // Transaction Effects
+        out.extend(self.generate("transaction-effects"));
+        // Transaction Events (optional)
+        let opt = self.rng.next_u32() & 1 == 0;
+        if opt {
+            out.push(0x01);
+            out.extend(self.generate("transaction-events"));
+        } else {
+            out.push(0x00);
+        }
+        // Input objects
+        let count = (self.rng.next_u32() as usize) % 6;
+        out.extend(encode_uleb128(count as u64));
+        for _ in 0..count {
+            out.extend(self.generate("object"));
+        }
+        // Output objects
+        let count = (self.rng.next_u32() as usize) % 6;
+        out.extend(encode_uleb128(count as u64));
+        for _ in 0..count {
+            out.extend(self.generate("object"));
+        }
+        out
+    }
+
+    /// Generate a valid `checkpoint-contents` in BCS wire form.
+    ///
+    /// The binary format is: `%x00` (V1 discriminant) + two parallel vectors of
+    /// the *same* length. The deserializer enforces this length invariant, so
+    /// the two vectors must be generated in sync.
+    fn gen_checkpoint_contents(&mut self) -> Vec<u8> {
+        let count = (self.rng.next_u32() as usize) % 6;
+        let mut out = vec![0x00]; // V1 enum discriminant
+        // First vector: (digest, digest) pairs — one pair per transaction
+        out.extend(encode_uleb128(count as u64));
+        for _ in 0..count {
+            out.extend(self.generate("digest"));
+            out.extend(self.generate("digest"));
+        }
+        // Second vector: (vector user-signature) — same count
+        out.extend(encode_uleb128(count as u64));
+        for _ in 0..count {
+            let n_sigs = (self.rng.next_u32() as usize) % 4;
+            out.extend(encode_uleb128(n_sigs as u64));
+            for _ in 0..n_sigs {
+                out.extend(self.gen_user_signature());
+            }
+        }
+        out
+    }
+
+    /// Generate a valid `user-signature` in BCS wire form.
+    ///
+    /// BCS `bytes` = ULEB128(97) + [0x00 scheme flag] + [64 Ed25519 sig] + [32
+    /// pubkey].
+    fn gen_user_signature(&mut self) -> Vec<u8> {
+        const PAYLOAD_LEN: usize = 1 + 64 + 32; // scheme byte + sig + pubkey
+        let mut out = encode_uleb128(PAYLOAD_LEN as u64);
+        out.push(0x00); // Ed25519 scheme flag
+        let mut buf = vec![0u8; 64 + 32];
+        self.rng.fill_bytes(&mut buf);
+        out.extend(buf);
+        out
+    }
+
+    /// Generate a valid `validator-aggregated-signature` in BCS wire form.
+    ///
+    /// Layout: u64 epoch + 48OCTET bls-sig + BCS-bytes(roaring bitmap).
+    /// Uses an empty RoaringBitmap so the bitmap deserialization always
+    /// succeeds.
+    fn gen_validator_aggregated_signature(&mut self) -> Vec<u8> {
+        let mut out = self.rng.next_u64().to_le_bytes().to_vec(); // epoch u64
+        let mut sig = vec![0u8; 48];
+        self.rng.fill_bytes(&mut sig);
+        out.extend(sig); // bls12381-signature = 48OCTET (no length prefix)
+        // serialize empty RoaringBitmap then wrap as BCS bytes
+        let bitmap = roaring::RoaringBitmap::new();
+        let mut bitmap_bytes = Vec::new();
+        bitmap
+            .serialize_into(&mut bitmap_bytes)
+            .expect("roaring serialize");
+        out.extend(encode_uleb128(bitmap_bytes.len() as u64));
+        out.extend(bitmap_bytes);
+        out
+    }
+
+    fn gen_expr(&mut self, expr: Expr, depth: usize) -> Vec<u8> {
+        let minimal = depth > MAX_DEPTH;
+        match expr {
+            Expr::Empty => vec![],
+            Expr::Concat(parts) => {
+                let mut out = Vec::new();
+                for p in parts {
+                    out.extend(self.gen_expr(p, depth));
+                }
+                out
+            }
+            Expr::Alt(alts) => {
+                let idx = if minimal {
+                    0
+                } else {
+                    (self.rng.next_u64() as usize) % alts.len()
+                };
+                self.gen_expr(alts[idx].clone(), depth)
+            }
+            Expr::Literal(b) => vec![b],
+            Expr::RuleRef(name) => {
+                if let Some(f) = self.overrides.get(name.as_str()) {
+                    return f(self);
+                }
+                let child = self
+                    .grammar
+                    .get(name.as_str())
+                    .cloned()
+                    .unwrap_or_else(|| panic!("unknown rule: {name}"));
+                self.gen_expr(child, depth + 1)
+            }
+            Expr::Prim(p) => self.gen_prim(p),
+            Expr::Vector(inner) => {
+                // Keep vectors small: 0-5 elements normally, 0 in minimal mode
+                let count: usize = if minimal {
+                    0
+                } else {
+                    (self.rng.next_u32() as usize) % 6
+                };
+                let mut out = encode_uleb128(count as u64);
+                for _ in 0..count {
+                    out.extend(self.gen_expr((*inner).clone(), depth));
+                }
+                out
+            }
+            Expr::Opt(inner) => {
+                let some = !minimal && (self.rng.next_u32() & 1 == 0);
+                if some {
+                    let mut out = vec![0x01];
+                    out.extend(self.gen_expr((*inner).clone(), depth));
+                    out
+                } else {
+                    vec![0x00]
+                }
+            }
+            Expr::Map(k_expr, v_expr) => {
+                let count: usize = if minimal {
+                    0
+                } else {
+                    (self.rng.next_u32() as usize) % 4
+                };
+                let mut pairs: Vec<(Vec<u8>, Vec<u8>)> = (0..count)
+                    .map(|_| {
+                        (
+                            self.gen_expr((*k_expr).clone(), depth),
+                            self.gen_expr((*v_expr).clone(), depth),
+                        )
+                    })
+                    .collect();
+                // BCS requires maps to be in canonical (lexicographic) key order
+                // and keys must be unique.
+                pairs.sort_by(|(a, _), (b, _)| a.cmp(b));
+                pairs.dedup_by(|(a, _), (b, _)| a == b);
+                let actual = pairs.len();
+                let mut out = encode_uleb128(actual as u64);
+                for (k, v) in pairs {
+                    out.extend(k);
+                    out.extend(v);
+                }
+                out
+            }
+            Expr::FixedBytes(n) => {
+                let mut bytes = vec![0u8; n];
+                self.rng.fill_bytes(&mut bytes);
+                bytes
+            }
+        }
+    }
+
+    fn gen_prim(&mut self, p: PrimKind) -> Vec<u8> {
+        match p {
+            PrimKind::U8 => (self.rng.next_u32() as u8).to_le_bytes().to_vec(),
+            PrimKind::U16 => (self.rng.next_u32() as u16).to_le_bytes().to_vec(),
+            PrimKind::U32 => self.rng.next_u32().to_le_bytes().to_vec(),
+            PrimKind::U64 => self.rng.next_u64().to_le_bytes().to_vec(),
+            PrimKind::U128 => {
+                let lo = self.rng.next_u64() as u128;
+                let hi = self.rng.next_u64() as u128;
+                ((hi << 64) | lo).to_le_bytes().to_vec()
+            }
+            PrimKind::I64 => (self.rng.next_u64() as i64).to_le_bytes().to_vec(),
+            PrimKind::Bool => vec![self.rng.next_u32() as u8 & 1],
+            PrimKind::Bytes => {
+                let len = (self.rng.next_u32() as usize) % 17; // 0..=16
+                let mut out = encode_uleb128(len as u64);
+                let mut content = vec![0u8; len];
+                self.rng.fill_bytes(&mut content);
+                out.extend(content);
+                out
+            }
+            PrimKind::Str => {
+                // Non-empty ASCII identifier (a-z first char, then a-z0-9_).
+                // BCS strings are UTF-8; Move Identifier validation requires non-empty
+                // strings starting with a letter.  This conservative generation avoids
+                // TypeParseError rejections that would mask real format bugs.
+                let len = 1 + (self.rng.next_u32() as usize) % 16; // 1..=16
+                let mut out = encode_uleb128(len as u64);
+                // First character: always a letter
+                out.push(b'a' + (self.rng.next_u32() as u8 % 26));
+                // Remaining characters: letter, digit, or underscore
+                for _ in 1..len {
+                    let ch = match self.rng.next_u32() % 3 {
+                        0 => b'a' + (self.rng.next_u32() as u8 % 26),
+                        1 => b'0' + (self.rng.next_u32() as u8 % 10),
+                        _ => b'_',
+                    };
+                    out.push(ch);
+                }
+                out
+            }
+        }
+    }
+
+    /// Generate byte sequences conforming to `rule` and assert that
+    /// a round trip of deserialization followed by serialization returns the
+    /// same bytes. Failures are collected into a vector rather than
+    /// panicking immediately, so the full test can run to completion.
     fn check_rule<T: Serialize + DeserializeOwned>(&mut self, rule: &str) {
         const ITERATIONS: usize = 200;
-        for i in 0_usize..ITERATIONS {
-            let bytes = generate(rule, &self.grammar, &self.overrides, &mut self.rng);
+        for _ in 0_usize..ITERATIONS {
+            let bytes = self.generate(rule);
             match bcs::from_bytes::<T>(&bytes) {
                 Ok(val) => match bcs::to_bytes(&val) {
                     Ok(round_trip) => {
                         if round_trip != bytes {
                             self.failures
-                                .push(format!("Rule '{rule}' iter {i}: round-trip mismatch:\n  original bytes ({} bytes): {bytes:02x?}\n  round-trip bytes ({} bytes): {round_trip:02x?}",
+                                .push(format!("Rule '{rule}': round-trip mismatch:\n  original bytes ({} bytes): {:02x?}\n  round-trip bytes ({} bytes): {:02x?}",
                                     bytes.len(),
+                                    hex::encode(bytes),
                                     round_trip.len(),
+                                    hex::encode(round_trip),
                                 ));
                             break;
                         }
                     }
                     Err(e) => {
                         self.failures
-                            .push(format!("Rule '{rule}' iter {i}: serialization failed: {e}"));
+                            .push(format!("Rule '{rule}': serialization failed: {e}"));
                         break;
                     }
                 },
                 Err(e) => {
                     self.failures.push(format!(
-                        "Rule '{rule}' iter {i}: {e}\n  bytes ({} bytes): {:02x?}",
+                        "Rule '{rule}': deserialization failed: {e}\n  bytes ({} bytes): {:02x?}",
                         bytes.len(),
-                        bytes,
+                        hex::encode(bytes),
                     ));
                     break;
                 }
@@ -598,6 +628,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<IdOperation>("id-operation");
     test.check_rule::<Identifier>("identifier");
     test.check_rule::<Input>("input");
+    test.check_rule::<Intent>("intent");
     test.check_rule::<Jwk>("jwk");
     test.check_rule::<JwkId>("jwk-id");
     test.check_rule::<MakeMoveVector>("make-move-vector");

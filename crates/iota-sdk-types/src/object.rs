@@ -496,13 +496,6 @@ fn id_opt(contents: &[u8]) -> Option<ObjectId> {
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-// The binary format wraps the struct in a single-variant enum `BinaryGenesisObject::RawObject`,
-// which BCS encodes as %x00 + fields.
-#[cfg_attr(
-    feature = "bcs-schema",
-    bcs_schema(definition = "%x00 object-data owner")
-)]
 pub struct GenesisObject {
     pub data: ObjectData,
     pub owner: Owner,
@@ -920,6 +913,8 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "genesis-object"))]
     enum BinaryGenesisObject {
         RawObject { data: ObjectData, owner: Owner },
     }
@@ -936,6 +931,17 @@ mod serialization {
                     linkage_table: package.linkage_table.clone(),
                 }),
             }
+        }
+    }
+
+    #[cfg(feature = "bcs-schema")]
+    impl iota_bcs_schema::BcsSchema for GenesisObject {
+        fn schema_name() -> &'static str {
+            BinaryGenesisObject::schema_name()
+        }
+
+        fn schema_definition() -> &'static str {
+            BinaryGenesisObject::schema_definition()
         }
     }
 

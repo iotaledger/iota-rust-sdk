@@ -80,7 +80,10 @@ changed-object = object-id      ; object-id
 
 checkpoint-commitment = %x00 digest   ; EcmhLiveObjectSet
 
-checkpoint-contents = %x00 (vector (digest digest)) (vector (vector user-signature))
+checkpoint-contents = %x00 checkpoint-contents-v1   ; V1
+
+checkpoint-contents-v1 = (vector execution-digests)         ; digests
+                         (vector (vector user-signature))   ; signatures
 
 checkpoint-data = signed-checkpoint-summary         ; checkpoint-summary
                   checkpoint-contents               ; checkpoint-contents
@@ -97,11 +100,11 @@ checkpoint-summary = u64                              ; epoch
                      (option end-of-epoch-data)       ; end-of-epoch-data
                      bytes                            ; version-specific-data
 
-checkpoint-transaction = %x01 %x00 %x00 %x00 transaction (vector user-signature)   ; transaction
-                         transaction-effects                                       ; effects
-                         (option transaction-events)                               ; events
-                         (vector object)                                           ; input-objects
-                         (vector object)                                           ; output-objects
+checkpoint-transaction = %x01 intent-signed-transaction   ; transaction
+                         transaction-effects              ; effects
+                         (option transaction-events)      ; events
+                         (vector object)                  ; input-objects
+                         (vector object)                  ; output-objects
 
 command = %x00 move-call   ; MoveCall
         / %x01 transfer-objects   ; TransferObjects
@@ -158,6 +161,9 @@ event = object-id    ; package-id
         address      ; sender
         struct-tag   ; type-
         bytes        ; contents
+
+execution-digests = digest   ; transaction
+                    digest   ; effects
 
 execution-error = %x00   ; InsufficientGas
                 / %x01   ; InvalidGasObject
@@ -226,7 +232,7 @@ gas-payment = (vector object-reference)   ; objects
               u64                         ; price
               u64                         ; budget
 
-genesis-object = %x00 object-data owner
+genesis-object = %x00 object-data owner   ; RawObject
 
 genesis-transaction = (vector genesis-object)   ; objects
                       (vector event)            ; events
@@ -243,11 +249,25 @@ intent = intent-scope     ; scope
          intent-version   ; version
          intent-app-id    ; app-id
 
-intent-app-id = u8
+intent-app-id = %x00   ; Iota
+              / %x01   ; Consensus
 
-intent-scope = u8
+intent-scope = %x00   ; TransactionData
+             / %x01   ; TransactionEffects
+             / %x02   ; CheckpointSummary
+             / %x03   ; PersonalMessage
+             / %x04   ; SenderSignedTransaction
+             / %x05   ; ProofOfPossession
+             / %x06   ; BridgeEventDeprecated
+             / %x07   ; ConsensusBlock
+             / %x08   ; DiscoveryPeers
+             / %x09   ; AuthorityCapabilities
 
-intent-version = u8
+intent-signed-transaction = intent                    ; intent
+                            transaction               ; transaction
+                            (vector user-signature)   ; signatures
+
+intent-version = %x00   ; V0
 
 jwk = string   ; kty
       string   ; e

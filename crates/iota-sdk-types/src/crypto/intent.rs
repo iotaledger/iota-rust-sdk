@@ -151,7 +151,6 @@ impl FromStr for Intent {
 )]
 #[repr(u8)]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "u8"))]
 #[non_exhaustive]
 pub enum IntentScope {
     TransactionData = 0,         // Used for a user signature on a transaction data.
@@ -212,7 +211,6 @@ impl TryFrom<u8> for IntentScope {
 )]
 #[repr(u8)]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "u8"))]
 #[non_exhaustive]
 pub enum IntentVersion {
     V0 = 0,
@@ -253,7 +251,6 @@ impl TryFrom<u8> for IntentVersion {
 )]
 #[repr(u8)]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[cfg_attr(feature = "bcs-schema", bcs_schema(definition = "u8"))]
 #[non_exhaustive]
 pub enum IntentAppId {
     Iota = 0,

@@ -771,93 +771,24 @@ mod signed_transaction {
 
     use super::*;
     use crate::{
-        UserSignature,
+        Intent, UserSignature,
         transaction::{SignedTransaction, Transaction},
     };
-
-    /// Intents are defined as:
-    ///
-    /// ```
-    /// struct Intent {
-    ///     scope: IntentScope,
-    ///     version: IntentVersion,
-    ///     app_id: IntendAppId,
-    /// }
-    ///
-    /// enum IntentScope {
-    ///     TransactionData = 0,         // Used for a user signature on a transaction data.
-    ///     TransactionEffects = 1,      // Used for an authority signature on transaction effects.
-    ///     CheckpointSummary = 2,       // Used for an authority signature on a checkpoint summary.
-    ///     PersonalMessage = 3,         // Used for a user signature on a personal message.
-    ///     SenderSignedTransaction = 4, // Used for an authority signature on a user signed transaction.
-    ///     ProofOfPossession = 5,       /* Used as a signature representing an authority's proof of
-    ///                                   * possession of its authority key. */
-    ///     BridgeEventDeprecated = 6, /* Deprecated. Should not be reused. Introduced for bridge
-    ///                                 * purposes but was never included in messages. */
-    ///     ConsensusBlock = 7, // Used for consensus authority signature on block's digest.
-    ///     DiscoveryPeers = 8, // Used for reporting peer addresses in discovery
-    ///     AuthorityCapabilities = 9, // Used for authority capabilities from non-committee authorities.
-    /// }
-    ///
-    /// enum IntentVersion {
-    ///     V0 = 0,
-    /// }
-    ///
-    /// enum IntendAppId {
-    ///     Iota = 0,
-    ///     Consensus = 1,
-    /// }
-    /// ```
-    struct IntentMessageWrappedTransaction;
-
-    impl SerializeAs<Transaction> for IntentMessageWrappedTransaction {
-        fn serialize_as<S>(transaction: &Transaction, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            use serde::ser::SerializeTuple;
-
-            let mut s = serializer.serialize_tuple(4)?;
-            s.serialize_element(&0u8)?;
-            s.serialize_element(&0u8)?;
-            s.serialize_element(&0u8)?;
-            s.serialize_element(transaction)?;
-            s.end()
-        }
-    }
-
-    impl<'de> DeserializeAs<'de, Transaction> for IntentMessageWrappedTransaction {
-        fn deserialize_as<D>(deserializer: D) -> Result<Transaction, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let (scope, version, app, transaction): (u8, u8, u8, Transaction) =
-                Deserialize::deserialize(deserializer)?;
-            match (scope, version, app) {
-                (0, 0, 0) => {}
-                _ => {
-                    return Err(serde::de::Error::custom(format!(
-                        "invalid intent message ({scope}, {version}, {app})"
-                    )));
-                }
-            }
-
-            Ok(transaction)
-        }
-    }
 
     pub(crate) struct SignedTransactionWithIntentMessage;
 
     #[derive(serde::Serialize)]
     struct BinarySignedTransactionWithIntentMessageRef<'a> {
-        #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
+        intent: &'a Intent,
         transaction: &'a Transaction,
         signatures: &'a Vec<UserSignature>,
     }
 
     #[derive(serde::Deserialize)]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "intent-signed-transaction"))]
     struct BinarySignedTransactionWithIntentMessage {
-        #[serde(with = "::serde_with::As::<IntentMessageWrappedTransaction>")]
+        intent: Intent,
         transaction: Transaction,
         signatures: Vec<UserSignature>,
     }
@@ -877,7 +808,13 @@ mod signed_transaction {
                     transaction,
                     signatures,
                 } = transaction;
+                let intent = Intent {
+                    scope: crate::IntentScope::TransactionData,
+                    version: crate::IntentVersion::V0,
+                    app_id: crate::IntentAppId::Iota,
+                };
                 let binary = BinarySignedTransactionWithIntentMessageRef {
+                    intent: &intent,
                     transaction,
                     signatures,
                 };
@@ -916,11 +853,20 @@ mod signed_transaction {
                         }
 
                         let BinarySignedTransactionWithIntentMessage {
+                            intent:
+                                Intent {
+                                    scope: crate::IntentScope::TransactionData,
+                                    version: crate::IntentVersion::V0,
+                                    app_id: crate::IntentAppId::Iota,
+                                },
                             transaction,
                             signatures,
                         } = seq.next_element()?.ok_or_else(|| {
                             serde::de::Error::custom("expected a sequence with length 1")
-                        })?;
+                        })?
+                        else {
+                            return Err(serde::de::Error::custom("invalid intent"));
+                        };
                         Ok(SignedTransaction {
                             transaction,
                             signatures,
