@@ -360,7 +360,7 @@ impl MultisigAggregatedSignature {
     /// invalid.
     // TODO keep this name or rename to new?
     pub fn combine(
-        signatures: Vec<MultisigMemberSignature>,
+        signatures: Vec<impl Into<MultisigMemberSignature>>,
         committee: MultisigCommittee,
     ) -> Result<Self, MultisigError> {
         // TODO call is_valid?
@@ -380,6 +380,7 @@ impl MultisigAggregatedSignature {
         // TODO do we actually need this vec?
         let mut sigs = Vec::with_capacity(signatures.len());
         for signature in signatures {
+            let signature = signature.into();
             let pk = signature.to_public_key()?;
             let index = committee.get_public_key_index(&pk).unwrap();
             // .ok_or(MultisigError::IncorrectSigner {
@@ -494,7 +495,7 @@ impl Hash for MultisigAggregatedSignature {
 /// zklogin-multisig-member-signature-deprecated    = %d03
 /// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, derive_more::From)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[non_exhaustive]
 // TODO why not a regular signature?
