@@ -89,9 +89,9 @@ fn parse_rule_block(block: &str) -> Option<(String, Expr)> {
         if content.is_empty() {
             continue;
         }
-        if content.starts_with('/') {
+        if let Some(stripped) = content.strip_prefix('/') {
             alternatives.push(current);
-            current = content[1..].trim().to_string();
+            current = stripped.trim().to_string();
         } else {
             if current.is_empty() {
                 current = content;
@@ -213,10 +213,10 @@ fn parse_atom(token: &str) -> Expr {
             u8::from_str_radix(hex, 16).unwrap_or_else(|_| panic!("invalid hex literal: %x{hex}"));
         return Expr::Literal(byte);
     }
-    if let Some(n_str) = token.strip_suffix("OCTET") {
-        if let Ok(n) = n_str.parse::<usize>() {
-            return Expr::FixedBytes(n);
-        }
+    if let Some(n_str) = token.strip_suffix("OCTET")
+        && let Ok(n) = n_str.parse::<usize>()
+    {
+        return Expr::FixedBytes(n);
     }
     match token {
         "u8" => Expr::Prim(PrimKind::U8),
