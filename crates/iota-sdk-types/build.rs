@@ -20,8 +20,8 @@ fn main() {
         let schema_file = manifest_dir.join("bcs-schema.abnf");
         let _ = std::fs::remove_file(&schema_file);
 
-        // 2. Touch all .rs files under src/ to invalidate incremental caches,
-        //    ensuring every #[derive(BcsSchema)] re-runs.
+        // 2. Touch all .rs files under src/ to invalidate incremental caches, ensuring
+        //    every #[derive(BcsSchema)] re-runs.
         let src_dir = manifest_dir.join("src");
         touch_all_rs(&src_dir);
     }

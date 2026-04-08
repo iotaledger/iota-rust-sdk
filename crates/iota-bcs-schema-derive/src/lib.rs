@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
 use syn::{
-    parse_macro_input, Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type,
+    Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type, parse_macro_input,
 };
 
 #[proc_macro_derive(BcsSchema, attributes(bcs_schema))]
@@ -119,8 +119,8 @@ fn type_to_schema(ty: &Type) -> String {
             };
             let name = seg.ident.to_string();
             match name.as_str() {
-                "u8" | "u16" | "u32" | "u64" | "u128" | "i8" | "i16" | "i32" | "i64"
-                | "i128" | "bool" => name,
+                "u8" | "u16" | "u32" | "u64" | "u128" | "i8" | "i16" | "i32" | "i64" | "i128"
+                | "bool" => name,
                 "str" | "String" => "string".into(),
                 "Vec" => match extract_single_generic(seg) {
                     Some(inner) if matches_type_name(&inner, "u8") => "bytes".into(),
@@ -214,8 +214,8 @@ fn collect_required_types(ty: &Type) -> Vec<Type> {
             let name = seg.ident.to_string();
             match name.as_str() {
                 // Primitives — no bound needed
-                "u8" | "u16" | "u32" | "u64" | "u128" | "i8" | "i16" | "i32" | "i64"
-                | "i128" | "bool" | "str" | "String" => vec![],
+                "u8" | "u16" | "u32" | "u64" | "u128" | "i8" | "i16" | "i32" | "i64" | "i128"
+                | "bool" | "str" | "String" => vec![],
                 // Containers — recurse into inner type(s)
                 "Vec" | "Option" | "Box" => match extract_single_generic(seg) {
                     Some(inner) => collect_required_types(&inner),
@@ -303,15 +303,8 @@ fn gen_struct(schema_name: &str, data: &syn::DataStruct) -> syn::Result<String> 
                 if fa.skip {
                     continue;
                 }
-                let type_str = fa
-                    .as_type
-                    .unwrap_or_else(|| type_to_schema(&field.ty));
-                let name = field
-                    .ident
-                    .as_ref()
-                    .unwrap()
-                    .to_string()
-                    .replace('_', "-");
+                let type_str = fa.as_type.unwrap_or_else(|| type_to_schema(&field.ty));
+                let name = field.ident.as_ref().unwrap().to_string().replace('_', "-");
                 parts.push((type_str, name));
             }
 
@@ -343,18 +336,13 @@ fn gen_struct(schema_name: &str, data: &syn::DataStruct) -> syn::Result<String> 
             if fields.unnamed.len() == 1 {
                 let field = &fields.unnamed[0];
                 let fa = parse_field_attrs(field)?;
-                let type_str = fa
-                    .as_type
-                    .unwrap_or_else(|| type_to_schema(&field.ty));
+                let type_str = fa.as_type.unwrap_or_else(|| type_to_schema(&field.ty));
                 Ok(format!("{schema_name} = {type_str}"))
             } else {
                 let mut types = Vec::new();
                 for field in &fields.unnamed {
                     let fa = parse_field_attrs(field)?;
-                    types.push(
-                        fa.as_type
-                            .unwrap_or_else(|| type_to_schema(&field.ty)),
-                    );
+                    types.push(fa.as_type.unwrap_or_else(|| type_to_schema(&field.ty)));
                 }
                 Ok(format!("{schema_name} = {}", types.join(" ")))
             }
@@ -390,10 +378,7 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
                 let mut types = Vec::new();
                 for f in &fields.unnamed {
                     let fa = parse_field_attrs(f)?;
-                    types.push(
-                        fa.as_type
-                            .unwrap_or_else(|| type_to_schema(&f.ty)),
-                    );
+                    types.push(fa.as_type.unwrap_or_else(|| type_to_schema(&f.ty)));
                 }
                 format!(" {}", types.join(" "))
             }
@@ -404,10 +389,7 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
                     if fa.skip {
                         continue;
                     }
-                    types.push(
-                        fa.as_type
-                            .unwrap_or_else(|| type_to_schema(&f.ty)),
-                    );
+                    types.push(fa.as_type.unwrap_or_else(|| type_to_schema(&f.ty)));
                 }
                 if types.is_empty() {
                     String::new()

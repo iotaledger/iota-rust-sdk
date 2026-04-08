@@ -20,9 +20,9 @@ pub use iota_bcs_schema_derive::BcsSchema;
 /// - `#[bcs_schema(name = "custom-name")]` — override the ABNF rule name
 ///   (defaults to kebab-case of the Rust type name).
 /// - `#[bcs_schema(definition = "32OCTET")]` — override the entire right-hand
-///   side of the rule. Useful for newtypes wrapping fixed-size byte arrays where
-///   the size is a const expression (`[u8; Self::LENGTH]`). When used, field
-///   types are **not** checked for `BcsSchema`.
+///   side of the rule. Useful for newtypes wrapping fixed-size byte arrays
+///   where the size is a const expression (`[u8; Self::LENGTH]`). When used,
+///   field types are **not** checked for `BcsSchema`.
 ///
 /// ## Field-level
 ///
@@ -92,26 +92,46 @@ impl_primitive! {
 }
 
 impl<T: BcsSchema> BcsSchema for Vec<T> {
-    fn schema_name() -> &'static str { "vector" }
-    fn schema_definition() -> &'static str { "vector = <container>" }
+    fn schema_name() -> &'static str {
+        "vector"
+    }
+    fn schema_definition() -> &'static str {
+        "vector = <container>"
+    }
 }
 
 impl<T: BcsSchema> BcsSchema for Option<T> {
-    fn schema_name() -> &'static str { "option" }
-    fn schema_definition() -> &'static str { "option = <container>" }
+    fn schema_name() -> &'static str {
+        "option"
+    }
+    fn schema_definition() -> &'static str {
+        "option = <container>"
+    }
 }
 
 impl<T: BcsSchema> BcsSchema for Box<T> {
-    fn schema_name() -> &'static str { "box" }
-    fn schema_definition() -> &'static str { "box = <transparent>" }
+    fn schema_name() -> &'static str {
+        "box"
+    }
+    fn schema_definition() -> &'static str {
+        "box = <transparent>"
+    }
 }
 
 impl<K: BcsSchema, V: BcsSchema> BcsSchema for BTreeMap<K, V> {
-    fn schema_name() -> &'static str { "map" }
-    fn schema_definition() -> &'static str { "map = <container>" }
+    fn schema_name() -> &'static str {
+        "map"
+    }
+    fn schema_definition() -> &'static str {
+        "map = <container>"
+    }
 }
 
 impl<const N: usize> BcsSchema for [u8; N] {
-    fn schema_name() -> &'static str { "octet-array" }
-    fn schema_definition() -> &'static str { "octet-array = <fixed-bytes>" }
+    fn schema_name() -> &'static str {
+        "octet-array"
+    }
+    fn schema_definition() -> &'static str {
+        "octet-array = <fixed-bytes>"
+    }
 }
