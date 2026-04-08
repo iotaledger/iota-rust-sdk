@@ -1,4 +1,4 @@
-// Copyright (c) 2025 IOTA Stiftung
+// Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
 //! Grammar-driven fuzzing: generates byte sequences that conform to
@@ -319,12 +319,13 @@ impl TestHarness {
 
     /// Generate a valid `checkpoint-transaction` in BCS wire form.
     fn generate_checkpoint_transaction(&mut self) -> Vec<u8> {
-        let mut out = Vec::new();
         // Intent
-        out.push(0x01); // V1 enum discriminant
-        out.push(0x00); // Intent scope = TransactionData
-        out.push(0x00); // Intent version = V0
-        out.push(0x00); // Intent app ID = Iota
+        let mut out = vec![
+            0x01, // V1 enum discriminant
+            0x00, // Intent scope = TransactionData
+            0x00, // Intent version = V0
+            0x00, // Intent app ID = Iota
+        ];
 
         // Signed Transaction
         out.extend(self.generate("signed-transaction"));

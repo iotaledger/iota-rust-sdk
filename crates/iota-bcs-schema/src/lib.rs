@@ -1,3 +1,6 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
@@ -147,10 +150,10 @@ fn type_to_schema(ty: &Type) -> String {
         Type::Array(arr) => {
             let elem = type_to_schema(&arr.elem);
             if elem == "u8" {
-                if let Expr::Lit(expr_lit) = &arr.len {
-                    if let Lit::Int(lit_int) = &expr_lit.lit {
-                        return format!("{}OCTET", lit_int.base10_digits());
-                    }
+                if let Expr::Lit(expr_lit) = &arr.len
+                    && let Lit::Int(lit_int) = &expr_lit.lit
+                {
+                    return format!("{}OCTET", lit_int.base10_digits());
                 }
                 // Non-literal length — user should use #[bcs_schema(definition = "...")]
                 "OCTET*".into()
@@ -168,10 +171,10 @@ fn type_to_schema(ty: &Type) -> String {
 }
 
 fn extract_single_generic(seg: &syn::PathSegment) -> Option<Type> {
-    if let PathArguments::AngleBracketed(args) = &seg.arguments {
-        if let Some(GenericArgument::Type(ty)) = args.args.first() {
-            return Some(ty.clone());
-        }
+    if let PathArguments::AngleBracketed(args) = &seg.arguments
+        && let Some(GenericArgument::Type(ty)) = args.args.first()
+    {
+        return Some(ty.clone());
     }
     None
 }
@@ -189,10 +192,10 @@ fn extract_two_generics(seg: &syn::PathSegment) -> Option<(Type, Type)> {
 }
 
 fn matches_type_name(ty: &Type, name: &str) -> bool {
-    if let Type::Path(p) = ty {
-        if let Some(seg) = p.path.segments.last() {
-            return seg.ident == name;
-        }
+    if let Type::Path(p) = ty
+        && let Some(seg) = p.path.segments.last()
+    {
+        return seg.ident == name;
     }
     false
 }
