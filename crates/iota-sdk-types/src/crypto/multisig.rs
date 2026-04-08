@@ -423,6 +423,10 @@ impl MultisigAggregatedSignature {
         self.bitmap
     }
 
+    pub fn get_indices(&self) -> Result<Vec<u8>, MultisigError> {
+        as_indices(self.bitmap)
+    }
+
     pub fn committee(&self) -> &MultisigCommittee {
         &self.committee
     }
@@ -439,6 +443,24 @@ impl MultisigAggregatedSignature {
             .cloned()
             .collect()
     }
+}
+
+/// Interpret a bitmap of 01s as a list of indices that is set to 1s.
+/// e.g. 22 = 0b10110, then the result is [1, 2, 4].
+fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
+    if bitmap > MAX_BITMAP_VALUE {
+        panic!()
+        // return Err(IotaError::InvalidSignature {
+        //     error: "Invalid bitmap".to_string(),
+        // });
+    }
+    let mut res = Vec::new();
+    for i in 0..10 {
+        if bitmap & (1 << i) != 0 {
+            res.push(i as u8);
+        }
+    }
+    Ok(res)
 }
 
 impl PartialEq for MultisigAggregatedSignature {
@@ -930,5 +952,15 @@ mod tests {
         assert_eq!(bcs_bytes[0], 0x04, "passkey must use BCS tag 0x04");
         // 1 tag byte + 33 bytes for the secp256r1 compressed public key.
         assert_eq!(bcs_bytes.len(), 34);
+    }
+
+    #[test]
+    fn test_to_indices() {
+        assert!(as_indices(0b11111111110).is_err());
+        assert_eq!(as_indices(0b0000010110).unwrap(), vec![1, 2, 4]);
+        assert_eq!(
+            as_indices(0b1111111111).unwrap(),
+            vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        );
     }
 }
