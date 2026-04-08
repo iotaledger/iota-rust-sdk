@@ -561,6 +561,17 @@ impl MultisigMemberSignature {
     }
 }
 
+impl AsRef<[u8]> for MultisigMemberSignature {
+    fn as_ref(&self) -> &[u8] {
+        match self {
+            Self::Ed25519(s) => s.as_ref(),
+            Self::Secp256k1(s) => s.as_ref(),
+            Self::Secp256r1(s) => s.as_ref(),
+            Self::ZkLogin(_) => panic!(),
+        }
+    }
+}
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
