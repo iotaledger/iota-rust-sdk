@@ -176,6 +176,17 @@ impl crate::PasskeyPublicKey {
     }
 }
 
+impl crate::MultisigMemberPublicKey {
+    pub fn derive_address(&self) -> Address {
+        match self {
+            Self::Ed25519(pk) => pk.derive_address(),
+            Self::Secp256k1(pk) => pk.derive_address(),
+            Self::Secp256r1(pk) => pk.derive_address(),
+            Self::ZkLogin(_) => panic!(),
+        }
+    }
+}
+
 impl crate::MultisigCommittee {
     /// Derive an `Address` from this MultisigCommittee.
     ///
