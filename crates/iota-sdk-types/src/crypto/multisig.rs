@@ -7,9 +7,10 @@
 use std::{
     convert::Infallible,
     hash::{Hash, Hasher},
+    str::FromStr,
 };
 
-use base64ct::Encoding;
+use base64ct::{Base64, Encoding};
 use once_cell::sync::OnceCell;
 
 use super::{
@@ -494,6 +495,26 @@ impl AsRef<[u8]> for MultisigAggregatedSignature {
 impl Hash for MultisigAggregatedSignature {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.as_ref().hash(state);
+    }
+}
+
+impl FromStr for MultisigAggregatedSignature {
+    type Err = MultisigError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let bytes = Base64::decode_vec(s).unwrap();
+        // .map_err(|_| MultisigError::InvalidSignature {
+        //     error: "Invalid base64 string".to_string(),
+        // })?;
+        let sig = MultisigAggregatedSignature::from_bytes(&bytes).unwrap();
+        //         .map_err(|_| {
+        //             IotaError::InvalidSignature {
+        //                 error: "Invalid multisig
+        // bytes"
+        //                     .to_string(),
+        //             }
+        //         })?;
+        Ok(sig)
     }
 }
 
