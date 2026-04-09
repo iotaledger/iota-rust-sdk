@@ -6,9 +6,9 @@ use std::env;
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
+        Client,
         pagination::{Direction, PaginationFilter},
         query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
-        Client,
     },
     types::{
         Address, Input, MoveCall, MovePackage, ObjectId, StructTag, Transaction, UpgradePolicy,
@@ -286,10 +286,7 @@ fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectI
     })
 }
 
-async fn was_package_published_as_immutable(
-    client: &Client,
-    package_id: ObjectId,
-) -> Result<bool> {
+async fn was_package_published_as_immutable(client: &Client, package_id: ObjectId) -> Result<bool> {
     let mut cursor = None;
 
     loop {

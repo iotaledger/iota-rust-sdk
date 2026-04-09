@@ -36,9 +36,7 @@ private fun shortenPackageIds(signature: String): String {
 
     while (index < signature.length) {
         if (
-            signature[index] == '0' &&
-                index + 1 < signature.length &&
-                signature[index + 1] == 'x'
+            signature[index] == '0' && index + 1 < signature.length && signature[index + 1] == 'x'
         ) {
             var end = index + 2
             while (end < signature.length && signature[end].digitToIntOrNull(16) != null) {
@@ -312,7 +310,8 @@ private suspend fun currentPackagePolicy(client: GraphQlClient, packageId: Objec
 
     val contents = client.moveObjectContents(upgradeCapId, null)
     if (contents == null) {
-        return if (wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId)) "Immutable" else "Unavailable"
+        return if (wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId)) "Immutable"
+        else "Unavailable"
     }
 
     val policy = extractPolicy(contents) ?: return "Unavailable"
@@ -395,9 +394,7 @@ fun main(args: Array<String>) = runBlocking {
             } else {
                 println("  functions:")
                 for (function in functions.nodes) {
-                    println(
-                        "    - ${formatFunctionSignature(function.toString(), packagePrefix)}"
-                    )
+                    println("    - ${formatFunctionSignature(function.toString(), packagePrefix)}")
                 }
                 if (functions.pageInfo.hasNextPage) {
                     println("    - ...")

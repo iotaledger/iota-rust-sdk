@@ -326,8 +326,10 @@ private func wasUpgradeCapUsedForMakeImmutable(
     )
 
     for txData in page.data {
-      if try usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId: upgradeCapId)
-      {
+      if try usesUpgradeCapForMakeImmutable(
+        txData.tx.transaction,
+        upgradeCapId: upgradeCapId
+      ) {
         return true
       }
     }
@@ -392,7 +394,8 @@ struct PackageInspectExample {
     let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
     let packagePrefix = package.id().toHex()
     print("Latest version: \(latestPackage.version()) (\(latestPackage.id().toHex()))")
-    print("Current package policy: \(try await currentPackagePolicy(client: client, packageId: package.id()))")
+    let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
+    print("Current package policy: \(currentPolicy)")
     print()
 
     print("Versions:")
@@ -447,7 +450,11 @@ struct PackageInspectExample {
       if let functions = module.functions, !functions.nodes.isEmpty {
         print("  functions:")
         for function in functions.nodes {
-          print("    - \(formatFunctionSignature(String(describing: function), packagePrefix: packagePrefix))")
+          let signature = formatFunctionSignature(
+            String(describing: function),
+            packagePrefix: packagePrefix
+          )
+          print("    - \(signature)")
         }
         if functions.pageInfo.hasNextPage {
           print("    - ...")

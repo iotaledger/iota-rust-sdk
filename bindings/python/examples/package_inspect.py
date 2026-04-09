@@ -31,7 +31,8 @@ def shorten_package_ids(signature):
             if end > index + 2:
                 candidate = signature[index:end]
                 try:
-                    parts.append(Address.from_hex(candidate).to_short_string(True))
+                    parts.append(
+                        Address.from_hex(candidate).to_short_string(True))
                     index = end
                     continue
                 except Exception:
@@ -125,7 +126,8 @@ async def resolve_upgrade_cap_id(client, package_id):
             if not changed_obj.output_state.is_object_write():
                 continue
 
-            obj = await client.object(changed_obj.object_id, effects_v1.lamport_version)
+            obj = await client.object(changed_obj.object_id,
+                                      effects_v1.lamport_version)
             if obj is not None and obj.as_struct_opt() is not None:
                 if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     return changed_obj.object_id
@@ -143,28 +145,24 @@ def programmable_transaction_json(tx):
         return None
 
     kind = tx_v1.get("kind")
-    if not isinstance(kind, dict) or kind.get("kind") != "programmable_transaction":
+    if not isinstance(kind,
+                      dict) or kind.get("kind") != "programmable_transaction":
         return None
 
     return kind
 
 
 def is_package_make_immutable_call(command):
-    return (
-        isinstance(command, dict)
-        and command.get("command") == "move_call"
-        and same_object_id(command.get("package"), FRAMEWORK_PACKAGE_ID)
-        and command.get("module") == "package"
-        and command.get("function") == "make_immutable"
-    )
+    return (isinstance(command, dict) and command.get("command") == "move_call"
+            and same_object_id(command.get("package"), FRAMEWORK_PACKAGE_ID)
+            and command.get("module") == "package"
+            and command.get("function") == "make_immutable")
 
 
 def input_matches_object_id(input_, object_id):
-    return (
-        isinstance(input_, dict)
-        and input_.get("type") in {"immutable_or_owned", "receiving", "shared"}
-        and same_object_id(input_.get("object_id"), object_id)
-    )
+    return (isinstance(input_, dict) and input_.get("type")
+            in {"immutable_or_owned", "receiving", "shared"}
+            and same_object_id(input_.get("object_id"), object_id))
 
 
 def publishes_package_as_immutable(tx):
@@ -177,24 +175,22 @@ def publishes_package_as_immutable(tx):
         return False
 
     publish_indexes = [
-        index
-        for index, command in enumerate(commands)
+        index for index, command in enumerate(commands)
         if isinstance(command, dict) and command.get("command") == "publish"
     ]
     if len(publish_indexes) != 1:
         return False
 
     publish_index = publish_indexes[0]
-    for command in commands[publish_index + 1 :]:
+    for command in commands[publish_index + 1:]:
         if not is_package_make_immutable_call(command):
             continue
 
         arguments = command.get("arguments")
-        if (
-            isinstance(arguments, list)
-            and len(arguments) == 1
-            and arguments[0] == {"result": publish_index}
-        ):
+        if (isinstance(arguments, list) and len(arguments) == 1
+                and arguments[0] == {
+                    "result": publish_index
+                }):
             return True
 
     return False
@@ -211,8 +207,7 @@ def uses_upgrade_cap_for_make_immutable(tx, upgrade_cap_id):
         return False
 
     upgrade_cap_inputs = [
-        index
-        for index, input_ in enumerate(inputs)
+        index for index, input_ in enumerate(inputs)
         if input_matches_object_id(input_, upgrade_cap_id.to_hex())
     ]
     if len(upgrade_cap_inputs) == 0:
@@ -227,11 +222,9 @@ def uses_upgrade_cap_for_make_immutable(tx, upgrade_cap_id):
             continue
 
         argument = arguments[0]
-        if (
-            isinstance(argument, dict)
-            and isinstance(argument.get("input"), int)
-            and argument["input"] in upgrade_cap_inputs
-        ):
+        if (isinstance(argument, dict)
+                and isinstance(argument.get("input"), int)
+                and argument["input"] in upgrade_cap_inputs):
             return True
 
     return False
@@ -266,9 +259,8 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
         )
 
         for tx_data in page.data:
-            if uses_upgrade_cap_for_make_immutable(
-                tx_data.tx.transaction, upgrade_cap_id
-            ):
+            if uses_upgrade_cap_for_make_immutable(tx_data.tx.transaction,
+                                                   upgrade_cap_id):
                 return True
 
         if page.page_info.has_next_page:
@@ -286,7 +278,8 @@ async def current_package_policy(client, package_id):
 
     contents = await client.move_object_contents(upgrade_cap_id)
     if contents is None:
-        if await was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
+        if await was_upgrade_cap_used_for_make_immutable(
+                client, upgrade_cap_id):
             return "Immutable"
         return "Unavailable"
 
@@ -315,7 +308,9 @@ async def main():
     print(
         f"Latest version: {latest_package.version()} ({latest_package.id().to_hex()})"
     )
-    print(f"Current package policy: {await current_package_policy(client, package.id())}")
+    print(
+        f"Current package policy: {await current_package_policy(client, package.id())}"
+    )
     print()
 
     print("Versions:")
@@ -337,14 +332,16 @@ async def main():
     if len(linkage_table) == 0:
         print("- none")
     else:
-        for upgrade in sorted(
-            linkage_table.values(), key=lambda item: item.upgraded_id.to_hex()
-        ):
-            print(f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version}")
+        for upgrade in sorted(linkage_table.values(),
+                              key=lambda item: item.upgraded_id.to_hex()):
+            print(
+                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version}"
+            )
     print()
 
     print("Package contents:")
-    module_names = sorted(module_id.as_str() for module_id in package.modules().keys())
+    module_names = sorted(module_id.as_str()
+                          for module_id in package.modules().keys())
 
     for module_name in module_names:
         print(f"Module: {module_name}")
@@ -381,17 +378,12 @@ async def main():
             for struct_ in module.structs.nodes:
                 type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
                 print(f"    - {type_tag}")
-                has_key_ability = (
-                    struct_.abilities is not None
-                    and MoveAbility.KEY in struct_.abilities
-                )
-                is_generic = (
-                    struct_.type_parameters is not None
-                    and len(struct_.type_parameters) > 0
-                )
-                await print_object_samples(
-                    client, type_tag, has_key_ability, is_generic
-                )
+                has_key_ability = (struct_.abilities is not None
+                                   and MoveAbility.KEY in struct_.abilities)
+                is_generic = (struct_.type_parameters is not None
+                              and len(struct_.type_parameters) > 0)
+                await print_object_samples(client, type_tag, has_key_ability,
+                                           is_generic)
             if module.structs.page_info.has_next_page:
                 print("    - ...")
 
