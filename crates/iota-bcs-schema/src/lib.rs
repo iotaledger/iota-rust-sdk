@@ -4,11 +4,18 @@
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
+use std::collections::HashSet;
+use std::sync::{Mutex, OnceLock};
 use syn::{
     Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type, parse_macro_input,
 };
 
 const DEFAULT_BCS_SCHEMA_FILE: &str = "bcs-schema.abnf";
+
+fn defined_names() -> &'static Mutex<HashSet<String>> {
+    static NAMES: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
+    NAMES.get_or_init(|| Mutex::new(HashSet::new()))
+}
 
 #[proc_macro_derive(BcsSchema, attributes(bcs_schema))]
 pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
@@ -509,6 +516,16 @@ fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
     let schema_name = type_attrs
         .name
         .unwrap_or_else(|| to_kebab_case(&ident.to_string()));
+
+    {
+        let mut names = defined_names().lock().unwrap();
+        if !names.insert(schema_name.clone()) {
+            return Err(syn::Error::new_spanned(
+                ident,
+                format!("BcsSchema: duplicate schema name `{schema_name}`"),
+            ));
+        }
+    }
 
     let definition = match type_attrs.definition {
         Some(def) => format!("{schema_name} = {def}"),
