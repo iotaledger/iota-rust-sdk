@@ -4,7 +4,7 @@
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::sync::{Mutex, OnceLock};
 use syn::{
     Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type, parse_macro_input,
@@ -12,9 +12,9 @@ use syn::{
 
 const DEFAULT_BCS_SCHEMA_FILE: &str = "bcs-schema.abnf";
 
-fn defined_names() -> &'static Mutex<HashSet<String>> {
-    static NAMES: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
-    NAMES.get_or_init(|| Mutex::new(HashSet::new()))
+fn defined_names() -> &'static Mutex<HashMap<String, String>> {
+    static NAMES: OnceLock<Mutex<HashMap<String, String>>> = OnceLock::new();
+    NAMES.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
 #[proc_macro_derive(BcsSchema, attributes(bcs_schema))]
@@ -519,11 +519,16 @@ fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
 
     {
         let mut names = defined_names().lock().unwrap();
-        if !names.insert(schema_name.clone()) {
-            return Err(syn::Error::new_spanned(
-                ident,
-                format!("BcsSchema: duplicate schema name `{schema_name}`"),
-            ));
+        let type_name = ident.to_string();
+        if let Some(existing) = names.get(&schema_name) {
+            if existing != &type_name {
+                return Err(syn::Error::new_spanned(
+                    ident,
+                    format!("BcsSchema: duplicate schema name `{schema_name}` (already used by `{existing}`)"),
+                ));
+            }
+        } else {
+            names.insert(schema_name.clone(), type_name);
         }
     }
 
