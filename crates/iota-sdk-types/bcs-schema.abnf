@@ -435,9 +435,6 @@ unchanged-shared-kind = %x00 u64 digest   ; ReadOnlyRoot
 unchanged-shared-object = object-id               ; object-id
                           unchanged-shared-kind   ; kind
 
-unchanged-shared-object = object-id               ; object-id
-                          unchanged-shared-kind   ; kind
-
 upgrade = (vector bytes)       ; modules
           (vector object-id)   ; dependencies
           object-id            ; package
@@ -445,8 +442,6 @@ upgrade = (vector bytes)       ; modules
 
 upgrade-info = object-id   ; upgraded-id
                u64         ; upgraded-version
-
-user-signature = bytes
 
 user-signature = bytes
 
