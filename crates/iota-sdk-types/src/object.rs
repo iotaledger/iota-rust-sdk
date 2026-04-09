@@ -319,7 +319,9 @@ impl MoveStruct {
         contents: Vec<u8>,
     ) -> Result<Self, MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
-            return Err(MoveStructContentsError(contents.len()));
+            return Err(MoveStructContentsError {
+                actual: contents.len(),
+            });
         }
         Ok(Self {
             object_type,
@@ -381,7 +383,9 @@ impl MoveStruct {
     /// bytes.
     pub fn set_contents(&mut self, contents: Vec<u8>) -> Result<(), MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
-            return Err(MoveStructContentsError(contents.len()));
+            return Err(MoveStructContentsError {
+                actual: contents.len(),
+            });
         }
         self.contents = contents;
         Ok(())
@@ -411,21 +415,14 @@ impl MoveStruct {
 
 /// Error returned when [`MoveStruct`] contents are too short to contain an
 /// [`ObjectId`].
-#[derive(Debug, Clone)]
-pub struct MoveStructContentsError(usize);
-
-impl std::fmt::Display for MoveStructContentsError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {}",
-            ObjectId::LENGTH,
-            self.0
-        )
-    }
+#[derive(thiserror::Error, Debug, Clone)]
+#[error(
+    "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {actual}",
+    ObjectId::LENGTH
+)]
+pub struct MoveStructContentsError {
+    actual: usize,
 }
-
-impl std::error::Error for MoveStructContentsError {}
 
 #[cfg(feature = "serde")]
 impl<'de> serde::Deserialize<'de> for MoveStruct {
