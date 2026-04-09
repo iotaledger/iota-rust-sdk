@@ -441,8 +441,14 @@ fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
         },
     };
 
-    // Write the definition to the schema file as a side-effect of expansion.
-    write_schema_entry(&schema_name, &definition);
+    // Write the definition to the schema file only when explicitly requested via
+    // the BCS_SCHEMA env var — keeps `--all-features` builds from regenerating
+    // the file during normal development.
+    let bcs_schema_enabled = std::env::var("BCS_SCHEMA")
+        .is_ok_and(|v| !v.is_empty() && v != "0");
+    if bcs_schema_enabled {
+        write_schema_entry(&schema_name, &definition);
+    }
 
     Ok(quote! {})
 }
