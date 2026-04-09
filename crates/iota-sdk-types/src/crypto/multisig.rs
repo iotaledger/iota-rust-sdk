@@ -619,6 +619,42 @@ impl MultisigMemberSignature {
             Self::ZkLogin(_) => SignatureScheme::ZkLoginAuthenticator,
         }
     }
+
+    pub fn to_base64(&self) -> String {
+        base64ct::Base64::encode_string(self.as_ref())
+    }
+
+    pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
+        let bytes = Base64::decode_vec(s).unwrap();
+
+        match bytes.first() {
+            Some(x) => {
+                if x == &(SignatureScheme::Ed25519 as u8) {
+                    let signature = Ed25519Signature::from_bytes(&bytes[1..]).unwrap();
+                    Ok(Self::Ed25519(signature))
+                } else if x == &(SignatureScheme::Secp256k1 as u8) {
+                    let signature = Secp256k1Signature::from_bytes(&bytes[1..]).unwrap();
+                    Ok(Self::Secp256k1(signature))
+                } else if x == &(SignatureScheme::Secp256r1 as u8) {
+                    let signature = Secp256r1Signature::from_bytes(&bytes[1..]).unwrap();
+                    Ok(Self::Secp256r1(signature))
+                } else {
+                    panic!()
+                    // Err(FastCryptoError::InvalidInput)
+                }
+            }
+            _ => panic!(),
+            // _ => Err(FastCryptoError::InvalidInput),
+        }
+    }
+}
+
+impl FromStr for MultisigMemberSignature {
+    type Err = MultisigError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_base64(s)
+    }
 }
 
 impl AsRef<[u8]> for MultisigMemberSignature {
