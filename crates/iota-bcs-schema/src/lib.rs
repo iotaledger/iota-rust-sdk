@@ -1,11 +1,14 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::{
+    collections::HashMap,
+    sync::{Mutex, OnceLock},
+};
+
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use std::collections::HashMap;
-use std::sync::{Mutex, OnceLock};
 use syn::{
     Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type, parse_macro_input,
 };
@@ -524,7 +527,9 @@ fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
             if existing != &type_name {
                 return Err(syn::Error::new_spanned(
                     ident,
-                    format!("BcsSchema: duplicate schema name `{schema_name}` (already used by `{existing}`)"),
+                    format!(
+                        "BcsSchema: duplicate schema name `{schema_name}` (already used by `{existing}`)"
+                    ),
                 ));
             }
         } else {
