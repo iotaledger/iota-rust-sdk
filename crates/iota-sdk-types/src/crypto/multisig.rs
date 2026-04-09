@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // TODO sort out overlap with iota-sdk-crypto's multisig module
+// TODO Harmonise serde primitives (from/to bytes/base64) with regular PK
 
 use std::{
     convert::Infallible,
@@ -101,6 +102,30 @@ impl MultisigMemberPublicKey {
     pub fn to_base64(&self) -> String {
         base64ct::Base64::encode_string(self.as_ref())
     }
+
+    pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
+        let bytes = Base64::decode_vec(s).unwrap();
+
+        match bytes.first() {
+            Some(x) => {
+                if x == &(SignatureScheme::Ed25519 as u8) {
+                    let pk = Ed25519PublicKey::from_bytes(&bytes[1..]).unwrap();
+                    Ok(Self::Ed25519(pk))
+                } else if x == &(SignatureScheme::Secp256k1 as u8) {
+                    let pk = Secp256k1PublicKey::from_bytes(&bytes[1..]).unwrap();
+                    Ok(Self::Secp256k1(pk))
+                } else if x == &(SignatureScheme::Secp256r1 as u8) {
+                    let pk = Secp256r1PublicKey::from_bytes(&bytes[1..]).unwrap();
+                    Ok(Self::Secp256r1(pk))
+                } else {
+                    panic!()
+                    // Err(FastCryptoError::InvalidInput)
+                }
+            }
+            _ => panic!(),
+            // _ => Err(FastCryptoError::InvalidInput),
+        }
+    }
 }
 
 impl AsRef<[u8]> for MultisigMemberPublicKey {
@@ -117,6 +142,14 @@ impl AsRef<[u8]> for MultisigMemberPublicKey {
 impl From<&MultisigMemberPublicKey> for Address {
     fn from(pk: &MultisigMemberPublicKey) -> Self {
         pk.derive_address()
+    }
+}
+
+impl FromStr for MultisigMemberPublicKey {
+    type Err = MultisigError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_base64(s)
     }
 }
 
