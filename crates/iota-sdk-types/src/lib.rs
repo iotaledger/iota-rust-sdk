@@ -71,34 +71,36 @@
 //! bcs-length-prefixed = bytes / string / vector / option
 //! bcs-fixed-length    = u8 / u16 / u32 / u64 / u128 /
 //!                       i8 / i16 / i32 / i64 / i128 /
-//!                       boolean
-//! bcs-struct          = *bcs-value                ; Sequence of serialized fields
-//! bcs-enum            = uleb128-index bcs-value   ; Enum index and associated value
+//!                       bool
+//! bcs-struct          = *bcs-value          ; Sequence of serialized fields
+//! bcs-enum            = uleb128 bcs-value   ; Variant index (ULEB128) + associated value
+//!
+//! ; --- Named primitives ---
+//! uleb128 = *(%x80-FF) %x00-7F   ; Variable-length unsigned integer
+//! size    = uleb128               ; BCS sequence / string length
+//! opt     = %x00                  ; None — no value follows
+//!         / %x01                  ; Some — value follows
 //!
 //! ; --- Length-prefixed types ---
-//! bytes           = uleb128 *OCTET          ; Raw bytes of the specified length
-//! string          = uleb128 *OCTET          ; valid utf8 string of the specified length
-//! vector          = uleb128 *bcs-value      ; Length-prefixed list of values
-//! option          = %d00 / (%d01 bcs-value) ; optional value
+//! bytes   = size *OCTET          ; Raw bytes
+//! string  = size *OCTET          ; UTF-8 string
+//! vector  = size *bcs-value      ; Length-prefixed list of values
+//! option  = %x00 / (%x01 bcs-value)  ; Optional value
 //!
 //! ; --- Fixed-length types ---
-//! u8          = OCTET                     ; 1-byte unsigned integer
-//! u16         = 2OCTET                    ; 2-byte unsigned integer, little-endian
-//! u32         = 4OCTET                    ; 4-byte unsigned integer, little-endian
-//! u64         = 8OCTET                    ; 8-byte unsigned integer, little-endian
-//! u128        = 16OCTET                   ; 16-byte unsigned integer, little-endian
-//! i8          = OCTET                     ; 1-byte signed integer
-//! i16         = 2OCTET                    ; 2-byte signed integer, little-endian
-//! i32         = 4OCTET                    ; 4-byte signed integer, little-endian
-//! i64         = 8OCTET                    ; 8-byte signed integer, little-endian
-//! i128        = 16OCTET                   ; 16-byte signed integer, little-endian
-//! boolean     = %d00 / %d01               ; Boolean: 0 = false, 1 = true
-//! array       = *(bcs-value)              ; Fixed-length array
-//!
-//! ; --- ULEB128 definition ---
-//! uleb128         = 1*5uleb128-byte       ; Variable-length ULEB128 encoding
-//! uleb128-byte    = %d00-7F / %x80-FF     ; ULEB128 continuation rules
-//! uleb128-index   = uleb128               ; ULEB128-encoded variant index
+//! u8      = 1OCTET               ; 1-byte unsigned integer
+//! u16     = 2OCTET               ; 2-byte unsigned integer, little-endian
+//! u32     = 4OCTET               ; 4-byte unsigned integer, little-endian
+//! u64     = 8OCTET               ; 8-byte unsigned integer, little-endian
+//! u128    = 16OCTET              ; 16-byte unsigned integer, little-endian
+//! i8      = 1OCTET               ; 1-byte signed integer
+//! i16     = 2OCTET               ; 2-byte signed integer, little-endian
+//! i32     = 4OCTET               ; 4-byte signed integer, little-endian
+//! i64     = 8OCTET               ; 8-byte signed integer, little-endian
+//! i128    = 16OCTET              ; 16-byte signed integer, little-endian
+//! bool    = %x00                 ; false
+//!         / %x01                 ; true
+//! array   = *(bcs-value)         ; Fixed-length array (no length prefix)
 //! ```
 //!
 //! [BCS]: https://docs.rs/bcs

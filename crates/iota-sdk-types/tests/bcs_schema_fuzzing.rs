@@ -26,6 +26,9 @@ enum Expr {
     Concat(Vec<Expr>),
     Alt(Vec<Expr>),
     Literal(u8),
+    /// Any byte in the inclusive range [lo, hi] — RFC 5234 `%xNN-MM` /
+    /// `%dNN-MM`.
+    ByteRange(u8, u8),
     RuleRef(String),
     Prim(PrimKind),
     Vector(Box<Expr>),
@@ -117,12 +120,7 @@ fn parse_rule_block(block: &str) -> Option<(String, Expr)> {
     Some((name, expr))
 }
 
-fn parse_concat(s: &str) -> Expr {
-    if s.is_empty() {
-        return Expr::Empty;
-    }
-    let tokens = tokenize(s);
-    let exprs = parse_token_seq(&tokens);
+fn concat_exprs(exprs: Vec<Expr>) -> Expr {
     match exprs.len() {
         0 => Expr::Empty,
         1 => exprs.into_iter().next().unwrap(),
@@ -130,27 +128,76 @@ fn parse_concat(s: &str) -> Expr {
     }
 }
 
+fn parse_concat(s: &str) -> Expr {
+    if s.is_empty() {
+        return Expr::Empty;
+    }
+    concat_exprs(parse_token_seq(&tokenize(s)))
+}
+
 fn tokenize(s: &str) -> Vec<String> {
-    // Normalize so parens become standalone tokens
+    // Normalize so parens and brackets become standalone tokens.
+    // `*(` and `*[` are kept together so repetition-of-group is a single token.
     s.replace('(', "( ")
         .replace(')', " )")
+        .replace('[', "[ ")
+        .replace(']', " ]")
         .split_whitespace()
         .map(String::from)
         .collect()
 }
 
+/// Find the indices of `/` tokens that are at group depth 0 (inline
+/// alternation).
+fn top_level_slash_positions(tokens: &[String]) -> Vec<usize> {
+    let mut positions = Vec::new();
+    let mut depth = 0usize;
+    for (i, tok) in tokens.iter().enumerate() {
+        match tok.as_str() {
+            "(" | "[" => depth += 1,
+            ")" | "]" => depth = depth.saturating_sub(1),
+            t if t == "*(" || t == "*[" => depth += 1,
+            "/" if depth == 0 => positions.push(i),
+            _ => {}
+        }
+    }
+    positions
+}
+
+/// Parse a flat token sequence, handling inline `/` alternation (RFC 5234 §3.2)
+/// as well as groups, repetition, and atoms.
 fn parse_token_seq(tokens: &[String]) -> Vec<Expr> {
+    let slash_positions = top_level_slash_positions(tokens);
+    if !slash_positions.is_empty() {
+        // Build alternation arms split at each top-level `/`
+        let mut arms: Vec<Expr> = Vec::new();
+        let mut start = 0;
+        for pos in slash_positions {
+            arms.push(concat_exprs(parse_atomic_seq(&tokens[start..pos])));
+            start = pos + 1;
+        }
+        arms.push(concat_exprs(parse_atomic_seq(&tokens[start..])));
+        return vec![Expr::Alt(arms)];
+    }
+    parse_atomic_seq(tokens)
+}
+
+/// Parse a token sequence that contains no top-level `/` (concatenation only).
+fn parse_atomic_seq(tokens: &[String]) -> Vec<Expr> {
     let mut result = Vec::new();
     let mut i = 0;
     while i < tokens.len() {
-        if tokens[i] == "(" {
-            // Scan for matching close paren
+        let tok = tokens[i].as_str();
+        if tok == "(" {
+            // Scan for matching close paren.
+            // Both `(` and `*(` open a paren-depth level; both `)` and `]` close one.
             let mut depth = 1usize;
             let mut j = i + 1;
             while j < tokens.len() {
                 match tokens[j].as_str() {
-                    "(" => depth += 1,
-                    ")" => {
+                    "(" | "*(" | "*[" => depth += 1,
+                    "[" => depth += 1,
+                    ")" | "]" => {
                         depth -= 1;
                         if depth == 0 {
                             break;
@@ -165,8 +212,62 @@ fn parse_token_seq(tokens: &[String]) -> Vec<Expr> {
                 result.push(parse_paren_expr(inner));
             }
             i = j + 1;
+        } else if tok == "[" {
+            // RFC 5234 §3.8 optional sequence: [ elements ] — treated as BCS Opt
+            let mut depth = 1usize;
+            let mut j = i + 1;
+            while j < tokens.len() {
+                match tokens[j].as_str() {
+                    "(" | "*(" | "*[" => depth += 1,
+                    "[" => depth += 1,
+                    ")" | "]" => {
+                        depth -= 1;
+                        if depth == 0 {
+                            break;
+                        }
+                    }
+                    _ => {}
+                }
+                j += 1;
+            }
+            let inner = &tokens[i + 1..j];
+            result.push(Expr::Opt(Box::new(concat_exprs(parse_token_seq(inner)))));
+            i = j + 1;
+        } else if tok == "*(" || tok == "*[" {
+            // RFC 5234 §3.6 repetition of a group: *(elements)
+            let mut depth = 1usize;
+            let mut j = i + 1;
+            while j < tokens.len() {
+                match tokens[j].as_str() {
+                    "(" | "*(" | "*[" => depth += 1,
+                    "[" => depth += 1,
+                    ")" | "]" => {
+                        depth -= 1;
+                        if depth == 0 {
+                            break;
+                        }
+                    }
+                    _ => {}
+                }
+                j += 1;
+            }
+            let inner = &tokens[i + 1..j];
+            let exprs = parse_token_seq(inner);
+            // Exactly 2 inner expressions → BCS map (sorted unique key-value pairs).
+            let expr = if exprs.len() == 2 {
+                let mut it = exprs.into_iter();
+                Expr::Map(Box::new(it.next().unwrap()), Box::new(it.next().unwrap()))
+            } else {
+                Expr::Vector(Box::new(concat_exprs(exprs)))
+            };
+            result.push(expr);
+            i = j + 1;
+        } else if tok.starts_with('*') && tok.len() > 1 {
+            // RFC 5234 §3.6 repetition of a single rule: *rulename
+            result.push(Expr::Vector(Box::new(parse_atom(&tok[1..]))));
+            i += 1;
         } else {
-            result.push(parse_atom(&tokens[i]));
+            result.push(parse_atom(tok));
             i += 1;
         }
     }
@@ -174,47 +275,52 @@ fn parse_token_seq(tokens: &[String]) -> Vec<Expr> {
 }
 
 fn parse_paren_expr(tokens: &[String]) -> Expr {
-    fn tail(tokens: &[String]) -> Expr {
-        // Everything after the keyword — may itself contain nested parens
-        let exprs = parse_token_seq(&tokens[1..]);
-        match exprs.len() {
-            0 => Expr::Empty,
-            1 => exprs.into_iter().next().unwrap(),
-            _ => Expr::Concat(exprs),
-        }
+    let exprs = parse_token_seq(tokens);
+
+    // Detect BCS vector pattern: (size *T) or (uleb128 *T) → Vector(T).
+    // The length prefix and element count are kept in sync by Expr::Vector.
+    if let [Expr::RuleRef(name), Expr::Vector(inner)] = exprs.as_slice()
+        && (name == "size" || name == "uleb128")
+    {
+        return Expr::Vector(inner.clone());
     }
-    fn group(tokens: &[String]) -> Expr {
-        let exprs = parse_token_seq(tokens);
-        match exprs.len() {
-            0 => Expr::Empty,
-            1 => exprs.into_iter().next().unwrap(),
-            _ => Expr::Concat(exprs),
-        }
+    // Detect BCS map pattern: (size *(K V)) or (uleb128 *(K V)) → Map(K, V).
+    if let [Expr::RuleRef(name), Expr::Map(k, v)] = exprs.as_slice()
+        && (name == "size" || name == "uleb128")
+    {
+        return Expr::Map(k.clone(), v.clone());
     }
 
-    match tokens.first().map(|s| s.as_str()) {
-        Some("vector") => Expr::Vector(Box::new(tail(tokens))),
-        Some("option") => Expr::Opt(Box::new(tail(tokens))),
-        Some("map") => {
-            // map takes exactly two type arguments — keep atom-based parsing for k/v
-            Expr::Map(
-                Box::new(tokens.get(1).map_or(Expr::Empty, |s| parse_atom(s))),
-                Box::new(tokens.get(2).map_or(Expr::Empty, |s| parse_atom(s))),
-            )
-        }
-        // Bare parenthesised group used as anonymous concat: (a b c)
-        _ => group(tokens),
-    }
+    // RFC 5234 §3.5: anonymous group — concatenation (or alternation if `Alt` was
+    // produced).
+    concat_exprs(exprs)
 }
 
 fn parse_atom(token: &str) -> Expr {
     if let Some(hex) = token.strip_prefix("%x") {
+        if let Some((lo_str, hi_str)) = hex.split_once('-') {
+            let lo = u8::from_str_radix(lo_str, 16)
+                .unwrap_or_else(|_| panic!("invalid hex range: %x{hex}"));
+            let hi = u8::from_str_radix(hi_str, 16)
+                .unwrap_or_else(|_| panic!("invalid hex range: %x{hex}"));
+            return Expr::ByteRange(lo, hi);
+        }
         let byte =
             u8::from_str_radix(hex, 16).unwrap_or_else(|_| panic!("invalid hex literal: %x{hex}"));
         return Expr::Literal(byte);
     }
     if let Some(dec) = token.strip_prefix("%d") {
-        let byte = u8::from_str_radix(dec, 10)
+        if let Some((lo_str, hi_str)) = dec.split_once('-') {
+            let lo = lo_str
+                .parse::<u8>()
+                .unwrap_or_else(|_| panic!("invalid decimal range: %d{dec}"));
+            let hi = hi_str
+                .parse::<u8>()
+                .unwrap_or_else(|_| panic!("invalid decimal range: %d{dec}"));
+            return Expr::ByteRange(lo, hi);
+        }
+        let byte = dec
+            .parse::<u8>()
             .unwrap_or_else(|_| panic!("invalid decimal literal: %d{dec}"));
         return Expr::Literal(byte);
     }
@@ -224,6 +330,9 @@ fn parse_atom(token: &str) -> Expr {
         return Expr::FixedBytes(n);
     }
     match token {
+        // RFC 5234 Appendix B core rule
+        "OCTET" => Expr::ByteRange(0x00, 0xFF),
+        // BCS primitives — handled directly rather than via grammar lookup
         "u8" => Expr::Prim(PrimKind::U8),
         "u16" => Expr::Prim(PrimKind::U16),
         "u32" => Expr::Prim(PrimKind::U32),
@@ -233,6 +342,8 @@ fn parse_atom(token: &str) -> Expr {
         "bool" => Expr::Prim(PrimKind::Bool),
         "bytes" => Expr::Prim(PrimKind::Bytes),
         "string" => Expr::Prim(PrimKind::Str),
+        // unit = "" (zero bytes)
+        "unit" | "\"\"" => Expr::Empty,
         other => Expr::RuleRef(other.to_string()),
     }
 }
@@ -440,6 +551,10 @@ impl TestHarness {
                 self.gen_expr(alts[idx].clone(), depth)
             }
             Expr::Literal(b) => vec![b],
+            Expr::ByteRange(lo, hi) => {
+                let range = (hi as u16) - (lo as u16) + 1;
+                vec![lo + (self.rng.next_u32() as u16 % range) as u8]
+            }
             Expr::RuleRef(name) => {
                 if let Some(f) = self.overrides.get(name.as_str()) {
                     return f(self);

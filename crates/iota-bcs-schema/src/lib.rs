@@ -129,22 +129,39 @@ fn type_to_schema(ty: &Type) -> String {
                 "str" | "String" => "string".into(),
                 "Vec" => match extract_single_generic(seg) {
                     Some(inner) if matches_type_name(&inner, "u8") => "bytes".into(),
-                    Some(inner) => format!("(vector {})", type_to_schema(&inner)),
-                    None => "vector".into(),
+                    // BCS vector: `size` length prefix followed by the elements.
+                    Some(inner) => {
+                        format!("(size {})", wrap_for_repetition(&type_to_schema(&inner)))
+                    }
+                    None => "(size *unknown)".into(),
                 },
                 "Option" => match extract_single_generic(seg) {
-                    Some(inner) => format!("(option {})", type_to_schema(&inner)),
-                    None => "option".into(),
+                    // BCS option: opt discriminant (%x00 = None, %x01 = Some) + value.
+                    Some(inner) => {
+                        let inner_str = type_to_schema(&inner);
+                        // Wrap complex inner types so the group is unambiguous.
+                        let rhs = if (inner_str.contains(' ') && !inner_str.starts_with('('))
+                            || inner_str.starts_with('*')
+                            || inner_str.starts_with('[')
+                        {
+                            format!("({inner_str})")
+                        } else {
+                            inner_str
+                        };
+                        format!("(%x00 / %x01 {rhs})")
+                    }
+                    None => "(%x00 / %x01 unknown)".into(),
                 },
                 "Box" => match extract_single_generic(seg) {
                     Some(inner) => type_to_schema(&inner),
                     None => "unknown".into(),
                 },
                 "BTreeMap" | "HashMap" => match extract_two_generics(seg) {
+                    // BCS map: `size` length prefix followed by sorted key-value pairs.
                     Some((k, v)) => {
-                        format!("(map {} {})", type_to_schema(&k), type_to_schema(&v))
+                        format!("(size *({} {}))", type_to_schema(&k), type_to_schema(&v))
                     }
-                    None => "map".into(),
+                    None => "(size *(unknown unknown))".into(),
                 },
                 other => to_kebab_case(other),
             }
@@ -158,9 +175,19 @@ fn type_to_schema(ty: &Type) -> String {
                     return format!("{}OCTET", lit_int.base10_digits());
                 }
                 // Non-literal length — user should use #[bcs_schema(definition = "...")]
-                "OCTET*".into()
+                "*OCTET".into()
+            } else if let Expr::Lit(expr_lit) = &arr.len
+                && let Lit::Int(lit_int) = &expr_lit.lit
+            {
+                // NRule or N(group) — exact repetition per RFC 5234 §3.7
+                let n = lit_int.base10_digits();
+                if elem.starts_with('(') || (!elem.contains(' ') && !elem.starts_with('*')) {
+                    format!("{n}{elem}")
+                } else {
+                    format!("{n}({elem})")
+                }
             } else {
-                format!("(array {})", elem)
+                wrap_for_repetition(&elem)
             }
         }
         Type::Tuple(tuple) if tuple.elems.is_empty() => "unit".into(),
@@ -200,6 +227,24 @@ fn matches_type_name(ty: &Type, name: &str) -> bool {
         return seg.ident == name;
     }
     false
+}
+
+// ---------------------------------------------------------------------------
+// RFC 5234 repetition helper
+// ---------------------------------------------------------------------------
+
+/// Prefix `s` with `*` to form a zero-or-more repetition per RFC 5234 §3.6.
+///
+/// If `s` is already a bracketed group (`(…)` or `[…]`) or a single bare token
+/// (no whitespace, not already a repetition), the `*` can be prepended
+/// directly. Otherwise `s` is wrapped in `(…)` first so the repetition applies
+/// to the whole expression.
+fn wrap_for_repetition(s: &str) -> String {
+    if s.starts_with('(') || s.starts_with('[') || (!s.contains(' ') && !s.starts_with('*')) {
+        format!("*{s}")
+    } else {
+        format!("*({s})")
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -361,6 +406,37 @@ fn schema_file_path() -> std::path::PathBuf {
     std::path::PathBuf::from(manifest).join(DEFAULT_BCS_SCHEMA_FILE)
 }
 
+/// Built-in BCS primitive type definitions.
+///
+/// These are seeded into every schema file so that the grammar is always
+/// self-contained.  The proc macro never derives entries for these names, so
+/// they are preserved unchanged across regeneration runs.
+fn primitive_entries() -> &'static [(&'static str, &'static str)] {
+    &[
+        ("bool", "bool    = %x00   ; false\n        / %x01   ; true"),
+        ("bytes", "bytes   = size *OCTET"),
+        ("i64", "i64     = 8OCTET"),
+        (
+            "opt",
+            "opt     = %x00   ; None\n        / %x01   ; Some (value follows)",
+        ),
+        (
+            "size",
+            "size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)",
+        ),
+        ("string", "string  = size *OCTET   ; UTF-8 encoded"),
+        ("u8", "u8      = 1OCTET"),
+        ("u16", "u16     = 2OCTET"),
+        ("u32", "u32     = 4OCTET"),
+        ("u64", "u64     = 8OCTET"),
+        ("u128", "u128    = 16OCTET"),
+        (
+            "uleb128",
+            "uleb128 = *(%x80-FF) %x00-7F   ; variable-length unsigned integer",
+        ),
+    ]
+}
+
 fn write_schema_entry(schema_name: &str, definition: &str) {
     let path = schema_file_path();
     let content = std::fs::read_to_string(&path).unwrap_or_default();
@@ -398,6 +474,13 @@ fn write_schema_entry(schema_name: &str, definition: &str) {
     }
     if !found {
         entries.push((schema_name.to_string(), definition.to_string()));
+    }
+
+    // Seed primitive definitions that the proc macro never derives itself.
+    for (name, def) in primitive_entries() {
+        if !entries.iter().any(|(n, _)| n == name) {
+            entries.push((name.to_string(), def.to_string()));
+        }
     }
 
     // Sort by rule name for deterministic output regardless of expansion order.
