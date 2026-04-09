@@ -8,6 +8,8 @@ use syn::{
     Data, DeriveInput, Expr, Fields, GenericArgument, Lit, PathArguments, Type, parse_macro_input,
 };
 
+const DEFAULT_BCS_SCHEMA_FILE: &str = "bcs-schema.abnf";
+
 #[proc_macro_derive(BcsSchema, attributes(bcs_schema))]
 pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -356,7 +358,7 @@ fn schema_file_path() -> std::path::PathBuf {
         return std::path::PathBuf::from(p);
     }
     let manifest = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".into());
-    std::path::PathBuf::from(manifest).join("bcs-schema.abnf")
+    std::path::PathBuf::from(manifest).join(DEFAULT_BCS_SCHEMA_FILE)
 }
 
 fn write_schema_entry(schema_name: &str, definition: &str) {
