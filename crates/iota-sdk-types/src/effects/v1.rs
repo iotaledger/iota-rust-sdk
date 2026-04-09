@@ -145,11 +145,11 @@ pub struct UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-kind = %x00 u64 digest   ; ReadOnlyRoot
-///                       / %x01 u64           ; MutateDeleted
-///                       / %x02 u64           ; ReadDeleted
-///                       / %x03 u64           ; Cancelled
-///                       / %x04               ; PerEpochConfig
+/// unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
+///                       / %d01 u64           ; MutateDeleted
+///                       / %d02 u64           ; ReadDeleted
+///                       / %d03 u64           ; Cancelled
+///                       / %d04               ; PerEpochConfig
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -215,8 +215,8 @@ impl UnchangedSharedKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-in = %x00           ; Missing
-///           / %x01 u64 digest owner   ; Data
+/// object-in = %d00           ; Missing
+///           / %d01 u64 digest owner   ; Data
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -286,9 +286,9 @@ impl ObjectIn {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// object-out = %x00                ; Missing
-///            / %x01 digest owner   ; ObjectWrite
-///            / %x02 u64 digest     ; PackageWrite
+/// object-out = %d00                ; Missing
+///            / %d01 digest owner   ; ObjectWrite
+///            / %d02 u64 digest     ; PackageWrite
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(
@@ -373,9 +373,9 @@ impl ObjectOut {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// id-operation = %x00   ; None
-///              / %x01   ; Created
-///              / %x02   ; Deleted
+/// id-operation = %d00   ; None
+///              / %d01   ; Created
+///              / %d02   ; Deleted
 /// ```
 #[derive(Eq, PartialEq, Copy, Clone, Debug)]
 #[cfg_attr(

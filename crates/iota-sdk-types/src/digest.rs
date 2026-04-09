@@ -9,7 +9,7 @@
 /// A `Digest`'s BCS serialized form is defined by the following:
 ///
 /// ```text
-/// digest = %x20 32OCTET
+/// digest = %d32 32OCTET
 /// ```
 ///
 /// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
@@ -23,7 +23,7 @@
 #[cfg_attr(
     feature = "bcs-schema",
     derive(iota_bcs_schema::BcsSchema),
-    bcs_schema(definition = "%x20 32OCTET")
+    bcs_schema(definition = "%d32 32OCTET")
 )]
 pub struct Digest(
     #[cfg_attr(feature = "serde", serde(with = "DigestSerialization"))]

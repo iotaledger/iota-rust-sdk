@@ -21,7 +21,7 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction = %x00 transaction-v1
+/// transaction = %d00 transaction-v1
 ///
 /// transaction-v1 = transaction-kind address gas-payment transaction-expiration
 /// ```
@@ -86,8 +86,8 @@ pub struct SignedTransaction {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-expiration =  %x00      ; none
-///                        =/ %x01 u64  ; epoch
+/// transaction-expiration =  %d00      ; none
+///                        =/ %d01 u64  ; epoch
 /// ```
 #[derive(Clone, Copy, Default, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -185,15 +185,15 @@ pub struct RandomnessStateUpdate {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-kind    =  %x00 ptb
-///                     =/ %x01 change-epoch
-///                     =/ %x02 genesis-transaction
-///                     =/ %x03 consensus-commit-prologue
-///                     =/ %x04 authenticator-state-update
-///                     =/ %x05 (vector end-of-epoch-transaction-kind)
-///                     =/ %x06 randomness-state-update
-///                     =/ %x07 consensus-commit-prologue-v2
-///                     =/ %x08 consensus-commit-prologue-v3
+/// transaction-kind    =  %d00 ptb
+///                     =/ %d01 change-epoch
+///                     =/ %d02 genesis-transaction
+///                     =/ %d03 consensus-commit-prologue
+///                     =/ %d04 authenticator-state-update
+///                     =/ %d05 (vector end-of-epoch-transaction-kind)
+///                     =/ %d06 randomness-state-update
+///                     =/ %d07 consensus-commit-prologue-v2
+///                     =/ %d08 consensus-commit-prologue-v3
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -248,14 +248,14 @@ impl TransactionKind {
 ///                                 =/ eoe-bridge-committee-init
 ///                                 =/ eoe-store-execution-time-observations
 ///
-/// eoe-change-epoch                = %x00 change-epoch
-/// eoe-authenticator-state-create  = %x01
-/// eoe-authenticator-state-expire  = %x02 authenticator-state-expire
-/// eoe-randomness-state-create     = %x03
-/// eoe-deny-list-state-create      = %x04
-/// eoe-bridge-state-create         = %x05 digest
-/// eoe-bridge-committee-init       = %x06 u64
-/// eoe-store-execution-time-observations = %x07 stored-execution-time-observations
+/// eoe-change-epoch                = %d00 change-epoch
+/// eoe-authenticator-state-create  = %d01
+/// eoe-authenticator-state-expire  = %d02 authenticator-state-expire
+/// eoe-randomness-state-create     = %d03
+/// eoe-deny-list-state-create      = %d04
+/// eoe-bridge-state-create         = %d05 digest
+/// eoe-bridge-committee-init       = %d06 u64
+/// eoe-store-execution-time-observations = %d07 stored-execution-time-observations
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
@@ -294,7 +294,7 @@ impl EndOfEpochTransactionKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// stored-execution-time-observations =  %x00 v1-stored-execution-time-observations
+/// stored-execution-time-observations =  %d00 v1-stored-execution-time-observations
 ///
 /// v1-stored-execution-time-observations = (vec
 ///                                          execution-time-observation-key
@@ -355,13 +355,13 @@ pub struct ValidatorExecutionTimeObservation {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// execution-time-observation-key  =  %x00 move-entry-point
-///                                 =/ %x01 ; transfer-objects
-///                                 =/ %x02 ; split-coins
-///                                 =/ %x03 ; merge-coins
-///                                 =/ %x04 ; publish
-///                                 =/ %x05 ; make-move-vec
-///                                 =/ %x06 ; upgrade
+/// execution-time-observation-key  =  %d00 move-entry-point
+///                                 =/ %d01 ; transfer-objects
+///                                 =/ %d02 ; split-coins
+///                                 =/ %d03 ; merge-coins
+///                                 =/ %d04 ; publish
+///                                 =/ %d05 ; make-move-vec
+///                                 =/ %d06 ; upgrade
 ///
 /// move-entry-point = object-id string string (vec type-tag)
 /// ```
@@ -920,10 +920,10 @@ pub struct ProgrammableTransaction {
 /// ```text
 /// input = input-pure / input-immutable-or-owned / input-shared / input-receiving
 ///
-/// input-pure                  = %x00 bytes
-/// input-immutable-or-owned    = %x01 object-ref
-/// input-shared                = %x02 object-id u64 bool
-/// input-receiving             = %x04 object-ref
+/// input-pure                  = %d00 bytes
+/// input-immutable-or-owned    = %d01 object-ref
+/// input-shared                = %d02 object-id u64 bool
+/// input-receiving             = %d04 object-ref
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(
@@ -987,13 +987,13 @@ impl Input {
 ///         =/ command-make-move-vector
 ///         =/ command-upgrade
 ///
-/// command-move-call           = %x00 move-call
-/// command-transfer-objects    = %x01 transfer-objects
-/// command-split-coins         = %x02 split-coins
-/// command-merge-coins         = %x03 merge-coins
-/// command-publish             = %x04 publish
-/// command-make-move-vector    = %x05 make-move-vector
-/// command-upgrade             = %x06 upgrade
+/// command-move-call           = %d00 move-call
+/// command-transfer-objects    = %d01 transfer-objects
+/// command-split-coins         = %d02 split-coins
+/// command-merge-coins         = %d03 merge-coins
+/// command-publish             = %d04 publish
+/// command-make-move-vector    = %d05 make-move-vector
+/// command-upgrade             = %d06 upgrade
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
@@ -1218,10 +1218,10 @@ pub struct Upgrade {
 ///             =/ argument-result
 ///             =/ argument-nested-result
 ///
-/// argument-gas            = %x00
-/// argument-input          = %x01 u16
-/// argument-result         = %x02 u16
-/// argument-nested-result  = %x03 u16 u16
+/// argument-gas            = %d00
+/// argument-input          = %d01 u16
+/// argument-result         = %d02 u16
+/// argument-nested-result  = %d03 u16 u16
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]

@@ -51,7 +51,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// bls-public-key = %x60 96OCTET
+    /// bls-public-key = %d96 96OCTET
     /// ```
     ///
     /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -190,7 +190,7 @@ impl_crypto_object!(
     /// The BCS serialized form for this type is defined by the following ABNF:
     ///
     /// ```text
-    /// bls-public-key = %x60 96OCTET
+    /// bls-public-key = %d96 96OCTET
     /// ```
     ///
     /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a

@@ -7,10 +7,10 @@ active-jwk = jwk-id   ; jwk-id
 
 address = 32OCTET
 
-argument = %x00   ; Gas
-         / %x01 u16   ; Input
-         / %x02 u16   ; Result
-         / %x03 u16 u16   ; NestedResult
+argument = %d00   ; Gas
+         / %d01 u16   ; Input
+         / %d02 u16   ; Result
+         / %d03 u16 u16   ; NestedResult
 
 authenticator-state-expire = u64   ; min-epoch
                              u64   ; authenticator-obj-initial-shared-version
@@ -20,12 +20,12 @@ authenticator-state-update-v1 = u64                   ; epoch
                                 (vector active-jwk)   ; new-active-jwks
                                 u64                   ; authenticator-obj-initial-shared-version
 
-bls12381-public-key = %x60 96OCTET
+bls12381-public-key = %d96 96OCTET
 
 bls12381-signature = 48OCTET
 
-call-arg = %x00 bytes   ; Pure
-         / %x01 object-arg   ; Object
+call-arg = %d00 bytes   ; Pure
+         / %d01 object-arg   ; Object
 
 cancelled-transaction = digest                        ; digest
                         (vector version-assignment)   ; version-assignments
@@ -78,9 +78,9 @@ changed-object = object-id      ; object-id
                  object-out     ; output-state
                  id-operation   ; id-operation
 
-checkpoint-commitment = %x00 digest   ; EcmhLiveObjectSet
+checkpoint-commitment = %d00 digest   ; EcmhLiveObjectSet
 
-checkpoint-contents = %x00 checkpoint-contents-v1   ; V1
+checkpoint-contents = %d00 checkpoint-contents-v1   ; V1
 
 checkpoint-contents-v1 = (vector execution-digests)         ; digests
                          (vector (vector user-signature))   ; signatures
@@ -100,38 +100,38 @@ checkpoint-summary = u64                              ; epoch
                      (option end-of-epoch-data)       ; end-of-epoch-data
                      bytes                            ; version-specific-data
 
-checkpoint-transaction = %x01 intent-signed-transaction   ; transaction
+checkpoint-transaction = %d01 intent-signed-transaction   ; transaction
                          transaction-effects              ; effects
                          (option transaction-events)      ; events
                          (vector object)                  ; input-objects
                          (vector object)                  ; output-objects
 
-command = %x00 move-call   ; MoveCall
-        / %x01 transfer-objects   ; TransferObjects
-        / %x02 split-coins   ; SplitCoins
-        / %x03 merge-coins   ; MergeCoins
-        / %x04 publish   ; Publish
-        / %x05 make-move-vector   ; MakeMoveVector
-        / %x06 upgrade   ; Upgrade
+command = %d00 move-call   ; MoveCall
+        / %d01 transfer-objects   ; TransferObjects
+        / %d02 split-coins   ; SplitCoins
+        / %d03 merge-coins   ; MergeCoins
+        / %d04 publish   ; Publish
+        / %d05 make-move-vector   ; MakeMoveVector
+        / %d06 upgrade   ; Upgrade
 
-command-argument-error = %x00   ; TypeMismatch
-                       / %x01   ; InvalidBcsBytes
-                       / %x02   ; InvalidUsageOfPureArgument
-                       / %x03   ; InvalidArgumentToPrivateEntryFunction
-                       / %x04 u16   ; IndexOutOfBounds
-                       / %x05 u16 u16   ; SecondaryIndexOutOfBounds
-                       / %x06 u16   ; InvalidResultArity
-                       / %x07   ; InvalidGasCoinUsage
-                       / %x08   ; InvalidValueUsage
-                       / %x09   ; InvalidObjectByValue
-                       / %x0a   ; InvalidObjectByMutRef
-                       / %x0b   ; SharedObjectOperationNotAllowed
-                       / %x0c   ; InvalidArgumentArity
+command-argument-error = %d00   ; TypeMismatch
+                       / %d01   ; InvalidBcsBytes
+                       / %d02   ; InvalidUsageOfPureArgument
+                       / %d03   ; InvalidArgumentToPrivateEntryFunction
+                       / %d04 u16   ; IndexOutOfBounds
+                       / %d05 u16 u16   ; SecondaryIndexOutOfBounds
+                       / %d06 u16   ; InvalidResultArity
+                       / %d07   ; InvalidGasCoinUsage
+                       / %d08   ; InvalidValueUsage
+                       / %d09   ; InvalidObjectByValue
+                       / %d10   ; InvalidObjectByMutRef
+                       / %d11   ; SharedObjectOperationNotAllowed
+                       / %d12   ; InvalidArgumentArity
 
-compressed-struct-tag = %x00 struct-tag   ; Other
-                      / %x01   ; GasCoin
-                      / %x02   ; StakedIota
-                      / %x03 type-tag   ; Coin
+compressed-struct-tag = %d00 struct-tag   ; Other
+                      / %d01   ; GasCoin
+                      / %d02   ; StakedIota
+                      / %d03 type-tag   ; Coin
 
 consensus-commit-prologue-v1 = u64                                        ; epoch
                                u64                                        ; round
@@ -140,21 +140,21 @@ consensus-commit-prologue-v1 = u64                                        ; epoc
                                digest                                     ; consensus-commit-digest
                                consensus-determined-version-assignments   ; consensus-determined-version-assignments
 
-consensus-determined-version-assignments = %x00 (vector cancelled-transaction)   ; CancelledTransactions
+consensus-determined-version-assignments = %d00 (vector cancelled-transaction)   ; CancelledTransactions
 
-digest = %x20 32OCTET
+digest = %d32 32OCTET
 
 end-of-epoch-data = (vector validator-committee-member)   ; next-epoch-committee
                     u64                                   ; next-epoch-protocol-version
                     (vector checkpoint-commitment)        ; epoch-commitments
                     i64                                   ; epoch-supply-change
 
-end-of-epoch-transaction-kind = %x00 change-epoch   ; ChangeEpoch
-                              / %x01 change-epoch-v2   ; ChangeEpochV2
-                              / %x02 change-epoch-v3   ; ChangeEpochV3
-                              / %x03 change-epoch-v4   ; ChangeEpochV4
-                              / %x04   ; AuthenticatorStateCreate
-                              / %x05 authenticator-state-expire   ; AuthenticatorStateExpire
+end-of-epoch-transaction-kind = %d00 change-epoch   ; ChangeEpoch
+                              / %d01 change-epoch-v2   ; ChangeEpochV2
+                              / %d02 change-epoch-v3   ; ChangeEpochV3
+                              / %d03 change-epoch-v4   ; ChangeEpochV4
+                              / %d04   ; AuthenticatorStateCreate
+                              / %d05 authenticator-state-expire   ; AuthenticatorStateExpire
 
 event = object-id    ; package-id
         identifier   ; module
@@ -165,61 +165,61 @@ event = object-id    ; package-id
 execution-digests = digest   ; transaction
                     digest   ; effects
 
-execution-error = %x00   ; InsufficientGas
-                / %x01   ; InvalidGasObject
-                / %x02   ; InvariantViolation
-                / %x03   ; FeatureNotYetSupported
-                / %x04 u64 u64   ; ObjectTooBig
-                / %x05 u64 u64   ; PackageTooBig
-                / %x06 object-id   ; CircularObjectOwnership
-                / %x07   ; InsufficientCoinBalance
-                / %x08   ; CoinBalanceOverflow
-                / %x09   ; PublishErrorNonZeroAddress
-                / %x0a   ; IotaMoveVerificationError
-                / %x0b (option move-location)   ; MovePrimitiveRuntimeError
-                / %x0c move-location u64   ; MoveAbort
-                / %x0d   ; VmVerificationOrDeserializationError
-                / %x0e   ; VmInvariantViolation
-                / %x0f   ; FunctionNotFound
-                / %x10   ; ArityMismatch
-                / %x11   ; TypeArityMismatch
-                / %x12   ; NonEntryFunctionInvoked
-                / %x13 u16 command-argument-error   ; CommandArgumentError
-                / %x14 u16 type-argument-error   ; TypeArgumentError
-                / %x15 u16 u16   ; UnusedValueWithoutDrop
-                / %x16 u16   ; InvalidPublicFunctionReturnType
-                / %x17   ; InvalidTransferObject
-                / %x18 u64 u64   ; EffectsTooLarge
-                / %x19   ; PublishUpgradeMissingDependency
-                / %x1a   ; PublishUpgradeDependencyDowngrade
-                / %x1b package-upgrade-error   ; PackageUpgradeError
-                / %x1c u64 u64   ; WrittenObjectsTooLarge
-                / %x1d   ; CertificateDenied
-                / %x1e   ; IotaMoveVerificationTimeout
-                / %x1f   ; SharedObjectOperationNotAllowed
-                / %x20   ; InputObjectDeleted
-                / %x21 (vector object-id)   ; ExecutionCancelledDueToSharedObjectCongestion
-                / %x22 address string   ; AddressDeniedForCoin
-                / %x23 string   ; CoinTypeGlobalPause
-                / %x24   ; ExecutionCancelledDueToRandomnessUnavailable
-                / %x25 (vector object-id) u64   ; ExecutionCancelledDueToSharedObjectCongestionV2
-                / %x26   ; InvalidLinkage
+execution-error = %d00   ; InsufficientGas
+                / %d01   ; InvalidGasObject
+                / %d02   ; InvariantViolation
+                / %d03   ; FeatureNotYetSupported
+                / %d04 u64 u64   ; ObjectTooBig
+                / %d05 u64 u64   ; PackageTooBig
+                / %d06 object-id   ; CircularObjectOwnership
+                / %d07   ; InsufficientCoinBalance
+                / %d08   ; CoinBalanceOverflow
+                / %d09   ; PublishErrorNonZeroAddress
+                / %d10   ; IotaMoveVerificationError
+                / %d11 (option move-location)   ; MovePrimitiveRuntimeError
+                / %d12 move-location u64   ; MoveAbort
+                / %d13   ; VmVerificationOrDeserializationError
+                / %d14   ; VmInvariantViolation
+                / %d15   ; FunctionNotFound
+                / %d16   ; ArityMismatch
+                / %d17   ; TypeArityMismatch
+                / %d18   ; NonEntryFunctionInvoked
+                / %d19 u16 command-argument-error   ; CommandArgumentError
+                / %d20 u16 type-argument-error   ; TypeArgumentError
+                / %d21 u16 u16   ; UnusedValueWithoutDrop
+                / %d22 u16   ; InvalidPublicFunctionReturnType
+                / %d23   ; InvalidTransferObject
+                / %d24 u64 u64   ; EffectsTooLarge
+                / %d25   ; PublishUpgradeMissingDependency
+                / %d26   ; PublishUpgradeDependencyDowngrade
+                / %d27 package-upgrade-error   ; PackageUpgradeError
+                / %d28 u64 u64   ; WrittenObjectsTooLarge
+                / %d29   ; CertificateDenied
+                / %d30   ; IotaMoveVerificationTimeout
+                / %d31   ; SharedObjectOperationNotAllowed
+                / %d32   ; InputObjectDeleted
+                / %d33 (vector object-id)   ; ExecutionCancelledDueToSharedObjectCongestion
+                / %d34 address string   ; AddressDeniedForCoin
+                / %d35 string   ; CoinTypeGlobalPause
+                / %d36   ; ExecutionCancelledDueToRandomnessUnavailable
+                / %d37 (vector object-id) u64   ; ExecutionCancelledDueToSharedObjectCongestionV2
+                / %d38   ; InvalidLinkage
 
-execution-status = %x00   ; Success
-                 / %x01 execution-error (option u64)   ; Failure
+execution-status = %d00   ; Success
+                 / %d01 execution-error (option u64)   ; Failure
 
 execution-time-observation = execution-time-observation-key                  ; key
                              (vector validator-execution-time-observation)   ; observations
 
-execution-time-observation-key = %x00 object-id string string (vector type-tag)   ; MoveEntryPoint
-                               / %x01   ; TransferObjects
-                               / %x02   ; SplitCoins
-                               / %x03   ; MergeCoins
-                               / %x04   ; Publish
-                               / %x05   ; MakeMoveVec
-                               / %x06   ; Upgrade
+execution-time-observation-key = %d00 object-id string string (vector type-tag)   ; MoveEntryPoint
+                               / %d01   ; TransferObjects
+                               / %d02   ; SplitCoins
+                               / %d03   ; MergeCoins
+                               / %d04   ; Publish
+                               / %d05   ; MakeMoveVec
+                               / %d06   ; Upgrade
 
-execution-time-observations = %x00 (vector execution-time-observation)   ; V1
+execution-time-observations = %d00 (vector execution-time-observation)   ; V1
 
 gas-cost-summary = u64   ; computation-cost
                    u64   ; computation-cost-burned
@@ -232,14 +232,14 @@ gas-payment = (vector object-reference)   ; objects
               u64                         ; price
               u64                         ; budget
 
-genesis-object = %x00 object-data owner   ; RawObject
+genesis-object = %d00 object-data owner   ; RawObject
 
 genesis-transaction = (vector genesis-object)   ; objects
                       (vector event)            ; events
 
-id-operation = %x00   ; None
-             / %x01   ; Created
-             / %x02   ; Deleted
+id-operation = %d00   ; None
+             / %d01   ; Created
+             / %d02   ; Deleted
 
 identifier = string
 
@@ -249,25 +249,25 @@ intent = intent-scope     ; scope
          intent-version   ; version
          intent-app-id    ; app-id
 
-intent-app-id = %x00   ; Iota
-              / %x01   ; Consensus
+intent-app-id = %d00   ; Iota
+              / %d01   ; Consensus
 
-intent-scope = %x00   ; TransactionData
-             / %x01   ; TransactionEffects
-             / %x02   ; CheckpointSummary
-             / %x03   ; PersonalMessage
-             / %x04   ; SenderSignedTransaction
-             / %x05   ; ProofOfPossession
-             / %x06   ; BridgeEventDeprecated
-             / %x07   ; ConsensusBlock
-             / %x08   ; DiscoveryPeers
-             / %x09   ; AuthorityCapabilities
+intent-scope = %d00   ; TransactionData
+             / %d01   ; TransactionEffects
+             / %d02   ; CheckpointSummary
+             / %d03   ; PersonalMessage
+             / %d04   ; SenderSignedTransaction
+             / %d05   ; ProofOfPossession
+             / %d06   ; BridgeEventDeprecated
+             / %d07   ; ConsensusBlock
+             / %d08   ; DiscoveryPeers
+             / %d09   ; AuthorityCapabilities
 
 intent-signed-transaction = intent                    ; intent
                             transaction               ; transaction
                             (vector user-signature)   ; signatures
 
-intent-version = %x00   ; V0
+intent-version = %d00   ; V0
 
 jwk = string   ; kty
       string   ; e
@@ -310,37 +310,37 @@ object = object-data   ; data
          digest        ; previous-transaction
          u64           ; storage-rebate
 
-object-arg = %x00 object-reference   ; ImmutableOrOwned
-           / %x01 object-id u64 bool   ; Shared
-           / %x02 object-reference   ; Receiving
+object-arg = %d00 object-reference   ; ImmutableOrOwned
+           / %d01 object-id u64 bool   ; Shared
+           / %d02 object-reference   ; Receiving
 
-object-data = %x00 move-struct   ; Struct
-            / %x01 move-package   ; Package
+object-data = %d00 move-struct   ; Struct
+            / %d01 move-package   ; Package
 
 object-id = address
 
-object-in = %x00   ; Missing
-          / %x01 u64 digest owner   ; Data
+object-in = %d00   ; Missing
+          / %d01 u64 digest owner   ; Data
 
-object-out = %x00   ; Missing
-           / %x01 digest owner   ; ObjectWrite
-           / %x02 u64 digest   ; PackageWrite
+object-out = %d00   ; Missing
+           / %d01 digest owner   ; ObjectWrite
+           / %d02 u64 digest   ; PackageWrite
 
 object-reference = object-id   ; object-id
                    u64         ; version
                    digest      ; digest
 
-owner = %x00 address   ; Address
-      / %x01 object-id   ; Object
-      / %x02 u64   ; Shared
-      / %x03   ; Immutable
+owner = %d00 address   ; Address
+      / %d01 object-id   ; Object
+      / %d02 u64   ; Shared
+      / %d03   ; Immutable
 
-package-upgrade-error = %x00 object-id   ; UnableToFetchPackage
-                      / %x01 object-id   ; NotAPackage
-                      / %x02   ; IncompatibleUpgrade
-                      / %x03 digest   ; DigestDoesNotMatch
-                      / %x04 u8   ; UnknownUpgradePolicy
-                      / %x05 object-id object-id   ; PackageIdDoesNotMatch
+package-upgrade-error = %d00 object-id   ; UnableToFetchPackage
+                      / %d01 object-id   ; NotAPackage
+                      / %d02   ; IncompatibleUpgrade
+                      / %d03 digest   ; DigestDoesNotMatch
+                      / %d04 u8   ; UnknownUpgradePolicy
+                      / %d05 object-id object-id   ; PackageIdDoesNotMatch
 
 programmable-transaction = (vector input)     ; inputs
                            (vector command)   ; commands
@@ -371,9 +371,9 @@ system-package = u64                  ; version
                  (vector bytes)       ; modules
                  (vector object-id)   ; dependencies
 
-transaction = %x00 transaction-v1   ; V1
+transaction = %d00 transaction-v1   ; V1
 
-transaction-effects = %x00 transaction-effects-v1   ; V1
+transaction-effects = %d00 transaction-effects-v1   ; V1
 
 transaction-effects-v1 = execution-status                   ; status
                          u64                                ; epoch
@@ -389,15 +389,15 @@ transaction-effects-v1 = execution-status                   ; status
 
 transaction-events = (vector event)
 
-transaction-expiration = %x00   ; None
-                       / %x01 u64   ; Epoch
+transaction-expiration = %d00   ; None
+                       / %d01 u64   ; Epoch
 
-transaction-kind = %x00 programmable-transaction   ; ProgrammableTransaction
-                 / %x01 genesis-transaction   ; Genesis
-                 / %x02 consensus-commit-prologue-v1   ; ConsensusCommitPrologueV1
-                 / %x03 authenticator-state-update-v1   ; AuthenticatorStateUpdateV1
-                 / %x04 (vector end-of-epoch-transaction-kind)   ; EndOfEpoch
-                 / %x05 randomness-state-update   ; RandomnessStateUpdate
+transaction-kind = %d00 programmable-transaction   ; ProgrammableTransaction
+                 / %d01 genesis-transaction   ; Genesis
+                 / %d02 consensus-commit-prologue-v1   ; ConsensusCommitPrologueV1
+                 / %d03 authenticator-state-update-v1   ; AuthenticatorStateUpdateV1
+                 / %d04 (vector end-of-epoch-transaction-kind)   ; EndOfEpoch
+                 / %d05 randomness-state-update   ; RandomnessStateUpdate
 
 transaction-v1 = transaction-kind         ; kind
                  address                  ; sender
@@ -407,30 +407,30 @@ transaction-v1 = transaction-kind         ; kind
 transfer-objects = (vector argument)   ; objects
                    argument            ; address
 
-type-argument-error = %x00   ; TypeNotFound
-                    / %x01   ; ConstraintNotSatisfied
+type-argument-error = %d00   ; TypeNotFound
+                    / %d01   ; ConstraintNotSatisfied
 
 type-origin = identifier   ; module-name
               identifier   ; struct-name
               object-id    ; package
 
-type-tag = %x00   ; Bool
-         / %x01   ; U8
-         / %x02   ; U64
-         / %x03   ; U128
-         / %x04   ; Address
-         / %x05   ; Signer
-         / %x06 type-tag   ; Vector
-         / %x07 struct-tag   ; Struct
-         / %x08   ; U16
-         / %x09   ; U32
-         / %x0a   ; U256
+type-tag = %d00   ; Bool
+         / %d01   ; U8
+         / %d02   ; U64
+         / %d03   ; U128
+         / %d04   ; Address
+         / %d05   ; Signer
+         / %d06 type-tag   ; Vector
+         / %d07 struct-tag   ; Struct
+         / %d08   ; U16
+         / %d09   ; U32
+         / %d10   ; U256
 
-unchanged-shared-kind = %x00 u64 digest   ; ReadOnlyRoot
-                      / %x01 u64   ; MutateDeleted
-                      / %x02 u64   ; ReadDeleted
-                      / %x03 u64   ; Cancelled
-                      / %x04   ; PerEpochConfig
+unchanged-shared-kind = %d00 u64 digest   ; ReadOnlyRoot
+                      / %d01 u64   ; MutateDeleted
+                      / %d02 u64   ; ReadDeleted
+                      / %d03 u64   ; Cancelled
+                      / %d04   ; PerEpochConfig
 
 unchanged-shared-object = object-id               ; object-id
                           unchanged-shared-kind   ; kind

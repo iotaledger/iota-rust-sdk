@@ -18,7 +18,7 @@ use crate::execution_status::ExecutionStatus;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-effects = %x00 transaction-effects-v1   ; V1
+/// transaction-effects = %d00 transaction-effects-v1   ; V1
 /// ```
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(

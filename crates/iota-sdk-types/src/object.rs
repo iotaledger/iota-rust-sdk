@@ -86,10 +86,10 @@ impl ObjectReference {
 /// ```text
 /// owner = owner-address / owner-object / owner-shared / owner-immutable
 ///
-/// owner-address   = %x00 address
-/// owner-object    = %x01 object-id
-/// owner-shared    = %x02 u64
-/// owner-immutable = %x03
+/// owner-address   = %d00 address
+/// owner-object    = %d01 object-id
+/// owner-shared    = %d02 u64
+/// owner-immutable = %d03
 /// ```
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(
@@ -144,8 +144,8 @@ impl std::fmt::Display for Owner {
 /// ```text
 /// object-data = object-data-struct / object-data-package
 ///
-/// object-data-struct  = %x00 object-move-struct
-/// object-data-package = %x01 object-move-package
+/// object-data-struct  = %d00 object-move-struct
+/// object-data-package = %d01 object-move-package
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -279,10 +279,10 @@ pub struct UpgradeInfo {
 /// object-move-struct = compressed-struct-tag bool u64 object-contents
 ///
 /// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-/// other-struct-type     = %x00 struct-tag
-/// gas-coin-type         = %x01
-/// staked-iota-type      = %x02
-/// coin-type             = %x03 type-tag
+/// other-struct-type     = %d00 struct-tag
+/// gas-coin-type         = %d01
+/// staked-iota-type      = %d02
+/// coin-type             = %d03 type-tag
 ///
 /// ; first 32 bytes of the contents are the object's object-id
 /// object-contents = uleb128 (object-id *OCTET) ; length followed by contents

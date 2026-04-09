@@ -17,17 +17,17 @@ use super::Address;
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// type-tag = %x00            ; Bool
-///          / %x01            ; U8
-///          / %x02            ; U64
-///          / %x03            ; U128
-///          / %x04            ; Address
-///          / %x05            ; Signer
-///          / %x06 type-tag   ; Vector
-///          / %x07 struct-tag ; Struct
-///          / %x08            ; U16
-///          / %x09            ; U32
-///          / %x0a            ; U256
+/// type-tag = %d00            ; Bool
+///          / %d01            ; U8
+///          / %d02            ; U64
+///          / %d03            ; U128
+///          / %d04            ; Address
+///          / %d05            ; Signer
+///          / %d06 type-tag   ; Vector
+///          / %d07 struct-tag ; Struct
+///          / %d08            ; U16
+///          / %d09            ; U32
+///          / %d10            ; U256
 /// ```
 #[derive(PartialEq, Eq, PartialOrd, Ord, Debug, Clone, Hash)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -202,7 +202,7 @@ impl std::error::Error for TypeParseError {}
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// identifier = %x01-80    ; length of the identifier
+/// identifier = %d01-80    ; length of the identifier
 ///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
 ///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
 ///

@@ -213,6 +213,11 @@ fn parse_atom(token: &str) -> Expr {
             u8::from_str_radix(hex, 16).unwrap_or_else(|_| panic!("invalid hex literal: %x{hex}"));
         return Expr::Literal(byte);
     }
+    if let Some(dec) = token.strip_prefix("%d") {
+        let byte = u8::from_str_radix(dec, 10)
+            .unwrap_or_else(|_| panic!("invalid decimal literal: %d{dec}"));
+        return Expr::Literal(byte);
+    }
     if let Some(n_str) = token.strip_suffix("OCTET")
         && let Ok(n) = n_str.parse::<usize>()
     {
@@ -356,7 +361,7 @@ impl TestHarness {
 
     /// Generate a valid `checkpoint-contents` in BCS wire form.
     ///
-    /// The binary format is: `%x00` (V1 discriminant) + two parallel vectors of
+    /// The binary format is: `%d00` (V1 discriminant) + two parallel vectors of
     /// the *same* length. The deserializer enforces this length invariant, so
     /// the two vectors must be generated in sync.
     fn gen_checkpoint_contents(&mut self) -> Vec<u8> {

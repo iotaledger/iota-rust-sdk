@@ -22,7 +22,7 @@ pub type ProtocolVersion = u64;
 /// ```text
 /// ; CheckpointCommitment is an enum and each variant is prefixed with its index
 /// checkpoint-commitment = ecmh-live-object-set
-/// ecmh-live-object-set = %x00 digest
+/// ecmh-live-object-set = %d00 digest
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
@@ -196,7 +196,7 @@ pub struct SignedCheckpointSummary {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// checkpoint-contents = %x00 checkpoint-contents-v1 ; variant 0
+/// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
 ///
 /// checkpoint-contents-v1 = (vector (digest digest)) ; vector of transaction and effect digests
 ///                          (vector (vector bcs-user-signature)) ; set of user signatures for each
@@ -263,7 +263,7 @@ pub struct CheckpointTransaction {
     #[cfg_attr(feature = "schemars", schemars(with = "SignedTransaction"))]
     #[cfg_attr(
         feature = "bcs-schema",
-        bcs_schema(as_type = "%x01 intent-signed-transaction")
+        bcs_schema(as_type = "%d01 intent-signed-transaction")
     )]
     pub transaction: SignedTransaction,
     /// The effects produced by executing this transaction

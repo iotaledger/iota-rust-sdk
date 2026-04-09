@@ -209,11 +209,11 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 ///                              =/ cancelled
 ///                              =/ per-epoch-config
 ///
-/// read-only-root      = %x00 u64 digest
-/// mutate-deleted      = %x01 u64
-/// read-deleted        = %x02 u64
-/// cancelled           = %x03 u64
-/// per-epoch-config    = %x04
+/// read-only-root      = %d00 u64 digest
+/// mutate-deleted      = %d01 u64
+/// read-deleted        = %d02 u64
+/// cancelled           = %d03 u64
+/// per-epoch-config    = %d04
 /// ```
 #[derive(uniffi::Enum)]
 pub enum UnchangedSharedKind {
@@ -285,8 +285,8 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 /// ```text
 /// object-in = object-in-missing / object-in-data
 ///
-/// object-in-missing = %x00
-/// object-in-data    = %x01 u64 digest owner
+/// object-in-missing = %d00
+/// object-in-data    = %d01 u64 digest owner
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ObjectIn {
@@ -346,9 +346,9 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
 ///             =/ object-out-package-write
 ///
 ///
-/// object-out-missing        = %x00
-/// object-out-object-write   = %x01 digest owner
-/// object-out-package-write  = %x02 version digest
+/// object-out-missing        = %d00
+/// object-out-object-write   = %d01 digest owner
+/// object-out-package-write  = %d02 version digest
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ObjectOut {
@@ -408,9 +408,9 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
 ///              =/ id-operation-created
 ///              =/ id-operation-deleted
 ///
-/// id-operation-none       = %x00
-/// id-operation-created    = %x01
-/// id-operation-deleted    = %x02
+/// id-operation-none       = %d00
+/// id-operation-created    = %d01
+/// id-operation-deleted    = %d02
 /// ```
 #[uniffi::remote(Enum)]
 #[non_exhaustive]

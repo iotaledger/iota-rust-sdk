@@ -11,7 +11,7 @@
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// bls-public-key = %x60 96OCTET
+/// bls-public-key = %d96 96OCTET
 /// ```
 ///
 /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
@@ -25,7 +25,7 @@
 #[cfg_attr(
     feature = "bcs-schema",
     derive(iota_bcs_schema::BcsSchema),
-    bcs_schema(definition = "%x60 96OCTET")
+    bcs_schema(definition = "%d96 96OCTET")
 )]
 pub struct Bls12381PublicKey(
     #[cfg_attr(

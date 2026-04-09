@@ -409,7 +409,7 @@ pub struct ZkLoginProof {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// circom-g1 = %x03 3(bn254-field-element)
+/// circom-g1 = %d03 3(bn254-field-element)
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -426,7 +426,7 @@ pub struct CircomG1(pub [Bn254FieldElement; 3]);
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// circom-g2 = %x03 3(%x02 2(bn254-field-element))
+/// circom-g2 = %d03 3(%d02 2(bn254-field-element))
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "schemars", derive(schemars::JsonSchema))]
@@ -481,7 +481,7 @@ pub struct CircomG2(pub [[Bn254FieldElement; 2]; 3]);
 ///
 /// ; A Bn254FieldElement serialized as a 32-byte big-endian value
 /// ; with any leading zero bytes stripped
-/// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
+/// address-seed-unpadded = %d00 / %d01-ff *31(OCTET)
 /// ```
 ///
 /// [`Address`]: crate::Address

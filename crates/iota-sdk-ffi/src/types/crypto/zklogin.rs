@@ -105,7 +105,7 @@ impl ZkLoginAuthenticator {
 ///
 /// ; A Bn254FieldElement serialized as a 32-byte big-endian value
 /// ; with any leading zero bytes stripped
-/// address-seed-unpadded = %x00 / %x01-ff *31(OCTET)
+/// address-seed-unpadded = %d00 / %d01-ff *31(OCTET)
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -290,7 +290,7 @@ pub struct ZkLoginClaim {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// circom-g1 = %x03 3(bn254-field-element)
+/// circom-g1 = %d03 3(bn254-field-element)
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -322,7 +322,7 @@ impl CircomG1 {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// circom-g2 = %x03 3(%x02 2(bn254-field-element))
+/// circom-g2 = %d03 3(%d02 2(bn254-field-element))
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]

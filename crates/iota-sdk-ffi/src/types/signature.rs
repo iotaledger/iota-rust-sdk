@@ -25,14 +25,14 @@ use crate::{
 /// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
 ///                    multisig-flag / bls-flag / zklogin-auth-flag / passkey-auth-flag /
 ///                    move-auth-flag
-/// ed25519-flag        = %x00
-/// secp256k1-flag      = %x01
-/// secp256r1-flag      = %x02
-/// multisig-flag       = %x03
-/// bls-flag            = %x04
-/// zklogin-auth-flag   = %x05
-/// passkey-auth-flag   = %x06
-/// move-auth-flag      = %x07
+/// ed25519-flag        = %d00
+/// secp256k1-flag      = %d01
+/// secp256r1-flag      = %d02
+/// multisig-flag       = %d03
+/// bls-flag            = %d04
+/// zklogin-auth-flag   = %d05
+/// passkey-auth-flag   = %d06
+/// move-auth-flag      = %d07
 /// ```
 #[uniffi::remote(Enum)]
 #[non_exhaustive]

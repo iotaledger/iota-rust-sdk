@@ -26,10 +26,10 @@ use crate::types::{
 ///                             secp256r1-multisig-member-signature /
 ///                             zklogin-multisig-member-signature
 ///
-/// ed25519-multisig-member-signature   = %x00 ed25519-signature
-/// secp256k1-multisig-member-signature = %x01 secp256k1-signature
-/// secp256r1-multisig-member-signature = %x02 secp256r1-signature
-/// zklogin-multisig-member-signature   = %x03 zklogin-authenticator
+/// ed25519-multisig-member-signature   = %d00 ed25519-signature
+/// secp256k1-multisig-member-signature = %d01 secp256k1-signature
+/// secp256r1-multisig-member-signature = %d02 secp256r1-signature
+/// zklogin-multisig-member-signature   = %d03 zklogin-authenticator
 /// ```
 #[derive(Debug, PartialEq, Eq, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -114,10 +114,10 @@ impl MultisigMemberSignature {
 ///                              secp256r1-multisig-member-public-key /
 ///                              zklogin-multisig-member-public-key
 ///
-/// ed25519-multisig-member-public-key   = %x00 ed25519-public-key
-/// secp256k1-multisig-member-public-key = %x01 secp256k1-public-key
-/// secp256r1-multisig-member-public-key = %x02 secp256r1-public-key
-/// zklogin-multisig-member-public-key   = %x03 zklogin-public-identifier
+/// ed25519-multisig-member-public-key   = %d00 ed25519-public-key
+/// secp256k1-multisig-member-public-key = %d01 secp256k1-public-key
+/// secp256r1-multisig-member-public-key = %d02 secp256r1-public-key
+/// zklogin-multisig-member-public-key   = %d03 zklogin-public-identifier
 /// ```
 ///
 /// There is also a legacy encoding for this type defined as:
