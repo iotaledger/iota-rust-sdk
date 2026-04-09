@@ -785,8 +785,11 @@ mod signed_transaction {
     }
 
     #[derive(serde::Deserialize)]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "intent-signed-transaction"))]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "intent-signed-transaction")
+    )]
     struct BinarySignedTransactionWithIntentMessage {
         intent: Intent,
         transaction: Transaction,

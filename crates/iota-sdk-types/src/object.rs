@@ -555,8 +555,11 @@ mod serialization {
     /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
     /// `GasCoin`
     #[derive(serde::Deserialize)]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "compressed-struct-tag"))]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "compressed-struct-tag")
+    )]
     enum MoveStructType {
         /// A type that is not `0x2::coin::Coin<T>`
         Other(StructTag),
@@ -913,8 +916,11 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "genesis-object"))]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "genesis-object")
+    )]
     enum BinaryGenesisObject {
         RawObject { data: ObjectData, owner: Owner },
     }

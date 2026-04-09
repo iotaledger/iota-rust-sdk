@@ -749,8 +749,11 @@ mod serialization {
     }
 
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    #[cfg_attr(feature = "bcs-schema", bcs_schema(name = "execution-error"))]
+    #[cfg_attr(
+        feature = "bcs-schema",
+        derive(iota_bcs_schema::BcsSchema),
+        bcs_schema(name = "execution-error")
+    )]
     enum BinaryExecutionError {
         InsufficientGas,
         InvalidGasObject,
