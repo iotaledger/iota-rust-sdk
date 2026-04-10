@@ -5,7 +5,6 @@ from lib.iota_sdk import *
 
 import asyncio
 import json
-import sys
 
 FRAMEWORK_PACKAGE_ID = Address.framework().to_hex()
 HEX_DIGITS = set("0123456789abcdefABCDEF")
@@ -288,10 +287,7 @@ async def current_package_policy(client, package_id):
 
 
 async def main():
-    if len(sys.argv) <= 1:
-        raise SystemExit(f"Usage: python3 {sys.argv[0]} <PACKAGE_ID>")
-
-    package_id = sys.argv[1]
+    package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
     package_address = Address.from_hex(package_id)
     client = GraphQlClient.new_testnet()
 

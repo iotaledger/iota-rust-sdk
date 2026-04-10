@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -470,10 +469,7 @@ func currentPackagePolicy(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Ob
 }
 
 func main() {
-	if len(os.Args) <= 1 {
-		log.Fatalf("Usage: %s <PACKAGE_ID>", os.Args[0])
-	}
-	packageID := os.Args[1]
+	packageID := "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
 
 	packageAddress, err := iota_sdk.AddressFromHex(packageID)
 	if err != nil {

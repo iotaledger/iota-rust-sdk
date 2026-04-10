@@ -1,8 +1,6 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::env;
-
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
@@ -375,11 +373,8 @@ async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let package_id = env::args()
-        .nth(1)
-        .ok_or_eyre("Usage: cargo run -p iota-sdk --example package_inspect -- <PACKAGE_ID>")?;
-
-    let package_address = Address::from_hex(&package_id)?;
+    let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
+    let package_address = Address::from_hex(package_id)?;
     let client = Client::new_testnet();
 
     let package = client

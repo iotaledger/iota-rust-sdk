@@ -367,15 +367,7 @@ private func currentPackagePolicy(
 @main
 struct PackageInspectExample {
   static func main() async throws {
-    guard CommandLine.arguments.count > 1 else {
-      throw NSError(
-        domain: "PackageInspect", code: 1,
-        userInfo: [
-          NSLocalizedDescriptionKey:
-            "Usage: swift run PackageInspect <PACKAGE_ID>"
-        ])
-    }
-    let packageId = CommandLine.arguments[1]
+    let packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
 
     let packageAddress = try Address.fromHex(hex: packageId)
     let client = GraphQlClient.newTestnet()

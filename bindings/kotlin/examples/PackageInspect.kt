@@ -318,16 +318,9 @@ private suspend fun currentPackagePolicy(client: GraphQlClient, packageId: Objec
     return formatPolicyName(policy)
 }
 
-fun main(args: Array<String>) = runBlocking {
+fun main() = runBlocking {
     try {
-        val packageId =
-            if (args.isNotEmpty()) {
-                args[0]
-            } else {
-                throw IllegalArgumentException(
-                    "Usage: ./gradlew example -Pexample=package_inspect --args=\"<PACKAGE_ID>\""
-                )
-            }
+        val packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
 
         val packageAddress = Address.fromHex(packageId)
         val client = GraphQlClient.newTestnet()

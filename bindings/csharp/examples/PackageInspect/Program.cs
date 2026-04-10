@@ -457,15 +457,9 @@ class Program
             : "Unavailable";
     }
 
-    static async Task Main(string[] args)
+    static async Task Main()
     {
-        if (args.Length == 0)
-        {
-            throw new ArgumentException(
-                "Usage: dotnet run --project PackageInspect -- <PACKAGE_ID>"
-            );
-        }
-        var packageId = args[0];
+        var packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
 
         var packageAddress = Address.FromHex(packageId);
         var client = GraphQlClient.NewTestnet();
