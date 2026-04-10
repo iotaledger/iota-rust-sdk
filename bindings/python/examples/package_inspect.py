@@ -152,16 +152,17 @@ def programmable_transaction_json(tx):
 
 
 def is_package_make_immutable_call(command):
-    return (isinstance(command, dict) and command.get("command") == "move_call"
-            and same_object_id(command.get("package"), FRAMEWORK_PACKAGE_ID)
-            and command.get("module") == "package"
-            and command.get("function") == "make_immutable")
+    return (isinstance(command, dict) and
+            command.get("command") == "move_call" and
+            same_object_id(command.get("package"), FRAMEWORK_PACKAGE_ID) and
+            command.get("module") == "package" and
+            command.get("function") == "make_immutable")
 
 
 def input_matches_object_id(input_, object_id):
     return (isinstance(input_, dict) and input_.get("type")
-            in {"immutable_or_owned", "receiving", "shared"}
-            and same_object_id(input_.get("object_id"), object_id))
+            in {"immutable_or_owned", "receiving", "shared"} and
+            same_object_id(input_.get("object_id"), object_id))
 
 
 def publishes_package_as_immutable(tx):
@@ -186,8 +187,8 @@ def publishes_package_as_immutable(tx):
             continue
 
         arguments = command.get("arguments")
-        if (isinstance(arguments, list) and len(arguments) == 1
-                and arguments[0] == {
+        if (isinstance(arguments, list) and len(arguments) == 1 and
+                arguments[0] == {
                     "result": publish_index
                 }):
             return True
@@ -221,9 +222,9 @@ def uses_upgrade_cap_for_make_immutable(tx, upgrade_cap_id):
             continue
 
         argument = arguments[0]
-        if (isinstance(argument, dict)
-                and isinstance(argument.get("input"), int)
-                and argument["input"] in upgrade_cap_inputs):
+        if (isinstance(argument, dict) and
+                isinstance(argument.get("input"), int) and
+                argument["input"] in upgrade_cap_inputs):
             return True
 
     return False
@@ -336,8 +337,8 @@ async def main():
     print()
 
     print("Package contents:")
-    module_names = sorted(module_id.as_str()
-                          for module_id in package.modules().keys())
+    module_names = sorted(
+        module_id.as_str() for module_id in package.modules().keys())
 
     for module_name in module_names:
         print(f"Module: {module_name}")
@@ -374,10 +375,10 @@ async def main():
             for struct_ in module.structs.nodes:
                 type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
                 print(f"    - {type_tag}")
-                has_key_ability = (struct_.abilities is not None
-                                   and MoveAbility.KEY in struct_.abilities)
-                is_generic = (struct_.type_parameters is not None
-                              and len(struct_.type_parameters) > 0)
+                has_key_ability = (struct_.abilities is not None and
+                                   MoveAbility.KEY in struct_.abilities)
+                is_generic = (struct_.type_parameters is not None and
+                              len(struct_.type_parameters) > 0)
                 await print_object_samples(client, type_tag, has_key_ability,
                                            is_generic)
             if module.structs.page_info.has_next_page:
