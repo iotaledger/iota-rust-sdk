@@ -47,6 +47,7 @@ runs:
         echo "Downloading binary from $download_url"
         wget -q $download_url -O iota.tgz
         tar -zxvf iota.tgz ./iota
+        tar -zxvf iota.tgz ./iota-localnet
 
         chmod +x ./iota
         chmod +x ./iota-localnet
